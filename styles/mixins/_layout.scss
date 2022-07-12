@@ -1,0 +1,5 @@
+@use '../constants/grids';
+
+@function getColumnWidth($column-width, $col) {
+  @return $column-width * $col + grids.$gutter * 2 * ($col - 1);
+}

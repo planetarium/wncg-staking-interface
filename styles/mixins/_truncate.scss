@@ -1,0 +1,13 @@
+@mixin truncate() {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@mixin lineClamp($line) {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  line-clamp: $line;
+  -webkit-line-clamp: $line;
+  overflow: hidden;
+}

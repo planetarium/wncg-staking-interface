@@ -1,0 +1,14 @@
+@mixin imageContainer($width: 100%) {
+  width: $width;
+
+  > span {
+    position: unset !important;
+  }
+
+  img {
+    object-fit: contain;
+    width: 100% !important;
+    position: relative !important;
+    height: unset !important;
+  }
+}

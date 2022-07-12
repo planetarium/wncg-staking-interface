@@ -1,0 +1,175 @@
+.main {
+  @include textStyle(16, 400);
+  min-height: calc(100vh - 56px);
+  padding: ($gnb-height-sm + 20px) 0;
+  overflow-x: hidden;
+  color: $gray-6;
+  background-color: $white;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  @include responsive(MD) {
+    padding: ($gnb-height-md + 30px) 0;
+  }
+}
+
+.container {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 600px;
+  padding: 0 20px;
+  margin: 0 auto;
+
+  @include responsive(LG) {
+    max-width: 700px;
+  }
+}
+
+.header {
+  padding: 30px 0;
+  margin-bottom: 30px;
+  text-align: center;
+
+  .title {
+    font-size: 36px;
+    line-height: 1;
+    margin-bottom: 10px;
+    color: $black;
+  }
+
+  .updated {
+    @include textStyle(13);
+    color: $black;
+  }
+
+  @include responsive(MD) {
+    padding: 40px 0;
+    margin-bottom: 40px;
+
+    .title {
+      font-size: 48px;
+      margin-bottom: 10px;
+    }
+  }
+}
+
+.section {
+  margin-top: 3rem;
+
+  &:last-of-type {
+    margin-bottom: 3rem;
+  }
+
+  h2 {
+    @include textStyle(24);
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+    font-size: 20px;
+    color: $black;
+  }
+
+  h3 {
+    @include textStyle(18);
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+    color: $black;
+  }
+
+  p {
+    margin-bottom: 1rem;
+  }
+
+  a {
+    color: $dark-mint;
+    transition: $transition-short;
+
+    &:hover {
+      opacity: 0.5;
+    }
+  }
+
+  strong {
+    font-weight: 400;
+  }
+
+  ul {
+    list-style-type: disc;
+    padding-left: 20px;
+
+    ul {
+      list-style-type: circle;
+      padding-top: 8px;
+      padding-bottom: 8px;
+    }
+
+    > li {
+      padding: 4px 0;
+
+      ul:last-child {
+        margin-bottom: -8px;
+      }
+    }
+
+    h4 {
+      margin-bottom: 0.5rem;
+    }
+
+    & + * {
+      margin-top: 1.5rem;
+    }
+
+    p.bold {
+      margin-bottom: 0;
+    }
+  }
+
+  table {
+    @include textStyle(14);
+    text-align: left;
+    border-collapse: collapse;
+
+    thead {
+      tr {
+        border-bottom: 1px solid $black;
+      }
+
+      th {
+        padding: 4px 8px 4px 0;
+      }
+    }
+
+    tbody {
+      tr {
+        &:last-child {
+          border-bottom: 1px solid $black;
+        }
+      }
+
+      th,
+      td {
+        padding: 10px 8px 16px 0;
+        vertical-align: top;
+      }
+    }
+
+    h6 {
+      font-size: 1em;
+    }
+
+    & + * {
+      margin-top: 1rem;
+    }
+  }
+}
+
+.underline {
+  font-style: normal;
+  text-decoration: underline;
+}
+
+.bold {
+  font-weight: 700 !important;
+}
