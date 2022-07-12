@@ -1,0 +1,64 @@
+.content {
+  width: 100%;
+
+  @include responsive(MD) {
+    @include flexbox(between, start);
+  }
+
+  @include responsive(LG) {
+    width: getColumnWidth($column-lg, 10);
+  }
+
+  @include responsive(XL) {
+    width: getColumnWidth($column-xl, 8);
+  }
+}
+
+.form,
+.sidebar {
+  padding: 20px;
+  background-color: rgba($black, 0.9);
+  border-radius: $radius-sm;
+
+  @include responsive(MD) {
+    width: 50%;
+  }
+
+  @include responsive(LG) {
+    padding: 30px;
+  }
+}
+
+.form {
+  padding-top: 10px;
+  margin-bottom: $gutter * 2;
+
+  @include responsive(MD) {
+    margin-right: $gutter * 2;
+    margin-bottom: 0;
+  }
+
+  @include responsive(LG) {
+    padding-top: 20px;
+  }
+
+  @include responsive(XL) {
+    flex-shrink: 0;
+    width: 430px;
+  }
+}
+
+.formPlaceholder,
+.sidebarPlaceholder {
+  @include flexbox;
+  @include textStyle(14, 500);
+  text-align: center;
+}
+
+.formPlaceholder {
+  min-height: 254px;
+}
+
+.sidebarPlaceholder {
+  min-height: 328px;
+}

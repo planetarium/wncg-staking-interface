@@ -1,0 +1,177 @@
+.globalFooter {
+  position: relative;
+  z-index: 5;
+  width: 100%;
+  padding: 30px 0 20px;
+  color: $gray-3;
+  background-color: $white;
+
+  @include responsive(MD) {
+    padding: 0;
+  }
+}
+
+.container {
+  width: 100%;
+  max-width: $max-container-sm;
+  padding: 0 20px;
+  margin: 0 auto;
+
+  @include responsive(MD) {
+    @include flexbox(between);
+    max-width: $max-container-md;
+    height: $global-footer-height-md;
+    padding: 0;
+  }
+
+  @include responsive(LG) {
+    max-width: $max-container-lg;
+  }
+
+  @include responsive(XL) {
+    max-width: $max-container-xl;
+  }
+}
+
+.center {
+  width: 100%;
+
+  .buttonGroup {
+    top: -5px;
+    left: 0;
+    justify-content: center;
+    margin-top: 0;
+  }
+
+  @include responsive(MD) {
+    .buttonGroup {
+      top: 0;
+      justify-content: flex-end;
+    }
+  }
+}
+
+.left {
+  @include responsive(MD) {
+    @include flexbox(start);
+  }
+}
+
+.title {
+  @include flexbox(start);
+  margin-bottom: 20px;
+  white-space: nowrap;
+
+  h1 {
+    @include flexbox(start);
+    @include textStyle(13, 700);
+    margin-right: 10px;
+
+    a {
+      transition: $transition-short;
+
+      &:hover {
+        opacity: 0.5;
+      }
+    }
+
+    span {
+      margin-left: 0.3em;
+    }
+  }
+
+  span {
+    @include textStyle(12, 400);
+  }
+
+  .copyright {
+    position: relative;
+    top: 1px;
+  }
+
+  @include responsive(MD) {
+    margin-right: 40px;
+    margin-bottom: 0;
+  }
+
+  @include responsive(LG) {
+    margin-right: 60px;
+  }
+}
+
+.link {
+  @include textStyle(13, 400);
+  display: block;
+  padding: 4px 0;
+  transition: $transition-short;
+  white-space: nowrap;
+
+  &:hover {
+    opacity: 0.5;
+  }
+
+  @include responsive(MD) {
+    margin-right: 16px;
+
+    &:last-of-type {
+      margin-right: 0 !important;
+    }
+  }
+
+  @include responsive(LG) {
+    margin-right: 24px;
+  }
+}
+
+.buttonGroup {
+  @include flexbox(start);
+  position: relative;
+  left: -10px;
+  margin-top: 16px;
+
+  a {
+    margin-right: 8px;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+
+  @include responsive(MD) {
+    left: 0;
+    justify-content: flex-end;
+    margin-top: 0;
+
+    a {
+      margin-right: 0;
+      margin-left: 8px;
+
+      &:first-child {
+        margin-left: 0;
+      }
+    }
+  }
+}
+
+.snsButton {
+  @include inlineFlexbox;
+  width: 40px;
+  height: 40px;
+  transition: $transition-short;
+
+  &.etherscan {
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+  &:hover {
+    opacity: 0.5;
+  }
+
+  svg {
+    width: 24px;
+    height: 24px;
+  }
+}

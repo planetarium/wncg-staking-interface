@@ -1,0 +1,33 @@
+$selector-height: 4px;
+
+.tabMenu {
+  @include flexbox;
+  position: relative;
+  z-index: 1;
+  background-color: $black;
+
+  &.unstake {
+    &::after {
+      transform: translate3d(100%, 0, 0);
+    }
+  }
+
+  &::after {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 50%;
+    height: $selector-height;
+    background-color: $primary;
+    content: '';
+    transition: $transition-short;
+  }
+}
+
+.tab {
+  @include textStyle(14, 700);
+  width: 50%;
+  height: 50px;
+  color: $white;
+  border-bottom: $selector-height solid transparent;
+}

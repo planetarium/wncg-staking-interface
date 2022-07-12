@@ -1,0 +1,177 @@
+.title {
+  @include textStyle(16, 700);
+  margin-bottom: 10px;
+}
+
+.desc {
+  @include textStyle(13);
+  color: $gray-2;
+  margin-bottom: 30px;
+
+  @include responsive(MD) {
+    @include textStyle(14);
+    margin-bottom: 40px;
+  }
+}
+
+.cooldownGraph {
+  margin-bottom: 30px;
+
+  .barGroup {
+    @include flexbox;
+  }
+
+  .bar {
+    height: 8px;
+    margin-bottom: 8px;
+    background-size: 400% 400%;
+    border-radius: 8px;
+    animation: gradient ease-in infinite;
+
+    &.cooldown {
+      flex-shrink: 0;
+      width: 82%;
+      margin-right: 3px;
+      background-color: $gray-3;
+      background-image: $gray-gradient;
+      animation-duration: 4s;
+    }
+
+    &.withdraw {
+      flex-grow: 1;
+      background-image: $orange-gradient;
+      animation-duration: 3s;
+    }
+  }
+
+  .detail {
+    @include flexbox(between);
+    width: 100%;
+  }
+
+  .detailItem {
+    &:last-child {
+      text-align: right;
+    }
+
+    dt {
+      @include textStyle(13, 400);
+    }
+
+    dd {
+      @include textStyle(13, 700);
+    }
+  }
+
+  @include responsive(MD) {
+    margin-bottom: 40px;
+
+    .detailItem {
+      dt {
+        @include textStyle(14);
+      }
+
+      dd {
+        @include textStyle(14);
+      }
+    }
+  }
+}
+
+.coolingDownButton {
+  cursor: default;
+
+  &:hover {
+    background-color: $black !important;
+  }
+}
+
+.withdrawTimer {
+  @include textStyle(13, 400);
+
+  .barGroup {
+    @include flexbox(start);
+    box-sizing: content-box;
+    width: 100%;
+    height: 8px;
+    margin-bottom: 8px;
+    overflow: hidden;
+    background-color: $black;
+    border: 1px solid $gray-6;
+    border-radius: 8px;
+  }
+
+  .bar {
+    position: relative;
+    height: 8px;
+    overflow: hidden;
+    background-color: $red;
+    background-image: linear-gradient(to right, $red 37%, lighten($red, 5) 69%);
+    border-radius: 8px;
+    transition: $transition-long;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      z-index: 1;
+      background-image: linear-gradient(
+        -45deg,
+        rgba($white, 0.2) 25%,
+        transparent 25%,
+        transparent 50%,
+        rgba($white, 0.2) 50%,
+        rgba($white, 0.2) 75%,
+        transparent 75%,
+        transparent
+      );
+      background-size: 10px 10px;
+      animation: move 3s linear infinite;
+    }
+  }
+
+  .content {
+    span {
+      display: block;
+    }
+
+    strong {
+      @include textStyle(13, 700);
+    }
+  }
+
+  @include responsive(MD) {
+    @include textStyle(14);
+
+    strong {
+      @include textStyle(14);
+    }
+  }
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes move {
+  0% {
+    background-position: 0 0;
+  }
+
+  100% {
+    background-position: 50px 50px;
+  }
+}

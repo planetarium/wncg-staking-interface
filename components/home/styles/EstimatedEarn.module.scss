@@ -1,0 +1,119 @@
+.estimatedEarn {
+  margin-bottom: 30px;
+
+  @include responsive(MD) {
+    margin-bottom: 40px;
+  }
+}
+
+.header {
+  @include flexbox(between);
+  margin-bottom: 10px;
+}
+
+.title {
+  @include textStyle(16, 700);
+}
+
+.options {
+  @include flexbox(start);
+
+  &.day {
+    .day {
+      font-weight: 700;
+      color: $primary;
+    }
+  }
+
+  &.week {
+    .week {
+      font-weight: 700;
+      color: $primary;
+    }
+  }
+
+  &.month {
+    .month {
+      font-weight: 700;
+      color: $primary;
+    }
+  }
+
+  &.year {
+    .year {
+      font-weight: 700;
+      color: $primary;
+    }
+  }
+
+  button {
+    @include textStyle(13, 500);
+    margin-left: 8px;
+    color: $white;
+    transition: $transition-short;
+
+    &.active {
+      font-weight: 700;
+      color: $primary;
+    }
+
+    &:hover {
+      opacity: 0.5;
+    }
+
+    &:first-child {
+      margin-left: 0 !important;
+    }
+  }
+
+  @include responsive(MD) {
+    button {
+      margin-left: 10px;
+    }
+  }
+}
+
+.desc {
+  @include textStyle(13);
+  color: $gray-2;
+  margin-bottom: 10px;
+
+  @include responsive(MD) {
+    @include textStyle(14);
+  }
+}
+
+.detailItem {
+  @include flexbox(between);
+  width: 100%;
+  padding: 8px 0;
+
+  dt {
+    @include flexbox(start);
+
+    strong {
+      @include textStyle(14, 700);
+    }
+  }
+
+  dd {
+    @include flexbox(center, end);
+    @include textStyle(16, 700);
+    flex-direction: column;
+    text-align: right;
+  }
+}
+
+.token {
+  @include flexbox;
+  width: 28px;
+  height: 28px;
+  margin-right: 8px;
+  border-radius: 50%;
+  overflow: hidden;
+
+  &.wncg {
+    @include imageContainer(28px);
+    background-color: $white;
+  }
+}

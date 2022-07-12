@@ -1,0 +1,179 @@
+.title {
+  @include textStyle(16, 700);
+  margin-bottom: 10px;
+}
+
+.desc {
+  @include textStyle(13);
+  color: $gray-2;
+  margin-bottom: 10px;
+
+  @include responsive(MD) {
+    @include textStyle(14);
+    margin-bottom: 20px;
+  }
+}
+
+.detail {
+  margin-bottom: 20px;
+}
+
+.detailItem {
+  @include flexbox(between);
+  width: 100%;
+  padding: 8px 0 4px;
+
+  dt {
+    @include flexbox(start);
+    @include textStyle(13, 700);
+  }
+
+  dd {
+    @include flexbox(center, end);
+    @include textStyle(14, 700);
+    flex-direction: column;
+    text-align: right;
+  }
+}
+
+.advanced {
+  margin-top: 40px;
+
+  .header {
+    @include flexbox(start);
+    margin-bottom: 10px;
+  }
+
+  .title {
+    margin-right: 8px;
+    margin-bottom: 0;
+  }
+
+  .tooltip {
+    @include flexbox;
+    position: relative;
+    width: 24px;
+    height: 24px;
+
+    &:hover {
+      strong {
+        opacity: 1;
+        visibility: visible;
+        transform: translate3d(0, -50%, 0);
+      }
+
+      svg {
+        color: $gray-4;
+      }
+    }
+
+    strong {
+      @include posCenterY;
+      @include textStyle(12, 400);
+      left: calc(100% + 5px);
+      width: 200px;
+      padding: 12px 16px;
+      line-height: 1.5;
+      color: $black;
+      background-color: $gray-1;
+      border-radius: $radius-sm;
+      box-shadow: 0 5px 30px rgba($black, 0.25);
+      opacity: 0;
+      visibility: hidden;
+      transform: translate3d(3px, -50%, 0);
+      transition: $transition-short;
+
+      &::before {
+        @include posCenterY;
+        left: -14px;
+        width: 0;
+        height: 0;
+        border-top: 8px solid transparent;
+        border-right: 8px solid $gray-1;
+        border-bottom: 8px solid transparent;
+        border-left: 8px solid transparent;
+        content: '';
+      }
+    }
+
+    svg {
+      width: 20px;
+      height: 20px;
+      color: $gray-3;
+      transition: $transition-short;
+    }
+  }
+
+  .content {
+    padding-top: 20px;
+  }
+
+  .bal {
+    @include flexbox(end);
+  }
+
+  .token {
+    @include flexbox;
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+    margin-right: 4px;
+
+    svg {
+      width: 100%;
+      height: 100%;
+    }
+  }
+}
+
+.toggleButton {
+  @include textStyle(13, 500);
+  color: $primary;
+}
+
+.medal {
+  position: relative;
+  margin-left: 0.2em;
+  font-size: 1.5em;
+  font-style: normal;
+  user-select: none;
+  cursor: default;
+
+  &:hover {
+    .tooltip {
+      opacity: 1;
+      visibility: visible;
+      transform: translate3d(-50%, 0, 0);
+    }
+  }
+
+  .tooltip {
+    @include posCenterX;
+    @include textStyle(12, 500);
+    bottom: calc(100% + 12px);
+    padding: 8px;
+    bottom: 100%;
+    color: $black;
+    text-align: center;
+    font-style: normal;
+    white-space: nowrap;
+    background-color: $white;
+    border-radius: $radius-sm;
+    opacity: 0;
+    visibility: hidden;
+    transition: $transition-short;
+    transform: translate3d(-50%, -4px, 0);
+
+    &::after {
+      @include posCenterX;
+      top: calc(100% - 1px);
+      width: 0;
+      height: 0;
+      border-top: 5px solid $white;
+      border-right: 5px solid transparent;
+      border-bottom: 5px solid transparent;
+      border-left: 5px solid transparent;
+      content: '';
+    }
+  }
+}

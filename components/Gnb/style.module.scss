@@ -1,0 +1,37 @@
+.gnb {
+  @include flexbox(between);
+  position: fixed;
+  z-index: 10;
+  width: 100%;
+  height: $gnb-height-sm;
+  padding: 0 20px;
+  transition: $transition-network-alert;
+
+  &.withAlert {
+    transform: translateY($network-alert-height-sm);
+  }
+
+  @include responsive(MD) {
+    height: $gnb-height-md;
+    padding: 0 24px;
+
+    &.withAlert {
+      transform: translateY($network-alert-height-md);
+    }
+  }
+
+  @include responsive(LG) {
+    padding: 0 30px;
+  }
+}
+
+.logo {
+  a {
+    @include imageContainer(40px);
+    display: block;
+
+    @include responsive(MD) {
+      width: 66px;
+    }
+  }
+}
