@@ -23,6 +23,10 @@
   padding: 0 20px;
   margin: 0 auto;
 
+  .right {
+    margin-bottom: 20px;
+  }
+
   @include responsive(MD) {
     max-width: $max-container-md;
     padding: 0;
@@ -30,10 +34,24 @@
 
   @include responsive(LG) {
     max-width: $max-container-lg;
+    display: grid;
+    grid-gap: 20px;
+    grid-template-columns: 1fr getColumnWidth($column-lg, 4);
+    grid-template-areas: 'left   right';
+
+    .left {
+      grid-area: left;
+    }
+
+    .right {
+      grid-area: right;
+      margin-bottom: 0;
+    }
   }
 
   @include responsive(XL) {
     max-width: $max-container-xl;
+    grid-template-columns: 1fr getColumnWidth($column-xl, 4);
   }
 }
 

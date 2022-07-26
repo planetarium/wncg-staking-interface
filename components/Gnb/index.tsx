@@ -18,7 +18,7 @@ import { GnbConnect } from './Connect'
 
 export function Gnb() {
   const { pathname } = useRouter()
-  const isStakingPage = pathname === '/wncg'
+  const isStakingPage = ['/wncg', '/wncg/pool'].includes(pathname)
 
   const showAlert = useAppSelector(getShowAlert(() => isStakingPage))
   const status = useAppSelector(getStatus)

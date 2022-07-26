@@ -5,11 +5,15 @@ import clsx from 'clsx'
 import styles from 'styles/Pool.module.scss'
 
 import { getIsDesktop } from 'app/states/mediaQuery'
-import { getPool } from 'app/states/pool'
 import { useAppSelector, usePool } from 'hooks'
 
+import Effects from 'components/Effects'
+import PoolCharts from 'components/pool/Charts'
+import MyPoolBalance from 'components/pool/MyPoolBalance'
+import PoolComposition from 'components/pool/PoolComposition'
+import PoolRecentTrades from 'components/pool/RecentTrades'
+
 const WncgPool: NextPage = () => {
-  const pool = useAppSelector(getPool)
   usePool()
 
   const isDesktop = useAppSelector(getIsDesktop)
@@ -19,9 +23,19 @@ const WncgPool: NextPage = () => {
       <Head>
         <title>WNCG-WETH Pool / WNCG Staking</title>
       </Head>
-      {JSON.stringify(pool)}
 
-      <main>main</main>
+      <main className={styles.main}>
+        <div className={styles.container}>
+          <div className={styles.right}>
+            <MyPoolBalance />
+          </div>
+          <div className={styles.left}>
+            <PoolCharts />
+            <PoolComposition />
+            <PoolRecentTrades />
+          </div>
+        </div>
+      </main>
 
       {isDesktop && (
         <div className={styles.bgWrapper} aria-hidden>
@@ -33,6 +47,8 @@ const WncgPool: NextPage = () => {
           </div>
         </div>
       )}
+
+      <Effects />
     </>
   )
 }
