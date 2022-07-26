@@ -17,16 +17,21 @@ export const client = new ApolloClient({
   link: ApolloLink.from([httpLink as any as ApolloLink]),
 })
 
-// NOTE: https://thegraph.com/hosted-service/subgraph/balancer-labs/balancer
-export const POOL_TOKEN_BALANCES = gql`
-  {
-    pool(
-      id: "${BPT_POOL_ID}"
-    ) {
-      tokens {
-        symbol
-        balance
+export async function fetchPoolTokenBalances() {
+  const result = await client.query({
+    query: gql`
+      {
+        pool(
+          id: "${BPT_POOL_ID}"
+        ) {
+          tokens {
+            symbol
+            balance
+          }
+        }
       }
-    }
-  }
-`
+    `,
+  })
+
+  return result?.data?.pool?.tokens
+}
