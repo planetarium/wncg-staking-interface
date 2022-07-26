@@ -15,12 +15,11 @@ import { resetStakedBalance } from 'app/states/stake'
 import { resetTimestamps } from 'app/states/unstake'
 import { gaEvent } from 'lib/gtag'
 import { IS_ETHEREUM } from 'utils/env'
-import { useError } from './useError'
+import { handleError } from 'utils/error'
 import { useModal } from './useModal'
 import { useAppDispatch, useAppSelector } from './useRedux'
 
 export function useConnection() {
-  const { handleError } = useError()
   const { addModal, removeModal } = useModal()
 
   const dispatch = useAppDispatch()

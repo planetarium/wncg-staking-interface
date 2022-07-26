@@ -15,9 +15,9 @@ import {
 } from 'app/states/reward'
 import { addTx, TransactionAction } from 'app/states/transaction'
 import { balRewardAbi } from 'lib/abis'
+import { handleError } from 'utils/error'
 import Decimal, { weiToEther } from 'utils/num'
 import { useContract } from './useContract'
-import { useError } from './useError'
 import { useFee } from './useFee'
 import { useProvider } from './useProvider'
 import { useAppDispatch, useAppSelector } from './useRedux'
@@ -28,7 +28,6 @@ const stakingContractAddress = process.env
 
 export function useReward() {
   const contract = useContract()
-  const { handleError } = useError()
   const { earmarkIncentiveFee, feeDenominator } = useFee()
   const provider = useProvider()
   const { addToast } = useToast()
@@ -58,7 +57,7 @@ export function useReward() {
     } catch (error) {
       handleError(error)
     }
-  }, [contract, dispatch, handleError])
+  }, [contract, dispatch])
 
   const earmarkIncentive = useCallback(async () => {
     if (!balRewardContract) return
@@ -82,13 +81,7 @@ export function useReward() {
     } catch (error) {
       handleError(error)
     }
-  }, [
-    balRewardContract,
-    dispatch,
-    earmarkIncentiveFee,
-    feeDenominator,
-    handleError,
-  ])
+  }, [balRewardContract, dispatch, earmarkIncentiveFee, feeDenominator])
 
   const earmarkRewards = useCallback(async () => {
     const data = await contract?.earmarkRewards()
@@ -112,7 +105,7 @@ export function useReward() {
     } catch (error) {
       handleError(error)
     }
-  }, [account, contract, dispatch, handleError])
+  }, [account, contract, dispatch])
 
   const earnedWncg = useCallback(async () => {
     try {
@@ -123,7 +116,7 @@ export function useReward() {
     } catch (error) {
       handleError(error)
     }
-  }, [account, contract, dispatch, handleError])
+  }, [account, contract, dispatch])
 
   const getBalEmissionPerSec = useCallback(async () => {
     try {
@@ -134,7 +127,7 @@ export function useReward() {
     } catch (error) {
       handleError(error)
     }
-  }, [contract, dispatch, handleError])
+  }, [contract, dispatch])
 
   const getWncgEmissionPerSec = useCallback(async () => {
     try {
@@ -145,7 +138,7 @@ export function useReward() {
     } catch (error) {
       handleError(error)
     }
-  }, [contract, dispatch, handleError])
+  }, [contract, dispatch])
 
   return {
     balRewardPool,

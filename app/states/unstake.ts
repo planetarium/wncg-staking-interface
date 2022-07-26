@@ -22,8 +22,8 @@ type UnstakeState = {
 
 const STORE_UNSTAKE_PERIOD_KEY = `wncgStaking.unstakePeriod`
 export const STORE_IS_UNSTAKE_WINDOW_KEY = `wncgStaking.isUnstakeWindow`
-export const STORE_COOLDOWN_ENDS_AT_KEY = `wncgStaking.cooldownEndsAt`
-export const STORE_WITHDRAW_ENDS_AT_KEY = `wncgStaking.withdrawEndsAt`
+export const STORE_COOLDOWN_ENDS_AT = `wncgStaking.cooldownEndsAt`
+export const STORE_WITHDRAW_ENDS_AT = `wncgStaking.withdrawEndsAt`
 
 const INITIAL_STATE: UnstakeState = {
   cooldownEndsAt: null,
@@ -37,28 +37,27 @@ const unstakeSlice = createSlice({
   reducers: {
     setCooldownEndsAt(state: UnstakeState, action: PayloadAction<number>) {
       state.cooldownEndsAt = action.payload
-      store.set(STORE_COOLDOWN_ENDS_AT_KEY, action.payload)
+      store.set(STORE_COOLDOWN_ENDS_AT, action.payload)
     },
     setWithdrawEndsAt(state: UnstakeState, action: PayloadAction<number>) {
       state.withdrawEndsAt = action.payload
       store.set(STORE_IS_UNSTAKE_WINDOW_KEY, true)
-      store.set(STORE_WITHDRAW_ENDS_AT_KEY, action.payload)
+      store.set(STORE_WITHDRAW_ENDS_AT, action.payload)
     },
     setUnstakePeriod(
       state: UnstakeState,
       action: PayloadAction<number | null>
     ) {
       state.unstakePeriod = action.payload
-      store.set(STORE_UNSTAKE_PERIOD_KEY, action.payload)
     },
     resetCooldownEndsAt(state: UnstakeState) {
       state.cooldownEndsAt = null
+      store.remove(STORE_COOLDOWN_ENDS_AT)
     },
     resetWithdrawEndsAt(state: UnstakeState) {
       state.withdrawEndsAt = null
       store.set(STORE_IS_UNSTAKE_WINDOW_KEY, false)
-      store.remove(STORE_COOLDOWN_ENDS_AT_KEY)
-      store.remove(STORE_WITHDRAW_ENDS_AT_KEY)
+      store.remove(STORE_WITHDRAW_ENDS_AT)
     },
     resetTimestamps(state: UnstakeState) {
       state.cooldownEndsAt = null

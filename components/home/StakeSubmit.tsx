@@ -11,11 +11,11 @@ import { ModalCategory } from 'app/states/modal'
 import { TransactionAction } from 'app/states/transaction'
 import { getIsUnstakeWindow } from 'app/states/unstake'
 import { gaEvent } from 'lib/gtag'
+import { handleError } from 'utils/error'
 import {
   useAppSelector,
   useBpt,
   useConnection,
-  useError,
   useEventFilter,
   useModal,
   useProvider,
@@ -45,7 +45,6 @@ export function StakeSubmit({
 
   const { approve } = useBpt()
   const { connect } = useConnection()
-  const { handleError } = useError()
   const { approvalEventFilter, stakedEventFilter } = useEventFilter()
   const { addModal } = useModal()
   const provider = useProvider()

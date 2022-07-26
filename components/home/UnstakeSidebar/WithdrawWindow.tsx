@@ -1,12 +1,11 @@
 /* eslint-disable react/no-unescaped-entities */
-import store from 'store'
+import clsx from 'clsx'
 import styles from '../styles/UnstakeSidebar.module.scss'
 
 import {
   getUnstakePeriod,
   getWithdrawEndsAt,
   resetWithdrawEndsAt,
-  STORE_WITHDRAW_ENDS_AT_KEY,
 } from 'app/states/unstake'
 import { formatTimer } from 'utils/string'
 import { useAppDispatch, useAppSelector, useTimer } from 'hooks'
@@ -14,10 +13,7 @@ import { useAppDispatch, useAppSelector, useTimer } from 'hooks'
 export function UnstakeSidebarWithdrawWindow() {
   const dispatch = useAppDispatch()
   const unstakePeriod = useAppSelector(getUnstakePeriod)
-  const withdrawEndsAt =
-    useAppSelector(getWithdrawEndsAt) ||
-    store.get(STORE_WITHDRAW_ENDS_AT_KEY) ||
-    0
+  const withdrawEndsAt = useAppSelector(getWithdrawEndsAt)
 
   function onExpiration() {
     if (!withdrawEndsAt) return
@@ -44,20 +40,36 @@ export function UnstakeSidebarWithdrawWindow() {
 
       <div className={styles.withdrawTimer}>
         <div className={styles.barGroup}>
-          <div
-            className={styles.bar}
-            style={{ width: `${percentRemaining}%` }}
-          />
+          {isExpired ? (
+            <div className={clsx(styles.bar, styles.loading)} />
+          ) : (
+            <div
+              className={styles.bar}
+              style={{ width: `${percentRemaining}%` }}
+            />
+          )}
         </div>
 
         <div className={styles.content}>
           <span>Withdraw window expires in</span>
-          <strong>
-            {formatTimer(days)}d {formatTimer(hours)}h {formatTimer(minutes)}m{' '}
-            {formatTimer(seconds)}s
+          <strong className={clsx({ [styles.expired]: isExpired })}>
+            {isExpired
+              ? 'Calculating...'
+              : generateTimerText(days, hours, minutes, seconds)}
           </strong>
         </div>
       </div>
     </>
   )
+}
+
+function generateTimerText(
+  days: number,
+  hours: number,
+  minutes: number,
+  seconds: number
+) {
+  return `${formatTimer(days)}d ${formatTimer(hours)}h ${formatTimer(
+    minutes
+  )}m ${formatTimer(seconds)}s`
 }

@@ -10,11 +10,11 @@ import { TransactionAction } from 'app/states/transaction'
 import { gaEvent } from 'lib/gtag'
 import { assertUnreachable } from 'utils/assertion'
 import { countUpOption, usdCountUpOption } from 'utils/countUp'
+import { handleError } from 'utils/error'
 import Decimal, { sanitizeNumber } from 'utils/num'
 import {
   useAppSelector,
   useClaim,
-  useError,
   useEventFilter,
   useModal,
   useProvider,
@@ -32,7 +32,6 @@ export function ClaimRewardModal() {
   const [loading, setLoading] = useState<ClaimLoading>(null)
 
   const { claimAllRewards, claimBalRewards, claimWncgRewards } = useClaim()
-  const { handleError } = useError()
   const { rewardsBalEventFilter, rewardsWncgEventFilter } = useEventFilter()
   const { removeModal } = useModal()
   const provider = useProvider()

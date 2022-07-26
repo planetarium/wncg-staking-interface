@@ -5,15 +5,14 @@ import { getAccount } from 'app/states/connection'
 import { setBptAddress } from 'app/states/contract'
 import { setStakedBalance } from 'app/states/stake'
 import { addTx, TransactionAction } from 'app/states/transaction'
+import { handleError } from 'utils/error'
 import Decimal, { etherToWei, sanitizeNumber, weiToEther } from 'utils/num'
 import { useContract } from './useContract'
-import { useError } from './useError'
 import { useAppDispatch, useAppSelector } from './useRedux'
 import { useToast } from './useToast'
 
 export function useStake() {
   const contract = useContract()
-  const { handleError } = useError()
   const { addToast } = useToast()
 
   const dispatch = useAppDispatch()
@@ -28,7 +27,7 @@ export function useStake() {
     } catch (error) {
       handleError(error)
     }
-  }, [account, contract, dispatch, handleError])
+  }, [account, contract, dispatch])
 
   const stake = useCallback(
     async (amount: string) => {
@@ -56,7 +55,7 @@ export function useStake() {
     } catch (error) {
       handleError(error)
     }
-  }, [contract, dispatch, handleError])
+  }, [contract, dispatch])
 
   const totalStaked = useCallback(async () => {
     try {
@@ -67,7 +66,7 @@ export function useStake() {
     } catch (error) {
       handleError(error)
     }
-  }, [contract, dispatch, handleError])
+  }, [contract, dispatch])
 
   return {
     stake,

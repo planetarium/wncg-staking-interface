@@ -11,6 +11,7 @@ export function UnstakeFormTimer() {
   function onExpiration() {
     dispatch(resetCooldownEndsAt())
   }
+
   const { days, hours, minutes, seconds, isExpired } = useTimer(
     cooldownEndsAt || 0,
     onExpiration

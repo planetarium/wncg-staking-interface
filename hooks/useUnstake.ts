@@ -9,15 +9,14 @@ import {
   setWithdrawEndsAt,
   setUnstakePeriod,
 } from 'app/states/unstake'
+import { handleError } from 'utils/error'
 import Decimal, { etherToWei, sanitizeNumber } from 'utils/num'
 import { useContract } from './useContract'
-import { useError } from './useError'
 import { useAppDispatch, useAppSelector } from './useRedux'
 import { useToast } from './useToast'
 
 export function useUnstake() {
   const contract = useContract()
-  const { handleError } = useError()
   const { addToast } = useToast()
 
   const dispatch = useAppDispatch()
@@ -83,7 +82,7 @@ export function useUnstake() {
     } catch (error) {
       handleError(error)
     }
-  }, [contract, dispatch, handleError])
+  }, [contract, dispatch])
 
   const getCooldownEndTimestamp = useCallback(async () => {
     const timestamp = await contract?.getCooldownEndTimestamp(account)
@@ -116,7 +115,7 @@ export function useUnstake() {
     } catch (error) {
       handleError(error)
     }
-  }, [getCooldownEndTimestamp, getWithdrawEndTimestamp, handleError])
+  }, [getCooldownEndTimestamp, getWithdrawEndTimestamp])
 
   return {
     getTimestamps,

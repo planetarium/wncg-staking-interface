@@ -7,14 +7,13 @@ import { getBptContractAddress } from 'app/states/contract'
 import { setTotalBptSupply } from 'app/states/token'
 import { addTx, TransactionAction } from 'app/states/transaction'
 import { bptAbi } from 'lib/abis'
+import { handleError } from 'utils/error'
 import { weiToEther } from 'utils/num'
-import { useError } from './useError'
 import { useProvider } from './useProvider'
 import { useAppDispatch, useAppSelector } from './useRedux'
 import { useToast } from './useToast'
 
 export function useBpt() {
-  const { handleError } = useError()
   const provider = useProvider()
   const { addToast } = useToast()
 
@@ -50,7 +49,7 @@ export function useBpt() {
     } catch (error) {
       handleError(error)
     }
-  }, [account, contract, dispatch, handleError])
+  }, [account, contract, dispatch])
 
   const approve = useCallback(async () => {
     const data = await contract?.approve(
@@ -77,7 +76,7 @@ export function useBpt() {
     } catch (error) {
       handleError(error)
     }
-  }, [account, contract, dispatch, handleError])
+  }, [account, contract, dispatch])
 
   const totalSupply = useCallback(async () => {
     try {
@@ -86,9 +85,9 @@ export function useBpt() {
         dispatch(setTotalBptSupply(weiToEther(supply)))
       }
     } catch (error) {
-      handleError(error)
+      error
     }
-  }, [contract, dispatch, handleError])
+  }, [contract, dispatch])
 
   return {
     allowance,

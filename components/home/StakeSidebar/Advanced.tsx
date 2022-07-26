@@ -8,9 +8,9 @@ import { getEarmarkIncentive } from 'app/states/reward'
 import { TransactionAction } from 'app/states/transaction'
 import { gaEvent } from 'lib/gtag'
 import { countUpOption, usdCountUpOption } from 'utils/countUp'
+import { handleError } from 'utils/error'
 import {
   useAppSelector,
-  useError,
   useEventFilter,
   useProvider,
   useReward,
@@ -26,7 +26,6 @@ export function StakeSidebarAdvanced() {
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
 
-  const { handleError } = useError()
   const { earmarkEventFilter } = useEventFilter()
   const provider = useProvider()
   const { earmarkIncentive, earmarkRewards } = useReward()

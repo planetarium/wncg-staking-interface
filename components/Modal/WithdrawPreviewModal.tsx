@@ -11,12 +11,12 @@ import { TransactionAction } from 'app/states/transaction'
 import { getWithdrawEndsAt } from 'app/states/unstake'
 import { gaEvent } from 'lib/gtag'
 import { countUpOption, usdCountUpOption } from 'utils/countUp'
+import { handleError } from 'utils/error'
 import { sanitizeNumber } from 'utils/num'
 import { toastAnimation } from 'utils/toast'
 import {
   useAppDispatch,
   useAppSelector,
-  useError,
   useModal,
   useTimer,
   useUnstake,
@@ -46,7 +46,6 @@ export function WithdrawPreviewModal({
   const bal = parseFloat(sanitizeNumber(balReward))
   const wncg = parseFloat(sanitizeNumber(wncgReward))
 
-  const { handleError } = useError()
   const { removeModal } = useModal()
   const { calculateUsdValue } = useUsd()
   const { withdrawAndClaim } = useUnstake()

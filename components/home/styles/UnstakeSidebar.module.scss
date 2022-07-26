@@ -110,6 +110,11 @@
     border-radius: 8px;
     transition: $transition-long;
 
+    &.loading {
+      width: 100%;
+      background-image: $dark-gray-gradient;
+    }
+
     &::after {
       content: '';
       position: absolute;
@@ -140,6 +145,11 @@
 
     strong {
       @include textStyle(13, 700);
+
+      &.expired {
+        font-weight: 400;
+        color: $gray-3;
+      }
     }
   }
 

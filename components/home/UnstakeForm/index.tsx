@@ -7,8 +7,9 @@ import { ModalCategory } from 'app/states/modal'
 import { getStakedBalance } from 'app/states/stake'
 import { TransactionAction } from 'app/states/transaction'
 import { gaEvent } from 'lib/gtag'
+import { handleError } from 'utils/error'
 import Decimal, { sanitizeNumber } from 'utils/num'
-import { useAppSelector, useError, useModal, useUnstake } from 'hooks'
+import { useAppSelector, useModal, useUnstake } from 'hooks'
 import { formTransition, motionVariants, TabId, TabPanelId } from '../constants'
 
 import { Button } from 'components/Button'
@@ -26,7 +27,6 @@ export function UnstakeForm({ disabled }: UnstakeFormProps) {
   const [checked, setChecked] = useState(false)
   const [loading, setLoading] = useState(false)
 
-  const { handleError } = useError()
   const { addModal } = useModal()
   const { withdraw } = useUnstake()
 
