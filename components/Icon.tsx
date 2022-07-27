@@ -3,6 +3,7 @@ type Icon =
   | 'approximate'
   | 'arrowLeft'
   | 'arrowRight'
+  | 'arrowRightUp'
   | 'beta'
   | 'bin'
   | 'check'
