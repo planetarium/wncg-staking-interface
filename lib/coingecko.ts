@@ -54,13 +54,13 @@ export class CoingeckoService {
   async getTokens(symbols: string[]) {
     try {
       const results = await this.fetchTokens(symbols)
-      const priceMap = results.reduce((acc, result) => {
-        Object.entries(result.data).forEach(([key, value]) => {
+      const priceMap = Object.fromEntries(
+        results.map((result) => {
+          const [key, value] = Object.entries(result.data)[0]
           const symb = this.getSymbolName(key)
-          acc[symb] = value.usd
+          return [symb, value.usd]
         })
-        return acc
-      }, {} as PriceMap)
+      )
       return priceMap
     } catch (error) {
       console.log('Unable to fetch token prices', symbols, error)
