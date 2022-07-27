@@ -78,3 +78,31 @@ export async function fetchPoolRecentSwaps({ pageParam = 0 }): Promise<Swap[]> {
   const result = await request(endpoint, query)
   return result?.pool?.swaps || []
 }
+
+export async function fetchPoolRecentJoinExits({
+  pageParam = 0,
+}): Promise<JoinExit[]> {
+  const query = gql`
+    query {
+      joinExits(
+        orderBy: timestamp,
+        orderDirection: desc,
+        first: 5,
+        skip: ${pageParam},
+        where: {
+          pool: "${BPT_POOL_ID}"
+        }
+      ) {
+        id
+        type
+        amounts
+        sender
+        timestamp
+        tx
+      }
+    }
+  `
+
+  const result = await request(endpoint, query)
+  return result?.joinExits || []
+}
