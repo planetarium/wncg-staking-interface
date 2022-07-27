@@ -11,6 +11,7 @@ import Effects from 'components/Effects'
 import PoolCharts from 'components/pool/Charts'
 import MyPoolBalance from 'components/pool/MyPoolBalance'
 import PoolComposition from 'components/pool/PoolComposition'
+import PoolInvestments from 'components/pool/Investments'
 import PoolRecentTrades from 'components/pool/RecentTrades'
 
 const WncgPool: NextPage = () => {
@@ -33,6 +34,7 @@ const WncgPool: NextPage = () => {
           <div className={styles.left}>
             <PoolCharts />
             <PoolComposition />
+            <PoolInvestments />
             <PoolRecentTrades />
           </div>
         </div>
