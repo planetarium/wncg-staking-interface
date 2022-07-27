@@ -1,0 +1,128 @@
+.poolInvestments {
+  margin-bottom: 50px;
+}
+
+.title {
+  @include textStyle(16, 700);
+  margin-bottom: 20px;
+}
+
+.tableWrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  white-space: nowrap;
+
+  th,
+  td {
+    text-align: right;
+    padding-left: 20px;
+
+    &:first-child {
+      padding-right: 20px;
+      padding-left: 0;
+      text-align: left;
+    }
+
+    &:nth-child(3) {
+      padding-left: 40px;
+      text-align: left;
+    }
+  }
+
+  th {
+    @include textStyle(12, 700);
+    height: 32px;
+  }
+
+  td {
+    @include textStyle(14, 400);
+    height: 44px;
+  }
+
+  @include responsive(MD) {
+    th {
+      @include textStyle(14);
+      height: 40px;
+    }
+
+    td {
+      @include textStyle(16);
+      height: 50px;
+    }
+  }
+
+  @include responsive(LG) {
+    th,
+    td {
+      &:nth-child(3) {
+        padding-left: 60px;
+      }
+    }
+  }
+}
+
+.type {
+  @include flexbox(start);
+
+  &.invest {
+    span {
+      color: $green;
+    }
+  }
+
+  &.withdraw {
+    span {
+      color: $red;
+    }
+  }
+
+  span {
+    font-size: 1.5em;
+    margin-right: 8px;
+  }
+}
+
+.investmentDetails {
+  @include flexbox(start);
+}
+
+.detail {
+  @include inlineFlexbox(start);
+
+  &:first-child {
+    margin-right: 16px;
+  }
+
+  .token {
+    width: 20px !important;
+    height: 20px !important;
+    margin-right: 8px;
+  }
+
+  > svg {
+    width: 20px;
+    height: 20px;
+    color: $gray-2;
+    margin: 0 8px;
+  }
+}
+
+.loadMore {
+  @include textStyle(14, 400);
+  width: 100%;
+  text-align: center !important;
+  cursor: pointer;
+  transition: $transition-short;
+
+  &:hover {
+    opacity: 0.5;
+  }
+
+  @include responsive(MD) {
+    @include textStyle(16);
+  }
+}
