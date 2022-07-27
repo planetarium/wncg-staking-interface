@@ -9,16 +9,16 @@ import { useAppDispatch } from 'hooks'
 export function useTokenPrices() {
   const dispatch = useAppDispatch()
 
-  const { data: tokenPrices } = useQuery('tokenPrices', fetchTokenPrices, {
+  const { data } = useQuery('tokenPrices', fetchTokenPrices, {
     staleTime: 10 * 1_000,
   })
 
-  const { bal, weth, wncg } = tokenPrices || {}
+  const { bal, weth, wncg } = data || {}
   const {
     bal: prevBal,
     weth: prevWeth,
     wncg: prevWncg,
-  } = usePrevious(tokenPrices) || {}
+  } = usePrevious(data) || {}
 
   useEffect(() => {
     if (prevBal !== bal) dispatch(setBalPrice(bal))
