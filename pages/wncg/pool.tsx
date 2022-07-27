@@ -5,7 +5,7 @@ import clsx from 'clsx'
 import styles from 'styles/Pool.module.scss'
 
 import { getIsDesktop } from 'app/states/mediaQuery'
-import { useAppSelector, usePool } from 'hooks'
+import { useAppSelector, usePool, useTokenPrices } from 'hooks'
 
 import Effects from 'components/Effects'
 import PoolCharts from 'components/pool/Charts'
@@ -14,6 +14,7 @@ import PoolComposition from 'components/pool/PoolComposition'
 import PoolRecentTrades from 'components/pool/RecentTrades'
 
 const WncgPool: NextPage = () => {
+  useTokenPrices()
   usePool()
 
   const isDesktop = useAppSelector(getIsDesktop)

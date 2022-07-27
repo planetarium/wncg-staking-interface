@@ -1,5 +1,64 @@
 .poolComposition {
-  height: 100px;
+  margin-bottom: 50px;
+}
+
+.title {
+  @include textStyle(16, 700);
   margin-bottom: 20px;
-  background-color: blue;
+}
+
+.tableWrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.table {
+  @include textStyle(16, 400);
+  min-width: 100%;
+
+  th,
+  td {
+    text-align: right;
+    padding-left: 20px;
+
+    &:first-child {
+      padding-left: 0;
+      text-align: left;
+    }
+  }
+
+  th {
+    @include textStyle(14, 700);
+    height: 40px;
+  }
+
+  td {
+    @include textStyle(16, 400);
+    height: 50px;
+  }
+}
+
+.symbol {
+  @include flexbox(start);
+
+  strong {
+    @include textStyle(16, 400);
+    text-transform: uppercase;
+  }
+
+  .externalLink {
+    @include flexbox;
+    width: 24px;
+    height: 24px;
+
+    svg {
+      width: 20px;
+      height: 20px;
+      color: $gray-3;
+    }
+  }
+}
+
+.token {
+  margin-right: 8px;
 }

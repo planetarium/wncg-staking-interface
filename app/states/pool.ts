@@ -22,7 +22,10 @@ const poolSlice = createSlice({
 export const { setPool } = poolSlice.actions
 export default poolSlice.reducer
 
-// Selector
+// Selectors
 export function getPool(state: RootState): Pool | null {
   return state.pool.pool
+}
+export function getPoolTokens(state: RootState): PoolToken[] {
+  return state.pool.pool?.tokens || []
 }
