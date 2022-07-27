@@ -1,6 +1,9 @@
 .poolCharts {
-  color: $black;
-  height: 100px;
+  padding: 30px;
   margin-bottom: 20px;
-  background-color: red;
+}
+
+.title {
+  @include textStyle(16, 700);
+  margin-bottom: 20px;
 }
