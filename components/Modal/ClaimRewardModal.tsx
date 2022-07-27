@@ -1,7 +1,5 @@
 import { MouseEvent, useCallback, useEffect, useState } from 'react'
 import { useMount } from 'react-use'
-import Image from 'next/image'
-import clsx from 'clsx'
 import styles from './ClaimRewardModal.module.scss'
 
 import { ModalCategory } from 'app/states/modal'
@@ -24,7 +22,7 @@ import {
 
 import { Button } from 'components/Button'
 import { CountUp } from 'components/CountUp'
-import { Icon } from 'components/Icon'
+import { TokenIcon } from 'components/TokenIcon'
 
 type ClaimLoading = 'all' | 'bal' | 'wncg' | null
 
@@ -124,15 +122,7 @@ export function ClaimRewardModal() {
       <dl className={styles.detail}>
         <div className={styles.detailItem}>
           <dt>
-            <span className={clsx(styles.token, styles.wncg)} title="WNCG">
-              <Image
-                src="/img-wncg.png"
-                layout="fill"
-                objectFit="contain"
-                priority
-                alt="WNCG"
-              />
-            </span>
+            <TokenIcon className={styles.token} symbol="wncg" />
             <strong className="hidden">WNCG</strong>
           </dt>
           <dd>
@@ -167,9 +157,7 @@ export function ClaimRewardModal() {
 
         <div className={styles.detailItem}>
           <dt>
-            <span className={clsx(styles.token, styles.balancer)} title="BAL">
-              <Icon id="balancer" />
-            </span>
+            <TokenIcon className={styles.token} symbol="bal" />
             <strong className="hidden">BAL</strong>
           </dt>
           <dd>

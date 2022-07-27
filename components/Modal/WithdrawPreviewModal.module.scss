@@ -55,31 +55,9 @@
   @include inlineFlexbox;
   flex-grow: 0;
   flex-shrink: 0;
-  position: relative;
-  width: 22px;
-  height: 22px;
-  overflow: hidden;
+  width: 22px !important;
+  height: 22px !important;
   border: 1px solid $white;
-  border-radius: 50%;
-
-  &.balancer {
-    @include imageContainer(22px);
-    border: 1px solid $gray-2;
-  }
-
-  &.ether {
-    background-color: $ethereum;
-
-    svg {
-      width: 12px;
-      height: auto;
-    }
-  }
-
-  &.wncg {
-    @include imageContainer(22px);
-    background-color: $white;
-  }
 }
 
 .usd {

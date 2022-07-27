@@ -1,0 +1,30 @@
+.token {
+  @include flexbox;
+  width: 30px;
+  height: 30px;
+  overflow: hidden;
+  border-radius: 50%;
+
+  &.bal {
+    background-color: $white;
+
+    svg {
+      width: 100%;
+      height: auto;
+    }
+  }
+
+  &.weth {
+    background-color: $ethereum;
+
+    svg {
+      width: 60%;
+      height: auto;
+    }
+  }
+
+  &.wncg {
+    @include imageContainer(30px);
+    background-color: $white;
+  }
+}
