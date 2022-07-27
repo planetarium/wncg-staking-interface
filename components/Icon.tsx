@@ -2,6 +2,7 @@ type Icon =
   | 'alert'
   | 'approximate'
   | 'arrowRightUp'
+  | 'arrowRight'
   | 'beta'
   | 'bin'
   | 'check'
