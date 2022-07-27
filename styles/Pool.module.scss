@@ -36,7 +36,10 @@
     max-width: $max-container-lg;
     display: grid;
     grid-gap: 20px;
-    grid-template-columns: 1fr getColumnWidth($column-lg, 4);
+    grid-template-columns: getColumnWidth($column-lg, 8) getColumnWidth(
+        $column-lg,
+        4
+      );
     grid-template-areas: 'left   right';
 
     .left {
@@ -51,7 +54,10 @@
 
   @include responsive(XL) {
     max-width: $max-container-xl;
-    grid-template-columns: 1fr getColumnWidth($column-xl, 4);
+    grid-template-columns: getColumnWidth($column-xl, 8) getColumnWidth(
+        $column-xl,
+        4
+      );
   }
 }
 
