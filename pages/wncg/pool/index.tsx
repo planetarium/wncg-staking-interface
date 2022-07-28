@@ -5,7 +5,7 @@ import clsx from 'clsx'
 import styles from 'styles/Pool.module.scss'
 
 import { getIsDesktop } from 'app/states/mediaQuery'
-import { useAppSelector, usePool, useTokenPrices } from 'hooks'
+import { useAppSelector } from 'hooks'
 
 import Effects from 'components/Effects'
 import MyPoolBalance from 'components/pool/MyPoolBalance'
@@ -14,15 +14,12 @@ import PoolInvestments from 'components/pool/Investments'
 import PoolRecentTrades from 'components/pool/RecentTrades'
 
 const WncgPool: NextPage = () => {
-  useTokenPrices()
-  usePool()
-
   const isDesktop = useAppSelector(getIsDesktop)
 
   return (
     <>
       <Head>
-        <title>WNCG-WETH Pool / WNCG Staking</title>
+        <title>B-50WNCG-50WETH / WNCG Staking</title>
       </Head>
 
       <main className={styles.main}>

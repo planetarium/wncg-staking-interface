@@ -87,10 +87,15 @@ function MyPoolBalance() {
       <div className={styles.buttonGroup}>
         {isConnected ? (
           <>
-            <Button size="large" fullWidth>
+            <Button href="/wncg/pool/invest" size="large" fullWidth>
               Invest
             </Button>
-            <Button variant="secondary" size="large" fullWidth>
+            <Button
+              href="/wncg/pool/withdraw"
+              variant="secondary"
+              size="large"
+              fullWidth
+            >
               Withdraw
             </Button>
           </>
