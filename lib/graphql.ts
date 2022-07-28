@@ -3,6 +3,7 @@ import { QueryFunctionContext } from 'react-query'
 import { BALANCER_SUBGRAPHS, BPT_POOL_ID } from 'utils/env'
 
 const endpoint = BALANCER_SUBGRAPHS as string
+const itemsPerPage = 5
 
 export async function fetchPoolTokenBalances() {
   const query = gql`
@@ -61,7 +62,7 @@ export async function fetchPoolRecentSwaps({ pageParam = 0 }): Promise<Swap[]> {
         id: "${BPT_POOL_ID}"
       ) {
         address
-        swaps(orderBy: timestamp, orderDirection: desc, first: 5, skip: ${pageParam}) {
+        swaps(orderBy: timestamp, orderDirection: desc, first: ${itemsPerPage}, skip: ${pageParam}) {
           tokenIn
           tokenOut
           tokenAmountIn
@@ -101,7 +102,7 @@ export async function fetchPoolRecentJoinExits({
       joinExits(
         orderBy: timestamp,
         orderDirection: desc,
-        first: 5,
+        first: ${itemsPerPage},
         skip: ${pageParam},
         where: ${where}
       ) {
@@ -117,4 +118,8 @@ export async function fetchPoolRecentJoinExits({
 
   const result = await request(endpoint, query)
   return result?.joinExits || []
+}
+
+export function getNextPageParam<T>(lastPage: T[], pages: T[][]) {
+  return lastPage.length === itemsPerPage ? pages.length * itemsPerPage : false
 }
