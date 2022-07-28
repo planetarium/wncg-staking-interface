@@ -8,7 +8,6 @@ import { getIsDesktop } from 'app/states/mediaQuery'
 import { useAppSelector, usePool, useTokenPrices } from 'hooks'
 
 import Effects from 'components/Effects'
-import PoolCharts from 'components/pool/Charts'
 import MyPoolBalance from 'components/pool/MyPoolBalance'
 import PoolComposition from 'components/pool/PoolComposition'
 import PoolInvestments from 'components/pool/Investments'
@@ -32,7 +31,6 @@ const WncgPool: NextPage = () => {
             <MyPoolBalance />
           </div>
           <div className={styles.left}>
-            <PoolCharts />
             <PoolComposition />
             <PoolInvestments />
             <PoolRecentTrades />
