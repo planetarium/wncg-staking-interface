@@ -1,5 +1,6 @@
-import { Decimal } from 'decimal.js'
 import { BigNumberish, utils } from 'ethers'
+import { Decimal } from 'decimal.js'
+import OldBigNumber from 'bignumber.js'
 
 Decimal.set({
   precision: 20,
@@ -35,6 +36,16 @@ export function etherToWei(amount: string) {
 
 export function weiToEther(amount: BigNumberish) {
   return utils.formatEther(amount)
+}
+
+export function bnum(value: string | number | OldBigNumber): OldBigNumber {
+  const number =
+    typeof value === 'string' || typeof value === 'number'
+      ? sanitizeNumber(value)
+      : OldBigNumber.isBigNumber(value)
+      ? value.toString()
+      : '0'
+  return new OldBigNumber(number)
 }
 
 export default Decimal
