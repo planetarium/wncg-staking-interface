@@ -10,8 +10,8 @@ import { fetchPoolRecentJoinExits, getNextPageParam } from 'lib/graphql'
 import Decimal from 'utils/num'
 import { useAppSelector, useUsd } from 'hooks'
 
-import { TokenIcon } from 'components/TokenIcon'
 import { Checkbox } from 'components/Checkbox'
+import { TokenIcon } from 'components/TokenIcon'
 
 function PoolInvestments() {
   const [showMine, setShowMine] = useState(false)
