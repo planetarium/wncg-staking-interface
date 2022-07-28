@@ -33,6 +33,18 @@
   }
 }
 
+.header {
+  @include flexbox(between);
+}
+
+.checkboxGroup {
+  @include flexbox(end);
+
+  label {
+    margin-left: 8px;
+  }
+}
+
 .title {
   @include textStyle(16, 700);
   margin-bottom: 20px;
