@@ -1,5 +1,6 @@
 import { request, gql } from 'graphql-request'
 import { QueryFunctionContext } from 'react-query'
+
 import { BALANCER_SUBGRAPHS, BPT_POOL_ID } from 'utils/env'
 
 const endpoint = BALANCER_SUBGRAPHS as string

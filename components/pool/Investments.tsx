@@ -19,7 +19,7 @@ function PoolInvestments() {
   const { calculateUsdValue } = useUsd()
   const account = useAppSelector(getAccount)
 
-  const { data, status, fetchNextPage, hasNextPage, isFetchingNextPage } =
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery(
       ['investments', showMine, account],
       fetchPoolRecentJoinExits,
