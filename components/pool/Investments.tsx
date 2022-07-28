@@ -6,7 +6,7 @@ import clsx from 'clsx'
 import styles from './styles/Investments.module.scss'
 
 import { getAccount } from 'app/states/connection'
-import { fetchPoolRecentJoinExits } from 'lib/graphql'
+import { fetchPoolRecentJoinExits, getNextPageParam } from 'lib/graphql'
 import Decimal from 'utils/num'
 import { useAppSelector, useUsd } from 'hooks'
 
@@ -19,12 +19,12 @@ function PoolInvestments() {
   const { calculateUsdValue } = useUsd()
   const account = useAppSelector(getAccount)
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
+  const { data, status, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery(
       ['investments', showMine, account],
       fetchPoolRecentJoinExits,
       {
-        getNextPageParam: (_, pages) => pages.length * 5,
+        getNextPageParam,
         staleTime: 10 * 1_000,
         keepPreviousData: true,
       }
@@ -34,6 +34,10 @@ function PoolInvestments() {
     if (!hasNextPage || isFetchingNextPage) return
     fetchNextPage()
   }
+
+  const isEmpty = data?.pages[0]?.length === 0
+  const isInitialLoad = data == null
+  const showLoadMore = !isInitialLoad && !isEmpty && hasNextPage
 
   function toggleShowMine() {
     if (!account) return
@@ -103,7 +107,25 @@ function PoolInvestments() {
               })
             )}
 
-            {hasNextPage && (
+            {isInitialLoad && (
+              <tr>
+                <td className={styles.empty} colSpan={4}>
+                  Fetching...
+                </td>
+              </tr>
+            )}
+
+            {isEmpty && (
+              <tr>
+                <td className={styles.empty} colSpan={4}>
+                  {showMine
+                    ? "You haven't made any investments in this pool."
+                    : 'No investments'}
+                </td>
+              </tr>
+            )}
+
+            {showLoadMore && (
               <tr>
                 <td
                   className={styles.loadMore}
@@ -111,7 +133,7 @@ function PoolInvestments() {
                   onClick={loadMore}
                   role="button"
                 >
-                  {isFetchingNextPage ? 'Loading...' : 'Load More'}
+                  {isFetchingNextPage ? 'Fetching...' : 'Load More'}
                 </td>
               </tr>
             )}

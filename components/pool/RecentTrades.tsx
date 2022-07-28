@@ -4,7 +4,7 @@ import { useInfiniteQuery } from 'react-query'
 import { formatDistanceToNow } from 'date-fns'
 import styles from './styles/RecentTrades.module.scss'
 
-import { fetchPoolRecentSwaps } from 'lib/graphql'
+import { fetchPoolRecentSwaps, getNextPageParam } from 'lib/graphql'
 import { getSymbolFromAddress } from 'utils/address'
 import { truncateAddress } from 'utils/string'
 
@@ -15,7 +15,7 @@ import { TokenIcon } from 'components/TokenIcon'
 function PoolRecentTrades() {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery(['recentSwaps'], fetchPoolRecentSwaps, {
-      getNextPageParam: (_, pages) => pages.length * 5,
+      getNextPageParam,
       staleTime: 10 * 1_000,
       keepPreviousData: true,
     })
@@ -24,6 +24,10 @@ function PoolRecentTrades() {
     if (!hasNextPage || isFetchingNextPage) return
     fetchNextPage()
   }
+
+  const isEmpty = data?.pages[0]?.length === 0
+  const isInitialLoad = data == null
+  const showLoadMore = !isInitialLoad && !isEmpty && hasNextPage
 
   return (
     <section className={styles.poolRecentTrades}>
@@ -97,7 +101,24 @@ function PoolRecentTrades() {
                 )
               })
             )}
-            {hasNextPage && (
+
+            {isInitialLoad && (
+              <tr>
+                <td className={styles.empty} colSpan={4}>
+                  Fetching...
+                </td>
+              </tr>
+            )}
+
+            {isEmpty && (
+              <tr>
+                <td className={styles.empty} colSpan={4}>
+                  No swaps in this pool.
+                </td>
+              </tr>
+            )}
+
+            {showLoadMore && (
               <tr>
                 <td
                   className={styles.loadMore}
@@ -105,7 +126,7 @@ function PoolRecentTrades() {
                   onClick={loadMore}
                   role="button"
                 >
-                  {isFetchingNextPage ? 'Loading...' : 'Load More'}
+                  {isFetchingNextPage ? 'Fetching...' : 'Load More'}
                 </td>
               </tr>
             )}
