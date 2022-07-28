@@ -44,6 +44,13 @@ function PoolInvestments() {
     setShowMine((prev) => !prev)
   }
 
+  useEffect(() => {
+    setFilter(false)
+    setSkip(0)
+    setInvestments([])
+    setTimeout(refetch, 0)
+  }, [account, refetch])
+
   return (
     <section className={styles.poolInvestments}>
       <header className={styles.header}>
