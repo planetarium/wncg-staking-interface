@@ -5,30 +5,57 @@ import { formatDistanceToNow } from 'date-fns'
 import clsx from 'clsx'
 import styles from './styles/Investments.module.scss'
 
+import { getAccount } from 'app/states/connection'
 import { fetchPoolRecentJoinExits } from 'lib/graphql'
 import Decimal from 'utils/num'
-import { useUsd } from 'hooks'
+import { useAppSelector, useUsd } from 'hooks'
 
 import { TokenIcon } from 'components/TokenIcon'
+import { Checkbox } from 'components/Checkbox'
 
 function PoolInvestments() {
+  const [showMine, setShowMine] = useState(false)
+
   const { calculateUsdValue } = useUsd()
+  const account = useAppSelector(getAccount)
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useInfiniteQuery(['investments'], fetchPoolRecentJoinExits, {
-      getNextPageParam: (_, pages) => pages.length * 5,
-      staleTime: 10 * 1_000,
-      keepPreviousData: true,
-    })
+    useInfiniteQuery(
+      ['investments', showMine, account],
+      fetchPoolRecentJoinExits,
+      {
+        getNextPageParam: (_, pages) => pages.length * 5,
+        staleTime: 10 * 1_000,
+        keepPreviousData: true,
+      }
+    )
 
   function loadMore() {
     if (!hasNextPage || isFetchingNextPage) return
     fetchNextPage()
   }
 
+  function toggleShowMine() {
+    if (!account) return
+    setShowMine((prev) => !prev)
+  }
+
   return (
     <section className={styles.poolInvestments}>
-      <h3 className={styles.title}>Investments</h3>
+      <header className={styles.header}>
+        <h3 className={styles.title}>Investments</h3>
+
+        {account && (
+          <div className={styles.checkboxGroup}>
+            <Checkbox
+              id="showMyInvestments"
+              checked={showMine}
+              onChange={toggleShowMine}
+            />
+            <label htmlFor="showMyInvestments">Show my investments</label>
+          </div>
+        )}
+      </header>
 
       <div className={styles.tableWrapper}>
         <table className={styles.table}>

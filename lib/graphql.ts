@@ -1,4 +1,5 @@
 import { request, gql } from 'graphql-request'
+import { QueryFunctionContext } from 'react-query'
 import { BALANCER_SUBGRAPHS, BPT_POOL_ID } from 'utils/env'
 
 const endpoint = BALANCER_SUBGRAPHS as string
@@ -81,7 +82,20 @@ export async function fetchPoolRecentSwaps({ pageParam = 0 }): Promise<Swap[]> {
 
 export async function fetchPoolRecentJoinExits({
   pageParam = 0,
-}): Promise<JoinExit[]> {
+  queryKey,
+}: QueryFunctionContext): Promise<JoinExit[]> {
+  const [, showMine, account] = queryKey || []
+
+  const where =
+    showMine && !!account
+      ? `{
+    pool: "${BPT_POOL_ID}",
+    user: "${account}"
+  }`
+      : `{
+    pool: "${BPT_POOL_ID}"
+  }`
+
   const query = gql`
     query {
       joinExits(
@@ -89,9 +103,7 @@ export async function fetchPoolRecentJoinExits({
         orderDirection: desc,
         first: 5,
         skip: ${pageParam},
-        where: {
-          pool: "${BPT_POOL_ID}"
-        }
+        where: ${where}
       ) {
         id
         type
