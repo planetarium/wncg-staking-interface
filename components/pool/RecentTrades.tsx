@@ -8,8 +8,8 @@ import { fetchPoolRecentSwaps, getNextPageParam } from 'lib/graphql'
 import { getSymbolFromAddress } from 'utils/address'
 import { truncateAddress } from 'utils/string'
 
-import { Jazzicon } from 'components/Jazzicon'
 import { Icon } from 'components/Icon'
+import { Jazzicon } from 'components/Jazzicon'
 import { TokenIcon } from 'components/TokenIcon'
 
 function PoolRecentTrades() {
