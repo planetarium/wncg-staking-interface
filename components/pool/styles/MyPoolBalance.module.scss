@@ -15,6 +15,7 @@
 }
 
 .detailItem {
+  @include flexbox(between);
   margin-bottom: 20px;
 
   .token {
@@ -37,8 +38,23 @@
     }
   }
 
+  .usd {
+    @include inlineFlexbox(start);
+    @include textStyle(12, 500);
+    margin-top: 2px;
+    padding-right: 4px;
+    color: $gray-3;
+  }
+
   dt {
     @include flexbox(start);
+    white-space: nowrap;
+  }
+
+  dd {
+    @include flexbox(center, end);
+    flex-direction: column;
+    text-align: right;
   }
 }
 

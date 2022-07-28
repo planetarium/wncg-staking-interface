@@ -1,28 +1,45 @@
-import { memo } from 'react'
+import { memo, useMemo } from 'react'
+import NumberFormat from 'react-number-format'
 import styles from './styles/MyPoolBalance.module.scss'
 
+import { getBalance } from 'app/states/bpt'
 import { getIsConnected } from 'app/states/connection'
-import { getPoolTokens } from 'app/states/pool'
-import { useAppSelector, useConnection } from 'hooks'
+import { getPool, getPoolTokens } from 'app/states/pool'
+import CalculatorService from 'lib/calculator'
+import { useAppSelector, useConnection, useUsd } from 'hooks'
 
 import { Button } from 'components/Button'
 import { TokenIcon } from 'components/TokenIcon'
 
 function MyPoolBalance() {
   const { connect } = useConnection()
+  const { calculateUsdValue } = useUsd()
 
   const tokens = useAppSelector(getPoolTokens)
+  const pool = useAppSelector(getPool)
+  const bptBalance = useAppSelector(getBalance)
   const isConnected = useAppSelector(getIsConnected)
+
+  const calculator = useMemo(() => {
+    if (!pool) return null
+    return new CalculatorService(pool, bptBalance, 'exit')
+  }, [bptBalance, pool])
+
+  const propAmounts = calculator?.propAmountsGiven(bptBalance, 0, 'send')
+    .receive || ['0', '0']
 
   return (
     <section className={styles.myPoolBalance}>
       <h3 className={styles.title}>My Pool Balance</h3>
 
       <dl className={styles.details}>
-        {tokens.map((token) => {
+        {tokens.map((token, i) => {
           const symbol = (
             token.symbol === 'WBTC' ? 'WNCG' : token.symbol
           ).toLowerCase() as 'wncg' | 'weth'
+          const amount = propAmounts[i]
+          const amountUsdValue = calculateUsdValue(symbol, amount)
+
           return (
             <div
               className={styles.detailItem}
@@ -37,7 +54,31 @@ function MyPoolBalance() {
                   <span>{token.name}</span>
                 </div>
               </dt>
-              <dd></dd>
+              <dd>
+                {isConnected ? (
+                  <>
+                    <NumberFormat
+                      value={amount}
+                      displayType="text"
+                      thousandSeparator
+                      decimalScale={4}
+                    />
+                    <NumberFormat
+                      className={styles.usd}
+                      value={amountUsdValue}
+                      displayType="text"
+                      thousandSeparator
+                      decimalScale={2}
+                      prefix="$"
+                    />
+                  </>
+                ) : (
+                  <>
+                    <span>-</span>
+                    <span className={styles.usd}>$-</span>
+                  </>
+                )}
+              </dd>
             </div>
           )
         })}
