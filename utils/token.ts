@@ -33,3 +33,6 @@ export function getTokenInfo(address: string) {
     (t) => t.address.toLowerCase() === address.toLowerCase()
   )
 }
+
+export const wethAddress = WETH_ADDRESS
+export const wncgAddress = IS_ETHEREUM ? WNCG_ADDRESS : WBTC_ADDRESS

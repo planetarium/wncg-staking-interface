@@ -6,7 +6,13 @@ import styles from './styles/StakingPageWrapper.module.scss'
 
 import { getShowAlert } from 'app/states/connection'
 import { getIsDesktop } from 'app/states/mediaQuery'
-import { useAppSelector, usePool, usePoolBalances, useTokenPrices } from 'hooks'
+import {
+  useAppSelector,
+  usePool,
+  usePoolBalances,
+  useTokenPrices,
+  useUserBalances,
+} from 'hooks'
 
 import Effects from 'components/Effects'
 
@@ -20,6 +26,7 @@ function StakingPageWrapper({ children, showBg }: StakingPageWrapperProps) {
   usePool()
   usePoolBalances()
   useTokenPrices()
+  useUserBalances()
 
   const isDesktop = useAppSelector(getIsDesktop)
   const showAlert = useAppSelector(getShowAlert(() => pathname === '/wncg'))

@@ -1,4 +1,4 @@
-export const bptAbi = [
+export const tokenAbi = [
   'constructor(string symbol, string name)',
   'function allowance(address owner, address spender) view returns (uint allowance)',
   'function balanceOf(address owner) view returns (uint balance)',

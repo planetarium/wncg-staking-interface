@@ -6,7 +6,7 @@ import { getAccount, getIsValidNetwork } from 'app/states/connection'
 import { getBptContractAddress } from 'app/states/contract'
 import { setTotalBptSupply } from 'app/states/token'
 import { addTx, TransactionAction } from 'app/states/transaction'
-import { bptAbi } from 'lib/abis'
+import { tokenAbi } from 'lib/abis'
 import { handleError } from 'utils/error'
 import { weiToEther } from 'utils/num'
 import { useProvider } from './useProvider'
@@ -26,7 +26,7 @@ export function useBpt() {
     if (!provider || !isValidNetwork || !bptAddress || !account) {
       return null
     }
-    return new Contract(bptAddress, bptAbi, provider.getSigner(account))
+    return new Contract(bptAddress, tokenAbi, provider.getSigner(account))
   }, [account, bptAddress, isValidNetwork, provider])
 
   const allowance = useCallback(async () => {
