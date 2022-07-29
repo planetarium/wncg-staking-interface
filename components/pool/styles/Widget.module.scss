@@ -1,0 +1,70 @@
+.title {
+  @include textStyle(16, 700);
+  margin-bottom: 20px;
+}
+
+.detailItem {
+  @include flexbox(between);
+  padding: 10px 0;
+
+  .usd {
+    @include inlineFlexbox(start);
+    @include textStyle(12, 500);
+    margin-top: 2px;
+    color: $gray-3;
+  }
+
+  dt,
+  dd {
+    @include flexbox(center, start);
+    flex-direction: column;
+  }
+
+  dt {
+    @include textStyle(13, 700);
+  }
+
+  dd {
+    @include textStyle(14, 700);
+    text-align: right;
+  }
+
+  dt {
+    span {
+      @include textStyle(13, 400);
+      padding-left: 2px;
+    }
+  }
+
+  dd {
+    text-align: right;
+    align-items: flex-end;
+  }
+
+  @include responsive(MD) {
+    .usd {
+      @include textStyle(13);
+    }
+
+    dt {
+      span {
+        @include textStyle(14);
+      }
+    }
+  }
+}
+
+.total {
+  @include flexbox(between);
+  padding: 16px 0;
+  margin-top: 16px - 10px;
+  border-top: 1px solid $gray-5;
+
+  dt {
+    @include textStyle(16, 700);
+  }
+
+  dd {
+    @include textStyle(16, 700);
+  }
+}
