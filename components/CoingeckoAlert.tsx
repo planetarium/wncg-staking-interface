@@ -28,7 +28,10 @@ export function CoingeckoAlert() {
   const { pathname } = useRouter()
   const isPriceInvalid = useAppSelector(getIsPriceInvalid)
   const showNetworkAlert = useAppSelector(getShowNetworkAlert)
-  const showAlert = pathname === '/wncg' && !showNetworkAlert && isPriceInvalid
+
+  const isStakingPage =
+    pathname === '/wncg' || pathname.startsWith('/wncg/pool')
+  const showAlert = isStakingPage && !showNetworkAlert && isPriceInvalid
 
   function refresh() {
     window?.location.reload()

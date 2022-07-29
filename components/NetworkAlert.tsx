@@ -27,7 +27,10 @@ export function NetworkAlert() {
   const { switchToMainnet } = useConnection()
   const { pathname } = useRouter()
   const showNetworkAlert = useAppSelector(getShowNetworkAlert)
-  const showAlert = pathname === '/wncg' && showNetworkAlert
+
+  const isStakingPage =
+    pathname === '/wncg' || pathname.startsWith('/wncg/pool')
+  const showAlert = isStakingPage && showNetworkAlert
 
   return (
     <AnimatePresence>
