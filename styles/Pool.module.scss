@@ -1,20 +1,3 @@
-.main {
-  width: 100%;
-  max-width: 100%;
-  min-height: 100vh;
-  padding: #{$gnb-height-sm + 20px} 0 60px;
-  overflow-x: hidden;
-  transition: $transition-network-alert;
-
-  &.withAlert {
-    transform: translateY($network-alert-height-sm);
-  }
-
-  &::-webkit-scrollbar {
-    display: none;
-  }
-}
-
 .container {
   position: relative;
   z-index: 1;
