@@ -26,26 +26,12 @@
 }
 
 .token {
-  @include inlineFlexbox;
   position: relative;
-  width: 16px;
-  height: 16px;
-  overflow: hidden;
+  width: 16px !important;
+  height: 16px !important;
   border: 1px solid $gray-6;
-  border-radius: 50%;
 
-  &.ether {
-    background-color: $ethereum;
-
-    svg {
-      width: 10px;
-      height: auto;
-    }
-  }
-
-  &.wncg {
-    @include imageContainer(16px);
+  &:nth-child(2) {
     margin-left: -4px;
-    background-color: $white;
   }
 }

@@ -2,8 +2,6 @@ import { memo } from 'react'
 import { motion } from 'framer-motion'
 import styles from '../styles/StakeSidebar.module.scss'
 
-import { gaEvent } from 'lib/gtag'
-import { BALANCER_POOL_URL } from 'utils/env'
 import { motionVariants, sidebarTransition } from '../constants'
 
 import { Button } from 'components/Button'
@@ -11,12 +9,6 @@ import { StakeSidebarAdvanced } from './Advanced'
 import { StakeSidebarBalance } from './Balance'
 
 function StakeSidebar() {
-  function handleOpenBalancer() {
-    gaEvent({
-      name: 'open_balancer_pool',
-    })
-  }
-
   return (
     <motion.aside
       initial="initial"
@@ -34,12 +26,7 @@ function StakeSidebar() {
 
       <StakeSidebarBalance />
 
-      <Button
-        href={BALANCER_POOL_URL}
-        onClick={handleOpenBalancer}
-        target="_blank"
-        fullWidth
-      >
+      <Button href="/wncg/pool" fullWidth>
         Get 20WETH-80WNCG
       </Button>
 

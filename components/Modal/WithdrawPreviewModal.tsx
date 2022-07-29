@@ -1,7 +1,5 @@
 import { useState } from 'react'
 import { toast } from 'react-toastify'
-import Image from 'next/image'
-import clsx from 'clsx'
 import styles from './WithdrawPreviewModal.module.scss'
 
 import { ModalCategory } from 'app/states/modal'
@@ -25,7 +23,7 @@ import {
 
 import { Button } from 'components/Button'
 import { CountUp } from 'components/CountUp'
-import { Icon } from 'components/Icon'
+import { TokenIcon } from 'components/TokenIcon'
 import { CustomToast } from 'components/Toast/CustomToast'
 
 type WithdrawPreviewModalProps = {
@@ -99,18 +97,8 @@ export function WithdrawPreviewModal({
       <dl className={styles.withdrawDetail}>
         <dt>
           <div className={styles.tokens} title="20WETH-80WNCG">
-            <span className={clsx(styles.token, styles.ether)}>
-              <Icon id="ethereumSimple" />
-            </span>
-            <span className={clsx(styles.token, styles.wncg)}>
-              <Image
-                src="/img-wncg.png"
-                layout="fill"
-                objectFit="contain"
-                priority
-                alt=""
-              />
-            </span>
+            <TokenIcon className={styles.token} symbol="weth" />
+            <TokenIcon className={styles.token} symbol="wncg" />
           </div>
           <CountUp {...countUpOption} decimals={8} end={withdrawAmount} />
         </dt>
@@ -129,15 +117,7 @@ export function WithdrawPreviewModal({
       <dl className={styles.claimDetail}>
         <div className={styles.detailItem}>
           <dt>
-            <span className={clsx(styles.token, styles.wncg)} title="WNCG">
-              <Image
-                src="/img-wncg.png"
-                layout="fill"
-                objectFit="contain"
-                priority
-                alt="WNCG"
-              />
-            </span>
+            <TokenIcon className={styles.token} symbol="wncg" />
             <CountUp
               {...countUpOption}
               className={styles.reward}
@@ -159,9 +139,7 @@ export function WithdrawPreviewModal({
 
         <div className={styles.detailItem}>
           <dt>
-            <span className={clsx(styles.token, styles.balancer)} title="BAL">
-              <Icon id="balancer" />
-            </span>
+            <TokenIcon className={styles.token} symbol="bal" />
             <CountUp
               {...countUpOption}
               className={styles.reward}

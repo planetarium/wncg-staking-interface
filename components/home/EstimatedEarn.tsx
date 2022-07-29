@@ -7,7 +7,6 @@ import {
   useState,
 } from 'react'
 import { useIsomorphicLayoutEffect } from 'react-use'
-import Image from 'next/image'
 import store from 'store'
 import clsx from 'clsx'
 import styles from './styles/EstimatedEarn.module.scss'
@@ -18,7 +17,7 @@ import { useUsd } from 'hooks'
 import { useEstimation } from './useEstimation'
 
 import { CountUp } from 'components/CountUp'
-import { Icon } from 'components/Icon'
+import { TokenIcon } from 'components/TokenIcon'
 
 const STORE_OPTION_KEY = `wncgStaking.estimatedEarnOption`
 
@@ -127,15 +126,7 @@ function EstimatedEarn({ amount = '' }: EstimatedEarnProps) {
       <dl className={styles.detail}>
         <div className={styles.detailItem}>
           <dt>
-            <span className={clsx(styles.token, styles.wncg)}>
-              <Image
-                src="/img-wncg.png"
-                layout="fill"
-                objectFit="contain"
-                priority
-                alt="WNCG"
-              />
-            </span>
+            <TokenIcon className={styles.token} symbol="wncg" />
             <strong>WNCG</strong>
           </dt>
           <dd>
@@ -156,9 +147,7 @@ function EstimatedEarn({ amount = '' }: EstimatedEarnProps) {
 
         <div className={styles.detailItem}>
           <dt>
-            <span className={clsx(styles.token, styles.balancer)}>
-              <Icon id="balancer" />
-            </span>
+            <TokenIcon className={styles.token} symbol="bal" />
             <strong>BAL</strong>
           </dt>
           <dd>

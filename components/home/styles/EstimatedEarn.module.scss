@@ -105,15 +105,5 @@
 }
 
 .token {
-  @include flexbox;
-  width: 28px;
-  height: 28px;
   margin-right: 8px;
-  border-radius: 50%;
-  overflow: hidden;
-
-  &.wncg {
-    @include imageContainer(28px);
-    background-color: $white;
-  }
 }

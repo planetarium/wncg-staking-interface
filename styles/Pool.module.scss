@@ -1,0 +1,125 @@
+.main {
+  width: 100%;
+  max-width: 100%;
+  min-height: 100vh;
+  padding: #{$gnb-height-sm + 20px} 0 60px;
+  overflow-x: hidden;
+  transition: $transition-network-alert;
+
+  &.withAlert {
+    transform: translateY($network-alert-height-sm);
+  }
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.container {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: $max-container-sm;
+  padding: 0 20px;
+  margin: 0 auto;
+
+  .right {
+    margin-bottom: 20px;
+  }
+
+  @include responsive(MD) {
+    max-width: $max-container-md;
+    padding: 0;
+  }
+
+  @include responsive(LG) {
+    max-width: $max-container-lg;
+    display: grid;
+    grid-gap: 20px;
+    grid-template-columns: 1fr getColumnWidth($column-lg, 4);
+    grid-template-areas: 'left   right';
+
+    .left {
+      grid-area: left;
+    }
+
+    .right {
+      grid-area: right;
+      margin-bottom: 0;
+    }
+  }
+
+  @include responsive(XL) {
+    max-width: $max-container-xl;
+    grid-template-columns: 1fr getColumnWidth($column-xl, 4);
+  }
+}
+
+.bgWrapper {
+  display: none;
+
+  @include responsive(MD) {
+    display: block;
+  }
+}
+
+.bg {
+  @include imageContainer;
+  position: fixed;
+  z-index: 0;
+  transition: $transition-long;
+
+  &.cash {
+    left: 30%;
+    bottom: -200px;
+    width: 1000px;
+  }
+
+  &.human {
+    left: 57%;
+    bottom: -380px;
+    width: 720px;
+  }
+
+  @include responsive(LG) {
+    &.cash {
+      left: 35%;
+    }
+
+    &.human {
+      left: 40%;
+    }
+  }
+
+  @include responsive(XL) {
+    &.cash {
+      left: 45%;
+    }
+
+    &.human {
+      left: 50%;
+    }
+  }
+
+  @include responsive(1440px) {
+    &.cash {
+      bottom: -220px;
+      width: 1100px;
+    }
+
+    &.human {
+      left: 57%;
+      width: 780px;
+    }
+  }
+
+  @include responsive(1900px) {
+    &.cash {
+      left: 55%;
+    }
+
+    &.human {
+      left: 65%;
+    }
+  }
+}
