@@ -5,6 +5,7 @@ import styles from './styles/Widget.module.scss'
 import { getBalance } from 'app/states/bpt'
 import { getPool, getPoolTokens } from 'app/states/pool'
 import CalculatorService from 'lib/calculator'
+import Decimal from 'utils/num'
 import { useAppSelector, useUsd } from 'hooks'
 
 function MyBalance() {
@@ -44,6 +45,7 @@ function MyBalance() {
           ).toLowerCase() as 'wncg' | 'weth'
           const amount = propAmounts[i]
           const amountUsdValue = calculateUsdValue(symbol, amount)
+          const isAmountLessThanMinAmount = new Decimal(amount).lt(0.0001)
 
           return (
             <div
@@ -55,12 +57,16 @@ function MyBalance() {
                 <span>{token.name}</span>
               </dt>
               <dd>
-                <NumberFormat
-                  value={amount}
-                  displayType="text"
-                  thousandSeparator
-                  decimalScale={4}
-                />
+                {isAmountLessThanMinAmount ? (
+                  '< 0.0001'
+                ) : (
+                  <NumberFormat
+                    value={amount}
+                    displayType="text"
+                    thousandSeparator
+                    decimalScale={4}
+                  />
+                )}
                 <NumberFormat
                   className={styles.usd}
                   value={amountUsdValue}

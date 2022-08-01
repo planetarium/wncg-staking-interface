@@ -30,6 +30,7 @@ function MyWallet({ currentEthType, selectEth }: MyWalletProps) {
   const wncgUsdValue = calculateUsdValue('wncg', wncgBalance)
 
   const isSelectable = !!selectEth
+  const isWncgLessThanMinAmount = new Decimal(wncgBalance).lt(0.0001)
 
   const totalValue = useMemo(() => {
     if (!isSelectable) {
@@ -61,12 +62,16 @@ function MyWallet({ currentEthType, selectEth }: MyWalletProps) {
             <span>Wrapped NCG</span>
           </dt>
           <dd>
-            <NumberFormat
-              value={wncgBalance}
-              displayType="text"
-              thousandSeparator
-              decimalScale={4}
-            />
+            {isWncgLessThanMinAmount ? (
+              '< 0.0001'
+            ) : (
+              <NumberFormat
+                value={wncgBalance}
+                displayType="text"
+                thousandSeparator
+                decimalScale={4}
+              />
+            )}
             <NumberFormat
               className={styles.usd}
               value={wncgUsdValue}
@@ -92,6 +97,9 @@ function MyWallet({ currentEthType, selectEth }: MyWalletProps) {
                 const isEth = token === 'eth'
                 const balance = isEth ? ethBalance : wethBalance
                 const usdValue = isEth ? ethUsdValue : wethUsdValue
+                const isBalanceLessThanMinAmount = new Decimal(balance).lt(
+                  0.0001
+                )
 
                 return (
                   <div
@@ -108,12 +116,16 @@ function MyWallet({ currentEthType, selectEth }: MyWalletProps) {
                       <span>{isEth ? 'Ether' : 'Wrapped Ether'}</span>
                     </dt>
                     <dd>
-                      <NumberFormat
-                        value={balance}
-                        displayType="text"
-                        thousandSeparator
-                        decimalScale={4}
-                      />
+                      {isBalanceLessThanMinAmount ? (
+                        '< 0.0001'
+                      ) : (
+                        <NumberFormat
+                          value={balance}
+                          displayType="text"
+                          thousandSeparator
+                          decimalScale={4}
+                        />
+                      )}
                       <NumberFormat
                         className={styles.usd}
                         value={usdValue}
