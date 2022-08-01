@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import styles from 'styles/form.module.scss'
@@ -8,6 +9,8 @@ import MyWallet from 'components/pool/MyWallet'
 import InvestForm from 'components/pool/InvestForm'
 
 const WncgPoolInvest: NextPage = () => {
+  const [ethType, setEthType] = useState<EthType>('eth')
+
   return (
     <>
       <Head>
@@ -19,7 +22,7 @@ const WncgPoolInvest: NextPage = () => {
           <h1 className="hidden">Invest</h1>
 
           <div className={styles.left}>
-            <MyWallet />
+            <MyWallet currentEthType={ethType} selectEth={setEthType} />
           </div>
           <div className={styles.center}>
             <InvestForm />

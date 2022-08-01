@@ -10,3 +10,5 @@ type TokenFiatPrice = {
 }
 
 type TokenPrice = Record<string, TokenFiatPrice>
+
+type EthType = 'eth' | 'weth'
