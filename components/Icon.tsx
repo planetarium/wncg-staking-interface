@@ -5,6 +5,7 @@ type Icon =
   | 'arrowRight'
   | 'beta'
   | 'bin'
+  | 'caret'
   | 'check'
   | 'checkCircle'
   | 'chevronLeft'
