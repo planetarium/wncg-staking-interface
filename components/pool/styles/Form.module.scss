@@ -1,4 +1,9 @@
 .formSection {
-  height: 200px;
-  background-color: blue;
+  padding: 20px;
+  background-color: rgba($black, 0.9);
+  border-radius: $radius-sm;
+
+  @include responsive(LG) {
+    padding: 30px;
+  }
 }

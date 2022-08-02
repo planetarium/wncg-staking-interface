@@ -11,6 +11,10 @@ import InvestForm from 'components/pool/InvestForm'
 const WncgPoolInvest: NextPage = () => {
   const [ethType, setEthType] = useState<EthType>('eth')
 
+  function selectEth(value: EthType) {
+    setEthType(value)
+  }
+
   return (
     <>
       <Head>
@@ -25,7 +29,7 @@ const WncgPoolInvest: NextPage = () => {
             <MyWallet currentEthType={ethType} selectEth={setEthType} />
           </div>
           <div className={styles.center}>
-            <InvestForm />
+            <InvestForm currentEthType={ethType} selectEth={selectEth} />
           </div>
           <div className={styles.right}>
             <MyBalance />

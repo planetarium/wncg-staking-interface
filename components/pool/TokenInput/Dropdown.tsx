@@ -17,8 +17,8 @@ import { TokenIcon } from 'components/TokenIcon'
 type TokenDropdownProps = {
   currentToken: TokenDropdownSymbol
   id: string
-  selectToken?(value: TokenDropdownSymbol): void
   tokenList: TokenDropdownSymbol[]
+  selectToken?(value: TokenDropdownSymbol): void
 }
 
 export function TokenDropdown({
