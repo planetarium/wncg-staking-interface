@@ -6,12 +6,27 @@ import styles from './styles/TokenIcon.module.scss'
 import { Icon } from './Icon'
 
 type TokenIconProps = {
-  symbol: 'weth' | 'wncg' | 'bal'
+  symbol: 'eth' | 'weth' | 'wncg' | 'bal'
   className?: string
 }
 
 function TokenIcon({ symbol, className }: TokenIconProps) {
   switch (symbol) {
+    case 'bal':
+      return (
+        <span className={clsx(className, styles.token, styles.bal)}>
+          <Icon id="balancer" />
+        </span>
+      )
+
+    case 'eth':
+    case 'weth':
+      return (
+        <span className={clsx(className, styles.token, styles.weth)}>
+          <Icon id="ethereumSimple" />
+        </span>
+      )
+
     case 'wncg':
       return (
         <span className={clsx(className, styles.token, styles.wncg)}>
@@ -24,18 +39,7 @@ function TokenIcon({ symbol, className }: TokenIconProps) {
           />
         </span>
       )
-    case 'weth':
-      return (
-        <span className={clsx(className, styles.token, styles.weth)}>
-          <Icon id="ethereumSimple" />
-        </span>
-      )
-    case 'bal':
-      return (
-        <span className={clsx(className, styles.token, styles.bal)}>
-          <Icon id="balancer" />
-        </span>
-      )
+
     default:
       return null
   }
