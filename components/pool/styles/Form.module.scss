@@ -1,7 +1,14 @@
 .formSection {
-  padding: 20px;
-  background-color: rgba($black, 0.9);
-  border-radius: $radius-sm;
+  form {
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  @include responsive(MD) {
+    padding: 20px;
+    background-color: rgba($black, 0.9);
+    border-radius: $radius-sm;
+  }
 
   @include responsive(LG) {
     padding: 30px;
@@ -14,5 +21,41 @@
 
   .title {
     @include textStyle(18, 700);
+  }
+}
+
+.formSummary {
+  margin-top: 20px;
+  margin-bottom: 20px;
+
+  .warning {
+    dd {
+      @include flexbox(start);
+      color: $red;
+    }
+
+    svg {
+      width: 16px;
+      height: 16px;
+      margin-left: 4px;
+      color: lighten($red, 10);
+    }
+  }
+
+  > div {
+    @include flexbox(start);
+    width: 100%;
+    padding: 4px 0;
+
+    dt {
+      @include textStyle(14, 400);
+      width: 100px;
+    }
+
+    dd {
+      strong {
+        @include textStyle(18, 700);
+      }
+    }
   }
 }
