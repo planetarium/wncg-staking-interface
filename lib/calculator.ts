@@ -107,13 +107,11 @@ export default class CalculatorService {
     }
 
     const types = ['send', 'receive']
-    const fixedAmount = new Decimal(amount).toFixed(4)
     const fixedTokenAddress = this.tokenOf(type, index)
     const fixedToken = getTokenInfo(fixedTokenAddress)
-    const fixedDenormAmount = parseUnits(
-      fixedAmount,
-      fixedToken?.decimals || 18
-    )
+    const fixedTokenDecimals = fixedToken?.decimals || 18
+    const fixedAmount = new Decimal(amount).toFixed(fixedTokenDecimals)
+    const fixedDenormAmount = parseUnits(fixedAmount, fixedTokenDecimals)
     const fixedRatio = this.ratioOf(type, index)
     const amounts = {
       send: this.sendTokens.map(() => ''),
@@ -147,7 +145,7 @@ export default class CalculatorService {
 
     if (this.action === 'join') {
       bptAmount = this.exactTokensInForBptOut(tokenAmounts)
-      if (bptAmount.lt(0)) return bnum(0)
+      if (bptAmount.lte(0)) return bnum(0)
 
       bptZeroPriceImpact = this.bptForTokensZeroPriceImpact(tokenAmounts)
       return bnum(1).minus(bptAmount.div(bptZeroPriceImpact))
