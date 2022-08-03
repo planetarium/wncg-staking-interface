@@ -5,8 +5,10 @@ import { AnimatePresence, motion } from 'framer-motion'
 import clsx from 'clsx'
 import styles from '../styles/TokenInput.module.scss'
 
+import { getIsMobile } from 'app/states/mediaQuery'
 import { IS_ETHEREUM } from 'utils/env'
 import { errorMessageVariants } from 'components/Input/constants'
+import { useAppSelector } from 'hooks'
 import type { TokenDropdownSymbol } from '../constants'
 
 import { TokenBaseInput } from './BaseInput'
@@ -16,31 +18,39 @@ type TokenInputProps = {
   balance: string
   control: Control
   id: string
+  maximized: boolean
   name: string
   rules: Partial<RegisterOptions>
   token: TokenDropdownSymbol
   disabled?: boolean
   error?: string
+  propButton?: boolean
   selectToken?(value: TokenDropdownSymbol): void
   setMaxValue?(e: MouseEvent<HTMLButtonElement>): void
+  setPropAmount?(e: MouseEvent<HTMLButtonElement>): void
   tokenList?: TokenDropdownSymbol[]
 }
 
 export function TokenInput({
   balance,
   control,
+  maximized,
   name,
+  id,
   rules,
   token,
   disabled,
   error,
-  id,
+  propButton,
   selectToken,
   setMaxValue,
+  setPropAmount,
   tokenList = [],
 }: TokenInputProps) {
+  const isMobile = useAppSelector(getIsMobile)
+
   const hasError = !!error
-  const hasMaxButton = !!setMaxValue
+  const showPropButton = propButton && !!setPropAmount
   const precision = !IS_ETHEREUM && token === 'wncg' ? 8 : 18
 
   return (
@@ -67,7 +77,7 @@ export function TokenInput({
         </div>
 
         <div className={styles.balanceGroup}>
-          <span>Balance:</span>
+          <span className={styles.label}>Balance:</span>
           <strong>
             <NumberFormat
               className={styles.balance}
@@ -78,14 +88,23 @@ export function TokenInput({
               value={balance}
             />
           </strong>
-          {hasMaxButton && (
+          <button
+            className={styles.maxButton}
+            type="button"
+            value={name}
+            onClick={setMaxValue}
+            disabled={maximized}
+          >
+            {maximized ? 'Maxed' : 'Max'}
+          </button>
+          {showPropButton && (
             <button
-              className={styles.maxButton}
+              className={styles.propButton}
               type="button"
               value={name}
-              onClick={setMaxValue}
+              onClick={setPropAmount}
             >
-              Max
+              {isMobile ? 'suggestion' : 'proportional suggestion'}
             </button>
           )}
         </div>

@@ -5,6 +5,7 @@ $input-height: 60px;
 $input-padding: 16px;
 
 .tokenInputField {
+  width: 100%;
   margin-bottom: 10px;
 
   &:last-child {
@@ -35,9 +36,14 @@ $input-padding: 16px;
 
 .balanceGroup {
   @include flexbox(start);
+  position: relative;
   width: 100%;
-  padding-bottom: 10px;
+  margin-bottom: 10px;
   white-space: nowrap;
+
+  .label {
+    @include textStyle(13, 400);
+  }
 
   .balance {
     @include textStyle(13, 700);
@@ -45,9 +51,31 @@ $input-padding: 16px;
     margin-left: 8px;
   }
 
+  .maxButton,
+  .propButton {
+    transition: $transition-short;
+
+    &[disabled] {
+      color: $gray-3;
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    &:hover {
+      opacity: 0.5;
+    }
+  }
+
   .maxButton {
     @include textStyle(13, 700);
     margin-left: 8px;
+    color: $primary;
+  }
+
+  .propButton {
+    @include posCenterY;
+    @include textStyle(13, 400);
+    right: 0;
     color: $primary;
   }
 
