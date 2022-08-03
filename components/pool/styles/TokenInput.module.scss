@@ -4,6 +4,14 @@ $dropdown-padding: 4px;
 $input-height: 60px;
 $input-padding: 16px;
 
+.tokenInputField {
+  margin-bottom: 10px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
 .tokenInputGroup {
   width: 100%;
   padding: 0 $input-padding;

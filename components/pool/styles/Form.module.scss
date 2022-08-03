@@ -7,3 +7,12 @@
     padding: 30px;
   }
 }
+
+.header {
+  @include flexbox(between);
+  margin-bottom: 20px;
+
+  .title {
+    @include textStyle(18, 700);
+  }
+}
