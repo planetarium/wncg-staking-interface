@@ -94,7 +94,6 @@ function PoolInvestForm({ currentEthType, selectEth }: PoolInvestFormProps) {
       setValue('wncgAmount', wncgBalance)
       return
     }
-
     setValue('ethAmount', ethBalanceAvailable)
   }
 
@@ -144,6 +143,17 @@ function PoolInvestForm({ currentEthType, selectEth }: PoolInvestFormProps) {
     [isEthMaximized, isWncgMaximized]
   )
 
+  const showPropButton = useMemo(() => {
+    const hasError = !!Object.keys(formState.errors).length
+    const wncg = new Decimal(wncgValue)
+    const eth = new Decimal(ethValue)
+
+    return {
+      wncgAmount: !hasError && wncg.isZero() && !eth.isZero(),
+      ethAmount: !hasError && eth.isZero() && !wncg.isZero(),
+    }
+  }, [ethValue, formState, wncgValue])
+
   useEffect(() => {
     trigger('ethAmount')
   }, [currentEthType, trigger])
@@ -166,7 +176,7 @@ function PoolInvestForm({ currentEthType, selectEth }: PoolInvestFormProps) {
           token="wncg"
           setMaxValue={setMaxValue}
           setPropAmount={setPropAmount}
-          propButton
+          propButton={showPropButton.wncgAmount}
         />
         <TokenInput
           id="ethAmount"
@@ -181,7 +191,7 @@ function PoolInvestForm({ currentEthType, selectEth }: PoolInvestFormProps) {
           tokenList={etherTokenList}
           setMaxValue={setMaxValue}
           setPropAmount={setPropAmount}
-          propButton
+          propButton={showPropButton.ethAmount}
         />
         <InvestFormSummary
           investMax={investMax}

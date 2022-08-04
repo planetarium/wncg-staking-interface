@@ -7,6 +7,7 @@ import styles from '../styles/TokenInput.module.scss'
 
 import { getIsMobile } from 'app/states/mediaQuery'
 import { IS_ETHEREUM } from 'utils/env'
+import Decimal from 'utils/num'
 import { errorMessageVariants } from 'components/Input/constants'
 import { useAppSelector } from 'hooks'
 import type { TokenDropdownSymbol } from '../constants'
@@ -53,6 +54,9 @@ export function TokenInput({
   const showPropButton = propButton && !!setPropAmount
   const precision = !IS_ETHEREUM && token === 'wncg' ? 8 : 18
 
+  const tokenBalance = new Decimal(balance)
+  const lessThanMinAmount = !tokenBalance.isZero() && tokenBalance.lt(0.0001)
+
   return (
     <div className={styles.tokenInputField}>
       <div
@@ -79,14 +83,18 @@ export function TokenInput({
         <div className={styles.balanceGroup}>
           <span className={styles.label}>Balance:</span>
           <strong>
-            <NumberFormat
-              className={styles.balance}
-              decimalScale={precision}
-              displayType="text"
-              isNumericString
-              thousandSeparator={true}
-              value={balance}
-            />
+            {lessThanMinAmount ? (
+              <span className={styles.balance}>&lt; 0.0001</span>
+            ) : (
+              <NumberFormat
+                className={styles.balance}
+                decimalScale={4}
+                displayType="text"
+                isNumericString
+                thousandSeparator={true}
+                value={balance}
+              />
+            )}
           </strong>
           <button
             className={styles.maxButton}
