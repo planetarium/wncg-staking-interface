@@ -30,7 +30,6 @@
 
   .warning {
     dd {
-      @include flexbox(start);
       color: $red;
     }
 
@@ -39,6 +38,23 @@
       height: 16px;
       margin-left: 4px;
       color: lighten($red, 10);
+    }
+  }
+
+  .maxButton {
+    @include textStyle(13, 700);
+    margin-left: 8px;
+    color: $primary;
+    transition: $transition-short;
+
+    &[disabled],
+    &:hover {
+      opacity: 0.5;
+    }
+
+    &[disabled] {
+      cursor: not-allowed;
+      color: $gray-3;
     }
   }
 
@@ -53,6 +69,9 @@
     }
 
     dd {
+      @include flexbox(start);
+      flex-grow: 1;
+
       strong {
         @include textStyle(18, 700);
       }

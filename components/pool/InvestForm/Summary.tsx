@@ -7,11 +7,15 @@ import { bnum } from 'utils/num'
 import { Icon } from 'components/Icon'
 
 type InvestFormSummaryProps = {
+  investMax(): void
+  maximized: boolean
   priceImpact: number
   totalUsdValue: string
 }
 
 export function InvestFormSummary({
+  investMax,
+  maximized,
   priceImpact,
   totalUsdValue,
 }: InvestFormSummaryProps) {
@@ -35,6 +39,15 @@ export function InvestFormSummary({
               prefix="$"
             />
           </strong>
+
+          <button
+            className={styles.maxButton}
+            type="button"
+            onClick={investMax}
+            disabled={maximized}
+          >
+            {maximized ? 'Maxed' : 'Max'}
+          </button>
         </dd>
       </div>
 
