@@ -22,7 +22,7 @@ type PoolInvestFormProps = {
 }
 
 function PoolInvestForm({ currentEthType, selectEth }: PoolInvestFormProps) {
-  const { getPriceImpact } = useInvestMath()
+  const { getPriceImpact, getPropAmounts } = useInvestMath()
   const { calculateUsdValue } = useUsd()
 
   const ethBalance = useAppSelector(getEthBalance)
@@ -35,13 +35,20 @@ function PoolInvestForm({ currentEthType, selectEth }: PoolInvestFormProps) {
     ? new Decimal(ethNetBalance).minus(0.05).toString()
     : ethNetBalance
 
-  const { clearErrors, control, formState, setValue, trigger, watch } =
-    useForm<{
-      wncgAmount: string
-      ethAmount: string
-    }>({
-      mode: 'onBlur',
-    })
+  const {
+    clearErrors,
+    control,
+    formState,
+    getValues,
+    setValue,
+    trigger,
+    watch,
+  } = useForm<{
+    wncgAmount: string
+    ethAmount: string
+  }>({
+    mode: 'onChange',
+  })
 
   const ethValue = sanitizeNumber(watch('ethAmount'))
   const wncgValue = sanitizeNumber(watch('wncgAmount'))
@@ -89,6 +96,21 @@ function PoolInvestForm({ currentEthType, selectEth }: PoolInvestFormProps) {
     }
 
     setValue('ethAmount', ethBalanceAvailable)
+  }
+
+  function setPropAmount(e: MouseEvent<HTMLButtonElement>) {
+    const inputName = e.currentTarget.value as 'wncgAmount' | 'ethAmount'
+    const currentTokenIndex = inputName === 'wncgAmount' ? 0 : 1
+
+    const amounts = [
+      sanitizeNumber(getValues('wncgAmount')),
+      sanitizeNumber(getValues('ethAmount')),
+    ]
+
+    const propAmounts = getPropAmounts(amounts, currentTokenIndex)
+    setValue(inputName, propAmounts[currentTokenIndex])
+
+    setTimeout(() => trigger(inputName), 0)
   }
 
   function investMax() {
@@ -143,6 +165,8 @@ function PoolInvestForm({ currentEthType, selectEth }: PoolInvestFormProps) {
           maximized={isWncgMaximized}
           token="wncg"
           setMaxValue={setMaxValue}
+          setPropAmount={setPropAmount}
+          propButton
         />
         <TokenInput
           id="ethAmount"
@@ -156,6 +180,8 @@ function PoolInvestForm({ currentEthType, selectEth }: PoolInvestFormProps) {
           selectToken={selectEth}
           tokenList={etherTokenList}
           setMaxValue={setMaxValue}
+          setPropAmount={setPropAmount}
+          propButton
         />
         <InvestFormSummary
           investMax={investMax}

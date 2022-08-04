@@ -8,6 +8,7 @@ import { useAppSelector } from 'hooks'
 
 export function useInvestMath() {
   const bptBalance = useAppSelector(getBptBalance)
+
   const pool = useAppSelector(getPool)
 
   const calculator = useMemo(() => {
@@ -36,8 +37,19 @@ export function useInvestMath() {
     [calculator]
   )
 
+  const getPropAmounts = useCallback(
+    (amounts: string[], fixedTokenIndex: number) => {
+      const index = fixedTokenIndex === 1 ? 0 : 1
+      const { send } =
+        calculator?.propAmountsGiven(amounts[index], index, 'send') || {}
+      return send || ['0', '0']
+    },
+    [calculator]
+  )
+
   return {
     getPriceImpact,
+    getPropAmounts,
   }
 }
 
