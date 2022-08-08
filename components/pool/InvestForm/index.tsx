@@ -1,4 +1,4 @@
-import { memo, MouseEvent, useEffect, useMemo } from 'react'
+import { FormEvent, memo, MouseEvent, useEffect, useMemo } from 'react'
 import { Control, FieldValues, useForm } from 'react-hook-form'
 import styles from '../styles/Form.module.scss'
 
@@ -10,6 +10,7 @@ import {
 import Decimal, { sanitizeNumber } from 'utils/num'
 import { useAppSelector, useUsd } from 'hooks'
 import { useInvestMath } from './useInvestMath'
+import { useJoinPool } from './useJoinPool'
 import { etherTokenList } from '../constants'
 
 import { Button } from 'components/Button'
@@ -22,7 +23,8 @@ type PoolInvestFormProps = {
 }
 
 function PoolInvestForm({ currentEthType, selectEth }: PoolInvestFormProps) {
-  const { getPriceImpact, getPropAmounts } = useInvestMath()
+  const { getMinBptOut, getPriceImpact, getPropAmounts } = useInvestMath()
+  const { joinPool } = useJoinPool()
   const { calculateUsdValue } = useUsd()
 
   const ethBalance = useAppSelector(getEthBalance)
@@ -118,6 +120,14 @@ function PoolInvestForm({ currentEthType, selectEth }: PoolInvestFormProps) {
     clearErrors()
   }
 
+  async function handleSubmit(e: FormEvent) {
+    e.preventDefault()
+    const amounts = [wncgValue, ethValue]
+    const minBptOut = getMinBptOut(amounts)
+
+    await joinPool(amounts, minBptOut, currentEthType)
+  }
+
   const priceImpact = useMemo(() => {
     return getPriceImpact([wncgValue, ethValue])
   }, [ethValue, getPriceImpact, wncgValue])
@@ -164,7 +174,7 @@ function PoolInvestForm({ currentEthType, selectEth }: PoolInvestFormProps) {
         <h3 className={styles.title}>Invest in pool</h3>
       </header>
 
-      <form>
+      <form onSubmit={handleSubmit}>
         <TokenInput
           id="wncgAmount"
           name="wncgAmount"

@@ -16,6 +16,13 @@ export function useInvestMath() {
     return new CalculatorService(pool, bptBalance, 'join')
   }, [bptBalance, pool])
 
+  const getMinBptOut = useCallback(
+    (amounts: string[]) => {
+      return calculator?.exactTokensInForBptOut(amounts).toString() || '0'
+    },
+    [calculator]
+  )
+
   const getPriceImpact = useCallback(
     (amounts: string[]) => {
       if (!hasAmounts(amounts)) return 0
@@ -48,6 +55,7 @@ export function useInvestMath() {
   )
 
   return {
+    getMinBptOut,
     getPriceImpact,
     getPropAmounts,
   }
