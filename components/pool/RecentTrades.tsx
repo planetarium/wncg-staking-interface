@@ -1,11 +1,11 @@
 import { memo, useState } from 'react'
 import NumberFormat from 'react-number-format'
 import { useQuery } from 'react-query'
+import { formatDistanceToNow } from 'date-fns'
 import styles from './styles/RecentTrades.module.scss'
 
 import { fetchPoolRecentSwaps } from 'lib/graphql'
 import { getSymbolFromAddress } from 'utils/address'
-import { timeAgo } from 'utils/date'
 import { truncateAddress } from 'utils/string'
 
 import { Jazzicon } from 'components/Jazzicon'
@@ -90,7 +90,11 @@ function PoolRecentTrades() {
                       />
                     </div>
                   </td>
-                  <td>{timeAgo(swap.timestamp)}</td>
+                  <td>
+                    {formatDistanceToNow(swap.timestamp * 1_000, {
+                      addSuffix: true,
+                    })}
+                  </td>
                 </tr>
               )
             })}
