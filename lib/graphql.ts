@@ -53,17 +53,14 @@ export async function fetchPool(): Promise<Pool> {
   return result?.pool
 }
 
-export async function fetchPoolRecentSwaps(
-  skip = 0,
-  count = 5
-): Promise<Swap[]> {
+export async function fetchPoolRecentSwaps({ pageParam = 0 }): Promise<Swap[]> {
   const query = gql`
     query {
       pool(
         id: "${BPT_POOL_ID}"
       ) {
         address
-        swaps(orderBy: timestamp, orderDirection: desc, first: ${count}, skip: ${skip}) {
+        swaps(orderBy: timestamp, orderDirection: desc, first: 5, skip: ${pageParam}) {
           tokenIn
           tokenOut
           tokenAmountIn
