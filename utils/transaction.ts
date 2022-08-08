@@ -12,6 +12,10 @@ export function renderTxTitle(action: TransactionAction) {
       return 'Claim reward'
     case TransactionAction.EarmarkRewards:
       return 'Harvest'
+    case TransactionAction.ExitPool:
+      return 'Withdraw'
+    case TransactionAction.JoinPool:
+      return 'Invest'
     case TransactionAction.Stake:
       return 'Stake'
     case TransactionAction.StartCooldown:

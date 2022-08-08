@@ -8,6 +8,8 @@ export const TransactionAction = {
   ClaimBalRewards: 'ClaimBalRewards',
   ClaimWncgRewards: 'ClaimWncgRewards',
   EarmarkRewards: 'EarmarkRewards',
+  ExitPool: 'ExitPool',
+  JoinPool: 'JoinPool',
   Stake: 'Stake',
   StartCooldown: 'StartCooldown',
   Withdraw: 'Withdraw',
