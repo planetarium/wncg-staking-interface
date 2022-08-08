@@ -6,6 +6,7 @@ import { getBalance } from 'app/states/bpt'
 import { getIsConnected } from 'app/states/connection'
 import { getPool, getPoolTokens } from 'app/states/pool'
 import CalculatorService from 'lib/calculator'
+import Decimal from 'utils/num'
 import { useAppSelector, useConnection, useUsd } from 'hooks'
 
 import { Button } from 'components/Button'
@@ -40,6 +41,10 @@ function MyPoolBalance() {
           const amount = propAmounts[i]
           const amountUsdValue = calculateUsdValue(symbol, amount)
 
+          const tokenAmount = new Decimal(amount)
+          const isAmountLessThanMinAmount =
+            !tokenAmount.isZero() && tokenAmount.lt(0.0001)
+
           return (
             <div
               className={styles.detailItem}
@@ -57,12 +62,16 @@ function MyPoolBalance() {
               <dd>
                 {isConnected ? (
                   <>
-                    <NumberFormat
-                      value={amount}
-                      displayType="text"
-                      thousandSeparator
-                      decimalScale={4}
-                    />
+                    {isAmountLessThanMinAmount ? (
+                      '< 0.0001'
+                    ) : (
+                      <NumberFormat
+                        value={amount}
+                        displayType="text"
+                        thousandSeparator
+                        decimalScale={4}
+                      />
+                    )}
                     <NumberFormat
                       className={styles.usd}
                       value={amountUsdValue}

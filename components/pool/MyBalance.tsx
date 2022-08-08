@@ -45,7 +45,10 @@ function MyBalance() {
           ).toLowerCase() as 'wncg' | 'weth'
           const amount = propAmounts[i]
           const amountUsdValue = calculateUsdValue(symbol, amount)
-          const isAmountLessThanMinAmount = new Decimal(amount).lt(0.0001)
+
+          const tokenAmount = new Decimal(amount)
+          const isAmountLessThanMinAmount =
+            !tokenAmount.isZero() && tokenAmount.lt(0.0001)
 
           return (
             <div

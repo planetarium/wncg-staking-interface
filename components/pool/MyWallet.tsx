@@ -30,7 +30,9 @@ function MyWallet({ currentEthType, selectEth }: MyWalletProps) {
   const wncgUsdValue = calculateUsdValue('wncg', wncgBalance)
 
   const isSelectable = !!selectEth
-  const isWncgLessThanMinAmount = new Decimal(wncgBalance).lt(0.0001)
+  const wncgBalanceAmount = new Decimal(wncgBalance)
+  const isWncgLessThanMinAmount =
+    !wncgBalanceAmount.isZero() && wncgBalanceAmount.lt(0.0001)
 
   const totalValue = useMemo(() => {
     if (!isSelectable) {
@@ -97,9 +99,10 @@ function MyWallet({ currentEthType, selectEth }: MyWalletProps) {
                 const isEth = token === 'eth'
                 const balance = isEth ? ethBalance : wethBalance
                 const usdValue = isEth ? ethUsdValue : wethUsdValue
-                const isBalanceLessThanMinAmount = new Decimal(balance).lt(
-                  0.0001
-                )
+
+                const balanceAmount = new Decimal(balance)
+                const isBalanceLessThanMinAmount =
+                  !balanceAmount.isZero() && balanceAmount.lt(0.0001)
 
                 return (
                   <div
