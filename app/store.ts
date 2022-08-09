@@ -1,7 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit'
 
 import balance from './states/balance'
-import bpt from './states/bpt'
 import connection from './states/connection'
 import contract from './states/contract'
 import mediaQuery from './states/mediaQuery'
@@ -15,7 +14,6 @@ import unstake from './states/unstake'
 export const store = configureStore({
   reducer: {
     balance,
-    bpt,
     connection,
     contract,
     mediaQuery,
