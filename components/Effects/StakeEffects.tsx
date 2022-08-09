@@ -4,9 +4,9 @@ import { Event } from 'ethers'
 import { removeTx, TransactionAction } from 'app/states/transaction'
 import {
   useAppDispatch,
-  useBpt,
   useConfirmations,
   useEventFilter,
+  useFetchPool,
   useProvider,
   useStake,
   useToast,
@@ -16,9 +16,9 @@ import {
 } from 'hooks'
 
 export function StakeEffects() {
-  const { totalSupply } = useBpt()
   const { getConfirmations, setConfirmations } = useConfirmations()
   const { stakedEventFilter } = useEventFilter()
+  const { fetchPool } = useFetchPool()
   const provider = useProvider()
   const { stakedTokenBalance, totalStaked } = useStake()
   const { addToast } = useToast()
@@ -53,7 +53,7 @@ export function StakeEffects() {
 
       stakedTokenBalance()
       fetchBptBalance()
-      totalSupply()
+      fetchPool()
       totalStaked()
       getTimestamps()
     },
@@ -64,10 +64,10 @@ export function StakeEffects() {
       getConfirmations,
       getTimestamps,
       getTransactionReceipt,
+      fetchPool,
       setConfirmations,
       stakedTokenBalance,
       totalStaked,
-      totalSupply,
     ]
   )
 

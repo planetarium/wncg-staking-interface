@@ -1,7 +1,8 @@
 import { useCallback, useMemo } from 'react'
+import { useRecoilValue } from 'recoil'
 
 import { getBptBalance } from 'app/states/balance'
-import { getPool } from 'app/states/pool'
+import { poolState } from 'app/states/pool'
 import CalculatorService from 'lib/calculator'
 import { bnum } from 'utils/num'
 import { useAppSelector } from 'hooks'
@@ -9,7 +10,7 @@ import { useAppSelector } from 'hooks'
 export function useInvestMath() {
   const bptBalance = useAppSelector(getBptBalance)
 
-  const pool = useAppSelector(getPool)
+  const pool = useRecoilValue(poolState)
 
   const calculator = useMemo(() => {
     if (!pool) return null

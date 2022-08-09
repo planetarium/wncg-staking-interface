@@ -5,9 +5,9 @@ import { removeTx, TransactionAction } from 'app/states/transaction'
 
 import {
   useAppDispatch,
-  useBpt,
   useConfirmations,
   useEventFilter,
+  useFetchPool,
   useProvider,
   useReward,
   useStake,
@@ -18,9 +18,9 @@ import {
 } from 'hooks'
 
 export function UnstakeEffects() {
-  const { totalSupply } = useBpt()
   const { getConfirmations, setConfirmations } = useConfirmations()
   const { cooldownEventFilter, withdrawnEventFilter } = useEventFilter()
+  const { fetchPool } = useFetchPool()
   const provider = useProvider()
   const { earnedBal, earnedWncg } = useReward()
   const { stakedTokenBalance, totalStaked } = useStake()
@@ -90,7 +90,7 @@ export function UnstakeEffects() {
       setConfirmations(transactionHash)
       stakedTokenBalance()
       fetchBptBalance()
-      totalSupply()
+      fetchPool()
       totalStaked()
     },
     [
@@ -99,10 +99,10 @@ export function UnstakeEffects() {
       fetchBptBalance,
       getConfirmations,
       getTransactionReceipt,
+      fetchPool,
       setConfirmations,
       stakedTokenBalance,
       totalStaked,
-      totalSupply,
     ]
   )
 
@@ -130,7 +130,7 @@ export function UnstakeEffects() {
       earnedWncg()
       fetchBptBalance()
       stakedTokenBalance()
-      totalSupply()
+      fetchPool()
       totalStaked()
     },
     [
@@ -141,10 +141,10 @@ export function UnstakeEffects() {
       fetchBptBalance,
       getConfirmations,
       getTransactionReceipt,
+      fetchPool,
       setConfirmations,
       stakedTokenBalance,
       totalStaked,
-      totalSupply,
     ]
   )
 

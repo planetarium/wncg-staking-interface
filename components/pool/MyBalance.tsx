@@ -1,19 +1,20 @@
 import { memo, useMemo } from 'react'
 import NumberFormat from 'react-number-format'
+import { useRecoilValue } from 'recoil'
 import styles from './styles/Widget.module.scss'
 
 import { getBptBalance } from 'app/states/balance'
-import { getPool, getPoolTokens } from 'app/states/pool'
+import { poolState } from 'app/states/pool'
 import CalculatorService from 'lib/calculator'
 import Decimal from 'utils/num'
 import { useAppSelector, useUsd } from 'hooks'
 
 function MyBalance() {
   const { calculateUsdValue } = useUsd()
+  const pool = useRecoilValue(poolState)
+  const poolTokens = pool?.tokens || []
 
-  const pool = useAppSelector(getPool)
   const bptBalance = useAppSelector(getBptBalance)
-  const tokens = useAppSelector(getPoolTokens)
 
   const calculator = useMemo(() => {
     if (!pool) return null
@@ -39,7 +40,7 @@ function MyBalance() {
     <section className={styles.myBalance}>
       <h3 className={styles.title}>My Pool Balance</h3>
       <dl className={styles.details}>
-        {tokens.map((token, i) => {
+        {poolTokens.map((token, i) => {
           const symbol = (
             token.symbol === 'WBTC' ? 'WNCG' : token.symbol
           ).toLowerCase() as 'wncg' | 'weth'

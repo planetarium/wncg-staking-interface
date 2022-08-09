@@ -53,6 +53,7 @@ export async function fetchPool(): Promise<Pool> {
   `
 
   const result = await request(endpoint, query)
+  console.log('> Fetch pool')
   return result?.pool
 }
 

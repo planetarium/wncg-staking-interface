@@ -1,17 +1,19 @@
 import { memo } from 'react'
 import NumberFormat from 'react-number-format'
+import { useRecoilValue } from 'recoil'
 import styles from './styles/PoolComposition.module.scss'
 
-import { getPoolTokens } from 'app/states/pool'
+import { poolTokensState } from 'app/states/pool'
 import { getEtherscanUrl } from 'utils/url'
-import { useAppSelector, useUsd } from 'hooks'
+import { useUsd } from 'hooks'
 
 import { Icon } from 'components/Icon'
 import { TokenIcon } from 'components/TokenIcon'
 
 function PoolComposition() {
   const { calculateUsdValue } = useUsd()
-  const tokens = useAppSelector(getPoolTokens)
+
+  const poolTokens = useRecoilValue(poolTokensState)
 
   return (
     <section className={styles.poolComposition}>
@@ -28,7 +30,7 @@ function PoolComposition() {
             </tr>
           </thead>
           <tbody>
-            {tokens.map((token) => {
+            {poolTokens.map((token) => {
               const symbol = (
                 token.symbol === 'WBTC' ? 'WNCG' : token.symbol
               ).toLowerCase() as 'wncg' | 'weth'

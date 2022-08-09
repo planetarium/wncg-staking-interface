@@ -1,10 +1,11 @@
 import { memo, useMemo } from 'react'
 import NumberFormat from 'react-number-format'
+import { useRecoilValue } from 'recoil'
 import styles from './styles/MyPoolBalance.module.scss'
 
+import { poolState } from 'app/states/pool'
 import { getBptBalance } from 'app/states/balance'
 import { getIsConnected } from 'app/states/connection'
-import { getPool, getPoolTokens } from 'app/states/pool'
 import CalculatorService from 'lib/calculator'
 import Decimal from 'utils/num'
 import { useAppSelector, useConnection, useUsd } from 'hooks'
@@ -16,8 +17,8 @@ function MyPoolBalance() {
   const { connect } = useConnection()
   const { calculateUsdValue } = useUsd()
 
-  const tokens = useAppSelector(getPoolTokens)
-  const pool = useAppSelector(getPool)
+  const pool = useRecoilValue(poolState)
+  const poolTokens = pool?.tokens || []
   const bptBalance = useAppSelector(getBptBalance)
   const isConnected = useAppSelector(getIsConnected)
 
@@ -34,7 +35,7 @@ function MyPoolBalance() {
       <h3 className={styles.title}>My Pool Balance</h3>
 
       <dl className={styles.details}>
-        {tokens.map((token, i) => {
+        {poolTokens.map((token, i) => {
           const symbol = (
             token.symbol === 'WBTC' ? 'WNCG' : token.symbol
           ).toLowerCase() as 'wncg' | 'weth'
