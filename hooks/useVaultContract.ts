@@ -6,7 +6,7 @@ import { balancerVaultAbi } from 'lib/abis'
 import { useProvider } from './useProvider'
 import { useAppSelector } from './useRedux'
 
-export function useVault() {
+export function useVaultContract() {
   const account = useAppSelector(getAccount)
   const provider = useProvider()
 

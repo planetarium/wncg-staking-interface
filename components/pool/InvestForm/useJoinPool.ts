@@ -8,10 +8,15 @@ import { BPT_POOL_ID, IS_ETHEREUM } from 'utils/env'
 import { handleError } from 'utils/error'
 import { etherToWei } from 'utils/num'
 import { ethAddress, wethAddress, wncgAddress } from 'utils/token'
-import { useAppDispatch, useAppSelector, useToast, useVault } from 'hooks'
+import {
+  useAppDispatch,
+  useAppSelector,
+  useToast,
+  useVaultContract,
+} from 'hooks'
 
 export function useJoinPool() {
-  const vault = useVault()
+  const vault = useVaultContract()
   const { addToast } = useToast()
 
   const dispatch = useAppDispatch()
