@@ -1,5 +1,4 @@
-import { useCallback, useMemo } from 'react'
-import { Contract } from 'ethers'
+import { useCallback } from 'react'
 import { formatUnits } from 'ethers/lib/utils'
 
 import {
@@ -8,24 +7,21 @@ import {
   setWethBalance,
   setWncgBalance,
 } from 'app/states/balance'
-import { getAccount, getIsValidNetwork } from 'app/states/connection'
-import { getBptContractAddress } from 'app/states/contract'
-import { tokenAbi } from 'lib/abis'
+import { getAccount } from 'app/states/connection'
 import { IS_ETHEREUM } from 'utils/env'
 import { handleError } from 'utils/error'
 import { weiToEther } from 'utils/num'
-import { wethAddress, wncgAddress } from 'utils/token'
+import { useContracts } from './useContracts'
 import { useProvider } from './useProvider'
 import { useAppDispatch, useAppSelector } from './useRedux'
 
 const WNCG_DECIMALS = IS_ETHEREUM ? 18 : 8
 
 export function useUserBalances() {
-  const dispatch = useAppDispatch()
-  const isValidNetwork = useAppSelector(getIsValidNetwork)
-
-  const bptAddress = useAppSelector(getBptContractAddress)
+  const { bptContract, wethContract, wncgContract } = useContracts()
   const provider = useProvider()
+
+  const dispatch = useAppDispatch()
   const account = useAppSelector(getAccount)
 
   const fetchEthBalance = useCallback(async () => {
@@ -39,11 +35,6 @@ export function useUserBalances() {
     }
   }, [account, dispatch, provider])
 
-  const bptContract = useMemo(() => {
-    if (!provider || !isValidNetwork || !account) return null
-    return new Contract(bptAddress, tokenAbi, provider.getSigner(account))
-  }, [account, bptAddress, isValidNetwork, provider])
-
   const fetchBptBalance = useCallback(async () => {
     try {
       const balance = await bptContract?.balanceOf(account)
@@ -55,11 +46,6 @@ export function useUserBalances() {
     }
   }, [account, bptContract, dispatch])
 
-  const wethContract = useMemo(() => {
-    if (!provider || !isValidNetwork || !account) return null
-    return new Contract(wethAddress, tokenAbi, provider.getSigner(account))
-  }, [account, isValidNetwork, provider])
-
   const fetchWethBalance = useCallback(async () => {
     try {
       const balance = await wethContract?.balanceOf(account)
@@ -70,11 +56,6 @@ export function useUserBalances() {
       handleError(error)
     }
   }, [account, dispatch, wethContract])
-
-  const wncgContract = useMemo(() => {
-    if (!provider || !isValidNetwork || !account) return null
-    return new Contract(wncgAddress, tokenAbi, provider.getSigner(account))
-  }, [account, isValidNetwork, provider])
 
   const fetchWncgBalance = useCallback(async () => {
     try {
