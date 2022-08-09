@@ -3,8 +3,6 @@ import type { AxiosResponse } from 'axios'
 import axios from 'lib/axios'
 import { IS_ETHEREUM } from 'utils/env'
 
-type PriceMap = Record<string, number>
-
 export class CoingeckoService {
   fiatCurrency: string
 
@@ -37,7 +35,7 @@ export class CoingeckoService {
     }
   }
 
-  async fetchTokens(symbols: string[]) {
+  async fetchTokenPrices(symbols: string[]) {
     const responses: Promise<AxiosResponse<TokenPrice>>[] = []
 
     symbols.forEach((symb) => {
@@ -51,9 +49,9 @@ export class CoingeckoService {
     return await Promise.all(responses)
   }
 
-  async getTokens(symbols: string[]) {
+  async getTokenPrices(symbols: string[]) {
     try {
-      const results = await this.fetchTokens(symbols)
+      const results = await this.fetchTokenPrices(symbols)
       const priceMap = Object.fromEntries(
         results.map((result) => {
           const [key, value] = Object.entries(result.data)[0]
@@ -62,13 +60,9 @@ export class CoingeckoService {
         })
       )
       return priceMap
-    } catch (error) {
-      console.log('Unable to fetch token prices', symbols, error)
-      const priceMap = symbols.reduce((acc, symb) => {
-        acc[symb] = 0
-        return acc
-      }, {} as PriceMap)
-      return priceMap
+    } catch (error: any) {
+      console.error('Unable to fetch token prices', symbols)
+      throw new Error(error)
     }
   }
 }

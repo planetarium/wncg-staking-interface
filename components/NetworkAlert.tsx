@@ -1,10 +1,8 @@
-import { useRouter } from 'next/router'
 import { AnimatePresence, motion } from 'framer-motion'
 import styles from './styles/Alert.module.scss'
 
-import { getShowNetworkAlert } from 'app/states/connection'
 import { IS_ETHEREUM } from 'utils/env'
-import { useAppSelector, useConnection } from 'hooks'
+import { useAlert, useConnection } from 'hooks'
 
 import { Icon } from './Icon'
 
@@ -24,17 +22,12 @@ const motionVariants = {
 const motionTransition = { ease: 'easeOut', duration: 0.3 }
 
 export function NetworkAlert() {
+  const { showNetworkAlert } = useAlert()
   const { switchToMainnet } = useConnection()
-  const { pathname } = useRouter()
-  const showNetworkAlert = useAppSelector(getShowNetworkAlert)
-
-  const isStakingPage =
-    pathname === '/wncg' || pathname.startsWith('/wncg/pool')
-  const showAlert = isStakingPage && showNetworkAlert
 
   return (
     <AnimatePresence>
-      {showAlert && (
+      {showNetworkAlert && (
         <motion.aside
           className={styles.alert}
           initial="initial"

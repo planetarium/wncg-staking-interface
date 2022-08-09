@@ -1,3 +1,4 @@
+export { useAlert } from './useAlert'
 export { useApr } from './useApr'
 export { useBpt } from './useBpt'
 export { useClaim } from './useClaim'

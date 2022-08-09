@@ -1,12 +1,10 @@
 import { memo, ReactNode } from 'react'
 import Image from 'next/image'
-import { useRouter } from 'next/router'
 import clsx from 'clsx'
 import styles from './styles/StakingPageWrapper.module.scss'
 
-import { getShowAlert } from 'app/states/connection'
 import { getIsDesktop } from 'app/states/mediaQuery'
-import { useAppSelector, useFetchPool } from 'hooks'
+import { useAlert, useAppSelector, useFetchPool } from 'hooks'
 
 import Effects from 'components/Effects'
 
@@ -16,12 +14,10 @@ type StakingPageWrapperProps = {
 }
 
 function StakingPageWrapper({ children, showBg }: StakingPageWrapperProps) {
-  const { pathname } = useRouter()
-
+  const { showAlert } = useAlert()
   useFetchPool()
 
   const isDesktop = useAppSelector(getIsDesktop)
-  const showAlert = useAppSelector(getShowAlert(() => pathname === '/wncg'))
 
   return (
     <>

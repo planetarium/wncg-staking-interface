@@ -2,8 +2,7 @@ import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import store from 'store'
 
 import type { RootState } from 'app/store'
-import { IS_ETHEREUM } from 'utils/env'
-import { getIsPriceInvalid } from './token'
+import { CURRENT_MAINNET } from 'utils/env'
 
 export const ConnectionStatus = {
   NotConnected: 'CONNECTION_STATUS_NOT_CONNECTED',
@@ -12,8 +11,6 @@ export const ConnectionStatus = {
 } as const
 export type ConnectionStatus =
   typeof ConnectionStatus[keyof typeof ConnectionStatus]
-
-const MAINNET = IS_ETHEREUM ? 1 : 42
 
 type ConnectionState = {
   account: string | null
@@ -71,16 +68,12 @@ export function getChainId(state: RootState): number | null {
 export const getIsConnected = createSelector([getStatus], (status) => {
   return status === ConnectionStatus.Connected
 })
+export const getIsMetamaskInstalled = createSelector(
+  [getChainId],
+  (chainId) => {
+    return chainId !== null
+  }
+)
 export const getIsValidNetwork = createSelector([getChainId], (chainId) => {
-  return chainId === MAINNET
+  return chainId !== null && chainId === CURRENT_MAINNET
 })
-export const getShowNetworkAlert = createSelector([getChainId], (chainId) => {
-  return chainId !== null && chainId !== MAINNET
-})
-export const getShowAlert = (getIsStakingPage: () => boolean) =>
-  createSelector(
-    [getShowNetworkAlert, getIsPriceInvalid, getIsStakingPage],
-    (showNetworkAlert, showCoingeckoAlert, isStakingPage) => {
-      return isStakingPage && (showNetworkAlert || showCoingeckoAlert)
-    }
-  )
