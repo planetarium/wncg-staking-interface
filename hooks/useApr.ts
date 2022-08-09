@@ -1,9 +1,9 @@
 import { useMemo } from 'react'
 import { useRecoilValue } from 'recoil'
 
-import { getTotalStaked } from 'app/states/bpt'
 import { poolTokenPriceState } from 'app/states/pool'
 import { getBalEmissionPerSec, getWncgEmissionPerSec } from 'app/states/reward'
+import { getTotalStaked } from 'app/states/stake'
 import Decimal from 'utils/num'
 import { useFetchTokenPrices } from './useFetchTokenPrices'
 import { useAppSelector } from './useRedux'

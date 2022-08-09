@@ -2,9 +2,9 @@ import { memo } from 'react'
 import clsx from 'clsx'
 import styles from './styles/Dashboard.module.scss'
 
-import { getTotalStaked } from 'app/states/bpt'
 import { ModalCategory } from 'app/states/modal'
 import { getEarnedBal, getEarnedWncg } from 'app/states/reward'
+import { getTotalStaked } from 'app/states/stake'
 import { gaEvent } from 'lib/gtag'
 import {
   countUpOption,

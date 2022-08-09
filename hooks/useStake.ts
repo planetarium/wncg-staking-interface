@@ -1,9 +1,8 @@
 import { useCallback } from 'react'
 
-import { setTotalStaked } from 'app/states/bpt'
 import { getAccount } from 'app/states/connection'
 import { setBptAddress } from 'app/states/contract'
-import { setStakedBalance } from 'app/states/stake'
+import { setStakedBalance, setTotalStaked } from 'app/states/stake'
 import { addTx, TransactionAction } from 'app/states/transaction'
 import { handleError } from 'utils/error'
 import Decimal, { etherToWei, sanitizeNumber, weiToEther } from 'utils/num'

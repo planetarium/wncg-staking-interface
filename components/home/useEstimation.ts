@@ -1,9 +1,9 @@
 import { useCallback } from 'react'
 import { useRecoilValue } from 'recoil'
 
-import { getTotalStaked } from 'app/states/bpt'
 import { poolTokenPriceState } from 'app/states/pool'
 import { getBalEmissionPerSec, getWncgEmissionPerSec } from 'app/states/reward'
+import { getTotalStaked } from 'app/states/stake'
 import { assertUnreachable } from 'utils/assertion'
 import Decimal, { sanitizeNumber } from 'utils/num'
 import { useAppSelector, useFetchTokenPrices } from 'hooks'

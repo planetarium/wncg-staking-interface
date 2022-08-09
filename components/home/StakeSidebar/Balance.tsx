@@ -1,8 +1,7 @@
 import styles from '../styles/StakeSidebar.module.scss'
 
 import { getBptBalance } from 'app/states/balance'
-import { getTotalStaked } from 'app/states/bpt'
-import { getStakedBalance } from 'app/states/stake'
+import { getStakedBalance, getTotalStaked } from 'app/states/stake'
 import { countUpOption, usdCountUpOption } from 'utils/countUp'
 import Decimal, { sanitizeNumber } from 'utils/num'
 import { useAppSelector, useUsd } from 'hooks'
