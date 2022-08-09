@@ -13,7 +13,6 @@
 }
 
 .table {
-  @include textStyle(16, 400);
   min-width: 100%;
 
   th,
@@ -28,13 +27,25 @@
   }
 
   th {
-    @include textStyle(14, 700);
-    height: 40px;
+    @include textStyle(12, 700);
+    height: 32px;
   }
 
   td {
-    @include textStyle(16, 400);
-    height: 50px;
+    @include textStyle(14, 400);
+    height: 44px;
+  }
+
+  @include responsive(MD) {
+    th {
+      @include textStyle(14);
+      height: 40px;
+    }
+
+    td {
+      @include textStyle(16);
+      height: 50px;
+    }
   }
 }
 
@@ -42,7 +53,7 @@
   @include flexbox(start);
 
   strong {
-    @include textStyle(16, 400);
+    font-weight: 400;
     text-transform: uppercase;
   }
 

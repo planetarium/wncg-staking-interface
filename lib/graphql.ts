@@ -19,7 +19,7 @@ export async function fetchPoolTokenBalances() {
   return result?.pool?.tokens
 }
 
-export async function fetchPool() {
+export async function fetchPool(): Promise<Pool> {
   const query = gql`
     query {
       pool(
@@ -51,4 +51,30 @@ export async function fetchPool() {
 
   const result = await request(endpoint, query)
   return result?.pool
+}
+
+export async function fetchPoolRecentSwaps({ pageParam = 0 }): Promise<Swap[]> {
+  const query = gql`
+    query {
+      pool(
+        id: "${BPT_POOL_ID}"
+      ) {
+        address
+        swaps(orderBy: timestamp, orderDirection: desc, first: 5, skip: ${pageParam}) {
+          tokenIn
+          tokenOut
+          tokenAmountIn
+          tokenAmountOut
+          valueUSD
+          userAddress {
+            id
+          }
+          timestamp
+        }
+      }
+    }
+  `
+
+  const result = await request(endpoint, query)
+  return result?.pool?.swaps || []
 }
