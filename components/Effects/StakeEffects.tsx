@@ -12,10 +12,11 @@ import {
   useToast,
   useTransaction,
   useUnstake,
+  useUserBalances,
 } from 'hooks'
 
 export function StakeEffects() {
-  const { balanceOf, totalSupply } = useBpt()
+  const { totalSupply } = useBpt()
   const { getConfirmations, setConfirmations } = useConfirmations()
   const { stakedEventFilter } = useEventFilter()
   const provider = useProvider()
@@ -23,6 +24,7 @@ export function StakeEffects() {
   const { addToast } = useToast()
   const { getTransactionReceipt } = useTransaction()
   const { getTimestamps } = useUnstake()
+  const { fetchBptBalance } = useUserBalances()
 
   const dispatch = useAppDispatch()
 
@@ -50,15 +52,15 @@ export function StakeEffects() {
       setConfirmations(transactionHash)
 
       stakedTokenBalance()
-      balanceOf()
+      fetchBptBalance()
       totalSupply()
       totalStaked()
       getTimestamps()
     },
     [
       addToast,
-      balanceOf,
       dispatch,
+      fetchBptBalance,
       getConfirmations,
       getTimestamps,
       getTransactionReceipt,

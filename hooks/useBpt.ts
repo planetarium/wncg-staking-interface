@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react'
 import { constants, Contract } from 'ethers'
 
-import { setBalance, setIsApproved } from 'app/states/bpt'
+import { setIsApproved } from 'app/states/bpt'
 import { getAccount, getIsValidNetwork } from 'app/states/connection'
 import { getBptContractAddress } from 'app/states/contract'
 import { setTotalBptSupply } from 'app/states/token'
@@ -67,17 +67,6 @@ export function useBpt() {
     }
   }, [addToast, contract, dispatch])
 
-  const balanceOf = useCallback(async () => {
-    try {
-      const balance = await contract?.balanceOf(account)
-      if (balance) {
-        dispatch(setBalance(weiToEther(balance)))
-      }
-    } catch (error) {
-      handleError(error)
-    }
-  }, [account, contract, dispatch])
-
   const totalSupply = useCallback(async () => {
     try {
       const supply = await contract?.totalSupply()
@@ -92,7 +81,6 @@ export function useBpt() {
   return {
     allowance,
     approve,
-    balanceOf,
     totalSupply,
   }
 }

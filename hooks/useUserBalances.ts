@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { Contract } from 'ethers'
 import { formatUnits } from 'ethers/lib/utils'
 
@@ -31,9 +31,7 @@ export function useUserBalances() {
   const fetchEthBalance = useCallback(async () => {
     try {
       const balance = await provider?.getBalance(account || '')
-
       if (balance) {
-        console.log('eth', weiToEther(balance.toString()))
         dispatch(setEthBalance(weiToEther(balance.toString())))
       }
     } catch (error) {
@@ -50,7 +48,6 @@ export function useUserBalances() {
     try {
       const balance = await bptContract?.balanceOf(account)
       if (balance) {
-        console.log('bpt', weiToEther(balance.toString()))
         dispatch(setBptBalance(weiToEther(balance.toString())))
       }
     } catch (error) {
@@ -67,7 +64,6 @@ export function useUserBalances() {
     try {
       const balance = await wethContract?.balanceOf(account)
       if (balance) {
-        console.log('weth', weiToEther(balance.toString()))
         dispatch(setWethBalance(weiToEther(balance.toString())))
       }
     } catch (error) {
@@ -84,7 +80,6 @@ export function useUserBalances() {
     try {
       const balance = await wncgContract?.balanceOf(account)
       if (balance) {
-        console.log('wncg', formatUnits(balance, WNCG_DECIMALS).toString())
         dispatch(setWncgBalance(formatUnits(balance, WNCG_DECIMALS).toString()))
       }
     } catch (error) {
@@ -92,19 +87,10 @@ export function useUserBalances() {
     }
   }, [account, dispatch, wncgContract])
 
-  useEffect(() => {
-    fetchEthBalance()
-  }, [fetchEthBalance])
-
-  useEffect(() => {
-    fetchBptBalance()
-  }, [fetchBptBalance])
-
-  useEffect(() => {
-    fetchWethBalance()
-  }, [fetchWethBalance])
-
-  useEffect(() => {
-    fetchWncgBalance()
-  }, [fetchWncgBalance])
+  return {
+    fetchBptBalance,
+    fetchEthBalance,
+    fetchWethBalance,
+    fetchWncgBalance,
+  }
 }

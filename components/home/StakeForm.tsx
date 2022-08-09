@@ -3,7 +3,7 @@ import { Control, FieldValues, useForm } from 'react-hook-form'
 import { motion } from 'framer-motion'
 import styles from './styles/StakeForm.module.scss'
 
-import { getBalance } from 'app/states/bpt'
+import { getBptBalance } from 'app/states/balance'
 import { getIsValidNetwork } from 'app/states/connection'
 import { gaEvent } from 'lib/gtag'
 import Decimal, { sanitizeNumber } from 'utils/num'
@@ -17,7 +17,7 @@ import { StakeSubmit } from './StakeSubmit'
 const minAmount = 1e-18
 
 function StakeForm() {
-  const bptBalance = useAppSelector(getBalance)
+  const bptBalance = useAppSelector(getBptBalance)
   const isValidNetwork = useAppSelector(getIsValidNetwork)
   const { clearErrors, control, formState, setValue, watch } = useForm<{
     stakeAmount: string

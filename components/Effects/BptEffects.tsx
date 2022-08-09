@@ -3,7 +3,7 @@ import { useEffect } from 'react'
 import { useBpt, useStake } from 'hooks'
 
 export function BptEffects() {
-  const { allowance, balanceOf, totalSupply } = useBpt()
+  const { allowance, totalSupply } = useBpt()
   const { stakedToken, totalStaked } = useStake()
 
   useEffect(() => {
@@ -13,10 +13,6 @@ export function BptEffects() {
   useEffect(() => {
     allowance()
   }, [allowance])
-
-  useEffect(() => {
-    balanceOf()
-  }, [balanceOf])
 
   useEffect(() => {
     totalSupply()

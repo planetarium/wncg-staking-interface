@@ -2,7 +2,7 @@ import { memo, useMemo } from 'react'
 import NumberFormat from 'react-number-format'
 import styles from './styles/MyPoolBalance.module.scss'
 
-import { getBalance } from 'app/states/bpt'
+import { getBptBalance } from 'app/states/balance'
 import { getIsConnected } from 'app/states/connection'
 import { getPool, getPoolTokens } from 'app/states/pool'
 import CalculatorService from 'lib/calculator'
@@ -18,7 +18,7 @@ function MyPoolBalance() {
 
   const tokens = useAppSelector(getPoolTokens)
   const pool = useAppSelector(getPool)
-  const bptBalance = useAppSelector(getBalance)
+  const bptBalance = useAppSelector(getBptBalance)
   const isConnected = useAppSelector(getIsConnected)
 
   const calculator = useMemo(() => {

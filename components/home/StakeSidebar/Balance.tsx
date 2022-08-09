@@ -1,6 +1,7 @@
 import styles from '../styles/StakeSidebar.module.scss'
 
-import { getBalance, getTotalStaked } from 'app/states/bpt'
+import { getBptBalance } from 'app/states/balance'
+import { getTotalStaked } from 'app/states/bpt'
 import { getStakedBalance } from 'app/states/stake'
 import { countUpOption, usdCountUpOption } from 'utils/countUp'
 import Decimal, { sanitizeNumber } from 'utils/num'
@@ -11,7 +12,7 @@ import { CountUp } from 'components/CountUp'
 export function StakeSidebarBalance() {
   const { calculateUsdValue } = useUsd()
 
-  const bptBalance = useAppSelector(getBalance)
+  const bptBalance = useAppSelector(getBptBalance)
   const stakedBalance = useAppSelector(getStakedBalance)
   const totalStaked = useAppSelector(getTotalStaked)
 

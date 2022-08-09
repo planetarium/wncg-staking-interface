@@ -5,13 +5,11 @@ import Decimal, { sanitizeNumber } from 'utils/num'
 import { getBptPrice } from './token'
 
 type BptState = {
-  balance: string | null
   isApproved: boolean
   totalStaked: string | null
 }
 
 const INITIAL_STATE: BptState = {
-  balance: null,
   isApproved: false,
   totalStaked: null,
 }
@@ -20,9 +18,6 @@ const bptSlice = createSlice({
   name: '#bpt',
   initialState: INITIAL_STATE,
   reducers: {
-    setBalance(state: BptState, action: PayloadAction<string | null>) {
-      state.balance = action.payload
-    },
     setIsApproved(state: BptState, action: PayloadAction<boolean>) {
       state.isApproved = action.payload
     },
@@ -35,14 +30,10 @@ const bptSlice = createSlice({
   },
 })
 
-export const { setBalance, setIsApproved, setTotalStaked, resetBpt } =
-  bptSlice.actions
+export const { setIsApproved, setTotalStaked, resetBpt } = bptSlice.actions
 export default bptSlice.reducer
 
 // Selectors
-export function getBalance(state: RootState): string {
-  return state.bpt.balance || '0'
-}
 export function getIsApproved(state: RootState): boolean {
   return state.bpt.isApproved
 }

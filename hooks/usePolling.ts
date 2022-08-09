@@ -5,9 +5,10 @@ import { useBpt } from './useBpt'
 import { useReward } from './useReward'
 import { useStake } from './useStake'
 import { useUnstake } from './useUnstake'
+import { useUserBalances } from './useUserBalances'
 
 export function usePolling() {
-  const { balanceOf, totalSupply } = useBpt()
+  const { totalSupply } = useBpt()
   const {
     earmarkIncentive,
     earnedBal,
@@ -17,12 +18,21 @@ export function usePolling() {
   } = useReward()
   const { stakedTokenBalance, totalStaked } = useStake()
   const { getTimestamps, unstakeWindow } = useUnstake()
+  const {
+    fetchBptBalance,
+    fetchEthBalance,
+    fetchWethBalance,
+    fetchWncgBalance,
+  } = useUserBalances()
 
   const refetch = useCallback(() => {
-    balanceOf()
     earmarkIncentive()
     earnedBal()
     earnedWncg()
+    fetchBptBalance()
+    fetchEthBalance()
+    fetchWethBalance()
+    fetchWncgBalance()
     getBalEmissionPerSec()
     getWncgEmissionPerSec()
     getTimestamps()
@@ -31,10 +41,13 @@ export function usePolling() {
     totalStaked()
     unstakeWindow()
   }, [
-    balanceOf,
     earmarkIncentive,
     earnedBal,
     earnedWncg,
+    fetchBptBalance,
+    fetchEthBalance,
+    fetchWethBalance,
+    fetchWncgBalance,
     getBalEmissionPerSec,
     getTimestamps,
     getWncgEmissionPerSec,

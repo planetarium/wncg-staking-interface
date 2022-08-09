@@ -14,10 +14,11 @@ import {
   useToast,
   useTransaction,
   useUnstake,
+  useUserBalances,
 } from 'hooks'
 
 export function UnstakeEffects() {
-  const { balanceOf, totalSupply } = useBpt()
+  const { totalSupply } = useBpt()
   const { getConfirmations, setConfirmations } = useConfirmations()
   const { cooldownEventFilter, withdrawnEventFilter } = useEventFilter()
   const provider = useProvider()
@@ -26,6 +27,7 @@ export function UnstakeEffects() {
   const { addToast } = useToast()
   const { getTransactionReceipt } = useTransaction()
   const { getTimestamps, unstakeWindow } = useUnstake()
+  const { fetchBptBalance } = useUserBalances()
 
   const dispatch = useAppDispatch()
 
@@ -86,16 +88,15 @@ export function UnstakeEffects() {
         })
       }
       setConfirmations(transactionHash)
-
       stakedTokenBalance()
-      balanceOf()
+      fetchBptBalance()
       totalSupply()
       totalStaked()
     },
     [
       addToast,
-      balanceOf,
       dispatch,
+      fetchBptBalance,
       getConfirmations,
       getTransactionReceipt,
       setConfirmations,
@@ -125,20 +126,19 @@ export function UnstakeEffects() {
         })
       }
       setConfirmations(`${transactionHash}_withdrawAndClaim`)
-
-      balanceOf()
       earnedBal()
       earnedWncg()
+      fetchBptBalance()
       stakedTokenBalance()
       totalSupply()
       totalStaked()
     },
     [
       addToast,
-      balanceOf,
       dispatch,
       earnedBal,
       earnedWncg,
+      fetchBptBalance,
       getConfirmations,
       getTransactionReceipt,
       setConfirmations,

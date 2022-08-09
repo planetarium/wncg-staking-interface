@@ -1,4 +1,5 @@
 import { memo } from 'react'
+import { BalanceEffects } from './BalanceEffects'
 import { BaseEffects } from './BaseEffects'
 import { BptEffects } from './BptEffects'
 import { RewardEffects } from './RewardEffects'
@@ -8,6 +9,7 @@ import { UnstakeEffects } from './UnstakeEffects'
 function Effects() {
   return (
     <>
+      <BalanceEffects />
       <BaseEffects />
       <BptEffects />
       <RewardEffects />
