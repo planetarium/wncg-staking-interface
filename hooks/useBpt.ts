@@ -4,11 +4,9 @@ import { constants, Contract } from 'ethers'
 import { setIsApproved } from 'app/states/bpt'
 import { getAccount, getIsValidNetwork } from 'app/states/connection'
 import { getBptContractAddress } from 'app/states/contract'
-import { setTotalBptSupply } from 'app/states/token'
 import { addTx, TransactionAction } from 'app/states/transaction'
 import { tokenAbi } from 'lib/abis'
 import { handleError } from 'utils/error'
-import { weiToEther } from 'utils/num'
 import { useProvider } from './useProvider'
 import { useAppDispatch, useAppSelector } from './useRedux'
 import { useToast } from './useToast'
@@ -67,20 +65,8 @@ export function useBpt() {
     }
   }, [addToast, contract, dispatch])
 
-  const totalSupply = useCallback(async () => {
-    try {
-      const supply = await contract?.totalSupply()
-      if (supply) {
-        dispatch(setTotalBptSupply(weiToEther(supply)))
-      }
-    } catch (error) {
-      error
-    }
-  }, [contract, dispatch])
-
   return {
     allowance,
     approve,
-    totalSupply,
   }
 }
