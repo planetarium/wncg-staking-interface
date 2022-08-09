@@ -3,6 +3,7 @@ import ReactGA from 'react-ga4'
 import { Provider } from 'react-redux'
 import { Hydrate, QueryClient, QueryClientProvider } from 'react-query'
 import { useMount } from 'react-use'
+import { RecoilRoot } from 'recoil'
 import type { AppProps, NextWebVitalsMetric } from 'next/app'
 import { DefaultSeo } from 'next-seo'
 import 'react-toastify/dist/ReactToastify.css'
@@ -31,18 +32,20 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <QueryClientProvider client={queryClient.current}>
       <Hydrate state={pageProps.dehydratedState}>
-        <Provider store={store}>
-          <DefaultSeo {...DEFAULT_SEO} />
-          <CoingeckoAlert />
-          <NetworkAlert />
-          <Gnb />
-          <Component {...pageProps} />
-          <ToastEffects />
-          <Modal />
-          <ToastContainer />
-          <GlobalFooter />
-          <MediaQueryEffects />
-        </Provider>
+        <RecoilRoot>
+          <Provider store={store}>
+            <DefaultSeo {...DEFAULT_SEO} />
+            <CoingeckoAlert />
+            <NetworkAlert />
+            <Gnb />
+            <Component {...pageProps} />
+            <ToastEffects />
+            <Modal />
+            <ToastContainer />
+            <GlobalFooter />
+            <MediaQueryEffects />
+          </Provider>
+        </RecoilRoot>
       </Hydrate>
     </QueryClientProvider>
   )
