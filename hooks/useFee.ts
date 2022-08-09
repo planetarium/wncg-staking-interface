@@ -2,13 +2,13 @@ import { useCallback } from 'react'
 import store from 'store'
 
 import { handleError } from 'utils/error'
-import { useContract } from './useContract'
+import { useStakingContract } from './useStakingContract'
 
 const STORE_EARMARK_INCENTIVE_FEE_KEY = `wncgStaking.earmarkIncentiveFee`
 const STORE_FEE_DENOMINATOR_KEY = `wncgStaking.feeDenominator`
 
 export function useFee() {
-  const contract = useContract()
+  const contract = useStakingContract()
 
   const earmarkIncentiveFee = useCallback(async () => {
     const storedValue = store.get(STORE_EARMARK_INCENTIVE_FEE_KEY)

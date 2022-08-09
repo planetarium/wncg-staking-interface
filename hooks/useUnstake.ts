@@ -11,12 +11,12 @@ import {
 } from 'app/states/unstake'
 import { handleError } from 'utils/error'
 import Decimal, { etherToWei, sanitizeNumber } from 'utils/num'
-import { useContract } from './useContract'
 import { useAppDispatch, useAppSelector } from './useRedux'
+import { useStakingContract } from './useStakingContract'
 import { useToast } from './useToast'
 
 export function useUnstake() {
-  const contract = useContract()
+  const contract = useStakingContract()
   const { addToast } = useToast()
 
   const dispatch = useAppDispatch()

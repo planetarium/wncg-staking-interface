@@ -6,7 +6,7 @@ import { stakingAbi } from 'lib/abis'
 import { useProvider } from './useProvider'
 import { useAppSelector } from './useRedux'
 
-export function useContract() {
+export function useStakingContract() {
   const provider = useProvider()
 
   const account = useAppSelector(getAccount)

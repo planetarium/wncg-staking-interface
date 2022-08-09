@@ -17,9 +17,9 @@ import { addTx, TransactionAction } from 'app/states/transaction'
 import { balRewardAbi } from 'lib/abis'
 import { handleError } from 'utils/error'
 import Decimal, { weiToEther } from 'utils/num'
-import { useContract } from './useContract'
 import { useFee } from './useFee'
 import { useProvider } from './useProvider'
+import { useStakingContract } from './useStakingContract'
 import { useAppDispatch, useAppSelector } from './useRedux'
 import { useToast } from './useToast'
 
@@ -27,7 +27,7 @@ const stakingContractAddress = process.env
   .NEXT_PUBLIC_STAKING_CONTRACT_ADDRESS as string
 
 export function useReward() {
-  const contract = useContract()
+  const contract = useStakingContract()
   const { earmarkIncentiveFee, feeDenominator } = useFee()
   const provider = useProvider()
   const { addToast } = useToast()

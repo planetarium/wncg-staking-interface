@@ -6,12 +6,12 @@ import { setStakedBalance, setTotalStaked } from 'app/states/stake'
 import { addTx, TransactionAction } from 'app/states/transaction'
 import { handleError } from 'utils/error'
 import Decimal, { etherToWei, sanitizeNumber, weiToEther } from 'utils/num'
-import { useContract } from './useContract'
 import { useAppDispatch, useAppSelector } from './useRedux'
+import { useStakingContract } from './useStakingContract'
 import { useToast } from './useToast'
 
 export function useStake() {
-  const contract = useContract()
+  const contract = useStakingContract()
   const { addToast } = useToast()
 
   const dispatch = useAppDispatch()

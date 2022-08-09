@@ -3,12 +3,12 @@ import { useCallback } from 'react'
 import { getEarnedWncg } from 'app/states/reward'
 import { addTx, TransactionAction } from 'app/states/transaction'
 import { etherToWei } from 'utils/num'
-import { useContract } from './useContract'
+import { useStakingContract } from './useStakingContract'
 import { useAppDispatch, useAppSelector } from './useRedux'
 import { useToast } from './useToast'
 
 export function useClaim() {
-  const contract = useContract()
+  const contract = useStakingContract()
   const { addToast } = useToast()
 
   const dispatch = useAppDispatch()
