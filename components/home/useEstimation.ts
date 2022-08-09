@@ -1,19 +1,20 @@
 import { useCallback } from 'react'
+import { useRecoilValue } from 'recoil'
 
 import { getTotalStaked } from 'app/states/bpt'
+import { poolTokenPriceState } from 'app/states/pool'
 import { getBalEmissionPerSec, getWncgEmissionPerSec } from 'app/states/reward'
-import { getBalPrice, getBptPrice, getWncgPrice } from 'app/states/token'
 import { assertUnreachable } from 'utils/assertion'
 import Decimal, { sanitizeNumber } from 'utils/num'
-import { useAppSelector } from 'hooks'
+import { useAppSelector, useFetchTokenPrices } from 'hooks'
 import { calculateApr } from 'hooks/useApr'
 
 export function useEstimation() {
+  const { balPrice, wncgPrice } = useFetchTokenPrices()
+  const bptPrice = useRecoilValue(poolTokenPriceState)
+
   const balEmissionPerSec = useAppSelector(getBalEmissionPerSec)
-  const balPrice = useAppSelector(getBalPrice)
-  const bptPrice = useAppSelector(getBptPrice)
   const wncgEmissionPerSec = useAppSelector(getWncgEmissionPerSec)
-  const wncgPrice = useAppSelector(getWncgPrice)
   const totalStaked = useAppSelector(getTotalStaked)
 
   const getEstimation = useCallback(

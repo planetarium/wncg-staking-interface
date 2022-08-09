@@ -1,19 +1,24 @@
 import { useMemo } from 'react'
+import { useRecoilValue } from 'recoil'
 
-import { getTotalStakedValue } from 'app/states/bpt'
+import { getTotalStaked } from 'app/states/bpt'
+import { poolTokenPriceState } from 'app/states/pool'
 import { getBalEmissionPerSec, getWncgEmissionPerSec } from 'app/states/reward'
-import { getBalPrice, getWncgPrice } from 'app/states/token'
 import Decimal from 'utils/num'
+import { useFetchTokenPrices } from './useFetchTokenPrices'
 import { useAppSelector } from './useRedux'
 
 const YEAR_IN_SECONDS = 60 * 60 * 24 * 365
 
 export function useApr() {
-  const totalStakedValue = useAppSelector(getTotalStakedValue)
+  const { balPrice, wncgPrice } = useFetchTokenPrices()
+  const bptPrice = useRecoilValue(poolTokenPriceState)
+
+  const totalStaked = useAppSelector(getTotalStaked)
   const balEmissionPerSec = useAppSelector(getBalEmissionPerSec)
-  const balPrice = useAppSelector(getBalPrice)
   const wncgEmissionPerSec = useAppSelector(getWncgEmissionPerSec)
-  const wncgPrice = useAppSelector(getWncgPrice)
+
+  const totalStakedValue = new Decimal(totalStaked).mul(bptPrice).toNumber()
 
   const balApr = useMemo(
     () => calculateApr(balEmissionPerSec, balPrice, totalStakedValue),
@@ -33,8 +38,8 @@ export function useApr() {
 
 export function calculateApr(
   emissionRate: string,
-  price: string | number,
-  totalStakedValue: string | number
+  price: number,
+  totalStakedValue: number
 ) {
   const apr = new Decimal(emissionRate)
     .mul(price)

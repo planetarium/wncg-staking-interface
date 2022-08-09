@@ -2,7 +2,6 @@ import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import type { RootState } from 'app/store'
 
 import Decimal, { sanitizeNumber } from 'utils/num'
-import { getBptPrice } from './token'
 
 type BptState = {
   isApproved: boolean
@@ -40,9 +39,3 @@ export function getIsApproved(state: RootState): boolean {
 export function getTotalStaked(state: RootState): string {
   return state.bpt.totalStaked || '0'
 }
-export const getTotalStakedValue = createSelector(
-  [getTotalStaked, getBptPrice],
-  (totalStaked, bptPrice) => {
-    return new Decimal(sanitizeNumber(totalStaked)).mul(bptPrice).toNumber()
-  }
-)

@@ -1,39 +1,38 @@
-import {
-  getBalPrice,
-  getBptPrice,
-  getWethPrice,
-  getWncgPrice,
-} from 'app/states/token'
+import { useRecoilValue } from 'recoil'
+
+import { poolTokenPriceState } from 'app/states/pool'
 import { assertUnreachable } from 'utils/assertion'
 import Decimal, { sanitizeNumber } from 'utils/num'
-import { useAppSelector } from './useRedux'
+import { useFetchTokenPrices } from './useFetchTokenPrices'
 
 type Token = 'bal' | 'bpt' | 'weth' | 'wncg'
 
 export function useUsd() {
-  const balPrice = useAppSelector(getBalPrice)
-  const bptPrice = useAppSelector(getBptPrice)
-  const wethPrice = useAppSelector(getWethPrice)
-  const wncgPrice = useAppSelector(getWncgPrice)
+  const { balPrice, wethPrice, wncgPrice } = useFetchTokenPrices()
+  const bptPrice = useRecoilValue(poolTokenPriceState)
 
   function calculateBal(value: string | number) {
-    if (!balPrice) return 0
-    return new Decimal(sanitizeNumber(value)).mul(balPrice).toNumber()
+    return new Decimal(sanitizeNumber(value))
+      .mul(sanitizeNumber(balPrice))
+      .toNumber()
   }
 
   function calculateBpt(value: string | number) {
-    if (!bptPrice) return 0
-    return new Decimal(sanitizeNumber(value)).mul(bptPrice).toNumber()
+    return new Decimal(sanitizeNumber(value))
+      .mul(sanitizeNumber(bptPrice))
+      .toNumber()
   }
 
   function calculateWeth(value: string | number) {
-    if (!wethPrice) return 0
-    return new Decimal(sanitizeNumber(value)).mul(wethPrice).toNumber()
+    return new Decimal(sanitizeNumber(value))
+      .mul(sanitizeNumber(wethPrice))
+      .toNumber()
   }
 
   function calculateWncg(value: string | number) {
-    if (!wncgPrice) return 0
-    return new Decimal(sanitizeNumber(value)).mul(wncgPrice).toNumber()
+    return new Decimal(sanitizeNumber(value))
+      .mul(sanitizeNumber(wncgPrice))
+      .toNumber()
   }
 
   function calculateUsdValue(token: Token, value: string | number) {
