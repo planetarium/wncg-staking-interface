@@ -1,6 +1,7 @@
 export { useAlert } from './useAlert'
 export { useAllowance } from './useAllowance'
 export { useApr } from './useApr'
+export { useApprove } from './useApprove'
 export { useClaim } from './useClaim'
 export { useConfirmations } from './useConfirmations'
 export { useConnection } from './useConnection'

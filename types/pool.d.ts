@@ -25,3 +25,6 @@ type PoolToken = {
 }
 
 type PoolAction = 'join' | 'exit'
+
+type PoolLpToken = 'bpt'
+type PoolTokenSymbol = 'weth' | 'wncg'
