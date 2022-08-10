@@ -1,7 +1,9 @@
+import { useResetRecoilState } from 'recoil'
 import { providers } from 'ethers'
 import type { ExternalProvider } from '@ethersproject/providers'
 
-import { resetBpt } from 'app/states/bpt'
+import { approvalState } from 'app/states/approval'
+import { resetBalance } from 'app/states/balance'
 import {
   getAccount,
   resetConnection,
@@ -22,6 +24,7 @@ import { useAppDispatch, useAppSelector } from './useRedux'
 export function useConnection() {
   const { addModal, removeModal } = useModal()
 
+  const resetApproval = useResetRecoilState(approvalState)
   const dispatch = useAppDispatch()
   const account = useAppSelector(getAccount)
 
@@ -52,11 +55,13 @@ export function useConnection() {
   }
 
   function disconnect() {
+    dispatch(resetBalance())
     dispatch(resetConnection())
-    dispatch(resetBpt())
     dispatch(resetRewards())
     dispatch(resetStakedBalance())
     dispatch(resetTimestamps())
+    resetApproval()
+
     gaEvent({
       name: 'disconnect_metamask',
       params: {

@@ -31,11 +31,19 @@ const balanceSlice = createSlice({
     setWncgBalance(state: BalanceState, action: PayloadAction<string>) {
       state.wncgBalance = action.payload
     },
+    resetBalance() {
+      return INITIAL_STATE
+    },
   },
 })
 
-export const { setBptBalance, setEthBalance, setWethBalance, setWncgBalance } =
-  balanceSlice.actions
+export const {
+  setBptBalance,
+  setEthBalance,
+  setWethBalance,
+  setWncgBalance,
+  resetBalance,
+} = balanceSlice.actions
 export default balanceSlice.reducer
 
 // Selectors
