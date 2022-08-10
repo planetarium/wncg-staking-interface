@@ -1,4 +1,5 @@
 export { useAlert } from './useAlert'
+export { useAllowance } from './useAllowance'
 export { useApr } from './useApr'
 export { useClaim } from './useClaim'
 export { useConfirmations } from './useConfirmations'

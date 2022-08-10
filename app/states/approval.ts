@@ -1,6 +1,8 @@
 import { atom } from 'recoil'
 
-export const approvalState = atom({
+export type ApprovalTokenSymbol = PoolTokenSymbol | PoolLpToken
+
+export const approvalState = atom<Record<ApprovalTokenSymbol, boolean>>({
   key: '#approval',
   default: {
     bpt: false,
