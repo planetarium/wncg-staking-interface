@@ -9,11 +9,11 @@ import { useProvider } from './useProvider'
 import { useAppSelector } from './useRedux'
 
 export function useContracts() {
-  const isValidNetwork = useAppSelector(getIsValidNetwork)
+  const provider = useProvider()
 
   const account = useAppSelector(getAccount)
   const bptAddress = useAppSelector(getBptContractAddress)
-  const provider = useProvider()
+  const isValidNetwork = useAppSelector(getIsValidNetwork)
 
   const bptContract = useMemo(() => {
     if (!provider || !isValidNetwork || !account) return null

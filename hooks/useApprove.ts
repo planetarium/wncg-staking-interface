@@ -45,7 +45,7 @@ export function useApprove() {
         stakingContractAddress,
         constants.MaxUint256
       )
-      postApproveTransaction(data, 'bpt')
+      postApproveTransaction('bpt', data)
     } catch (error) {
       handleError(error)
     }
@@ -57,7 +57,7 @@ export function useApprove() {
         vaultContractAddress,
         constants.MaxUint256
       )
-      postApproveTransaction(data, 'weth')
+      postApproveTransaction('weth', data)
     } catch (error) {
       handleError(error)
     }
@@ -69,7 +69,7 @@ export function useApprove() {
         vaultContractAddress,
         constants.MaxUint256
       )
-      postApproveTransaction(data, 'wncg')
+      postApproveTransaction('wncg', data)
     } catch (error) {
       handleError(error)
     }

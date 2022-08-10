@@ -45,7 +45,7 @@ export function useStake() {
     [addToast, contract, dispatch]
   )
 
-  const stakedToken = useCallback(async () => {
+  const stakedTokenAddress = useCallback(async () => {
     try {
       const address = await contract?.STAKED_TOKEN()
       if (address) {
@@ -69,7 +69,7 @@ export function useStake() {
 
   return {
     stake,
-    stakedToken,
+    stakedTokenAddress,
     stakedTokenBalance,
     totalStaked,
   }
