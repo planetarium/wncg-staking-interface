@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react'
+import { memo, useCallback, useEffect } from 'react'
 import { Event } from 'ethers'
 
 import { removeTx, TransactionAction } from 'app/states/transaction'
@@ -15,7 +15,7 @@ import {
   useUserBalances,
 } from 'hooks'
 
-export function StakeEffects() {
+function StakeEffects() {
   const { getConfirmations, setConfirmations } = useConfirmations()
   const { stakedEventFilter } = useEventFilter()
   const { fetchPool } = useFetchPool()
@@ -31,6 +31,10 @@ export function StakeEffects() {
   useEffect(() => {
     stakedTokenBalance()
   }, [stakedTokenBalance])
+
+  useEffect(() => {
+    totalStaked()
+  }, [totalStaked])
 
   const handleStakedEvent = useCallback(
     async ({ transactionHash }: Event) => {
@@ -83,3 +87,5 @@ export function StakeEffects() {
 
   return null
 }
+
+export default memo(StakeEffects)

@@ -1,8 +1,8 @@
-import { useEffect } from 'react'
+import { memo, useEffect } from 'react'
 
 import { useUserBalances } from 'hooks'
 
-export function BalanceEffects() {
+function BalanceEffects() {
   const {
     fetchBptBalance,
     fetchEthBalance,
@@ -28,3 +28,5 @@ export function BalanceEffects() {
 
   return null
 }
+
+export default memo(BalanceEffects)

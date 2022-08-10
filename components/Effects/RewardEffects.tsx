@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react'
+import { memo, useCallback, useEffect } from 'react'
 import { Event } from 'ethers'
 
 import { removeTx, TransactionAction } from 'app/states/transaction'
@@ -6,39 +6,25 @@ import {
   useAppDispatch,
   useConfirmations,
   useEventFilter,
-  useFee,
   useProvider,
   useReward,
   useToast,
   useTransaction,
 } from 'hooks'
 
-export function RewardEffects() {
+function RewardEffects() {
   const { getConfirmations, setConfirmations } = useConfirmations()
   const {
     earmarkEventFilter,
-    feeUpdateEventFilter,
     rewardsAllEventFilter,
     rewardsBalEventFilter,
     rewardsWncgEventFilter,
   } = useEventFilter()
-  const { earmarkIncentiveFee, feeDenominator } = useFee()
   const provider = useProvider()
-  const {
-    balRewardPool,
-    earmarkIncentive,
-    earnedBal,
-    earnedWncg,
-    getBalEmissionPerSec,
-    getWncgEmissionPerSec,
-  } = useReward()
+  const { earmarkIncentive, earnedBal, earnedWncg } = useReward()
   const { addToast } = useToast()
   const { getTransactionReceipt } = useTransaction()
   const dispatch = useAppDispatch()
-
-  useEffect(() => {
-    balRewardPool()
-  }, [balRewardPool])
 
   useEffect(() => {
     earnedBal()
@@ -47,26 +33,6 @@ export function RewardEffects() {
   useEffect(() => {
     earnedWncg()
   }, [earnedWncg])
-
-  useEffect(() => {
-    earmarkIncentive()
-  }, [earmarkIncentive])
-
-  useEffect(() => {
-    earmarkIncentiveFee()
-  }, [earmarkIncentiveFee])
-
-  useEffect(() => {
-    feeDenominator()
-  }, [feeDenominator])
-
-  useEffect(() => {
-    getBalEmissionPerSec()
-  }, [getBalEmissionPerSec])
-
-  useEffect(() => {
-    getWncgEmissionPerSec()
-  }, [getWncgEmissionPerSec])
 
   const handleAllRewardEvent = useCallback(
     async ({ transactionHash }: Event) => {
@@ -182,7 +148,6 @@ export function RewardEffects() {
         })
       }
       setConfirmations(transactionHash)
-
       earmarkIncentive()
       earnedBal()
     },
@@ -196,11 +161,6 @@ export function RewardEffects() {
       setConfirmations,
     ]
   )
-
-  const handleFeeUpdateEvent = useCallback(() => {
-    earmarkIncentiveFee()
-    feeDenominator()
-  }, [earmarkIncentiveFee, feeDenominator])
 
   // NOTE: Reward All event
   useEffect(() => {
@@ -242,15 +202,7 @@ export function RewardEffects() {
     }
   }, [provider, handleEarmarkRewardsEvent, earmarkEventFilter])
 
-  // NOTE: Fee Update event
-  useEffect(() => {
-    if (feeUpdateEventFilter) {
-      provider?.on(feeUpdateEventFilter, handleFeeUpdateEvent)
-      return () => {
-        provider?.off(feeUpdateEventFilter)
-      }
-    }
-  }, [feeUpdateEventFilter, handleFeeUpdateEvent, provider])
-
   return null
 }
+
+export default memo(RewardEffects)

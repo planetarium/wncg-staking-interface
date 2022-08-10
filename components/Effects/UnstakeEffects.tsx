@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react'
+import { memo, useCallback, useEffect } from 'react'
 import { Event } from 'ethers'
 
 import { removeTx, TransactionAction } from 'app/states/transaction'
@@ -17,7 +17,7 @@ import {
   useUserBalances,
 } from 'hooks'
 
-export function UnstakeEffects() {
+function UnstakeEffects() {
   const { getConfirmations, setConfirmations } = useConfirmations()
   const { cooldownEventFilter, withdrawnEventFilter } = useEventFilter()
   const { fetchPool } = useFetchPool()
@@ -176,3 +176,5 @@ export function UnstakeEffects() {
 
   return null
 }
+
+export default memo(UnstakeEffects)
