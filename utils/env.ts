@@ -16,3 +16,9 @@ export const BALANCER_POOL_URL = IS_ETHEREUM
 export const BALANCER_SUBGRAPHS = IS_ETHEREUM
   ? process.env.NEXT_PUBLIC_BALANCER_SUBGRAPHS_MAINNET
   : process.env.NEXT_PUBLIC_BALANCER_SUBGRAPHS_KOVAN
+
+export const stakingContractAddress = process.env
+  .NEXT_PUBLIC_STAKING_CONTRACT_ADDRESS as string
+
+export const vaultContractAddress = process.env
+  .NEXT_PUBLIC_BALANCER_VAULT_ADDRESS as string
