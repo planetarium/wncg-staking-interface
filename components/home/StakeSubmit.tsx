@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useState } from 'react'
 import { usePrevious } from 'react-use'
+import { useRecoilValue } from 'recoil'
 import Lottie from 'lottie-react'
 import { Event } from 'ethers'
 import clsx from 'clsx'
 import styles from './styles/StakeSubmit.module.scss'
 
-import { getIsApproved } from 'app/states/bpt'
+import { approvalState } from 'app/states/approval'
 import { getIsConnected } from 'app/states/connection'
 import { ModalCategory } from 'app/states/modal'
 import { TransactionAction } from 'app/states/transaction'
@@ -13,8 +14,8 @@ import { getIsUnstakeWindow } from 'app/states/unstake'
 import { gaEvent } from 'lib/gtag'
 import { handleError } from 'utils/error'
 import {
+  useApprove,
   useAppSelector,
-  useBpt,
   useConnection,
   useEventFilter,
   useModal,
@@ -43,14 +44,14 @@ export function StakeSubmit({
   const [pendingTx, setPendingTx] = useState('')
   const prevAmount = usePrevious(amount)
 
-  const { approve } = useBpt()
+  const { approveBpt } = useApprove()
   const { connect } = useConnection()
-  const { approvalEventFilter, stakedEventFilter } = useEventFilter()
+  const { bptApprovalEventFilter, stakedEventFilter } = useEventFilter()
   const { addModal } = useModal()
   const provider = useProvider()
   const { stake } = useStake()
 
-  const isApproved = useAppSelector(getIsApproved)
+  const { bpt: isApproved } = useRecoilValue(approvalState)
   const isConnected = useAppSelector(getIsConnected)
   const isUnstakeWindow = useAppSelector(getIsUnstakeWindow)
 
@@ -85,7 +86,7 @@ export function StakeSubmit({
       name: 'approve_to_stake',
     })
     try {
-      await approve()
+      await approveBpt()
     } catch (error) {
       handleError(error, TransactionAction.Approve)
       setActive(null)
@@ -130,13 +131,13 @@ export function StakeSubmit({
 
   // NOTE: Approval event
   useEffect(() => {
-    if (approvalEventFilter) {
-      provider?.on(approvalEventFilter, handleApprovalEvent)
+    if (bptApprovalEventFilter) {
+      provider?.on(bptApprovalEventFilter, handleApprovalEvent)
       return () => {
-        provider?.off(approvalEventFilter)
+        provider?.off(bptApprovalEventFilter)
       }
     }
-  }, [approvalEventFilter, handleApprovalEvent, provider])
+  }, [bptApprovalEventFilter, handleApprovalEvent, provider])
 
   // NOTE: Staked event
   useEffect(() => {

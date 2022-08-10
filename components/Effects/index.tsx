@@ -1,5 +1,6 @@
 import { memo } from 'react'
 
+import ApprovalEffects from './ApprovalEffects'
 import BalanceEffects from './BalanceEffects'
 import BaseEffects from './BaseEffects'
 import ConfigEffects from './ConfigEffects'
@@ -10,6 +11,7 @@ import UnstakeEffects from './UnstakeEffects'
 function Effects() {
   return (
     <>
+      <ApprovalEffects />
       <BalanceEffects />
       <BaseEffects />
       <ConfigEffects />

@@ -4,6 +4,8 @@ import { hexZeroPad } from 'ethers/lib/utils'
 
 import { getAccount } from 'app/states/connection'
 import { getBptContractAddress } from 'app/states/contract'
+import { stakingContractAddress, vaultContractAddress } from 'utils/env'
+import { wethAddress, wncgAddress } from 'utils/token'
 import { useAppSelector } from './useRedux'
 
 const approvalTopic = utils.id('Approval(address,address,uint256)')
@@ -24,13 +26,41 @@ export function useEventFilter() {
   const account = useAppSelector(getAccount)
   const bptAddress = useAppSelector(getBptContractAddress)
 
-  const approvalEventFilter = useMemo(() => {
+  const bptApprovalEventFilter = useMemo(() => {
     if (!account || !bptAddress) return null
     return {
       address: bptAddress,
-      topics: [approvalTopic, hexZeroPad(account, 32)],
+      topics: [
+        approvalTopic,
+        hexZeroPad(account, 32),
+        hexZeroPad(stakingContractAddress, 32),
+      ],
     }
   }, [account, bptAddress])
+
+  const wethApprovalEventFilter = useMemo(() => {
+    if (!account) return null
+    return {
+      address: wethAddress,
+      topics: [
+        approvalTopic,
+        hexZeroPad(account, 32),
+        hexZeroPad(vaultContractAddress, 32),
+      ],
+    }
+  }, [account])
+
+  const wncgApprovalEventFilter = useMemo(() => {
+    if (!account) return null
+    return {
+      address: wncgAddress,
+      topics: [
+        approvalTopic,
+        hexZeroPad(account, 32),
+        hexZeroPad(vaultContractAddress, 32),
+      ],
+    }
+  }, [account])
 
   const stakedEventFilter = useMemo(() => {
     if (!account) return null
@@ -97,7 +127,9 @@ export function useEventFilter() {
   )
 
   return {
-    approvalEventFilter,
+    bptApprovalEventFilter,
+    wethApprovalEventFilter,
+    wncgApprovalEventFilter,
     stakedEventFilter,
     cooldownEventFilter,
     withdrawnEventFilter,
