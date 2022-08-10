@@ -7,6 +7,7 @@ import {
   getWethBalance,
   getWncgBalance,
 } from 'app/states/balance'
+import { handleError } from 'utils/error'
 import Decimal, { sanitizeNumber } from 'utils/num'
 import { useAppSelector, useUsd } from 'hooks'
 import { useInvestMath } from './useInvestMath'
@@ -34,7 +35,7 @@ function PoolInvestForm({ currentEthType, selectEth }: PoolInvestFormProps) {
   const isEth = currentEthType === 'eth'
   const ethNetBalance = isEth ? ethBalance : wethBalance
   const ethBalanceAvailable = isEth
-    ? new Decimal(ethNetBalance).minus(0.05).toString()
+    ? Math.max(new Decimal(ethNetBalance).minus(0.05).toNumber(), 0).toString()
     : ethNetBalance
 
   const {
@@ -125,7 +126,11 @@ function PoolInvestForm({ currentEthType, selectEth }: PoolInvestFormProps) {
     const amounts = [wncgValue, ethValue]
     const minBptOut = getMinBptOut(amounts)
 
-    await joinPool(amounts, minBptOut, currentEthType)
+    try {
+      await joinPool(amounts, minBptOut, currentEthType)
+    } catch (error) {
+      handleError(error)
+    }
   }
 
   const priceImpact = useMemo(() => {
