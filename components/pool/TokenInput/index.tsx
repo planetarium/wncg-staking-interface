@@ -55,7 +55,8 @@ export function TokenInput({
   const precision = !IS_ETHEREUM && token === 'wncg' ? 8 : 18
 
   const tokenBalance = new Decimal(balance)
-  const lessThanMinAmount = !tokenBalance.isZero() && tokenBalance.lt(0.0001)
+  const isEmpty = tokenBalance.isZero()
+  const lessThanMinAmount = !isEmpty && tokenBalance.lt(0.0001)
 
   return (
     <div className={styles.tokenInputField}>
@@ -96,15 +97,17 @@ export function TokenInput({
               />
             )}
           </strong>
-          <button
-            className={styles.maxButton}
-            type="button"
-            value={name}
-            onClick={setMaxValue}
-            disabled={maximized}
-          >
-            {maximized ? 'Maxed' : 'Max'}
-          </button>
+          {!isEmpty && (
+            <button
+              className={styles.maxButton}
+              type="button"
+              value={name}
+              onClick={setMaxValue}
+              disabled={maximized}
+            >
+              {maximized ? 'Maxed' : 'Max'}
+            </button>
+          )}
           {showPropButton && (
             <button
               className={styles.propButton}
