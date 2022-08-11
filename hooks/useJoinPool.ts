@@ -5,54 +5,49 @@ import { WeightedPoolEncoder } from '@balancer-labs/sdk'
 import { getAccount } from 'app/states/connection'
 import { addTx, TransactionAction } from 'app/states/transaction'
 import { BPT_POOL_ID, IS_ETHEREUM } from 'utils/env'
-import { handleError } from 'utils/error'
 import { etherToWei } from 'utils/num'
 import { ethAddress, wethAddress, wncgAddress } from 'utils/token'
-import {
-  useAppDispatch,
-  useAppSelector,
-  useToast,
-  useVaultContract,
-} from 'hooks'
+import { useInvestMath } from './useInvestMath'
+import { useAppDispatch, useAppSelector } from './useRedux'
+import { useToast } from './useToast'
+import { useVaultContract } from './useVaultContract'
 
 export function useJoinPool() {
-  const vault = useVaultContract()
+  const { getMinBptOut } = useInvestMath()
   const { addToast } = useToast()
+  const vault = useVaultContract()
 
   const dispatch = useAppDispatch()
   const account = useAppSelector(getAccount)
 
   const joinPool = useCallback(
-    async (amounts: string[], minBptOut: string, ethType: EthType) => {
+    async (amounts: string[], ethType: EthType) => {
       if (!vault) return
 
       const isEth = ethType === 'eth'
+      const minBptOut = getMinBptOut(amounts)
       const { request } = buildJoin({ isEth, amounts, minBptOut })
 
-      try {
-        let data
-        if (isEth) {
-          data = await vault.joinPool(BPT_POOL_ID, account, account, request, {
-            value: etherToWei(amounts[1]),
-          })
-        } else {
-          data = await vault.joinPool(BPT_POOL_ID, account, account, request)
-        }
+      let data
+      if (isEth) {
+        data = await vault.joinPool(BPT_POOL_ID, account, account, request, {
+          value: etherToWei(amounts[1]),
+        })
+      } else {
+        data = await vault.joinPool(BPT_POOL_ID, account, account, request)
+      }
 
-        if (data) {
-          const tx = {
-            hash: data.hash,
-            action: TransactionAction.JoinPool,
-            summary: 'Investing 20WETH-80WNCG pool',
-          }
-          dispatch(addTx(tx))
-          addToast(tx, data.hash)
+      if (data) {
+        const tx = {
+          hash: data.hash,
+          action: TransactionAction.JoinPool,
+          summary: 'Investing 20WETH-80WNCG pool',
         }
-      } catch (error) {
-        handleError(error)
+        dispatch(addTx(tx))
+        addToast(tx, data.hash)
       }
     },
-    [account, addToast, dispatch, vault]
+    [account, addToast, dispatch, getMinBptOut, vault]
   )
 
   return {
@@ -64,16 +59,16 @@ const WNCG_DECIMALS = IS_ETHEREUM ? 18 : 8
 
 type BuildJoinParams = {
   isEth: boolean
+  minBptOut: string
   amounts?: string[]
   joinInit?: boolean
-  minBptOut?: string
 }
 
 function buildJoin({
   isEth,
+  minBptOut,
   amounts = ['0', '0'],
   joinInit = false,
-  minBptOut = '0',
 }: BuildJoinParams) {
   const assets = isEth ? [wncgAddress, ethAddress] : [wncgAddress, wethAddress]
   const maxAmountsIn = [
