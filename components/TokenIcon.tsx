@@ -6,7 +6,7 @@ import styles from './styles/TokenIcon.module.scss'
 import { Icon } from './Icon'
 
 type TokenIconProps = {
-  symbol: 'eth' | 'weth' | 'wncg' | 'bal'
+  symbol: string
   className?: string
 }
 
@@ -27,6 +27,7 @@ function TokenIcon({ symbol, className }: TokenIconProps) {
         </span>
       )
 
+    case 'wbtc':
     case 'wncg':
       return (
         <span className={clsx(className, styles.token, styles.wncg)}>
