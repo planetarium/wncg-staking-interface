@@ -5,8 +5,6 @@ import { assertUnreachable } from 'utils/assertion'
 import Decimal, { sanitizeNumber } from 'utils/num'
 import { useFetchTokenPrices } from './useFetchTokenPrices'
 
-type Token = 'bal' | 'bpt' | 'weth' | 'wncg'
-
 export function useUsd() {
   const { balPrice, wethPrice, wncgPrice } = useFetchTokenPrices()
   const bptPrice = useRecoilValue(poolTokenPriceState)
@@ -35,8 +33,8 @@ export function useUsd() {
       .toNumber()
   }
 
-  function calculateUsdValue(token: Token, value: string | number) {
-    if (!value) return 0
+  function calculateUsdValue(token: string, value: string | number) {
+    if (!token || !value) return 0
 
     switch (token) {
       case 'bal':
@@ -45,6 +43,7 @@ export function useUsd() {
         return calculateBpt(value)
       case 'weth':
         return calculateWeth(value)
+      case 'wbtc':
       case 'wncg':
         return calculateWncg(value)
       default:

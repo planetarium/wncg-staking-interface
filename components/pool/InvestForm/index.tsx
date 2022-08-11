@@ -1,4 +1,4 @@
-import { FormEvent, memo, MouseEvent, useEffect, useMemo } from 'react'
+import { memo, MouseEvent, useEffect, useMemo } from 'react'
 import { Control, FieldValues, useForm } from 'react-hook-form'
 import styles from '../styles/Form.module.scss'
 
@@ -7,11 +7,9 @@ import {
   getWethBalance,
   getWncgBalance,
 } from 'app/states/balance'
-import { handleError } from 'utils/error'
+import { ModalCategory } from 'app/states/modal'
 import Decimal, { sanitizeNumber } from 'utils/num'
-import { useAppSelector, useUsd } from 'hooks'
-import { useInvestMath } from './useInvestMath'
-import { useJoinPool } from './useJoinPool'
+import { useAppSelector, useInvestMath, useModal, useUsd } from 'hooks'
 import { etherTokenList } from '../constants'
 
 import { Button } from 'components/Button'
@@ -24,8 +22,8 @@ type PoolInvestFormProps = {
 }
 
 function PoolInvestForm({ currentEthType, selectEth }: PoolInvestFormProps) {
-  const { getMinBptOut, getPriceImpact, getPropAmounts } = useInvestMath()
-  const { joinPool } = useJoinPool()
+  const { getPriceImpact, getPropAmounts } = useInvestMath()
+  const { addModal } = useModal()
   const { calculateUsdValue } = useUsd()
 
   const ethBalance = useAppSelector(getEthBalance)
@@ -38,23 +36,17 @@ function PoolInvestForm({ currentEthType, selectEth }: PoolInvestFormProps) {
     ? Math.max(new Decimal(ethNetBalance).minus(0.05).toNumber(), 0).toString()
     : ethNetBalance
 
-  const {
-    clearErrors,
-    control,
-    formState,
-    getValues,
-    setValue,
-    trigger,
-    watch,
-  } = useForm<{
-    wncgAmount: string
-    ethAmount: string
-  }>({
-    mode: 'onChange',
-  })
+  const { clearErrors, control, formState, setValue, trigger, watch } =
+    useForm<{
+      wncgAmount: string
+      ethAmount: string
+    }>({
+      mode: 'onChange',
+    })
 
   const ethValue = sanitizeNumber(watch('ethAmount'))
   const wncgValue = sanitizeNumber(watch('wncgAmount'))
+  const amounts = [wncgValue, ethValue]
 
   const ethRules = useMemo(
     () => ({
@@ -104,15 +96,10 @@ function PoolInvestForm({ currentEthType, selectEth }: PoolInvestFormProps) {
     const inputName = e.currentTarget.value as 'wncgAmount' | 'ethAmount'
     const currentTokenIndex = inputName === 'wncgAmount' ? 0 : 1
 
-    const amounts = [
-      sanitizeNumber(getValues('wncgAmount')),
-      sanitizeNumber(getValues('ethAmount')),
-    ]
-
     const propAmounts = getPropAmounts(amounts, currentTokenIndex)
     setValue(inputName, propAmounts[currentTokenIndex])
 
-    setTimeout(() => trigger(inputName), 0)
+    trigger(inputName)
   }
 
   function investMax() {
@@ -121,16 +108,18 @@ function PoolInvestForm({ currentEthType, selectEth }: PoolInvestFormProps) {
     clearErrors()
   }
 
-  async function handleSubmit(e: FormEvent) {
-    e.preventDefault()
-    const amounts = [wncgValue, ethValue]
-    const minBptOut = getMinBptOut(amounts)
+  function openInvestPreview(e: MouseEvent) {
+    e.stopPropagation()
 
-    try {
-      await joinPool(amounts, minBptOut, currentEthType)
-    } catch (error) {
-      handleError(error)
-    }
+    addModal({
+      category: ModalCategory.InvestPreview,
+      props: {
+        amounts,
+        currentEthType,
+        priceImpact,
+        totalUsdValue,
+      },
+    })
   }
 
   const priceImpact = useMemo(() => {
@@ -149,13 +138,20 @@ function PoolInvestForm({ currentEthType, selectEth }: PoolInvestFormProps) {
   )
 
   const isEthMaximized = useMemo(
-    () => new Decimal(ethValue).eq(ethBalanceAvailable),
+    () =>
+      !new Decimal(ethValue).isZero() &&
+      new Decimal(ethValue).eq(ethBalanceAvailable),
     [ethBalanceAvailable, ethValue]
   )
 
   const isMaximized = useMemo(
     () => isWncgMaximized && isEthMaximized,
     [isEthMaximized, isWncgMaximized]
+  )
+
+  const isAllZero = useMemo(
+    () => new Decimal(wncgValue).isZero() && new Decimal(ethValue).isZero(),
+    [ethValue, wncgValue]
   )
 
   const showPropButton = useMemo(() => {
@@ -179,7 +175,7 @@ function PoolInvestForm({ currentEthType, selectEth }: PoolInvestFormProps) {
         <h3 className={styles.title}>Invest in pool</h3>
       </header>
 
-      <form onSubmit={handleSubmit}>
+      <form>
         <TokenInput
           id="wncgAmount"
           name="wncgAmount"
@@ -214,8 +210,14 @@ function PoolInvestForm({ currentEthType, selectEth }: PoolInvestFormProps) {
           priceImpact={priceImpact}
           totalUsdValue={totalUsdValue}
         />
-        <Button size="large" type="submit" fullWidth>
-          Proceed
+        <Button
+          size="large"
+          type="button"
+          onClick={openInvestPreview}
+          fullWidth
+          disabled={isAllZero}
+        >
+          Preview
         </Button>
       </form>
     </section>
