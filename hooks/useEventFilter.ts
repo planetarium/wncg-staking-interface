@@ -4,7 +4,11 @@ import { hexZeroPad } from 'ethers/lib/utils'
 
 import { getAccount } from 'app/states/connection'
 import { getBptContractAddress } from 'app/states/contract'
-import { stakingContractAddress, vaultContractAddress } from 'utils/env'
+import {
+  BPT_POOL_ID,
+  stakingContractAddress,
+  vaultContractAddress,
+} from 'utils/env'
 import { wethAddress, wncgAddress } from 'utils/token'
 import { useAppSelector } from './useRedux'
 
@@ -17,9 +21,12 @@ const rewardsBalTopic = utils.id('RewardsClaimed_BAL(address,uint256)')
 const rewardsWncgTopic = utils.id('RewardsClaimed_WNCG(address,uint256)')
 const earmarkTopic = utils.id('EarmarkRewards(address,uint256)')
 const feeUpdateTopic = utils.id('FeeUpdate()')
+const poolBalanceChangedTopic = utils.id(
+  'PoolBalanceChanged(bytes32,address,address[],int256[],uint256[])'
+)
 
 const filter = {
-  address: process.env.NEXT_PUBLIC_STAKING_CONTRACT_ADDRESS as string,
+  address: stakingContractAddress,
 }
 
 export function useEventFilter() {
@@ -126,6 +133,14 @@ export function useEventFilter() {
     []
   )
 
+  const poolBalanceChangedEventFilter = useMemo(() => {
+    if (!account) return null
+    return {
+      address: vaultContractAddress,
+      topics: [poolBalanceChangedTopic, BPT_POOL_ID, hexZeroPad(account, 32)],
+    }
+  }, [account])
+
   return {
     bptApprovalEventFilter,
     wethApprovalEventFilter,
@@ -138,5 +153,6 @@ export function useEventFilter() {
     rewardsWncgEventFilter,
     earmarkEventFilter,
     feeUpdateEventFilter,
+    poolBalanceChangedEventFilter,
   }
 }

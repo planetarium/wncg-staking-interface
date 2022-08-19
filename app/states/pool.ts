@@ -28,6 +28,22 @@ export const poolTokensState = selector<PoolToken[]>({
   },
 })
 
+export const poolTokenDecimalsState = selector<number[]>({
+  key: '#poolTokenDecimals',
+  get({ get }) {
+    const poolTokens = get(poolTokensState)
+    return poolTokens.map((token) => token.decimals)
+  },
+})
+
+export const poolTokenSymbolsState = selector<string[]>({
+  key: '#poolTokenSymbols',
+  get({ get }) {
+    const poolTokens = get(poolTokensState)
+    return poolTokens.map((token) => token.symbol.toLowerCase())
+  },
+})
+
 export const poolTotalValueState = selector({
   key: '#poolTotalValue',
   get({ get }) {

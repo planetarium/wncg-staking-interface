@@ -6,8 +6,8 @@ export const IS_ETHEREUM =
 export const CURRENT_MAINNET = IS_ETHEREUM ? 1 : 42
 
 export const BPT_POOL_ID = IS_ETHEREUM
-  ? process.env.NEXT_PUBLIC_BPT_POOL_ID_MAINNET
-  : process.env.NEXT_PUBLIC_BPT_POOL_ID_KOVAN
+  ? (process.env.NEXT_PUBLIC_BPT_POOL_ID_MAINNET as string)
+  : (process.env.NEXT_PUBLIC_BPT_POOL_ID_KOVAN as string)
 
 export const BALANCER_POOL_URL = IS_ETHEREUM
   ? process.env.NEXT_PUBLIC_BALANCER_POOL_URL_MAINNET
