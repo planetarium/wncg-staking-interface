@@ -1,5 +1,5 @@
 import { memo, MouseEvent, useEffect, useMemo } from 'react'
-import { Control, FieldValues, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import styles from '../styles/Form.module.scss'
 
 import {
@@ -10,11 +10,11 @@ import {
 import { ModalCategory } from 'app/states/modal'
 import Decimal, { sanitizeNumber } from 'utils/num'
 import { useAppSelector, useInvestMath, useModal, useUsd } from 'hooks'
-import { etherTokenList } from '../constants'
 
 import { Button } from 'components/Button'
-import { TokenInput } from '../TokenInput'
+import { EtherInput } from './EtherInput'
 import { InvestFormSummary } from './Summary'
+import { WncgInput } from './WncgInput'
 
 type PoolInvestFormProps = {
   currentEthType: EthType
@@ -47,39 +47,6 @@ function PoolInvestForm({ currentEthType, selectEth }: PoolInvestFormProps) {
   const ethValue = sanitizeNumber(watch('ethAmount'))
   const wncgValue = sanitizeNumber(watch('wncgAmount'))
   const amounts = [wncgValue, ethValue]
-
-  const ethRules = useMemo(
-    () => ({
-      validate: {
-        maxAmount(v: string) {
-          return (
-            new Decimal(sanitizeNumber(v)).lte(ethNetBalance) ||
-            'Exceeds wallet balance'
-          )
-        },
-      },
-      onChange() {
-        clearErrors('ethAmount')
-      },
-    }),
-    [clearErrors, ethNetBalance]
-  )
-  const wncgRules = useMemo(
-    () => ({
-      validate: {
-        maxAmount(v: string) {
-          return (
-            new Decimal(sanitizeNumber(v)).lte(wncgBalance) ||
-            'Exceeds wallet balance'
-          )
-        },
-      },
-      onChange() {
-        clearErrors('wncgAmount')
-      },
-    }),
-    [clearErrors, wncgBalance]
-  )
 
   function setMaxValue(e: MouseEvent<HTMLButtonElement>) {
     const inputName = e.currentTarget.value as 'wncgAmount' | 'ethAmount'
@@ -132,21 +99,12 @@ function PoolInvestForm({ currentEthType, selectEth }: PoolInvestFormProps) {
       .toString()
   }, [calculateUsdValue, ethValue, wncgValue])
 
-  const isWncgMaximized = useMemo(
-    () => new Decimal(wncgValue).eq(wncgBalance),
-    [wncgBalance, wncgValue]
-  )
-
-  const isEthMaximized = useMemo(
+  const maximized = useMemo(
     () =>
+      new Decimal(wncgValue).eq(wncgBalance) &&
       !new Decimal(ethValue).isZero() &&
       new Decimal(ethValue).eq(ethBalanceAvailable),
-    [ethBalanceAvailable, ethValue]
-  )
-
-  const isMaximized = useMemo(
-    () => isWncgMaximized && isEthMaximized,
-    [isEthMaximized, isWncgMaximized]
+    [ethBalanceAvailable, ethValue, wncgBalance, wncgValue]
   )
 
   const isAllZero = useMemo(
@@ -176,37 +134,33 @@ function PoolInvestForm({ currentEthType, selectEth }: PoolInvestFormProps) {
       </header>
 
       <form>
-        <TokenInput
-          id="wncgAmount"
-          name="wncgAmount"
-          control={control as any as Control<FieldValues, 'any'>}
-          rules={wncgRules}
+        <WncgInput
+          clearErrors={clearErrors}
+          control={control}
+          formState={formState}
+          setMaxValue={setMaxValue}
+          setPropAmount={setPropAmount}
+          showPropButton={showPropButton.wncgAmount}
+          wncgValue={wncgValue}
+          wncgBalance={wncgBalance}
           error={formState.errors?.wncgAmount?.message}
-          balance={wncgBalance}
-          maximized={isWncgMaximized}
-          token="wncg"
-          setMaxValue={setMaxValue}
-          setPropAmount={setPropAmount}
-          propButton={showPropButton.wncgAmount}
         />
-        <TokenInput
-          id="ethAmount"
-          name="ethAmount"
-          control={control as any as Control<FieldValues, 'any'>}
-          rules={ethRules}
-          error={formState.errors?.ethAmount?.message}
-          balance={ethNetBalance}
-          maximized={isEthMaximized}
-          token={currentEthType}
-          selectToken={selectEth}
-          tokenList={etherTokenList}
+        <EtherInput
+          clearErrors={clearErrors}
+          control={control}
+          currentEthType={currentEthType}
+          ethValue={ethValue}
+          ethNetBalance={ethNetBalance}
+          ethBalanceAvailable={ethBalanceAvailable}
+          selectEth={selectEth}
           setMaxValue={setMaxValue}
           setPropAmount={setPropAmount}
-          propButton={showPropButton.ethAmount}
+          showPropButton={showPropButton.ethAmount}
+          error={formState.errors?.ethAmount?.message}
         />
         <InvestFormSummary
           investMax={investMax}
-          maximized={isMaximized}
+          maximized={maximized}
           priceImpact={priceImpact}
           totalUsdValue={totalUsdValue}
         />
