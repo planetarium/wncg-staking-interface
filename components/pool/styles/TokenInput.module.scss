@@ -237,10 +237,18 @@ $input-padding: 16px;
   }
 }
 
-.errorMessage {
+.errorMessage,
+.warningMessage {
   @include textStyle(13, 400);
   position: relative;
   z-index: 1;
   margin-top: 4px;
+}
+
+.errorMessage {
   color: $red;
+}
+
+.warningMessage {
+  color: $primary;
 }

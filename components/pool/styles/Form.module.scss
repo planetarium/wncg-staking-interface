@@ -78,3 +78,9 @@
     }
   }
 }
+
+.misc {
+  @include textStyle(12);
+  padding: 4px 20px;
+  color: $primary;
+}

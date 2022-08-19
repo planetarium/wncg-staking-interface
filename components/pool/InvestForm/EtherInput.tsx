@@ -58,6 +58,14 @@ export function EtherInput({
     [ethBalanceAvailable, ethValue]
   )
 
+  const showWarning = useMemo(() => {
+    if (error || new Decimal(ethValue).isZero()) return false
+    if (new Decimal(ethBalanceAvailable).minus(ethValue).lte(0.05)) {
+      return true
+    }
+    return false
+  }, [error, ethBalanceAvailable, ethValue])
+
   return (
     <TokenInput
       id="ethAmount"
@@ -73,6 +81,11 @@ export function EtherInput({
       setMaxValue={setMaxValue}
       setPropAmount={setPropAmount}
       propButton={showPropButton}
+      warning={
+        showWarning
+          ? 'To ensure a smooth transaction, at least 0.05 ETH must be left in your wallet to pay for gas fees.'
+          : undefined
+      }
     />
   )
 }

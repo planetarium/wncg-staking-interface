@@ -30,6 +30,7 @@ type TokenInputProps = {
   setMaxValue?(e: MouseEvent<HTMLButtonElement>): void
   setPropAmount?(e: MouseEvent<HTMLButtonElement>): void
   tokenList?: TokenDropdownSymbol[]
+  warning?: string
 }
 
 export function TokenInput({
@@ -47,10 +48,12 @@ export function TokenInput({
   setMaxValue,
   setPropAmount,
   tokenList = [],
+  warning,
 }: TokenInputProps) {
   const isMobile = useAppSelector(getIsMobile)
 
   const hasError = !!error
+  const hasWarning = !!warning
   const showPropButton = propButton && !!setPropAmount
   const precision = !IS_ETHEREUM && token === 'wncg' ? 8 : 18
 
@@ -131,6 +134,18 @@ export function TokenInput({
             variants={errorMessageVariants}
           >
             {error}
+          </motion.p>
+        )}
+
+        {hasWarning && (
+          <motion.p
+            className={styles.warningMessage}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            variants={errorMessageVariants}
+          >
+            {warning}
           </motion.p>
         )}
       </AnimatePresence>
