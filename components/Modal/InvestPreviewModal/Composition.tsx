@@ -4,6 +4,7 @@ import { useRecoilValue } from 'recoil'
 import clsx from 'clsx'
 import styles from './style.module.scss'
 
+import { priceErrorState } from 'app/states/error'
 import { poolTokenSymbolsState } from 'app/states/pool'
 import Decimal from 'utils/num'
 import { useUsd } from 'hooks'
@@ -24,6 +25,8 @@ function InvestComposition({
   const { calculateUsdValue } = useUsd()
 
   const poolTokenSymbols = useRecoilValue(poolTokenSymbolsState)
+  const isPriceInvalid = useRecoilValue(priceErrorState)
+
   const usdValues = amounts.map((amount, i) =>
     calculateUsdValue(poolTokenSymbols[i], amount)
   )
@@ -35,6 +38,7 @@ function InvestComposition({
           .div(totalUsdValue)
           .mul(100)
           .toFixed(2)
+
         if (i === 0) return wncgPcnt
         return new Decimal(100).minus(wncgPcnt).toString()
       }),
@@ -65,7 +69,9 @@ function InvestComposition({
             <dt>
               <TokenIcon className={styles.token} symbol={tokenSymbol} />
               <strong className={styles.symbol}>{symbol}</strong>
-              <span className={styles.percent}>({pcnt}%)</span>
+              {!isPriceInvalid && (
+                <span className={styles.percent}>({pcnt}%)</span>
+              )}
             </dt>
             <dd>
               {isAmountLessThanMinAmount ? (
@@ -76,7 +82,6 @@ function InvestComposition({
                   displayType="text"
                   thousandSeparator
                   decimalScale={4}
-                  title={amount}
                 />
               )}
               <NumberFormat

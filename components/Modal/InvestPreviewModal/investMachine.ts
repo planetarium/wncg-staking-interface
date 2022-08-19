@@ -39,6 +39,11 @@ export function createInvestMachine(
           ],
         },
         approveWncg: {
+          on: {
+            APPROVING_WNCG: 'approvingWncg',
+          },
+        },
+        approvingWncg: {
           always: [
             {
               target: 'invest',
@@ -50,28 +55,21 @@ export function createInvestMachine(
             },
           ],
           on: {
-            APPROVING_WNCG: 'approvingWncg',
-          },
-        },
-        approvingWncg: {
-          on: {
             APPROVED_WNCG: {
               actions: 'updateWncgApproval',
             },
           },
         },
         approveWeth: {
-          always: [
-            {
-              target: 'invest',
-              cond: 'canInvest',
-            },
-          ],
           on: {
             APPROVING_WETH: 'approvingWeth',
           },
         },
         approvingWeth: {
+          always: {
+            target: 'invest',
+            cond: 'canInvest',
+          },
           on: {
             APPROVED_WETH: {
               actions: 'updateWethApproval',

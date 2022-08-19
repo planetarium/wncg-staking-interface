@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useMemo } from 'react'
-import { useRecoilValue } from 'recoil'
+import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { useMachine } from '@xstate/react'
 
-import { poolTokenApprovalsState } from 'app/states/approval'
+import { approvalState, poolTokenApprovalsState } from 'app/states/approval'
 import { handleError } from 'utils/error'
 import { bnum } from 'utils/num'
 import { useApprove, useEventFilter, useJoinPool, useProvider } from 'hooks'
@@ -18,6 +18,7 @@ export function useInvestMachine(amounts: string[], currentEthType: EthType) {
   const { joinPool } = useJoinPool()
   const provider = useProvider()
 
+  const setApproval = useSetRecoilState(approvalState)
   const poolTokenApprovals = useRecoilValue(poolTokenApprovalsState)
 
   const investMachine = useMemo(
@@ -61,8 +62,8 @@ export function useInvestMachine(amounts: string[], currentEthType: EthType) {
   const stepsToSkip = useMemo(
     () =>
       amounts.map((amount, i) => {
+        if (i === 1 && currentEthType === 'eth') return true
         if (!bnum(amount).isZero()) return false
-        if (i === 1 && currentEthType === 'weth') false
         return true
       }),
     [amounts, currentEthType]
@@ -70,7 +71,8 @@ export function useInvestMachine(amounts: string[], currentEthType: EthType) {
 
   const handleWncgApprovalEvent = useCallback(() => {
     send('APPROVED_WNCG')
-  }, [send])
+    setApproval((prev) => ({ ...prev, wncg: true }))
+  }, [send, setApproval])
 
   useEffect(() => {
     if (wncgApprovalEventFilter) {
@@ -83,7 +85,8 @@ export function useInvestMachine(amounts: string[], currentEthType: EthType) {
 
   const handleWethApprovalEvent = useCallback(() => {
     send('APPROVED_WETH')
-  }, [send])
+    setApproval((prev) => ({ ...prev, weth: true }))
+  }, [send, setApproval])
 
   useEffect(() => {
     if (wethApprovalEventFilter) {
