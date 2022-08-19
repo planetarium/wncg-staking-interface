@@ -1,7 +1,7 @@
 import { useRecoilValue } from 'recoil'
 import styles from './style.module.scss'
 
-import { poolTokenApprovalState } from 'app/states/approval'
+import { poolTokenApprovalsState } from 'app/states/approval'
 
 import InvestActions from './Actions'
 import InvestComposition from './Composition'
