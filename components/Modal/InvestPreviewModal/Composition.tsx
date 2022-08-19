@@ -65,6 +65,7 @@ function InvestComposition({
             <dt>
               <TokenIcon className={styles.token} symbol={tokenSymbol} />
               <strong className={styles.symbol}>{symbol}</strong>
+              <span className={styles.percent}>({pcnt}%)</span>
             </dt>
             <dd>
               {isAmountLessThanMinAmount ? (
@@ -75,6 +76,7 @@ function InvestComposition({
                   displayType="text"
                   thousandSeparator
                   decimalScale={4}
+                  title={amount}
                 />
               )}
               <NumberFormat
@@ -85,7 +87,6 @@ function InvestComposition({
                 decimalScale={2}
                 prefix="$"
               />
-              ({pcnt}%)
             </dd>
           </div>
         )

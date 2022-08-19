@@ -4,6 +4,7 @@ $step-margin: 40px;
 .stepsWrapper {
   @include flexbox;
   position: relative;
+  margin-top: 20px;
   margin-bottom: 20px;
 }
 
@@ -32,9 +33,7 @@ $step-margin: 40px;
       transparent
     );
     background-size: 20px 10px;
-    opacity: 0;
     animation: move 3s linear infinite;
-    visibility: hidden;
     transition: $transition-short;
   }
 }

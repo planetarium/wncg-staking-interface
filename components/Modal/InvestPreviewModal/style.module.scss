@@ -1,0 +1,125 @@
+.investPreviewModal {
+  max-width: 360px;
+  width: calc(100% - 20px);
+  padding: 30px;
+  color: $black;
+  background-color: $white;
+  border-radius: $radius-sm;
+
+  @include responsive(MD) {
+    width: 100%;
+  }
+}
+
+.title {
+  @include textStyle(18, 700);
+  margin-bottom: 20px;
+  color: $black;
+}
+
+.desc {
+  @include textStyle(14, 400);
+  margin-bottom: 20px;
+  color: $black;
+}
+
+.details {
+  @include flexbox(start, start);
+  flex-direction: column;
+  width: 100%;
+  overflow: hidden;
+  background-color: $gray-1;
+  border-radius: $radius-sm;
+
+  &.reverse {
+    flex-direction: column-reverse;
+  }
+}
+
+.detailItem {
+  @include flexbox(between);
+  flex-wrap: wrap;
+  width: 100%;
+  padding: 8px;
+  background-color: $gray-1;
+  border-radius: $radius-sm;
+
+  dt {
+    @include flexbox(start);
+
+    strong {
+      @include textStyle(14, 700);
+      text-transform: uppercase;
+    }
+  }
+
+  dd {
+    @include flexbox(center, end);
+    @include textStyle(16, 700);
+    flex-direction: column;
+    text-align: right;
+  }
+
+  .usd {
+    @include inlineFlexbox(start);
+    @include textStyle(12, 500);
+    margin-top: 0px;
+    padding-right: 4px;
+    color: $gray-3;
+  }
+
+  .percent {
+    @include textStyle(12, 500);
+    margin-left: 4px;
+    color: $gray-4;
+  }
+}
+
+.token {
+  width: 28px;
+  height: 28px;
+  margin-right: 8px;
+  color: $white;
+}
+
+.summary {
+  width: 100%;
+  margin-top: 20px;
+
+  .warning {
+    dd {
+      color: $red;
+    }
+
+    svg {
+      width: 16px;
+      height: 16px;
+      margin-left: 4px;
+      color: lighten($red, 10);
+    }
+  }
+
+  > div {
+    @include flexbox(start);
+    width: 100%;
+    padding: 4px 0;
+
+    dt {
+      @include textStyle(14, 400);
+      width: 100px;
+    }
+
+    dd {
+      @include flexbox(end);
+      flex-grow: 1;
+
+      strong {
+        @include textStyle(18, 700);
+      }
+    }
+  }
+}
+
+.footer {
+  margin-top: 20px;
+}

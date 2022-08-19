@@ -30,7 +30,6 @@ function InvestActions({ amounts, currentEthType }: InvestActionsProps) {
 
   return (
     <footer>
-      {JSON.stringify(state.value)}
       <div className={styles.stepsWrapper}>
         <div className={styles.divider} aria-hidden />
 

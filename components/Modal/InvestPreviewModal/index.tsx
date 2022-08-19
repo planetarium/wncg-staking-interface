@@ -1,7 +1,4 @@
-import { useRecoilValue } from 'recoil'
 import styles from './style.module.scss'
-
-import { poolTokenApprovalsState } from 'app/states/approval'
 
 import InvestActions from './Actions'
 import InvestComposition from './Composition'
@@ -20,7 +17,16 @@ export function InvestPreviewModal({
   priceImpact,
   totalUsdValue,
 }: InvestPreviewModalProps) {
-  const poolTokenApproval = useRecoilValue(poolTokenApprovalState)
-
-  return <div className={styles.investPreviewModal}>InvestPreview</div>
+  return (
+    <div className={styles.investPreviewModal}>
+      <h1 className={styles.title}>Investment Preview</h1>
+      <InvestComposition
+        amounts={amounts}
+        currentEthType={currentEthType}
+        totalUsdValue={totalUsdValue}
+      />
+      <InvestSummary priceImpact={priceImpact} totalUsdValue={totalUsdValue} />
+      <InvestActions amounts={amounts} currentEthType={currentEthType} />
+    </div>
+  )
 }
