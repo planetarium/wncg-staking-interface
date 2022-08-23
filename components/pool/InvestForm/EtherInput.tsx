@@ -1,7 +1,14 @@
-import { MouseEvent, useMemo } from 'react'
-import type { Control, FieldValues, UseFormClearErrors } from 'react-hook-form'
+import { memo, MouseEvent, useEffect, useMemo } from 'react'
+import type {
+  Control,
+  FieldValues,
+  UseFormClearErrors,
+  UseFormTrigger,
+} from 'react-hook-form'
 
+import { getUserBalances } from 'app/states/balance'
 import Decimal, { sanitizeNumber } from 'utils/num'
+import { useAppSelector } from 'hooks'
 import { etherTokenList } from '../constants'
 import type { InvestFormFields } from './type'
 
@@ -10,30 +17,35 @@ import { TokenInput } from '../TokenInput'
 type EtherInputProps = {
   clearErrors: UseFormClearErrors<InvestFormFields>
   control: Control<InvestFormFields>
-  ethValue: string
-  ethNetBalance: string
-  ethBalanceAvailable: string
   isNativeAsset: boolean
+  showPropButton: boolean
   selectEth(value: EthType): void
   setMaxValue(e: MouseEvent<HTMLButtonElement>): void
   setPropAmount(e: MouseEvent<HTMLButtonElement>): void
-  showPropButton: boolean
+  trigger: UseFormTrigger<InvestFormFields>
+  value: string
   error?: string
 }
 
-export function EtherInput({
+function EtherInput({
   clearErrors,
   control,
-  ethValue,
-  ethNetBalance,
-  ethBalanceAvailable,
   isNativeAsset,
   selectEth,
   setMaxValue,
   setPropAmount,
   showPropButton,
+  trigger,
+  value,
   error,
 }: EtherInputProps) {
+  const userBalances = useAppSelector(getUserBalances)
+
+  const ethNetBalance = isNativeAsset ? userBalances.eth : userBalances.weth
+  const ethBalanceAvailable = isNativeAsset
+    ? Math.max(new Decimal(ethNetBalance).minus(0.05).toNumber(), 0).toString()
+    : ethNetBalance
+
   const rules = useMemo(
     () => ({
       validate: {
@@ -53,21 +65,25 @@ export function EtherInput({
 
   const maximized = useMemo(
     () =>
-      !new Decimal(ethValue).isZero() &&
-      new Decimal(ethValue).eq(ethBalanceAvailable),
-    [ethBalanceAvailable, ethValue]
+      !new Decimal(value).isZero() &&
+      new Decimal(value).eq(ethBalanceAvailable),
+    [ethBalanceAvailable, value]
   )
 
   const tokenName = isNativeAsset ? 'eth' : 'weth'
 
   const showWarning = useMemo(() => {
     if (!isNativeAsset) return false
-    if (error || new Decimal(ethValue).isZero()) return false
-    if (new Decimal(ethBalanceAvailable).minus(ethValue).lte(0.05)) {
+    if (error || new Decimal(value).isZero()) return false
+    if (new Decimal(ethBalanceAvailable).minus(value).lte(0.05)) {
       return true
     }
     return false
-  }, [error, ethBalanceAvailable, ethValue, isNativeAsset])
+  }, [error, ethBalanceAvailable, value, isNativeAsset])
+
+  useEffect(() => {
+    trigger('ethAmount')
+  }, [isNativeAsset, trigger, value])
 
   return (
     <TokenInput
@@ -92,3 +108,5 @@ export function EtherInput({
     />
   )
 }
+
+export default memo(EtherInput)

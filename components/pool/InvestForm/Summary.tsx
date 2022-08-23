@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import NumberFormat from 'react-number-format'
 import clsx from 'clsx'
 import styles from '../styles/Form.module.scss'
@@ -16,7 +17,7 @@ type InvestFormSummaryProps = {
   totalUsdValue: string
 }
 
-export function InvestFormSummary({
+function InvestFormSummary({
   investMax,
   investOpt,
   maximized,
@@ -79,3 +80,5 @@ export function InvestFormSummary({
     </dl>
   )
 }
+
+export default memo(InvestFormSummary)

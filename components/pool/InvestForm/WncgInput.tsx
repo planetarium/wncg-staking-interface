@@ -1,12 +1,9 @@
-import { MouseEvent, useMemo } from 'react'
-import type {
-  Control,
-  FieldValues,
-  FormState,
-  UseFormClearErrors,
-} from 'react-hook-form'
+import { memo, MouseEvent, useMemo } from 'react'
+import type { Control, FieldValues, UseFormClearErrors } from 'react-hook-form'
 
+import { getWncgBalance } from 'app/states/balance'
 import Decimal, { sanitizeNumber } from 'utils/num'
+import { useAppSelector } from 'hooks'
 import type { InvestFormFields } from './type'
 
 import { TokenInput } from '../TokenInput'
@@ -14,25 +11,24 @@ import { TokenInput } from '../TokenInput'
 type WncgInputProps = {
   clearErrors: UseFormClearErrors<InvestFormFields>
   control: Control<InvestFormFields>
-  formState: FormState<InvestFormFields>
+  showPropButton: boolean
   setMaxValue(e: MouseEvent<HTMLButtonElement>): void
   setPropAmount(e: MouseEvent<HTMLButtonElement>): void
-  showPropButton: boolean
-  wncgBalance: string
-  wncgValue: string
+  value: string
   error?: string
 }
 
-export function WncgInput({
+function WncgInput({
   clearErrors,
   control,
+  showPropButton,
   setMaxValue,
   setPropAmount,
-  showPropButton,
-  wncgBalance,
-  wncgValue,
+  value,
   error,
 }: WncgInputProps) {
+  const wncgBalance = useAppSelector(getWncgBalance)
+
   const rules = useMemo(
     () => ({
       validate: {
@@ -51,8 +47,8 @@ export function WncgInput({
   )
 
   const maximized = useMemo(
-    () => new Decimal(wncgValue).eq(wncgBalance),
-    [wncgBalance, wncgValue]
+    () => new Decimal(value).eq(wncgBalance),
+    [wncgBalance, value]
   )
 
   return (
@@ -71,3 +67,5 @@ export function WncgInput({
     />
   )
 }
+
+export default memo(WncgInput)
