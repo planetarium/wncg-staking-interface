@@ -63,9 +63,13 @@ export function useJoinMath() {
   const getUserPoolTokenBalances = useCallback(
     (isNativeAsset: boolean) => {
       return poolTokenSymbols.map((symb) => {
-        let symbol = symb as PoolTokenSymbol | 'eth'
+        // FIXME: Refactor selecting token balance
+        let symbol = symb as PoolTokenSymbol | 'eth' | 'wbtc'
         if (symbol === 'weth' && isNativeAsset) {
           symbol = 'eth'
+        }
+        if (symbol === 'wbtc') {
+          symbol = 'wncg'
         }
         return userBalances[symbol] || '0'
       })
@@ -77,22 +81,24 @@ export function useJoinMath() {
     (isNativeAsset: boolean) => {
       const userPoolBalances = getUserPoolTokenBalances(isNativeAsset)
 
-      const propMaxAmounts = userPoolBalances.map(
-        (balance, i) =>
+      const propMinAmounts = userPoolBalances.map((balance, i) => {
+        return (
           calculator?.propAmountsGiven(balance, i, 'send')?.send || ['0', '0']
-      )
-      const propMaxAmountsInUsdValue = propMaxAmounts.map((amounts) => {
+        )
+      })
+
+      const propMinAmountsInUsdValue = propMinAmounts.map((amounts) => {
         return amounts.reduce((acc, amount, i) => {
           const tokenName = poolTokenSymbols[i]
           acc += calculateUsdValue(tokenName, amount)
           return acc
         }, 0)
       })
-      const maxIndex = propMaxAmountsInUsdValue.indexOf(
-        Math.max(...propMaxAmountsInUsdValue)
+      const minIndex = propMinAmountsInUsdValue.indexOf(
+        Math.min(...propMinAmountsInUsdValue)
       )
 
-      return propMaxAmounts[maxIndex] || ['0', '0']
+      return propMinAmounts[minIndex] || ['0', '0']
     },
     [calculateUsdValue, calculator, getUserPoolTokenBalances, poolTokenSymbols]
   )

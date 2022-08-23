@@ -26,9 +26,10 @@ function JoinForm({ isNativeAsset, selectEth }: JoinFormProps) {
     joinMax,
     joinOpt,
     maximized,
-    maxOptDisabled,
+    maxDisabled,
     openPreviewModal,
     optimized,
+    optDisabled,
     priceImpact,
     setMaxValue,
     setPropAmount,
@@ -72,7 +73,8 @@ function JoinForm({ isNativeAsset, selectEth }: JoinFormProps) {
           joinOpt={joinOpt}
           maximized={maximized}
           optimized={optimized}
-          maxOptDisabled={maxOptDisabled}
+          maxDisabled={maxDisabled}
+          optDisabled={optDisabled}
           priceImpact={priceImpact}
           totalUsdValue={totalUsdValue}
         />

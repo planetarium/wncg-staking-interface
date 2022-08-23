@@ -29,6 +29,8 @@ export function useJoinForm(
   const wncgValue = sanitizeNumber(watch('wncgAmount'))
   const amounts = useMemo(() => [wncgValue, ethValue], [ethValue, wncgValue])
 
+  const optimizedMinAmounts = getOptimizedAmounts(isNativeAsset)
+
   const setMaxValue = useCallback(
     (e: MouseEvent<HTMLButtonElement>) => {
       const { value } = e.currentTarget as typeof e.currentTarget & {
@@ -65,9 +67,10 @@ export function useJoinForm(
   }, [clearErrors, ethBalanceAvailable, setValue, wncgBalance])
 
   const joinOpt = useCallback(() => {
-    const propMaxAmounts = getOptimizedAmounts(isNativeAsset)
-    setValue('wncgAmount', propMaxAmounts[0])
-    setValue('ethAmount', propMaxAmounts[1])
+    const propMinAmounts = getOptimizedAmounts(isNativeAsset)
+
+    setValue('wncgAmount', propMinAmounts[0])
+    setValue('ethAmount', propMinAmounts[1])
     trigger()
   }, [getOptimizedAmounts, isNativeAsset, setValue, trigger])
 
@@ -106,12 +109,13 @@ export function useJoinForm(
     [ethBalanceAvailable, ethValue, wncgBalance, wncgValue]
   )
 
-  const optimized = useMemo(() => {
-    const propMaxAmounts = getOptimizedAmounts(isNativeAsset)
-    return amounts.every((amount, i) =>
-      new Decimal(amount).eq(propMaxAmounts[i])
-    )
-  }, [amounts, getOptimizedAmounts, isNativeAsset])
+  const optimized = useMemo(
+    () =>
+      amounts.every((amount, i) =>
+        new Decimal(amount).eq(optimizedMinAmounts[i])
+      ),
+    [amounts, optimizedMinAmounts]
+  )
 
   const showPropButton = useMemo(() => {
     const hasError = !!Object.keys(formState.errors).length
@@ -129,11 +133,16 @@ export function useJoinForm(
     [ethValue, wncgValue]
   )
 
-  const maxOptDisabled = useMemo(
+  const maxDisabled = useMemo(
     () =>
       new Decimal(wncgBalance).isZero() &&
       new Decimal(ethBalanceAvailable).isZero(),
     [ethBalanceAvailable, wncgBalance]
+  )
+
+  const optDisabled = useMemo(
+    () => optimizedMinAmounts.every((amount) => new Decimal(amount).isZero()),
+    [optimizedMinAmounts]
   )
 
   return {
@@ -141,9 +150,10 @@ export function useJoinForm(
     joinMax,
     joinOpt,
     maximized,
-    maxOptDisabled,
+    maxDisabled,
     openPreviewModal,
     optimized,
+    optDisabled,
     priceImpact,
     setMaxValue,
     setPropAmount,

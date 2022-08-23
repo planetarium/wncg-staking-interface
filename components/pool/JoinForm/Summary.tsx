@@ -11,8 +11,9 @@ type JoinFormSummaryProps = {
   joinMax(): void
   joinOpt(): void
   maximized: boolean
+  maxDisabled: boolean
   optimized: boolean
-  maxOptDisabled: boolean
+  optDisabled: boolean
   priceImpact: number
   totalUsdValue: string
 }
@@ -21,8 +22,9 @@ function JoinFormSummary({
   joinMax,
   joinOpt,
   maximized,
+  maxDisabled,
   optimized,
-  maxOptDisabled,
+  optDisabled,
   priceImpact,
   totalUsdValue,
 }: JoinFormSummaryProps) {
@@ -47,25 +49,26 @@ function JoinFormSummary({
             />
           </strong>
 
-          {!maxOptDisabled && (
-            <>
-              <button
-                className={styles.maxButton}
-                type="button"
-                onClick={joinMax}
-                disabled={maximized}
-              >
-                {maximized ? 'Maxed' : 'Max'}
-              </button>
-              <button
-                className={styles.optButton}
-                type="button"
-                onClick={joinOpt}
-                disabled={optimized}
-              >
-                {optimized ? 'Optimized' : 'Optimize'}
-              </button>
-            </>
+          {!maxDisabled && (
+            <button
+              className={styles.maxButton}
+              type="button"
+              onClick={joinMax}
+              disabled={maximized}
+            >
+              {maximized ? 'Maxed' : 'Max'}
+            </button>
+          )}
+
+          {!optDisabled && (
+            <button
+              className={styles.optButton}
+              type="button"
+              onClick={joinOpt}
+              disabled={optimized}
+            >
+              {optimized ? 'Optimized' : 'Optimize'}
+            </button>
           )}
         </dd>
       </div>
