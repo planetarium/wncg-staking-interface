@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import type { RootState } from 'app/store'
 
 type BalanceState = {
@@ -62,3 +62,15 @@ export function getWethBalance(state: RootState): string {
 export function getWncgBalance(state: RootState): string {
   return state.balance.wncgBalance || '0'
 }
+
+export const getUserBalances = createSelector(
+  [getBptBalance, getEthBalance, getWethBalance, getWncgBalance],
+  (bpt, eth, weth, wncg) => {
+    return {
+      bpt,
+      eth,
+      weth,
+      wncg,
+    }
+  }
+)

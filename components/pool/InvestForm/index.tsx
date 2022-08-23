@@ -2,11 +2,7 @@ import { memo, MouseEvent, useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import styles from '../styles/Form.module.scss'
 
-import {
-  getEthBalance,
-  getWethBalance,
-  getWncgBalance,
-} from 'app/states/balance'
+import { getUserBalances } from 'app/states/balance'
 import { ModalCategory } from 'app/states/modal'
 import Decimal, { sanitizeNumber } from 'utils/num'
 import { useAppSelector, useInvestMath, useModal, useUsd } from 'hooks'
@@ -27,11 +23,10 @@ function PoolInvestForm({ isNativeAsset, selectEth }: PoolInvestFormProps) {
   const { addModal } = useModal()
   const { calculateUsdValue } = useUsd()
 
-  const ethBalance = useAppSelector(getEthBalance)
-  const wethBalance = useAppSelector(getWethBalance)
-  const wncgBalance = useAppSelector(getWncgBalance)
+  const userBalances = useAppSelector(getUserBalances)
 
-  const ethNetBalance = isNativeAsset ? ethBalance : wethBalance
+  const wncgBalance = userBalances.wncg
+  const ethNetBalance = isNativeAsset ? userBalances.eth : userBalances.weth
   const ethBalanceAvailable = isNativeAsset
     ? Math.max(new Decimal(ethNetBalance).minus(0.05).toNumber(), 0).toString()
     : ethNetBalance

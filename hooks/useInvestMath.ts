@@ -1,16 +1,17 @@
 import { useCallback, useMemo } from 'react'
 import { useRecoilValue } from 'recoil'
 
-import { getBptBalance } from 'app/states/balance'
+import { getUserBalances } from 'app/states/balance'
 import { poolState } from 'app/states/pool'
 import CalculatorService from 'lib/calculator'
 import { bnum } from 'utils/num'
 import { useAppSelector } from './useRedux'
 
 export function useInvestMath() {
-  const bptBalance = useAppSelector(getBptBalance)
-
   const pool = useRecoilValue(poolState)
+
+  const userBalances = useAppSelector(getUserBalances)
+  const bptBalance = userBalances.bpt
 
   const calculator = useMemo(() => {
     if (!pool) return null
