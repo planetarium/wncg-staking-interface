@@ -7,12 +7,18 @@ type Confirmation = {
   status: 'pending' | 'fulfilled'
   addedTime: number
   finalizedTime?: number
+  data?: any
 }
 
 export function useConfirmations() {
   function getConfirmations(hash: string) {
     const current = store.get(STORE_CONFIRMATIONS_KEY) || {}
     return current[key(hash)]?.status || false
+  }
+
+  function getHashData(hash: string) {
+    const current = store.get(STORE_CONFIRMATIONS_KEY) || {}
+    return current[key(hash)]?.data || {}
   }
 
   function setConfirmations(hash: string) {
@@ -30,13 +36,14 @@ export function useConfirmations() {
     store.set(STORE_CONFIRMATIONS_KEY, newConfirmations)
   }
 
-  function registerConfirmations(hash: string) {
+  function registerConfirmations(hash: string, data?: any) {
     const current = store.get(STORE_CONFIRMATIONS_KEY) || {}
     const newConfirmations = {
       ...current,
       [key(hash)]: {
         status: 'pending',
         addedTime: Date.now(),
+        data,
       },
     }
     store.set(STORE_CONFIRMATIONS_KEY, newConfirmations)
@@ -68,6 +75,7 @@ export function useConfirmations() {
   return {
     flushOutdatedConfirmations,
     getConfirmations,
+    getHashData,
     setConfirmations,
     registerConfirmations,
     resetConfirmations,

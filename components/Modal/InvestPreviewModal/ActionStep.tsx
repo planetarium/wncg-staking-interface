@@ -33,7 +33,6 @@ export function InvestActionStep({
   const isCompleted =
     typeof completed === 'boolean' ? completed : currentState === completed
   const isDone = isCompleted || skip
-  console.log(label, isCompleted, skip, isDone)
 
   const tooltip = renderTooltipText(token, approvalStep, completed, skip)
   const isTooltipSmall = approvalStep && !!completed

@@ -19,7 +19,11 @@ export function useToast() {
   const dispatch = useAppDispatch()
   const { registerConfirmations } = useConfirmations()
 
-  function addToast(params: AddToastParams, confirmationHash?: string) {
+  function addToast(
+    params: AddToastParams,
+    confirmationHash?: string,
+    data?: any
+  ) {
     const { hash, summary } = params
     const toastId = `${hash}.${summary}`
 
@@ -30,7 +34,7 @@ export function useToast() {
     dispatch(addToastId(toastId))
 
     if (confirmationHash) {
-      registerConfirmations(confirmationHash)
+      registerConfirmations(confirmationHash, data)
     }
   }
 
