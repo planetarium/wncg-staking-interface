@@ -4,7 +4,9 @@ import type { StateValue } from 'xstate'
 import styles from './Actions.module.scss'
 
 import { poolTokenApprovalsState } from 'app/states/approval'
+import { ModalCategory } from 'app/states/modal'
 import { useJoinMachine } from './useJoinMachine'
+import { useModal } from 'hooks'
 
 import { Button } from 'components/Button'
 import { JoinActionStep } from './ActionStep'
@@ -19,12 +21,18 @@ function JoinActions({ amounts, isNativeAsset }: JoinActionsProps) {
     amounts,
     isNativeAsset
   )
+  const { removeModal } = useModal()
 
   const poolTokenApprovals = useRecoilValue(poolTokenApprovalsState)
 
   const submitDisabled = ['approvingWncg', 'approvingWeth', 'joining'].includes(
     state.value as string
   )
+  const isCompleted = state.value === 'completed'
+
+  function closeModal() {
+    removeModal(ModalCategory.JoinPreview)
+  }
 
   return (
     <footer>
@@ -61,7 +69,21 @@ function JoinActions({ amounts, isNativeAsset }: JoinActionsProps) {
           />
         </ol>
       </div>
+
+      {isCompleted && (
+        <Button
+          className={styles.stakeButton}
+          onClick={closeModal}
+          size="large"
+          href="/wncg"
+          fullWidth
+          disabled={submitDisabled}
+        >
+          Stake
+        </Button>
+      )}
       <Button
+        variant={isCompleted ? 'secondary' : 'primary'}
         size="large"
         onClick={handleSubmit}
         fullWidth
