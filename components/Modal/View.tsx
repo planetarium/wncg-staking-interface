@@ -10,7 +10,7 @@ import { modalVariants, overlayVariants } from './constants'
 
 import { ClaimRewardModal } from './ClaimRewardModal'
 import { ConnectModal } from './ConnectModal'
-import { InvestPreviewModal } from './InvestPreviewModal'
+import { JoinPreviewModal } from './JoinPreviewModal'
 import { MetaMaskGuideModal } from './MetaMaskGuideModal'
 import { StakeWarningModal } from './StakeWarningModal'
 import { WithdrawPreviewModal } from './WithdrawPreviewModal'
@@ -73,8 +73,8 @@ function renderModal(modal: Modal) {
       return <ConnectModal {...props} />
     case ModalCategory.Error:
       return <div {...props}>ErrorModal</div>
-    case ModalCategory.InvestPreview:
-      return <InvestPreviewModal {...props} />
+    case ModalCategory.JoinPreview:
+      return <JoinPreviewModal {...props} />
     case ModalCategory.MetaMaskGuide:
       return <MetaMaskGuideModal {...props} />
     case ModalCategory.StakeWarning:

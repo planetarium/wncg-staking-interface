@@ -1,31 +1,18 @@
 import { memo } from 'react'
 import NumberFormat from 'react-number-format'
 import clsx from 'clsx'
-import styles from '../styles/Form.module.scss'
+import styles from './style.module.scss'
 
 import { bnum } from 'utils/num'
 
 import { Icon } from 'components/Icon'
 
-type InvestFormSummaryProps = {
-  investMax(): void
-  investOpt(): void
-  maximized: boolean
-  optimized: boolean
-  maxOptDisabled: boolean
+type JoinSummaryProps = {
   priceImpact: number
   totalUsdValue: string
 }
 
-function InvestFormSummary({
-  investMax,
-  investOpt,
-  maximized,
-  optimized,
-  maxOptDisabled,
-  priceImpact,
-  totalUsdValue,
-}: InvestFormSummaryProps) {
+function JoinSummary({ priceImpact, totalUsdValue }: JoinSummaryProps) {
   const priceImpactPcnt = (priceImpact * 100).toFixed(2)
   const bPriceImpactPcnt = bnum(priceImpactPcnt)
 
@@ -33,7 +20,7 @@ function InvestFormSummary({
   const highPriceImpact = bPriceImpactPcnt.gt(1)
 
   return (
-    <dl className={styles.formSummary}>
+    <dl className={styles.summary}>
       <div>
         <dt>Total</dt>
         <dd>
@@ -46,27 +33,6 @@ function InvestFormSummary({
               prefix="$"
             />
           </strong>
-
-          {!maxOptDisabled && (
-            <>
-              <button
-                className={styles.maxButton}
-                type="button"
-                onClick={investMax}
-                disabled={maximized}
-              >
-                {maximized ? 'Maxed' : 'Max'}
-              </button>
-              <button
-                className={styles.optButton}
-                type="button"
-                onClick={investOpt}
-                disabled={optimized}
-              >
-                {optimized ? 'Optimized' : 'Optimize'}
-              </button>
-            </>
-          )}
         </dd>
       </div>
 
@@ -81,4 +47,4 @@ function InvestFormSummary({
   )
 }
 
-export default memo(InvestFormSummary)
+export default memo(JoinSummary)

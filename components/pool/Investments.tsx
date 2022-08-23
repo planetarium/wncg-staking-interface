@@ -146,7 +146,7 @@ function PoolInvestments() {
 
 export default memo(PoolInvestments)
 
-function renderType(type: InvestType) {
+function renderType(type: PoolActionType) {
   if (type === 'Join') {
     return (
       <div className={clsx(styles.type, styles.invest)}>

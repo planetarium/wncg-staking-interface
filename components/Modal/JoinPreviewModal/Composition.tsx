@@ -11,17 +11,17 @@ import { useUsd } from 'hooks'
 
 import { TokenIcon } from 'components/TokenIcon'
 
-type InvestCompositionProps = {
+type JoinCompositionProps = {
   amounts: string[]
   isNativeAsset: boolean
   totalUsdValue: string
 }
 
-function InvestComposition({
+function JoinComposition({
   amounts,
   isNativeAsset,
   totalUsdValue,
-}: InvestCompositionProps) {
+}: JoinCompositionProps) {
   const { calculateUsdValue } = useUsd()
 
   const poolTokenSymbols = useRecoilValue(poolTokenSymbolsState)
@@ -62,10 +62,7 @@ function InvestComposition({
           !tokenAmount.isZero() && tokenAmount.lt(0.0001)
 
         return (
-          <div
-            className={styles.detailItem}
-            key={`investPreview.${tokenSymbol}`}
-          >
+          <div className={styles.detailItem} key={`JoinPreview.${tokenSymbol}`}>
             <dt>
               <TokenIcon className={styles.token} symbol={tokenSymbol} />
               <strong className={styles.symbol}>{symbol}</strong>
@@ -100,4 +97,4 @@ function InvestComposition({
   )
 }
 
-export default memo(InvestComposition)
+export default memo(JoinComposition)

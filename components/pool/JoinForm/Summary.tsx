@@ -1,18 +1,31 @@
 import { memo } from 'react'
 import NumberFormat from 'react-number-format'
 import clsx from 'clsx'
-import styles from './style.module.scss'
+import styles from '../styles/Form.module.scss'
 
 import { bnum } from 'utils/num'
 
 import { Icon } from 'components/Icon'
 
-type InvestSummaryProps = {
+type JoinFormSummaryProps = {
+  joinMax(): void
+  joinOpt(): void
+  maximized: boolean
+  optimized: boolean
+  maxOptDisabled: boolean
   priceImpact: number
   totalUsdValue: string
 }
 
-function InvestSummary({ priceImpact, totalUsdValue }: InvestSummaryProps) {
+function JoinFormSummary({
+  joinMax,
+  joinOpt,
+  maximized,
+  optimized,
+  maxOptDisabled,
+  priceImpact,
+  totalUsdValue,
+}: JoinFormSummaryProps) {
   const priceImpactPcnt = (priceImpact * 100).toFixed(2)
   const bPriceImpactPcnt = bnum(priceImpactPcnt)
 
@@ -20,7 +33,7 @@ function InvestSummary({ priceImpact, totalUsdValue }: InvestSummaryProps) {
   const highPriceImpact = bPriceImpactPcnt.gt(1)
 
   return (
-    <dl className={styles.summary}>
+    <dl className={styles.formSummary}>
       <div>
         <dt>Total</dt>
         <dd>
@@ -33,6 +46,27 @@ function InvestSummary({ priceImpact, totalUsdValue }: InvestSummaryProps) {
               prefix="$"
             />
           </strong>
+
+          {!maxOptDisabled && (
+            <>
+              <button
+                className={styles.maxButton}
+                type="button"
+                onClick={joinMax}
+                disabled={maximized}
+              >
+                {maximized ? 'Maxed' : 'Max'}
+              </button>
+              <button
+                className={styles.optButton}
+                type="button"
+                onClick={joinOpt}
+                disabled={optimized}
+              >
+                {optimized ? 'Optimized' : 'Optimize'}
+              </button>
+            </>
+          )}
         </dd>
       </div>
 
@@ -47,4 +81,4 @@ function InvestSummary({ priceImpact, totalUsdValue }: InvestSummaryProps) {
   )
 }
 
-export default memo(InvestSummary)
+export default memo(JoinFormSummary)

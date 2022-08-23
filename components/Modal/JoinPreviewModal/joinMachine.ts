@@ -1,20 +1,20 @@
 import { assign, createMachine } from 'xstate'
 import { bnum } from 'utils/num'
 
-export type InvestMachineContext = {
+export type JoinMachineContext = {
   amounts: string[]
   approvals: boolean[]
   isNativeAsset: boolean
 }
 
-export function createInvestMachine(
+export function createJoinMachine(
   amounts: string[],
   approvals: boolean[],
   isNativeAsset: boolean
 ) {
-  return createMachine<InvestMachineContext>(
+  return createMachine<JoinMachineContext>(
     {
-      id: '#investMachine',
+      id: '#JoinPoolMachine',
       initial: 'idle',
       context: {
         amounts,
@@ -25,8 +25,8 @@ export function createInvestMachine(
         idle: {
           always: [
             {
-              target: 'invest',
-              cond: 'canInvest',
+              target: 'join',
+              cond: 'canJoin',
             },
             {
               target: 'approveWncg',
@@ -46,8 +46,8 @@ export function createInvestMachine(
         approvingWncg: {
           always: [
             {
-              target: 'invest',
-              cond: 'canInvest',
+              target: 'join',
+              cond: 'canJoin',
             },
             {
               target: 'approveWeth',
@@ -68,8 +68,8 @@ export function createInvestMachine(
         },
         approvingWeth: {
           always: {
-            target: 'invest',
-            cond: 'canInvest',
+            target: 'join',
+            cond: 'canJoin',
           },
           on: {
             APPROVED_WETH: {
@@ -78,15 +78,15 @@ export function createInvestMachine(
             ROLLBACK: 'approveWeth',
           },
         },
-        invest: {
+        join: {
           on: {
-            INVESTING: 'investing',
+            JOINING: 'joining',
           },
         },
-        investing: {
+        joining: {
           on: {
             COMPLETED: 'completed',
-            ROLLBACK: 'invest',
+            ROLLBACK: 'join',
           },
         },
         completed: {},
@@ -98,7 +98,7 @@ export function createInvestMachine(
         updateWncgApproval,
       },
       guards: {
-        canInvest,
+        canJoin,
         shouldApproveWeth,
         shouldApproveWncg,
       },
@@ -106,7 +106,7 @@ export function createInvestMachine(
   )
 }
 
-function canInvest(ctx: InvestMachineContext) {
+function canJoin(ctx: JoinMachineContext) {
   return ctx.amounts.every((amount, i) => {
     const givenAmount = bnum(amount)
     if (i === 1 && ctx.isNativeAsset) return true
@@ -115,11 +115,11 @@ function canInvest(ctx: InvestMachineContext) {
   })
 }
 
-function shouldApproveWncg(ctx: InvestMachineContext) {
+function shouldApproveWncg(ctx: JoinMachineContext) {
   return !ctx.approvals[0] && !bnum(ctx.amounts[0]).isZero()
 }
 
-function shouldApproveWeth(ctx: InvestMachineContext) {
+function shouldApproveWeth(ctx: JoinMachineContext) {
   if (ctx.approvals[1]) return false
   if (ctx.isNativeAsset) return false
   if (bnum(ctx.amounts[1]).isZero()) return false
@@ -127,7 +127,7 @@ function shouldApproveWeth(ctx: InvestMachineContext) {
   return true
 }
 
-const updateWncgApproval = assign<InvestMachineContext>({
+const updateWncgApproval = assign<JoinMachineContext>({
   approvals: (ctx) => {
     const newApprovals = [...ctx.approvals]
     newApprovals[0] = true
@@ -135,7 +135,7 @@ const updateWncgApproval = assign<InvestMachineContext>({
   },
 })
 
-const updateWethApproval = assign<InvestMachineContext>({
+const updateWethApproval = assign<JoinMachineContext>({
   approvals: (ctx) => {
     const newApprovals = [...ctx.approvals]
     newApprovals[1] = true

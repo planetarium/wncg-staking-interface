@@ -4,17 +4,16 @@ import type { UseFormReturn } from 'react-hook-form'
 import { getUserBalances } from 'app/states/balance'
 import { ModalCategory } from 'app/states/modal'
 import Decimal, { sanitizeNumber } from 'utils/num'
-import { useAppSelector, useInvestMath, useModal, useUsd } from 'hooks'
-import type { InvestFormFields } from './type'
+import { useAppSelector, useJoinMath, useModal, useUsd } from 'hooks'
+import type { JoinFormFields } from './type'
 
-export function useInvestForm(
+export function useJoinForm(
   isNativeAsset: boolean,
-  useFormReturn: UseFormReturn<InvestFormFields>
+  useFormReturn: UseFormReturn<JoinFormFields>
 ) {
   const { clearErrors, formState, setValue, trigger, watch } = useFormReturn
 
-  const { getPriceImpact, getPropAmounts, getOptimizedAmounts } =
-    useInvestMath()
+  const { getPriceImpact, getPropAmounts, getOptimizedAmounts } = useJoinMath()
   const { addModal } = useModal()
   const { calculateUsdValue } = useUsd()
 
@@ -33,7 +32,7 @@ export function useInvestForm(
   const setMaxValue = useCallback(
     (e: MouseEvent<HTMLButtonElement>) => {
       const { value } = e.currentTarget as typeof e.currentTarget & {
-        value: keyof InvestFormFields
+        value: keyof JoinFormFields
       }
       const inputName = value
       clearErrors(inputName)
@@ -59,13 +58,13 @@ export function useInvestForm(
     [amounts, getPropAmounts, setValue, trigger]
   )
 
-  const investMax = useCallback(() => {
+  const joinMax = useCallback(() => {
     setValue('ethAmount', ethBalanceAvailable)
     setValue('wncgAmount', wncgBalance)
     clearErrors()
   }, [clearErrors, ethBalanceAvailable, setValue, wncgBalance])
 
-  const investOpt = useCallback(() => {
+  const joinOpt = useCallback(() => {
     const propMaxAmounts = getOptimizedAmounts(isNativeAsset)
     setValue('wncgAmount', propMaxAmounts[0])
     setValue('ethAmount', propMaxAmounts[1])
@@ -87,7 +86,7 @@ export function useInvestForm(
       e.stopPropagation()
 
       addModal({
-        category: ModalCategory.InvestPreview,
+        category: ModalCategory.JoinPreview,
         props: {
           amounts,
           isNativeAsset,
@@ -125,7 +124,7 @@ export function useInvestForm(
     }
   }, [ethValue, formState, wncgValue])
 
-  const investDisabled = useMemo(
+  const joinDisabled = useMemo(
     () => new Decimal(wncgValue).isZero() && new Decimal(ethValue).isZero(),
     [ethValue, wncgValue]
   )
@@ -138,9 +137,9 @@ export function useInvestForm(
   )
 
   return {
-    investDisabled,
-    investMax,
-    investOpt,
+    joinDisabled,
+    joinMax,
+    joinOpt,
     maximized,
     maxOptDisabled,
     openPreviewModal,

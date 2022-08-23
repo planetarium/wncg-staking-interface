@@ -5,7 +5,7 @@ export const ModalCategory = {
   ClaimReward: 'MODAL_CATEGORY_CLAIM_REWARD',
   Connect: 'MODAL_CATEGORY_CONNECT',
   Error: 'MODAL_CATEGORY_ERROR',
-  InvestPreview: 'MODAL_INVEST_PREVIEW',
+  JoinPreview: 'MODAL_JOIN_POOL_PREVIEW',
   MetaMaskGuide: 'MODAL_CATEGORY_METAMASK_GUIDE',
   StakeWarning: 'MODAL_CATEGORY_STAKE_WARNING',
   WithdrawPreview: 'MODAL_CATEGORY_WITHDRAW_PREVIEW',

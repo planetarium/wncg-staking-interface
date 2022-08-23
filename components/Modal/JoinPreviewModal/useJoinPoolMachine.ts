@@ -13,9 +13,9 @@ import {
   useModal,
   useProvider,
 } from 'hooks'
-import { createInvestMachine } from './investMachine'
+import { createJoinMachine } from './joinMachine'
 
-export function useInvestMachine(amounts: string[], isNativeAsset: boolean) {
+export function useJoinPoolMachine(amounts: string[], isNativeAsset: boolean) {
   const { approveWeth, approveWncg } = useApprove()
   const {
     poolBalanceChangedEventFilter,
@@ -29,12 +29,12 @@ export function useInvestMachine(amounts: string[], isNativeAsset: boolean) {
   const setApproval = useSetRecoilState(approvalState)
   const poolTokenApprovals = useRecoilValue(poolTokenApprovalsState)
 
-  const investMachine = useMemo(
-    () => createInvestMachine(amounts, poolTokenApprovals, isNativeAsset),
+  const joinMachine = useMemo(
+    () => createJoinMachine(amounts, poolTokenApprovals, isNativeAsset),
     [amounts, isNativeAsset, poolTokenApprovals]
   )
 
-  const [state, send] = useMachine(investMachine)
+  const [state, send] = useMachine(joinMachine)
 
   const handleSubmit = useCallback(
     async (e: MouseEvent) => {
@@ -50,12 +50,12 @@ export function useInvestMachine(amounts: string[], isNativeAsset: boolean) {
             send('APPROVING_WETH')
             await approveWeth()
             break
-          case 'invest':
-            send('INVESTING')
+          case 'join':
+            send('JOINING')
             await joinPool(amounts, isNativeAsset)
             break
           default:
-            removeModal(ModalCategory.InvestPreview)
+            removeModal(ModalCategory.JoinPreview)
             break
         }
       } catch (error) {

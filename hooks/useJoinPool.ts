@@ -7,13 +7,13 @@ import { addTx, TransactionAction } from 'app/states/transaction'
 import { BPT_POOL_ID, IS_ETHEREUM } from 'utils/env'
 import { etherToWei } from 'utils/num'
 import { ethAddress, wethAddress, wncgAddress } from 'utils/token'
-import { useInvestMath } from './useInvestMath'
+import { useJoinMath } from './useJoinMath'
 import { useAppDispatch, useAppSelector } from './useRedux'
 import { useToast } from './useToast'
 import { useVaultContract } from './useVaultContract'
 
 export function useJoinPool() {
-  const { getMinBptOut } = useInvestMath()
+  const { getMinBptOut } = useJoinMath()
   const { addToast } = useToast()
   const vault = useVaultContract()
 

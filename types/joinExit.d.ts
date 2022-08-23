@@ -1,8 +1,8 @@
-type InvestType = 'Join' | 'Exit'
+type PoolActionType = 'Join' | 'Exit'
 
 type JoinExit = {
   id: string
-  type: InvestType
+  type: PoolActionType
   sender: string
   amounts: string[]
   timestamp: number

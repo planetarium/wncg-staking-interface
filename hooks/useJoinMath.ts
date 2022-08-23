@@ -8,7 +8,7 @@ import { bnum } from 'utils/num'
 import { useAppSelector } from './useRedux'
 import { useUsd } from './useUsd'
 
-export function useInvestMath() {
+export function useJoinMath() {
   const { calculateUsdValue } = useUsd()
 
   const pool = useRecoilValue(poolState)

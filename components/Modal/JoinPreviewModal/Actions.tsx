@@ -4,29 +4,27 @@ import type { StateValue } from 'xstate'
 import styles from './Actions.module.scss'
 
 import { poolTokenApprovalsState } from 'app/states/approval'
-import { useInvestMachine } from './useInvestMachine'
+import { useJoinPoolMachine } from './useJoinPoolMachine'
 
 import { Button } from 'components/Button'
-import { InvestActionStep } from './ActionStep'
+import { JoinActionStep } from './ActionStep'
 
-type InvestActionsProps = {
+type JoinActionsProps = {
   amounts: string[]
   isNativeAsset: boolean
 }
 
-function InvestActions({ amounts, isNativeAsset }: InvestActionsProps) {
-  const { handleSubmit, state, stepsToSkip } = useInvestMachine(
+function JoinActions({ amounts, isNativeAsset }: JoinActionsProps) {
+  const { handleSubmit, state, stepsToSkip } = useJoinPoolMachine(
     amounts,
     isNativeAsset
   )
 
   const poolTokenApprovals = useRecoilValue(poolTokenApprovalsState)
 
-  const submitDisabled = [
-    'approvingWncg',
-    'approvingWeth',
-    'investing',
-  ].includes(state.value as string)
+  const submitDisabled = ['approvingWncg', 'approvingWeth', 'joining'].includes(
+    state.value as string
+  )
 
   return (
     <footer>
@@ -34,7 +32,7 @@ function InvestActions({ amounts, isNativeAsset }: InvestActionsProps) {
         <div className={styles.divider} aria-hidden />
 
         <ol className={styles.steps}>
-          <InvestActionStep
+          <JoinActionStep
             action="approveWncg"
             completed={poolTokenApprovals[0]}
             currentState={state.value}
@@ -44,7 +42,7 @@ function InvestActions({ amounts, isNativeAsset }: InvestActionsProps) {
             approvalStep
             token="wncg"
           />
-          <InvestActionStep
+          <JoinActionStep
             action="approveWeth"
             completed={poolTokenApprovals[1]}
             currentState={state.value}
@@ -54,12 +52,12 @@ function InvestActions({ amounts, isNativeAsset }: InvestActionsProps) {
             approvalStep
             token="weth"
           />
-          <InvestActionStep
-            action="invest"
+          <JoinActionStep
+            action="join"
             completed="completed"
             currentState={state.value}
             label={3}
-            pending="investing"
+            pending="joining"
           />
         </ol>
       </div>
@@ -75,7 +73,7 @@ function InvestActions({ amounts, isNativeAsset }: InvestActionsProps) {
   )
 }
 
-export default memo(InvestActions)
+export default memo(JoinActions)
 
 function renderButtonLabel(state: StateValue) {
   switch (state) {
@@ -87,13 +85,13 @@ function renderButtonLabel(state: StateValue) {
       return 'Approve WETH'
     case 'approvingWeth':
       return 'Approving WETH'
-    case 'invest':
-      return 'Invest'
-    case 'investing':
-      return 'Investing'
+    case 'join':
+      return 'Join pool'
+    case 'joining':
+      return 'Joining pool'
     case 'completed':
       return 'Close'
     default:
-      return 'Invest'
+      return 'Join Pool'
   }
 }

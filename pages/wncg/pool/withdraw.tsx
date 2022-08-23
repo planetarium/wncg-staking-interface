@@ -11,12 +11,12 @@ const WncgPoolWithdraw: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Withdraw / WNCG Staking</title>
+        <title>Exit Pool / WNCG Staking</title>
       </Head>
 
       <PageWrapper>
         <div className={styles.container}>
-          <h1 className="hidden">Invest</h1>
+          <h1 className="hidden">Exit Pool</h1>
 
           <div className={styles.left}>
             <MyWallet />

@@ -7,7 +7,7 @@ import loadingAnimation from 'animations/spinner-black.json'
 
 import { Icon } from 'components/Icon'
 
-type InvestActionStepProps = {
+type JoinActionStepProps = {
   action: StateValue
   completed: StateValue | boolean
   currentState: StateValue | boolean
@@ -18,7 +18,7 @@ type InvestActionStepProps = {
   token?: string
 }
 
-export function InvestActionStep({
+export function JoinActionStep({
   action,
   completed,
   currentState,
@@ -27,7 +27,7 @@ export function InvestActionStep({
   approvalStep = false,
   skip = false,
   token = '',
-}: InvestActionStepProps) {
+}: JoinActionStepProps) {
   const isActive = currentState === action
   const isPending = currentState === pending
   const isCompleted =

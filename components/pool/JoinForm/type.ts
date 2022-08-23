@@ -1,4 +1,4 @@
-export type InvestFormFields = {
+export type JoinFormFields = {
   wncgAmount: string
   ethAmount: string
 }

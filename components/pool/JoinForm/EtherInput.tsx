@@ -10,19 +10,19 @@ import { getUserBalances } from 'app/states/balance'
 import Decimal, { sanitizeNumber } from 'utils/num'
 import { useAppSelector } from 'hooks'
 import { etherTokenList } from '../constants'
-import type { InvestFormFields } from './type'
+import type { JoinFormFields } from './type'
 
 import { TokenInput } from '../TokenInput'
 
 type EtherInputProps = {
-  clearErrors: UseFormClearErrors<InvestFormFields>
-  control: Control<InvestFormFields>
+  clearErrors: UseFormClearErrors<JoinFormFields>
+  control: Control<JoinFormFields>
   isNativeAsset: boolean
   showPropButton: boolean
   selectEth(value: EthType): void
   setMaxValue(e: MouseEvent<HTMLButtonElement>): void
   setPropAmount(e: MouseEvent<HTMLButtonElement>): void
-  trigger: UseFormTrigger<InvestFormFields>
+  trigger: UseFormTrigger<JoinFormFields>
   value: string
   error?: string
 }

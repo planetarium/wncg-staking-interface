@@ -14,7 +14,7 @@ import { useAppSelector, useUsd } from 'hooks'
 const ethList: EthType[] = ['eth', 'weth']
 
 type MyWalletProps = {
-  isNativeAsset: boolean
+  isNativeAsset?: boolean
   selectEth?(value: EthType): void
 }
 

@@ -4,13 +4,13 @@ import type { Control, FieldValues, UseFormClearErrors } from 'react-hook-form'
 import { getWncgBalance } from 'app/states/balance'
 import Decimal, { sanitizeNumber } from 'utils/num'
 import { useAppSelector } from 'hooks'
-import type { InvestFormFields } from './type'
+import type { JoinFormFields } from './type'
 
 import { TokenInput } from '../TokenInput'
 
 type WncgInputProps = {
-  clearErrors: UseFormClearErrors<InvestFormFields>
-  control: Control<InvestFormFields>
+  clearErrors: UseFormClearErrors<JoinFormFields>
+  control: Control<JoinFormFields>
   showPropButton: boolean
   setMaxValue(e: MouseEvent<HTMLButtonElement>): void
   setPropAmount(e: MouseEvent<HTMLButtonElement>): void

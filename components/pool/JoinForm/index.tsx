@@ -3,28 +3,28 @@ import { useForm } from 'react-hook-form'
 import styles from '../styles/Form.module.scss'
 
 import { sanitizeNumber } from 'utils/num'
-import { useInvestForm } from './useInvestForm'
-import type { InvestFormFields } from './type'
+import { useJoinForm } from './useJoinForm'
+import type { JoinFormFields } from './type'
 
 import { Button } from 'components/Button'
 import EtherInput from './EtherInput'
-import InvestFormSummary from './Summary'
+import JoinFormSummary from './Summary'
 import WncgInput from './WncgInput'
 
-type PoolInvestFormProps = {
+type JoinFormProps = {
   isNativeAsset: boolean
   selectEth(value: EthType): void
 }
 
-function PoolInvestForm({ isNativeAsset, selectEth }: PoolInvestFormProps) {
-  const useFormReturn = useForm<InvestFormFields>({
+function JoinForm({ isNativeAsset, selectEth }: JoinFormProps) {
+  const useFormReturn = useForm<JoinFormFields>({
     mode: 'onChange',
   })
   const { clearErrors, control, formState, trigger, watch } = useFormReturn
   const {
-    investDisabled,
-    investMax,
-    investOpt,
+    joinDisabled,
+    joinMax,
+    joinOpt,
     maximized,
     maxOptDisabled,
     openPreviewModal,
@@ -34,7 +34,7 @@ function PoolInvestForm({ isNativeAsset, selectEth }: PoolInvestFormProps) {
     setPropAmount,
     showPropButton,
     totalUsdValue,
-  } = useInvestForm(isNativeAsset, useFormReturn)
+  } = useJoinForm(isNativeAsset, useFormReturn)
 
   const ethValue = sanitizeNumber(watch('ethAmount'))
   const wncgValue = sanitizeNumber(watch('wncgAmount'))
@@ -67,9 +67,9 @@ function PoolInvestForm({ isNativeAsset, selectEth }: PoolInvestFormProps) {
           value={ethValue}
           error={formState.errors?.ethAmount?.message}
         />
-        <InvestFormSummary
-          investMax={investMax}
-          investOpt={investOpt}
+        <JoinFormSummary
+          joinMax={joinMax}
+          joinOpt={joinOpt}
           maximized={maximized}
           optimized={optimized}
           maxOptDisabled={maxOptDisabled}
@@ -81,7 +81,7 @@ function PoolInvestForm({ isNativeAsset, selectEth }: PoolInvestFormProps) {
           type="button"
           onClick={openPreviewModal}
           fullWidth
-          disabled={investDisabled}
+          disabled={joinDisabled}
         >
           Preview
         </Button>
@@ -90,4 +90,4 @@ function PoolInvestForm({ isNativeAsset, selectEth }: PoolInvestFormProps) {
   )
 }
 
-export default memo(PoolInvestForm)
+export default memo(JoinForm)
