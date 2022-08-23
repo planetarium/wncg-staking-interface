@@ -4,7 +4,7 @@ import type { StateValue } from 'xstate'
 import styles from './Actions.module.scss'
 
 import { poolTokenApprovalsState } from 'app/states/approval'
-import { useJoinPoolMachine } from './useJoinPoolMachine'
+import { useJoinMachine } from './useJoinMachine'
 
 import { Button } from 'components/Button'
 import { JoinActionStep } from './ActionStep'
@@ -15,7 +15,7 @@ type JoinActionsProps = {
 }
 
 function JoinActions({ amounts, isNativeAsset }: JoinActionsProps) {
-  const { handleSubmit, state, stepsToSkip } = useJoinPoolMachine(
+  const { handleSubmit, state, stepsToSkip } = useJoinMachine(
     amounts,
     isNativeAsset
   )

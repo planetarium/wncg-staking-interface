@@ -15,7 +15,7 @@ import {
 } from 'hooks'
 import { createJoinMachine } from './joinMachine'
 
-export function useJoinPoolMachine(amounts: string[], isNativeAsset: boolean) {
+export function useJoinMachine(amounts: string[], isNativeAsset: boolean) {
   const { approveWeth, approveWncg } = useApprove()
   const {
     poolBalanceChangedEventFilter,
