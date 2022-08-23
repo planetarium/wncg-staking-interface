@@ -91,6 +91,8 @@ function renderButtonLabel(state: StateValue) {
       return 'Invest'
     case 'investing':
       return 'Investing'
+    case 'completed':
+      return 'Close'
     default:
       return 'Invest'
   }

@@ -1,11 +1,18 @@
-import { useCallback, useEffect, useMemo } from 'react'
+import { MouseEvent, useCallback, useEffect, useMemo } from 'react'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { useMachine } from '@xstate/react'
 
 import { approvalState, poolTokenApprovalsState } from 'app/states/approval'
+import { ModalCategory } from 'app/states/modal'
 import { handleError } from 'utils/error'
 import { bnum } from 'utils/num'
-import { useApprove, useEventFilter, useJoinPool, useProvider } from 'hooks'
+import {
+  useApprove,
+  useEventFilter,
+  useJoinPool,
+  useModal,
+  useProvider,
+} from 'hooks'
 import { createInvestMachine } from './investMachine'
 
 export function useInvestMachine(amounts: string[], currentEthType: EthType) {
@@ -16,6 +23,7 @@ export function useInvestMachine(amounts: string[], currentEthType: EthType) {
     wncgApprovalEventFilter,
   } = useEventFilter()
   const { joinPool } = useJoinPool()
+  const { removeModal } = useModal()
   const provider = useProvider()
 
   const setApproval = useSetRecoilState(approvalState)
@@ -28,36 +36,44 @@ export function useInvestMachine(amounts: string[], currentEthType: EthType) {
 
   const [state, send] = useMachine(investMachine)
 
-  const handleSubmit = useCallback(async () => {
-    try {
-      switch (state.value) {
-        case 'approveWncg':
-          send('APPROVING_WNCG')
-          await approveWncg()
-          break
-        case 'approveWeth':
-          send('APPROVING_WETH')
-          await approveWeth()
-          break
-        case 'invest':
-          send('INVESTING')
-          await joinPool(amounts, currentEthType)
-          break
-        default:
-          break
+  const handleSubmit = useCallback(
+    async (e: MouseEvent) => {
+      e.stopPropagation()
+
+      try {
+        switch (state.value) {
+          case 'approveWncg':
+            send('APPROVING_WNCG')
+            await approveWncg()
+            break
+          case 'approveWeth':
+            send('APPROVING_WETH')
+            await approveWeth()
+            break
+          case 'invest':
+            send('INVESTING')
+            await joinPool(amounts, currentEthType)
+            break
+          default:
+            removeModal(ModalCategory.InvestPreview)
+            break
+        }
+      } catch (error) {
+        send('ROLLBACK')
+        handleError(error)
       }
-    } catch (error) {
-      handleError(error)
-    }
-  }, [
-    amounts,
-    approveWeth,
-    approveWncg,
-    currentEthType,
-    joinPool,
-    send,
-    state.value,
-  ])
+    },
+    [
+      amounts,
+      approveWeth,
+      approveWncg,
+      currentEthType,
+      joinPool,
+      removeModal,
+      send,
+      state.value,
+    ]
+  )
 
   const stepsToSkip = useMemo(
     () =>

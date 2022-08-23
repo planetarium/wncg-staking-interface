@@ -58,6 +58,7 @@ export function createInvestMachine(
             APPROVED_WNCG: {
               actions: 'updateWncgApproval',
             },
+            ROLLBACK: 'approveWncg',
           },
         },
         approveWeth: {
@@ -74,6 +75,7 @@ export function createInvestMachine(
             APPROVED_WETH: {
               actions: 'updateWethApproval',
             },
+            ROLLBACK: 'approveWeth',
           },
         },
         invest: {
@@ -84,6 +86,7 @@ export function createInvestMachine(
         investing: {
           on: {
             COMPLETED: 'completed',
+            ROLLBACK: 'invest',
           },
         },
         completed: {},

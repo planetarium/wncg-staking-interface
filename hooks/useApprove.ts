@@ -52,27 +52,19 @@ export function useApprove() {
   }, [postApproveTransaction, bptContract])
 
   const approveWeth = useCallback(async () => {
-    try {
-      const data = await wethContract?.approve(
-        vaultContractAddress,
-        constants.MaxUint256
-      )
-      postApproveTransaction('weth', data)
-    } catch (error) {
-      handleError(error)
-    }
+    const data = await wethContract?.approve(
+      vaultContractAddress,
+      constants.MaxUint256
+    )
+    postApproveTransaction('weth', data)
   }, [postApproveTransaction, wethContract])
 
   const approveWncg = useCallback(async () => {
-    try {
-      const data = await wncgContract?.approve(
-        vaultContractAddress,
-        constants.MaxUint256
-      )
-      postApproveTransaction('wncg', data)
-    } catch (error) {
-      handleError(error)
-    }
+    const data = await wncgContract?.approve(
+      vaultContractAddress,
+      constants.MaxUint256
+    )
+    postApproveTransaction('wncg', data)
   }, [postApproveTransaction, wncgContract])
 
   const createApprovalEventHandler = useCallback(
