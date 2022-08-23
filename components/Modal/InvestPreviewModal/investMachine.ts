@@ -4,13 +4,13 @@ import { bnum } from 'utils/num'
 export type InvestMachineContext = {
   amounts: string[]
   approvals: boolean[]
-  currentEthType: EthType
+  isNativeAsset: boolean
 }
 
 export function createInvestMachine(
   amounts: string[],
   approvals: boolean[],
-  currentEthType: EthType
+  isNativeAsset: boolean
 ) {
   return createMachine<InvestMachineContext>(
     {
@@ -19,7 +19,7 @@ export function createInvestMachine(
       context: {
         amounts,
         approvals,
-        currentEthType,
+        isNativeAsset,
       },
       states: {
         idle: {
@@ -106,10 +106,10 @@ export function createInvestMachine(
   )
 }
 
-function canInvest(ctx: InvestMachineContext, event: any) {
+function canInvest(ctx: InvestMachineContext) {
   return ctx.amounts.every((amount, i) => {
     const givenAmount = bnum(amount)
-    if (i === 1 && ctx.currentEthType === 'eth') return true
+    if (i === 1 && ctx.isNativeAsset) return true
     if (givenAmount.gt(0)) return ctx.approvals[i]
     return true
   })
@@ -121,7 +121,7 @@ function shouldApproveWncg(ctx: InvestMachineContext) {
 
 function shouldApproveWeth(ctx: InvestMachineContext) {
   if (ctx.approvals[1]) return false
-  if (ctx.currentEthType === 'eth') return false
+  if (ctx.isNativeAsset) return false
   if (bnum(ctx.amounts[1]).isZero()) return false
   if (shouldApproveWncg(ctx)) return false
   return true

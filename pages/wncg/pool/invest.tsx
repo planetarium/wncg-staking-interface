@@ -4,12 +4,13 @@ import Head from 'next/head'
 import styles from 'styles/form.module.scss'
 
 import PageWrapper from 'components/StakingPageWrapper'
+import InvestForm from 'components/pool/InvestForm'
 import MyBalance from 'components/pool/MyBalance'
 import MyWallet from 'components/pool/MyWallet'
-import InvestForm from 'components/pool/InvestForm'
 
 const WncgPoolInvest: NextPage = () => {
   const [ethType, setEthType] = useState<EthType>('eth')
+  const isNativeAsset = ethType === 'eth'
 
   function selectEth(value: EthType) {
     setEthType(value)
@@ -26,10 +27,10 @@ const WncgPoolInvest: NextPage = () => {
           <h1 className="hidden">Invest</h1>
 
           <div className={styles.left}>
-            <MyWallet currentEthType={ethType} selectEth={setEthType} />
+            <MyWallet isNativeAsset={isNativeAsset} selectEth={setEthType} />
           </div>
           <div className={styles.center}>
-            <InvestForm currentEthType={ethType} selectEth={selectEth} />
+            <InvestForm isNativeAsset={isNativeAsset} selectEth={selectEth} />
           </div>
           <div className={styles.right}>
             <MyBalance />

@@ -36,9 +36,7 @@ function MyPoolBalance() {
 
       <dl className={styles.details}>
         {poolTokens.map((token, i) => {
-          const symbol = (
-            token.symbol === 'WBTC' ? 'WNCG' : token.symbol
-          ).toLowerCase() as 'wncg' | 'weth'
+          const symbol = token.symbol.toLowerCase()
           const amount = propAmounts[i]
           const amountUsdValue = calculateUsdValue(symbol, amount)
 

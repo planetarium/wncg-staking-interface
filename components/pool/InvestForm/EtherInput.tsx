@@ -10,10 +10,10 @@ import { TokenInput } from '../TokenInput'
 type EtherInputProps = {
   clearErrors: UseFormClearErrors<InvestFormFields>
   control: Control<InvestFormFields>
-  currentEthType: EthType
   ethValue: string
   ethNetBalance: string
   ethBalanceAvailable: string
+  isNativeAsset: boolean
   selectEth(value: EthType): void
   setMaxValue(e: MouseEvent<HTMLButtonElement>): void
   setPropAmount(e: MouseEvent<HTMLButtonElement>): void
@@ -24,10 +24,10 @@ type EtherInputProps = {
 export function EtherInput({
   clearErrors,
   control,
-  currentEthType,
   ethValue,
   ethNetBalance,
   ethBalanceAvailable,
+  isNativeAsset,
   selectEth,
   setMaxValue,
   setPropAmount,
@@ -58,13 +58,16 @@ export function EtherInput({
     [ethBalanceAvailable, ethValue]
   )
 
+  const tokenName = isNativeAsset ? 'eth' : 'weth'
+
   const showWarning = useMemo(() => {
+    if (!isNativeAsset) return false
     if (error || new Decimal(ethValue).isZero()) return false
     if (new Decimal(ethBalanceAvailable).minus(ethValue).lte(0.05)) {
       return true
     }
     return false
-  }, [error, ethBalanceAvailable, ethValue])
+  }, [error, ethBalanceAvailable, ethValue, isNativeAsset])
 
   return (
     <TokenInput
@@ -75,7 +78,7 @@ export function EtherInput({
       error={error}
       balance={ethNetBalance}
       maximized={maximized}
-      token={currentEthType}
+      token={tokenName}
       selectToken={selectEth}
       tokenList={etherTokenList}
       setMaxValue={setMaxValue}

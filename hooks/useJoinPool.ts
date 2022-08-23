@@ -21,15 +21,14 @@ export function useJoinPool() {
   const account = useAppSelector(getAccount)
 
   const joinPool = useCallback(
-    async (amounts: string[], ethType: EthType) => {
+    async (amounts: string[], isNativeAsset: boolean) => {
       if (!vault) return
 
-      const isEth = ethType === 'eth'
       const minBptOut = getMinBptOut(amounts)
-      const { request } = buildJoin({ isEth, amounts, minBptOut })
+      const { request } = buildJoin({ isNativeAsset, amounts, minBptOut })
 
       let data
-      if (isEth) {
+      if (isNativeAsset) {
         data = await vault.joinPool(BPT_POOL_ID, account, account, request, {
           value: etherToWei(amounts[1]),
         })
@@ -41,10 +40,12 @@ export function useJoinPool() {
         const tx = {
           hash: data.hash,
           action: TransactionAction.JoinPool,
-          summary: 'Investing 20WETH-80WNCG pool',
+          summary: 'Joining 20WETH-80WNCG pool',
         }
         dispatch(addTx(tx))
-        addToast(tx, data.hash)
+        addToast(tx, data.hash, {
+          action: TransactionAction.JoinPool,
+        })
       }
     },
     [account, addToast, dispatch, getMinBptOut, vault]
@@ -58,19 +59,21 @@ export function useJoinPool() {
 const WNCG_DECIMALS = IS_ETHEREUM ? 18 : 8
 
 type BuildJoinParams = {
-  isEth: boolean
+  isNativeAsset: boolean
   minBptOut: string
   amounts?: string[]
   joinInit?: boolean
 }
 
 function buildJoin({
-  isEth,
+  isNativeAsset,
   minBptOut,
   amounts = ['0', '0'],
   joinInit = false,
 }: BuildJoinParams) {
-  const assets = isEth ? [wncgAddress, ethAddress] : [wncgAddress, wethAddress]
+  const etherAddress = isNativeAsset ? ethAddress : wethAddress
+  const assets = [wncgAddress, etherAddress]
+
   const maxAmountsIn = [
     parseUnits(amounts[0], WNCG_DECIMALS).toString(),
     etherToWei(amounts[1]),

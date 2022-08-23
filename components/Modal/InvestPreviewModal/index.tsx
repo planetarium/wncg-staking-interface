@@ -6,27 +6,27 @@ import InvestSummary from './Summary'
 
 type InvestPreviewModalProps = {
   amounts: string[]
-  currentEthType: EthType
+  isNativeAsset: boolean
   priceImpact: number
   totalUsdValue: string
 }
 
 export function InvestPreviewModal({
   amounts,
-  currentEthType,
+  isNativeAsset,
   priceImpact,
   totalUsdValue,
 }: InvestPreviewModalProps) {
   return (
     <div className={styles.investPreviewModal}>
-      <h1 className={styles.title}>Investment Preview</h1>
+      <h1 className={styles.title}>Join Pool Preview</h1>
       <InvestComposition
         amounts={amounts}
-        currentEthType={currentEthType}
+        isNativeAsset={isNativeAsset}
         totalUsdValue={totalUsdValue}
       />
       <InvestSummary priceImpact={priceImpact} totalUsdValue={totalUsdValue} />
-      <InvestActions amounts={amounts} currentEthType={currentEthType} />
+      <InvestActions amounts={amounts} isNativeAsset={isNativeAsset} />
     </div>
   )
 }

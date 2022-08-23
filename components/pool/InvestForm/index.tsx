@@ -10,6 +10,7 @@ import {
 import { ModalCategory } from 'app/states/modal'
 import Decimal, { sanitizeNumber } from 'utils/num'
 import { useAppSelector, useInvestMath, useModal, useUsd } from 'hooks'
+import type { InvestFormFields } from './type'
 
 import { Button } from 'components/Button'
 import { EtherInput } from './EtherInput'
@@ -17,11 +18,11 @@ import { InvestFormSummary } from './Summary'
 import { WncgInput } from './WncgInput'
 
 type PoolInvestFormProps = {
-  currentEthType: EthType
+  isNativeAsset: boolean
   selectEth(value: EthType): void
 }
 
-function PoolInvestForm({ currentEthType, selectEth }: PoolInvestFormProps) {
+function PoolInvestForm({ isNativeAsset, selectEth }: PoolInvestFormProps) {
   const { getPriceImpact, getPropAmounts } = useInvestMath()
   const { addModal } = useModal()
   const { calculateUsdValue } = useUsd()
@@ -30,26 +31,25 @@ function PoolInvestForm({ currentEthType, selectEth }: PoolInvestFormProps) {
   const wethBalance = useAppSelector(getWethBalance)
   const wncgBalance = useAppSelector(getWncgBalance)
 
-  const isEth = currentEthType === 'eth'
-  const ethNetBalance = isEth ? ethBalance : wethBalance
-  const ethBalanceAvailable = isEth
+  const ethNetBalance = isNativeAsset ? ethBalance : wethBalance
+  const ethBalanceAvailable = isNativeAsset
     ? Math.max(new Decimal(ethNetBalance).minus(0.05).toNumber(), 0).toString()
     : ethNetBalance
 
   const { clearErrors, control, formState, setValue, trigger, watch } =
-    useForm<{
-      wncgAmount: string
-      ethAmount: string
-    }>({
+    useForm<InvestFormFields>({
       mode: 'onChange',
     })
 
   const ethValue = sanitizeNumber(watch('ethAmount'))
   const wncgValue = sanitizeNumber(watch('wncgAmount'))
-  const amounts = [wncgValue, ethValue]
+  const amounts = useMemo(() => [wncgValue, ethValue], [ethValue, wncgValue])
 
   function setMaxValue(e: MouseEvent<HTMLButtonElement>) {
-    const inputName = e.currentTarget.value as 'wncgAmount' | 'ethAmount'
+    const { value } = e.currentTarget as typeof e.currentTarget & {
+      value: keyof InvestFormFields
+    }
+    const inputName = value
     clearErrors(inputName)
 
     if (inputName === 'wncgAmount') {
@@ -82,7 +82,7 @@ function PoolInvestForm({ currentEthType, selectEth }: PoolInvestFormProps) {
       category: ModalCategory.InvestPreview,
       props: {
         amounts,
-        currentEthType,
+        isNativeAsset,
         priceImpact,
         totalUsdValue,
       },
@@ -107,11 +107,6 @@ function PoolInvestForm({ currentEthType, selectEth }: PoolInvestFormProps) {
     [ethBalanceAvailable, ethValue, wncgBalance, wncgValue]
   )
 
-  const isAllZero = useMemo(
-    () => new Decimal(wncgValue).isZero() && new Decimal(ethValue).isZero(),
-    [ethValue, wncgValue]
-  )
-
   const showPropButton = useMemo(() => {
     const hasError = !!Object.keys(formState.errors).length
     const wncg = new Decimal(wncgValue)
@@ -123,14 +118,19 @@ function PoolInvestForm({ currentEthType, selectEth }: PoolInvestFormProps) {
     }
   }, [ethValue, formState, wncgValue])
 
+  const investDisabled = useMemo(
+    () => new Decimal(wncgValue).isZero() && new Decimal(ethValue).isZero(),
+    [ethValue, wncgValue]
+  )
+
   useEffect(() => {
     trigger('ethAmount')
-  }, [currentEthType, trigger])
+  }, [isNativeAsset, trigger])
 
   return (
     <section className={styles.formSection}>
       <header className={styles.header}>
-        <h3 className={styles.title}>Invest in pool</h3>
+        <h3 className={styles.title}>Join pool</h3>
       </header>
 
       <form>
@@ -148,10 +148,10 @@ function PoolInvestForm({ currentEthType, selectEth }: PoolInvestFormProps) {
         <EtherInput
           clearErrors={clearErrors}
           control={control}
-          currentEthType={currentEthType}
           ethValue={ethValue}
           ethNetBalance={ethNetBalance}
           ethBalanceAvailable={ethBalanceAvailable}
+          isNativeAsset={isNativeAsset}
           selectEth={selectEth}
           setMaxValue={setMaxValue}
           setPropAmount={setPropAmount}
@@ -169,7 +169,7 @@ function PoolInvestForm({ currentEthType, selectEth }: PoolInvestFormProps) {
           type="button"
           onClick={openInvestPreview}
           fullWidth
-          disabled={isAllZero}
+          disabled={investDisabled}
         >
           Preview
         </Button>

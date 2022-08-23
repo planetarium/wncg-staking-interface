@@ -11,13 +11,13 @@ import { InvestActionStep } from './ActionStep'
 
 type InvestActionsProps = {
   amounts: string[]
-  currentEthType: EthType
+  isNativeAsset: boolean
 }
 
-function InvestActions({ amounts, currentEthType }: InvestActionsProps) {
+function InvestActions({ amounts, isNativeAsset }: InvestActionsProps) {
   const { handleSubmit, state, stepsToSkip } = useInvestMachine(
     amounts,
-    currentEthType
+    isNativeAsset
   )
 
   const poolTokenApprovals = useRecoilValue(poolTokenApprovalsState)

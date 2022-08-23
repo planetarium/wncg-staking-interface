@@ -31,9 +31,7 @@ function PoolComposition() {
           </thead>
           <tbody>
             {poolTokens.map((token) => {
-              const symbol = (
-                token.symbol === 'WBTC' ? 'WNCG' : token.symbol
-              ).toLowerCase() as 'wncg' | 'weth'
+              const symbol = token.symbol.toLowerCase()
               const usdValue = calculateUsdValue(symbol, token.balance)
               const url = getEtherscanUrl(token.address)
 

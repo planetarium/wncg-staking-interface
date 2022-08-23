@@ -13,13 +13,13 @@ import { TokenIcon } from 'components/TokenIcon'
 
 type InvestCompositionProps = {
   amounts: string[]
-  currentEthType: EthType
+  isNativeAsset: boolean
   totalUsdValue: string
 }
 
 function InvestComposition({
   amounts,
-  currentEthType,
+  isNativeAsset,
   totalUsdValue,
 }: InvestCompositionProps) {
   const { calculateUsdValue } = useUsd()
@@ -50,8 +50,8 @@ function InvestComposition({
   return (
     <dl className={clsx(styles.details, { [styles.reverse]: reverse })}>
       {poolTokenSymbols.map((tokenSymbol, i) => {
-        let symbol = tokenSymbol === 'wbtc' ? 'wncg' : tokenSymbol
-        if (symbol === 'weth' && currentEthType === 'eth') symbol = 'eth'
+        let symbol = tokenSymbol
+        if (isNativeAsset && symbol === 'weth') symbol = 'eth'
 
         const amount = amounts[i]
         const usdValue = usdValues[i]

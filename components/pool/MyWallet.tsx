@@ -14,11 +14,11 @@ import { useAppSelector, useUsd } from 'hooks'
 const ethList: EthType[] = ['eth', 'weth']
 
 type MyWalletProps = {
-  currentEthType?: EthType
+  isNativeAsset: boolean
   selectEth?(value: EthType): void
 }
 
-function MyWallet({ currentEthType, selectEth }: MyWalletProps) {
+function MyWallet({ isNativeAsset, selectEth }: MyWalletProps) {
   const { calculateUsdValue } = useUsd()
 
   const ethBalance = useAppSelector(getEthBalance)
@@ -29,6 +29,7 @@ function MyWallet({ currentEthType, selectEth }: MyWalletProps) {
   const wethUsdValue = calculateUsdValue('weth', wethBalance)
   const wncgUsdValue = calculateUsdValue('wncg', wncgBalance)
 
+  const currentEthType = isNativeAsset ? 'eth' : 'weth'
   const isSelectable = !!selectEth
   const wncgBalanceAmount = new Decimal(wncgBalance)
   const isWncgLessThanMinAmount =
@@ -41,9 +42,9 @@ function MyWallet({ currentEthType, selectEth }: MyWalletProps) {
         .add(wncgUsdValue)
         .toNumber()
     }
-    const balance = currentEthType === 'eth' ? ethUsdValue : wethUsdValue
+    const balance = isNativeAsset ? ethUsdValue : wethUsdValue
     return new Decimal(wncgUsdValue).add(balance).toNumber()
-  }, [currentEthType, ethUsdValue, isSelectable, wethUsdValue, wncgUsdValue])
+  }, [ethUsdValue, isNativeAsset, isSelectable, wethUsdValue, wncgUsdValue])
 
   function handleSelectEthType(e: MouseEvent<HTMLDivElement>) {
     if (!isSelectable) return
@@ -116,7 +117,7 @@ function MyWallet({ currentEthType, selectEth }: MyWalletProps) {
                   >
                     <dt>
                       <strong>{token}</strong>
-                      <span>{isEth ? 'Ether' : 'Wrapped Ether'}</span>
+                      <span>{token === 'weth' && 'Wrapped '} Ether</span>
                     </dt>
                     <dd>
                       {isBalanceLessThanMinAmount ? (

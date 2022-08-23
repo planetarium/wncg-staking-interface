@@ -15,7 +15,7 @@ import {
 } from 'hooks'
 import { createInvestMachine } from './investMachine'
 
-export function useInvestMachine(amounts: string[], currentEthType: EthType) {
+export function useInvestMachine(amounts: string[], isNativeAsset: boolean) {
   const { approveWeth, approveWncg } = useApprove()
   const {
     poolBalanceChangedEventFilter,
@@ -30,8 +30,8 @@ export function useInvestMachine(amounts: string[], currentEthType: EthType) {
   const poolTokenApprovals = useRecoilValue(poolTokenApprovalsState)
 
   const investMachine = useMemo(
-    () => createInvestMachine(amounts, poolTokenApprovals, currentEthType),
-    [amounts, currentEthType, poolTokenApprovals]
+    () => createInvestMachine(amounts, poolTokenApprovals, isNativeAsset),
+    [amounts, isNativeAsset, poolTokenApprovals]
   )
 
   const [state, send] = useMachine(investMachine)
@@ -52,7 +52,7 @@ export function useInvestMachine(amounts: string[], currentEthType: EthType) {
             break
           case 'invest':
             send('INVESTING')
-            await joinPool(amounts, currentEthType)
+            await joinPool(amounts, isNativeAsset)
             break
           default:
             removeModal(ModalCategory.InvestPreview)
@@ -67,7 +67,7 @@ export function useInvestMachine(amounts: string[], currentEthType: EthType) {
       amounts,
       approveWeth,
       approveWncg,
-      currentEthType,
+      isNativeAsset,
       joinPool,
       removeModal,
       send,
@@ -78,11 +78,11 @@ export function useInvestMachine(amounts: string[], currentEthType: EthType) {
   const stepsToSkip = useMemo(
     () =>
       amounts.map((amount, i) => {
-        if (i === 1 && currentEthType === 'eth') return true
+        if (i === 1 && isNativeAsset) return true
         if (!bnum(amount).isZero()) return false
         return true
       }),
-    [amounts, currentEthType]
+    [amounts, isNativeAsset]
   )
 
   const handleWncgApprovalEvent = useCallback(() => {
