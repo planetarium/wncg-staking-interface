@@ -19,7 +19,8 @@ type PoolInvestFormProps = {
 }
 
 function PoolInvestForm({ isNativeAsset, selectEth }: PoolInvestFormProps) {
-  const { getPriceImpact, getPropAmounts } = useInvestMath()
+  const { getPriceImpact, getPropAmounts, getOptimizedAmounts } =
+    useInvestMath()
   const { addModal } = useModal()
   const { calculateUsdValue } = useUsd()
 
@@ -70,6 +71,14 @@ function PoolInvestForm({ isNativeAsset, selectEth }: PoolInvestFormProps) {
     clearErrors()
   }
 
+  function investOpt() {
+    const propMaxAmounts = getOptimizedAmounts(isNativeAsset)
+    setValue('wncgAmount', propMaxAmounts[0])
+    setValue('ethAmount', propMaxAmounts[1])
+
+    trigger()
+  }
+
   function openInvestPreview(e: MouseEvent) {
     e.stopPropagation()
 
@@ -102,6 +111,13 @@ function PoolInvestForm({ isNativeAsset, selectEth }: PoolInvestFormProps) {
     [ethBalanceAvailable, ethValue, wncgBalance, wncgValue]
   )
 
+  const optimized = useMemo(() => {
+    const propMaxAmounts = getOptimizedAmounts(isNativeAsset)
+    return amounts.every((amount, i) =>
+      new Decimal(amount).eq(propMaxAmounts[i])
+    )
+  }, [amounts, getOptimizedAmounts, isNativeAsset])
+
   const showPropButton = useMemo(() => {
     const hasError = !!Object.keys(formState.errors).length
     const wncg = new Decimal(wncgValue)
@@ -116,6 +132,13 @@ function PoolInvestForm({ isNativeAsset, selectEth }: PoolInvestFormProps) {
   const investDisabled = useMemo(
     () => new Decimal(wncgValue).isZero() && new Decimal(ethValue).isZero(),
     [ethValue, wncgValue]
+  )
+
+  const maxOptDisabled = useMemo(
+    () =>
+      new Decimal(wncgBalance).isZero() &&
+      new Decimal(ethBalanceAvailable).isZero(),
+    [ethBalanceAvailable, wncgBalance]
   )
 
   useEffect(() => {
@@ -155,7 +178,10 @@ function PoolInvestForm({ isNativeAsset, selectEth }: PoolInvestFormProps) {
         />
         <InvestFormSummary
           investMax={investMax}
+          investOpt={investOpt}
           maximized={maximized}
+          optimized={optimized}
+          maxOptDisabled={maxOptDisabled}
           priceImpact={priceImpact}
           totalUsdValue={totalUsdValue}
         />

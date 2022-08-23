@@ -8,14 +8,20 @@ import { Icon } from 'components/Icon'
 
 type InvestFormSummaryProps = {
   investMax(): void
+  investOpt(): void
   maximized: boolean
+  optimized: boolean
+  maxOptDisabled: boolean
   priceImpact: number
   totalUsdValue: string
 }
 
 export function InvestFormSummary({
   investMax,
+  investOpt,
   maximized,
+  optimized,
+  maxOptDisabled,
   priceImpact,
   totalUsdValue,
 }: InvestFormSummaryProps) {
@@ -40,14 +46,26 @@ export function InvestFormSummary({
             />
           </strong>
 
-          <button
-            className={styles.maxButton}
-            type="button"
-            onClick={investMax}
-            disabled={maximized}
-          >
-            {maximized ? 'Maxed' : 'Max'}
-          </button>
+          {!maxOptDisabled && (
+            <>
+              <button
+                className={styles.maxButton}
+                type="button"
+                onClick={investMax}
+                disabled={maximized}
+              >
+                {maximized ? 'Maxed' : 'Max'}
+              </button>
+              <button
+                className={styles.optButton}
+                type="button"
+                onClick={investOpt}
+                disabled={optimized}
+              >
+                {optimized ? 'Optimized' : 'Optimize'}
+              </button>
+            </>
+          )}
         </dd>
       </div>
 

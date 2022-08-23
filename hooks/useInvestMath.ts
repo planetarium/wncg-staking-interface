@@ -2,13 +2,17 @@ import { useCallback, useMemo } from 'react'
 import { useRecoilValue } from 'recoil'
 
 import { getUserBalances } from 'app/states/balance'
-import { poolState } from 'app/states/pool'
+import { poolState, poolTokenSymbolsState } from 'app/states/pool'
 import CalculatorService from 'lib/calculator'
 import { bnum } from 'utils/num'
 import { useAppSelector } from './useRedux'
+import { useUsd } from './useUsd'
 
 export function useInvestMath() {
+  const { calculateUsdValue } = useUsd()
+
   const pool = useRecoilValue(poolState)
+  const poolTokenSymbols = useRecoilValue(poolTokenSymbolsState)
 
   const userBalances = useAppSelector(getUserBalances)
   const bptBalance = userBalances.bpt
@@ -56,8 +60,46 @@ export function useInvestMath() {
     [calculator]
   )
 
+  const getUserPoolTokenBalances = useCallback(
+    (isNativeAsset: boolean) => {
+      return poolTokenSymbols.map((symb) => {
+        let symbol = symb as PoolTokenSymbol | 'eth'
+        if (symbol === 'weth' && isNativeAsset) {
+          symbol = 'eth'
+        }
+        return userBalances[symbol] || '0'
+      })
+    },
+    [poolTokenSymbols, userBalances]
+  )
+
+  const getOptimizedAmounts = useCallback(
+    (isNativeAsset: boolean) => {
+      const userPoolBalances = getUserPoolTokenBalances(isNativeAsset)
+
+      const propMaxAmounts = userPoolBalances.map(
+        (balance, i) =>
+          calculator?.propAmountsGiven(balance, i, 'send')?.send || ['0', '0']
+      )
+      const propMaxAmountsInUsdValue = propMaxAmounts.map((amounts) => {
+        return amounts.reduce((acc, amount, i) => {
+          const tokenName = poolTokenSymbols[i]
+          acc += calculateUsdValue(tokenName, amount)
+          return acc
+        }, 0)
+      })
+      const maxIndex = propMaxAmountsInUsdValue.indexOf(
+        Math.max(...propMaxAmountsInUsdValue)
+      )
+
+      return propMaxAmounts[maxIndex] || ['0', '0']
+    },
+    [calculateUsdValue, calculator, getUserPoolTokenBalances, poolTokenSymbols]
+  )
+
   return {
     getMinBptOut,
+    getOptimizedAmounts,
     getPriceImpact,
     getPropAmounts,
   }
