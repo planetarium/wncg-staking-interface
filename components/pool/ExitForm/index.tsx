@@ -1,7 +1,7 @@
 import { memo } from 'react'
 import styles from '../styles/Form.module.scss'
 
-function PoolWithdrawForm() {
+function ExitForm() {
   return (
     <section className={styles.formSection}>
       <h3 className={styles.title}>Withdraw from pool</h3>
@@ -9,4 +9,4 @@ function PoolWithdrawForm() {
   )
 }
 
-export default memo(PoolWithdrawForm)
+export default memo(ExitForm)
