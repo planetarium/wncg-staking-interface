@@ -1,4 +1,4 @@
-import { MouseEvent, useCallback, useEffect, useMemo } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { useMachine } from '@xstate/react'
 
@@ -36,44 +36,39 @@ export function useJoinMachine(amounts: string[], isNativeAsset: boolean) {
 
   const [state, send] = useMachine(joinMachine)
 
-  const handleSubmit = useCallback(
-    async (e: MouseEvent) => {
-      e.stopPropagation()
-
-      try {
-        switch (state.value) {
-          case 'approveWncg':
-            send('APPROVING_WNCG')
-            await approveWncg()
-            break
-          case 'approveWeth':
-            send('APPROVING_WETH')
-            await approveWeth()
-            break
-          case 'join':
-            send('JOINING')
-            await joinPool(amounts, isNativeAsset)
-            break
-          default:
-            removeModal(ModalCategory.JoinPreview)
-            break
-        }
-      } catch (error) {
-        send('ROLLBACK')
-        handleError(error)
+  const handleJoin = useCallback(async () => {
+    try {
+      switch (state.value) {
+        case 'approveWncg':
+          send('APPROVING_WNCG')
+          await approveWncg()
+          break
+        case 'approveWeth':
+          send('APPROVING_WETH')
+          await approveWeth()
+          break
+        case 'join':
+          send('JOINING')
+          await joinPool(amounts, isNativeAsset)
+          break
+        default:
+          removeModal(ModalCategory.JoinPreview)
+          break
       }
-    },
-    [
-      amounts,
-      approveWeth,
-      approveWncg,
-      isNativeAsset,
-      joinPool,
-      removeModal,
-      send,
-      state.value,
-    ]
-  )
+    } catch (error) {
+      send('ROLLBACK')
+      handleError(error)
+    }
+  }, [
+    amounts,
+    approveWeth,
+    approveWncg,
+    isNativeAsset,
+    joinPool,
+    removeModal,
+    send,
+    state.value,
+  ])
 
   const stepsToSkip = useMemo(
     () =>
@@ -127,7 +122,7 @@ export function useJoinMachine(amounts: string[], isNativeAsset: boolean) {
   }, [handlePoolBalanceChangedEvent, poolBalanceChangedEventFilter, provider])
 
   return {
-    handleSubmit,
+    handleJoin,
     send,
     state,
     stepsToSkip,

@@ -1,4 +1,4 @@
-import { memo } from 'react'
+import { memo, MouseEvent } from 'react'
 import { useRecoilValue } from 'recoil'
 import type { StateValue } from 'xstate'
 import styles from './Actions.module.scss'
@@ -9,15 +9,17 @@ import { useJoinMachine } from './useJoinMachine'
 import { useModal } from 'hooks'
 
 import { Button } from 'components/Button'
+import { Icon } from 'components/Icon'
 import { JoinActionStep } from './ActionStep'
 
 type JoinActionsProps = {
   amounts: string[]
+  disabled: boolean
   isNativeAsset: boolean
 }
 
-function JoinActions({ amounts, isNativeAsset }: JoinActionsProps) {
-  const { handleSubmit, state, stepsToSkip } = useJoinMachine(
+function JoinActions({ amounts, disabled, isNativeAsset }: JoinActionsProps) {
+  const { handleJoin, state, stepsToSkip } = useJoinMachine(
     amounts,
     isNativeAsset
   )
@@ -29,9 +31,21 @@ function JoinActions({ amounts, isNativeAsset }: JoinActionsProps) {
     state.value as string
   )
   const isCompleted = state.value === 'completed'
+  const isCloseButton = isCompleted || disabled
 
   function closeModal() {
     removeModal(ModalCategory.JoinPreview)
+  }
+
+  function handleSubmit(e: MouseEvent) {
+    e.stopPropagation()
+
+    if (disabled) {
+      closeModal()
+      return
+    }
+
+    handleJoin()
   }
 
   return (
@@ -70,6 +84,21 @@ function JoinActions({ amounts, isNativeAsset }: JoinActionsProps) {
         </ol>
       </div>
 
+      {disabled && (
+        <aside className={styles.warning}>
+          <h3>
+            <Icon id="info" />
+            This price impact is too high.
+            <br />
+            You cannot proceed.
+          </h3>
+          <p>
+            The likelyhood of you losing money is too high. For your protection,
+            you can&apos;t perform this transaction on this interface.
+          </p>
+        </aside>
+      )}
+
       {isCompleted && (
         <Button
           className={styles.stakeButton}
@@ -82,14 +111,15 @@ function JoinActions({ amounts, isNativeAsset }: JoinActionsProps) {
           Stake
         </Button>
       )}
+
       <Button
-        variant={isCompleted ? 'secondary' : 'primary'}
+        variant={isCloseButton ? 'secondary' : 'primary'}
         size="large"
         onClick={handleSubmit}
         fullWidth
         disabled={submitDisabled}
       >
-        {renderButtonLabel(state.value)}
+        {disabled ? 'Close' : renderButtonLabel(state.value)}
       </Button>
     </footer>
   )
@@ -114,6 +144,6 @@ function renderButtonLabel(state: StateValue) {
     case 'completed':
       return 'Close'
     default:
-      return 'Join Pool'
+      return 'Join'
   }
 }

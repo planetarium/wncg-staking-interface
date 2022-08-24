@@ -93,23 +93,6 @@ export function useJoinForm(
       .toString()
   }, [calculateUsdValue, ethValue, wncgValue])
 
-  const openPreviewModal = useCallback(
-    (e: MouseEvent) => {
-      e.stopPropagation()
-
-      addModal({
-        category: ModalCategory.JoinPreview,
-        props: {
-          amounts,
-          isNativeAsset,
-          priceImpact,
-          totalUsdValue,
-        },
-      })
-    },
-    [addModal, amounts, isNativeAsset, priceImpact, totalUsdValue]
-  )
-
   const maximized = useMemo(
     () =>
       new Decimal(wncgValue).eq(wncgBalance) &&
@@ -159,6 +142,24 @@ export function useJoinForm(
   const optDisabled = useMemo(
     () => optimizedMinAmounts.every((amount) => new Decimal(amount).isZero()),
     [optimizedMinAmounts]
+  )
+
+  const openPreviewModal = useCallback(
+    (e: MouseEvent) => {
+      e.stopPropagation()
+
+      addModal({
+        category: ModalCategory.JoinPreview,
+        props: {
+          amounts,
+          disabled: joinDisabled,
+          isNativeAsset,
+          priceImpact,
+          totalUsdValue,
+        },
+      })
+    },
+    [addModal, amounts, isNativeAsset, joinDisabled, priceImpact, totalUsdValue]
   )
 
   return {

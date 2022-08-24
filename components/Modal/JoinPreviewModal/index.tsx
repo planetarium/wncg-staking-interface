@@ -6,6 +6,7 @@ import JoinSummary from './Summary'
 
 type JoinPreviewModalProps = {
   amounts: string[]
+  disabled: boolean
   isNativeAsset: boolean
   priceImpact: number
   totalUsdValue: string
@@ -13,6 +14,7 @@ type JoinPreviewModalProps = {
 
 export function JoinPreviewModal({
   amounts,
+  disabled,
   isNativeAsset,
   priceImpact,
   totalUsdValue,
@@ -26,7 +28,11 @@ export function JoinPreviewModal({
         totalUsdValue={totalUsdValue}
       />
       <JoinSummary priceImpact={priceImpact} totalUsdValue={totalUsdValue} />
-      <JoinActions amounts={amounts} isNativeAsset={isNativeAsset} />
+      <JoinActions
+        amounts={amounts}
+        disabled={disabled}
+        isNativeAsset={isNativeAsset}
+      />
     </div>
   )
 }
