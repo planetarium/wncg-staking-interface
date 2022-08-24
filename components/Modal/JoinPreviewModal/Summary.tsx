@@ -7,16 +7,19 @@ import { bnum } from 'utils/num'
 
 import { Icon } from 'components/Icon'
 
-type JoinSummaryProps = {
+type JoinPreviewSummaryProps = {
   priceImpact: number
   totalUsdValue: string
 }
 
-function JoinSummary({ priceImpact, totalUsdValue }: JoinSummaryProps) {
+function JoinPreviewSummary({
+  priceImpact,
+  totalUsdValue,
+}: JoinPreviewSummaryProps) {
   const priceImpactPcnt = (priceImpact * 100).toFixed(2)
   const bPriceImpactPcnt = bnum(priceImpactPcnt)
 
-  const lowPriceImpact = !bPriceImpactPcnt.isZero() && bPriceImpactPcnt.lt(0.01)
+  const lowPriceImpact = bPriceImpactPcnt.lt(0.01)
   const highPriceImpact = bPriceImpactPcnt.gt(1)
 
   return (
@@ -47,4 +50,4 @@ function JoinSummary({ priceImpact, totalUsdValue }: JoinSummaryProps) {
   )
 }
 
-export default memo(JoinSummary)
+export default memo(JoinPreviewSummary)

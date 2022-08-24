@@ -31,7 +31,7 @@ function JoinFormSummary({
   const priceImpactPcnt = (priceImpact * 100).toFixed(2)
   const bPriceImpactPcnt = bnum(priceImpactPcnt)
 
-  const lowPriceImpact = !bPriceImpactPcnt.isZero() && bPriceImpactPcnt.lt(0.01)
+  const lowPriceImpact = bPriceImpactPcnt.lt(0.01)
   const highPriceImpact = bPriceImpactPcnt.gt(1)
 
   return (

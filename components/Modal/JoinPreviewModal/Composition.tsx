@@ -11,17 +11,17 @@ import { useUsd } from 'hooks'
 
 import { TokenIcon } from 'components/TokenIcon'
 
-type JoinCompositionProps = {
+type JoinPreviewCompositionProps = {
   amounts: string[]
   isNativeAsset: boolean
   totalUsdValue: string
 }
 
-function JoinComposition({
+function JoinPreviewComposition({
   amounts,
   isNativeAsset,
   totalUsdValue,
-}: JoinCompositionProps) {
+}: JoinPreviewCompositionProps) {
   const { calculateUsdValue } = useUsd()
 
   const poolTokenSymbols = useRecoilValue(poolTokenSymbolsState)
@@ -97,4 +97,4 @@ function JoinComposition({
   )
 }
 
-export default memo(JoinComposition)
+export default memo(JoinPreviewComposition)
