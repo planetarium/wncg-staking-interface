@@ -120,11 +120,24 @@ export function useJoinForm(
     }
   }, [ethValue, formState, wncgValue])
 
+  const emptyAmounts = useMemo(
+    () => new Decimal(wncgValue).isZero() && new Decimal(ethValue).isZero(),
+    [ethValue, wncgValue]
+  )
+
+  const excessiveAmounts = useMemo(
+    () =>
+      new Decimal(wncgValue).gt(wncgBalance) ||
+      new Decimal(ethValue).gt(ethBalanceAvailable),
+    [ethBalanceAvailable, ethValue, wncgBalance, wncgValue]
+  )
+
   const previewDisabled = useMemo(
     () =>
-      (new Decimal(wncgValue).isZero() && new Decimal(ethValue).isZero()) ||
+      emptyAmounts ||
+      excessiveAmounts ||
       (highPriceImpact && !priceImpactAgreement),
-    [ethValue, highPriceImpact, priceImpactAgreement, wncgValue]
+    [emptyAmounts, excessiveAmounts, highPriceImpact, priceImpactAgreement]
   )
 
   const joinDisabled = useMemo(
@@ -148,6 +161,8 @@ export function useJoinForm(
     (e: MouseEvent) => {
       e.stopPropagation()
 
+      if (previewDisabled) return
+
       addModal({
         category: ModalCategory.JoinPreview,
         props: {
@@ -159,7 +174,15 @@ export function useJoinForm(
         },
       })
     },
-    [addModal, amounts, isNativeAsset, joinDisabled, priceImpact, totalUsdValue]
+    [
+      addModal,
+      amounts,
+      isNativeAsset,
+      joinDisabled,
+      previewDisabled,
+      priceImpact,
+      totalUsdValue,
+    ]
   )
 
   return {
