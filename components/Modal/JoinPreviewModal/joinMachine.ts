@@ -89,7 +89,9 @@ export function createJoinMachine(
             ROLLBACK: 'join',
           },
         },
-        completed: {},
+        completed: {
+          type: 'final',
+        },
       },
     },
     {
