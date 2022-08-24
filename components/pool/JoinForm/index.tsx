@@ -8,6 +8,7 @@ import type { JoinFormFields } from './type'
 
 import { Button } from 'components/Button'
 import EtherInput from './EtherInput'
+import HighPriceImpact from './HighPriceImpact'
 import JoinFormSummary from './Summary'
 import WncgInput from './WncgInput'
 
@@ -19,10 +20,13 @@ type JoinFormProps = {
 function JoinForm({ isNativeAsset, selectEth }: JoinFormProps) {
   const useFormReturn = useForm<JoinFormFields>({
     mode: 'onChange',
+    defaultValues: {
+      priceImpactAgreement: false,
+    },
   })
   const { clearErrors, control, formState, trigger, watch } = useFormReturn
   const {
-    joinDisabled,
+    highPriceImpact,
     joinMax,
     joinOpt,
     maximized,
@@ -30,15 +34,18 @@ function JoinForm({ isNativeAsset, selectEth }: JoinFormProps) {
     openPreviewModal,
     optimized,
     optDisabled,
+    previewDisabled,
     priceImpact,
     setMaxValue,
     setPropAmount,
     showPropButton,
+    toggleHighPriceImpactCheckbox,
     totalUsdValue,
   } = useJoinForm(isNativeAsset, useFormReturn)
 
   const ethValue = sanitizeNumber(watch('ethAmount'))
   const wncgValue = sanitizeNumber(watch('wncgAmount'))
+  const priceImpactAgreement = watch('priceImpactAgreement')
 
   return (
     <section className={styles.formSection}>
@@ -78,12 +85,17 @@ function JoinForm({ isNativeAsset, selectEth }: JoinFormProps) {
           priceImpact={priceImpact}
           totalUsdValue={totalUsdValue}
         />
+        <HighPriceImpact
+          checked={priceImpactAgreement}
+          handleCheck={toggleHighPriceImpactCheckbox}
+          required={highPriceImpact}
+        />
         <Button
           size="large"
           type="button"
           onClick={openPreviewModal}
           fullWidth
-          disabled={joinDisabled}
+          disabled={previewDisabled}
         >
           Preview
         </Button>

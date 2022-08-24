@@ -27,6 +27,7 @@ export function useJoinForm(
 
   const ethValue = sanitizeNumber(watch('ethAmount'))
   const wncgValue = sanitizeNumber(watch('wncgAmount'))
+  const priceImpactAgreement = watch('priceImpactAgreement')
   const amounts = useMemo(() => [wncgValue, ethValue], [ethValue, wncgValue])
 
   const optimizedMinAmounts = getOptimizedAmounts(isNativeAsset)
@@ -60,6 +61,10 @@ export function useJoinForm(
     [amounts, getPropAmounts, setValue, trigger]
   )
 
+  function toggleHighPriceImpactCheckbox(value: boolean) {
+    setValue('priceImpactAgreement', value)
+  }
+
   const joinMax = useCallback(() => {
     setValue('ethAmount', ethBalanceAvailable)
     setValue('wncgAmount', wncgBalance)
@@ -77,6 +82,10 @@ export function useJoinForm(
   const priceImpact = useMemo(() => {
     return getPriceImpact([wncgValue, ethValue])
   }, [ethValue, getPriceImpact, wncgValue])
+
+  const highPriceImpact = useMemo(() => {
+    return new Decimal(priceImpact).gte(0.01)
+  }, [priceImpact])
 
   const totalUsdValue = useMemo(() => {
     return new Decimal(calculateUsdValue('wncg', wncgValue))
@@ -128,9 +137,16 @@ export function useJoinForm(
     }
   }, [ethValue, formState, wncgValue])
 
+  const previewDisabled = useMemo(
+    () =>
+      (new Decimal(wncgValue).isZero() && new Decimal(ethValue).isZero()) ||
+      (highPriceImpact && !priceImpactAgreement),
+    [ethValue, highPriceImpact, priceImpactAgreement, wncgValue]
+  )
+
   const joinDisabled = useMemo(
-    () => new Decimal(wncgValue).isZero() && new Decimal(ethValue).isZero(),
-    [ethValue, wncgValue]
+    () => new Decimal(priceImpact).gte(0.2),
+    [priceImpact]
   )
 
   const maxDisabled = useMemo(
@@ -146,6 +162,7 @@ export function useJoinForm(
   )
 
   return {
+    highPriceImpact,
     joinDisabled,
     joinMax,
     joinOpt,
@@ -154,10 +171,12 @@ export function useJoinForm(
     openPreviewModal,
     optimized,
     optDisabled,
+    previewDisabled,
     priceImpact,
     setMaxValue,
     setPropAmount,
     showPropButton,
+    toggleHighPriceImpactCheckbox,
     totalUsdValue,
   }
 }
