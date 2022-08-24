@@ -3,7 +3,7 @@ import { useSetRecoilState } from 'recoil'
 
 import { priceErrorState } from 'app/states/error'
 import { poolTokenPricesState } from 'app/states/pool'
-import { coingecko, tokenIds, tokenSymbols } from 'lib/coingecko'
+import { coingecko, tokenIds, tokenSymbols } from 'services/coingecko'
 
 type PriceMap = Record<string, number>
 

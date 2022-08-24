@@ -5,7 +5,7 @@ import styles from './styles/Widget.module.scss'
 
 import { getBptBalance } from 'app/states/balance'
 import { poolState } from 'app/states/pool'
-import CalculatorService from 'lib/calculator'
+import CalculatorService from 'services/calculator'
 import Decimal from 'utils/num'
 import { useAppSelector, useUsd } from 'hooks'
 

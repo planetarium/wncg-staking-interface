@@ -3,7 +3,7 @@ import { useRecoilValue } from 'recoil'
 
 import { getUserBalances } from 'app/states/balance'
 import { poolState, poolTokenSymbolsState } from 'app/states/pool'
-import CalculatorService from 'lib/calculator'
+import CalculatorService from 'services/calculator'
 import { bnum } from 'utils/num'
 import { useAppSelector } from './useRedux'
 import { useUsd } from './useUsd'

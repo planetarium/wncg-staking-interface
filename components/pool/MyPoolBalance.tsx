@@ -6,7 +6,7 @@ import styles from './styles/MyPoolBalance.module.scss'
 import { poolState } from 'app/states/pool'
 import { getBptBalance } from 'app/states/balance'
 import { getIsConnected } from 'app/states/connection'
-import CalculatorService from 'lib/calculator'
+import CalculatorService from 'services/calculator'
 import Decimal from 'utils/num'
 import { useAppSelector, useConnection, useUsd } from 'hooks'
 
