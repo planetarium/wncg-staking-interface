@@ -6,7 +6,6 @@ import {
   useAppDispatch,
   useConfirmations,
   useEventFilter,
-  useFetchPool,
   useProvider,
   useStake,
   useToast,
@@ -18,7 +17,6 @@ import {
 function StakeEffects() {
   const { getConfirmations, setConfirmations } = useConfirmations()
   const { stakedEventFilter } = useEventFilter()
-  const { fetchPool } = useFetchPool()
   const provider = useProvider()
   const { stakedTokenBalance, totalStaked } = useStake()
   const { addToast } = useToast()
@@ -57,7 +55,6 @@ function StakeEffects() {
 
       stakedTokenBalance()
       fetchBptBalance()
-      fetchPool()
       totalStaked()
       getTimestamps()
     },
@@ -68,7 +65,6 @@ function StakeEffects() {
       getConfirmations,
       getTimestamps,
       getTransactionReceipt,
-      fetchPool,
       setConfirmations,
       stakedTokenBalance,
       totalStaked,

@@ -1,12 +1,12 @@
 import { memo, useMemo } from 'react'
 import NumberFormat from 'react-number-format'
-import { useRecoilValue } from 'recoil'
+import { useQuery } from 'react-query'
 import styles from './styles/MyPoolBalance.module.scss'
 
-import { poolState } from 'app/states/pool'
 import { getBptBalance } from 'app/states/balance'
 import { getIsConnected } from 'app/states/connection'
 import CalculatorService from 'services/calculator'
+import { poolService } from 'services/pool'
 import Decimal from 'utils/num'
 import { useAppSelector, useConnection, useUsd } from 'hooks'
 
@@ -17,8 +17,12 @@ function MyPoolBalance() {
   const { connect } = useConnection()
   const { calculateUsdValue } = useUsd()
 
-  const pool = useRecoilValue(poolState)
+  const { data: pool } = useQuery('pool', poolService.fetchPool, {
+    keepPreviousData: true,
+    staleTime: 5 * 1_000,
+  })
   const poolTokens = pool?.tokens || []
+
   const bptBalance = useAppSelector(getBptBalance)
   const isConnected = useAppSelector(getIsConnected)
 

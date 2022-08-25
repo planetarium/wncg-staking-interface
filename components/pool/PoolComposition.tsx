@@ -1,9 +1,9 @@
 import { memo } from 'react'
 import NumberFormat from 'react-number-format'
-import { useRecoilValue } from 'recoil'
+import { useQuery } from 'react-query'
 import styles from './styles/PoolComposition.module.scss'
 
-import { poolTokensState } from 'app/states/pool'
+import { poolService } from 'services/pool'
 import { getEtherscanUrl } from 'utils/url'
 import { useUsd } from 'hooks'
 
@@ -13,7 +13,11 @@ import { TokenIcon } from 'components/TokenIcon'
 function PoolComposition() {
   const { calculateUsdValue } = useUsd()
 
-  const poolTokens = useRecoilValue(poolTokensState)
+  const { data: pool } = useQuery('pool', poolService.fetchPool, {
+    keepPreviousData: true,
+    staleTime: 5 * 1_000,
+  })
+  const poolTokens = pool?.tokens || []
 
   return (
     <section className={styles.poolComposition}>

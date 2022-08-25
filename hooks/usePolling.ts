@@ -1,14 +1,12 @@
 import { useCallback, useEffect } from 'react'
 import { useInterval } from 'react-use'
 
-import { useFetchPool } from './useFetchPool'
 import { useReward } from './useReward'
 import { useStake } from './useStake'
 import { useUnstake } from './useUnstake'
 import { useUserBalances } from './useUserBalances'
 
 export function usePolling() {
-  const { fetchPool } = useFetchPool()
   const {
     earmarkIncentive,
     earnedBal,
@@ -31,7 +29,6 @@ export function usePolling() {
     earnedWncg()
     fetchBptBalance()
     fetchEthBalance()
-    fetchPool()
     fetchWethBalance()
     fetchWncgBalance()
     getBalEmissionPerSec()
@@ -46,7 +43,6 @@ export function usePolling() {
     earnedWncg,
     fetchBptBalance,
     fetchEthBalance,
-    fetchPool,
     fetchWethBalance,
     fetchWncgBalance,
     getBalEmissionPerSec,

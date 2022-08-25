@@ -8,6 +8,7 @@ import { WeightedMath } from '@georgeroman/balancer-v2-pools'
 
 import Decimal, { bnum } from 'utils/num'
 import { getTokenInfo } from 'utils/token'
+import { configService } from './config'
 
 const POOL_DECIMALS = 18
 
@@ -27,7 +28,9 @@ export default class CalculatorService {
   constructor(
     public pool: Pool,
     public bptBalance: string,
-    public action: PoolAction
+    public action: PoolAction,
+    public useNativeAsset = false,
+    public readonly config = configService
   ) {}
 
   public exactTokensInForBptOut(tokenAmounts: string[]): OldBigNumber {
@@ -219,6 +222,15 @@ export default class CalculatorService {
 
   // NOTE: Getters
   public get tokenAddresses(): string[] {
+    if (this.useNativeAsset) {
+      return this.pool.tokensList.map((address) => {
+        if (address === this.config.weth) {
+          return this.config.network.nativeAsset.address
+        }
+        return address
+      })
+    }
+
     return this.pool.tokensList
   }
 

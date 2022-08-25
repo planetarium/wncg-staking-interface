@@ -1,9 +1,11 @@
 import { useCallback, useMemo } from 'react'
+import { useQuery } from 'react-query'
 import { useRecoilValue } from 'recoil'
 
 import { getUserBalances } from 'app/states/balance'
-import { poolState, poolTokenSymbolsState } from 'app/states/pool'
+import { poolTokenSymbolsState } from 'app/states/pool'
 import CalculatorService from 'services/calculator'
+import { poolService } from 'services/pool'
 import { bnum } from 'utils/num'
 import { useAppSelector } from './useRedux'
 import { useUsd } from './useUsd'
@@ -11,7 +13,10 @@ import { useUsd } from './useUsd'
 export function useJoinMath() {
   const { calculateUsdValue } = useUsd()
 
-  const pool = useRecoilValue(poolState)
+  const { data: pool } = useQuery('pool', poolService.fetchPool, {
+    keepPreviousData: true,
+    staleTime: 5 * 1_000,
+  })
   const poolTokenSymbols = useRecoilValue(poolTokenSymbolsState)
 
   const userBalances = useAppSelector(getUserBalances)
