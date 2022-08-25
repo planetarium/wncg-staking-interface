@@ -1,10 +1,11 @@
 import { memo, useMemo } from 'react'
 import { Control, FieldValues, useForm } from 'react-hook-form'
+import { useRecoilValue } from 'recoil'
 import { motion } from 'framer-motion'
 import styles from './styles/StakeForm.module.scss'
 
 import { getBptBalance } from 'app/states/balance'
-import { getIsValidNetwork } from 'app/states/connection'
+import { networkMismatchState } from 'app/states/network'
 import { gaEvent } from 'lib/gtag'
 import Decimal, { sanitizeNumber } from 'utils/num'
 import { useAppSelector } from 'hooks'
@@ -17,8 +18,8 @@ import { StakeSubmit } from './StakeSubmit'
 const minAmount = 1e-18
 
 function StakeForm() {
+  const networkMismatch = useRecoilValue(networkMismatchState)
   const bptBalance = useAppSelector(getBptBalance)
-  const isValidNetwork = useAppSelector(getIsValidNetwork)
   const { clearErrors, control, formState, setValue, watch } = useForm<{
     stakeAmount: string
   }>({
@@ -26,9 +27,9 @@ function StakeForm() {
   })
   const stakeAmountValue = watch('stakeAmount')
   const disabled =
+    networkMismatch ||
     Object.keys(formState.errors).length > 0 ||
-    new Decimal(sanitizeNumber(stakeAmountValue)).isZero() ||
-    !isValidNetwork
+    new Decimal(sanitizeNumber(stakeAmountValue)).isZero()
 
   const rules = useMemo(
     () => ({

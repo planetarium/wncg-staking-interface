@@ -1,11 +1,13 @@
 import { useCallback, useMemo } from 'react'
+import { useRecoilValue } from 'recoil'
 import { Contract } from 'ethers'
 
-import { getAccount, getIsValidNetwork } from 'app/states/connection'
+import { getAccount } from 'app/states/connection'
 import {
   getBalRewardContractAddress,
   setBalRewardAddress,
 } from 'app/states/contract'
+import { networkMismatchState } from 'app/states/network'
 import {
   setBalEmissionPerSec,
   setEarmarkIncentive,
@@ -30,13 +32,14 @@ export function useReward() {
   const contract = useStakingContract()
   const { addToast } = useToast()
 
+  const networkMismatch = useRecoilValue(networkMismatchState)
+
   const dispatch = useAppDispatch()
   const account = useAppSelector(getAccount)
   const balRewardContractAddress = useAppSelector(getBalRewardContractAddress)
-  const isValidNetwork = useAppSelector(getIsValidNetwork)
 
   const balRewardContract = useMemo(() => {
-    if (!provider || !balRewardContractAddress || !isValidNetwork || !account) {
+    if (!provider || !balRewardContractAddress || networkMismatch || !account) {
       return null
     }
     return new Contract(
@@ -44,7 +47,7 @@ export function useReward() {
       balRewardAbi,
       provider.getSigner(account)
     )
-  }, [account, balRewardContractAddress, isValidNetwork, provider])
+  }, [account, balRewardContractAddress, networkMismatch, provider])
 
   const balRewardPool = useCallback(async () => {
     try {

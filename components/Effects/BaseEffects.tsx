@@ -1,8 +1,10 @@
 import { memo } from 'react'
 import { useMount, useUnmount } from 'react-use'
+import { useSetRecoilState } from 'recoil'
 import type { Network } from '@ethersproject/networks'
 import store from 'store'
 
+import { currentNetworkIdState } from 'app/states/network'
 import { resetTxList } from 'app/states/transaction'
 import {
   useAppDispatch,
@@ -14,12 +16,13 @@ import {
 
 function BaseEffects() {
   const { flushOutdatedConfirmations, resetConfirmations } = useConfirmations()
-  const { disconnect, updateAccount, updateChainId } = useConnection()
+  const { disconnect, updateAccount } = useConnection()
   const provider = useProvider()
 
   usePolling()
 
   const dispatch = useAppDispatch()
+  const setCurrentNetworkId = useSetRecoilState(currentNetworkIdState)
 
   function handleAccountsChanged(...args: unknown[]) {
     dispatch(resetTxList())
@@ -43,7 +46,7 @@ function BaseEffects() {
 
   function handleNetworkChange(network: Network) {
     if (network) {
-      updateChainId(network.chainId)
+      setCurrentNetworkId(network.chainId)
     }
   }
 

@@ -2,7 +2,6 @@ import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import store from 'store'
 
 import type { RootState } from 'app/store'
-import { CURRENT_MAINNET } from 'utils/env'
 
 export const ConnectionStatus = {
   NotConnected: 'CONNECTION_STATUS_NOT_CONNECTED',
@@ -14,13 +13,11 @@ export type ConnectionStatus =
 
 type ConnectionState = {
   account: string | null
-  chainId: number | null
   status: ConnectionStatus
 }
 
 const INITIAL_STATE: ConnectionState = {
   account: null,
-  chainId: null,
   status: ConnectionStatus.NotConnected,
 }
 
@@ -35,9 +32,6 @@ const connectionSlice = createSlice({
       state.status = ConnectionStatus.Connected
       store.set(STORE_ACCOUNT_KEY, action.payload)
     },
-    setChainId: (state: ConnectionState, action: PayloadAction<number>) => {
-      state.chainId = action.payload
-    },
     setConnecting: (state: ConnectionState) => {
       state.status = ConnectionStatus.Connecting
       state.account = null
@@ -51,7 +45,7 @@ const connectionSlice = createSlice({
   },
 })
 
-export const { setAccount, setChainId, setConnecting, resetConnection } =
+export const { setAccount, setConnecting, resetConnection } =
   connectionSlice.actions
 export default connectionSlice.reducer
 
@@ -62,18 +56,6 @@ export function getStatus(state: RootState): ConnectionStatus {
 export function getAccount(state: RootState): string | null {
   return state.connection.account
 }
-export function getChainId(state: RootState): number | null {
-  return state.connection.chainId
-}
 export const getIsConnected = createSelector([getStatus], (status) => {
   return status === ConnectionStatus.Connected
-})
-export const getIsMetamaskInstalled = createSelector(
-  [getChainId],
-  (chainId) => {
-    return chainId !== null
-  }
-)
-export const getIsValidNetwork = createSelector([getChainId], (chainId) => {
-  return chainId !== null && chainId === CURRENT_MAINNET
 })

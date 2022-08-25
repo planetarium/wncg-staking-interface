@@ -8,7 +8,6 @@ import {
   getAccount,
   resetConnection,
   setAccount,
-  setChainId,
   setConnecting,
 } from 'app/states/connection'
 import { ModalCategory } from 'app/states/modal'
@@ -103,15 +102,10 @@ export function useConnection() {
     dispatch(setAccount(account))
   }
 
-  function updateChainId(chainId: number) {
-    dispatch(setChainId(chainId))
-  }
-
   return {
     connect,
     disconnect,
     switchToMainnet,
     updateAccount,
-    updateChainId,
   }
 }

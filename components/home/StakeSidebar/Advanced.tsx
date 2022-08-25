@@ -1,9 +1,11 @@
 import { useCallback, useEffect, useState } from 'react'
+import { useRecoilValue } from 'recoil'
 import { AnimatePresence, motion } from 'framer-motion'
 import styles from '../styles/StakeSidebar.module.scss'
 
-import { getIsConnected, getIsValidNetwork } from 'app/states/connection'
+import { getIsConnected } from 'app/states/connection'
 import { getIsMobile } from 'app/states/mediaQuery'
+import { networkMismatchState } from 'app/states/network'
 import { getEarmarkIncentive } from 'app/states/reward'
 import { TransactionAction } from 'app/states/transaction'
 import { gaEvent } from 'lib/gtag'
@@ -31,12 +33,12 @@ export function StakeSidebarAdvanced() {
   const { earmarkIncentive, earmarkRewards } = useReward()
   const { calculateUsdValue } = useUsd()
 
+  const networkMismatch = useRecoilValue(networkMismatchState)
   const incentive = useAppSelector(getEarmarkIncentive)
   const isConnected = useAppSelector(getIsConnected)
   const isMobile = useAppSelector(getIsMobile)
-  const isValidNetwork = useAppSelector(getIsValidNetwork)
 
-  const disabled = loading || !isValidNetwork || !isConnected
+  const disabled = networkMismatch || !isConnected || loading
 
   function toggle() {
     if (!open) {

@@ -2,12 +2,14 @@
 import { useCallback, useRef, useState } from 'react'
 import { useMount, useUnmount } from 'react-use'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
+import { useRecoilValue } from 'recoil'
 import { motion } from 'framer-motion'
 import store from 'store'
 import clsx from 'clsx'
 import styles from './style.module.scss'
 
-import { getAccount, getIsValidNetwork } from 'app/states/connection'
+import { getAccount } from 'app/states/connection'
+import { networkMismatchState } from 'app/states/network'
 import { gaEvent } from 'lib/gtag'
 import { IS_ETHEREUM } from 'utils/env'
 import { truncateAddress } from 'utils/string'
@@ -31,8 +33,9 @@ export function AccountUserMenu({ close }: AccountUserMenuProps) {
   const menuRef = useRef<HTMLDivElement>(null)
 
   const { disconnect, switchToMainnet } = useConnection()
+
+  const networkMismatch = useRecoilValue(networkMismatchState)
   const account = useAppSelector(getAccount)
-  const isValidNetwork = useAppSelector(getIsValidNetwork)
 
   function disconnectApp() {
     close()
@@ -137,17 +140,17 @@ export function AccountUserMenu({ close }: AccountUserMenuProps) {
         <div>
           <dt>Network</dt>
           <dd>
-            {isValidNetwork ? (
+            {networkMismatch ? (
+              <Button variant="tertiary" size="small" onClick={switchNetwork}>
+                Switch Network
+              </Button>
+            ) : (
               <>
                 <span className={styles.ethereum}>
                   <Icon id="ethereumSimple" />
                 </span>
                 {IS_ETHEREUM ? 'Ethereum' : 'Kovan'}
               </>
-            ) : (
-              <Button variant="tertiary" size="small" onClick={switchNetwork}>
-                Switch Network
-              </Button>
             )}
           </dd>
         </div>

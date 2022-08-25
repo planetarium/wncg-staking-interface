@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react'
 import { usePrevious } from 'react-use'
 import ReactCountUp, { CountUpProps as ReactCountUpProps } from 'react-countup'
+import { useRecoilValue } from 'recoil'
 import clsx from 'clsx'
 import styles from './style.module.scss'
 
-import { getIsConnected, getIsValidNetwork } from 'app/states/connection'
+import { getIsConnected } from 'app/states/connection'
+import { networkMismatchState } from 'app/states/network'
 import Decimal, { sanitizeNumber } from 'utils/num'
 import { useAppSelector } from 'hooks'
 
@@ -28,12 +30,12 @@ export function CountUp({
   const prevEnd = usePrevious(Number(sanitizeNumber(end))) || 0
 
   const isConnected = useAppSelector(getIsConnected)
-  const isValidNetwork = useAppSelector(getIsValidNetwork)
+  const networkMismatch = useRecoilValue(networkMismatchState)
 
   const invalidEnd = !new Decimal(end).isFinite() || new Decimal(end).isNaN()
   const showDash =
     !isConnected ||
-    !isValidNetwork ||
+    networkMismatch ||
     invalidEnd ||
     (showDashWhenZero && new Decimal(end).isZero())
 

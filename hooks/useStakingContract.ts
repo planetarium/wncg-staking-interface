@@ -1,7 +1,9 @@
 import { useMemo } from 'react'
+import { useRecoilValue } from 'recoil'
 import { Contract } from 'ethers'
 
-import { getAccount, getIsValidNetwork } from 'app/states/connection'
+import { getAccount } from 'app/states/connection'
+import { networkMismatchState } from 'app/states/network'
 import { stakingAbi } from 'lib/abis'
 import { useProvider } from './useProvider'
 import { useAppSelector } from './useRedux'
@@ -9,11 +11,11 @@ import { useAppSelector } from './useRedux'
 export function useStakingContract() {
   const provider = useProvider()
 
+  const networkMismatch = useRecoilValue(networkMismatchState)
   const account = useAppSelector(getAccount)
-  const isValidNetwork = useAppSelector(getIsValidNetwork)
 
   const contract = useMemo(() => {
-    if (!provider || !isValidNetwork || !account) {
+    if (!provider || networkMismatch || !account) {
       return null
     }
 
@@ -22,7 +24,7 @@ export function useStakingContract() {
       stakingAbi,
       provider.getSigner(account)
     )
-  }, [account, isValidNetwork, provider])
+  }, [account, networkMismatch, provider])
 
   return contract
 }
