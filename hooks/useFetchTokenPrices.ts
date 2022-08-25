@@ -1,7 +1,7 @@
 import { useQuery } from 'react-query'
 import { useSetRecoilState } from 'recoil'
 
-import { priceErrorState } from 'app/states/error'
+import { invalidPriceState } from 'app/states/error'
 import { poolTokenPricesState } from 'app/states/pool'
 import { coingecko, tokenIds, tokenSymbols } from 'services/coingecko'
 
@@ -14,7 +14,7 @@ const DEFAULT_TOKEN_PRICES = tokenSymbols.reduce((acc, symb) => {
 
 export function useFetchTokenPrices() {
   const setPoolTokenPrices = useSetRecoilState(poolTokenPricesState)
-  const setPriceError = useSetRecoilState(priceErrorState)
+  const setInvalidPrice = useSetRecoilState(invalidPriceState)
 
   const { data: prices, refetch } = useQuery('tokenPrices', fetchTokenPrices, {
     staleTime: 10 * 1_000,
@@ -23,12 +23,12 @@ export function useFetchTokenPrices() {
     placeholderData: DEFAULT_TOKEN_PRICES,
     onError() {
       setPoolTokenPrices([0, 0])
-      setPriceError(true)
+      setInvalidPrice(true)
     },
     onSuccess(data) {
       const { weth, wncg } = data || {}
       setPoolTokenPrices([wncg, weth])
-      setPriceError(false)
+      setInvalidPrice(false)
     },
   })
 

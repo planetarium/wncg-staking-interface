@@ -1,6 +1,6 @@
 import { atom } from 'recoil'
 
-export const priceErrorState = atom<boolean>({
-  key: '#priceError',
+export const invalidPriceState = atom<boolean>({
+  key: '#invalidPrice',
   default: false,
 })
