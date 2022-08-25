@@ -1,0 +1,25 @@
+{
+  "key": "42",
+  "chainId": 42,
+  "chainName": "Ethereum",
+  "name": "Ethereum Testnet Kovan",
+  "shortName": "Kovan",
+  "network": "kovan",
+  "explorer": "https://kovan.etherscan.io",
+  "explorerName": "Etherscan",
+  "subgraph": "https://api.thegraph.com/subgraphs/name/balancer-labs/balancer-kovan-v2",
+  "nativeAsset": {
+    "name": "Ether",
+    "address": "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+    "symbol": "ETH",
+    "decimals": 18,
+    "deeplinkId": "ether",
+    "logoURI": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png",
+    "minTransactionBuffer": "0.05"
+  },
+  "addresses": {
+    "bal": "0xcb355677E36f390Ccc4a5d4bEADFbF1Eb2071c81",
+    "vault": "0xBA12222222228d8Ba445958a75a0704d566BF2C8",
+    "weth": "0xdFCeA9088c8A88A76FF74892C1457C17dfeef9C1"
+  }
+}
