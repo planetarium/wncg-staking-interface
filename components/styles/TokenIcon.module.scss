@@ -1,30 +1,18 @@
 .token {
   @include flexbox;
+  @include imageContainer(30px);
   width: 30px;
   height: 30px;
   overflow: hidden;
+  background-color: $white;
   border-radius: 50%;
 
-  &.bal {
-    background-color: $white;
+  &.placeholder {
+    background-color: $gray-5;
 
     svg {
-      width: 100%;
+      width: 50%;
       height: auto;
     }
-  }
-
-  &.weth {
-    background-color: $ethereum;
-
-    svg {
-      width: 60%;
-      height: auto;
-    }
-  }
-
-  &.wncg {
-    @include imageContainer(30px);
-    background-color: $white;
   }
 }

@@ -14,6 +14,7 @@ type Icon =
   | 'clock'
   | 'close'
   | 'closeCircle'
+  | 'coin'
   | 'diamond'
   | 'discord'
   | 'externalLink'
