@@ -4,7 +4,8 @@ import { Contract } from 'ethers'
 
 import { getAccount } from 'app/states/connection'
 import { networkMismatchState } from 'app/states/network'
-import { stakingAbi } from 'lib/abis'
+import { configService } from 'services/config'
+import { StakingAbi } from 'lib/abi'
 import { useProvider } from './useProvider'
 import { useAppSelector } from './useRedux'
 
@@ -21,7 +22,7 @@ export function useStakingContract() {
 
     return new Contract(
       process.env.NEXT_PUBLIC_STAKING_CONTRACT_ADDRESS as string,
-      stakingAbi,
+      StakingAbi,
       provider.getSigner(account)
     )
   }, [account, networkMismatch, provider])

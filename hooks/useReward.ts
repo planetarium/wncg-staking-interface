@@ -16,7 +16,7 @@ import {
   setWncgEmissionPerSec,
 } from 'app/states/reward'
 import { addTx, TransactionAction } from 'app/states/transaction'
-import { balRewardAbi } from 'lib/abis'
+import { LiquidityGuageAbi } from 'lib/abi'
 import { stakingContractAddress } from 'utils/env'
 import { handleError } from 'utils/error'
 import Decimal, { weiToEther } from 'utils/num'
@@ -44,7 +44,7 @@ export function useReward() {
     }
     return new Contract(
       balRewardContractAddress,
-      balRewardAbi,
+      LiquidityGuageAbi,
       provider.getSigner(account)
     )
   }, [account, balRewardContractAddress, networkMismatch, provider])

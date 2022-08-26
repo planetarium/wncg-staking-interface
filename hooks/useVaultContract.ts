@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { Contract } from 'ethers'
 
 import { getAccount } from 'app/states/connection'
-import { balancerVaultAbi } from 'lib/abis'
+import { BalancerVaultAbi } from 'lib/abi'
 import { useProvider } from './useProvider'
 import { useAppSelector } from './useRedux'
 
@@ -15,7 +15,7 @@ export function useVaultContract() {
 
     return new Contract(
       process.env.NEXT_PUBLIC_BALANCER_VAULT_ADDRESS as string,
-      balancerVaultAbi,
+      BalancerVaultAbi,
       provider.getSigner(account)
     )
   }, [account, provider])
