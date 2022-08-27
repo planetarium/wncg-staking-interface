@@ -130,6 +130,7 @@ export function StakeSidebarAdvanced() {
                       end={parseFloat(incentive)}
                       decimals={8}
                       duration={0.5}
+                      showAlways
                     />
                   </div>
                   <CountUp
@@ -137,6 +138,7 @@ export function StakeSidebarAdvanced() {
                     className={styles.usd}
                     end={calculateUsdValue('bal', incentive)}
                     isApproximate
+                    showAlways
                   />
                 </dd>
               </div>

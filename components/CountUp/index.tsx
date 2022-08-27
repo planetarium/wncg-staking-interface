@@ -7,23 +7,23 @@ import styles from './style.module.scss'
 
 import { getIsConnected } from 'app/states/connection'
 import { networkMismatchState } from 'app/states/network'
-import Decimal, { sanitizeNumber } from 'utils/num'
+import { bnum, sanitizeNumber } from 'utils/num'
 import { useAppSelector } from 'hooks'
 
 import { Icon } from '../Icon'
 
 type CountUpProps = ReactCountUpProps & {
   isApproximate?: boolean
+  showAlways?: boolean
   showTitle?: boolean
-  showDashWhenZero?: boolean
 }
 
 export function CountUp({
   className,
   end,
-  isApproximate,
+  isApproximate = false,
+  showAlways = false,
   showTitle = true,
-  showDashWhenZero = false,
   ...countUpProps
 }: CountUpProps) {
   const [start, setStart] = useState(0)
@@ -32,22 +32,18 @@ export function CountUp({
   const isConnected = useAppSelector(getIsConnected)
   const networkMismatch = useRecoilValue(networkMismatchState)
 
-  const invalidEnd = !new Decimal(end).isFinite() || new Decimal(end).isNaN()
+  const bEnd = bnum(end)
+  const invalidValue = !bEnd.isFinite() || bEnd.isNaN()
   const showDash =
-    !isConnected ||
-    networkMismatch ||
-    invalidEnd ||
-    (showDashWhenZero && new Decimal(end).isZero())
+    invalidValue || networkMismatch || (!showAlways && !isConnected)
 
   const nestedClassName = clsx(className, { [styles.usd]: isApproximate })
 
   useEffect(() => {
-    if (prevEnd !== end) {
-      setStart(prevEnd)
-    }
+    if (prevEnd !== end) setStart(prevEnd)
   }, [end, prevEnd])
 
-  if (showDash || !new Decimal(end).isFinite()) {
+  if (showDash) {
     return (
       <div className={nestedClassName}>
         {isApproximate && <Icon id="approximate" ariaHidden />}-
@@ -55,10 +51,11 @@ export function CountUp({
     )
   }
 
-  const title = showTitle ? sanitizeNumber(end) : undefined
-
   return (
-    <div className={nestedClassName} title={title}>
+    <div
+      className={nestedClassName}
+      title={showTitle ? sanitizeNumber(end) : undefined}
+    >
       {isApproximate && <Icon id="approximate" ariaHidden />}
       <ReactCountUp {...countUpProps} start={start} end={end} />
     </div>

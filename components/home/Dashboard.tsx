@@ -5,6 +5,7 @@ import styles from './styles/Dashboard.module.scss'
 import { ModalCategory } from 'app/states/modal'
 import { getEarnedBal, getEarnedWncg } from 'app/states/reward'
 import { getTotalStaked } from 'app/states/stake'
+import { configService } from 'services/config'
 import { gaEvent } from 'lib/gtag'
 import {
   countUpOption,
@@ -64,7 +65,7 @@ function Dashboard() {
               <CountUp
                 {...usdCountUpOption}
                 className={styles.usd}
-                end={calculateUsdValue('bal', bal)}
+                end={getFiatValue(configService.bal, bal)}
                 isApproximate
               />
             </dd>
@@ -80,33 +81,26 @@ function Dashboard() {
           <div className={clsx(styles.detailItem, styles.isBig)}>
             <dt>Total Staked</dt>
             <dd>
-              <CountUp {...countUpOption} end={staked} />
+              <CountUp {...countUpOption} end={staked} showAlways />
               <CountUp
                 {...usdCountUpOption}
                 className={styles.usd}
                 end={calculateUsdValue('bpt', staked)}
                 isApproximate
+                showAlways
               />
             </dd>
           </div>
           <div className={styles.detailItem}>
             <dt>WNCG APR</dt>
             <dd>
-              <CountUp
-                {...percentCountUpOption}
-                end={wncgApr}
-                showDashWhenZero
-              />
+              <CountUp {...percentCountUpOption} end={wncgApr} showAlways />
             </dd>
           </div>
           <div className={styles.detailItem}>
             <dt>BAL APR</dt>
             <dd>
-              <CountUp
-                {...percentCountUpOption}
-                end={balApr}
-                showDashWhenZero
-              />
+              <CountUp {...percentCountUpOption} end={balApr} showAlways />
             </dd>
           </div>
         </dl>

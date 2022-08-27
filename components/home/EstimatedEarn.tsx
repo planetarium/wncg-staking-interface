@@ -134,12 +134,14 @@ function EstimatedEarn({ amount = '' }: EstimatedEarnProps) {
               end={wncg}
               decimals={8}
               duration={0.5}
+              showAlways
             />
             <CountUp
               {...usdCountUpOption}
               className={styles.usd}
               end={calculateUsdValue('wncg', wncg)}
               isApproximate
+              showAlways
             />
           </dd>
         </div>
@@ -150,12 +152,19 @@ function EstimatedEarn({ amount = '' }: EstimatedEarnProps) {
             <strong>BAL</strong>
           </dt>
           <dd>
-            <CountUp {...countUpOption} end={bal} decimals={8} duration={0.5} />
+            <CountUp
+              {...countUpOption}
+              end={bal}
+              decimals={8}
+              duration={0.5}
+              showAlways
+            />
             <CountUp
               {...usdCountUpOption}
               className={styles.usd}
               end={calculateUsdValue('bal', bal)}
               isApproximate
+              showAlways
             />
           </dd>
         </div>
