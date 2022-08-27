@@ -4,7 +4,7 @@ import { AnimatePresence } from 'framer-motion'
 import store from 'store'
 import styles from './styles/Content.module.scss'
 
-import { STORE_IS_UNSTAKE_WINDOW_KEY } from 'app/states/unstake'
+import { STORE_IS_UNSTAKE_WINDOW_KEY } from 'constants/storeKeys'
 import { useWithdrawable } from './useWithdrawable'
 import { Tab } from './constants'
 

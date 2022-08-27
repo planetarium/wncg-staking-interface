@@ -1,6 +1,8 @@
-import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import store from 'store'
+
 import type { RootState } from 'app/store'
+import { STORE_TX_LIST_KEY } from 'constants/storeKeys'
 
 export const TransactionAction = {
   Approve: 'Approve',
@@ -22,8 +24,6 @@ export type Transaction = {
   summary: string
   action: TransactionAction
 }
-
-const STORE_TX_LIST_KEY = `wncgStaking.txList`
 
 type TransactionState = {
   txList: Transaction[]

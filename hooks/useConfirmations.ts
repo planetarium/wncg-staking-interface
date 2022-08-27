@@ -1,6 +1,7 @@
 import store from 'store'
 
-const STORE_CONFIRMATIONS_KEY = `wncgStaking.confirmations`
+import { STORE_CONFIRMATIONS_KEY } from 'constants/storeKeys'
+
 const DAY_IN_SECONDS = 60 * 60 * 24
 
 type Confirmation = {

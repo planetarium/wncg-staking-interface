@@ -2,6 +2,12 @@ import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import store from 'store'
 
 import type { RootState } from 'app/store'
+import {
+  STORE_COOLDOWN_ENDS_AT,
+  STORE_IS_UNSTAKE_WINDOW_KEY,
+  STORE_UNSTAKE_PERIOD_KEY,
+  STORE_WITHDRAW_ENDS_AT,
+} from 'constants/storeKeys'
 import { getIsConnected } from './connection'
 import { getIsStaked } from './stake'
 
@@ -19,11 +25,6 @@ type UnstakeState = {
   withdrawEndsAt: number | null
   unstakePeriod: number | null
 }
-
-const STORE_UNSTAKE_PERIOD_KEY = `wncgStaking.unstakePeriod`
-export const STORE_IS_UNSTAKE_WINDOW_KEY = `wncgStaking.isUnstakeWindow`
-export const STORE_COOLDOWN_ENDS_AT = `wncgStaking.cooldownEndsAt`
-export const STORE_WITHDRAW_ENDS_AT = `wncgStaking.withdrawEndsAt`
 
 const INITIAL_STATE: UnstakeState = {
   cooldownEndsAt: null,

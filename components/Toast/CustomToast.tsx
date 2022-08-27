@@ -2,7 +2,7 @@ import { useMount } from 'react-use'
 import store from 'store'
 import styles from './style.module.scss'
 
-import { STORE_MUTED_KEY } from 'components/Gnb/Account/constants'
+import { STORE_MUTED_KEY } from 'constants/storeKeys'
 
 type CustomToastProps = {
   title: string

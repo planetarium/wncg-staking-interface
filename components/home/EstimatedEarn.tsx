@@ -13,13 +13,12 @@ import styles from './styles/EstimatedEarn.module.scss'
 
 import { gaEvent } from 'lib/gtag'
 import { countUpOption, usdCountUpOption } from 'utils/countUp'
+import { STORE_ESTIMATED_EARN_OPTION_KEY } from 'constants/storeKeys'
 import { useUsd } from 'hooks'
 import { useEstimation } from './useEstimation'
 
 import { CountUp } from 'components/CountUp'
 import { TokenIcon } from 'components/TokenIcon'
-
-const STORE_OPTION_KEY = `wncgStaking.estimatedEarnOption`
 
 type EstimatedEarnProps = {
   amount?: string
@@ -42,7 +41,7 @@ function EstimatedEarn({ amount = '' }: EstimatedEarnProps) {
   function handleOption(e: MouseEvent<HTMLButtonElement>) {
     const newOption = e.currentTarget.value
     setOption(newOption)
-    store.set(STORE_OPTION_KEY, newOption)
+    store.set(STORE_ESTIMATED_EARN_OPTION_KEY, newOption)
     gaEvent({
       name: 'estimated_earn_period',
       params: {
@@ -63,7 +62,7 @@ function EstimatedEarn({ amount = '' }: EstimatedEarnProps) {
   )
 
   useIsomorphicLayoutEffect(() => {
-    const initialOption = store.get(STORE_OPTION_KEY)
+    const initialOption = store.get(STORE_ESTIMATED_EARN_OPTION_KEY)
     if (initialOption && initialOption !== option) {
       setOption(initialOption)
     }

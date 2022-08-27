@@ -2,6 +2,7 @@ import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import store from 'store'
 
 import type { RootState } from 'app/store'
+import { STORE_ACCOUNT_KEY } from 'constants/storeKeys'
 
 export const ConnectionStatus = {
   NotConnected: 'CONNECTION_STATUS_NOT_CONNECTED',
@@ -20,8 +21,6 @@ const INITIAL_STATE: ConnectionState = {
   account: null,
   status: ConnectionStatus.NotConnected,
 }
-
-const STORE_ACCOUNT_KEY = `wncgStaking.account`
 
 const connectionSlice = createSlice({
   name: '#connection',

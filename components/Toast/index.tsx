@@ -7,7 +7,7 @@ import { TransactionAction } from 'app/states/transaction'
 import { gaEvent } from 'lib/gtag'
 import { renderTxTitle } from 'utils/transaction'
 import { getTxUrl } from 'utils/url'
-import { STORE_MUTED_KEY } from 'components/Gnb/Account/constants'
+import { STORE_MUTED_KEY } from 'constants/storeKeys'
 
 import { Icon } from 'components/Icon'
 
