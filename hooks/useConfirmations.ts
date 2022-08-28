@@ -1,8 +1,7 @@
 import store from 'store'
 
 import { STORE_CONFIRMATIONS_KEY } from 'constants/storeKeys'
-
-const DAY_IN_SECONDS = 60 * 60 * 24
+import { DAY_IN_MS } from 'constants/time'
 
 type Confirmation = {
   status: 'pending' | 'fulfilled'
@@ -61,10 +60,7 @@ export function useConfirmations() {
 
     const newConfirmations: Record<string, Confirmation> = {}
     Object.entries(current).forEach(([hash, value]) => {
-      if (
-        value.finalizedTime &&
-        now - value.finalizedTime > DAY_IN_SECONDS * 1_000
-      ) {
+      if (value.finalizedTime && now - value.finalizedTime > DAY_IN_MS) {
         return
       }
       newConfirmations[hash] = value

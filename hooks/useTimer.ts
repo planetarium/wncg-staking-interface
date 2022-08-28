@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react'
 import { useInterval, usePrevious } from 'react-use'
 
-const SECOND = 1_000
-const MINUTE = SECOND * 60
-const HOUR = MINUTE * 60
-const DAY = HOUR * 24
+import {
+  SECOND_IN_MS as SECOND,
+  MINUTE_IN_MS as MINUTE,
+  DAY_IN_MS as DAY,
+  HOUR_IN_MS as HOUR,
+} from 'constants/time'
 
 export function useTimer(expiresAt = 0, onExpiration?: () => void) {
   const [timeRemaining, setTimeRemaining] = useState(expiresAt - Date.now())
