@@ -8,24 +8,23 @@ import {
 import clsx from 'clsx'
 import styles from '../styles/TokenInput.module.scss'
 
-import type { TokenDropdownSymbol } from '../constants'
+import { renderTokenIcon } from './utils'
 
 import { Button } from 'components/Button'
 import { Icon } from 'components/Icon'
-import { TokenIcon } from 'components/TokenIcon'
 
 type TokenDropdownProps = {
-  currentToken: TokenDropdownSymbol
   id: string
-  tokenList: TokenDropdownSymbol[]
-  selectToken?(value: TokenDropdownSymbol): void
+  selectedToken: string
+  tokenList: string[]
+  selectToken?(value: string): void
 }
 
 export function TokenDropdown({
-  currentToken,
   id,
-  selectToken,
+  selectedToken,
   tokenList,
+  selectToken,
 }: TokenDropdownProps) {
   const [show, setShow] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
@@ -34,10 +33,7 @@ export function TokenDropdown({
 
   function handleClick(e: ReactMouseEvent) {
     if (!hasList) return
-    const { value } = e.currentTarget as HTMLButtonElement & {
-      value: TokenDropdownSymbol
-    }
-    selectToken(value)
+    selectToken((e.currentTarget as HTMLButtonElement).value)
     setShow(false)
   }
 
@@ -71,14 +67,15 @@ export function TokenDropdown({
         onClick={toggle}
         disabled={!hasList}
       >
-        {renderTokenIcon(currentToken, tokenList)}
+        {renderTokenIcon(selectedToken, tokenList)}
         {hasList && <Icon className={styles.caret} id="caret" ariaHidden />}
       </Button>
 
       {hasList && (
         <ul className={styles.dropdownMenu}>
           {tokenList.map((token) => {
-            const isSelected = currentToken === token
+            const isSelected = token === selectedToken
+
             return (
               <li
                 key={`${token}.${id}`}
@@ -94,33 +91,5 @@ export function TokenDropdown({
         </ul>
       )}
     </div>
-  )
-}
-
-function renderTokenIcon(
-  symbol: TokenDropdownSymbol,
-  poolTokenSymbols: string[]
-) {
-  if (symbol === 'all') {
-    return (
-      <>
-        <div className={styles.tokenGroup}>
-          {poolTokenSymbols.map((symbol) => (
-            <TokenIcon
-              key={`tokenInputDropdown.${symbol}`}
-              className={styles.token}
-              symbol={symbol}
-            />
-          ))}
-        </div>
-        <span className={styles.label}>All tokens</span>
-      </>
-    )
-  }
-  return (
-    <>
-      <TokenIcon className={styles.token} symbol={symbol} />
-      <span className={styles.label}>{symbol.toUpperCase()}</span>
-    </>
   )
 }

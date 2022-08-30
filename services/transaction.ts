@@ -8,9 +8,11 @@ import { isToday } from 'date-fns'
 import store from 'store'
 
 import { STORE_TRANSACTION_MAP_KEY } from 'constants/storeKeys'
-import { createLogger } from 'utils/log'
-import { renderTxMessage, renderTxTitle } from 'utils/transaction'
-import { getTokenSymbol } from 'utils/token'
+import {
+  renderTxInfoMessage,
+  renderTxSuccessMessage,
+  renderTxTitle,
+} from 'utils/transaction'
 
 export const TransactionAction = {
   Approve: 'Approve',
@@ -37,6 +39,7 @@ export type Transaction = {
   status: TransactionStatus
   addedTime: number
   finalizedTime?: number
+  params?: string | string[]
 }
 
 export type TransactionNotificationParams = {
@@ -53,10 +56,7 @@ type TransactionMap = {
 
 type UpdateTxOption = {
   onFulfill?(): void
-  onRevert?(): void
 }
-
-const logger = createLogger('black')
 
 export class TransactionService {
   constructor(
@@ -66,28 +66,26 @@ export class TransactionService {
     ) => string
   ) {}
 
-  registerTx(
+  registerTx = async (
     response: TransactionResponse,
     action: TransactionAction,
-    hashId?: string
-  ) {
-    console.log(22222, 'registerTx', action, response)
-    const hashKey = this.key(response.hash, hashId)
+    params?: string | string[]
+  ) => {
+    const hashKey = this.key(response.hash, action)
+    console.log('>>>> registerTx', hashKey, response)
     const newTx: Transaction = {
       action,
       hash: response.hash,
       status: 'pending',
       addedTime: Date.now(),
+      params,
     }
 
     this.sendNotification({
       action,
       hash: response.hash,
       title: renderTxTitle(action),
-      message: renderTxMessage(action, 'info', {
-        symbol: getTokenSymbol(response.to),
-        value: response.value.toString(),
-      }),
+      message: renderTxInfoMessage(action, params),
     })
 
     store.set(STORE_TRANSACTION_MAP_KEY, {
@@ -96,74 +94,38 @@ export class TransactionService {
     })
   }
 
-  async updateTxStatus(
+  updateTxStatus = async (
     event: Event,
-    option: UpdateTxOption = {},
-    hashId?: string
-  ): Promise<Transaction | undefined> {
-    const hash = event.transactionHash
-    const key = `tx receipt: ${hash}`
+    action: TransactionAction,
+    option: UpdateTxOption = {}
+  ) => {
+    const hashKey = this.key(event.transactionHash, action)
 
-    console.log(111111, 'updateTxStatus', event)
-
-    const hashKey = this.key(hash, hashId)
     const target = this.txMap[hashKey]
+    console.log('>>>> updateTxStatus', hashKey, target?.status)
 
-    //   NOTE: register가 안된 녀석
-    if (!target || !target?.status) return
-
-    //   NOTE: finalize 완료된 녀석
+    if (!target || target.status !== 'pending') return
     if (!!target.finalizedTime) return
 
-    try {
-      logger(key)
-      const receipt = await this.getTxReceipt(hash)
-      if (!receipt) return
+    const newTarget: Transaction = { ...target }
 
-      const newTarget: Transaction = { ...target }
+    newTarget.status = 'fulfilled'
+    newTarget.finalizedTime = Date.now()
 
-      //   NOTE: Fulfilled
-      if (!!receipt.status) {
-        newTarget.status = 'fulfilled'
-        newTarget.finalizedTime = Date.now()
+    this.sendNotification({
+      action: target.action,
+      hash: target.hash,
+      title: renderTxTitle(target.action),
+      message: renderTxSuccessMessage(target.action, target.params),
+      type: 'success',
+    })
 
-        this.sendNotification({
-          action: target.action,
-          hash: target.hash,
-          title: renderTxTitle(target.action),
-          message: renderTxMessage(target.action, 'success', {
-            symbol: getTokenSymbol(event.address),
-          }),
-          type: 'success',
-        })
+    option.onFulfill?.()
 
-        option.onFulfill?.()
-      } else {
-        // NOTE: Reverted
-        newTarget.status = 'reverted'
-        newTarget.finalizedTime = Date.now()
-
-        this.sendNotification({
-          action: target.action,
-          hash: target.hash,
-          title: renderTxTitle(target.action),
-          message: renderTxMessage(target.action, 'error', {
-            symbol: getTokenSymbol(event.address),
-          }),
-          type: 'error',
-        })
-
-        option.onRevert?.()
-      }
-
-      store.set(STORE_TRANSACTION_MAP_KEY, {
-        ...this.txMap,
-        [hashKey]: newTarget,
-      })
-    } catch (error) {
-      logger(key, error)
-      throw error
-    }
+    store.set(STORE_TRANSACTION_MAP_KEY, {
+      ...this.txMap,
+      [hashKey]: newTarget,
+    })
   }
 
   resetTx() {
@@ -188,10 +150,6 @@ export class TransactionService {
     return await txInfo?.wait()
   }
 
-  getTxStatus(hash: string): TransactionStatus | null {
-    return this.txMap[this.key(hash)]?.status || null
-  }
-
   get txMap(): TransactionMap {
     return store.get(STORE_TRANSACTION_MAP_KEY) || {}
   }
@@ -200,7 +158,7 @@ export class TransactionService {
     return Object.values(this.txMap).filter((tx) => tx.status === 'pending')
   }
 
-  private key(hash: string, hashId?: string) {
-    return hashId ? `tx_${hash}_${hashId}` : `tx_${hash}`
+  private key(hash: string, action: TransactionAction) {
+    return `tx_${hash}_${action}`
   }
 }

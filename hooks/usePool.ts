@@ -1,15 +1,16 @@
 import { useMemo } from 'react'
 import { useQuery } from '@tanstack/react-query'
 
+import { REFETCH_INTERVAL, STALE_TIME } from 'constants/time'
 import PoolService from 'services/pool'
 import { fetchPool } from 'lib/graphql'
-import { getTokenInfo } from 'utils/token'
-import { useAllowances } from 'hooks'
+import { getTokenInfo, getTokenSymbol } from 'utils/token'
 
-export function usePoolService() {
+export function usePool() {
   const { data: pool, refetch } = useQuery(['pool'], fetchPool, {
+    staleTime: STALE_TIME,
+    refetchInterval: REFETCH_INTERVAL,
     keepPreviousData: true,
-    staleTime: 5 * 1_000,
   })
 
   const poolService = useMemo(() => {
@@ -17,6 +18,7 @@ export function usePoolService() {
     return new PoolService(pool)
   }, [pool])
 
+  const poolName = poolService?.poolName || 'Balancer Weighted Pool'
   const poolTokens = poolService?.poolTokens || []
   const poolTokenAddresses = poolService?.poolTokenAddresses || []
   const poolTokenDecimals = poolService?.poolTokenDecimals || []
@@ -26,13 +28,16 @@ export function usePoolService() {
   const nativeAssetIndex = poolService?.nativeAssetIndex || 1
 
   const bptAddress = poolService?.bptAddress || ''
+  const poolTokenName = getTokenSymbol(bptAddress)
 
   return {
     pool,
     poolService,
+    poolName,
     poolTokens,
     poolTokenAddresses,
     poolTokenDecimals,
+    poolTokenName,
     poolTokenSymbols,
     nativeAssetIndex,
     bptAddress,

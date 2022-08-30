@@ -5,21 +5,20 @@ import styles from './WithdrawPreviewModal.module.scss'
 import { ModalCategory } from 'app/states/modal'
 import { addToast } from 'app/states/toast'
 import { TransactionAction } from 'services/transaction'
-import { getWithdrawEndsAt } from 'app/states/unstake'
 import { gaEvent } from 'lib/gtag'
 import { countUpOption, usdCountUpOption } from 'utils/countUp'
 import { handleError } from 'utils/error'
-import { getTokenSymbol } from 'utils/token'
-import { sanitizeNumber } from 'utils/num'
 import { toastAnimation } from 'utils/toast'
+import { getTokenSymbol } from 'utils/token'
 import {
   useAppDispatch,
-  useAppSelector,
+  useFiatCurrency,
   useModal,
-  useRewardData,
+  useRewards,
   useTimer,
   useUnstake,
-  useUsd,
+  useUnstakeTimestamps,
+  usePool,
 } from 'hooks'
 
 import { Button } from 'components/Button'
@@ -38,19 +37,34 @@ export function WithdrawPreviewModal({
 }: WithdrawPreviewModalProps) {
   const [loading, setLoading] = useState(false)
 
-  const { rewards, rewardsInFiatValue, rewardTokensList } = useRewardData()
+  const { poolTokenName, poolTokenSymbols } = usePool()
+  const { rewards, rewardsInFiatValue, rewardTokensList } = useRewards()
+  const { withdrawEndsAt } = useUnstakeTimestamps()
 
   const dispatch = useAppDispatch()
-  const withdrawEndsAt = useAppSelector(getWithdrawEndsAt)
 
   const { removeModal } = useModal()
-  const { getBptFiatValue } = useUsd()
+  const { getBptFiatValue } = useFiatCurrency()
   const { withdraw } = useUnstake()
-
-  const withdrawAmount = parseFloat(sanitizeNumber(amount))
 
   function close() {
     removeModal(ModalCategory.WithdrawPreview)
+  }
+
+  async function handleWithdraw() {
+    gaEvent({
+      name: 'withdraw_and_claim',
+    })
+
+    try {
+      setLoading(true)
+      await withdraw(amount, true)
+      resetForm()
+      close()
+    } catch (error) {
+      setLoading(false)
+      handleError(error, TransactionAction.Withdraw)
+    }
   }
 
   function onExpiration() {
@@ -71,22 +85,6 @@ export function WithdrawPreviewModal({
 
   useTimer(withdrawEndsAt, onExpiration)
 
-  async function handleWithdraw() {
-    gaEvent({
-      name: 'withdraw_and_claim',
-    })
-
-    try {
-      setLoading(true)
-      await withdraw(amount, true)
-      resetForm()
-      close()
-    } catch (error) {
-      setLoading(false)
-      handleError(error, TransactionAction.Withdraw)
-    }
-  }
-
   return (
     <div className={styles.withdrawPreviewModal}>
       <h1 className={styles.title}>Withdrawal Preview</h1>
@@ -95,18 +93,23 @@ export function WithdrawPreviewModal({
 
       <dl className={styles.withdrawDetail}>
         <dt>
-          <div className={styles.tokens} title="20WETH-80WNCG">
-            <TokenIcon className={styles.token} symbol="weth" />
-            <TokenIcon className={styles.token} symbol="wncg" />
+          <div className={styles.tokens} title={poolTokenName}>
+            {poolTokenSymbols.map((symbol) => (
+              <TokenIcon
+                key={`withdrawPreviewToken.${symbol}`}
+                className={styles.token}
+                symbol={symbol}
+              />
+            ))}
           </div>
-          <CountUp {...countUpOption} decimals={8} end={withdrawAmount} />
+          <CountUp {...countUpOption} decimals={8} end={amount} />
         </dt>
 
         <dd>
           <CountUp
             {...usdCountUpOption}
             className={styles.usd}
-            end={getBptFiatValue(withdrawAmount)}
+            end={getBptFiatValue(amount)}
             isApproximate
           />
         </dd>

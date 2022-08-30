@@ -3,17 +3,12 @@ import { useCallback } from 'react'
 import { getAccount } from 'app/states/connection'
 import { configService } from 'services/config'
 import { createApprovalEventFilter } from 'utils/event'
-import {
-  useAllowances,
-  useAppSelector,
-  useEventFilters,
-  usePoolService,
-} from 'hooks'
+import { useAllowances, useAppSelector, useEventFilters, usePool } from 'hooks'
 
 export function useJoinEvents(send: any) {
   const { allowanceFor } = useAllowances()
   const { poolBalanceChangedEventFilter } = useEventFilters()
-  const { poolTokenAddresses, poolTokenSymbols } = usePoolService()
+  const { poolTokenAddresses, poolTokenSymbols } = usePool()
   const account = useAppSelector(getAccount)
 
   const approvalEventFilters = poolTokenAddresses.map((address) => {

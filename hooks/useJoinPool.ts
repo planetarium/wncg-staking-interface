@@ -3,21 +3,21 @@ import { parseUnits } from 'ethers/lib/utils'
 import { isSameAddress } from '@balancer-labs/sdk'
 
 import { getAccount } from 'app/states/connection'
-import { initJoinPool } from 'contracts/vault'
+import { joinPool as initJoinPool } from 'contracts/vault'
 import { configService } from 'services/config'
 import { TransactionAction } from 'services/transaction'
 import { useJoinMath } from './useJoinMath'
-import { usePoolService } from './usePoolService'
+import { usePool } from './usePool'
 import { useAppSelector } from './useRedux'
 import { useTransaction } from './useTransaction'
 import { useVaultContract } from './useVaultContract'
 
 export function useJoinPool() {
   const { calcMinBptOut } = useJoinMath()
-  const { poolTokenAddresses, poolTokenDecimals, nativeAssetIndex } =
-    usePoolService()
+  const { poolTokenAddresses, poolTokenDecimals, poolName, nativeAssetIndex } =
+    usePool()
 
-  const { transactionService } = useTransaction()
+  const { registerTx } = useTransaction()
   const vault = useVaultContract()
 
   const account = useAppSelector(getAccount)
@@ -44,7 +44,7 @@ export function useJoinPool() {
         nativeAssetIndex,
         poolId: configService.poolId,
       })
-      transactionService?.registerTx(response, TransactionAction.JoinPool)
+      registerTx?.(response, TransactionAction.JoinPool, poolName)
     },
     [
       vault,
@@ -52,7 +52,8 @@ export function useJoinPool() {
       poolTokenAddresses,
       calcMinBptOut,
       nativeAssetIndex,
-      transactionService,
+      registerTx,
+      poolName,
       poolTokenDecimals,
     ]
   )

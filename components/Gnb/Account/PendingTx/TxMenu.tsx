@@ -3,7 +3,7 @@ import { useMount, useUnmount } from 'react-use'
 import { motion } from 'framer-motion'
 import styles from './style.module.scss'
 
-import { useAppDispatch, useTransaction } from 'hooks'
+import { useTransaction } from 'hooks'
 import { menuTransition, menuVariants } from '../constants'
 
 import { TxItem } from './TxItem'
@@ -16,14 +16,11 @@ export function PendingTxMenu({ close }: PendingTxMenuProps) {
   const menuRef = useRef<HTMLDivElement>(null)
   const { transactionService } = useTransaction()
 
-  // const dispatch = useAppDispatch()
   const pendingTxList = useMemo(
     () => transactionService?.pendingTxList || [],
     [transactionService?.pendingTxList]
   )
   console.log(pendingTxList)
-
-  const hasPendingTx = !!pendingTxList.length
 
   function clearTransactions() {
     transactionService?.resetTx()
@@ -60,7 +57,7 @@ export function PendingTxMenu({ close }: PendingTxMenuProps) {
     >
       <h1 className={styles.title}>Pending Transactions</h1>
 
-      {hasPendingTx ? (
+      {!!pendingTxList.length ? (
         <>
           <ul className={styles.txList}>
             {pendingTxList.map((tx) => (

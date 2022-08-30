@@ -4,7 +4,6 @@ import { hexZeroPad } from 'ethers/lib/utils'
 
 import { getAccount } from 'app/states/connection'
 import { configService } from 'services/config'
-import { usePoolService } from './usePoolService'
 import { useAppSelector } from './useRedux'
 
 export function useEventFilters() {

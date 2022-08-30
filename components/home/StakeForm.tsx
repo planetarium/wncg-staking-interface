@@ -7,7 +7,7 @@ import styles from './styles/StakeForm.module.scss'
 import { networkMismatchState } from 'app/states/network'
 import { gaEvent } from 'lib/gtag'
 import { bnum } from 'utils/num'
-import { useBalances } from 'hooks'
+import { useBalances, usePool } from 'hooks'
 import { formTransition, motionVariants, TabId, TabPanelId } from './constants'
 
 import { EstimatedEarn } from './EstimatedEarn'
@@ -19,6 +19,7 @@ const minAmount = 1e-18
 function StakeForm() {
   const networkMismatch = useRecoilValue(networkMismatchState)
   const { bptBalance } = useBalances()
+  const { poolTokenName } = usePool()
 
   const { clearErrors, control, formState, setValue, watch } = useForm<{
     stakeAmount: string
@@ -77,7 +78,7 @@ function StakeForm() {
       <InputGroup
         name="stakeAmount"
         control={control as any as Control<FieldValues, 'any'>}
-        label="20WETH-80WNCG"
+        label={poolTokenName}
         maxAmount={bptBalance}
         rules={rules}
         setMaxValue={setMaxValue}

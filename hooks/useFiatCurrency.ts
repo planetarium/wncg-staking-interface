@@ -3,12 +3,12 @@ import { useCallback } from 'react'
 
 import { bnum } from 'utils/num'
 import { findTokenAddressBySymbol } from 'utils/token'
-import { useTokenPrices } from './useTokenPrices'
+import { usePrices } from './usePrices'
 
-export function useUsd() {
-  const { bptPrice, priceFor } = useTokenPrices()
+export function useFiatCurrency() {
+  const { bptPrice, priceFor } = usePrices()
 
-  function getFiatValue(token?: string, value?: string | number) {
+  function toFiat(token?: string, value?: string | number) {
     if (!token || !value) return 0
 
     let address = token
@@ -30,6 +30,6 @@ export function useUsd() {
 
   return {
     getBptFiatValue,
-    getFiatValue,
+    toFiat,
   }
 }

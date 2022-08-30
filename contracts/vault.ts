@@ -12,7 +12,7 @@ type InitJoinPoolParams = {
   joinInit?: boolean
 }
 
-export async function initJoinPool(
+export async function joinPool(
   contract: Contract,
   account: string,
   params: InitJoinPoolParams

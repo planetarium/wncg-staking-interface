@@ -3,13 +3,13 @@ import NumberFormat from 'react-number-format'
 import styles from './styles/Widget.module.scss'
 
 import { bnum, isLessThanMinAmount } from 'utils/num'
-import { useBalances, useCalculator, usePoolService, useUsd } from 'hooks'
+import { useBalances, useCalculator, usePool, useFiatCurrency } from 'hooks'
 
 function MyBalance() {
   const { bptBalance } = useBalances()
   const calculator = useCalculator('exit')
-  const { poolTokenAddresses, poolTokens } = usePoolService()
-  const { getFiatValue } = useUsd()
+  const { poolTokenAddresses, poolTokens } = usePool()
+  const { toFiat } = useFiatCurrency()
 
   const propAmounts = useMemo(
     () =>
@@ -22,10 +22,10 @@ function MyBalance() {
       propAmounts
         .reduce((total, amount, i) => {
           const address = poolTokenAddresses[i]
-          return total.plus(getFiatValue(address, amount))
+          return total.plus(toFiat(address, amount))
         }, bnum(0))
         .toNumber(),
-    [getFiatValue, poolTokenAddresses, propAmounts]
+    [toFiat, poolTokenAddresses, propAmounts]
   )
 
   return (
@@ -35,7 +35,7 @@ function MyBalance() {
         {poolTokens.map((token, i) => {
           const symbol = token.symbol.toLowerCase()
           const amount = propAmounts[i]
-          const amountUsdValue = getFiatValue(token.address, amount)
+          const amountUsdValue = toFiat(token.address, amount)
 
           return (
             <div

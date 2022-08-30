@@ -1,17 +1,16 @@
 import { memo } from 'react'
 import NumberFormat from 'react-number-format'
-import { useQuery } from '@tanstack/react-query'
 import styles from './styles/PoolComposition.module.scss'
 
 import { getEtherscanUrl } from 'utils/url'
-import { usePoolService, useUsd } from 'hooks'
+import { usePool, useFiatCurrency } from 'hooks'
 
 import { Icon } from 'components/Icon'
 import { TokenIcon } from 'components/TokenIcon'
 
 function PoolComposition() {
-  const { getFiatValue } = useUsd()
-  const { poolTokens } = usePoolService()
+  const { toFiat } = useFiatCurrency()
+  const { poolTokens } = usePool()
 
   return (
     <section className={styles.poolComposition}>
@@ -30,7 +29,7 @@ function PoolComposition() {
           <tbody>
             {poolTokens.map((token) => {
               const symbol = token.symbol.toLowerCase()
-              const usdValue = getFiatValue(token.address, token.balance)
+              const usdValue = toFiat(token.address, token.balance)
               const url = getEtherscanUrl(token.address)
 
               return (

@@ -5,28 +5,22 @@ import type { Network } from '@ethersproject/networks'
 import store from 'store'
 
 import { currentNetworkIdState } from 'app/states/network'
-// import { resetTxList } from 'app/states/transaction'
-import {
-  useAppDispatch,
-  useConfirmations,
-  useConnection,
-  usePolling,
-  useProvider,
-} from 'hooks'
+import { useConnection, useProvider, useTransaction } from 'hooks'
+import { STORE_ACCOUNT_KEY } from 'constants/storeKeys'
 
 function BaseEffects() {
-  const { flushOutdatedConfirmations, resetConfirmations } = useConfirmations()
   const { disconnect, updateAccount } = useConnection()
   const provider = useProvider()
+  const { transactionService } = useTransaction()
 
-  usePolling()
-
-  const dispatch = useAppDispatch()
   const setCurrentNetworkId = useSetRecoilState(currentNetworkIdState)
 
   function handleAccountsChanged(...args: unknown[]) {
-    // dispatch(resetTxList())
-    resetConfirmations()
+    console.log('handleAccountsChanged')
+
+    transactionService?.resetTx()
+    // resetConfirmations()
+    // resetTxList
     const accounts = args[0] as string[]
 
     // NOTE: Disconnected
@@ -51,7 +45,7 @@ function BaseEffects() {
   }
 
   useMount(() => {
-    const connectedAccount = store.get('wncgStaking.account')
+    const connectedAccount = store.get(STORE_ACCOUNT_KEY)
     if (connectedAccount) {
       updateAccount(connectedAccount)
     }
@@ -61,7 +55,7 @@ function BaseEffects() {
     provider?.on('network', handleNetworkChange)
     window?.ethereum?.on('accountsChanged', handleAccountsChanged)
     window?.ethereum?.on('chainChanged', handleChainChanged)
-    flushOutdatedConfirmations()
+    transactionService?.flushOutdatedTx()
   })
 
   useUnmount(() => {

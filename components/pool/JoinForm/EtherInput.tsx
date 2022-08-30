@@ -7,9 +7,9 @@ import type {
 } from 'react-hook-form'
 
 import { configService } from 'services/config'
+import { uniqAddress } from 'utils/address'
 import { bnum } from 'utils/num'
-import { useBalances } from 'hooks'
-import { etherTokenList } from '../constants'
+import { useBalances, usePool } from 'hooks'
 import type { JoinFormFields } from './type'
 
 import { TokenInput } from '../TokenInput'
@@ -17,11 +17,12 @@ import { TokenInput } from '../TokenInput'
 type EtherInputProps = {
   clearErrors: UseFormClearErrors<JoinFormFields>
   control: Control<JoinFormFields>
+  currentEther: string
   isNativeAsset: boolean
-  showPropButton: boolean
-  selectEth(value: EthType): void
+  selectEther(value: string): void
   setMaxValue(e: MouseEvent<HTMLButtonElement>): void
   setPropAmount(e: MouseEvent<HTMLButtonElement>): void
+  showPropButton: boolean
   trigger: UseFormTrigger<JoinFormFields>
   value: string
   error?: string
@@ -30,8 +31,9 @@ type EtherInputProps = {
 function EtherInput({
   clearErrors,
   control,
+  currentEther,
   isNativeAsset,
-  selectEth,
+  selectEther,
   setMaxValue,
   setPropAmount,
   showPropButton,
@@ -40,10 +42,18 @@ function EtherInput({
   error,
 }: EtherInputProps) {
   const { balanceFor } = useBalances()
+  const { nativeAssetIndex, poolTokenAddresses } = usePool()
 
-  const ethBalance = balanceFor(
-    isNativeAsset ? configService.nativeAssetAddress : configService.weth
+  const etherAddresses = useMemo(
+    () =>
+      uniqAddress([
+        configService.nativeAssetAddress,
+        poolTokenAddresses[nativeAssetIndex],
+      ]),
+    [nativeAssetIndex, poolTokenAddresses]
   )
+
+  const ethBalance = balanceFor(currentEther)
   const ethBalanceAvailable = isNativeAsset
     ? Math.max(bnum(ethBalance).minus(0.05).toNumber(), 0).toString()
     : ethBalance
@@ -67,8 +77,6 @@ function EtherInput({
     [ethBalanceAvailable, value]
   )
 
-  const tokenName = isNativeAsset ? 'eth' : 'weth'
-
   const showWarning = useMemo(() => {
     if (!isNativeAsset) return false
     if (error || bnum(value).isZero()) return false
@@ -88,12 +96,12 @@ function EtherInput({
       name="ethAmount"
       control={control as any as Control<FieldValues, 'any'>}
       rules={rules}
-      error={error}
+      address={currentEther}
       balance={ethBalance}
+      error={error}
       maximized={maximized}
-      token={tokenName}
-      selectToken={selectEth}
-      tokenList={etherTokenList}
+      selectToken={selectEther}
+      tokenList={etherAddresses}
       setMaxValue={setMaxValue}
       setPropAmount={setPropAmount}
       propButton={showPropButton}

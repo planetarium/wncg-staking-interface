@@ -1,10 +1,5 @@
-import { useMemo } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { useRecoilValue } from 'recoil'
-import { Contract } from 'ethers'
 
-import { networkMismatchState } from 'app/states/network'
-import { configService } from 'services/config'
 import {
   getBalancerGaugeAddress,
   getBalEmissionPerSec,
@@ -12,8 +7,8 @@ import {
   getUnstakeWindow,
   getWncgEmissionPerSec,
 } from 'contracts/staking'
-import { StakingAbi } from 'lib/abi'
-import { useProvider } from './useProvider'
+import { REFETCH_INTERVAL } from 'constants/time'
+import { useStakingContract } from './useStakingContract'
 
 const options = {
   staleTime: Infinity,
@@ -21,14 +16,8 @@ const options = {
 }
 
 // NOTE: Show data without connecting to Metamask
-export function useStakingData() {
-  const provider = useProvider()
-  const networkMismatch = useRecoilValue(networkMismatchState)
-
-  const contract = useMemo(() => {
-    if (!provider || networkMismatch) return null
-    return new Contract(configService.stakingAddress, StakingAbi, provider)
-  }, [networkMismatch, provider])
+export function useStaking() {
+  const contract = useStakingContract()
 
   const balancerGaugeAddress = useQuery(
     ['balancerGaugeAddress'],
@@ -64,9 +53,10 @@ export function useStakingData() {
     ['totalStaked'],
     () => getTotalStaked(contract!),
     {
-      ...options,
       enabled: !!contract,
+      refetchInterval: REFETCH_INTERVAL,
       placeholderData: '0',
+      keepPreviousData: true,
     }
   )
 

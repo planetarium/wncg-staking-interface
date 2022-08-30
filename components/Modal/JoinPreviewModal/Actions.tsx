@@ -3,7 +3,7 @@ import { useMount, useUnmount } from 'react-use'
 import styles from './Actions.module.scss'
 
 import { ModalCategory } from 'app/states/modal'
-import { useModal, usePoolService, useProvider } from 'hooks'
+import { useModal, usePool, useProvider } from 'hooks'
 import { getJoinActionButtonLabel, isApprovingState } from './utils'
 import { useJoinEvents } from './useJoinEvents'
 import { useJoinMachine } from './useJoinMachine'
@@ -25,7 +25,7 @@ function JoinActions({ amounts, disabled, isNativeAsset }: JoinActionsProps) {
   )
   const { eventFilters, eventHandlers } = useJoinEvents(send)
   const { removeModal } = useModal()
-  const { poolTokenAddresses, poolTokenSymbols } = usePoolService()
+  const { poolTokenAddresses, poolTokenSymbols } = usePool()
   const provider = useProvider()
 
   const submitDisabled =
@@ -52,8 +52,6 @@ function JoinActions({ amounts, disabled, isNativeAsset }: JoinActionsProps) {
     eventFilters.forEach((filter, i) => {
       const handler = eventHandlers[i]
       if (!filter || !handler) return
-      console.log('>>>>>>>> JOIN ACTION', filter?.address?.slice(0, 6))
-
       provider?.on(filter, handler)
     })
   })
@@ -61,7 +59,6 @@ function JoinActions({ amounts, disabled, isNativeAsset }: JoinActionsProps) {
   useUnmount(() => {
     eventFilters.forEach((filter) => {
       if (!filter) return
-      console.log('>>>>>>>> BYE ACTION', filter?.address?.slice(0, 6))
       provider?.off(filter)
     })
   })

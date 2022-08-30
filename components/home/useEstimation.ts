@@ -1,61 +1,43 @@
 import { useCallback } from 'react'
 
 import { calcApr } from 'utils/calculator'
-import Decimal, { bnum, sanitizeNumber } from 'utils/num'
-import { useStakingData, useTokenPrices, useUsd } from 'hooks'
+import { bnum } from 'utils/num'
+import { useStaking, usePrices, useFiatCurrency, useApr } from 'hooks'
 
 export function useEstimation() {
-  const { balPrice, wncgPrice, bptPrice } = useTokenPrices()
-  const { balEmissionPerSec, wncgEmissionPerSec, totalStaked } =
-    useStakingData()
-  const { getBptFiatValue } = useUsd()
+  const { emissionPerSecList, rewardTokenPriceList } = useApr()
+  const { getBptFiatValue } = useFiatCurrency()
+  const { bptPrice } = usePrices()
+  const { totalStaked } = useStaking()
 
-  const getEstimation = useCallback(
+  const calcEstimatedRevenue = useCallback(
     (amount: string, option: string) => {
       const totalStakedValue = getBptFiatValue(
         bnum(totalStaked).plus(bnum(amount)).toNumber()
       )
-
-      const balApr = calcApr(balEmissionPerSec, balPrice, totalStakedValue)
-      const wncgApr = calcApr(wncgEmissionPerSec, wncgPrice, totalStakedValue)
-
-      const newBal = calculateEstimatedToken(
-        amount,
-        balApr,
-        option,
-        bptPrice,
-        balPrice
-      )
-      const newWncg = calculateEstimatedToken(
-        amount,
-        wncgApr,
-        option,
-        bptPrice,
-        wncgPrice
+      const aprs = emissionPerSecList.map((emission, i) =>
+        calcApr(emission, rewardTokenPriceList[i], totalStakedValue)
       )
 
-      return {
-        bal: newBal,
-        wncg: newWncg,
-      }
+      return aprs.map((apr, i) =>
+        calcRevenue(amount, apr, option, bptPrice, rewardTokenPriceList[i])
+      )
     },
     [
-      balEmissionPerSec,
-      balPrice,
       bptPrice,
+      emissionPerSecList,
       getBptFiatValue,
+      rewardTokenPriceList,
       totalStaked,
-      wncgEmissionPerSec,
-      wncgPrice,
     ]
   )
 
   return {
-    getEstimation,
+    calcEstimatedRevenue,
   }
 }
 
-function calculateEstimatedToken(
+function calcRevenue(
   amount: string,
   tokenApr: number | string,
   option: string,
@@ -81,11 +63,12 @@ function calculateEstimatedToken(
       break
   }
 
-  return new Decimal(sanitizeNumber(amount, { allowEmptyString: false }))
-    .mul(tokenApr)
-    .mul(pcnt)
-    .mul(bptPrice)
+  const value = bnum(amount)
+    .times(tokenApr)
+    .times(pcnt)
+    .times(bptPrice)
     .div(tokenPrice)
     .div(100)
-    .toNumber()
+
+  return value.isFinite() && !value.isNaN() ? value.toNumber() : 0
 }

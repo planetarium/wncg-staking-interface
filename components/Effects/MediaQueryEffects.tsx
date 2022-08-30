@@ -3,6 +3,7 @@ import { useMediaQuery } from 'hooks'
 
 function MediaQueryEffects() {
   useMediaQuery()
+
   return null
 }
 

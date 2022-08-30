@@ -1,21 +1,29 @@
+import { configService } from 'services/config'
 import { calcApr } from 'utils/calculator'
-import { useStakingData } from './useStakingData'
-import { useTokenPrices } from './useTokenPrices'
-import { useUsd } from './useUsd'
+import { useStaking } from './useStaking'
+import { usePrices } from './usePrices'
+import { useFiatCurrency } from './useFiatCurrency'
 
 export function useApr() {
-  const { balPrice, wncgPrice } = useTokenPrices()
-  const { getBptFiatValue } = useUsd()
-  const { balEmissionPerSec, wncgEmissionPerSec, totalStaked } =
-    useStakingData()
+  const { priceFor } = usePrices()
+  const { getBptFiatValue } = useFiatCurrency()
+  const { balEmissionPerSec, wncgEmissionPerSec, totalStaked } = useStaking()
+
+  const emissionPerSecList = [wncgEmissionPerSec, balEmissionPerSec]
+  const rewardTokenPriceList = configService.rewardTokensList.map((address) =>
+    priceFor(address)
+  )
 
   const totalStakedValue = getBptFiatValue(totalStaked)
 
-  const wncgApr = calcApr(wncgEmissionPerSec, wncgPrice, totalStakedValue)
-  const balApr = calcApr(balEmissionPerSec, balPrice, totalStakedValue)
+  const aprs = emissionPerSecList.map((emission, i) =>
+    calcApr(emission, rewardTokenPriceList[i], totalStakedValue)
+  )
 
   return {
-    balApr,
-    wncgApr,
+    aprs,
+    emissionPerSecList,
+    rewardTokenPriceList,
+    totalStakedValue,
   }
 }

@@ -7,7 +7,7 @@ import { invalidPriceState } from 'app/states/error'
 import { configService } from 'services/config'
 import { bnum, isLessThanMinAmount } from 'utils/num'
 import { getTokenInfo } from 'utils/token'
-import { usePoolService, useUsd } from 'hooks'
+import { usePool, useFiatCurrency } from 'hooks'
 
 import { TokenIcon } from 'components/TokenIcon'
 
@@ -22,13 +22,13 @@ function JoinPreviewComposition({
   isNativeAsset,
   totalUsdValue,
 }: JoinPreviewCompositionProps) {
-  const { poolTokenAddresses, nativeAssetIndex } = usePoolService()
-  const { getFiatValue } = useUsd()
+  const { poolTokenAddresses, nativeAssetIndex } = usePool()
+  const { toFiat } = useFiatCurrency()
 
   const invalidPrice = useRecoilValue(invalidPriceState)
 
   const usdValues = amounts.map((amount, i) =>
-    getFiatValue(poolTokenAddresses[i], amount)
+    toFiat(poolTokenAddresses[i], amount)
   )
 
   const tokenRatios = useMemo(() => {

@@ -3,6 +3,7 @@ import Head from 'next/head'
 import { NextSeo } from 'next-seo'
 import styles from 'styles/Wncg.module.scss'
 
+import { configService } from 'services/config'
 import { STAKING_SEO } from 'lib/seo'
 
 import PageWrapper from 'components/StakingPageWrapper'
@@ -27,7 +28,7 @@ const WncgStaking: NextPage = () => {
             <p>
               Smart contracts are{' '}
               <a
-                href={process.env.NEXT_PUBLIC_AUDIT_REPORT_URL}
+                href={configService.github.auditReportUrl}
                 target="_blank"
                 rel="noreferrer"
               >

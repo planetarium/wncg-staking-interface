@@ -1,48 +1,51 @@
 import { memo, MouseEvent, useMemo } from 'react'
 import NumberFormat from 'react-number-format'
+import { isSameAddress } from '@balancer-labs/sdk'
 import clsx from 'clsx'
 import styles from '../styles/Widget.module.scss'
 
 import { configService } from 'services/config'
+import { uniqAddress } from 'utils/address'
 import { bnum } from 'utils/num'
-import { getTokenInfo } from 'utils/token'
-import { useBalances, usePoolService, useUsd } from 'hooks'
+import { useBalances, usePool, useFiatCurrency } from 'hooks'
 
 import MyWalletItem from './Item'
 
 type MyWalletProps = {
-  isNativeAsset?: boolean
-  selectEth?(value: EthType): void
+  currentEther?: string
+  selectEther?(value: string): void
 }
 
-function MyWallet({ isNativeAsset, selectEth }: MyWalletProps) {
+function MyWallet({ currentEther, selectEther }: MyWalletProps) {
   const { balanceFor } = useBalances()
-  const { poolService } = usePoolService()
-  const { getFiatValue } = useUsd()
+  const { nativeAssetIndex, poolTokenAddresses } = usePool()
+  const { toFiat } = useFiatCurrency()
 
-  const currentEthType: EthType = isNativeAsset ? 'eth' : 'weth'
-  const isSelectable = !!selectEth
-
-  const { poolTokenAddresses = [] } = poolService || {}
+  const isSelectable = !!currentEther && !!selectEther
 
   const ercTokenAddresses = poolTokenAddresses.filter(
     (address) => address !== configService.weth
   )
   const etherAddresses = useMemo(
-    () => [
-      configService.nativeAssetAddress,
-      ...poolTokenAddresses.filter((address) => address === configService.weth),
-    ],
-    [poolTokenAddresses]
+    () =>
+      uniqAddress([
+        configService.nativeAssetAddress,
+        poolTokenAddresses[nativeAssetIndex],
+      ]),
+    [nativeAssetIndex, poolTokenAddresses]
   )
 
   const totalFiatValue = useMemo(() => {
     const addressesToSum = isSelectable
-      ? [...ercTokenAddresses, etherAddresses[isNativeAsset ? 0 : 1]]
+      ? [
+          ...ercTokenAddresses,
+          etherAddresses[etherAddresses.indexOf(currentEther)],
+        ]
       : [...poolTokenAddresses, configService.nativeAssetAddress]
+
     const balances = addressesToSum.map((address) => balanceFor(address))
     const fiatValues = balances.map((balance, i) =>
-      getFiatValue(addressesToSum[i], balance)
+      toFiat(addressesToSum[i], balance)
     )
 
     return fiatValues
@@ -51,13 +54,13 @@ function MyWallet({ isNativeAsset, selectEth }: MyWalletProps) {
       }, bnum(0))
       .toNumber()
   }, [
-    balanceFor,
+    isSelectable,
     ercTokenAddresses,
     etherAddresses,
-    getFiatValue,
-    isNativeAsset,
-    isSelectable,
+    currentEther,
     poolTokenAddresses,
+    balanceFor,
+    toFiat,
   ])
 
   function handleSelectEthType(e: MouseEvent<HTMLDivElement>) {
@@ -65,9 +68,9 @@ function MyWallet({ isNativeAsset, selectEth }: MyWalletProps) {
 
     const dataset = e.currentTarget
       .dataset as typeof e.currentTarget.dataset & {
-      ethType: EthType
+      currentEther: string
     }
-    selectEth(dataset.ethType)
+    selectEther(dataset.currentEther)
   }
 
   return (
@@ -75,14 +78,10 @@ function MyWallet({ isNativeAsset, selectEth }: MyWalletProps) {
       <h3 className={styles.title}>Pool tokens in my wallet</h3>
       <dl className={styles.details}>
         {ercTokenAddresses.map((address) => {
-          const { symbol, name } = getTokenInfo(address)
-
           return (
             <MyWalletItem
               key={`myWalletErcToken.${address}`}
               address={address}
-              name={name}
-              symbol={symbol}
               balance={balanceFor(address)}
             />
           )
@@ -99,16 +98,13 @@ function MyWallet({ isNativeAsset, selectEth }: MyWalletProps) {
               })}
             >
               {etherAddresses.map((address) => {
-                const { symbol, name } = getTokenInfo(address)
-                const isSelected = symbol.toLowerCase() === currentEthType
+                const isSelected = isSameAddress(address, currentEther!)
 
                 return (
                   <MyWalletItem
                     key={`myWalletEtherToken.${address}`}
                     address={address}
                     balance={balanceFor(address)}
-                    name={name}
-                    symbol={symbol}
                     isSelected={isSelected}
                     handleSelect={handleSelectEthType}
                   />

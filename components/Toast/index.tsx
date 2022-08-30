@@ -3,11 +3,11 @@ import { useMount } from 'react-use'
 import store from 'store'
 import styles from './style.module.scss'
 
+import { STORE_MUTED_KEY } from 'constants/storeKeys'
 import { TransactionAction } from 'services/transaction'
 import { gaEvent } from 'lib/gtag'
-import { renderTxTitle } from 'utils/transaction'
 import { getTxUrl } from 'utils/url'
-import { STORE_MUTED_KEY } from 'constants/storeKeys'
+import { getToastAudioFilename, renderToastEmoji } from './utils'
 
 import { Icon } from 'components/Icon'
 
@@ -28,7 +28,7 @@ export function Toast({
 }: ToastProps) {
   const muted = store.get(STORE_MUTED_KEY) || false
   const txUrl = getTxUrl(hash)
-  const audioFilename = getAudioFilename(action, type)
+  const audioFilename = getToastAudioFilename(action, type)
   const audio = new Audio(audioFilename)
 
   function onClick() {
@@ -65,40 +65,4 @@ export function Toast({
       <p className={styles.desc}>{message}</p>
     </aside>
   )
-}
-
-function getAudioFilename(action: TransactionAction, type: ToastType) {
-  switch (type) {
-    case 'success':
-      switch (action) {
-        case TransactionAction.ClaimAllRewards:
-        case TransactionAction.ClaimBalRewards:
-        case TransactionAction.ClaimWncgRewards:
-        case TransactionAction.EarmarkRewards:
-          return '/alert-money.opus'
-        default:
-          return '/alert-success.opus'
-      }
-    default:
-      return '/alert-default.opus'
-  }
-}
-
-function renderToastEmoji(type: ToastType) {
-  switch (type) {
-    case 'success':
-      return (
-        <span className={styles.emoji} aria-hidden>
-          🎉
-        </span>
-      )
-    case 'error':
-      return (
-        <span className={styles.emoji} aria-hidden>
-          🚧
-        </span>
-      )
-    default:
-      return null
-  }
 }

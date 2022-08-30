@@ -2,15 +2,14 @@ import { memo } from 'react'
 import { motion } from 'framer-motion'
 import styles from '../styles/UnstakeForm.module.scss'
 
-import { getUnstakeStatus, UnstakeStatus } from 'app/states/unstake'
-import { useAppSelector } from 'hooks'
 import { formTransition, blockVariants } from '../constants'
 
 import { UnstakeFormTimer } from './Timer'
+import { UnstakeStatus, useUnstakeTimestamps } from 'hooks/useUnstakeTimestamps'
 
 function UnstakeFormBlock() {
-  const status = useAppSelector(getUnstakeStatus)
-  const isCoolingDown = status === UnstakeStatus.CooldownInProgress
+  const { unstakeStatus } = useUnstakeTimestamps()
+  const isCoolingDown = unstakeStatus === UnstakeStatus.CooldownInProgress
 
   return (
     <motion.section
@@ -21,7 +20,7 @@ function UnstakeFormBlock() {
       transition={formTransition}
       variants={blockVariants}
     >
-      {isCoolingDown ? <UnstakeFormTimer /> : renderBlockMessage(status)}
+      {isCoolingDown ? <UnstakeFormTimer /> : renderBlockMessage(unstakeStatus)}
     </motion.section>
   )
 }

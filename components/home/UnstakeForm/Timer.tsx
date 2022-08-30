@@ -1,15 +1,14 @@
-import { getCooldownEndsAt, resetCooldownEndsAt } from 'app/states/unstake'
 import { formatTimer } from 'utils/string'
-import { useAppDispatch, useAppSelector, useTimer } from 'hooks'
+import { useTimer, useUnstakeTimestamps } from 'hooks'
 
 import { Icon } from 'components/Icon'
 
 export function UnstakeFormTimer() {
-  const dispatch = useAppDispatch()
-  const cooldownEndsAt = useAppSelector(getCooldownEndsAt)
+  const { cooldownEndsAt, fetchTimestamps } = useUnstakeTimestamps()
 
   function onExpiration() {
-    dispatch(resetCooldownEndsAt())
+    // dispatch(resetCooldownEndsAt())
+    fetchTimestamps()
   }
 
   const { days, hours, minutes, seconds, isExpired } = useTimer(

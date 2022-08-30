@@ -6,41 +6,40 @@ import clsx from 'clsx'
 import styles from '../styles/TokenInput.module.scss'
 
 import { getIsMobile } from 'app/states/mediaQuery'
-import { IS_ETHEREUM } from 'utils/env'
-import Decimal from 'utils/num'
+import { bnum, isLessThanMinAmount } from 'utils/num'
+import { getTokenInfo } from 'utils/token'
 import { errorMessageVariants } from 'components/Input/constants'
 import { useAppSelector } from 'hooks'
-import type { TokenDropdownSymbol } from '../constants'
 
 import { TokenBaseInput } from './BaseInput'
 import { TokenDropdown } from './Dropdown'
 
 type TokenInputProps = {
+  address: string
   balance: string
   control: Control
   id: string
   maximized: boolean
   name: string
   rules: Partial<RegisterOptions>
-  token: TokenDropdownSymbol
   disabled?: boolean
   error?: string
   propButton?: boolean
-  selectToken?(value: TokenDropdownSymbol): void
+  selectToken?(value: string): void
   setMaxValue?(e: MouseEvent<HTMLButtonElement>): void
   setPropAmount?(e: MouseEvent<HTMLButtonElement>): void
-  tokenList?: TokenDropdownSymbol[]
+  tokenList?: string[]
   warning?: string
 }
 
 export function TokenInput({
+  address,
   balance,
   control,
   maximized,
   name,
   id,
   rules,
-  token,
   disabled,
   error,
   propButton,
@@ -55,11 +54,7 @@ export function TokenInput({
   const hasError = !!error
   const hasWarning = !!warning
   const showPropButton = propButton && !!setPropAmount
-  const precision = !IS_ETHEREUM && token === 'wncg' ? 8 : 18
-
-  const tokenBalance = new Decimal(balance)
-  const isEmpty = tokenBalance.isZero()
-  const lessThanMinAmount = !isEmpty && tokenBalance.lt(0.0001)
+  const { decimals } = getTokenInfo(address)
 
   return (
     <div className={styles.tokenInputField}>
@@ -69,7 +64,7 @@ export function TokenInput({
         <div className={styles.control}>
           <TokenDropdown
             id={id}
-            currentToken={token}
+            selectedToken={address}
             selectToken={selectToken}
             tokenList={tokenList}
           />
@@ -79,7 +74,7 @@ export function TokenInput({
             name={name}
             control={control as any as Control<FieldValues, 'any'>}
             rules={rules}
-            precision={precision}
+            precision={decimals}
             disabled={disabled}
           />
         </div>
@@ -87,7 +82,7 @@ export function TokenInput({
         <div className={styles.balanceGroup}>
           <span className={styles.label}>Balance:</span>
           <strong>
-            {lessThanMinAmount ? (
+            {isLessThanMinAmount(balance) ? (
               <span className={styles.balance}>&lt; 0.0001</span>
             ) : (
               <NumberFormat
@@ -100,7 +95,8 @@ export function TokenInput({
               />
             )}
           </strong>
-          {!isEmpty && (
+
+          {!bnum(balance).isZero() && (
             <button
               className={styles.maxButton}
               type="button"
@@ -111,6 +107,7 @@ export function TokenInput({
               {maximized ? 'Maxed' : 'Max'}
             </button>
           )}
+
           {showPropButton && (
             <button
               className={styles.propButton}

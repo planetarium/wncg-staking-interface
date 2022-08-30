@@ -4,28 +4,26 @@ import clsx from 'clsx'
 import styles from '../styles/Widget.module.scss'
 
 import { isLessThanMinAmount } from 'utils/num'
-import { useUsd } from 'hooks'
+import { getTokenInfo } from 'utils/token'
+import { useFiatCurrency } from 'hooks'
 
 type MyWalletItemProps = {
   address: string
   balance: string
-  name: string
-  symbol: string
   isSelected?: boolean
-  handleSelect?(value: MouseEvent<HTMLDivElement>): void
+  handleSelect?(e: MouseEvent<HTMLDivElement>): void
 }
 
 function MyWalletItem({
   address,
   balance,
-  name,
-  symbol,
   isSelected,
   handleSelect,
 }: MyWalletItemProps) {
-  const { getFiatValue } = useUsd()
+  const { toFiat } = useFiatCurrency()
+  const fiatValue = toFiat(address, balance)
 
-  const fiatValue = getFiatValue(address, balance)
+  const { symbol, name } = getTokenInfo(address)
   const isSelectable = !!handleSelect
 
   return (
@@ -35,7 +33,7 @@ function MyWalletItem({
       })}
       onClick={handleSelect}
       role={isSelectable ? 'button' : undefined}
-      data-eth-type={symbol.toLowerCase()}
+      data-current-ether={address}
     >
       <dt>
         <strong>{symbol.toUpperCase()}</strong>

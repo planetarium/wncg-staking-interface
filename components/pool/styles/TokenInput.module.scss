@@ -1,6 +1,7 @@
-$dropdown-max-width: 169px;
 $dropdown-offset: 16px;
 $dropdown-padding: 4px;
+$toggle-max-width: 169px;
+$toggle-min-width: 108px;
 $input-height: 60px;
 $input-padding: 16px;
 
@@ -90,7 +91,6 @@ $input-padding: 16px;
   position: relative;
   z-index: 2;
   flex-shrink: 0;
-  max-width: $dropdown-max-width;
 
   &.show {
     .dropdownToggle {
@@ -141,6 +141,8 @@ $input-padding: 16px;
 
 .dropdownToggle {
   position: relative;
+  min-width: $toggle-min-width;
+  max-width: $toggle-max-width;
 
   &[disabled] {
     cursor: initial;

@@ -14,9 +14,9 @@ import {
   useAppSelector,
   useConnection,
   useEarmark,
+  useEarmarkIncentive,
   useEventFilters,
   useProvider,
-  useReward,
 } from 'hooks'
 import { motionVariants } from '../constants'
 
@@ -33,11 +33,11 @@ export function StakeSidebarAdvanced() {
     earmarkIncentive,
     earmarkIncentiveInFiatValue,
     fetchEarmarkIncentive,
-  } = useEarmark()
+  } = useEarmarkIncentive()
 
   const { earmarkEventFilter } = useEventFilters()
   const provider = useProvider()
-  const { earmarkRewards } = useReward()
+  const { earmarkRewards } = useEarmark()
 
   const networkMismatch = useRecoilValue(networkMismatchState)
   const isConnected = useAppSelector(getIsConnected)

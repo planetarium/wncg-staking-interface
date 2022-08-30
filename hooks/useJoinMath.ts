@@ -4,14 +4,14 @@ import { configService } from 'services/config'
 import { bnum, hasAmounts } from 'utils/num'
 import { useBalances } from './useBalances'
 import { useCalculator } from './useCalculator'
-import { usePoolService } from './usePoolService'
-import { useUsd } from './useUsd'
+import { usePool } from './usePool'
+import { useFiatCurrency } from './useFiatCurrency'
 
 export function useJoinMath() {
   const { balanceFor } = useBalances()
   const calculator = useCalculator('join')
-  const { poolTokenAddresses } = usePoolService()
-  const { getFiatValue } = useUsd()
+  const { poolTokenAddresses } = usePool()
+  const { toFiat } = useFiatCurrency()
 
   const calcMinBptOut = useCallback(
     (amounts: string[]) => {
@@ -72,7 +72,7 @@ export function useJoinMath() {
           .reduce((total, amount, i) => {
             const address = poolTokenAddresses[i]
             if (!address) return total
-            return total.plus(getFiatValue(address, amount))
+            return total.plus(toFiat(address, amount))
           }, bnum(0))
           .toNumber()
       })
@@ -82,7 +82,7 @@ export function useJoinMath() {
 
       return propMinAmounts[minIndex] || ['0', '0']
     },
-    [balanceFor, calculator, getFiatValue, poolTokenAddresses]
+    [balanceFor, calculator, toFiat, poolTokenAddresses]
   )
 
   return {

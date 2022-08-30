@@ -9,8 +9,8 @@ import {
   useBalances,
   useCalculator,
   useConnection,
-  usePoolService,
-  useUsd,
+  usePool,
+  useFiatCurrency,
 } from 'hooks'
 
 import { Button } from 'components/Button'
@@ -19,9 +19,9 @@ import { TokenIcon } from 'components/TokenIcon'
 function MyPoolBalance() {
   const calculator = useCalculator('exit')
   const { connect } = useConnection()
-  const { getFiatValue } = useUsd()
+  const { toFiat } = useFiatCurrency()
 
-  const { bptAddress, poolTokens } = usePoolService()
+  const { bptAddress, poolTokens } = usePool()
   const { balanceFor } = useBalances()
 
   const bptBalance = balanceFor(bptAddress)
@@ -37,7 +37,7 @@ function MyPoolBalance() {
       <dl className={styles.details}>
         {poolTokens.map((token, i) => {
           const amount = propAmounts[i]
-          const fiatValue = getFiatValue(token.address, amount)
+          const fiatValue = toFiat(token.address, amount)
 
           return (
             <div

@@ -1,10 +1,7 @@
 import { atom, selector } from 'recoil'
 import { Network } from '@balancer-labs/sdk'
 
-export const networkId =
-  process.env.NEXT_PUBLIC_NETWORK_ID != null
-    ? (Number(process.env.NEXT_PUBLIC_NETWORK_ID) as Network)
-    : Network.MAINNET
+import { configService } from 'services/config'
 
 export const currentNetworkIdState = atom<null | Network>({
   key: '#currentNetworkId',
@@ -24,6 +21,6 @@ export const networkMismatchState = selector({
   key: '#networkMismatch',
   get({ get }) {
     const currentNetworkId = get(currentNetworkIdState)
-    return currentNetworkId !== networkId
+    return currentNetworkId !== configService.networkId
   },
 })

@@ -6,15 +6,16 @@ import { getAccount } from 'app/states/connection'
 import { networkMismatchState } from 'app/states/network'
 import { fetchBalances } from 'contracts/erc20'
 import { configService } from 'services/config'
+import { REFETCH_INTERVAL } from 'constants/time'
 import { useAppSelector } from './useRedux'
-import { usePoolService } from './usePoolService'
+import { usePool } from './usePool'
 import { useProvider } from './useProvider'
 
 export function useBalances() {
   const provider = useProvider()
   const account = useAppSelector(getAccount) || ''
 
-  const { bptAddress, poolTokenAddresses } = usePoolService()
+  const { bptAddress, poolTokenAddresses } = usePool()
 
   const networkMismatch = useRecoilValue(networkMismatchState)
 
@@ -30,7 +31,7 @@ export function useBalances() {
     () => fetchBalances(provider, account, addresses),
     {
       enabled: !networkMismatch,
-      staleTime: 5 * 1_000,
+      refetchInterval: REFETCH_INTERVAL,
       keepPreviousData: true,
       placeholderData: {},
     }

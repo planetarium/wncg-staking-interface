@@ -9,3 +9,6 @@ export const MINUTE_IN_MS = MINUTE_IN_SEC * 1_000
 export const HOUR_IN_MS = HOUR_IN_SEC * 1_000
 export const DAY_IN_MS = DAY_IN_SEC * 1_000
 export const YEAR_IN_MS = YEAR_IN_SEC * 1_000
+
+export const REFETCH_INTERVAL = 15 * 1_000
+export const STALE_TIME = 10 * 1_000

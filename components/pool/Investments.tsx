@@ -8,7 +8,7 @@ import styles from './styles/Investments.module.scss'
 import { getAccount } from 'app/states/connection'
 import { fetchPoolJoinExits, getNextPageParam } from 'lib/graphql'
 import { bnum } from 'utils/num'
-import { useAppSelector, usePoolService, useUsd } from 'hooks'
+import { useAppSelector, usePool, useFiatCurrency } from 'hooks'
 
 import { Checkbox } from 'components/Checkbox'
 import { TokenIcon } from 'components/TokenIcon'
@@ -16,8 +16,8 @@ import { TokenIcon } from 'components/TokenIcon'
 function PoolInvestments() {
   const [showMine, setShowMine] = useState(false)
 
-  const { getFiatValue } = useUsd()
-  const { poolTokenAddresses } = usePoolService()
+  const { toFiat } = useFiatCurrency()
+  const { poolTokenAddresses, poolTokenSymbols } = usePool()
 
   const account = useAppSelector(getAccount)
   const showFilter = !!account
@@ -75,7 +75,7 @@ function PoolInvestments() {
                 const value = investment.amounts
                   .reduce((total, amount, i) => {
                     const address = poolTokenAddresses[i]
-                    return total.plus(getFiatValue(address, amount))
+                    return total.plus(toFiat(address, amount))
                   }, bnum(0))
                   .toNumber()
 
@@ -93,7 +93,11 @@ function PoolInvestments() {
                     </td>
                     <td>
                       <div className={styles.investmentDetails}>
-                        {renderAmounts(investment.amounts, investment.tx)}
+                        {renderAmounts(
+                          investment.amounts,
+                          poolTokenSymbols,
+                          investment.tx
+                        )}
                       </div>
                     </td>
                     <td>
@@ -163,18 +167,21 @@ function renderType(type: PoolActionType) {
   )
 }
 
-function renderAmounts(amounts: string[], key: string) {
+function renderAmounts(
+  amounts: string[],
+  poolTokenSymbols: string[],
+  key: string
+) {
   return amounts.map((amount, i) => {
     if (amount === '0') {
       return null
     }
-
-    const symb = i === 0 ? 'wncg' : 'weth'
+    const symbol = poolTokenSymbols[i]
     const lessThanMinAmount = bnum(amount).lt(0.0001)
 
     return (
-      <div key={`${key}.${amount}`} className={styles.detail}>
-        <TokenIcon className={styles.token} symbol={symb} />
+      <div key={`${key}.${symbol}${amount}`} className={styles.detail}>
+        <TokenIcon className={styles.token} symbol={symbol} />
         {lessThanMinAmount ? (
           <span title={amount}>&lt; 0.0001</span>
         ) : (

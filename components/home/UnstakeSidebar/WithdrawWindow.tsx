@@ -2,22 +2,16 @@
 import clsx from 'clsx'
 import styles from '../styles/UnstakeSidebar.module.scss'
 
-import {
-  getUnstakePeriod,
-  getWithdrawEndsAt,
-  resetWithdrawEndsAt,
-} from 'app/states/unstake'
 import { formatTimer } from 'utils/string'
-import { useAppDispatch, useAppSelector, useTimer } from 'hooks'
+import { useStaking, useTimer, useUnstakeTimestamps } from 'hooks'
 
 export function UnstakeSidebarWithdrawWindow() {
-  const dispatch = useAppDispatch()
-  const unstakePeriod = useAppSelector(getUnstakePeriod)
-  const withdrawEndsAt = useAppSelector(getWithdrawEndsAt)
+  const { unstakeWindow } = useStaking()
+  const { fetchTimestamps, withdrawEndsAt } = useUnstakeTimestamps()
 
   function onExpiration() {
     if (!withdrawEndsAt) return
-    dispatch(resetWithdrawEndsAt())
+    fetchTimestamps()
   }
 
   const { days, hours, minutes, seconds, isExpired, timeRemaining } = useTimer(
@@ -26,7 +20,7 @@ export function UnstakeSidebarWithdrawWindow() {
   )
 
   const percentRemaining = (
-    (Math.floor(timeRemaining / 1_000) / unstakePeriod) *
+    (Math.floor(timeRemaining / 1_000) / unstakeWindow) *
     100
   ).toFixed(2)
 

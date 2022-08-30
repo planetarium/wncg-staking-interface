@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { usePrevious } from 'react-use'
 import Lottie from 'lottie-react'
 import { Event } from 'ethers'
@@ -9,7 +9,6 @@ import { getAccount, getIsConnected } from 'app/states/connection'
 import { ModalCategory } from 'app/states/modal'
 import { configService } from 'services/config'
 import { TransactionAction } from 'services/transaction'
-import { getIsUnstakeWindow } from 'app/states/unstake'
 import { gaEvent } from 'lib/gtag'
 import { handleError } from 'utils/error'
 import { createApprovalEventFilter } from 'utils/event'
@@ -20,10 +19,12 @@ import {
   useConnection,
   useEventFilters,
   useModal,
-  usePoolService,
+  usePool,
   useProvider,
   useStake,
+  useUnstakeTimestamps,
 } from 'hooks'
+import { UnstakeStatus } from 'hooks/useUnstakeTimestamps'
 
 import loadingAnimation from 'animations/spinner.json'
 
@@ -35,6 +36,11 @@ type StakeSubmitProps = {
   clearInput(): void
   disabled: boolean
 }
+
+const UNSTAKE_WINDOW: UnstakeStatus[] = [
+  UnstakeStatus.CooldownInProgress,
+  UnstakeStatus.Withdrawable,
+]
 
 export function StakeSubmit({
   amount,
@@ -51,13 +57,14 @@ export function StakeSubmit({
   const { connect } = useConnection()
   const { stakedEventFilter } = useEventFilters()
   const { addModal } = useModal()
-  const { bptAddress } = usePoolService()
+  const { bptAddress, poolTokenName } = usePool()
   const provider = useProvider()
   const { stake } = useStake()
+  const { unstakeStatus } = useUnstakeTimestamps()
 
   const account = useAppSelector(getAccount)
   const isConnected = useAppSelector(getIsConnected)
-  const isUnstakeWindow = useAppSelector(getIsUnstakeWindow)
+  const isUnstakeWindow = UNSTAKE_WINDOW.includes(unstakeStatus)
 
   const isApproved = allowanceFor(bptAddress, configService.stakingAddress)
   const isLoading = active !== null
@@ -183,7 +190,6 @@ export function StakeSubmit({
   return (
     <>
       <div className={styles.stepsWrapper}>
-        {JSON.stringify(isApproved)}
         <div
           className={clsx(styles.divider, {
             [styles.lastStep]: isApproved,
@@ -228,7 +234,7 @@ export function StakeSubmit({
                 loop
               />
             )}
-            <strong className={styles.tooltip}>Stake 20WETH-80WNCG</strong>
+            <strong className={styles.tooltip}>Stake {poolTokenName}</strong>
           </li>
         </ol>
       </div>

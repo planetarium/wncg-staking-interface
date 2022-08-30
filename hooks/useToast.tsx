@@ -4,7 +4,6 @@ import { nanoid } from 'nanoid'
 import { addToast as addToastId } from 'app/states/toast'
 import type { TransactionAction } from 'services/transaction'
 import { toastAnimation } from 'utils/toast'
-import { useConfirmations } from './useConfirmations'
 import { useAppDispatch } from './useRedux'
 
 import { Toast } from 'components/Toast'
@@ -19,7 +18,6 @@ type AddToastParams = {
 
 export function useToast() {
   const dispatch = useAppDispatch()
-  const { registerConfirmations } = useConfirmations()
 
   function addToast(
     params: AddToastParams,
@@ -35,9 +33,9 @@ export function useToast() {
 
     dispatch(addToastId(toastId))
 
-    if (confirmationHash) {
-      registerConfirmations(confirmationHash, data)
-    }
+    // if (confirmationHash) {
+    //   registerConfirmations(confirmationHash, data)
+    // }
   }
 
   const sendToast = (params: AddToastParams) => {

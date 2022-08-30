@@ -8,11 +8,12 @@
   border-radius: 50%;
 
   &.placeholder {
-    background-color: $gray-5;
+    background-color: $ethereum;
 
     svg {
       width: 50%;
-      height: auto;
+      height: 50%;
+      color: $white;
     }
   }
 }

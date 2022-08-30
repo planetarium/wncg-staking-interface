@@ -1,9 +1,6 @@
 import { EventFilter, utils } from 'ethers'
 import { hexZeroPad } from 'ethers/lib/utils'
 
-import { configService } from 'services/config'
-import { assertUnreachable } from './assertion'
-
 export const EventType = {
   Approval: 'EVENT_FILTER_APPROVAL',
   Staked: 'EVENT_FILTER_STAKED',

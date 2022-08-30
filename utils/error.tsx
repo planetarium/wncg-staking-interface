@@ -1,9 +1,10 @@
 import { toast } from 'react-toastify'
-import { TransactionAction } from 'app/states/transaction'
+
+import { TransactionAction } from 'services/transaction'
 import { gaEvent } from 'lib/gtag'
+import { toastAnimation } from './toast'
 
 import { CustomToast } from 'components/Toast/CustomToast'
-import { toastAnimation } from './toast'
 
 export function handleError(error: any, transactionType?: TransactionAction) {
   //   TODO: Handle error

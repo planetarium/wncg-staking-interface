@@ -2,7 +2,9 @@ import { memo } from 'react'
 import { useForm } from 'react-hook-form'
 import styles from '../styles/Form.module.scss'
 
+import { configService } from 'services/config'
 import { sanitizeNumber } from 'utils/num'
+import { useBalances, usePool } from 'hooks'
 import { useJoinForm } from './useJoinForm'
 import type { JoinFormFields } from './type'
 
@@ -11,16 +13,17 @@ import EtherInput from './EtherInput'
 import HighPriceImpact from './HighPriceImpact'
 import JoinFormSummary from './Summary'
 import WncgInput from './WncgInput'
-import { useBalances, usePoolService } from 'hooks'
 
 type JoinFormProps = {
-  isNativeAsset: boolean
-  selectEth(value: EthType): void
+  currentEther: string
+  selectEther(value: EthType): void
 }
 
-function JoinForm({ isNativeAsset, selectEth }: JoinFormProps) {
+function JoinForm({ currentEther, selectEther }: JoinFormProps) {
   const { balanceFor } = useBalances()
-  const { poolTokenAddresses } = usePoolService()
+  const { poolTokenAddresses } = usePool()
+
+  const isNativeAsset = currentEther === configService.nativeAssetAddress
 
   const useFormReturn = useForm<JoinFormFields>({
     mode: 'onChange',
@@ -59,6 +62,7 @@ function JoinForm({ isNativeAsset, selectEth }: JoinFormProps) {
 
       <form>
         <WncgInput
+          address={poolTokenAddresses[0]}
           balance={balanceFor(poolTokenAddresses[0])}
           clearErrors={clearErrors}
           control={control}
@@ -71,9 +75,10 @@ function JoinForm({ isNativeAsset, selectEth }: JoinFormProps) {
         <EtherInput
           clearErrors={clearErrors}
           control={control}
+          currentEther={currentEther}
           isNativeAsset={isNativeAsset}
           showPropButton={showPropButton.ethAmount}
-          selectEth={selectEth}
+          selectEther={selectEther}
           setMaxValue={setMaxValue}
           setPropAmount={setPropAmount}
           trigger={trigger}

@@ -9,7 +9,7 @@ import {
   useApprove,
   useJoinPool,
   useModal,
-  usePoolService,
+  usePool,
 } from 'hooks'
 import { createJoinMachine } from './joinMachine'
 import { getSymbolNameFromState, isApprovalState } from './utils'
@@ -19,8 +19,7 @@ export function useJoinMachine(amounts: string[], isNativeAsset: boolean) {
   const { poolTokenAllowances } = useAllowances()
   const { joinPool } = useJoinPool()
   const { removeModal } = useModal()
-  const { nativeAssetIndex, poolTokenAddresses, poolTokenSymbols } =
-    usePoolService()
+  const { nativeAssetIndex, poolTokenAddresses, poolTokenSymbols } = usePool()
 
   const joinMachine = useRef(
     createJoinMachine(
@@ -33,7 +32,6 @@ export function useJoinMachine(amounts: string[], isNativeAsset: boolean) {
   )
 
   const [state, send] = useMachine(joinMachine.current)
-  console.log(1111111, joinMachine.current.key)
 
   const handleJoin = useCallback(async () => {
     const currentState = state.value

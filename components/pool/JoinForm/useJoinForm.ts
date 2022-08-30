@@ -8,8 +8,8 @@ import {
   useBalances,
   useJoinMath,
   useModal,
-  usePoolService,
-  useUsd,
+  usePool,
+  useFiatCurrency,
 } from 'hooks'
 import type { JoinFormFields } from './type'
 
@@ -23,8 +23,8 @@ export function useJoinForm(
   const { calcPriceImpact, calcPropAmounts, calcOptimizedAmounts } =
     useJoinMath()
   const { addModal } = useModal()
-  const { poolTokenAddresses: rawPoolTokenAddresses } = usePoolService()
-  const { getFiatValue } = useUsd()
+  const { poolTokenAddresses: rawPoolTokenAddresses } = usePool()
+  const { toFiat } = useFiatCurrency()
 
   const poolTokenAddresses = useMemo(
     () =>
@@ -115,11 +115,11 @@ export function useJoinForm(
     () =>
       poolTokenAddresses
         .reduce((total, address, i) => {
-          const sumValue = getFiatValue(address, amounts[i])
+          const sumValue = toFiat(address, amounts[i])
           return total.plus(sumValue)
         }, bnum(0))
         .toString(),
-    [amounts, getFiatValue, poolTokenAddresses]
+    [amounts, toFiat, poolTokenAddresses]
   )
 
   const maximized = useMemo(

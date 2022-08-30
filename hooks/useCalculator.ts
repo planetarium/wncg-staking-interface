@@ -2,10 +2,10 @@ import { useMemo } from 'react'
 
 import CalculatorService from 'services/calculator'
 import { useBalances } from './useBalances'
-import { usePoolService } from './usePoolService'
+import { usePool } from './usePool'
 
 export function useCalculator(action: PoolAction) {
-  const { bptAddress, pool } = usePoolService()
+  const { bptAddress, pool } = usePool()
   const { balanceFor } = useBalances()
 
   const bptBalance = balanceFor(bptAddress)

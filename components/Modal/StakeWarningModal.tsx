@@ -2,8 +2,8 @@ import { useState } from 'react'
 import styles from './StakeWarningModal.module.scss'
 
 import { ModalCategory } from 'app/states/modal'
-import { getUnstakeStatus, UnstakeStatus } from 'app/states/unstake'
-import { useAppSelector, useModal } from 'hooks'
+import { useModal, useUnstakeTimestamps } from 'hooks'
+import { UnstakeStatus } from 'hooks/useUnstakeTimestamps'
 
 import { Button } from 'components/Button'
 import { Checkbox } from 'components/Checkbox'
@@ -16,8 +16,8 @@ export function StakeWarningModal({ stake }: StakeWarningModalProps) {
   const [checked, setChecked] = useState(false)
 
   const { removeModal } = useModal()
-  const status = useAppSelector(getUnstakeStatus)
-  const isCoolingDown = status === UnstakeStatus.CooldownInProgress
+  const { unstakeStatus } = useUnstakeTimestamps()
+  const isCoolingDown = unstakeStatus === UnstakeStatus.CooldownInProgress
 
   function handleCheck(value: boolean) {
     setChecked(value)

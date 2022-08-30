@@ -10,17 +10,23 @@ import {
   usdCountUpOption,
 } from 'utils/countUp'
 import { getTokenSymbol } from 'utils/token'
-import { useApr, useModal, useRewardData, useStakingData, useUsd } from 'hooks'
+import {
+  useApr,
+  useModal,
+  useRewards,
+  useStaking,
+  useFiatCurrency,
+} from 'hooks'
 
 import { Button } from 'components/Button'
 import { CountUp } from 'components/CountUp'
 
 function Dashboard() {
-  const { balApr, wncgApr } = useApr()
+  const { aprs } = useApr()
+  const { getBptFiatValue } = useFiatCurrency()
   const { addModal } = useModal()
-  const { rewards, rewardsInFiatValue, rewardTokensList } = useRewardData()
-  const { totalStaked } = useStakingData()
-  const { getBptFiatValue } = useUsd()
+  const { rewards, rewardsInFiatValue, rewardTokensList } = useRewards()
+  const { totalStaked } = useStaking()
 
   function handleClaim(e: MouseEvent) {
     e.stopPropagation()
@@ -79,18 +85,18 @@ function Dashboard() {
               />
             </dd>
           </div>
-          <div className={styles.detailItem}>
-            <dt>WNCG APR</dt>
-            <dd>
-              <CountUp {...percentCountUpOption} end={wncgApr} showAlways />
-            </dd>
-          </div>
-          <div className={styles.detailItem}>
-            <dt>BAL APR</dt>
-            <dd>
-              <CountUp {...percentCountUpOption} end={balApr} showAlways />
-            </dd>
-          </div>
+          {rewardTokensList.map((address, i) => {
+            const symbol = getTokenSymbol(address)
+
+            return (
+              <div key={`rewardApr.${address}`} className={styles.detailItem}>
+                <dt>{symbol} APR</dt>
+                <dd>
+                  <CountUp {...percentCountUpOption} end={aprs[i]} showAlways />
+                </dd>
+              </div>
+            )
+          })}
         </dl>
       </div>
     </section>

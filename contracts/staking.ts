@@ -1,6 +1,7 @@
 import type { Contract } from 'ethers'
 import { formatEther, formatUnits, parseEther } from 'ethers/lib/utils'
 import type { TransactionResponse } from '@ethersproject/providers'
+import { isPast } from 'date-fns'
 
 import { createLogger } from 'utils/log'
 import { sanitizeNumber } from 'utils/num'
@@ -8,6 +9,8 @@ import { sanitizeNumber } from 'utils/num'
 type Account = string | null
 
 const logger = createLogger('white')
+
+const unstakeLogger = createLogger('black')
 
 //   NOTE: BAL reward contract address
 export async function getBalancerGaugeAddress(
@@ -120,11 +123,11 @@ export async function getUnstakeWindow(contract: Contract): Promise<number> {
   const key = 'unstake window'
 
   try {
-    logger(key)
+    unstakeLogger(key)
     const data = await contract.UNSTAKE_WINDOW()
     return data ? data.toNumber() : 0
   } catch (error) {
-    logger(key, error)
+    unstakeLogger(key, error)
     throw error
   }
 }
@@ -163,9 +166,12 @@ export async function getCooldownEndTimestamp(
 ) {
   if (!account) return 0
 
-  logger('cooldown end timestamp')
+  unstakeLogger('cooldown end timestamp')
   const data = await contract.getCooldownEndTimestamp(account)
-  return data ? data.toNumber() * 1_000 : 0
+  let timestamp = data ? data.toNumber() * 1_000 : 0
+  if (isPast(timestamp)) timestamp = 0
+
+  return timestamp
 }
 
 export async function getWithdrawEndTimestamp(
@@ -173,9 +179,12 @@ export async function getWithdrawEndTimestamp(
   account: Account
 ) {
   if (!account) return 0
-  logger('withdraw end timestamp')
+  unstakeLogger('withdraw end timestamp')
   const data = await contract.getWithdrawEndTimestamp(account)
-  return data ? data.toNumber() * 1_000 : 0
+  let timestamp = data ? data.toNumber() * 1_000 : 0
+  if (isPast(timestamp)) timestamp = 0
+
+  return timestamp
 }
 
 export async function claimAllRewards(
@@ -191,9 +200,10 @@ export async function claimBalRewards(
 }
 
 export async function claimWncgRewards(
-  contract: Contract
+  contract: Contract,
+  amount: string
 ): Promise<TransactionResponse> {
-  return await contract.claimWNCGRewards()
+  return await contract.claimWNCGRewards(amount)
 }
 
 export async function earmarkRewards(

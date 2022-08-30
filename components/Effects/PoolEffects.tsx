@@ -7,22 +7,24 @@ import {
   useProvider,
   useTransaction,
 } from 'hooks'
+import { TransactionAction } from 'services/transaction'
 
 function PoolEffects() {
   const { fetchBalances } = useBalances()
   const { poolBalanceChangedEventFilter } = useEventFilters()
   const provider = useProvider()
-  const { transactionService } = useTransaction()
+  const { updateTxStatus } = useTransaction()
 
   const handlePoolBalanceChangedEvent = useCallback(
     async (event: Event) => {
       console.log(3433, 'poolchangedevent', event)
 
-      await transactionService?.updateTxStatus(event, {
+      // Join인지 Exit인지 어떻게 구별하지
+      await updateTxStatus?.(event, TransactionAction.JoinPool, {
         onFulfill: fetchBalances,
       })
     },
-    [fetchBalances, transactionService]
+    [fetchBalances, updateTxStatus]
   )
 
   // NOTE: Pool balance changed event (Join / Exit)

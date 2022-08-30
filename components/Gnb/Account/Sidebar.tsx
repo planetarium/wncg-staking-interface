@@ -9,11 +9,11 @@ import styles from './style.module.scss'
 
 import { getAccount } from 'app/states/connection'
 import { networkMismatchState } from 'app/states/network'
+import { STORE_MUTED_KEY } from 'constants/storeKeys'
 import { gaEvent } from 'lib/gtag'
-import { IS_ETHEREUM } from 'utils/env'
+import { networkChainId, networkNameFor } from 'utils/network'
 import { truncateAddress } from 'utils/string'
 import { getEtherscanUrl } from 'utils/url'
-import { STORE_MUTED_KEY } from 'constants/storeKeys'
 import { useAppSelector, useConnection } from 'hooks'
 import { sidebarVariants } from './constants'
 
@@ -135,7 +135,7 @@ export function AccountSidebar({ close }: AccountSidebarProps) {
                 <span className={styles.ethereum}>
                   <Icon id="ethereumSimple" />
                 </span>
-                {IS_ETHEREUM ? 'Ethereum' : 'Kovan'}
+                {networkNameFor(networkChainId)}
               </>
             )}
           </dd>

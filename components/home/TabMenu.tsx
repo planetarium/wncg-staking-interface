@@ -2,7 +2,7 @@ import { Dispatch, memo, MouseEvent, SetStateAction, useMemo } from 'react'
 import clsx from 'clsx'
 import styles from './styles/TabMenu.module.scss'
 
-import { useUnstake } from 'hooks'
+import { useUnstakeTimestamps } from 'hooks'
 import { Tab, TabId, TabPanelId } from './constants'
 
 type TabMenuProps = {
@@ -11,7 +11,7 @@ type TabMenuProps = {
 }
 
 function TabMenu({ setTab, tab }: TabMenuProps) {
-  const { fetchTimestamps } = useUnstake()
+  const { fetchTimestamps } = useUnstakeTimestamps()
   const nestedClassName = useMemo(
     () => clsx(styles.tabMenu, { [styles.unstake]: tab === Tab.Unstake }),
     [tab]

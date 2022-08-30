@@ -1,12 +1,13 @@
 import { memo, MouseEvent, useMemo } from 'react'
 import type { Control, FieldValues, UseFormClearErrors } from 'react-hook-form'
 
-import Decimal, { sanitizeNumber } from 'utils/num'
+import { bnum } from 'utils/num'
 import type { JoinFormFields } from './type'
 
 import { TokenInput } from '../TokenInput'
 
 type WncgInputProps = {
+  address: string
   balance: string
   clearErrors: UseFormClearErrors<JoinFormFields>
   control: Control<JoinFormFields>
@@ -18,6 +19,7 @@ type WncgInputProps = {
 }
 
 function WncgInput({
+  address,
   balance,
   clearErrors,
   control,
@@ -31,10 +33,7 @@ function WncgInput({
     () => ({
       validate: {
         maxAmount(v: string) {
-          return (
-            new Decimal(sanitizeNumber(v)).lte(balance) ||
-            'Exceeds wallet balance'
-          )
+          return bnum(v).lte(balance) || 'Exceeds wallet balance'
         },
       },
       onChange() {
@@ -44,10 +43,7 @@ function WncgInput({
     [clearErrors, balance]
   )
 
-  const maximized = useMemo(
-    () => new Decimal(value).eq(balance),
-    [balance, value]
-  )
+  const maximized = useMemo(() => bnum(value).eq(balance), [balance, value])
 
   return (
     <TokenInput
@@ -55,10 +51,10 @@ function WncgInput({
       name="wncgAmount"
       control={control as any as Control<FieldValues, 'any'>}
       rules={rules}
-      error={error}
+      address={address}
       balance={balance}
+      error={error}
       maximized={maximized}
-      token="wncg"
       setMaxValue={setMaxValue}
       setPropAmount={setPropAmount}
       propButton={showPropButton}

@@ -4,12 +4,17 @@ import { AnimatePresence, motion } from 'framer-motion'
 import styles from '../styles/UnstakeForm.module.scss'
 
 import { ModalCategory } from 'app/states/modal'
-import { getStakedBalance } from 'app/states/stake'
 import { TransactionAction } from 'services/transaction'
 import { gaEvent } from 'lib/gtag'
 import { handleError } from 'utils/error'
 import { bnum } from 'utils/num'
-import { useAppSelector, useModal, useUnstake } from 'hooks'
+import {
+  useModal,
+  usePool,
+  useRewards,
+  useStakedBalance,
+  useUnstake,
+} from 'hooks'
 import { formTransition, motionVariants, TabId, TabPanelId } from '../constants'
 
 import { Button } from 'components/Button'
@@ -28,9 +33,10 @@ export function UnstakeForm({ disabled }: UnstakeFormProps) {
   const [loading, setLoading] = useState(false)
 
   const { addModal } = useModal()
+  const { poolTokenName } = usePool()
+  const { rewardTokenSymbols } = useRewards()
+  const { stakedBalance } = useStakedBalance()
   const { withdraw } = useUnstake()
-
-  const stakedBalance = useAppSelector(getStakedBalance)
 
   const { clearErrors, control, setValue, watch } = useForm({
     mode: 'onBlur',
@@ -125,7 +131,7 @@ export function UnstakeForm({ disabled }: UnstakeFormProps) {
       <InputGroup
         name="unstakeAmount"
         control={control as any as Control<FieldValues, 'any'>}
-        label="Staked 20WETH-80WNCG"
+        label={`Staked ${poolTokenName}`}
         maxAmount={stakedBalance}
         rules={rules}
         setMaxValue={setMaxValue}
@@ -139,7 +145,9 @@ export function UnstakeForm({ disabled }: UnstakeFormProps) {
           onChange={handleCheck}
           disabled={disabled}
         />
-        <label htmlFor="withdrawAndClaim">Claim all BAL & WNCG rewards</label>
+        <label htmlFor="withdrawAndClaim">
+          Claim all {rewardTokenSymbols.join(' & ')} rewards
+        </label>
       </div>
 
       <Button

@@ -5,15 +5,13 @@ import { useRouter } from 'next/router'
 import clsx from 'clsx'
 import styles from './styles/GlobalFooter.module.scss'
 
+import { configService } from 'services/config'
 import { gaEvent } from 'lib/gtag'
 import { getEtherscanUrl } from 'utils/url'
 
 import { Icon } from './Icon'
 
-const etherscanUrl = getEtherscanUrl(
-  process.env.NEXT_PUBLIC_STAKING_CONTRACT_ADDRESS
-)
-const githubUrl = `https://github.com/${process.env.NEXT_PUBLIC_GITHUB_REPO}`
+const stakingContractUrl = getEtherscanUrl(configService.stakingAddress)
 
 function handleClick(e: MouseEvent<HTMLAnchorElement>) {
   gaEvent({
@@ -30,7 +28,7 @@ function GlobalFooter() {
     <div className={styles.buttonGroup}>
       <a
         className={styles.snsButton}
-        href="https://twitter.com/NineChronicles"
+        href={configService.socialMedia.twitter}
         onClick={handleClick}
         data-name="twitter"
         target="_blank"
@@ -41,7 +39,7 @@ function GlobalFooter() {
       </a>
       <a
         className={styles.snsButton}
-        href="https://ninechronicles.medium.com/"
+        href={configService.socialMedia.medium}
         onClick={handleClick}
         data-name="medium"
         target="_blank"
@@ -52,7 +50,7 @@ function GlobalFooter() {
       </a>
       <a
         className={styles.snsButton}
-        href="https://discord.gg/planetarium"
+        href={configService.socialMedia.discord}
         onClick={handleClick}
         data-name="discord"
         target="_blank"
@@ -65,7 +63,7 @@ function GlobalFooter() {
         <>
           <a
             className={clsx(styles.snsButton, styles.etherscan)}
-            href={etherscanUrl}
+            href={stakingContractUrl}
             target="_blank"
             rel="noreferrer"
             aria-label="Open Etherscan"
@@ -74,7 +72,7 @@ function GlobalFooter() {
           </a>
           <a
             className={styles.snsButton}
-            href={githubUrl}
+            href={configService.github.repositoryUrl}
             target="_blank"
             rel="noreferrer"
             aria-label="Open Github"
@@ -128,7 +126,7 @@ function GlobalFooter() {
           </FooterLink>
           <a
             className={styles.link}
-            href={process.env.NEXT_PUBLIC_DOCUMENTATION_URL}
+            href={configService.docs.notion}
             data-name="docs"
             target="_blank"
             rel="noreferrer"

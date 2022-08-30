@@ -1,25 +1,29 @@
 import styles from '../styles/StakeSidebar.module.scss'
 
-import { getStakedBalance, getTotalStaked } from 'app/states/stake'
 import { countUpOption, usdCountUpOption } from 'utils/countUp'
-import Decimal, { sanitizeNumber } from 'utils/num'
-import { useAppSelector, useBalances, usePoolService, useUsd } from 'hooks'
+import { bnum, sanitizeNumber } from 'utils/num'
+import {
+  useBalances,
+  usePool,
+  useStakedBalance,
+  useStaking,
+  useFiatCurrency,
+} from 'hooks'
 
 import { CountUp } from 'components/CountUp'
 
 export function StakeSidebarBalance() {
   const { bptBalance } = useBalances()
-  const { bptAddress } = usePoolService()
-  const { getFiatValue } = useUsd()
+  const { bptAddress } = usePool()
+  const { stakedBalance } = useStakedBalance()
+  const { totalStaked } = useStaking()
+  const { toFiat } = useFiatCurrency()
 
-  const stakedBalance = useAppSelector(getStakedBalance)
-  const totalStaked = useAppSelector(getTotalStaked)
-
-  const share = new Decimal(stakedBalance).div(totalStaked).mul(100).toNumber()
+  const share = bnum(stakedBalance).div(totalStaked).times(100).toNumber()
 
   const transferable = parseFloat(sanitizeNumber(bptBalance))
   const staked = parseFloat(sanitizeNumber(stakedBalance))
-  const total = new Decimal(transferable).plus(stakedBalance).toNumber()
+  const total = bnum(transferable).plus(stakedBalance).toNumber()
 
   return (
     <dl className={styles.detail}>
@@ -29,7 +33,7 @@ export function StakeSidebarBalance() {
           <CountUp {...countUpOption} start={0} end={total} duration={0.5} />
           <CountUp
             {...usdCountUpOption}
-            end={getFiatValue(bptAddress, total)}
+            end={toFiat(bptAddress, total)}
             isApproximate
           />
         </dd>
@@ -43,7 +47,7 @@ export function StakeSidebarBalance() {
           <CountUp {...countUpOption} start={0} end={staked} duration={0.5} />
           <CountUp
             {...usdCountUpOption}
-            end={getFiatValue(bptAddress, staked)}
+            end={toFiat(bptAddress, staked)}
             isApproximate
           />
         </dd>
@@ -59,7 +63,7 @@ export function StakeSidebarBalance() {
           />
           <CountUp
             {...usdCountUpOption}
-            end={getFiatValue(bptAddress, transferable)}
+            end={toFiat(bptAddress, transferable)}
             isApproximate
           />
         </dd>

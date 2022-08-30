@@ -98,6 +98,10 @@ export default class PoolService {
     return this.pool?.address || ''
   }
 
+  get poolName() {
+    return this.pool?.name || 'Balancer Weighted Pool'
+  }
+
   get poolTokens() {
     return this.pool?.tokens || []
   }

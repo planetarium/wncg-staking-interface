@@ -9,8 +9,9 @@ export function renderTxTitle(action: TransactionAction) {
     case TransactionAction.ClaimAllRewards:
       return 'Claim all rewards'
     case TransactionAction.ClaimBalRewards:
+      return 'Claim BAL reward'
     case TransactionAction.ClaimWncgRewards:
-      return 'Claim reward'
+      return 'Claim WNCG reward'
     case TransactionAction.EarmarkRewards:
       return 'Harvest'
     case TransactionAction.ExitPool:
@@ -23,43 +24,40 @@ export function renderTxTitle(action: TransactionAction) {
       return 'Cooldown'
     case TransactionAction.Withdraw:
       return 'Withdraw'
+    case TransactionAction.WithdrawAndClaim:
+      return 'Withdraw & claim'
     default:
       assertUnreachable(action)
   }
 }
 
-type TxMessageData = {
-  symbol: string
-  value?: string
-}
-
 export function renderTxSuccessMessage(
   action: TransactionAction,
-  { symbol }: TxMessageData
+  params?: string | string[]
 ) {
   switch (action) {
     case TransactionAction.Approve:
-      return `Successfully approved ${symbol}`
+      return `Successfully approved ${parseParams(params)}`
     case TransactionAction.ClaimAllRewards:
-      return 'Successfully claimed WNCG & BAL rewards'
+      return `Successfully claimed ${parseParams(params)} & BAL rewards`
     case TransactionAction.ClaimBalRewards:
       return 'Successfully claimed BAL reward'
     case TransactionAction.ClaimWncgRewards:
-      return 'Successfully claimed WNCG reward'
+      return `Successfully claimed ${parseParams(params)} reward`
     case TransactionAction.EarmarkRewards:
       return 'Successfully harvested BAL reward'
     case TransactionAction.ExitPool:
-      return 'Successfully exited pool'
+      return `Successfully exited ${parseParams(params)} pool`
     case TransactionAction.JoinPool:
-      return 'Successfully joined pool'
+      return `Successfully joined ${parseParams(params)} pool`
     case TransactionAction.Stake:
-      return 'Successfully staked 20WETH-80WNCG'
+      return `Successfully staked ${parseParams(params)}`
     case TransactionAction.StartCooldown:
       return 'Successfully started cooldown'
     case TransactionAction.Withdraw:
-      return 'Successfully withdrew staked 20WETH-80WNCG'
+      return `Successfully withdrew staked ${parseParams(params)}`
     case TransactionAction.WithdrawAndClaim:
-      return 'Successfully withdrew and claimed'
+      return 'Successfully withdrew and claimed all rewards'
     default:
       assertUnreachable(action)
   }
@@ -67,30 +65,30 @@ export function renderTxSuccessMessage(
 
 export function renderTxInfoMessage(
   action: TransactionAction,
-  { symbol, value = '' }: TxMessageData
+  params?: string | string[]
 ) {
   switch (action) {
     case TransactionAction.Approve:
-      return `Approving ${symbol}`
+      return `Approving ${parseParams(params)}`
     case TransactionAction.ClaimAllRewards:
-      return 'Claim WNCG & BAL rewards'
+      return `Claim ${parseParams(params)} & BAL rewards`
     case TransactionAction.ClaimBalRewards:
       return 'Claim BAL reward'
     case TransactionAction.ClaimWncgRewards:
-      return 'Claim WNCG reward'
+      return `Claim ${parseParams(params)} reward`
     case TransactionAction.EarmarkRewards:
       return 'Harvest BAL reward'
     case TransactionAction.ExitPool:
-      return 'Exiting the pool'
+      return `Exiting ${parseParams(params)} pool`
     case TransactionAction.JoinPool:
-      return 'Joining the pool'
+      return `Joining ${parseParams(params)} pool`
     case TransactionAction.Stake:
-      return `Stake ${bnum(value).toFixed(8)} 20WETH-80WNCG`
+      return `Stake ${parseParams(params)}`
     case TransactionAction.StartCooldown:
       return 'Start cooldown'
     case TransactionAction.Withdraw:
     case TransactionAction.WithdrawAndClaim:
-      return `Withdraw ${bnum(value).toFixed(8)} 20WETH-80WNCG`
+      return `Withdraw ${parseParams(params)}`
     default:
       assertUnreachable(action)
   }
@@ -98,29 +96,29 @@ export function renderTxInfoMessage(
 
 export function renderTxErrorMessage(
   action: TransactionAction,
-  { symbol }: TxMessageData
+  params?: string | string[]
 ) {
   switch (action) {
     case TransactionAction.Approve:
-      return `Failed to approve ${symbol}`
+      return `Failed to approve ${parseParams(params)}`
     case TransactionAction.ClaimAllRewards:
-      return 'Failed to claim WNCG & BAL rewards'
+      return `Failed to claim ${parseParams(params)} & BAL rewards`
     case TransactionAction.ClaimBalRewards:
       return 'Failed to claim BAL reward'
     case TransactionAction.ClaimWncgRewards:
-      return 'Failed to claim WNCG reward'
+      return `Failed to claim ${parseParams(params)} reward`
     case TransactionAction.EarmarkRewards:
       return 'Failed to harvest BAL reward'
     case TransactionAction.ExitPool:
-      return 'Failed to exit pool'
+      return `Failed to exit ${parseParams(params)} pool`
     case TransactionAction.JoinPool:
-      return 'Failed to join pool'
+      return `Failed to join ${parseParams(params)} pool`
     case TransactionAction.Stake:
-      return 'Failed to stake 20WETH-80WNCG'
+      return `Failed to stake ${parseParams(params)}`
     case TransactionAction.StartCooldown:
       return 'Failed to start cooldown'
     case TransactionAction.Withdraw:
-      return 'Failed to withdraw staked 20WETH-80WNCG'
+      return `Failed to withdraw staked ${parseParams(params)}`
     case TransactionAction.WithdrawAndClaim:
       return 'Failed to withdraw and claim'
     default:
@@ -128,19 +126,7 @@ export function renderTxErrorMessage(
   }
 }
 
-export function renderTxMessage(
-  action: TransactionAction,
-  type: ToastType,
-  data: TxMessageData
-) {
-  switch (type) {
-    case 'success':
-      return renderTxSuccessMessage(action, data)
-    case 'info':
-      return renderTxInfoMessage(action, data)
-    case 'error':
-      return renderTxErrorMessage(action, data)
-    default:
-      assertUnreachable(type)
-  }
+function parseParams(params?: string | string[]) {
+  if (!params || typeof params === 'string') return params
+  return `${bnum(params[0] || 0).toFixed(8)} ${params?.[1]}`
 }

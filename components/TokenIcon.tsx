@@ -11,6 +11,8 @@ type TokenIconProps = {
 }
 
 function TokenIcon({ symbol, className }: TokenIconProps) {
+  if (!symbol) return null
+
   const srcImage = getTokenIconImage(symbol)
   const nestedClassName = clsx(className, styles.token, {
     [styles.placeholder]: !srcImage,

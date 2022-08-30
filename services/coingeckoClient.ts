@@ -1,11 +1,8 @@
 import axios from 'axios'
+import { configService } from './config'
 
 export class CoingeckoClientService {
-  baseUrl: string
-
-  constructor() {
-    this.baseUrl = 'https://api.coingecko.com/api/v3'
-  }
+  constructor(public readonly config = configService) {}
 
   async get<T>(endpoint: string): Promise<T> {
     const { data } = await this.axios.get<T>(endpoint)
@@ -13,7 +10,7 @@ export class CoingeckoClientService {
   }
 
   get axios() {
-    return axios.create({ baseURL: this.baseUrl })
+    return axios.create({ baseURL: this.config.coingecko.baseUrl })
   }
 }
 

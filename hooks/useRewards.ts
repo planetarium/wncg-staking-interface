@@ -1,41 +1,30 @@
-import { useMemo } from 'react'
 import { useQueries } from '@tanstack/react-query'
-import { useRecoilValue } from 'recoil'
-import { Contract } from 'ethers'
+import { parseUnits } from 'ethers/lib/utils'
 
 import { getAccount } from 'app/states/connection'
-import { networkMismatchState } from 'app/states/network'
 import { configService } from 'services/config'
 import { getEarnedBal, getEarnedWncg } from 'contracts/staking'
-import { StakingAbi } from 'lib/abi'
+import { REFETCH_INTERVAL } from 'constants/time'
 import { getTokenInfo } from 'utils/token'
-import { useProvider } from './useProvider'
-
+import { useFiatCurrency } from './useFiatCurrency'
 import { useAppSelector } from './useRedux'
-import { useUsd } from './useUsd'
+import { useStakingContract } from './useStakingContract'
 
 const queryFnList = [getEarnedWncg, getEarnedBal]
 
-export function useRewardData() {
-  const provider = useProvider()
-  const { getFiatValue } = useUsd()
+export function useRewards() {
+  const { toFiat } = useFiatCurrency()
+  const contract = useStakingContract(true)
 
-  const networkMismatch = useRecoilValue(networkMismatchState)
   const account = useAppSelector(getAccount)
 
   const { rewardTokensList } = configService
   const rewardTokenDecimals = rewardTokensList.map(
     (address) => getTokenInfo(address).decimals
   )
-
-  const contract = useMemo(() => {
-    if (!provider || networkMismatch || !account) return null
-    return new Contract(
-      configService.stakingAddress,
-      StakingAbi,
-      provider.getSigner(account)
-    )
-  }, [account, networkMismatch, provider])
+  const rewardTokenSymbols = rewardTokensList.map(
+    (address) => getTokenInfo(address).symbol
+  )
 
   const rewardsQuery = useQueries({
     queries: rewardTokensList.map((address, i) => ({
@@ -44,13 +33,18 @@ export function useRewardData() {
         queryFnList[i]?.(contract!, account, rewardTokenDecimals[i]),
       enabled: !!contract,
       placeholderData: '0',
+      refetchInterval: REFETCH_INTERVAL,
     })),
   })
 
   const rewards = rewardsQuery.map((reward) => reward.data || '0')
-  const rewardsInFiatValue = rewards.map((reward, i) =>
-    getFiatValue(rewardTokensList[i], reward)
+  const scaledRewards = rewards.map((reward, i) =>
+    parseUnits(reward, rewardTokenDecimals[i])
   )
+  const rewardsInFiatValue = rewards.map((reward, i) =>
+    toFiat(rewardTokensList[i], reward)
+  )
+
   const fetchRewards = async () => {
     const requests = rewardsQuery.map((query) => query.refetch)
     return await Promise.all(requests)
@@ -60,6 +54,8 @@ export function useRewardData() {
     rewards,
     rewardsInFiatValue,
     rewardTokensList,
+    rewardTokenSymbols,
+    scaledRewards,
     fetchRewards,
   }
 }

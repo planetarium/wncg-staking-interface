@@ -1,6 +1,5 @@
 import { Network } from '@balancer-labs/sdk'
 
-import { networkId } from 'app/states/network'
 import { configService } from 'services/config'
 
 export const NATIVE_ASSET_ADDRESS = configService.nativeAssetAddress
@@ -120,9 +119,9 @@ export const TOKENS_GOERLI: TokenConstants = {
     },
     '0xa488533be3018a0720c4c0647f407f3b41e6cb82': {
       address: '0xa488533be3018a0720c4c0647f407f3b41e6cb82',
-      name: 'Wrapped NCG',
+      name: 'Hotbody',
       decimals: 18,
-      symbol: 'WNCG',
+      symbol: 'HOTBODY',
     },
     '0x37f03a12241e9fd3658ad6777d289c3fb8512bc9': {
       address: '0x37f03a12241e9fd3658ad6777d289c3fb8512bc9',
@@ -181,9 +180,9 @@ export const TOKENS_KOVAN: TokenConstants = {
     },
     '0xa488533be3018a0720c4c0647f407f3b41e6cb82': {
       address: '0xa488533be3018a0720c4c0647f407f3b41e6cb82',
-      name: 'Wrapped NCG',
+      name: 'Hotbody',
       decimals: 18,
-      symbol: 'WNCG',
+      symbol: 'HOTBODY',
     },
     '0x1c8e3bcb3378a443cc591f154c5ce0ebb4da9648': {
       address: '0x1c8e3bcb3378a443cc591f154c5ce0ebb4da9648',
@@ -217,7 +216,7 @@ const TOKENS_PLACEHOLDER: TokenConstants = {
 }
 
 export const TOKENS: TokenConstants =
-  TOKENS_MAP[networkId] || TOKENS_PLACEHOLDER
+  TOKENS_MAP[configService.networkId] || TOKENS_PLACEHOLDER
 
 export const TOKEN_PRICES_PLACEHOLDERS = Object.fromEntries(
   Object.keys(TOKENS.PriceChainMap || {}).map((key) => [key, '0'])

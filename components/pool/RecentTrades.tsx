@@ -5,13 +5,12 @@ import { formatDistanceToNow } from 'date-fns'
 import styles from './styles/RecentTrades.module.scss'
 
 import { fetchPoolSwaps, getNextPageParam } from 'lib/graphql'
-import { getSymbolFromAddress } from 'utils/address'
 import { truncateAddress } from 'utils/string'
+import { getTokenSymbol } from 'utils/token'
 
 import { Icon } from 'components/Icon'
 import { Jazzicon } from 'components/Jazzicon'
 import { TokenIcon } from 'components/TokenIcon'
-import { getTokenInfo } from 'utils/token'
 
 function PoolRecentTrades() {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
@@ -44,11 +43,12 @@ function PoolRecentTrades() {
               <th scope="col">Time</th>
             </tr>
           </thead>
+
           <tbody>
             {data?.pages?.map((swaps) =>
               swaps.map((swap) => {
                 return (
-                  <tr key={`poolComposition-${swap.timestamp}`}>
+                  <tr key={`poolComposition.${swap.timestamp}`}>
                     <td>
                       <div className={styles.trader}>
                         <Jazzicon
@@ -72,7 +72,7 @@ function PoolRecentTrades() {
                       <div className={styles.tradeDetail}>
                         <TokenIcon
                           className={styles.token}
-                          symbol={getTokenInfo(swap.tokenIn).symbol}
+                          symbol={getTokenSymbol(swap.tokenIn)}
                         />
                         <NumberFormat
                           value={swap.tokenAmountIn}
@@ -83,7 +83,7 @@ function PoolRecentTrades() {
                         <Icon id="arrowRight" />
                         <TokenIcon
                           className={styles.token}
-                          symbol={getTokenInfo(swap.tokenOut).symbol}
+                          symbol={getTokenSymbol(swap.tokenOut)}
                         />
                         <NumberFormat
                           value={swap.tokenAmountOut}
