@@ -34,8 +34,10 @@ export function TokenDropdown({
 
   function handleClick(e: ReactMouseEvent) {
     if (!hasList) return
-    const { value } = e.currentTarget as HTMLButtonElement
-    selectToken(value as TokenDropdownSymbol)
+    const { value } = e.currentTarget as HTMLButtonElement & {
+      value: TokenDropdownSymbol
+    }
+    selectToken(value)
     setShow(false)
   }
 
@@ -54,7 +56,7 @@ export function TokenDropdown({
   useEffect(() => {
     window.addEventListener('click', closeOnBlur)
     return () => window.removeEventListener('click', closeOnBlur)
-  }, [])
+  }, [closeOnBlur])
 
   return (
     <div
@@ -69,8 +71,7 @@ export function TokenDropdown({
         onClick={toggle}
         disabled={!hasList}
       >
-        {renderTokenIcon(currentToken)}
-        {renderTokenLabel(currentToken)}
+        {renderTokenIcon(currentToken, tokenList)}
         {hasList && <Icon className={styles.caret} id="caret" ariaHidden />}
       </Button>
 
@@ -84,8 +85,7 @@ export function TokenDropdown({
                 className={clsx({ [styles.selected]: isSelected })}
               >
                 <button type="button" value={token} onClick={handleClick}>
-                  {renderTokenIcon(token)}
-                  {renderTokenLabel(token)}
+                  {renderTokenIcon(token, tokenList)}
                   {isSelected && <Icon className={styles.check} id="check" />}
                 </button>
               </li>
@@ -97,20 +97,30 @@ export function TokenDropdown({
   )
 }
 
-function renderTokenIcon(symbol: TokenDropdownSymbol) {
+function renderTokenIcon(
+  symbol: TokenDropdownSymbol,
+  poolTokenSymbols: string[]
+) {
   if (symbol === 'all') {
     return (
-      <div className={styles.tokenGroup}>
-        <TokenIcon className={styles.token} symbol="wncg" />
-        <TokenIcon className={styles.token} symbol="weth" />
-        <TokenIcon className={styles.token} symbol="eth" />
-      </div>
+      <>
+        <div className={styles.tokenGroup}>
+          {poolTokenSymbols.map((symbol) => (
+            <TokenIcon
+              key={`tokenInputDropdown.${symbol}`}
+              className={styles.token}
+              symbol={symbol}
+            />
+          ))}
+        </div>
+        <span className={styles.label}>All tokens</span>
+      </>
     )
   }
-  return <TokenIcon className={styles.token} symbol={symbol} />
-}
-
-function renderTokenLabel(symbol: TokenDropdownSymbol) {
-  const labelText = symbol === 'all' ? 'All tokens' : symbol.toUpperCase()
-  return <span className={styles.label}>{labelText}</span>
+  return (
+    <>
+      <TokenIcon className={styles.token} symbol={symbol} />
+      <span className={styles.label}>{symbol.toUpperCase()}</span>
+    </>
+  )
 }

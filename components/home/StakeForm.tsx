@@ -4,11 +4,10 @@ import { useRecoilValue } from 'recoil'
 import { motion } from 'framer-motion'
 import styles from './styles/StakeForm.module.scss'
 
-import { getBptBalance } from 'app/states/balance'
 import { networkMismatchState } from 'app/states/network'
 import { gaEvent } from 'lib/gtag'
-import Decimal, { sanitizeNumber } from 'utils/num'
-import { useAppSelector } from 'hooks'
+import { bnum } from 'utils/num'
+import { useBalances } from 'hooks'
 import { formTransition, motionVariants, TabId, TabPanelId } from './constants'
 
 import { EstimatedEarn } from './EstimatedEarn'
@@ -19,7 +18,8 @@ const minAmount = 1e-18
 
 function StakeForm() {
   const networkMismatch = useRecoilValue(networkMismatchState)
-  const bptBalance = useAppSelector(getBptBalance)
+  const { bptBalance } = useBalances()
+
   const { clearErrors, control, formState, setValue, watch } = useForm<{
     stakeAmount: string
   }>({
@@ -29,17 +29,16 @@ function StakeForm() {
   const disabled =
     networkMismatch ||
     Object.keys(formState.errors).length > 0 ||
-    new Decimal(sanitizeNumber(stakeAmountValue)).isZero()
+    bnum(stakeAmountValue).isZero()
 
   const rules = useMemo(
     () => ({
       required: 'Please enter valid amount',
       validate: {
         maxAmount: (v: string) =>
-          new Decimal(sanitizeNumber(v)).lte(bptBalance) ||
-          'You don’t have enough balance',
+          bnum(v).lte(bptBalance) || 'You don’t have enough balance',
         minAmount: (v: string) =>
-          new Decimal(sanitizeNumber(v)).gte(minAmount) ||
+          bnum(v).gte(minAmount) ||
           'Please enter the amount bigger than or equal to 1e-18',
       },
       onChange: () => {

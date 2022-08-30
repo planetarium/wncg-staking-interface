@@ -1,144 +1,76 @@
 import { memo, useCallback, useEffect } from 'react'
 import { Event } from 'ethers'
 
-import { removeTx, TransactionAction } from 'app/states/transaction'
-
 import {
-  useAppDispatch,
-  useConfirmations,
-  useEventFilter,
+  useBalances,
+  useEventFilters,
   useProvider,
-  useReward,
-  useStake,
-  useToast,
+  useRewardData,
+  useStakingData,
   useTransaction,
   useUnstake,
-  useUserBalances,
 } from 'hooks'
 
 function UnstakeEffects() {
-  const { getConfirmations, setConfirmations } = useConfirmations()
-  const { cooldownEventFilter, withdrawnEventFilter } = useEventFilter()
+  const { fetchBalances } = useBalances()
+  const { cooldownEventFilter, withdrawnEventFilter } = useEventFilters()
   const provider = useProvider()
-  const { earnedBal, earnedWncg } = useReward()
-  const { stakedTokenBalance, totalStaked } = useStake()
-  const { addToast } = useToast()
-  const { getTransactionReceipt } = useTransaction()
-  const { getTimestamps, unstakeWindow } = useUnstake()
-  const { fetchBptBalance } = useUserBalances()
+  // const { stakedTokenBalance } = useStake()
+  const { fetchRewards } = useRewardData()
+  const { fetchTotalStaked } = useStakingData()
 
-  const dispatch = useAppDispatch()
+  const { transactionService } = useTransaction()
+  const { fetchTimestamps } = useUnstake()
 
-  useEffect(() => {
-    getTimestamps()
-  }, [getTimestamps])
-
-  useEffect(() => {
-    unstakeWindow()
-  }, [unstakeWindow])
+  // useEffect(() => {
+  //   getTimestamps()
+  // }, [getTimestamps])
 
   const handleCooldownEvent = useCallback(
-    async ({ transactionHash }: Event) => {
-      const receipt = await getTransactionReceipt(transactionHash)
-      if (!receipt) return
-
-      dispatch(removeTx(transactionHash))
-
-      const confirmations = getConfirmations(transactionHash)
-      if (!confirmations) return
-      if (confirmations !== 'fulfilled') {
-        addToast({
-          action: TransactionAction.StartCooldown,
-          hash: transactionHash,
-          summary: 'Successfully started cooldown',
-          showPartyEmoji: true,
-        })
-      }
-      setConfirmations(transactionHash)
-
-      getTimestamps()
+    async (event: Event) => {
+      await transactionService?.updateTxStatus(event, {
+        onFulfill: () => {
+          fetchTimestamps()
+        },
+      })
     },
-    [
-      addToast,
-      dispatch,
-      getConfirmations,
-      getTimestamps,
-      getTransactionReceipt,
-      setConfirmations,
-    ]
+    [fetchTimestamps, transactionService]
   )
 
   const handleWithdrawnEvent = useCallback(
-    async ({ transactionHash }: Event) => {
-      const receipt = await getTransactionReceipt(transactionHash)
-      if (!receipt) return
-
-      dispatch(removeTx(transactionHash))
-
-      const confirmations = getConfirmations(transactionHash)
-      if (!confirmations) return
-      if (confirmations !== 'fulfilled') {
-        addToast({
-          action: TransactionAction.Withdraw,
-          hash: transactionHash,
-          summary: 'Successfully withdrew staked 20WETH-80WNCG',
-          showPartyEmoji: true,
-        })
-      }
-      setConfirmations(transactionHash)
-      stakedTokenBalance()
-      fetchBptBalance()
-      totalStaked()
+    async (event: Event) => {
+      await transactionService?.updateTxStatus(event, {
+        onFulfill: () => {
+          // stakedTokenBalance()
+          fetchBalances()
+          fetchTotalStaked()
+        },
+      })
     },
-    [
-      addToast,
-      dispatch,
-      fetchBptBalance,
-      getConfirmations,
-      getTransactionReceipt,
-      setConfirmations,
-      stakedTokenBalance,
-      totalStaked,
-    ]
+    [fetchBalances, fetchTotalStaked, transactionService]
   )
 
   const handleWithdrawnAndAllRewardsEvent = useCallback(
-    async ({ transactionHash }: Event) => {
-      const receipt = await getTransactionReceipt(transactionHash)
-      if (!receipt) return
-
-      dispatch(removeTx(transactionHash))
-
-      const confirmations = getConfirmations(
-        `${transactionHash}_withdrawAndClaim`
+    async (event: Event) => {
+      await transactionService?.updateTxStatus(
+        event,
+        {
+          onFulfill: () => {
+            fetchRewards()
+            fetchBalances()
+            // stakedTokenBalance()
+            fetchTotalStaked()
+          },
+        },
+        'withdrawAndClaim'
       )
-      if (!confirmations) return
-      if (confirmations !== 'fulfilled') {
-        addToast({
-          action: TransactionAction.Withdraw,
-          hash: transactionHash,
-          summary: 'Successfully withdrew and claimed',
-          showPartyEmoji: true,
-        })
-      }
-      setConfirmations(`${transactionHash}_withdrawAndClaim`)
-      earnedBal()
-      earnedWncg()
-      fetchBptBalance()
-      stakedTokenBalance()
-      totalStaked()
     },
     [
-      addToast,
-      dispatch,
-      earnedBal,
-      earnedWncg,
-      fetchBptBalance,
-      getConfirmations,
-      getTransactionReceipt,
-      setConfirmations,
-      stakedTokenBalance,
-      totalStaked,
+      fetchBalances,
+      fetchRewards,
+      fetchTotalStaked,
+      // stakedTokenBalance,
+      transactionService,
     ]
   )
 

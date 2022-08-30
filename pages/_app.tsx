@@ -1,7 +1,11 @@
 import { useRef } from 'react'
 import ReactGA from 'react-ga4'
 import { Provider } from 'react-redux'
-import { Hydrate, QueryClient, QueryClientProvider } from 'react-query'
+import {
+  Hydrate,
+  QueryClient,
+  QueryClientProvider,
+} from '@tanstack/react-query'
 import { useMount } from 'react-use'
 import { RecoilRoot } from 'recoil'
 import type { AppProps, NextWebVitalsMetric } from 'next/app'

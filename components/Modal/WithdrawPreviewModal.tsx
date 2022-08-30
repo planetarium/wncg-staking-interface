@@ -3,19 +3,20 @@ import { toast } from 'react-toastify'
 import styles from './WithdrawPreviewModal.module.scss'
 
 import { ModalCategory } from 'app/states/modal'
-import { getEarnedBal, getEarnedWncg } from 'app/states/reward'
 import { addToast } from 'app/states/toast'
-import { TransactionAction } from 'app/states/transaction'
+import { TransactionAction } from 'services/transaction'
 import { getWithdrawEndsAt } from 'app/states/unstake'
 import { gaEvent } from 'lib/gtag'
 import { countUpOption, usdCountUpOption } from 'utils/countUp'
 import { handleError } from 'utils/error'
+import { getTokenSymbol } from 'utils/token'
 import { sanitizeNumber } from 'utils/num'
 import { toastAnimation } from 'utils/toast'
 import {
   useAppDispatch,
   useAppSelector,
   useModal,
+  useRewardData,
   useTimer,
   useUnstake,
   useUsd,
@@ -37,16 +38,14 @@ export function WithdrawPreviewModal({
 }: WithdrawPreviewModalProps) {
   const [loading, setLoading] = useState(false)
 
+  const { rewards, rewardsInFiatValue, rewardTokensList } = useRewardData()
+
   const dispatch = useAppDispatch()
   const withdrawEndsAt = useAppSelector(getWithdrawEndsAt)
-  const balReward = useAppSelector(getEarnedBal)
-  const wncgReward = useAppSelector(getEarnedWncg)
-  const bal = parseFloat(sanitizeNumber(balReward))
-  const wncg = parseFloat(sanitizeNumber(wncgReward))
 
   const { removeModal } = useModal()
-  const { calculateUsdValue } = useUsd()
-  const { withdrawAndClaim } = useUnstake()
+  const { getBptFiatValue } = useUsd()
+  const { withdraw } = useUnstake()
 
   const withdrawAmount = parseFloat(sanitizeNumber(amount))
 
@@ -79,7 +78,7 @@ export function WithdrawPreviewModal({
 
     try {
       setLoading(true)
-      await withdrawAndClaim(amount)
+      await withdraw(amount, true)
       resetForm()
       close()
     } catch (error) {
@@ -107,7 +106,7 @@ export function WithdrawPreviewModal({
           <CountUp
             {...usdCountUpOption}
             className={styles.usd}
-            end={calculateUsdValue('bpt', withdrawAmount)}
+            end={getBptFiatValue(withdrawAmount)}
             isApproximate
           />
         </dd>
@@ -115,49 +114,38 @@ export function WithdrawPreviewModal({
 
       <h3 className={styles.subtitle}>Rewards</h3>
       <dl className={styles.claimDetail}>
-        <div className={styles.detailItem}>
-          <dt>
-            <TokenIcon className={styles.token} symbol="wncg" />
-            <CountUp
-              {...countUpOption}
-              className={styles.reward}
-              end={wncg}
-              decimals={8}
-              duration={0.5}
-            />
-            <strong className="hidden">WNCG</strong>
-          </dt>
-          <dd>
-            <CountUp
-              {...usdCountUpOption}
-              className={styles.usd}
-              end={calculateUsdValue('wncg', wncg)}
-              isApproximate
-            />
-          </dd>
-        </div>
+        {rewardTokensList.map((address, i) => {
+          const symbol = getTokenSymbol(address)
+          const amount = rewards[i]
+          const fiatValue = rewardsInFiatValue[i]
 
-        <div className={styles.detailItem}>
-          <dt>
-            <TokenIcon className={styles.token} symbol="bal" />
-            <CountUp
-              {...countUpOption}
-              className={styles.reward}
-              end={bal}
-              decimals={8}
-              duration={0.5}
-            />
-            <strong className="hidden">BAL</strong>
-          </dt>
-          <dd>
-            <CountUp
-              {...usdCountUpOption}
-              className={styles.usd}
-              end={calculateUsdValue('bal', bal)}
-              isApproximate
-            />
-          </dd>
-        </div>
+          return (
+            <div
+              key={`withdrawPreview.${address}`}
+              className={styles.detailItem}
+            >
+              <dt>
+                <TokenIcon className={styles.token} symbol={symbol} />
+                <CountUp
+                  {...countUpOption}
+                  className={styles.reward}
+                  end={amount}
+                  decimals={8}
+                  duration={0.5}
+                />
+                <strong className="hidden">{symbol}</strong>
+              </dt>
+              <dd>
+                <CountUp
+                  {...usdCountUpOption}
+                  className={styles.usd}
+                  end={fiatValue}
+                  isApproximate
+                />
+              </dd>
+            </div>
+          )
+        })}
       </dl>
 
       <Button

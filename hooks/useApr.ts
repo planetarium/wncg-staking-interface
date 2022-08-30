@@ -1,52 +1,21 @@
-import { useMemo } from 'react'
-import { useRecoilValue } from 'recoil'
-
-import { poolTokenPriceState } from 'app/states/pool'
-import { getBalEmissionPerSec, getWncgEmissionPerSec } from 'app/states/reward'
-import { getTotalStaked } from 'app/states/stake'
-import Decimal from 'utils/num'
-import { useFetchTokenPrices } from './useFetchTokenPrices'
-import { useAppSelector } from './useRedux'
-
-const YEAR_IN_SECONDS = 60 * 60 * 24 * 365
+import { calcApr } from 'utils/calculator'
+import { useStakingData } from './useStakingData'
+import { useTokenPrices } from './useTokenPrices'
+import { useUsd } from './useUsd'
 
 export function useApr() {
-  const { balPrice, wncgPrice } = useFetchTokenPrices()
-  const bptPrice = useRecoilValue(poolTokenPriceState)
+  const { balPrice, wncgPrice } = useTokenPrices()
+  const { getBptFiatValue } = useUsd()
+  const { balEmissionPerSec, wncgEmissionPerSec, totalStaked } =
+    useStakingData()
 
-  const totalStaked = useAppSelector(getTotalStaked)
-  const balEmissionPerSec = useAppSelector(getBalEmissionPerSec)
-  const wncgEmissionPerSec = useAppSelector(getWncgEmissionPerSec)
+  const totalStakedValue = getBptFiatValue(totalStaked)
 
-  const totalStakedValue = new Decimal(totalStaked).mul(bptPrice).toNumber()
-
-  const balApr = useMemo(
-    () => calculateApr(balEmissionPerSec, balPrice, totalStakedValue),
-    [totalStakedValue, balEmissionPerSec, balPrice]
-  )
-
-  const wncgApr = useMemo(
-    () => calculateApr(wncgEmissionPerSec, wncgPrice, totalStakedValue),
-    [totalStakedValue, wncgEmissionPerSec, wncgPrice]
-  )
+  const wncgApr = calcApr(wncgEmissionPerSec, wncgPrice, totalStakedValue)
+  const balApr = calcApr(balEmissionPerSec, balPrice, totalStakedValue)
 
   return {
     balApr,
     wncgApr,
   }
-}
-
-export function calculateApr(
-  emissionRate: string,
-  price: number,
-  totalStakedValue: number
-) {
-  const apr = new Decimal(emissionRate)
-    .mul(price)
-    .mul(YEAR_IN_SECONDS)
-    .div(totalStakedValue)
-    .mul(100)
-
-  const validApr = !apr.isNaN() && apr.isFinite()
-  return validApr ? apr.toNumber() : 0
 }

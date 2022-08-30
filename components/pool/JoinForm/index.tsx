@@ -11,6 +11,7 @@ import EtherInput from './EtherInput'
 import HighPriceImpact from './HighPriceImpact'
 import JoinFormSummary from './Summary'
 import WncgInput from './WncgInput'
+import { useBalances, usePoolService } from 'hooks'
 
 type JoinFormProps = {
   isNativeAsset: boolean
@@ -18,6 +19,9 @@ type JoinFormProps = {
 }
 
 function JoinForm({ isNativeAsset, selectEth }: JoinFormProps) {
+  const { balanceFor } = useBalances()
+  const { poolTokenAddresses } = usePoolService()
+
   const useFormReturn = useForm<JoinFormFields>({
     mode: 'onChange',
     defaultValues: {
@@ -39,7 +43,7 @@ function JoinForm({ isNativeAsset, selectEth }: JoinFormProps) {
     setMaxValue,
     setPropAmount,
     showPropButton,
-    toggleHighPriceImpactCheckbox,
+    togglePriceImpactAgreement,
     totalUsdValue,
   } = useJoinForm(isNativeAsset, useFormReturn)
 
@@ -55,6 +59,7 @@ function JoinForm({ isNativeAsset, selectEth }: JoinFormProps) {
 
       <form>
         <WncgInput
+          balance={balanceFor(poolTokenAddresses[0])}
           clearErrors={clearErrors}
           control={control}
           setMaxValue={setMaxValue}
@@ -87,7 +92,7 @@ function JoinForm({ isNativeAsset, selectEth }: JoinFormProps) {
         />
         <HighPriceImpact
           checked={priceImpactAgreement}
-          handleCheck={toggleHighPriceImpactCheckbox}
+          handleCheck={togglePriceImpactAgreement}
           required={highPriceImpact}
         />
         <Button

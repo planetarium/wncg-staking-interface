@@ -1,125 +1,121 @@
-import { request, gql } from 'graphql-request'
-import { QueryFunctionContext } from 'react-query'
+import { QueryFunctionContext } from '@tanstack/react-query'
+import { request } from 'graphql-request'
+import { jsonToGraphQLQuery } from 'json-to-graphql-query'
 
-import { BALANCER_SUBGRAPHS, BPT_POOL_ID } from 'utils/env'
+import { configService } from 'services/config'
+import { createLogger } from 'utils/log'
 
-const endpoint = BALANCER_SUBGRAPHS as string
+const logger = createLogger('purple')
+
+const endpoint = configService.subgraph
+const poolId = configService.env.poolId
 const itemsPerPage = 5
 
-export async function fetchPoolTokenBalances() {
-  const query = gql`
-    query {
-      pool(id: "${BPT_POOL_ID}") {
-        tokens {
-          symbol
-          balance
-        }
-      }
-    }
-  `
-
-  const result = await request(endpoint, query)
-  return result?.pool?.tokens
+const fetchPoolQuery = {
+  query: {
+    pool: {
+      __args: {
+        id: poolId,
+      },
+      id: true,
+      address: true,
+      factory: true,
+      symbol: true,
+      name: true,
+      swapFee: true,
+      owner: true,
+      totalWeight: true,
+      totalLiquidity: true,
+      totalShares: true,
+      createTime: true,
+      tokensList: true,
+      tokens: {
+        symbol: true,
+        name: true,
+        decimals: true,
+        address: true,
+        balance: true,
+        weight: true,
+      },
+    },
+  },
 }
 
 export async function fetchPool(): Promise<Pool> {
-  const query = gql`
-    query {
-      pool(
-        id: "${BPT_POOL_ID}"
-      ) {
-        id
-        address
-        factory
-        symbol
-        name
-        swapFee
-        owner
-        totalWeight
-        totalLiquidity
-        totalShares
-        createTime
-        tokensList
-        tokens {
-          symbol
-          name
-          decimals
-          address
-          balance
-          weight
-        }
-      }
-    }
-  `
-
-  const result = await request(endpoint, query)
-  console.log('> Fetch pool')
-  return result?.pool
+  logger(`${poolId.slice(0, 6)} pool`)
+  const data = await request(endpoint, jsonToGraphQLQuery(fetchPoolQuery))
+  return data?.pool
 }
 
-export async function fetchPoolRecentSwaps({ pageParam = 0 }): Promise<Swap[]> {
-  const query = gql`
-    query {
-      pool(
-        id: "${BPT_POOL_ID}"
-      ) {
-        address
-        swaps(orderBy: timestamp, orderDirection: desc, first: ${itemsPerPage}, skip: ${pageParam}) {
-          tokenIn
-          tokenOut
-          tokenAmountIn
-          tokenAmountOut
-          valueUSD
-          userAddress {
-            id
-          }
-          timestamp
-        }
-      }
-    }
-  `
+export async function fetchPoolSwaps({
+  pageParam = 0,
+}: QueryFunctionContext): Promise<Swap[]> {
+  const query = {
+    query: {
+      pool: {
+        __args: {
+          id: poolId,
+        },
+        swaps: {
+          __args: {
+            orderBy: 'timestamp',
+            orderDirection: 'desc',
+            first: itemsPerPage,
+            skip: pageParam,
+          },
+          tokenIn: true,
+          tokenOut: true,
+          tokenAmountIn: true,
+          tokenAmountOut: true,
+          valueUSD: true,
+          userAddress: {
+            id: true,
+          },
+          timestamp: true,
+        },
+      },
+    },
+  }
 
-  const result = await request(endpoint, query)
-  return result?.pool?.swaps || []
+  logger(`${itemsPerPage} swaps`)
+  const data = await request(endpoint, jsonToGraphQLQuery(query))
+  return data?.pool?.swaps || []
 }
 
-export async function fetchPoolRecentJoinExits({
+export async function fetchPoolJoinExits({
   pageParam = 0,
   queryKey,
 }: QueryFunctionContext): Promise<JoinExit[]> {
   const [, showMine, account] = queryKey || []
+  const shouldFilterJoinExits = showMine && account
+  const where = shouldFilterJoinExits ? { user: account } : {}
 
-  const where =
-    showMine && !!account
-      ? `{
-    pool: "${BPT_POOL_ID}",
-    user: "${account}"
-  }`
-      : `{
-    pool: "${BPT_POOL_ID}"
-  }`
+  const query = {
+    query: {
+      joinExits: {
+        __args: {
+          orderBy: 'timestamp',
+          orderDirection: 'desc',
+          first: itemsPerPage,
+          skip: pageParam,
+          where: {
+            pool: poolId,
+            ...where,
+          },
+        },
+        id: true,
+        type: true,
+        amounts: true,
+        sender: true,
+        timestamp: true,
+        tx: true,
+      },
+    },
+  }
 
-  const query = gql`
-    query {
-      joinExits(
-        orderBy: timestamp,
-        orderDirection: desc,
-        first: ${itemsPerPage},
-        skip: ${pageParam},
-        where: ${where}
-      ) {
-        id
-        type
-        amounts
-        sender
-        timestamp
-        tx
-      }
-    }
-  `
-
-  const result = await request(endpoint, query)
-  return result?.joinExits || []
+  logger(`${itemsPerPage} investments`)
+  const data = await request(endpoint, jsonToGraphQLQuery(query))
+  return data?.joinExits || []
 }
 
 export function getNextPageParam<T>(lastPage: T[], pages: T[][]) {

@@ -8,3 +8,10 @@ type JoinExit = {
   timestamp: number
   tx: string
 }
+
+type JoinPoolRequest = {
+  assets: string[]
+  maxAmountsIn: string[]
+  userData: string
+  fromInternalBalance: boolean
+}

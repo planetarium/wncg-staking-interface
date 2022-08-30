@@ -3,7 +3,6 @@ import { providers } from 'ethers'
 import type { ExternalProvider } from '@ethersproject/providers'
 
 import { approvalState } from 'app/states/approval'
-import { resetBalance } from 'app/states/balance'
 import {
   getAccount,
   resetConnection,
@@ -11,12 +10,11 @@ import {
   setConnecting,
 } from 'app/states/connection'
 import { ModalCategory } from 'app/states/modal'
-import { resetRewards } from 'app/states/reward'
 import { resetStakedBalance } from 'app/states/stake'
 import { resetTimestamps } from 'app/states/unstake'
 import { gaEvent } from 'lib/gtag'
-import { IS_ETHEREUM } from 'utils/env'
 import { handleError } from 'utils/error'
+import { convertChainIdToHex, networkChainId } from 'utils/network'
 import { useModal } from './useModal'
 import { useAppDispatch, useAppSelector } from './useRedux'
 
@@ -54,9 +52,7 @@ export function useConnection() {
   }
 
   function disconnect() {
-    dispatch(resetBalance())
     dispatch(resetConnection())
-    dispatch(resetRewards())
     dispatch(resetStakedBalance())
     dispatch(resetTimestamps())
     resetApproval()
@@ -83,7 +79,7 @@ export function useConnection() {
 
     window.ethereum.request({
       method: 'wallet_switchEthereumChain',
-      params: [{ chainId: IS_ETHEREUM ? '0x1' : '0x2a' }],
+      params: [{ chainId: convertChainIdToHex(networkChainId) }],
     })
   }
 

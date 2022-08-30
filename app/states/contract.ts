@@ -1,6 +1,5 @@
-import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import type { RootState } from 'app/store'
-import { getIsValidNetwork } from './connection'
 
 type ContractState = {
   balReward: string | null
@@ -32,21 +31,9 @@ export const { setBalRewardAddress, setBptAddress } = contractSlice.actions
 export default contractSlice.reducer
 
 // Selectors
-export function getBalRewardAddress(state: RootState): string {
+export function getBalRewardContractAddress(state: RootState): string {
   return state.contract.balReward || ''
 }
-export function getBptAddress(state: RootState): string {
+export function getBptContractAddress(state: RootState): string {
   return state.contract.bpt || ''
 }
-export const getBalRewardContractAddress = createSelector(
-  [getBalRewardAddress, getIsValidNetwork],
-  (address, isValidNetwork) => {
-    return isValidNetwork ? address : ''
-  }
-)
-export const getBptContractAddress = createSelector(
-  [getBptAddress, getIsValidNetwork],
-  (address, isValidNetwork) => {
-    return isValidNetwork ? address : ''
-  }
-)

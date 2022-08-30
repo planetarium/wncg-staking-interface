@@ -49,15 +49,19 @@ export const poolTotalValueState = selector({
   get({ get }) {
     const pool = get(poolState)
     const prices = get(poolTokenPricesState) || []
+
     if (!pool || !prices) return 0
 
     const poolTokenBalances = pool.tokens.map((t) => t.balance)
-    return poolTokenBalances.reduce((acc, balance, i) => {
+    const result = poolTokenBalances.reduce((acc, balance, i) => {
       acc += new Decimal(sanitizeNumber(balance))
         .mul(sanitizeNumber(prices[i]))
         .toNumber()
+
       return acc
     }, 0)
+
+    return result
   },
 })
 
@@ -70,6 +74,7 @@ export const poolTokenPriceState = selector({
     const price = new Decimal(totalValue).div(totalShares)
 
     if (price.isNaN() || !price.isFinite()) return 0
+
     return price.toNumber()
   },
 })

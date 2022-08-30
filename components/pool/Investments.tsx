@@ -1,14 +1,14 @@
 import { memo, useState } from 'react'
 import NumberFormat from 'react-number-format'
-import { useInfiniteQuery } from 'react-query'
+import { useInfiniteQuery } from '@tanstack/react-query'
 import { formatDistanceToNow } from 'date-fns'
 import clsx from 'clsx'
 import styles from './styles/Investments.module.scss'
 
 import { getAccount } from 'app/states/connection'
-import { fetchPoolRecentJoinExits, getNextPageParam } from 'lib/graphql'
-import Decimal from 'utils/num'
-import { useAppSelector, useUsd } from 'hooks'
+import { fetchPoolJoinExits, getNextPageParam } from 'lib/graphql'
+import { bnum } from 'utils/num'
+import { useAppSelector, usePoolService, useUsd } from 'hooks'
 
 import { Checkbox } from 'components/Checkbox'
 import { TokenIcon } from 'components/TokenIcon'
@@ -16,19 +16,18 @@ import { TokenIcon } from 'components/TokenIcon'
 function PoolInvestments() {
   const [showMine, setShowMine] = useState(false)
 
-  const { calculateUsdValue } = useUsd()
+  const { getFiatValue } = useUsd()
+  const { poolTokenAddresses } = usePoolService()
+
   const account = useAppSelector(getAccount)
+  const showFilter = !!account
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useInfiniteQuery(
-      ['investments', showMine, account],
-      fetchPoolRecentJoinExits,
-      {
-        getNextPageParam,
-        staleTime: 10 * 1_000,
-        keepPreviousData: true,
-      }
-    )
+    useInfiniteQuery(['investments', showMine, account], fetchPoolJoinExits, {
+      getNextPageParam,
+      staleTime: 10 * 1_000,
+      keepPreviousData: true,
+    })
 
   function loadMore() {
     if (!hasNextPage || isFetchingNextPage) return
@@ -48,8 +47,7 @@ function PoolInvestments() {
     <section className={styles.poolInvestments}>
       <header className={styles.header}>
         <h3 className={styles.title}>Investments</h3>
-
-        {account && (
+        {showFilter && (
           <div className={styles.checkboxGroup}>
             <Checkbox
               id="showMyInvestments"
@@ -74,11 +72,12 @@ function PoolInvestments() {
           <tbody>
             {data?.pages?.map((investments) =>
               investments.map((investment) => {
-                const value = investment.amounts.reduce((acc, amount, i) => {
-                  const symb = i === 0 ? 'wncg' : 'weth'
-                  acc += calculateUsdValue(symb, amount)
-                  return acc
-                }, 0)
+                const value = investment.amounts
+                  .reduce((total, amount, i) => {
+                    const address = poolTokenAddresses[i]
+                    return total.plus(getFiatValue(address, amount))
+                  }, bnum(0))
+                  .toNumber()
 
                 return (
                   <tr key={investment.timestamp}>
@@ -171,19 +170,20 @@ function renderAmounts(amounts: string[], key: string) {
     }
 
     const symb = i === 0 ? 'wncg' : 'weth'
-    const lessThanMinAmount = new Decimal(amount).lt(0.0001)
+    const lessThanMinAmount = bnum(amount).lt(0.0001)
 
     return (
       <div key={`${key}.${amount}`} className={styles.detail}>
         <TokenIcon className={styles.token} symbol={symb} />
         {lessThanMinAmount ? (
-          '< 0.0001'
+          <span title={amount}>&lt; 0.0001</span>
         ) : (
           <NumberFormat
             value={amount}
             decimalScale={4}
             displayType="text"
             thousandSeparator
+            title={amount}
           />
         )}
       </div>

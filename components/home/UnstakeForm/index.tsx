@@ -5,10 +5,10 @@ import styles from '../styles/UnstakeForm.module.scss'
 
 import { ModalCategory } from 'app/states/modal'
 import { getStakedBalance } from 'app/states/stake'
-import { TransactionAction } from 'app/states/transaction'
+import { TransactionAction } from 'services/transaction'
 import { gaEvent } from 'lib/gtag'
 import { handleError } from 'utils/error'
-import Decimal, { sanitizeNumber } from 'utils/num'
+import { bnum } from 'utils/num'
 import { useAppSelector, useModal, useUnstake } from 'hooks'
 import { formTransition, motionVariants, TabId, TabPanelId } from '../constants'
 
@@ -44,10 +44,10 @@ export function UnstakeForm({ disabled }: UnstakeFormProps) {
             required: 'Please enter valid amount',
             validate: {
               maxAmount: (v: string) =>
-                new Decimal(sanitizeNumber(v)).lte(stakedBalance) ||
+                bnum(v).lte(stakedBalance) ||
                 'You cannot withdraw more than the staked amount',
               minAmount: (v: string) =>
-                new Decimal(sanitizeNumber(v)).gte(minAmount) ||
+                bnum(v).gte(minAmount) ||
                 'Please enter the amount bigger than or equal to 1e-18',
             },
             onChange: () => clearErrors('unstakeAmount'),
@@ -55,8 +55,7 @@ export function UnstakeForm({ disabled }: UnstakeFormProps) {
     [clearErrors, disabled, stakedBalance]
   )
 
-  const withdrawalDisabled =
-    disabled || new Decimal(sanitizeNumber(unstakeAmountValue)).isZero()
+  const withdrawalDisabled = disabled || bnum(unstakeAmountValue).isZero()
 
   function setMaxValue() {
     setValue('unstakeAmount', stakedBalance)
@@ -100,7 +99,7 @@ export function UnstakeForm({ disabled }: UnstakeFormProps) {
       name: 'withdraw',
     })
     try {
-      await withdraw(unstakeAmountValue)
+      await withdraw(unstakeAmountValue, false)
       resetForm()
       setLoading(false)
     } catch (error) {

@@ -1,20 +1,21 @@
 import { memo } from 'react'
 import NumberFormat from 'react-number-format'
-import { useInfiniteQuery } from 'react-query'
+import { useInfiniteQuery } from '@tanstack/react-query'
 import { formatDistanceToNow } from 'date-fns'
 import styles from './styles/RecentTrades.module.scss'
 
-import { fetchPoolRecentSwaps, getNextPageParam } from 'lib/graphql'
+import { fetchPoolSwaps, getNextPageParam } from 'lib/graphql'
 import { getSymbolFromAddress } from 'utils/address'
 import { truncateAddress } from 'utils/string'
 
 import { Icon } from 'components/Icon'
 import { Jazzicon } from 'components/Jazzicon'
 import { TokenIcon } from 'components/TokenIcon'
+import { getTokenInfo } from 'utils/token'
 
 function PoolRecentTrades() {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useInfiniteQuery(['recentSwaps'], fetchPoolRecentSwaps, {
+    useInfiniteQuery(['recentSwaps'], fetchPoolSwaps, {
       getNextPageParam,
       staleTime: 10 * 1_000,
       keepPreviousData: true,
@@ -71,7 +72,7 @@ function PoolRecentTrades() {
                       <div className={styles.tradeDetail}>
                         <TokenIcon
                           className={styles.token}
-                          symbol={getSymbolFromAddress(swap.tokenIn)}
+                          symbol={getTokenInfo(swap.tokenIn).symbol}
                         />
                         <NumberFormat
                           value={swap.tokenAmountIn}
@@ -82,7 +83,7 @@ function PoolRecentTrades() {
                         <Icon id="arrowRight" />
                         <TokenIcon
                           className={styles.token}
-                          symbol={getSymbolFromAddress(swap.tokenOut)}
+                          symbol={getTokenInfo(swap.tokenOut).symbol}
                         />
                         <NumberFormat
                           value={swap.tokenAmountOut}

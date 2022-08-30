@@ -11,10 +11,11 @@ import store from 'store'
 import clsx from 'clsx'
 import styles from './styles/EstimatedEarn.module.scss'
 
+import { configService } from 'services/config'
 import { gaEvent } from 'lib/gtag'
 import { countUpOption, usdCountUpOption } from 'utils/countUp'
 import { STORE_ESTIMATED_EARN_OPTION_KEY } from 'constants/storeKeys'
-import { useUsd } from 'hooks'
+import { usePoolService, useUsd } from 'hooks'
 import { useEstimation } from './useEstimation'
 
 import { CountUp } from 'components/CountUp'
@@ -30,7 +31,8 @@ function EstimatedEarn({ amount = '' }: EstimatedEarnProps) {
   const [bal, setBal] = useState(0)
 
   const { getEstimation } = useEstimation()
-  const { calculateUsdValue } = useUsd()
+  const { poolTokenAddresses } = usePoolService()
+  const { getFiatValue } = useUsd()
 
   const updateEstimation = useCallback(() => {
     const { bal: newBal, wncg: newWncg } = getEstimation(amount, option)
@@ -139,7 +141,7 @@ function EstimatedEarn({ amount = '' }: EstimatedEarnProps) {
             <CountUp
               {...usdCountUpOption}
               className={styles.usd}
-              end={calculateUsdValue('wncg', wncg)}
+              end={getFiatValue(poolTokenAddresses[0], wncg)}
               isApproximate
               showAlways
             />
@@ -162,7 +164,7 @@ function EstimatedEarn({ amount = '' }: EstimatedEarnProps) {
             <CountUp
               {...usdCountUpOption}
               className={styles.usd}
-              end={calculateUsdValue('bal', bal)}
+              end={getFiatValue(configService.bal, wncg)}
               isApproximate
               showAlways
             />

@@ -1,92 +1,65 @@
-import { memo, useEffect, useMemo } from 'react'
-import { useRecoilValue } from 'recoil'
+import { memo, useCallback, useEffect, useMemo } from 'react'
+import type { Event } from 'ethers'
 
-import { approvalState } from 'app/states/approval'
-import { useAllowance, useApprove, useEventFilter, useProvider } from 'hooks'
+import {
+  useAllowances,
+  useAppSelector,
+  usePoolService,
+  useProvider,
+  useTransaction,
+} from 'hooks'
+import { getAccount } from 'app/states/connection'
+import { configService } from 'services/config'
+import { createApprovalEventFilter } from 'utils/event'
 
 function ApprovalEffects() {
-  const {
-    bptAllowanceToStakingContract,
-    wethAllowanceToVaultContract,
-    wncgAllowanceToVaultContract,
-  } = useAllowance()
-  const { createApprovalEventHandler } = useApprove()
-  const {
-    bptApprovalEventFilter,
-    wethApprovalEventFilter,
-    wncgApprovalEventFilter,
-  } = useEventFilter()
+  const { fetchAllowances } = useAllowances()
+  const { bptAddress, poolTokenAddresses } = usePoolService()
   const provider = useProvider()
+  const { transactionService } = useTransaction()
 
-  const {
-    bpt: isBptApproved,
-    weth: isWethApproved,
-    wncg: isWncgApproved,
-  } = useRecoilValue(approvalState)
+  const account = useAppSelector(getAccount)
 
-  const handleBptApprovalEvent = useMemo(
-    () => createApprovalEventHandler('bpt'),
-    [createApprovalEventHandler]
+  const eventFilters = useMemo(
+    () => [
+      ...poolTokenAddresses.map((address) =>
+        createApprovalEventFilter(account, address, configService.vaultAddress)
+      ),
+      createApprovalEventFilter(
+        account,
+        bptAddress,
+        configService.stakingAddress
+      ),
+    ],
+    [account, bptAddress, poolTokenAddresses]
   )
 
-  const handleWethApprovalEvent = useMemo(
-    () => createApprovalEventHandler('weth'),
-    [createApprovalEventHandler]
+  const eventHandler = useCallback(
+    async (event: Event) => {
+      await transactionService?.updateTxStatus(event, {
+        onFulfill: fetchAllowances,
+      })
+    },
+    [fetchAllowances, transactionService]
   )
 
-  const handleWncgApprovalEvent = useMemo(
-    () => createApprovalEventHandler('wncg'),
-    [createApprovalEventHandler]
-  )
-
   useEffect(() => {
-    bptAllowanceToStakingContract()
-  }, [bptAllowanceToStakingContract])
+    eventFilters.forEach((filter) => {
+      if (!filter) return
 
-  useEffect(() => {
-    wethAllowanceToVaultContract()
-  }, [wethAllowanceToVaultContract])
+      console.log('>>>>>>>>>> ✅ Register: ', filter.address?.slice(0, 6))
 
-  useEffect(() => {
-    wncgAllowanceToVaultContract()
-  }, [wncgAllowanceToVaultContract])
+      provider?.on(filter, eventHandler)
+    })
 
-  useEffect(() => {
-    if (!isBptApproved && bptApprovalEventFilter) {
-      provider?.on(bptApprovalEventFilter, handleBptApprovalEvent)
-      return () => {
-        provider?.off(bptApprovalEventFilter)
-      }
+    return () => {
+      eventFilters.forEach((filter) => {
+        if (!filter) return
+        console.log('>>>>>>>>>> 🏀 Unregister: ', filter.address?.slice(0, 6))
+        provider?.off(filter)
+      })
     }
-  }, [bptApprovalEventFilter, handleBptApprovalEvent, isBptApproved, provider])
-
-  useEffect(() => {
-    if (!isWethApproved && wethApprovalEventFilter) {
-      provider?.on(wethApprovalEventFilter, handleWethApprovalEvent)
-      return () => {
-        provider?.off(wethApprovalEventFilter)
-      }
-    }
-  }, [
-    handleWethApprovalEvent,
-    isWethApproved,
-    provider,
-    wethApprovalEventFilter,
-  ])
-
-  useEffect(() => {
-    if (!isWncgApproved && wncgApprovalEventFilter) {
-      provider?.on(wncgApprovalEventFilter, handleWncgApprovalEvent)
-      return () => {
-        provider?.off(wncgApprovalEventFilter)
-      }
-    }
-  }, [
-    handleWncgApprovalEvent,
-    isWncgApproved,
-    provider,
-    wncgApprovalEventFilter,
-  ])
+  }, [eventFilters, eventHandler, provider])
 
   return null
 }

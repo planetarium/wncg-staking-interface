@@ -1,56 +1,35 @@
 import { useCallback, useEffect } from 'react'
 import { useInterval } from 'react-use'
 
-import { useReward } from './useReward'
+import { useBalances } from './useBalances'
+import { useEarmark } from './useEarmark'
+import { useRewardData } from './useRewardData'
 import { useStake } from './useStake'
+import { useStakingData } from './useStakingData'
 import { useUnstake } from './useUnstake'
-import { useUserBalances } from './useUserBalances'
 
 export function usePolling() {
-  const {
-    earmarkIncentive,
-    earnedBal,
-    earnedWncg,
-    getBalEmissionPerSec,
-    getWncgEmissionPerSec,
-  } = useReward()
-  const { stakedTokenBalance, totalStaked } = useStake()
-  const { getTimestamps, unstakeWindow } = useUnstake()
-  const {
-    fetchBptBalance,
-    fetchEthBalance,
-    fetchWethBalance,
-    fetchWncgBalance,
-  } = useUserBalances()
+  const { fetchBalances } = useBalances()
+  const { fetchEarmarkIncentive } = useEarmark()
+  const { fetchRewards } = useRewardData()
+  const { stakedTokenBalance } = useStake()
+  const { fetchTotalStaked } = useStakingData()
+  const { fetchTimestamps } = useUnstake()
 
   const refetch = useCallback(() => {
-    earmarkIncentive()
-    earnedBal()
-    earnedWncg()
-    fetchBptBalance()
-    fetchEthBalance()
-    fetchWethBalance()
-    fetchWncgBalance()
-    getBalEmissionPerSec()
-    getWncgEmissionPerSec()
-    getTimestamps()
-    stakedTokenBalance()
-    totalStaked()
-    unstakeWindow()
+    fetchEarmarkIncentive()
+    fetchRewards()
+    fetchBalances()
+    fetchTimestamps()
+    // stakedTokenBalance()
+    fetchTotalStaked()
   }, [
-    earmarkIncentive,
-    earnedBal,
-    earnedWncg,
-    fetchBptBalance,
-    fetchEthBalance,
-    fetchWethBalance,
-    fetchWncgBalance,
-    getBalEmissionPerSec,
-    getTimestamps,
-    getWncgEmissionPerSec,
-    stakedTokenBalance,
-    totalStaked,
-    unstakeWindow,
+    fetchEarmarkIncentive,
+    fetchBalances,
+    fetchRewards,
+    fetchTimestamps,
+    // stakedTokenBalance,
+    fetchTotalStaked,
   ])
 
   const handleVisibilityChange = useCallback(() => {

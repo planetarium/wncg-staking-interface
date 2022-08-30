@@ -87,10 +87,6 @@ $nested-list-padding: 20px;
   }
 
   dt {
-    strong {
-      text-transform: uppercase;
-    }
-
     span {
       @include textStyle(13, 400);
       padding-left: 2px;

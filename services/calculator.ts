@@ -3,7 +3,10 @@
 import { BigNumber, BigNumberish } from 'ethers'
 import { formatUnits, getAddress, parseUnits } from 'ethers/lib/utils'
 import OldBigNumber from 'bignumber.js'
-import { weightedBPTForTokensZeroPriceImpact as _bptForTokensZeroPriceImpact } from '@balancer-labs/sdk'
+import {
+  isSameAddress,
+  weightedBPTForTokensZeroPriceImpact as _bptForTokensZeroPriceImpact,
+} from '@balancer-labs/sdk'
 import { WeightedMath } from '@georgeroman/balancer-v2-pools'
 
 import Decimal, { bnum } from 'utils/num'
@@ -33,7 +36,7 @@ export default class CalculatorService {
     public readonly config = configService
   ) {}
 
-  public exactTokensInForBptOut(tokenAmounts: string[]): OldBigNumber {
+  exactTokensInForBptOut(tokenAmounts: string[]): OldBigNumber {
     const balances = this.poolTokenBalances.map((b) => bnum(b.toString()))
     const weights = this.poolTokenWeights.map((w) => bnum(w.toString()))
     const amountsIn = this.denormAmounts(tokenAmounts).map((a) =>
@@ -49,7 +52,7 @@ export default class CalculatorService {
     )
   }
 
-  public bptInForExactTokensOut(tokenAmounts: string[]): OldBigNumber {
+  bptInForExactTokensOut(tokenAmounts: string[]): OldBigNumber {
     const balances = this.poolTokenBalances.map((b) => bnum(b.toString()))
     const weights = this.poolTokenWeights.map((w) => bnum(w.toString()))
     const amountsOut = this.denormAmounts(tokenAmounts).map((a) =>
@@ -65,10 +68,7 @@ export default class CalculatorService {
     )
   }
 
-  public bptInForExactTokenOut(
-    amount: string,
-    tokenIndex: number
-  ): OldBigNumber {
+  bptInForExactTokenOut(amount: string, tokenIndex: number): OldBigNumber {
     const balance = bnum(this.poolTokenBalances[tokenIndex].toString())
     const weight = bnum(this.poolTokenWeights[tokenIndex].toString())
     const amountOut = bnum(
@@ -84,10 +84,7 @@ export default class CalculatorService {
     )
   }
 
-  public exactBptInForTokenOut(
-    bptAmount: string,
-    tokenIndex: number
-  ): OldBigNumber {
+  exactBptInForTokenOut(bptAmount: string, tokenIndex: number): OldBigNumber {
     const balance = bnum(this.poolTokenBalances[tokenIndex].toString())
     const weight = bnum(this.poolTokenWeights[tokenIndex].toString())
 
@@ -100,7 +97,7 @@ export default class CalculatorService {
     )
   }
 
-  public propAmountsGiven(
+  propAmountsGiven(
     amount: string,
     index: number,
     type: 'send' | 'receive'
@@ -139,10 +136,7 @@ export default class CalculatorService {
     return amounts
   }
 
-  public priceImpact(
-    tokenAmounts: string[],
-    option: PriceImpactOption
-  ): OldBigNumber {
+  priceImpact(tokenAmounts: string[], option: PriceImpactOption): OldBigNumber {
     let bptAmount: OldBigNumber
     let bptZeroPriceImpact
 
@@ -186,7 +180,7 @@ export default class CalculatorService {
     return bnum(bptAmount).div(bptZeroPriceImpact).minus(1)
   }
 
-  public bptForTokensZeroPriceImpact(tokenAmounts: string[]): OldBigNumber {
+  bptForTokensZeroPriceImpact(tokenAmounts: string[]): OldBigNumber {
     const denormAmounts = this.denormAmounts(tokenAmounts)
 
     return bnum(
@@ -200,8 +194,7 @@ export default class CalculatorService {
     )
   }
 
-  //   NOTE: Utils
-  public denormAmounts(amounts: string[]): BigNumber[] {
+  denormAmounts(amounts: string[]): BigNumber[] {
     return amounts.map((a, i) =>
       parseUnits(
         new Decimal(a).toFixed(4, Decimal.ROUND_DOWN),
@@ -210,21 +203,20 @@ export default class CalculatorService {
     )
   }
 
-  public tokenOf(type: string, index: number): string {
+  tokenOf(type: string, index: number): string {
     const key = `${type}Tokens` as 'sendTokens' | 'receiveTokens'
     return getAddress(this[key][index])
   }
 
-  public ratioOf(type: string, index: number): BigNumberish {
+  ratioOf(type: string, index: number): BigNumberish {
     const key = `${type}Ratios` as 'sendRatios' | 'receiveRatios'
     return this[key][index]
   }
 
-  // NOTE: Getters
-  public get tokenAddresses(): string[] {
+  get tokenAddresses(): string[] {
     if (this.useNativeAsset) {
       return this.pool.tokensList.map((address) => {
-        if (address === this.config.weth) {
+        if (isSameAddress(address, this.config.weth)) {
           return this.config.network.nativeAsset.address
         }
         return address
@@ -234,50 +226,50 @@ export default class CalculatorService {
     return this.pool.tokensList
   }
 
-  public get poolTokens(): PoolToken[] {
+  get poolTokens(): PoolToken[] {
     return this.pool.tokens
   }
 
-  public get poolTokenDecimals(): number[] {
+  get poolTokenDecimals(): number[] {
     return this.poolTokens.map((t) => t.decimals)
   }
 
-  public get poolTokenBalances(): BigNumber[] {
+  get poolTokenBalances(): BigNumber[] {
     const normalizedBalances = this.poolTokens.map((t) => t.balance)
     return normalizedBalances.map((b, i) =>
       parseUnits(b, this.poolTokenDecimals[i])
     )
   }
 
-  public get poolTokenWeights(): BigNumber[] {
+  get poolTokenWeights(): BigNumber[] {
     const normalizedWeights = this.poolTokens.map((t) => t.weight)
     return normalizedWeights.map((w) => parseUnits(w, 18))
   }
 
-  public get poolTotalSupply(): BigNumber {
+  get poolTotalSupply(): BigNumber {
     return parseUnits(this.pool.totalShares || '0', POOL_DECIMALS)
   }
 
-  public get poolSwapFee(): BigNumber {
+  get poolSwapFee(): BigNumber {
     return parseUnits(this.pool.swapFee || '0', 18)
   }
 
-  public get sendTokens(): string[] {
+  private get sendTokens(): string[] {
     if (this.action === 'join') return this.tokenAddresses
     return [this.pool.address]
   }
 
-  public get receiveTokens(): string[] {
+  private get receiveTokens(): string[] {
     if (this.action === 'join') return [this.pool.address]
     return this.tokenAddresses
   }
 
-  public get sendRatios(): BigNumberish[] {
+  private get sendRatios(): BigNumberish[] {
     if (this.action === 'join') return this.poolTokenBalances
     return [this.poolTotalSupply]
   }
 
-  public get receiveRatios(): BigNumberish[] {
+  private get receiveRatios(): BigNumberish[] {
     if (this.action === 'join') return [this.poolTotalSupply]
     return this.poolTokenBalances
   }

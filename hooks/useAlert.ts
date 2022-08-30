@@ -13,7 +13,7 @@ export function useAlert() {
   const metamaskNotFound = useRecoilValue(metamaskNotFoundState)
   const invalidPrice = useRecoilValue(invalidPriceState)
 
-  const showNetworkAlert = isStakingPage && metamaskNotFound && !networkMismatch
+  const showNetworkAlert = isStakingPage && !metamaskNotFound && networkMismatch
   const showCoingeckoAlert = isStakingPage && !showNetworkAlert && invalidPrice
 
   const showAlert = showNetworkAlert || showCoingeckoAlert

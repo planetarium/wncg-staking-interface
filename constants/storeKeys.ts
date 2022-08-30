@@ -11,5 +11,8 @@ export const STORE_WITHDRAW_ENDS_AT = `wncgStaking.withdrawEndsAt`
 export const STORE_CONFIRMATIONS_KEY = `wncgStaking.confirmations`
 export const STORE_TX_LIST_KEY = `wncgStaking.txList`
 
+export const STORE_HASH_LIST_KEY = `wncgStaking.hashList`
+export const STORE_TRANSACTION_MAP_KEY = `wncgStaking.txMap`
+
 export const STORE_EARMARK_INCENTIVE_FEE_KEY = `wncgStaking.earmarkIncentiveFee`
 export const STORE_FEE_DENOMINATOR_KEY = `wncgStaking.feeDenominator`

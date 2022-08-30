@@ -1,10 +1,16 @@
 import { MouseEvent, useCallback, useMemo } from 'react'
 import type { UseFormReturn } from 'react-hook-form'
 
-import { getUserBalances } from 'app/states/balance'
 import { ModalCategory } from 'app/states/modal'
-import Decimal, { sanitizeNumber } from 'utils/num'
-import { useAppSelector, useJoinMath, useModal, useUsd } from 'hooks'
+import { configService } from 'services/config'
+import { bnum, sanitizeNumber } from 'utils/num'
+import {
+  useBalances,
+  useJoinMath,
+  useModal,
+  usePoolService,
+  useUsd,
+} from 'hooks'
 import type { JoinFormFields } from './type'
 
 export function useJoinForm(
@@ -13,106 +19,126 @@ export function useJoinForm(
 ) {
   const { clearErrors, formState, setValue, trigger, watch } = useFormReturn
 
-  const { getPriceImpact, getPropAmounts, getOptimizedAmounts } = useJoinMath()
+  const { balanceFor } = useBalances()
+  const { calcPriceImpact, calcPropAmounts, calcOptimizedAmounts } =
+    useJoinMath()
   const { addModal } = useModal()
-  const { calculateUsdValue } = useUsd()
+  const { poolTokenAddresses: rawPoolTokenAddresses } = usePoolService()
+  const { getFiatValue } = useUsd()
 
-  const userBalances = useAppSelector(getUserBalances)
+  const poolTokenAddresses = useMemo(
+    () =>
+      rawPoolTokenAddresses.map((address) => {
+        return address === configService.weth && isNativeAsset
+          ? configService.nativeAssetAddress
+          : address
+      }) || [],
+    [isNativeAsset, rawPoolTokenAddresses]
+  )
 
-  const wncgBalance = userBalances.wncg
-  const ethNetBalance = isNativeAsset ? userBalances.eth : userBalances.weth
-  const ethBalanceAvailable = isNativeAsset
-    ? Math.max(new Decimal(ethNetBalance).minus(0.05).toNumber(), 0).toString()
-    : ethNetBalance
+  const userTokenBalances = useMemo(
+    () =>
+      poolTokenAddresses.map((address) => {
+        const balance = balanceFor(address)
+        if (!isNativeAsset || address !== configService.nativeAssetAddress) {
+          return balance
+        }
+        return Math.max(bnum(balance).minus(0.05).toNumber(), 0).toString()
+      }),
+    [balanceFor, isNativeAsset, poolTokenAddresses]
+  )
 
   const ethValue = sanitizeNumber(watch('ethAmount'))
   const wncgValue = sanitizeNumber(watch('wncgAmount'))
   const priceImpactAgreement = watch('priceImpactAgreement')
   const amounts = useMemo(() => [wncgValue, ethValue], [ethValue, wncgValue])
 
-  const optimizedMinAmounts = getOptimizedAmounts(isNativeAsset)
+  const optimizedMinAmounts = calcOptimizedAmounts(isNativeAsset)
 
   const setMaxValue = useCallback(
     (e: MouseEvent<HTMLButtonElement>) => {
-      const { value } = e.currentTarget as typeof e.currentTarget & {
+      const { value: inputName } = e.currentTarget as typeof e.currentTarget & {
         value: keyof JoinFormFields
       }
-      const inputName = value
       clearErrors(inputName)
 
       if (inputName === 'wncgAmount') {
-        setValue('wncgAmount', wncgBalance)
+        setValue('wncgAmount', userTokenBalances[0])
         return
       }
-      setValue('ethAmount', ethBalanceAvailable)
+      setValue('ethAmount', userTokenBalances[1])
     },
-    [clearErrors, ethBalanceAvailable, setValue, wncgBalance]
+    [clearErrors, setValue, userTokenBalances]
   )
 
   const setPropAmount = useCallback(
     (e: MouseEvent<HTMLButtonElement>) => {
-      const inputName = e.currentTarget.value as 'wncgAmount' | 'ethAmount'
+      const inputName = e.currentTarget.value as keyof JoinFormFields
       const currentTokenIndex = inputName === 'wncgAmount' ? 0 : 1
 
-      const propAmounts = getPropAmounts(amounts, currentTokenIndex)
+      const propAmounts = calcPropAmounts(amounts, currentTokenIndex)
       setValue(inputName, propAmounts[currentTokenIndex])
       trigger(inputName)
     },
-    [amounts, getPropAmounts, setValue, trigger]
+    [amounts, calcPropAmounts, setValue, trigger]
   )
 
-  function toggleHighPriceImpactCheckbox(value: boolean) {
+  function togglePriceImpactAgreement(value: boolean) {
     setValue('priceImpactAgreement', value)
   }
 
   const joinMax = useCallback(() => {
-    setValue('ethAmount', ethBalanceAvailable)
-    setValue('wncgAmount', wncgBalance)
+    setValue('wncgAmount', userTokenBalances[0])
+    setValue('ethAmount', userTokenBalances[1])
     clearErrors()
-  }, [clearErrors, ethBalanceAvailable, setValue, wncgBalance])
+  }, [clearErrors, setValue, userTokenBalances])
 
   const joinOpt = useCallback(() => {
-    const propMinAmounts = getOptimizedAmounts(isNativeAsset)
+    const propMinAmounts = calcOptimizedAmounts(isNativeAsset)
 
     setValue('wncgAmount', propMinAmounts[0])
     setValue('ethAmount', propMinAmounts[1])
     trigger()
-  }, [getOptimizedAmounts, isNativeAsset, setValue, trigger])
+  }, [calcOptimizedAmounts, isNativeAsset, setValue, trigger])
 
-  const priceImpact = useMemo(() => {
-    return getPriceImpact([wncgValue, ethValue])
-  }, [ethValue, getPriceImpact, wncgValue])
+  const priceImpact = useMemo(
+    () => calcPriceImpact([wncgValue, ethValue]),
+    [ethValue, calcPriceImpact, wncgValue]
+  )
 
-  const highPriceImpact = useMemo(() => {
-    return new Decimal(priceImpact).gte(0.01)
-  }, [priceImpact])
+  const highPriceImpact = useMemo(
+    () => bnum(priceImpact).gte(0.01),
+    [priceImpact]
+  )
 
-  const totalUsdValue = useMemo(() => {
-    return new Decimal(calculateUsdValue('wncg', wncgValue))
-      .add(calculateUsdValue('weth', ethValue))
-      .toString()
-  }, [calculateUsdValue, ethValue, wncgValue])
+  const totalUsdValue = useMemo(
+    () =>
+      poolTokenAddresses
+        .reduce((total, address, i) => {
+          const sumValue = getFiatValue(address, amounts[i])
+          return total.plus(sumValue)
+        }, bnum(0))
+        .toString(),
+    [amounts, getFiatValue, poolTokenAddresses]
+  )
 
   const maximized = useMemo(
     () =>
-      new Decimal(wncgValue).eq(wncgBalance) &&
-      !new Decimal(ethValue).isZero() &&
-      new Decimal(ethValue).eq(ethBalanceAvailable),
-    [ethBalanceAvailable, ethValue, wncgBalance, wncgValue]
+      bnum(wncgValue).eq(userTokenBalances[0]) &&
+      !bnum(ethValue).isZero() &&
+      bnum(ethValue).eq(userTokenBalances[1]),
+    [ethValue, userTokenBalances, wncgValue]
   )
 
   const optimized = useMemo(
-    () =>
-      amounts.every((amount, i) =>
-        new Decimal(amount).eq(optimizedMinAmounts[i])
-      ),
+    () => amounts.every((amount, i) => bnum(amount).eq(optimizedMinAmounts[i])),
     [amounts, optimizedMinAmounts]
   )
 
   const showPropButton = useMemo(() => {
     const hasError = !!Object.keys(formState.errors).length
-    const wncg = new Decimal(wncgValue)
-    const eth = new Decimal(ethValue)
+    const wncg = bnum(wncgValue)
+    const eth = bnum(ethValue)
 
     return {
       wncgAmount: !hasError && wncg.isZero() && !eth.isZero(),
@@ -121,15 +147,15 @@ export function useJoinForm(
   }, [ethValue, formState, wncgValue])
 
   const emptyAmounts = useMemo(
-    () => new Decimal(wncgValue).isZero() && new Decimal(ethValue).isZero(),
+    () => bnum(wncgValue).isZero() && bnum(ethValue).isZero(),
     [ethValue, wncgValue]
   )
 
   const excessiveAmounts = useMemo(
     () =>
-      new Decimal(wncgValue).gt(wncgBalance) ||
-      new Decimal(ethValue).gt(ethBalanceAvailable),
-    [ethBalanceAvailable, ethValue, wncgBalance, wncgValue]
+      bnum(wncgValue).gt(userTokenBalances[0]) ||
+      bnum(ethValue).gt(userTokenBalances[1]),
+    [ethValue, userTokenBalances, wncgValue]
   )
 
   const previewDisabled = useMemo(
@@ -140,20 +166,15 @@ export function useJoinForm(
     [emptyAmounts, excessiveAmounts, highPriceImpact, priceImpactAgreement]
   )
 
-  const joinDisabled = useMemo(
-    () => new Decimal(priceImpact).gte(0.2),
-    [priceImpact]
-  )
+  const joinDisabled = useMemo(() => bnum(priceImpact).gte(0.2), [priceImpact])
 
   const maxDisabled = useMemo(
-    () =>
-      new Decimal(wncgBalance).isZero() &&
-      new Decimal(ethBalanceAvailable).isZero(),
-    [ethBalanceAvailable, wncgBalance]
+    () => userTokenBalances.every((balance) => bnum(balance).isZero()),
+    [userTokenBalances]
   )
 
   const optDisabled = useMemo(
-    () => optimizedMinAmounts.every((amount) => new Decimal(amount).isZero()),
+    () => optimizedMinAmounts.every((amount) => bnum(amount).isZero()),
     [optimizedMinAmounts]
   )
 
@@ -200,7 +221,7 @@ export function useJoinForm(
     setMaxValue,
     setPropAmount,
     showPropButton,
-    toggleHighPriceImpactCheckbox,
+    togglePriceImpactAgreement,
     totalUsdValue,
   }
 }

@@ -1,57 +1,35 @@
-import { useRecoilValue } from 'recoil'
+import { isAddress } from 'ethers/lib/utils'
+import { useCallback } from 'react'
 
-import { poolTokenPriceState } from 'app/states/pool'
-import { assertUnreachable } from 'utils/assertion'
-import Decimal, { sanitizeNumber } from 'utils/num'
-import { useFetchTokenPrices } from './useFetchTokenPrices'
+import { bnum } from 'utils/num'
+import { findTokenAddressBySymbol } from 'utils/token'
+import { useTokenPrices } from './useTokenPrices'
 
 export function useUsd() {
-  const { balPrice, wethPrice, wncgPrice } = useFetchTokenPrices()
-  const bptPrice = useRecoilValue(poolTokenPriceState)
+  const { bptPrice, priceFor } = useTokenPrices()
 
-  function calculateBal(value: string | number) {
-    return new Decimal(sanitizeNumber(value))
-      .mul(sanitizeNumber(balPrice))
-      .toNumber()
-  }
-
-  function calculateBpt(value: string | number) {
-    return new Decimal(sanitizeNumber(value))
-      .mul(sanitizeNumber(bptPrice))
-      .toNumber()
-  }
-
-  function calculateWeth(value: string | number) {
-    return new Decimal(sanitizeNumber(value))
-      .mul(sanitizeNumber(wethPrice))
-      .toNumber()
-  }
-
-  function calculateWncg(value: string | number) {
-    return new Decimal(sanitizeNumber(value))
-      .mul(sanitizeNumber(wncgPrice))
-      .toNumber()
-  }
-
-  function calculateUsdValue(token: string, value: string | number) {
+  function getFiatValue(token?: string, value?: string | number) {
     if (!token || !value) return 0
 
-    switch (token) {
-      case 'bal':
-        return calculateBal(value)
-      case 'bpt':
-        return calculateBpt(value)
-      case 'weth':
-        return calculateWeth(value)
-      case 'wbtc':
-      case 'wncg':
-        return calculateWncg(value)
-      default:
-        assertUnreachable(token)
+    let address = token
+    if (!isAddress(address)) {
+      address = findTokenAddressBySymbol(token)
     }
+    const price = priceFor(address)
+
+    return bnum(value).times(price).toNumber()
   }
 
+  const getBptFiatValue = useCallback(
+    (value?: string | number) => {
+      if (!value) return 0
+      return bnum(value).times(bptPrice).toNumber()
+    },
+    [bptPrice]
+  )
+
   return {
-    calculateUsdValue,
+    getBptFiatValue,
+    getFiatValue,
   }
 }

@@ -1,13 +1,13 @@
 import { memo, useMemo } from 'react'
 import NumberFormat from 'react-number-format'
 import { useRecoilValue } from 'recoil'
-import clsx from 'clsx'
 import styles from './style.module.scss'
 
-import { priceErrorState } from 'app/states/error'
-import { poolTokenSymbolsState } from 'app/states/pool'
-import Decimal from 'utils/num'
-import { useUsd } from 'hooks'
+import { invalidPriceState } from 'app/states/error'
+import { configService } from 'services/config'
+import { bnum, isLessThanMinAmount } from 'utils/num'
+import { getTokenInfo } from 'utils/token'
+import { usePoolService, useUsd } from 'hooks'
 
 import { TokenIcon } from 'components/TokenIcon'
 
@@ -22,63 +22,60 @@ function JoinPreviewComposition({
   isNativeAsset,
   totalUsdValue,
 }: JoinPreviewCompositionProps) {
-  const { calculateUsdValue } = useUsd()
+  const { poolTokenAddresses, nativeAssetIndex } = usePoolService()
+  const { getFiatValue } = useUsd()
 
-  const poolTokenSymbols = useRecoilValue(poolTokenSymbolsState)
-  const isPriceInvalid = useRecoilValue(priceErrorState)
+  const invalidPrice = useRecoilValue(invalidPriceState)
 
   const usdValues = amounts.map((amount, i) =>
-    calculateUsdValue(poolTokenSymbols[i], amount)
+    getFiatValue(poolTokenAddresses[i], amount)
   )
 
-  const tokenRatio = useMemo(
-    () =>
-      usdValues.map((_, i) => {
-        const wncgPcnt = new Decimal(usdValues[0])
-          .div(totalUsdValue)
-          .mul(100)
-          .toFixed(2)
-
-        if (i === 0) return wncgPcnt
-        return new Decimal(100).minus(wncgPcnt).toString()
-      }),
-    [totalUsdValue, usdValues]
-  )
-
-  const reverse = new Decimal(usdValues[1]).gt(usdValues[0])
+  const tokenRatios = useMemo(() => {
+    const lastIndex = usdValues.length - 1
+    const ratios = usdValues.map((value, i) => {
+      if (i === lastIndex) return '0'
+      return bnum(value).div(totalUsdValue).times(100).toFixed(2)
+    })
+    const pcntSum = ratios.reduce((total, pcnt) => {
+      return bnum(total).plus(pcnt)
+    }, bnum(0))
+    ratios[lastIndex] = bnum(100).minus(pcntSum).toFixed(2)
+    return ratios
+  }, [totalUsdValue, usdValues])
 
   return (
-    <dl className={clsx(styles.details, { [styles.reverse]: reverse })}>
-      {poolTokenSymbols.map((tokenSymbol, i) => {
-        let symbol = tokenSymbol
-        if (isNativeAsset && symbol === 'weth') symbol = 'eth'
+    <dl className={styles.details}>
+      {poolTokenAddresses.map((address, i) => {
+        let { symbol } = getTokenInfo(address)
+        if (i === nativeAssetIndex && isNativeAsset) {
+          symbol = configService.nativeAsset.symbol
+        }
 
         const amount = amounts[i]
         const usdValue = usdValues[i]
-        const pcnt = tokenRatio[i]
-
-        const tokenAmount = new Decimal(amount)
-        const isAmountLessThanMinAmount =
-          !tokenAmount.isZero() && tokenAmount.lt(0.0001)
+        let pcnt = tokenRatios[i]
+        if (bnum(pcnt).isZero()) pcnt = '0'
 
         return (
-          <div className={styles.detailItem} key={`JoinPreview.${tokenSymbol}`}>
+          <div className={styles.detailItem} key={`JoinPreview.${symbol}`}>
             <dt>
-              <TokenIcon className={styles.token} symbol={tokenSymbol} />
+              <TokenIcon className={styles.token} symbol={symbol} />
               <strong className={styles.symbol}>{symbol}</strong>
-              {!isPriceInvalid && (
+              {!invalidPrice && (
                 <span className={styles.percent}>({pcnt}%)</span>
               )}
             </dt>
             <dd>
-              {isAmountLessThanMinAmount ? (
-                '< 0.0001'
+              {isLessThanMinAmount(amount) ? (
+                <span title={amount}>&lt; 0.0001</span>
               ) : (
                 <NumberFormat
                   value={amount}
                   displayType="text"
                   thousandSeparator
                   decimalScale={4}
+                  title={amount}
                 />
               )}
               <NumberFormat

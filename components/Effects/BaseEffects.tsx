@@ -5,7 +5,7 @@ import type { Network } from '@ethersproject/networks'
 import store from 'store'
 
 import { currentNetworkIdState } from 'app/states/network'
-import { resetTxList } from 'app/states/transaction'
+// import { resetTxList } from 'app/states/transaction'
 import {
   useAppDispatch,
   useConfirmations,
@@ -25,7 +25,7 @@ function BaseEffects() {
   const setCurrentNetworkId = useSetRecoilState(currentNetworkIdState)
 
   function handleAccountsChanged(...args: unknown[]) {
-    dispatch(resetTxList())
+    // dispatch(resetTxList())
     resetConfirmations()
     const accounts = args[0] as string[]
 

@@ -11,7 +11,7 @@ type TabMenuProps = {
 }
 
 function TabMenu({ setTab, tab }: TabMenuProps) {
-  const { getTimestamps } = useUnstake()
+  const { fetchTimestamps } = useUnstake()
   const nestedClassName = useMemo(
     () => clsx(styles.tabMenu, { [styles.unstake]: tab === Tab.Unstake }),
     [tab]
@@ -19,7 +19,7 @@ function TabMenu({ setTab, tab }: TabMenuProps) {
 
   function handleClick(e: MouseEvent<HTMLButtonElement>) {
     setTab(e.currentTarget.value as Tab)
-    getTimestamps()
+    fetchTimestamps()
   }
 
   return (

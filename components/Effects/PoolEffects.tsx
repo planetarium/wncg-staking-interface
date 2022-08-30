@@ -1,57 +1,28 @@
 import { memo, useCallback, useEffect } from 'react'
 import type { Event } from 'ethers'
 
-import { removeTx, TransactionAction } from 'app/states/transaction'
 import {
-  useAppDispatch,
-  useConfirmations,
-  useEventFilter,
+  useBalances,
+  useEventFilters,
   useProvider,
-  useToast,
   useTransaction,
 } from 'hooks'
 
 function PoolEffects() {
-  const { getConfirmations, getHashData, setConfirmations } = useConfirmations()
-  const { poolBalanceChangedEventFilter } = useEventFilter()
+  const { fetchBalances } = useBalances()
+  const { poolBalanceChangedEventFilter } = useEventFilters()
   const provider = useProvider()
-  const { addToast } = useToast()
-  const { getTransactionReceipt } = useTransaction()
-
-  const dispatch = useAppDispatch()
+  const { transactionService } = useTransaction()
 
   const handlePoolBalanceChangedEvent = useCallback(
-    async ({ transactionHash }: Event) => {
-      const receipt = await getTransactionReceipt(transactionHash)
-      if (!receipt) return
+    async (event: Event) => {
+      console.log(3433, 'poolchangedevent', event)
 
-      dispatch(removeTx(transactionHash))
-
-      const confirmations = getConfirmations(transactionHash)
-      if (!confirmations) return
-
-      if (confirmations !== 'fulfilled') {
-        const { action } = getHashData(transactionHash) || {}
-        addToast({
-          action,
-          hash: transactionHash,
-          summary: `Successfully ${
-            action === TransactionAction.JoinPool ? 'joined' : 'exited'
-          } pool`,
-          showPartyEmoji: true,
-        })
-      }
-
-      setConfirmations(transactionHash)
+      await transactionService?.updateTxStatus(event, {
+        onFulfill: fetchBalances,
+      })
     },
-    [
-      addToast,
-      dispatch,
-      getConfirmations,
-      getHashData,
-      getTransactionReceipt,
-      setConfirmations,
-    ]
+    [fetchBalances, transactionService]
   )
 
   // NOTE: Pool balance changed event (Join / Exit)
@@ -63,6 +34,7 @@ function PoolEffects() {
       }
     }
   })
+
   return null
 }
 

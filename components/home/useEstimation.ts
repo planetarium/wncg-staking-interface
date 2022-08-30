@@ -1,36 +1,23 @@
 import { useCallback } from 'react'
-import { useRecoilValue } from 'recoil'
 
-import { poolTokenPriceState } from 'app/states/pool'
-import { getBalEmissionPerSec, getWncgEmissionPerSec } from 'app/states/reward'
-import { getTotalStaked } from 'app/states/stake'
-import { assertUnreachable } from 'utils/assertion'
-import Decimal, { sanitizeNumber } from 'utils/num'
-import { useAppSelector, useFetchTokenPrices } from 'hooks'
-import { calculateApr } from 'hooks/useApr'
+import { calcApr } from 'utils/calculator'
+import Decimal, { bnum, sanitizeNumber } from 'utils/num'
+import { useStakingData, useTokenPrices, useUsd } from 'hooks'
 
 export function useEstimation() {
-  const { balPrice, wncgPrice } = useFetchTokenPrices()
-  const bptPrice = useRecoilValue(poolTokenPriceState)
-
-  const balEmissionPerSec = useAppSelector(getBalEmissionPerSec)
-  const wncgEmissionPerSec = useAppSelector(getWncgEmissionPerSec)
-  const totalStaked = useAppSelector(getTotalStaked)
+  const { balPrice, wncgPrice, bptPrice } = useTokenPrices()
+  const { balEmissionPerSec, wncgEmissionPerSec, totalStaked } =
+    useStakingData()
+  const { getBptFiatValue } = useUsd()
 
   const getEstimation = useCallback(
     (amount: string, option: string) => {
-      const value = sanitizeNumber(amount, { allowEmptyString: false })
-      const totalStakedValue = new Decimal(totalStaked)
-        .plus(value)
-        .mul(bptPrice)
-        .toNumber()
-
-      const balApr = calculateApr(balEmissionPerSec, balPrice, totalStakedValue)
-      const wncgApr = calculateApr(
-        wncgEmissionPerSec,
-        wncgPrice,
-        totalStakedValue
+      const totalStakedValue = getBptFiatValue(
+        bnum(totalStaked).plus(bnum(amount)).toNumber()
       )
+
+      const balApr = calcApr(balEmissionPerSec, balPrice, totalStakedValue)
+      const wncgApr = calcApr(wncgEmissionPerSec, wncgPrice, totalStakedValue)
 
       const newBal = calculateEstimatedToken(
         amount,
@@ -56,6 +43,7 @@ export function useEstimation() {
       balEmissionPerSec,
       balPrice,
       bptPrice,
+      getBptFiatValue,
       totalStaked,
       wncgEmissionPerSec,
       wncgPrice,
@@ -67,31 +55,35 @@ export function useEstimation() {
   }
 }
 
-function getOptionPercentage(option: string) {
-  switch (option) {
-    case 'day':
-      return 1 / 365
-    case 'week':
-      return 1 / 52
-    case 'month':
-      return 1 / 12
-    case 'year':
-      return 1
-    default:
-      assertUnreachable(option)
-  }
-}
-
 function calculateEstimatedToken(
   amount: string,
-  tokenApr: number,
+  tokenApr: number | string,
   option: string,
-  bptPrice: number,
-  tokenPrice: number
+  bptPrice: number | string,
+  tokenPrice: number | string
 ) {
+  let pcnt = 0
+
+  switch (option) {
+    case 'day':
+      pcnt = 1 / 365
+      break
+    case 'week':
+      pcnt = 1 / 52
+      break
+    case 'month':
+      pcnt = 1 / 12
+      break
+    case 'year':
+      pcnt = 1
+      break
+    default:
+      break
+  }
+
   return new Decimal(sanitizeNumber(amount, { allowEmptyString: false }))
     .mul(tokenApr)
-    .mul(getOptionPercentage(option))
+    .mul(pcnt)
     .mul(bptPrice)
     .div(tokenPrice)
     .div(100)

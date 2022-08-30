@@ -48,4 +48,16 @@ export function bnum(value: string | number | OldBigNumber): OldBigNumber {
   return new OldBigNumber(number)
 }
 
+export function isLessThanMinAmount(
+  amount: string | number,
+  minAmount = 0.0001
+) {
+  const bAmount = bnum(amount)
+  return !bAmount.isZero() && bAmount.lt(minAmount)
+}
+
 export default Decimal
+
+export function hasAmounts(amounts: string[]) {
+  return amounts.some((amount) => bnum(amount).gt(0))
+}

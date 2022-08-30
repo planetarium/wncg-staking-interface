@@ -1,113 +1,37 @@
 import { useCallback } from 'react'
-import { useSetRecoilState } from 'recoil'
-import { constants, Event } from 'ethers'
+import { Contract } from 'ethers'
 
-import { approvalState, ApprovalTokenSymbol } from 'app/states/approval'
-import { addTx, removeTx, TransactionAction } from 'app/states/transaction'
-import { stakingContractAddress, vaultContractAddress } from 'utils/env'
-import { handleError } from 'utils/error'
-import { useConfirmations } from './useConfirmations'
-import { useContracts } from './useContracts'
-import { useAppDispatch } from './useRedux'
-import { useToast } from './useToast'
+import { getAccount } from 'app/states/connection'
+import { approve as initApprove } from 'contracts/erc20'
+import { TransactionAction } from 'services/transaction'
+import { Erc20Abi } from 'lib/abi'
+import { useProvider } from './useProvider'
+import { useAppSelector } from './useRedux'
 import { useTransaction } from './useTransaction'
 
 export function useApprove() {
-  const { getConfirmations, setConfirmations } = useConfirmations()
-  const { addToast } = useToast()
-  const { getTransactionReceipt } = useTransaction()
+  const provider = useProvider()
+  const { transactionService } = useTransaction()
 
-  const setApproval = useSetRecoilState(approvalState)
-  const dispatch = useAppDispatch()
+  const account = useAppSelector(getAccount)
 
-  const { bptContract, wethContract, wncgContract } = useContracts()
+  const approve = useCallback(
+    async (address: string, spender: string) => {
+      if (!address || !provider || !account) return
 
-  const postApproveTransaction = useCallback(
-    (tokenName: ApprovalTokenSymbol, data?: any) => {
-      if (!data) return
-
-      const symbol = getTokenSymbolName(tokenName)
-      const tx = {
-        hash: data.hash,
-        action: TransactionAction.Approve,
-        summary: `Approving ${symbol}`,
-      }
-
-      dispatch(addTx(tx))
-      addToast(tx, data.hash)
-    },
-    [addToast, dispatch]
-  )
-
-  const approveBpt = useCallback(async () => {
-    try {
-      const data = await bptContract?.approve(
-        stakingContractAddress,
-        constants.MaxUint256
+      const contract = new Contract(
+        address,
+        Erc20Abi,
+        provider.getSigner(account)
       )
-      postApproveTransaction('bpt', data)
-    } catch (error) {
-      handleError(error)
-    }
-  }, [postApproveTransaction, bptContract])
 
-  const approveWeth = useCallback(async () => {
-    const data = await wethContract?.approve(
-      vaultContractAddress,
-      constants.MaxUint256
-    )
-    postApproveTransaction('weth', data)
-  }, [postApproveTransaction, wethContract])
-
-  const approveWncg = useCallback(async () => {
-    const data = await wncgContract?.approve(
-      vaultContractAddress,
-      constants.MaxUint256
-    )
-    postApproveTransaction('wncg', data)
-  }, [postApproveTransaction, wncgContract])
-
-  const createApprovalEventHandler = useCallback(
-    (tokenName: ApprovalTokenSymbol) => {
-      const symbol = getTokenSymbolName(tokenName)
-      return async function ({ transactionHash }: Event) {
-        const receipt = await getTransactionReceipt(transactionHash)
-        if (!receipt) return
-
-        dispatch(removeTx(transactionHash))
-        setApproval((prev) => ({ ...prev, [tokenName]: true }))
-
-        const confirmations = getConfirmations(transactionHash)
-        if (!confirmations) return
-        if (confirmations !== 'fulfilled') {
-          addToast({
-            action: TransactionAction.Approve,
-            hash: transactionHash,
-            summary: `Successfully approved ${symbol}`,
-            showPartyEmoji: true,
-          })
-        }
-        setConfirmations(transactionHash)
-      }
+      const response = await initApprove(contract, spender)
+      transactionService?.registerTx(response, TransactionAction.Approve)
     },
-    [
-      addToast,
-      dispatch,
-      getConfirmations,
-      getTransactionReceipt,
-      setApproval,
-      setConfirmations,
-    ]
+    [account, provider, transactionService]
   )
 
   return {
-    approveBpt,
-    approveWeth,
-    approveWncg,
-    createApprovalEventHandler,
+    approve,
   }
-}
-
-function getTokenSymbolName(tokenName: ApprovalTokenSymbol) {
-  return tokenName === 'bpt' ? '20WETH-80WNCG' : tokenName.toUpperCase()
 }

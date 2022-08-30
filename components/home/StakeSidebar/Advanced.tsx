@@ -6,17 +6,17 @@ import styles from '../styles/StakeSidebar.module.scss'
 import { getIsConnected } from 'app/states/connection'
 import { getIsMobile } from 'app/states/mediaQuery'
 import { networkMismatchState } from 'app/states/network'
-import { getEarmarkIncentive } from 'app/states/reward'
-import { TransactionAction } from 'app/states/transaction'
+import { TransactionAction } from 'services/transaction'
 import { gaEvent } from 'lib/gtag'
 import { countUpOption, usdCountUpOption } from 'utils/countUp'
 import { handleError } from 'utils/error'
 import {
   useAppSelector,
-  useEventFilter,
+  useConnection,
+  useEarmark,
+  useEventFilters,
   useProvider,
   useReward,
-  useUsd,
 } from 'hooks'
 import { motionVariants } from '../constants'
 
@@ -28,21 +28,26 @@ export function StakeSidebarAdvanced() {
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
 
-  const { earmarkEventFilter } = useEventFilter()
+  const { connect } = useConnection()
+  const {
+    earmarkIncentive,
+    earmarkIncentiveInFiatValue,
+    fetchEarmarkIncentive,
+  } = useEarmark()
+
+  const { earmarkEventFilter } = useEventFilters()
   const provider = useProvider()
-  const { earmarkIncentive, earmarkRewards } = useReward()
-  const { calculateUsdValue } = useUsd()
+  const { earmarkRewards } = useReward()
 
   const networkMismatch = useRecoilValue(networkMismatchState)
-  const incentive = useAppSelector(getEarmarkIncentive)
   const isConnected = useAppSelector(getIsConnected)
   const isMobile = useAppSelector(getIsMobile)
 
-  const disabled = networkMismatch || !isConnected || loading
+  const disabled = networkMismatch || loading
 
   function toggle() {
     if (!open) {
-      earmarkIncentive()
+      fetchEarmarkIncentive()
       gaEvent({
         name: 'open_advanced',
       })
@@ -127,7 +132,7 @@ export function StakeSidebarAdvanced() {
                     </span>
                     <CountUp
                       {...countUpOption}
-                      end={parseFloat(incentive)}
+                      end={earmarkIncentive}
                       decimals={8}
                       duration={0.5}
                       showAlways
@@ -136,7 +141,7 @@ export function StakeSidebarAdvanced() {
                   <CountUp
                     {...usdCountUpOption}
                     className={styles.usd}
-                    end={calculateUsdValue('bal', incentive)}
+                    end={earmarkIncentiveInFiatValue}
                     isApproximate
                     showAlways
                   />
@@ -144,14 +149,20 @@ export function StakeSidebarAdvanced() {
               </div>
             </dl>
 
-            <Button
-              onClick={handleHarvest}
-              loading={loading}
-              disabled={disabled}
-              fullWidth
-            >
-              Harvest BAL
-            </Button>
+            {isConnected ? (
+              <Button
+                onClick={handleHarvest}
+                loading={loading}
+                disabled={disabled}
+                fullWidth
+              >
+                Harvest BAL
+              </Button>
+            ) : (
+              <Button size="large" onClick={connect} fullWidth>
+                Connect
+              </Button>
+            )}
           </motion.div>
         )}
       </AnimatePresence>

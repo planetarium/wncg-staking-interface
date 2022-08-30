@@ -1,24 +1,26 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { usePrevious } from 'react-use'
-import { useRecoilValue } from 'recoil'
 import Lottie from 'lottie-react'
 import { Event } from 'ethers'
 import clsx from 'clsx'
 import styles from './styles/StakeSubmit.module.scss'
 
-import { approvalState } from 'app/states/approval'
-import { getIsConnected } from 'app/states/connection'
+import { getAccount, getIsConnected } from 'app/states/connection'
 import { ModalCategory } from 'app/states/modal'
-import { TransactionAction } from 'app/states/transaction'
+import { configService } from 'services/config'
+import { TransactionAction } from 'services/transaction'
 import { getIsUnstakeWindow } from 'app/states/unstake'
 import { gaEvent } from 'lib/gtag'
 import { handleError } from 'utils/error'
+import { createApprovalEventFilter } from 'utils/event'
 import {
+  useAllowances,
   useApprove,
   useAppSelector,
   useConnection,
-  useEventFilter,
+  useEventFilters,
   useModal,
+  usePoolService,
   useProvider,
   useStake,
 } from 'hooks'
@@ -44,16 +46,21 @@ export function StakeSubmit({
   const [pendingTx, setPendingTx] = useState('')
   const prevAmount = usePrevious(amount)
 
-  const { approveBpt } = useApprove()
+  const { allowanceFor } = useAllowances()
+  const { approve } = useApprove()
   const { connect } = useConnection()
-  const { bptApprovalEventFilter, stakedEventFilter } = useEventFilter()
+  const { stakedEventFilter } = useEventFilters()
   const { addModal } = useModal()
+  const { bptAddress } = usePoolService()
   const provider = useProvider()
   const { stake } = useStake()
 
-  const { bpt: isApproved } = useRecoilValue(approvalState)
+  const account = useAppSelector(getAccount)
   const isConnected = useAppSelector(getIsConnected)
   const isUnstakeWindow = useAppSelector(getIsUnstakeWindow)
+
+  const isApproved = allowanceFor(bptAddress, configService.stakingAddress)
+  const isLoading = active !== null
 
   function resetStatus() {
     setActive(null)
@@ -68,6 +75,7 @@ export function StakeSubmit({
         amount,
       },
     })
+
     try {
       const hash = await stake(amount)
       if (hash) {
@@ -85,8 +93,9 @@ export function StakeSubmit({
     gaEvent({
       name: 'approve_to_stake',
     })
+
     try {
-      await approveBpt()
+      await approve(bptAddress, configService.stakingAddress)
     } catch (error) {
       handleError(error, TransactionAction.Approve)
       setActive(null)
@@ -103,6 +112,7 @@ export function StakeSubmit({
       })
       return
     }
+
     proceedStake()
   }
 
@@ -113,6 +123,12 @@ export function StakeSubmit({
       handleStake()
     }
   }
+
+  const approvalEventFilter = createApprovalEventFilter(
+    account,
+    bptAddress,
+    configService.stakingAddress
+  )
 
   const handleApprovalEvent = useCallback(() => {
     setActive(null)
@@ -131,13 +147,13 @@ export function StakeSubmit({
 
   // NOTE: Approval event
   useEffect(() => {
-    if (bptApprovalEventFilter) {
-      provider?.on(bptApprovalEventFilter, handleApprovalEvent)
+    if (approvalEventFilter) {
+      provider?.on(approvalEventFilter, handleApprovalEvent)
       return () => {
-        provider?.off(bptApprovalEventFilter)
+        provider?.off(approvalEventFilter)
       }
     }
-  }, [bptApprovalEventFilter, handleApprovalEvent, provider])
+  }, [approvalEventFilter, handleApprovalEvent, isApproved, provider])
 
   // NOTE: Staked event
   useEffect(() => {
@@ -167,6 +183,7 @@ export function StakeSubmit({
   return (
     <>
       <div className={styles.stepsWrapper}>
+        {JSON.stringify(isApproved)}
         <div
           className={clsx(styles.divider, {
             [styles.lastStep]: isApproved,
@@ -216,9 +233,16 @@ export function StakeSubmit({
         </ol>
       </div>
 
-      <Button size="large" onClick={handleClick} disabled={disabled} fullWidth>
-        {isApproved ? 'Stake' : 'Approve to stake'}
+      <Button
+        size="large"
+        onClick={handleClick}
+        disabled={disabled || isLoading}
+        loading={isLoading}
+        fullWidth
+      >
+        {renderButtonLabel(isApproved, isLoading)}
       </Button>
+
       {isApproved && (
         <dl className={styles.cooldown}>
           <dt>
@@ -236,4 +260,19 @@ export function StakeSubmit({
       )}
     </>
   )
+}
+
+function renderButtonLabel(isApproved: boolean, isLoading: boolean) {
+  switch (true) {
+    case isApproved && isLoading:
+      return 'Staking'
+    case isApproved && !isLoading:
+      return 'Stake'
+    case !isApproved && isLoading:
+      return 'Approving'
+    case !isApproved && !isLoading:
+      return 'Approve to stake'
+    default:
+      return ''
+  }
 }

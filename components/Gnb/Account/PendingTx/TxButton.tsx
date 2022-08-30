@@ -1,9 +1,9 @@
+import { useMemo } from 'react'
 import Lottie from 'lottie-react'
 import clsx from 'clsx'
 import styles from './style.module.scss'
 
-import { getTxList } from 'app/states/transaction'
-import { useAppSelector } from 'hooks'
+import { useTransaction } from 'hooks'
 
 import loadingAnimation from 'animations/spinner.json'
 
@@ -14,8 +14,15 @@ type PendingTxButtonProps = {
 }
 
 export function PendingTxButton({ open }: PendingTxButtonProps) {
-  const txList = useAppSelector(getTxList)
-  const hasPendingTx = !!txList.length
+  const { transactionService } = useTransaction()
+
+  const pendingTxList = useMemo(
+    () => transactionService?.pendingTxList || [],
+    [transactionService?.pendingTxList]
+  )
+  console.log(pendingTxList)
+
+  const hasPendingTx = !!pendingTxList.length
 
   return (
     <button
@@ -31,7 +38,7 @@ export function PendingTxButton({ open }: PendingTxButtonProps) {
             animationData={loadingAnimation}
             loop
           />
-          <span>{txList.length}</span>
+          <span>{pendingTxList.length}</span>
         </div>
       ) : (
         <Icon id="pulse" />

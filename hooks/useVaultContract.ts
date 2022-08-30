@@ -1,24 +1,29 @@
 import { useMemo } from 'react'
+import { useRecoilValue } from 'recoil'
 import { Contract } from 'ethers'
 
 import { getAccount } from 'app/states/connection'
+import { networkMismatchState } from 'app/states/network'
+import { configService } from 'services/config'
 import { BalancerVaultAbi } from 'lib/abi'
 import { useProvider } from './useProvider'
 import { useAppSelector } from './useRedux'
 
 export function useVaultContract() {
-  const account = useAppSelector(getAccount)
   const provider = useProvider()
 
+  const networkMismatch = useRecoilValue(networkMismatchState)
+  const account = useAppSelector(getAccount)
+
   const vault = useMemo(() => {
-    if (!provider || !account) return null
+    if (!provider || networkMismatch || !account) return null
 
     return new Contract(
-      process.env.NEXT_PUBLIC_BALANCER_VAULT_ADDRESS as string,
+      configService.vaultAddress,
       BalancerVaultAbi,
       provider.getSigner(account)
     )
-  }, [account, provider])
+  }, [account, networkMismatch, provider])
 
   return vault
 }

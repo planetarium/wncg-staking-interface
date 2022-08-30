@@ -1,70 +1,72 @@
-import { useCallback, useEffect, useMemo } from 'react'
-import { useRecoilValue, useSetRecoilState } from 'recoil'
+import { useCallback, useMemo, useRef } from 'react'
 import { useMachine } from '@xstate/react'
 
-import { approvalState, poolTokenApprovalsState } from 'app/states/approval'
 import { ModalCategory } from 'app/states/modal'
-import { handleError } from 'utils/error'
+import { configService } from 'services/config'
 import { bnum } from 'utils/num'
 import {
+  useAllowances,
   useApprove,
-  useEventFilter,
   useJoinPool,
   useModal,
-  useProvider,
+  usePoolService,
 } from 'hooks'
 import { createJoinMachine } from './joinMachine'
+import { getSymbolNameFromState, isApprovalState } from './utils'
 
 export function useJoinMachine(amounts: string[], isNativeAsset: boolean) {
-  const { approveWeth, approveWncg } = useApprove()
-  const {
-    poolBalanceChangedEventFilter,
-    wethApprovalEventFilter,
-    wncgApprovalEventFilter,
-  } = useEventFilter()
+  const { approve } = useApprove()
+  const { poolTokenAllowances } = useAllowances()
   const { joinPool } = useJoinPool()
   const { removeModal } = useModal()
-  const provider = useProvider()
+  const { nativeAssetIndex, poolTokenAddresses, poolTokenSymbols } =
+    usePoolService()
 
-  const setApproval = useSetRecoilState(approvalState)
-  const poolTokenApprovals = useRecoilValue(poolTokenApprovalsState)
-
-  const joinMachine = useMemo(
-    () => createJoinMachine(amounts, poolTokenApprovals, isNativeAsset),
-    [amounts, isNativeAsset, poolTokenApprovals]
+  const joinMachine = useRef(
+    createJoinMachine(
+      amounts,
+      poolTokenSymbols,
+      poolTokenAllowances,
+      nativeAssetIndex,
+      isNativeAsset
+    )
   )
 
-  const [state, send] = useMachine(joinMachine)
+  const [state, send] = useMachine(joinMachine.current)
+  console.log(1111111, joinMachine.current.key)
 
   const handleJoin = useCallback(async () => {
+    const currentState = state.value
+
     try {
-      switch (state.value) {
-        case 'approveWncg':
-          send('APPROVING_WNCG')
-          await approveWncg()
-          break
-        case 'approveWeth':
-          send('APPROVING_WETH')
-          await approveWeth()
-          break
-        case 'join':
-          send('JOINING')
-          await joinPool(amounts, isNativeAsset)
-          break
-        default:
-          removeModal(ModalCategory.JoinPreview)
-          break
+      if (isApprovalState(currentState)) {
+        const symbol = getSymbolNameFromState(currentState)
+        const tokenIndex = poolTokenSymbols.indexOf(symbol)
+        const address = poolTokenAddresses[tokenIndex]
+
+        if (!address) return
+
+        send(`APPROVING_${symbol}`)
+        return await approve(address, configService.vaultAddress)
       }
+
+      if (currentState === 'join') {
+        send(`JOINING`)
+        return await joinPool(amounts, isNativeAsset)
+      }
+
+      removeModal(ModalCategory.JoinPreview)
     } catch (error) {
-      send('ROLLBACK')
-      handleError(error)
+      send(`ROLLBACK`)
+      throw error
     }
   }, [
     amounts,
-    approveWeth,
-    approveWncg,
+    approve,
     isNativeAsset,
     joinPool,
+    poolTokenAddresses,
+    poolTokenSymbols,
     removeModal,
     send,
     state.value,
@@ -73,53 +75,12 @@ export function useJoinMachine(amounts: string[], isNativeAsset: boolean) {
   const stepsToSkip = useMemo(
     () =>
       amounts.map((amount, i) => {
-        if (i === 1 && isNativeAsset) return true
+        if (i === nativeAssetIndex && isNativeAsset) return true
         if (!bnum(amount).isZero()) return false
         return true
       }),
-    [amounts, isNativeAsset]
+    [amounts, isNativeAsset, nativeAssetIndex]
   )
-
-  const handleWncgApprovalEvent = useCallback(() => {
-    send('APPROVED_WNCG')
-    setApproval((prev) => ({ ...prev, wncg: true }))
-  }, [send, setApproval])
-
-  useEffect(() => {
-    if (wncgApprovalEventFilter) {
-      provider?.on(wncgApprovalEventFilter, handleWncgApprovalEvent)
-      return () => {
-        provider?.off(wncgApprovalEventFilter)
-      }
-    }
-  }, [handleWncgApprovalEvent, provider, wncgApprovalEventFilter])
-
-  const handleWethApprovalEvent = useCallback(() => {
-    send('APPROVED_WETH')
-    setApproval((prev) => ({ ...prev, weth: true }))
-  }, [send, setApproval])
-
-  useEffect(() => {
-    if (wethApprovalEventFilter) {
-      provider?.on(wethApprovalEventFilter, handleWethApprovalEvent)
-      return () => {
-        provider?.off(wethApprovalEventFilter)
-      }
-    }
-  }, [handleWethApprovalEvent, provider, wethApprovalEventFilter])
-
-  const handlePoolBalanceChangedEvent = useCallback(() => {
-    send('COMPLETED')
-  }, [send])
-
-  useEffect(() => {
-    if (poolBalanceChangedEventFilter) {
-      provider?.on(poolBalanceChangedEventFilter, handlePoolBalanceChangedEvent)
-      return () => {
-        provider?.off(poolBalanceChangedEventFilter)
-      }
-    }
-  }, [handlePoolBalanceChangedEvent, poolBalanceChangedEventFilter, provider])
 
   return {
     handleJoin,

@@ -11,67 +11,19 @@
 
 .header {
   @include flexbox(between);
-}
-
-.checkboxGroup {
-  @include flexbox(end);
-
-  label {
-    margin-left: 8px;
-  }
-}
-
-.header {
-  @include flexbox(between);
-}
-
-.checkboxGroup {
-  @include flexbox(end);
-
-  label {
-    margin-left: 8px;
-  }
-}
-
-.header {
-  @include flexbox(between);
-}
-
-.checkboxGroup {
-  @include flexbox(end);
-
-  label {
-    margin-left: 8px;
-  }
-}
-
-.header {
-  @include flexbox(between);
-}
-
-.checkboxGroup {
-  @include flexbox(end);
-
-  label {
-    margin-left: 8px;
-  }
-}
-
-.header {
-  @include flexbox(between);
-}
-
-.checkboxGroup {
-  @include flexbox(end);
-
-  label {
-    margin-left: 8px;
-  }
+  margin-bottom: 20px;
 }
 
 .title {
   @include textStyle(16, 700);
-  margin-bottom: 20px;
+}
+
+.checkboxGroup {
+  @include flexbox(end);
+
+  label {
+    margin-left: 8px;
+  }
 }
 
 .tableWrapper {

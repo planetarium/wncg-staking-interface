@@ -12,15 +12,16 @@ import { useAppSelector } from 'hooks'
 
 import { Icon } from '../Icon'
 
-type CountUpProps = ReactCountUpProps & {
+type CountUpProps = Omit<ReactCountUpProps, 'end'> & {
+  end: string | number
   isApproximate?: boolean
   showAlways?: boolean
   showTitle?: boolean
 }
 
 export function CountUp({
-  className,
   end,
+  className,
   isApproximate = false,
   showAlways = false,
   showTitle = true,
@@ -57,7 +58,7 @@ export function CountUp({
       title={showTitle ? sanitizeNumber(end) : undefined}
     >
       {isApproximate && <Icon id="approximate" ariaHidden />}
-      <ReactCountUp {...countUpProps} start={start} end={end} />
+      <ReactCountUp {...countUpProps} start={start} end={bEnd.toNumber()} />
     </div>
   )
 }

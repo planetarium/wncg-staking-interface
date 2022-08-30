@@ -4,7 +4,7 @@ import { useMount } from 'react-use'
 import { motion } from 'framer-motion'
 import styles from './style.module.scss'
 
-import { removeTx, Transaction } from 'app/states/transaction'
+// import { Transaction } from 'app/states/transaction'
 import { renderTxTitle } from 'utils/transaction'
 import { getTxUrl } from 'utils/url'
 import { useAppDispatch, useConfirmations, useTransaction } from 'hooks'
@@ -13,7 +13,7 @@ import { listItemVariants } from '../constants'
 import { Icon } from 'components/Icon'
 
 type TxItemProps = {
-  transaction: Transaction
+  transaction: any
 }
 
 export function TxItem({ transaction }: TxItemProps) {
@@ -35,18 +35,18 @@ export function TxItem({ transaction }: TxItemProps) {
       } else {
         // NOTE: Canceled tx
         setIsCanceled(true)
-        setConfirmations(hash)
+        // setConfirmations(hash)
       }
     } catch (error) {
       // NOTE: Failed tx
       setIsFailed(true)
-      setConfirmations(hash)
+      // setConfirmations(hash)
     }
   }
 
   function handleDelete(e: MouseEvent<HTMLButtonElement>) {
     e.stopPropagation()
-    dispatch(removeTx(hash))
+    // dispatch(removeTx(hash))
   }
 
   useMount(() => {

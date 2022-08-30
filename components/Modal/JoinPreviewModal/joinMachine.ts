@@ -1,146 +1,128 @@
 import { assign, createMachine } from 'xstate'
+import { nanoid } from 'nanoid'
+
 import { bnum } from 'utils/num'
+import { getTokenIndex } from 'utils/token'
+import {
+  createEventlessTransitions,
+  createTransitions,
+  generateStateNames,
+} from './utils'
 
 export type JoinMachineContext = {
   amounts: string[]
   approvals: boolean[]
+  nativeAssetIndex: number
   isNativeAsset: boolean
 }
 
 export function createJoinMachine(
   amounts: string[],
+  poolTokenSymbols: string[],
   approvals: boolean[],
+  nativeAssetIndex: number,
   isNativeAsset: boolean
 ) {
+  const id = `#JoinPoolMachine.${nanoid()}`
+  const states = buildStates(poolTokenSymbols)
+  const actions = buildActions(poolTokenSymbols)
+  const guards = buildGuards(poolTokenSymbols)
+
   return createMachine<JoinMachineContext>(
     {
-      id: '#JoinPoolMachine',
+      predictableActionArguments: true,
+      id,
       initial: 'idle',
       context: {
         amounts,
         approvals,
         isNativeAsset,
+        nativeAssetIndex,
       },
-      states: {
-        idle: {
-          always: [
-            {
-              target: 'join',
-              cond: 'canJoin',
-            },
-            {
-              target: 'approveWncg',
-              cond: 'shouldApproveWncg',
-            },
-            {
-              target: 'approveWeth',
-              cond: 'shouldApproveWeth',
-            },
-          ],
-        },
-        approveWncg: {
-          on: {
-            APPROVING_WNCG: 'approvingWncg',
-          },
-        },
-        approvingWncg: {
-          always: [
-            {
-              target: 'join',
-              cond: 'canJoin',
-            },
-            {
-              target: 'approveWeth',
-              cond: 'shouldApproveWeth',
-            },
-          ],
-          on: {
-            APPROVED_WNCG: {
-              actions: 'updateWncgApproval',
-            },
-            ROLLBACK: 'approveWncg',
-          },
-        },
-        approveWeth: {
-          on: {
-            APPROVING_WETH: 'approvingWeth',
-          },
-        },
-        approvingWeth: {
-          always: {
-            target: 'join',
-            cond: 'canJoin',
-          },
-          on: {
-            APPROVED_WETH: {
-              actions: 'updateWethApproval',
-            },
-            ROLLBACK: 'approveWeth',
-          },
-        },
-        join: {
-          on: {
-            JOINING: 'joining',
-          },
-        },
-        joining: {
-          on: {
-            COMPLETED: 'completed',
-            ROLLBACK: 'join',
-          },
-        },
-        completed: {
-          type: 'final',
-        },
-      },
+      states,
     },
     {
-      actions: {
-        updateWethApproval,
-        updateWncgApproval,
-      },
-      guards: {
-        canJoin,
-        shouldApproveWeth,
-        shouldApproveWncg,
-      },
+      actions,
+      guards,
     }
   )
 }
 
 function canJoin(ctx: JoinMachineContext) {
   return ctx.amounts.every((amount, i) => {
-    const givenAmount = bnum(amount)
-    if (i === 1 && ctx.isNativeAsset) return true
-    if (givenAmount.gt(0)) return ctx.approvals[i]
+    const bAmount = bnum(amount)
+    if (i === ctx.nativeAssetIndex && ctx.isNativeAsset) return true
+    if (bAmount.gt(0)) return ctx.approvals[i]
     return true
   })
 }
 
-function shouldApproveWncg(ctx: JoinMachineContext) {
-  return !ctx.approvals[0] && !bnum(ctx.amounts[0]).isZero()
+function createShouldApprove(tokenIndex: number) {
+  return function (ctx: JoinMachineContext): boolean {
+    if (ctx.approvals[tokenIndex]) return false
+    if (ctx.nativeAssetIndex === tokenIndex && ctx.isNativeAsset) return false
+    if (bnum(ctx.amounts[tokenIndex]).isZero()) return false
+
+    const prevIndex = tokenIndex - 1
+    if (prevIndex < 0) return true
+
+    const prevIndexArray = Array.from(Array(tokenIndex).keys())
+    return prevIndexArray.every((index) => !createShouldApprove(index)(ctx))
+  }
 }
 
-function shouldApproveWeth(ctx: JoinMachineContext) {
-  if (ctx.approvals[1]) return false
-  if (ctx.isNativeAsset) return false
-  if (bnum(ctx.amounts[1]).isZero()) return false
-  if (shouldApproveWncg(ctx)) return false
-  return true
+function createUpdateApproval(tokenIndex: number) {
+  return assign<JoinMachineContext>({
+    approvals: (ctx) => {
+      const newApprovals = [...ctx.approvals]
+      newApprovals[tokenIndex] = true
+      return newApprovals
+    },
+  })
 }
 
-const updateWncgApproval = assign<JoinMachineContext>({
-  approvals: (ctx) => {
-    const newApprovals = [...ctx.approvals]
-    newApprovals[0] = true
-    return newApprovals
-  },
-})
+function buildActions(poolTokenSymbols: string[]) {
+  const entries = poolTokenSymbols.map((symbol, i) => [
+    `update${symbol}Approval`,
+    createUpdateApproval(i),
+  ])
+  return Object.fromEntries(entries)
+}
 
-const updateWethApproval = assign<JoinMachineContext>({
-  approvals: (ctx) => {
-    const newApprovals = [...ctx.approvals]
-    newApprovals[1] = true
-    return newApprovals
-  },
-})
+function buildGuards(poolTokenSymbols: string[]) {
+  const entries = poolTokenSymbols.map((symbol, i) => {
+    const guardType = `shouldApprove${symbol}`
+    return [guardType, createShouldApprove(i)]
+  })
+
+  return {
+    canJoin,
+    ...Object.fromEntries(entries),
+  }
+}
+
+function buildStates(poolTokenSymbols: string[]) {
+  const stateNames = generateStateNames(poolTokenSymbols)
+  const stateEntries = stateNames.map((state) => {
+    if (state === 'completed') {
+      return [state, { type: 'final' }]
+    }
+    const tokenIndex = getTokenIndex(poolTokenSymbols, state)
+    const always = createEventlessTransitions(
+      poolTokenSymbols,
+      state,
+      tokenIndex
+    )
+    const events = createTransitions(poolTokenSymbols, state, tokenIndex)
+
+    const definitions = { always, on: events }
+    const entries = Object.entries(definitions).filter(([, value]) => {
+      if (value instanceof Array) return !!value.length
+      return !!Object.keys(value).length
+    })
+
+    return [state, Object.fromEntries(entries)]
+  })
+
+  return Object.fromEntries(stateEntries)
+}

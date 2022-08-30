@@ -1,73 +1,46 @@
 import { memo, useCallback, useEffect } from 'react'
 import { Event } from 'ethers'
 
-import { removeTx, TransactionAction } from 'app/states/transaction'
 import {
-  useAppDispatch,
-  useConfirmations,
-  useEventFilter,
+  useBalances,
+  useEventFilters,
   useProvider,
   useStake,
-  useToast,
+  useStakingData,
   useTransaction,
   useUnstake,
-  useUserBalances,
 } from 'hooks'
 
 function StakeEffects() {
-  const { getConfirmations, setConfirmations } = useConfirmations()
-  const { stakedEventFilter } = useEventFilter()
+  const { fetchBalances } = useBalances()
+  const { stakedEventFilter } = useEventFilters()
   const provider = useProvider()
-  const { stakedTokenBalance, totalStaked } = useStake()
-  const { addToast } = useToast()
-  const { getTransactionReceipt } = useTransaction()
-  const { getTimestamps } = useUnstake()
-  const { fetchBptBalance } = useUserBalances()
+  const { stakedTokenBalance } = useStake()
+  const { fetchTotalStaked } = useStakingData()
+  const { transactionService } = useTransaction()
+  const { fetchTimestamps } = useUnstake()
 
-  const dispatch = useAppDispatch()
-
-  useEffect(() => {
-    stakedTokenBalance()
-  }, [stakedTokenBalance])
-
-  useEffect(() => {
-    totalStaked()
-  }, [totalStaked])
+  // useEffect(() => {
+  //   stakedTokenBalance()
+  // }, [stakedTokenBalance])
 
   const handleStakedEvent = useCallback(
-    async ({ transactionHash }: Event) => {
-      const receipt = await getTransactionReceipt(transactionHash)
-      if (!receipt) return
-
-      dispatch(removeTx(transactionHash))
-
-      const confirmations = getConfirmations(transactionHash)
-      if (!confirmations) return
-      if (confirmations !== 'fulfilled') {
-        addToast({
-          action: TransactionAction.Stake,
-          hash: transactionHash,
-          summary: 'Successfully staked 20WETH-80WNCG',
-          showPartyEmoji: true,
-        })
-      }
-      setConfirmations(transactionHash)
-
-      stakedTokenBalance()
-      fetchBptBalance()
-      totalStaked()
-      getTimestamps()
+    async (event: Event) => {
+      await transactionService?.updateTxStatus(event, {
+        onFulfill: () => {
+          stakedTokenBalance()
+          fetchBalances()
+          fetchTotalStaked()
+          fetchTimestamps()
+        },
+      })
     },
     [
-      addToast,
-      dispatch,
-      fetchBptBalance,
-      getConfirmations,
-      getTimestamps,
-      getTransactionReceipt,
-      setConfirmations,
+      fetchBalances,
+      fetchTimestamps,
+      fetchTotalStaked,
       stakedTokenBalance,
-      totalStaked,
+      transactionService,
     ]
   )
 

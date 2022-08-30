@@ -1,46 +1,31 @@
-import { useCallback, useMemo } from 'react'
-import { useQuery } from 'react-query'
-import { useRecoilValue } from 'recoil'
+import { useCallback } from 'react'
 
-import { getUserBalances } from 'app/states/balance'
-import { poolTokenSymbolsState } from 'app/states/pool'
-import CalculatorService from 'services/calculator'
-import { poolService } from 'services/pool'
-import { bnum } from 'utils/num'
-import { useAppSelector } from './useRedux'
+import { configService } from 'services/config'
+import { bnum, hasAmounts } from 'utils/num'
+import { useBalances } from './useBalances'
+import { useCalculator } from './useCalculator'
+import { usePoolService } from './usePoolService'
 import { useUsd } from './useUsd'
 
 export function useJoinMath() {
-  const { calculateUsdValue } = useUsd()
+  const { balanceFor } = useBalances()
+  const calculator = useCalculator('join')
+  const { poolTokenAddresses } = usePoolService()
+  const { getFiatValue } = useUsd()
 
-  const { data: pool } = useQuery('pool', poolService.fetchPool, {
-    keepPreviousData: true,
-    staleTime: 5 * 1_000,
-  })
-  const poolTokenSymbols = useRecoilValue(poolTokenSymbolsState)
-
-  const userBalances = useAppSelector(getUserBalances)
-  const bptBalance = userBalances.bpt
-
-  const calculator = useMemo(() => {
-    if (!pool) return null
-    return new CalculatorService(pool, bptBalance, 'join')
-  }, [bptBalance, pool])
-
-  const getMinBptOut = useCallback(
+  const calcMinBptOut = useCallback(
     (amounts: string[]) => {
       return calculator?.exactTokensInForBptOut(amounts).toString() || '0'
     },
     [calculator]
   )
 
-  const getPriceImpact = useCallback(
+  const calcPriceImpact = useCallback(
     (amounts: string[]) => {
       if (!hasAmounts(amounts)) return 0
 
       try {
         const fullBptOut = calculator?.exactTokensInForBptOut(amounts)
-
         return (
           calculator
             ?.priceImpact(amounts, {
@@ -55,7 +40,7 @@ export function useJoinMath() {
     [calculator]
   )
 
-  const getPropAmounts = useCallback(
+  const calcPropAmounts = useCallback(
     (amounts: string[], fixedTokenIndex: number) => {
       const index = fixedTokenIndex === 1 ? 0 : 1
       const { send } =
@@ -65,26 +50,16 @@ export function useJoinMath() {
     [calculator]
   )
 
-  const getUserPoolTokenBalances = useCallback(
+  const calcOptimizedAmounts = useCallback(
     (isNativeAsset: boolean) => {
-      return poolTokenSymbols.map((symb) => {
-        // FIXME: Refactor selecting token balance
-        let symbol = symb as PoolTokenSymbol | 'eth' | 'wbtc'
-        if (symbol === 'weth' && isNativeAsset) {
-          symbol = 'eth'
-        }
-        if (symbol === 'wbtc') {
-          symbol = 'wncg'
-        }
-        return userBalances[symbol] || '0'
-      })
-    },
-    [poolTokenSymbols, userBalances]
-  )
-
-  const getOptimizedAmounts = useCallback(
-    (isNativeAsset: boolean) => {
-      const userPoolBalances = getUserPoolTokenBalances(isNativeAsset)
+      const userPoolBalances =
+        poolTokenAddresses.map((address) => {
+          address =
+            isNativeAsset && address === configService.weth
+              ? configService.nativeAssetAddress
+              : address
+          return balanceFor(address)
+        }) || []
 
       const propMinAmounts = userPoolBalances.map((balance, i) => {
         return (
@@ -92,30 +67,28 @@ export function useJoinMath() {
         )
       })
 
-      const propMinAmountsInUsdValue = propMinAmounts.map((amounts) => {
-        return amounts.reduce((acc, amount, i) => {
-          const tokenName = poolTokenSymbols[i]
-          acc += calculateUsdValue(tokenName, amount)
-          return acc
-        }, 0)
+      const propMinAmountsInFiatValue = propMinAmounts.map((amounts) => {
+        return amounts
+          .reduce((total, amount, i) => {
+            const address = poolTokenAddresses[i]
+            if (!address) return total
+            return total.plus(getFiatValue(address, amount))
+          }, bnum(0))
+          .toNumber()
       })
-      const minIndex = propMinAmountsInUsdValue.indexOf(
-        Math.min(...propMinAmountsInUsdValue)
+      const minIndex = propMinAmountsInFiatValue.indexOf(
+        Math.min(...propMinAmountsInFiatValue)
       )
 
       return propMinAmounts[minIndex] || ['0', '0']
     },
-    [calculateUsdValue, calculator, getUserPoolTokenBalances, poolTokenSymbols]
+    [balanceFor, calculator, getFiatValue, poolTokenAddresses]
   )
 
   return {
-    getMinBptOut,
-    getOptimizedAmounts,
-    getPriceImpact,
-    getPropAmounts,
+    calcMinBptOut,
+    calcOptimizedAmounts,
+    calcPriceImpact,
+    calcPropAmounts,
   }
-}
-
-function hasAmounts(amounts: string[]) {
-  return amounts.some((amount) => bnum(amount).gt(0))
 }

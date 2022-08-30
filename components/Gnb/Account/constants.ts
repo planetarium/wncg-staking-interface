@@ -41,5 +41,3 @@ export const sidebarVariants = {
 }
 
 export const menuTransition = { ease: 'easeOut', duration: 0.25 }
-
-export const STORE_MUTED_KEY = `wncgStaking.muted`

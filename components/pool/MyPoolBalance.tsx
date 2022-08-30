@@ -1,35 +1,31 @@
-import { memo, useMemo } from 'react'
+import { memo } from 'react'
 import NumberFormat from 'react-number-format'
-import { useQuery } from 'react-query'
 import styles from './styles/MyPoolBalance.module.scss'
 
-import { getBptBalance } from 'app/states/balance'
 import { getIsConnected } from 'app/states/connection'
-import CalculatorService from 'services/calculator'
-import { poolService } from 'services/pool'
-import Decimal from 'utils/num'
-import { useAppSelector, useConnection, useUsd } from 'hooks'
+import { isLessThanMinAmount } from 'utils/num'
+import {
+  useAppSelector,
+  useBalances,
+  useCalculator,
+  useConnection,
+  usePoolService,
+  useUsd,
+} from 'hooks'
 
 import { Button } from 'components/Button'
 import { TokenIcon } from 'components/TokenIcon'
 
 function MyPoolBalance() {
+  const calculator = useCalculator('exit')
   const { connect } = useConnection()
-  const { calculateUsdValue } = useUsd()
+  const { getFiatValue } = useUsd()
 
-  const { data: pool } = useQuery('pool', poolService.fetchPool, {
-    keepPreviousData: true,
-    staleTime: 5 * 1_000,
-  })
-  const poolTokens = pool?.tokens || []
+  const { bptAddress, poolTokens } = usePoolService()
+  const { balanceFor } = useBalances()
 
-  const bptBalance = useAppSelector(getBptBalance)
+  const bptBalance = balanceFor(bptAddress)
   const isConnected = useAppSelector(getIsConnected)
-
-  const calculator = useMemo(() => {
-    if (!pool) return null
-    return new CalculatorService(pool, bptBalance, 'exit')
-  }, [bptBalance, pool])
 
   const propAmounts = calculator?.propAmountsGiven(bptBalance, 0, 'send')
     .receive || ['0', '0']
@@ -40,13 +36,8 @@ function MyPoolBalance() {
 
       <dl className={styles.details}>
         {poolTokens.map((token, i) => {
-          const symbol = token.symbol.toLowerCase()
           const amount = propAmounts[i]
-          const amountUsdValue = calculateUsdValue(symbol, amount)
-
-          const tokenAmount = new Decimal(amount)
-          const isAmountLessThanMinAmount =
-            !tokenAmount.isZero() && tokenAmount.lt(0.0001)
+          const fiatValue = getFiatValue(token.address, amount)
 
           return (
             <div
@@ -54,7 +45,7 @@ function MyPoolBalance() {
               key={`poolBalance-${token.symbol}`}
             >
               <dt>
-                <TokenIcon className={styles.token} symbol={symbol} />
+                <TokenIcon className={styles.token} symbol={token.symbol} />
                 <div className={styles.symbol}>
                   <strong>
                     {Number(token.weight) * 100}% {token.symbol}
@@ -65,8 +56,8 @@ function MyPoolBalance() {
               <dd>
                 {isConnected ? (
                   <>
-                    {isAmountLessThanMinAmount ? (
-                      '< 0.0001'
+                    {isLessThanMinAmount(amount) ? (
+                      <span title={amount}>&lt; 0.0001</span>
                     ) : (
                       <NumberFormat
                         value={amount}
@@ -77,7 +68,7 @@ function MyPoolBalance() {
                     )}
                     <NumberFormat
                       className={styles.usd}
-                      value={amountUsdValue}
+                      value={fiatValue}
                       displayType="text"
                       thousandSeparator
                       decimalScale={2}

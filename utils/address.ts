@@ -1,3 +1,4 @@
+import { TOKENS } from 'constants/tokens'
 import { assertUnreachable } from './assertion'
 
 export function getSymbolFromAddress(address: string) {
@@ -11,4 +12,17 @@ export function getSymbolFromAddress(address: string) {
     default:
       assertUnreachable(address)
   }
+}
+
+export function convertAddress(address: string) {
+  const addressMap = TOKENS.PriceChainMap
+  return addressMap[address.toLowerCase()] || address
+}
+
+export function uniqAddress(addresses: string[]) {
+  return addresses.flatMap((address, i) => {
+    if (!address) return []
+    if (addresses.indexOf(address) !== i) return []
+    return address
+  })
 }

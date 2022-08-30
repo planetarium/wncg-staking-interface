@@ -6,9 +6,9 @@ import type {
   UseFormTrigger,
 } from 'react-hook-form'
 
-import { getUserBalances } from 'app/states/balance'
-import Decimal, { sanitizeNumber } from 'utils/num'
-import { useAppSelector } from 'hooks'
+import { configService } from 'services/config'
+import { bnum } from 'utils/num'
+import { useBalances } from 'hooks'
 import { etherTokenList } from '../constants'
 import type { JoinFormFields } from './type'
 
@@ -39,34 +39,31 @@ function EtherInput({
   value,
   error,
 }: EtherInputProps) {
-  const userBalances = useAppSelector(getUserBalances)
+  const { balanceFor } = useBalances()
 
-  const ethNetBalance = isNativeAsset ? userBalances.eth : userBalances.weth
+  const ethBalance = balanceFor(
+    isNativeAsset ? configService.nativeAssetAddress : configService.weth
+  )
   const ethBalanceAvailable = isNativeAsset
-    ? Math.max(new Decimal(ethNetBalance).minus(0.05).toNumber(), 0).toString()
-    : ethNetBalance
+    ? Math.max(bnum(ethBalance).minus(0.05).toNumber(), 0).toString()
+    : ethBalance
 
   const rules = useMemo(
     () => ({
       validate: {
         maxAmount(v: string) {
-          return (
-            new Decimal(sanitizeNumber(v)).lte(ethNetBalance) ||
-            'Exceeds wallet balance'
-          )
+          return bnum(v).lte(ethBalance) || 'Exceeds wallet balance'
         },
       },
       onChange() {
         clearErrors('ethAmount')
       },
     }),
-    [clearErrors, ethNetBalance]
+    [clearErrors, ethBalance]
   )
 
   const maximized = useMemo(
-    () =>
-      !new Decimal(value).isZero() &&
-      new Decimal(value).eq(ethBalanceAvailable),
+    () => !bnum(value).isZero() && bnum(value).eq(ethBalanceAvailable),
     [ethBalanceAvailable, value]
   )
 
@@ -74,8 +71,8 @@ function EtherInput({
 
   const showWarning = useMemo(() => {
     if (!isNativeAsset) return false
-    if (error || new Decimal(value).isZero()) return false
-    if (new Decimal(ethBalanceAvailable).minus(value).lte(0.05)) {
+    if (error || bnum(value).isZero()) return false
+    if (bnum(ethBalanceAvailable).minus(value).lte(0.05)) {
       return true
     }
     return false
@@ -92,7 +89,7 @@ function EtherInput({
       control={control as any as Control<FieldValues, 'any'>}
       rules={rules}
       error={error}
-      balance={ethNetBalance}
+      balance={ethBalance}
       maximized={maximized}
       token={tokenName}
       selectToken={selectEth}

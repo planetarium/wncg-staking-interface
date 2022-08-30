@@ -1,10 +1,9 @@
-import { useCallback, useRef } from 'react'
+import { useCallback, useMemo, useRef } from 'react'
 import { useMount, useUnmount } from 'react-use'
 import { motion } from 'framer-motion'
 import styles from './style.module.scss'
 
-import { getTxList, resetTxList } from 'app/states/transaction'
-import { useAppDispatch, useAppSelector } from 'hooks'
+import { useAppDispatch, useTransaction } from 'hooks'
 import { menuTransition, menuVariants } from '../constants'
 
 import { TxItem } from './TxItem'
@@ -15,14 +14,19 @@ type PendingTxMenuProps = {
 
 export function PendingTxMenu({ close }: PendingTxMenuProps) {
   const menuRef = useRef<HTMLDivElement>(null)
+  const { transactionService } = useTransaction()
 
-  const dispatch = useAppDispatch()
-  const rawTxList = useAppSelector(getTxList)
-  const txList = [...rawTxList].reverse()
-  const hasPendingTx = !!txList.length
+  // const dispatch = useAppDispatch()
+  const pendingTxList = useMemo(
+    () => transactionService?.pendingTxList || [],
+    [transactionService?.pendingTxList]
+  )
+  console.log(pendingTxList)
+
+  const hasPendingTx = !!pendingTxList.length
 
   function clearTransactions() {
-    dispatch(resetTxList())
+    transactionService?.resetTx()
   }
 
   const closeOnBlur = useCallback(
@@ -59,7 +63,7 @@ export function PendingTxMenu({ close }: PendingTxMenuProps) {
       {hasPendingTx ? (
         <>
           <ul className={styles.txList}>
-            {txList.map((tx) => (
+            {pendingTxList.map((tx) => (
               <TxItem key={tx.hash} transaction={tx} />
             ))}
           </ul>

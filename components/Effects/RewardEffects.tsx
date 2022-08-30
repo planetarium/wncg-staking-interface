@@ -1,13 +1,13 @@
 import { memo, useCallback, useEffect } from 'react'
 import { Event } from 'ethers'
 
-import { removeTx, TransactionAction } from 'app/states/transaction'
+// import { removeTx, TransactionAction } from 'app/states/transaction'
 import {
   useAppDispatch,
   useConfirmations,
-  useEventFilter,
+  useEarmark,
+  useEventFilters,
   useProvider,
-  useReward,
   useToast,
   useTransaction,
 } from 'hooks'
@@ -19,49 +19,39 @@ function RewardEffects() {
     rewardsAllEventFilter,
     rewardsBalEventFilter,
     rewardsWncgEventFilter,
-  } = useEventFilter()
+  } = useEventFilters()
   const provider = useProvider()
-  const { earmarkIncentive, earnedBal, earnedWncg } = useReward()
+  const { fetchEarmarkIncentive } = useEarmark()
   const { addToast } = useToast()
   const { getTransactionReceipt } = useTransaction()
   const dispatch = useAppDispatch()
-
-  useEffect(() => {
-    earnedBal()
-  }, [earnedBal])
-
-  useEffect(() => {
-    earnedWncg()
-  }, [earnedWncg])
 
   const handleAllRewardEvent = useCallback(
     async ({ transactionHash }: Event) => {
       const receipt = await getTransactionReceipt(transactionHash)
       if (!receipt) return
 
-      dispatch(removeTx(transactionHash))
+      // dispatch(removeTx(transactionHash))
 
       const key = `${transactionHash}_claimAll`
       const confirmations = getConfirmations(key)
       if (!confirmations) return
       if (confirmations !== 'fulfilled') {
-        addToast({
-          action: TransactionAction.ClaimAllRewards,
-          hash: transactionHash,
-          summary: 'Successfully claimed WNCG & BAL rewards',
-          showPartyEmoji: true,
-        })
+        // addToast({
+        //   action: TransactionAction.ClaimAllRewards,
+        //   hash: transactionHash,
+        //   message: 'Successfully claimed WNCG & BAL rewards',
+        //   type: 'success',
+        // })
       }
-      setConfirmations(key)
+      // setConfirmations(key)
 
-      earnedBal()
-      earnedWncg()
+      // earnedBal()
+      // earnedWncg()
     },
     [
       addToast,
       dispatch,
-      earnedBal,
-      earnedWncg,
       getConfirmations,
       getTransactionReceipt,
       setConfirmations,
@@ -73,26 +63,26 @@ function RewardEffects() {
       const receipt = await getTransactionReceipt(transactionHash)
       if (!receipt) return
 
-      dispatch(removeTx(transactionHash))
+      // dispatch(removeTx(transactionHash))
 
       const confirmations = getConfirmations(transactionHash)
       if (!confirmations) return
       if (confirmations !== 'fulfilled') {
-        addToast({
-          action: TransactionAction.ClaimBalRewards,
-          hash: transactionHash,
-          summary: 'Successfully claimed BAL reward',
-          showPartyEmoji: true,
-        })
+        // addToast({
+        //   action: TransactionAction.ClaimBalRewards,
+        //   hash: transactionHash,
+        //   message: 'Successfully claimed BAL reward',
+        //   type: 'success',
+        // })
       }
-      setConfirmations(transactionHash)
+      // setConfirmations(transactionHash)
 
-      earnedBal()
+      // earnedBal()
     },
     [
       addToast,
       dispatch,
-      earnedBal,
+      // earnedBal,
       getConfirmations,
       getTransactionReceipt,
       setConfirmations,
@@ -104,26 +94,26 @@ function RewardEffects() {
       const receipt = await getTransactionReceipt(transactionHash)
       if (!receipt) return
 
-      dispatch(removeTx(transactionHash))
+      // dispatch(removeTx(transactionHash))
 
       const confirmations = getConfirmations(transactionHash)
       if (!confirmations) return
       if (confirmations !== 'fulfilled') {
-        addToast({
-          action: TransactionAction.ClaimWncgRewards,
-          hash: transactionHash,
-          summary: 'Successfully claimed WNCG reward',
-          showPartyEmoji: true,
-        })
+        // addToast({
+        //   action: TransactionAction.ClaimWncgRewards,
+        //   hash: transactionHash,
+        //   message: 'Successfully claimed WNCG reward',
+        //   type: 'success',
+        // })
       }
-      setConfirmations(transactionHash)
+      // setConfirmations(transactionHash)
 
-      earnedWncg()
+      // earnedWncg()
     },
     [
       addToast,
       dispatch,
-      earnedWncg,
+      // earnedWncg,
       getConfirmations,
       getTransactionReceipt,
       setConfirmations,
@@ -135,27 +125,27 @@ function RewardEffects() {
       const receipt = await getTransactionReceipt(transactionHash)
       if (!receipt) return
 
-      dispatch(removeTx(transactionHash))
+      // dispatch(removeTx(transactionHash))
 
       const confirmations = getConfirmations(transactionHash)
       if (!confirmations) return
       if (confirmations !== 'fulfilled') {
-        addToast({
-          action: TransactionAction.EarmarkRewards,
-          hash: transactionHash,
-          summary: 'Successfully harvested BAL reward',
-          showPartyEmoji: true,
-        })
+        // addToast({
+        //   action: TransactionAction.EarmarkRewards,
+        //   hash: transactionHash,
+        //   message: 'Successfully harvested BAL reward',
+        //   type: 'success',
+        // })
       }
-      setConfirmations(transactionHash)
-      earmarkIncentive()
-      earnedBal()
+      // setConfirmations(transactionHash)
+      fetchEarmarkIncentive()
+      // earnedBal()
     },
     [
       addToast,
       dispatch,
-      earmarkIncentive,
-      earnedBal,
+      fetchEarmarkIncentive,
+      // earnedBal,
       getConfirmations,
       getTransactionReceipt,
       setConfirmations,

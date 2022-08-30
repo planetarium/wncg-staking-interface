@@ -1,12 +1,12 @@
 import { memo, MouseEvent } from 'react'
-import { useRecoilValue } from 'recoil'
-import type { StateValue } from 'xstate'
+import { useMount, useUnmount } from 'react-use'
 import styles from './Actions.module.scss'
 
-import { poolTokenApprovalsState } from 'app/states/approval'
 import { ModalCategory } from 'app/states/modal'
+import { useModal, usePoolService, useProvider } from 'hooks'
+import { getJoinActionButtonLabel, isApprovingState } from './utils'
+import { useJoinEvents } from './useJoinEvents'
 import { useJoinMachine } from './useJoinMachine'
-import { useModal } from 'hooks'
 
 import { Button } from 'components/Button'
 import { Icon } from 'components/Icon'
@@ -19,19 +19,20 @@ type JoinActionsProps = {
 }
 
 function JoinActions({ amounts, disabled, isNativeAsset }: JoinActionsProps) {
-  const { handleJoin, state, stepsToSkip } = useJoinMachine(
+  const { handleJoin, send, state, stepsToSkip } = useJoinMachine(
     amounts,
     isNativeAsset
   )
+  const { eventFilters, eventHandlers } = useJoinEvents(send)
   const { removeModal } = useModal()
+  const { poolTokenAddresses, poolTokenSymbols } = usePoolService()
+  const provider = useProvider()
 
-  const poolTokenApprovals = useRecoilValue(poolTokenApprovalsState)
-
-  const submitDisabled = ['approvingWncg', 'approvingWeth', 'joining'].includes(
-    state.value as string
-  )
+  const submitDisabled =
+    isApprovingState(state.value) || state.value === 'joining'
   const isCompleted = state.value === 'completed'
-  const isCloseButton = isCompleted || disabled
+  const isIdle = state.value === 'idle'
+  const showCloseButton = isCompleted || isIdle || disabled
 
   function closeModal() {
     removeModal(ModalCategory.JoinPreview)
@@ -44,9 +45,26 @@ function JoinActions({ amounts, disabled, isNativeAsset }: JoinActionsProps) {
       closeModal()
       return
     }
-
     handleJoin()
   }
+
+  useMount(() => {
+    eventFilters.forEach((filter, i) => {
+      const handler = eventHandlers[i]
+      if (!filter || !handler) return
+      console.log('>>>>>>>> JOIN ACTION', filter?.address?.slice(0, 6))
+
+      provider?.on(filter, handler)
+    })
+  })
+
+  useUnmount(() => {
+    eventFilters.forEach((filter) => {
+      if (!filter) return
+      console.log('>>>>>>>> BYE ACTION', filter?.address?.slice(0, 6))
+      provider?.off(filter)
+    })
+  })
 
   return (
     <footer>
@@ -54,31 +72,27 @@ function JoinActions({ amounts, disabled, isNativeAsset }: JoinActionsProps) {
         <div className={styles.divider} aria-hidden />
 
         <ol className={styles.steps}>
-          <JoinActionStep
-            action="approveWncg"
-            completed={poolTokenApprovals[0]}
-            currentState={state.value}
-            label={1}
-            pending="approvingWncg"
-            skip={stepsToSkip[0]}
-            approvalStep
-            token="wncg"
-          />
-          <JoinActionStep
-            action="approveWeth"
-            completed={poolTokenApprovals[1]}
-            currentState={state.value}
-            label={2}
-            pending="approvingWeth"
-            skip={stepsToSkip[1]}
-            approvalStep
-            token="weth"
-          />
+          {poolTokenSymbols.map((symbol, i) => {
+            return (
+              <JoinActionStep
+                key={`joinActionStep.${symbol}`}
+                action={`approve${symbol}`}
+                completed={state.context.approvals[i]}
+                currentState={state.value}
+                label={i + 1}
+                pending={`approving${symbol}`}
+                skip={stepsToSkip[i]}
+                approvalStep
+                token={symbol}
+              />
+            )
+          })}
+
           <JoinActionStep
             action="join"
             completed="completed"
             currentState={state.value}
-            label={3}
+            label={poolTokenAddresses.length + 1}
             pending="joining"
           />
         </ol>
@@ -106,44 +120,23 @@ function JoinActions({ amounts, disabled, isNativeAsset }: JoinActionsProps) {
           size="large"
           href="/wncg"
           fullWidth
-          disabled={submitDisabled}
         >
           Stake
         </Button>
       )}
 
       <Button
-        variant={isCloseButton ? 'secondary' : 'primary'}
+        variant={showCloseButton ? 'secondary' : 'primary'}
         size="large"
         onClick={handleSubmit}
         fullWidth
+        loading={submitDisabled}
         disabled={submitDisabled}
       >
-        {disabled ? 'Close' : renderButtonLabel(state.value)}
+        {disabled ? 'Close' : getJoinActionButtonLabel(state.value)}
       </Button>
     </footer>
   )
 }
 
 export default memo(JoinActions)
-
-function renderButtonLabel(state: StateValue) {
-  switch (state) {
-    case 'approveWncg':
-      return 'Approve WNCG'
-    case 'approvingWncg':
-      return 'Approving WNCG'
-    case 'approveWeth':
-      return 'Approve WETH'
-    case 'approvingWeth':
-      return 'Approving WETH'
-    case 'join':
-      return 'Join pool'
-    case 'joining':
-      return 'Joining pool'
-    case 'completed':
-      return 'Close'
-    default:
-      return 'Join'
-  }
-}

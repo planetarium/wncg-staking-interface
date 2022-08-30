@@ -1,7 +1,8 @@
 import { toast } from 'react-toastify'
+import { nanoid } from 'nanoid'
 
 import { addToast as addToastId } from 'app/states/toast'
-import type { TransactionAction } from 'app/states/transaction'
+import type { TransactionAction } from 'services/transaction'
 import { toastAnimation } from 'utils/toast'
 import { useConfirmations } from './useConfirmations'
 import { useAppDispatch } from './useRedux'
@@ -11,8 +12,9 @@ import { Toast } from 'components/Toast'
 type AddToastParams = {
   action: TransactionAction
   hash: string
-  summary: string
-  showPartyEmoji?: boolean
+  title: string
+  message: string
+  type?: ToastType
 }
 
 export function useToast() {
@@ -24,13 +26,13 @@ export function useToast() {
     confirmationHash?: string,
     data?: any
   ) {
-    const { hash, summary } = params
-    const toastId = `${hash}.${summary}`
+    const toastId = `${params.hash}.${nanoid()}`
 
     toast(<Toast {...params} />, {
       transition: toastAnimation,
       toastId,
     })
+
     dispatch(addToastId(toastId))
 
     if (confirmationHash) {
@@ -38,7 +40,19 @@ export function useToast() {
     }
   }
 
+  const sendToast = (params: AddToastParams) => {
+    const toastId = `${params.hash}.${nanoid()}`
+
+    toast(<Toast {...params} />, {
+      transition: toastAnimation,
+      toastId,
+    })
+
+    return toastId
+  }
+
   return {
     addToast,
+    sendToast,
   }
 }

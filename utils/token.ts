@@ -1,3 +1,4 @@
+import { DEFAULT_TOKEN_INFO, TOKENS } from 'constants/tokens'
 import { IS_ETHEREUM } from './env'
 
 // TODO: Create a separate JSON file
@@ -8,33 +9,26 @@ const WETH_ADDRESS = IS_ETHEREUM
   : '0xdfcea9088c8a88a76ff74892c1457c17dfeef9c1'
 const ETH_ADDRESS = '0x0000000000000000000000000000000000000000'
 
-const tokenInfo: TokenInfo[] = [
-  {
-    address: WBTC_ADDRESS,
-    name: 'Wrapped Bitcoin',
-    decimals: 8,
-    symbol: 'WBTC',
-  },
-  {
-    address: WNCG_ADDRESS,
-    name: 'Wrapped NCG',
-    decimals: 18,
-    symbol: 'WNCG',
-  },
-  {
-    address: WETH_ADDRESS,
-    name: 'Wrapped Ether',
-    decimals: 18,
-    symbol: 'WETH',
-  },
-]
-
-export function getTokenInfo(address: string) {
-  return tokenInfo.find(
-    (t) => t.address.toLowerCase() === address.toLowerCase()
-  )
-}
-
 export const ethAddress = ETH_ADDRESS
 export const wethAddress = WETH_ADDRESS
 export const wncgAddress = IS_ETHEREUM ? WNCG_ADDRESS : WBTC_ADDRESS
+
+export function getTokenInfo(address?: string) {
+  if (!address) return DEFAULT_TOKEN_INFO
+  return TOKENS.TokenInfo[address.toLowerCase()] || DEFAULT_TOKEN_INFO
+}
+
+export function getTokenSymbol(address?: string) {
+  return getTokenInfo(address).symbol
+}
+
+export function findTokenAddressBySymbol(symbol = '') {
+  const match = Object.values(TOKENS.TokenInfo).find(
+    (tokenInfo) => tokenInfo.symbol.toLowerCase() === symbol.toLowerCase()
+  )
+  return match ? match.address : ''
+}
+
+export function getTokenIndex(list: string[], value: string) {
+  return list.findIndex((symbol) => value.includes(symbol))
+}

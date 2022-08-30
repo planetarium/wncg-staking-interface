@@ -1,27 +1,19 @@
 import { configureStore } from '@reduxjs/toolkit'
 
-import balance from './states/balance'
 import connection from './states/connection'
 import contract from './states/contract'
 import mediaQuery from './states/mediaQuery'
 import modal from './states/modal'
-import reward from './states/reward'
-import stake from './states/stake'
 import toast from './states/toast'
-import transaction from './states/transaction'
 import unstake from './states/unstake'
 
 export const store = configureStore({
   reducer: {
-    balance,
     connection,
     contract,
     mediaQuery,
     modal,
-    reward,
-    stake,
     toast,
-    transaction,
     unstake,
   },
 })
