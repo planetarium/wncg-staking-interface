@@ -9,7 +9,7 @@ import styles from './style.module.scss'
 
 import { accountState } from 'app/states/connection'
 import { networkMismatchState } from 'app/states/error'
-import { STORE_MUTED_KEY } from 'constants/storeKeys'
+import STORAGE_KEYS from 'constants/storageKeys'
 import { gaEvent } from 'lib/gtag'
 import { networkChainId, networkNameFor } from 'utils/network'
 import { truncateAddress } from 'utils/string'
@@ -28,7 +28,7 @@ type AccountSidebarProps = {
 export function AccountSidebar({ close }: AccountSidebarProps) {
   const [copied, setCopied] = useState(false)
   const [muted, setMuted] = useState<boolean>(
-    store.get(STORE_MUTED_KEY) || false
+    store.get(STORAGE_KEYS.UserSettings.Muted) || false
   )
   const menuRef = useRef<HTMLDivElement>(null)
 
@@ -58,7 +58,7 @@ export function AccountSidebar({ close }: AccountSidebarProps) {
 
   function handleMute() {
     setMuted((prev) => {
-      store.set(STORE_MUTED_KEY, !prev)
+      store.set(STORAGE_KEYS.UserSettings.Muted, !prev)
       gaEvent({
         name: 'mute_sound',
         params: {

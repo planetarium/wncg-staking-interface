@@ -7,7 +7,7 @@ import type {
 import { isToday } from 'date-fns'
 import store from 'store'
 
-import { STORE_TRANSACTION_MAP_KEY } from 'constants/storeKeys'
+import STORAGE_KEYS from 'constants/storageKeys'
 import {
   txInfoMessage,
   txSuccessMessage,
@@ -77,7 +77,7 @@ export class TransactionService {
       message: txInfoMessage(action, params),
     })
 
-    store.set(STORE_TRANSACTION_MAP_KEY, {
+    store.set(STORAGE_KEYS.Transactions, {
       ...this.txMap,
       [hashKey]: newTx,
     })
@@ -111,14 +111,14 @@ export class TransactionService {
 
     callbacks.onTxConfirmed?.()
 
-    store.set(STORE_TRANSACTION_MAP_KEY, {
+    store.set(STORAGE_KEYS.Transactions, {
       ...this.txMap,
       [hashKey]: newTarget,
     })
   }
 
   resetTx() {
-    store.remove(STORE_TRANSACTION_MAP_KEY)
+    store.remove(STORAGE_KEYS.Transactions)
   }
 
   flushOutdatedTx() {
@@ -130,7 +130,7 @@ export class TransactionService {
       newTxMap[hash] = tx
     })
 
-    store.set(STORE_TRANSACTION_MAP_KEY, newTxMap)
+    store.set(STORAGE_KEYS.Transactions, newTxMap)
   }
 
   async getTxReceipt(hash: string): Promise<TransactionReceipt> {
@@ -139,7 +139,7 @@ export class TransactionService {
   }
 
   get txMap(): TxMap {
-    return store.get(STORE_TRANSACTION_MAP_KEY) || {}
+    return store.get(STORAGE_KEYS.Transactions) || {}
   }
 
   get pendingTxList(): Transaction[] {

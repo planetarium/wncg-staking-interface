@@ -11,7 +11,7 @@ import store from 'store'
 import clsx from 'clsx'
 import styles from './styles/EstimatedEarn.module.scss'
 
-import { STORE_ESTIMATED_EARN_OPTION_KEY } from 'constants/storeKeys'
+import STORAGE_KEYS from 'constants/storageKeys'
 import { configService } from 'services/config'
 import { gaEvent } from 'lib/gtag'
 import { countUpOption, usdCountUpOption } from 'utils/countUp'
@@ -42,7 +42,7 @@ function EstimatedEarn({ amount = '' }: EstimatedEarnProps) {
   function handleOption(e: MouseEvent<HTMLButtonElement>) {
     const newOption = e.currentTarget.value
     setOption(newOption)
-    store.set(STORE_ESTIMATED_EARN_OPTION_KEY, newOption)
+    store.set(STORAGE_KEYS.UserSettings.EstimatedEarnOption, newOption)
     gaEvent({
       name: 'estimated_earn_period',
       params: {
@@ -63,7 +63,9 @@ function EstimatedEarn({ amount = '' }: EstimatedEarnProps) {
   )
 
   useIsomorphicLayoutEffect(() => {
-    const initialOption = store.get(STORE_ESTIMATED_EARN_OPTION_KEY)
+    const initialOption = store.get(
+      STORAGE_KEYS.UserSettings.EstimatedEarnOption
+    )
     if (initialOption && initialOption !== option) {
       setOption(initialOption)
     }

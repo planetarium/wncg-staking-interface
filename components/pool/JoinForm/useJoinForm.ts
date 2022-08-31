@@ -2,6 +2,7 @@ import { MouseEvent, useCallback, useMemo } from 'react'
 import type { UseFormReturn } from 'react-hook-form'
 
 import { ModalCategory } from 'app/states/modal'
+import { HIGH_PRICE_IMPACT, REKT_PRICE_IMPACT } from 'constants/poolLiquidity'
 import { configService } from 'services/config'
 import { bnum, sanitizeNumber } from 'utils/num'
 import {
@@ -107,7 +108,7 @@ export function useJoinForm(
   )
 
   const highPriceImpact = useMemo(
-    () => bnum(priceImpact).gte(0.01),
+    () => bnum(priceImpact).gte(HIGH_PRICE_IMPACT),
     [priceImpact]
   )
 
@@ -166,7 +167,10 @@ export function useJoinForm(
     [emptyAmounts, excessiveAmounts, highPriceImpact, priceImpactAgreement]
   )
 
-  const joinDisabled = useMemo(() => bnum(priceImpact).gte(0.2), [priceImpact])
+  const joinDisabled = useMemo(
+    () => bnum(priceImpact).gte(REKT_PRICE_IMPACT),
+    [priceImpact]
+  )
 
   const maxDisabled = useMemo(
     () => userTokenBalances.every((balance) => bnum(balance).isZero()),

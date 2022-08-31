@@ -8,11 +8,7 @@ import {
   getCooldownEndTimestamp,
   getWithdrawEndTimestamp,
 } from 'contracts/staking'
-import {
-  STORE_COOLDOWN_ENDS_AT,
-  STORE_IS_UNSTAKE_WINDOW_KEY,
-  STORE_WITHDRAW_ENDS_AT,
-} from 'constants/storeKeys'
+import STORAGE_KEYS from 'constants/storageKeys'
 import { REFETCH_INTERVAL } from 'constants/time'
 import { bnum } from 'utils/num'
 import { useStakedBalance } from './useStakedBalance'
@@ -42,9 +38,9 @@ export function useUnstakeTimestamps() {
       refetchInterval: REFETCH_INTERVAL,
       onSuccess(data) {
         if (bnum(data).gt(0)) {
-          store.set(STORE_COOLDOWN_ENDS_AT, data)
+          store.set(STORAGE_KEYS.Unstake.CooldownEndsAt, data)
         } else {
-          store.remove(STORE_COOLDOWN_ENDS_AT)
+          store.remove(STORAGE_KEYS.Unstake.CooldownEndsAt)
         }
       },
     }
@@ -57,11 +53,11 @@ export function useUnstakeTimestamps() {
       enabled: !!contract,
       onSuccess(data) {
         if (bnum(data).gt(0)) {
-          store.set(STORE_IS_UNSTAKE_WINDOW_KEY, true)
-          store.set(STORE_WITHDRAW_ENDS_AT, data)
+          store.set(STORAGE_KEYS.Unstake.Initiated, true)
+          store.set(STORAGE_KEYS.Unstake.WithdrawEndsAt, data)
         } else {
-          store.remove(STORE_IS_UNSTAKE_WINDOW_KEY)
-          store.remove(STORE_WITHDRAW_ENDS_AT)
+          store.remove(STORAGE_KEYS.Unstake.Initiated)
+          store.remove(STORAGE_KEYS.Unstake.WithdrawEndsAt)
         }
       },
     }

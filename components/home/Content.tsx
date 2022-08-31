@@ -4,7 +4,7 @@ import { AnimatePresence } from 'framer-motion'
 import store from 'store'
 import styles from './styles/Content.module.scss'
 
-import { STORE_IS_UNSTAKE_WINDOW_KEY } from 'constants/storeKeys'
+import STORAGE_KEYS from 'constants/storageKeys'
 import { useWithdrawable } from './useWithdrawable'
 import { Tab } from './constants'
 
@@ -19,7 +19,7 @@ export function Content() {
   const { isWithdrawable } = useWithdrawable()
 
   useMount(() => {
-    const isUnstakeWindow = store.get(STORE_IS_UNSTAKE_WINDOW_KEY)
+    const isUnstakeWindow = store.get(STORAGE_KEYS.Unstake.Initiated)
     if (isUnstakeWindow) {
       setTab(isUnstakeWindow ? Tab.Unstake : Tab.Stake)
     }

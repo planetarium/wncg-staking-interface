@@ -8,7 +8,7 @@ import {
   connectionStatusState,
 } from 'app/states/connection'
 import { ModalCategory } from 'app/states/modal'
-import { STORE_ACCOUNT_KEY } from 'constants/storeKeys'
+import STORAGE_KEYS from 'constants/storageKeys'
 import { gaEvent } from 'lib/gtag'
 import { handleError } from 'utils/error'
 import { convertChainIdToHex, networkChainId } from 'utils/network'
@@ -35,7 +35,7 @@ export function useConnection() {
     (account: string) => {
       setAccount(account)
       setConnectionStatus(ConnectionStatus.Connected)
-      store.set(STORE_ACCOUNT_KEY, account)
+      store.set(STORAGE_KEYS.Account, account)
     },
     [setAccount, setConnectionStatus]
   )

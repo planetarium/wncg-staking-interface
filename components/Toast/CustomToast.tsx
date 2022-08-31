@@ -2,7 +2,7 @@ import { useMount } from 'react-use'
 import store from 'store'
 import styles from './style.module.scss'
 
-import { STORE_MUTED_KEY } from 'constants/storeKeys'
+import STORAGE_KEYS from 'constants/storageKeys'
 import { renderToastEmoji } from './utils'
 
 type CustomToastProps = {
@@ -16,7 +16,7 @@ export function CustomToast({
   message,
   type = 'info',
 }: CustomToastProps) {
-  const muted = store.get(STORE_MUTED_KEY) || false
+  const muted = store.get(STORAGE_KEYS.UserSettings.Muted) || false
   const audio = new Audio('/alert-default.opus')
 
   useMount(() => {

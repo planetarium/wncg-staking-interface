@@ -5,7 +5,7 @@ import type { Network } from '@ethersproject/networks'
 import store from 'store'
 
 import { currentNetworkIdState } from 'app/states/connection'
-import { STORE_ACCOUNT_KEY } from 'constants/storeKeys'
+import STORAGE_KEYS from 'constants/storageKeys'
 import { useConnection, useProvider, useTx } from 'hooks'
 
 function BaseEffects() {
@@ -41,7 +41,7 @@ function BaseEffects() {
   }
 
   useMount(() => {
-    const connectedAccount = store.get(STORE_ACCOUNT_KEY)
+    const connectedAccount = store.get(STORAGE_KEYS.Account)
     if (connectedAccount) {
       updateAccount(connectedAccount)
     }
