@@ -13,6 +13,7 @@ type TokenConstants = {
 type TokenFiatPrice = {
   usd: number
 }
+
 type TokenPrices = { [address: string]: string }
 
 type TokenInfo = {
@@ -21,5 +22,3 @@ type TokenInfo = {
   readonly decimals: number
   readonly symbol: string
 }
-
-type EthType = 'eth' | 'weth'

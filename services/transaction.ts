@@ -16,14 +16,14 @@ import {
 
 export const TxAction = {
   Approve: 'Approve',
-  ClaimAllRewards: 'ClaimAllRewards',
-  ClaimBalRewards: 'ClaimBalRewards',
-  ClaimWncgRewards: 'ClaimWncgRewards',
+  ClaimAll: 'ClaimAll',
+  ClaimBal: 'ClaimBal',
+  ClaimWncg: 'ClaimWncg',
   EarmarkRewards: 'EarmarkRewards',
   ExitPool: 'ExitPool',
   JoinPool: 'JoinPool',
   Stake: 'Stake',
-  StartCooldown: 'StartCooldown',
+  Cooldown: 'Cooldown',
   Withdraw: 'Withdraw',
   WithdrawAndClaim: 'WithdrawAndClaim',
 } as const
@@ -31,15 +31,6 @@ export const TxAction = {
 export type TxAction = typeof TxAction[keyof typeof TxAction]
 
 export type TxStatus = 'pending' | 'fulfilled' | 'reverted'
-
-export type Transaction = {
-  action: TxAction
-  hash: string
-  status: TxStatus
-  addedTime: number
-  finalizedTime?: number
-  params?: string | string[]
-}
 
 export type TxToastParams = {
   action: TxAction

@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useRecoilValue } from 'recoil'
 import { utils } from 'ethers'
 import { hexZeroPad } from 'ethers/lib/utils'
@@ -6,10 +6,26 @@ import { hexZeroPad } from 'ethers/lib/utils'
 import { accountState } from 'app/states/connection'
 import { configService } from 'services/config'
 
-export function useEventFilters() {
+export function useEvents() {
   const account = useRecoilValue(accountState)
 
-  const stakedEventFilter = useMemo(() => {
+  const createApprovalEvent = useCallback(
+    (address?: string, spender?: string) => {
+      if (!account || !address || !spender) return null
+
+      return {
+        address,
+        topics: [
+          utils.id('Approval(address,address,uint256)'),
+          hexZeroPad(account, 32),
+          hexZeroPad(spender, 32),
+        ],
+      }
+    },
+    [account]
+  )
+
+  const stakedEvent = useMemo(() => {
     if (!account) return null
     return {
       address: configService.stakingAddress,
@@ -17,7 +33,7 @@ export function useEventFilters() {
     }
   }, [account])
 
-  const cooldownEventFilter = useMemo(() => {
+  const cooldownEvent = useMemo(() => {
     if (!account) return null
     return {
       address: configService.stakingAddress,
@@ -25,7 +41,7 @@ export function useEventFilters() {
     }
   }, [account])
 
-  const withdrawnEventFilter = useMemo(() => {
+  const withdrawnEvent = useMemo(() => {
     if (!account) return null
     return {
       address: configService.stakingAddress,
@@ -33,7 +49,7 @@ export function useEventFilters() {
     }
   }, [account])
 
-  const rewardsAllEventFilter = useMemo(() => {
+  const rewardsClaimedAllEvent = useMemo(() => {
     if (!account) return null
     return {
       address: configService.stakingAddress,
@@ -41,7 +57,7 @@ export function useEventFilters() {
     }
   }, [account])
 
-  const rewardsBalEventFilter = useMemo(() => {
+  const rewardsClaimedBalEvent = useMemo(() => {
     if (!account) return null
     return {
       address: configService.stakingAddress,
@@ -52,7 +68,7 @@ export function useEventFilters() {
     }
   }, [account])
 
-  const rewardsWncgEventFilter = useMemo(() => {
+  const rewardsClaimedWncgEvent = useMemo(() => {
     if (!account) return null
     return {
       address: configService.stakingAddress,
@@ -63,7 +79,7 @@ export function useEventFilters() {
     }
   }, [account])
 
-  const earmarkEventFilter = useMemo(() => {
+  const earmarkRewardsEvent = useMemo(() => {
     if (!account) return null
     return {
       address: configService.stakingAddress,
@@ -74,7 +90,7 @@ export function useEventFilters() {
     }
   }, [account])
 
-  const feeUpdateEventFilter = useMemo(
+  const feeUpdateEvent = useMemo(
     () => ({
       address: configService.stakingAddress,
       topics: [utils.id('FeeUpdate()')],
@@ -82,7 +98,7 @@ export function useEventFilters() {
     []
   )
 
-  const poolBalanceChangedEventFilter = useMemo(() => {
+  const poolBalanceChangedEvent = useMemo(() => {
     if (!account) return null
     return {
       address: configService.vaultAddress,
@@ -97,14 +113,15 @@ export function useEventFilters() {
   }, [account])
 
   return {
-    stakedEventFilter,
-    cooldownEventFilter,
-    withdrawnEventFilter,
-    rewardsAllEventFilter,
-    rewardsBalEventFilter,
-    rewardsWncgEventFilter,
-    earmarkEventFilter,
-    feeUpdateEventFilter,
-    poolBalanceChangedEventFilter,
+    createApprovalEvent,
+    stakedEvent,
+    cooldownEvent,
+    withdrawnEvent,
+    rewardsClaimedAllEvent,
+    rewardsClaimedBalEvent,
+    rewardsClaimedWncgEvent,
+    earmarkRewardsEvent,
+    feeUpdateEvent,
+    poolBalanceChangedEvent,
   }
 }

@@ -4,12 +4,12 @@ import { stakeBpt } from 'contracts/staking'
 import { TxAction } from 'services/transaction'
 import { usePool } from './usePool'
 import { useStakingContract } from './useStakingContract'
-import { useTransaction } from './useTransaction'
+import { useTx } from './useTx'
 
 export function useStake() {
   const { poolTokenName } = usePool()
   const contract = useStakingContract(true)
-  const { registerTx } = useTransaction()
+  const { registerTx } = useTx()
 
   const stake = useCallback(
     async (amount: string) => {

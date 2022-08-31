@@ -8,11 +8,11 @@ import { TxAction } from 'services/transaction'
 import { Erc20Abi } from 'lib/abi'
 import { getTokenSymbol } from 'utils/token'
 import { useProvider } from './useProvider'
-import { useTransaction } from './useTransaction'
+import { useTx } from './useTx'
 
 export function useApprove() {
   const provider = useProvider()
-  const { registerTx } = useTransaction()
+  const { registerTx } = useTx()
 
   const account = useRecoilValue(accountState)
 

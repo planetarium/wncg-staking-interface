@@ -7,7 +7,7 @@
 // // import { Transaction } from 'app/states/transaction'
 // import { txToastTitle } from 'utils/transaction'
 // import { getTxUrl } from 'utils/url'
-// // import { useAppDispatch, useTransaction } from 'hooks'
+// // import { useAppDispatch, useTx } from 'hooks'
 // import { listItemVariants } from '../constants'
 
 // import { Icon } from 'components/Icon'

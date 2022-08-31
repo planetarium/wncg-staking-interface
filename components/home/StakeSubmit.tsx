@@ -6,18 +6,17 @@ import type { Event } from 'ethers'
 import clsx from 'clsx'
 import styles from './styles/StakeSubmit.module.scss'
 
-import { accountState, connectedState } from 'app/states/connection'
+import { connectedState } from 'app/states/connection'
 import { ModalCategory } from 'app/states/modal'
 import { configService } from 'services/config'
 import { TxAction } from 'services/transaction'
 import { gaEvent } from 'lib/gtag'
 import { handleError } from 'utils/error'
-import { createApprovalEventFilter } from 'utils/event'
 import {
   useAllowances,
   useApprove,
   useConnection,
-  useEventFilters,
+  useEvents,
   useModal,
   usePool,
   useProvider,
@@ -55,14 +54,13 @@ export function StakeSubmit({
   const { allowanceFor } = useAllowances()
   const { approve } = useApprove()
   const { connect } = useConnection()
-  const { stakedEventFilter } = useEventFilters()
+  const { createApprovalEvent, stakedEvent } = useEvents()
   const { addModal } = useModal()
   const { bptAddress, poolTokenName } = usePool()
   const provider = useProvider()
   const { stake } = useStake()
   const { unstakeStatus } = useUnstakeTimestamps()
 
-  const account = useRecoilValue(accountState)
   const isConnected = useRecoilValue(connectedState)
   const isUnstakeWindow = UNSTAKE_WINDOW.includes(unstakeStatus)
 
@@ -85,9 +83,7 @@ export function StakeSubmit({
 
     try {
       const hash = await stake(amount)
-      if (hash) {
-        setPendingTx(hash)
-      }
+      if (hash) setPendingTx(hash)
       clearInput()
     } catch (error) {
       handleError(error, TxAction.Stake)
@@ -103,9 +99,7 @@ export function StakeSubmit({
 
     try {
       const hash = await approve(bptAddress, configService.stakingAddress)
-      if (hash) {
-        setPendingTx(hash)
-      }
+      if (hash) setPendingTx(hash)
     } catch (error) {
       handleError(error, TxAction.Approve)
       setActive(null)
@@ -127,20 +121,16 @@ export function StakeSubmit({
   }
 
   function handleClick() {
-    if (!isApproved) {
-      handleApprove()
-    } else {
-      handleStake()
-    }
+    if (!isApproved) handleApprove()
+    else handleStake()
   }
 
-  const approvalEventFilter = createApprovalEventFilter(
-    account,
+  const approvalFilter = createApprovalEvent(
     bptAddress,
     configService.stakingAddress
   )
 
-  const handleApprovalEvent = useCallback(
+  const approvalHandler = useCallback(
     ({ transactionHash }: Event) => {
       if (active === 'approval' && pendingTx === transactionHash) {
         setActive(null)
@@ -149,7 +139,7 @@ export function StakeSubmit({
     [active, pendingTx]
   )
 
-  const handleStakedEvent = useCallback(
+  const stakedHandler = useCallback(
     async ({ transactionHash }: Event) => {
       if (pendingTx !== transactionHash) return
       if (active === 'stake') {
@@ -162,23 +152,23 @@ export function StakeSubmit({
 
   // NOTE: Approval event
   useEffect(() => {
-    if (approvalEventFilter) {
-      provider?.on(approvalEventFilter, handleApprovalEvent)
+    if (approvalFilter) {
+      provider?.on(approvalFilter, approvalHandler)
       return () => {
-        provider?.off(approvalEventFilter)
+        provider?.off(approvalFilter)
       }
     }
-  }, [approvalEventFilter, handleApprovalEvent, isApproved, provider])
+  }, [approvalFilter, approvalHandler, isApproved, provider])
 
   // NOTE: Staked event
   useEffect(() => {
-    if (stakedEventFilter) {
-      provider?.on(stakedEventFilter, handleStakedEvent)
+    if (stakedEvent) {
+      provider?.on(stakedEvent, stakedHandler)
       return () => {
-        provider?.off(stakedEventFilter)
+        provider?.off(stakedEvent)
       }
     }
-  }, [handleStakedEvent, provider, stakedEventFilter])
+  }, [stakedHandler, provider, stakedEvent])
 
   useEffect(() => {
     if (amount && prevAmount !== amount) {

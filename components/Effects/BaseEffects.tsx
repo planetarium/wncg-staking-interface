@@ -6,17 +6,17 @@ import store from 'store'
 
 import { currentNetworkIdState } from 'app/states/connection'
 import { STORE_ACCOUNT_KEY } from 'constants/storeKeys'
-import { useConnection, useProvider, useTransaction } from 'hooks'
+import { useConnection, useProvider, useTx } from 'hooks'
 
 function BaseEffects() {
   const { disconnect, updateAccount } = useConnection()
   const provider = useProvider()
-  const { eventLogService } = useTransaction()
+  const { txService } = useTx()
 
   const setCurrentNetworkId = useSetRecoilState(currentNetworkIdState)
 
   function handleAccountsChanged(...args: unknown[]) {
-    eventLogService?.resetTx()
+    txService?.resetTx()
     const accounts = args[0] as string[]
 
     // NOTE: Disconnected
@@ -51,7 +51,7 @@ function BaseEffects() {
     provider?.on('network', handleNetworkChange)
     window?.ethereum?.on('accountsChanged', handleAccountsChanged)
     window?.ethereum?.on('chainChanged', handleChainChanged)
-    eventLogService?.flushOutdatedTx()
+    txService?.flushOutdatedTx()
   })
 
   useUnmount(() => {

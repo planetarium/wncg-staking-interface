@@ -1,31 +1,31 @@
 import { memo, useCallback, useEffect } from 'react'
 import { Event } from 'ethers'
 
+import { TxAction } from 'services/transaction'
 import {
   useBalances,
-  useEventFilters,
+  useEvents,
   useProvider,
   useRewards,
   useStakedBalance,
   useStaking,
-  useTransaction,
+  useTx,
   useUnstakeTimestamps,
 } from 'hooks'
-import { TxAction } from 'services/transaction'
 
 function UnstakeEffects() {
   const { fetchBalances } = useBalances()
-  const { cooldownEventFilter, withdrawnEventFilter } = useEventFilters()
+  const { cooldownEvent, withdrawnEvent } = useEvents()
   const provider = useProvider()
   const { fetchStakedBalance } = useStakedBalance()
   const { fetchRewards } = useRewards()
   const { fetchTotalStaked } = useStaking()
-  const { handleTx } = useTransaction()
+  const { handleTx } = useTx()
   const { fetchTimestamps } = useUnstakeTimestamps()
 
-  const handleCooldownEvent = useCallback(
+  const cooldownHandler = useCallback(
     async (event: Event) => {
-      await handleTx?.(event, TxAction.StartCooldown, {
+      await handleTx?.(event, TxAction.Cooldown, {
         onTxConfirmed: () => {
           fetchTimestamps()
         },
@@ -34,7 +34,7 @@ function UnstakeEffects() {
     [fetchTimestamps, handleTx]
   )
 
-  const handleWithdrawnEvent = useCallback(
+  const withdrawnHandler = useCallback(
     async (event: Event) => {
       await handleTx?.(event, TxAction.Withdraw, {
         onTxEvent: () => {
@@ -47,7 +47,7 @@ function UnstakeEffects() {
     [fetchBalances, fetchStakedBalance, fetchTotalStaked, handleTx]
   )
 
-  const handleWithdrawnAndAllRewardsEvent = useCallback(
+  const withdrawnAndClaimedHandler = useCallback(
     async (event: Event) => {
       await handleTx?.(event, TxAction.WithdrawAndClaim, {
         onTxEvent: () => {
@@ -69,29 +69,24 @@ function UnstakeEffects() {
 
   // NOTE: Cooldown event
   useEffect(() => {
-    if (cooldownEventFilter) {
-      provider?.on(cooldownEventFilter, handleCooldownEvent)
+    if (cooldownEvent) {
+      provider?.on(cooldownEvent, cooldownHandler)
       return () => {
-        provider?.off(cooldownEventFilter)
+        provider?.off(cooldownEvent)
       }
     }
-  }, [cooldownEventFilter, handleCooldownEvent, provider])
+  }, [cooldownEvent, cooldownHandler, provider])
 
   // NOTE: Withdrawn event
   useEffect(() => {
-    if (withdrawnEventFilter) {
-      provider?.on(withdrawnEventFilter, handleWithdrawnEvent)
-      provider?.on(withdrawnEventFilter, handleWithdrawnAndAllRewardsEvent)
+    if (withdrawnEvent) {
+      provider?.on(withdrawnEvent, withdrawnHandler)
+      provider?.on(withdrawnEvent, withdrawnAndClaimedHandler)
       return () => {
-        provider?.off(withdrawnEventFilter)
+        provider?.off(withdrawnEvent)
       }
     }
-  }, [
-    handleWithdrawnAndAllRewardsEvent,
-    handleWithdrawnEvent,
-    provider,
-    withdrawnEventFilter,
-  ])
+  }, [provider, withdrawnAndClaimedHandler, withdrawnEvent, withdrawnHandler])
 
   return null
 }

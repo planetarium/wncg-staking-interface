@@ -9,13 +9,7 @@ import { gaEvent } from 'lib/gtag'
 import { countUpOption, usdCountUpOption } from 'utils/countUp'
 import { handleError } from 'utils/error'
 import { bnum } from 'utils/num'
-import {
-  useClaim,
-  useEventFilters,
-  useModal,
-  useProvider,
-  useRewards,
-} from 'hooks'
+import { useClaim, useEvents, useModal, useProvider, useRewards } from 'hooks'
 
 import { Button } from 'components/Button'
 import { CountUp } from 'components/CountUp'
@@ -25,7 +19,7 @@ export function ClaimRewardModal() {
   const [loading, setLoading] = useState('')
 
   const { claimAllRewards, claimBalRewards, claimWncgRewards } = useClaim()
-  const { rewardsBalEventFilter, rewardsWncgEventFilter } = useEventFilters()
+  const { rewardsClaimedBalEvent, rewardsClaimedWncgEvent } = useEvents()
   const { removeModal } = useModal()
   const provider = useProvider()
   const { rewards, rewardsInFiatValue, rewardTokenSymbols, fetchRewards } =
@@ -69,7 +63,7 @@ export function ClaimRewardModal() {
     }
   }
 
-  const handleRewardEvent = useCallback(() => {
+  const rewardsClaimedHandler = useCallback(() => {
     setLoading('')
   }, [])
 
@@ -79,23 +73,23 @@ export function ClaimRewardModal() {
 
   // NOTE: Reward BAL event
   useEffect(() => {
-    if (rewardsBalEventFilter) {
-      provider?.on(rewardsBalEventFilter, handleRewardEvent)
+    if (rewardsClaimedBalEvent) {
+      provider?.on(rewardsClaimedBalEvent, rewardsClaimedHandler)
       return () => {
-        provider?.off(rewardsBalEventFilter)
+        provider?.off(rewardsClaimedBalEvent)
       }
     }
-  }, [handleRewardEvent, provider, rewardsBalEventFilter])
+  }, [rewardsClaimedHandler, provider, rewardsClaimedBalEvent])
 
   // NOTE: Reward WNCG event
   useEffect(() => {
-    if (rewardsWncgEventFilter) {
-      provider?.on(rewardsWncgEventFilter, handleRewardEvent)
+    if (rewardsClaimedWncgEvent) {
+      provider?.on(rewardsClaimedWncgEvent, rewardsClaimedHandler)
       return () => {
-        provider?.off(rewardsWncgEventFilter)
+        provider?.off(rewardsClaimedWncgEvent)
       }
     }
-  }, [handleRewardEvent, provider, rewardsWncgEventFilter])
+  }, [rewardsClaimedHandler, provider, rewardsClaimedWncgEvent])
 
   return (
     <div className={styles.claimRewardModal}>

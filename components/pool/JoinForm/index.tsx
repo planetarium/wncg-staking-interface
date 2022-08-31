@@ -16,7 +16,7 @@ import WncgInput from './WncgInput'
 
 type JoinFormProps = {
   currentEther: string
-  selectEther(value: EthType): void
+  selectEther(value: string): void
 }
 
 function JoinForm({ currentEther, selectEther }: JoinFormProps) {

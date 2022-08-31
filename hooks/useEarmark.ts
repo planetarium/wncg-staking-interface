@@ -3,11 +3,11 @@ import { useCallback } from 'react'
 import { earmarkRewards as initEarmarkRewards } from 'contracts/staking'
 import { TxAction } from 'services/transaction'
 import { useStakingContract } from './useStakingContract'
-import { useTransaction } from './useTransaction'
+import { useTx } from './useTx'
 
 export function useEarmark() {
   const contract = useStakingContract(true)
-  const { registerTx } = useTransaction()
+  const { registerTx } = useTx()
 
   const earmarkRewards = useCallback(async () => {
     if (!contract) return

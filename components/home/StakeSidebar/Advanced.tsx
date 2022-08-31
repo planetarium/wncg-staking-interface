@@ -14,7 +14,7 @@ import {
   useConnection,
   useEarmark,
   useEarmarkIncentive,
-  useEventFilters,
+  useEvents,
   useProvider,
 } from 'hooks'
 import { motionVariants } from '../constants'
@@ -34,7 +34,7 @@ export function StakeSidebarAdvanced() {
     fetchEarmarkIncentive,
   } = useEarmarkIncentive()
 
-  const { earmarkEventFilter } = useEventFilters()
+  const { earmarkRewardsEvent } = useEvents()
   const provider = useProvider()
   const { earmarkRewards } = useEarmark()
 
@@ -67,19 +67,19 @@ export function StakeSidebarAdvanced() {
     }
   }
 
-  const resetLoading = useCallback(() => {
+  const earmarkRewardsHandler = useCallback(() => {
     setLoading(false)
   }, [])
 
   // NOTE: Earmark rewards event
   useEffect(() => {
-    if (earmarkEventFilter) {
-      provider?.on(earmarkEventFilter, resetLoading)
+    if (earmarkRewardsEvent) {
+      provider?.on(earmarkRewardsEvent, earmarkRewardsHandler)
       return () => {
-        provider?.off(earmarkEventFilter)
+        provider?.off(earmarkRewardsEvent)
       }
     }
-  }, [earmarkEventFilter, provider, resetLoading])
+  }, [earmarkRewardsEvent, earmarkRewardsHandler, provider])
 
   return (
     <div className={styles.advanced}>

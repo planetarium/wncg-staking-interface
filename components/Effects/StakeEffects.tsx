@@ -3,25 +3,25 @@ import { Event } from 'ethers'
 
 import {
   useBalances,
-  useEventFilters,
+  useEvents,
   useProvider,
   useStakedBalance,
   useStaking,
-  useTransaction,
+  useTx,
   useUnstakeTimestamps,
 } from 'hooks'
 import { TxAction } from 'services/transaction'
 
 function StakeEffects() {
   const { fetchBalances } = useBalances()
-  const { stakedEventFilter } = useEventFilters()
+  const { stakedEvent } = useEvents()
   const provider = useProvider()
   const { fetchStakedBalance } = useStakedBalance()
   const { fetchTotalStaked } = useStaking()
-  const { handleTx } = useTransaction()
+  const { handleTx } = useTx()
   const { fetchTimestamps } = useUnstakeTimestamps()
 
-  const handleStakedEvent = useCallback(
+  const stakedHandler = useCallback(
     async (event: Event) => {
       await handleTx?.(event, TxAction.Stake, {
         onTxEvent: () => {
@@ -43,13 +43,13 @@ function StakeEffects() {
 
   // NOTE: Staked event
   useEffect(() => {
-    if (stakedEventFilter) {
-      provider?.on(stakedEventFilter, handleStakedEvent)
+    if (stakedEvent) {
+      provider?.on(stakedEvent, stakedHandler)
       return () => {
-        provider?.off(stakedEventFilter)
+        provider?.off(stakedEvent)
       }
     }
-  }, [handleStakedEvent, provider, stakedEventFilter])
+  }, [stakedHandler, provider, stakedEvent])
 
   return null
 }

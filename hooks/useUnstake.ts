@@ -4,17 +4,17 @@ import { cooldown as initCooldown, unstakeBpt } from 'contracts/staking'
 import { TxAction } from 'services/transaction'
 import { usePool } from './usePool'
 import { useStakingContract } from './useStakingContract'
-import { useTransaction } from './useTransaction'
+import { useTx } from './useTx'
 
 export function useUnstake() {
   const { poolTokenName } = usePool()
   const contract = useStakingContract(true)
-  const { registerTx } = useTransaction()
+  const { registerTx } = useTx()
 
   const startCooldown = useCallback(async () => {
     if (!contract) return
     const response = await initCooldown(contract)
-    registerTx?.(response, TxAction.StartCooldown)
+    registerTx?.(response, TxAction.Cooldown)
   }, [contract, registerTx])
 
   const withdraw = useCallback(

@@ -3,7 +3,7 @@ import { useMount, useUnmount } from 'react-use'
 import { motion } from 'framer-motion'
 import styles from './style.module.scss'
 
-import { useTransaction } from 'hooks'
+import { useTx } from 'hooks'
 import { menuTransition, menuVariants } from '../constants'
 
 import { TxItem } from './TxItem'
@@ -14,15 +14,15 @@ type PendingTxMenuProps = {
 
 export function PendingTxMenu({ close }: PendingTxMenuProps) {
   const menuRef = useRef<HTMLDivElement>(null)
-  const { eventLogService } = useTransaction()
+  const { txService } = useTx()
 
   const pendingTxList = useMemo(
-    () => eventLogService?.pendingTxList || [],
-    [eventLogService?.pendingTxList]
+    () => txService?.pendingTxList || [],
+    [txService?.pendingTxList]
   )
 
   function clearTransactions() {
-    eventLogService?.resetTx()
+    txService?.resetTx()
   }
 
   const closeOnBlur = useCallback(

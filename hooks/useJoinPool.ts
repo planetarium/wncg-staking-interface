@@ -9,7 +9,7 @@ import { configService } from 'services/config'
 import { TxAction } from 'services/transaction'
 import { useJoinMath } from './useJoinMath'
 import { usePool } from './usePool'
-import { useTransaction } from './useTransaction'
+import { useTx } from './useTx'
 import { useVaultContract } from './useVaultContract'
 
 export function useJoinPool() {
@@ -17,7 +17,7 @@ export function useJoinPool() {
   const { poolTokenAddresses, poolTokenDecimals, poolName, nativeAssetIndex } =
     usePool()
 
-  const { registerTx } = useTransaction()
+  const { registerTx } = useTx()
   const vault = useVaultContract()
 
   const account = useRecoilValue(accountState)

@@ -2,33 +2,30 @@ import { memo, useCallback, useEffect, useMemo } from 'react'
 import { useRecoilValue } from 'recoil'
 import type { Event } from 'ethers'
 
-import { useAllowances, usePool, useProvider, useTransaction } from 'hooks'
 import { accountState } from 'app/states/connection'
 import { configService } from 'services/config'
-import { createApprovalEventFilter } from 'utils/event'
 import { TxAction } from 'services/transaction'
+import { useAllowances, useEvents, usePool, useProvider, useTx } from 'hooks'
 
 function ApprovalEffects() {
   const { fetchAllowances } = useAllowances()
+  const { createApprovalEvent } = useEvents()
   const { bptAddress, poolTokenAddresses } = usePool()
   const provider = useProvider()
-  const { handleTx } = useTransaction()
+  const { handleTx } = useTx()
 
   const account = useRecoilValue(accountState)
 
-  const eventFilters = useMemo(
-    () => [
+  const eventFilters = useMemo(() => {
+    if (!account) return null
+
+    return [
       ...poolTokenAddresses.map((address) =>
-        createApprovalEventFilter(account, address, configService.vaultAddress)
+        createApprovalEvent(address, configService.vaultAddress)
       ),
-      createApprovalEventFilter(
-        account,
-        bptAddress,
-        configService.stakingAddress
-      ),
-    ],
-    [account, bptAddress, poolTokenAddresses]
-  )
+      createApprovalEvent(bptAddress, configService.stakingAddress),
+    ]
+  }, [account, bptAddress, createApprovalEvent, poolTokenAddresses])
 
   const eventHandler = useCallback(
     async (event: Event) => {
@@ -41,13 +38,13 @@ function ApprovalEffects() {
   )
 
   useEffect(() => {
-    eventFilters.forEach((filter) => {
+    eventFilters?.forEach((filter) => {
       if (!filter) return
       provider?.on(filter, eventHandler)
     })
 
     return () => {
-      eventFilters.forEach((filter) => {
+      eventFilters?.forEach((filter) => {
         if (!filter) return
         provider?.off(filter)
       })

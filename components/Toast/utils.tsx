@@ -6,9 +6,9 @@ export function getToastAudioFilename(action: TxAction, type: ToastType) {
   switch (type) {
     case 'success':
       switch (action) {
-        case TxAction.ClaimAllRewards:
-        case TxAction.ClaimBalRewards:
-        case TxAction.ClaimWncgRewards:
+        case TxAction.ClaimAll:
+        case TxAction.ClaimBal:
+        case TxAction.ClaimWncg:
         case TxAction.EarmarkRewards:
           return '/alert-money.opus'
         default:

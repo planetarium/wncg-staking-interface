@@ -4,22 +4,22 @@ import { Event } from 'ethers'
 import { TxAction } from 'services/transaction'
 import {
   useEarmarkIncentive,
-  useEventFilters,
+  useEvents,
   useProvider,
   useRewards,
-  useTransaction,
+  useTx,
 } from 'hooks'
 
 function RewardEffects() {
   const {
-    earmarkEventFilter,
-    rewardsAllEventFilter,
-    rewardsBalEventFilter,
-    rewardsWncgEventFilter,
-  } = useEventFilters()
+    rewardsClaimedAllEvent,
+    rewardsClaimedBalEvent,
+    rewardsClaimedWncgEvent,
+    earmarkRewardsEvent,
+  } = useEvents()
   const provider = useProvider()
   const { fetchEarmarkIncentive } = useEarmarkIncentive()
-  const { handleTx } = useTransaction()
+  const { handleTx } = useTx()
   const { fetchRewards } = useRewards()
 
   const option = useMemo(
@@ -29,28 +29,28 @@ function RewardEffects() {
     [fetchRewards]
   )
 
-  const handleAllRewardEvent = useCallback(
+  const rewardsClaimedAllHandler = useCallback(
     async (event: Event) => {
-      await handleTx?.(event, TxAction.ClaimAllRewards, option)
+      await handleTx?.(event, TxAction.ClaimAll, option)
     },
-    [option, handleTx]
+    [handleTx, option]
   )
 
-  const handleBalRewardEvent = useCallback(
+  const rewardsClaimedBalHandler = useCallback(
     async (event: Event) => {
-      await handleTx?.(event, TxAction.ClaimBalRewards, option)
+      await handleTx?.(event, TxAction.ClaimBal, option)
     },
-    [option, handleTx]
+    [handleTx, option]
   )
 
-  const handleWncgRewardEvent = useCallback(
+  const rewardsClaimedWncgHandler = useCallback(
     async (event: Event) => {
-      await handleTx?.(event, TxAction.ClaimWncgRewards, option)
+      await handleTx?.(event, TxAction.ClaimWncg, option)
     },
-    [option, handleTx]
+    [handleTx, option]
   )
 
-  const handleEarmarkRewardsEvent = useCallback(
+  const earmarkRewardsHandler = useCallback(
     async (event: Event) => {
       await handleTx?.(event, TxAction.EarmarkRewards, {
         onTxConfirmed: () => {
@@ -64,43 +64,43 @@ function RewardEffects() {
 
   // NOTE: Reward All event
   useEffect(() => {
-    if (rewardsAllEventFilter) {
-      provider?.on(rewardsAllEventFilter, handleAllRewardEvent)
+    if (rewardsClaimedAllEvent) {
+      provider?.on(rewardsClaimedAllEvent, rewardsClaimedAllHandler)
       return () => {
-        provider?.off(rewardsAllEventFilter)
+        provider?.off(rewardsClaimedAllEvent)
       }
     }
-  }, [handleAllRewardEvent, provider, rewardsAllEventFilter])
+  }, [provider, rewardsClaimedAllEvent, rewardsClaimedAllHandler])
 
   // NOTE: Reward BAL event
   useEffect(() => {
-    if (rewardsBalEventFilter) {
-      provider?.on(rewardsBalEventFilter, handleBalRewardEvent)
+    if (rewardsClaimedBalEvent) {
+      provider?.on(rewardsClaimedBalEvent, rewardsClaimedBalHandler)
       return () => {
-        provider?.off(rewardsBalEventFilter)
+        provider?.off(rewardsClaimedBalEvent)
       }
     }
-  }, [handleBalRewardEvent, provider, rewardsBalEventFilter])
+  }, [provider, rewardsClaimedBalEvent, rewardsClaimedBalHandler])
 
   // NOTE: Reward WNCG event
   useEffect(() => {
-    if (rewardsWncgEventFilter) {
-      provider?.on(rewardsWncgEventFilter, handleWncgRewardEvent)
+    if (rewardsClaimedWncgEvent) {
+      provider?.on(rewardsClaimedWncgEvent, rewardsClaimedWncgHandler)
       return () => {
-        provider?.off(rewardsWncgEventFilter)
+        provider?.off(rewardsClaimedWncgEvent)
       }
     }
-  }, [handleWncgRewardEvent, provider, rewardsWncgEventFilter])
+  }, [provider, rewardsClaimedWncgEvent, rewardsClaimedWncgHandler])
 
   // NOTE: Earmark rewards event
   useEffect(() => {
-    if (earmarkEventFilter) {
-      provider?.on(earmarkEventFilter, handleEarmarkRewardsEvent)
+    if (earmarkRewardsEvent) {
+      provider?.on(earmarkRewardsEvent, earmarkRewardsHandler)
       return () => {
-        provider?.off(earmarkEventFilter)
+        provider?.off(earmarkRewardsEvent)
       }
     }
-  }, [provider, handleEarmarkRewardsEvent, earmarkEventFilter])
+  }, [earmarkRewardsEvent, earmarkRewardsHandler, provider])
 
   return null
 }

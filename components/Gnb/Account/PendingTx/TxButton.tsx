@@ -3,7 +3,7 @@ import Lottie from 'lottie-react'
 import clsx from 'clsx'
 import styles from './style.module.scss'
 
-import { useTransaction } from 'hooks'
+import { useTx } from 'hooks'
 
 import loadingAnimation from 'animations/spinner.json'
 
@@ -14,11 +14,11 @@ type PendingTxButtonProps = {
 }
 
 export function PendingTxButton({ open }: PendingTxButtonProps) {
-  const { eventLogService } = useTransaction()
+  const { txService } = useTx()
 
   const pendingTxList = useMemo(
-    () => eventLogService?.pendingTxList || [],
-    [eventLogService?.pendingTxList]
+    () => txService?.pendingTxList || [],
+    [txService?.pendingTxList]
   )
 
   const hasPendingTx = !!pendingTxList.length
