@@ -63,13 +63,14 @@ function MyWallet({ currentEther, selectEther }: MyWalletProps) {
     toFiat,
   ])
 
-  function handleSelectEthType(e: MouseEvent<HTMLDivElement>) {
+  function handleSelectEther(e: MouseEvent<HTMLDivElement>) {
     if (!isSelectable) return
 
     const dataset = e.currentTarget
       .dataset as typeof e.currentTarget.dataset & {
       currentEther: string
     }
+
     selectEther(dataset.currentEther)
   }
 
@@ -97,19 +98,15 @@ function MyWallet({ currentEther, selectEther }: MyWalletProps) {
                 [styles.selectable]: isSelectable,
               })}
             >
-              {etherAddresses.map((address) => {
-                const isSelected = isSameAddress(address, currentEther!)
-
-                return (
-                  <MyWalletItem
-                    key={`myWalletEtherToken.${address}`}
-                    address={address}
-                    balance={balanceFor(address)}
-                    isSelected={isSelected}
-                    handleSelect={handleSelectEthType}
-                  />
-                )
-              })}
+              {etherAddresses.map((address) => (
+                <MyWalletItem
+                  key={`myWalletEtherToken.${address}`}
+                  address={address}
+                  balance={balanceFor(address)}
+                  isSelected={address === currentEther}
+                  handleSelect={handleSelectEther}
+                />
+              ))}
             </dl>
           </dd>
         </div>
