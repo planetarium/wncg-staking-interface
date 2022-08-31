@@ -3,9 +3,9 @@ import {
   ToastContainer as ReactToastContainer,
   ToastContainerProps,
 } from 'react-toastify'
+import { useRecoilValue } from 'recoil'
 
-import { getIsDesktop } from 'app/states/mediaQuery'
-import { useAppSelector } from 'hooks'
+import { isDesktopState } from 'app/states/mediaQuery'
 
 import { ToastCloseButton } from 'components/Toast/CloseButton'
 
@@ -23,7 +23,7 @@ const config: ToastContainerProps = {
 }
 
 export function ToastContainer() {
-  const isDesktop = useAppSelector(getIsDesktop)
+  const isDesktop = useRecoilValue(isDesktopState)
   const toastConfig = useMemo(
     () => (isDesktop ? config : { ...config, limit: 4 }),
     [isDesktop]

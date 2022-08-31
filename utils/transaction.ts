@@ -1,93 +1,87 @@
-import { TransactionAction } from 'services/transaction'
+import { TxAction } from 'services/transaction'
 import { assertUnreachable } from './assertion'
 import { bnum } from './num'
 
-export function renderTxTitle(action: TransactionAction) {
+export function txToastTitle(action: TxAction) {
   switch (action) {
-    case TransactionAction.Approve:
+    case TxAction.Approve:
       return 'Approve'
-    case TransactionAction.ClaimAllRewards:
+    case TxAction.ClaimAllRewards:
       return 'Claim all rewards'
-    case TransactionAction.ClaimBalRewards:
+    case TxAction.ClaimBalRewards:
       return 'Claim BAL reward'
-    case TransactionAction.ClaimWncgRewards:
+    case TxAction.ClaimWncgRewards:
       return 'Claim WNCG reward'
-    case TransactionAction.EarmarkRewards:
+    case TxAction.EarmarkRewards:
       return 'Harvest'
-    case TransactionAction.ExitPool:
+    case TxAction.ExitPool:
       return 'Exit pool'
-    case TransactionAction.JoinPool:
+    case TxAction.JoinPool:
       return 'Join pool'
-    case TransactionAction.Stake:
+    case TxAction.Stake:
       return 'Stake'
-    case TransactionAction.StartCooldown:
+    case TxAction.StartCooldown:
       return 'Cooldown'
-    case TransactionAction.Withdraw:
+    case TxAction.Withdraw:
       return 'Withdraw'
-    case TransactionAction.WithdrawAndClaim:
+    case TxAction.WithdrawAndClaim:
       return 'Withdraw & claim'
     default:
       assertUnreachable(action)
   }
 }
 
-export function renderTxSuccessMessage(
-  action: TransactionAction,
-  params?: string | string[]
-) {
+export function txSuccessMessage(action: TxAction, params?: string | string[]) {
   switch (action) {
-    case TransactionAction.Approve:
+    case TxAction.Approve:
       return `Successfully approved ${parseParams(params)}`
-    case TransactionAction.ClaimAllRewards:
+    case TxAction.ClaimAllRewards:
       return `Successfully claimed ${parseParams(params)} & BAL rewards`
-    case TransactionAction.ClaimBalRewards:
+    case TxAction.ClaimBalRewards:
       return 'Successfully claimed BAL reward'
-    case TransactionAction.ClaimWncgRewards:
+    case TxAction.ClaimWncgRewards:
       return `Successfully claimed ${parseParams(params)} reward`
-    case TransactionAction.EarmarkRewards:
+    case TxAction.EarmarkRewards:
       return 'Successfully harvested BAL reward'
-    case TransactionAction.ExitPool:
+    case TxAction.ExitPool:
       return `Successfully exited ${parseParams(params)} pool`
-    case TransactionAction.JoinPool:
+    case TxAction.JoinPool:
       return `Successfully joined ${parseParams(params)} pool`
-    case TransactionAction.Stake:
+    case TxAction.Stake:
       return `Successfully staked ${parseParams(params)}`
-    case TransactionAction.StartCooldown:
+    case TxAction.StartCooldown:
       return 'Successfully started cooldown'
-    case TransactionAction.Withdraw:
+    case TxAction.Withdraw:
       return `Successfully withdrew staked ${parseParams(params)}`
-    case TransactionAction.WithdrawAndClaim:
+    case TxAction.WithdrawAndClaim:
       return 'Successfully withdrew and claimed all rewards'
     default:
       assertUnreachable(action)
   }
 }
 
-export function renderTxInfoMessage(
-  action: TransactionAction,
-  params?: string | string[]
-) {
+export function txInfoMessage(action: TxAction, params?: string | string[]) {
   switch (action) {
-    case TransactionAction.Approve:
+    case TxAction.Approve:
       return `Approving ${parseParams(params)}`
-    case TransactionAction.ClaimAllRewards:
+    case TxAction.ClaimAllRewards:
       return `Claim ${parseParams(params)} & BAL rewards`
-    case TransactionAction.ClaimBalRewards:
+    case TxAction.ClaimBalRewards:
       return 'Claim BAL reward'
-    case TransactionAction.ClaimWncgRewards:
+    case TxAction.ClaimWncgRewards:
       return `Claim ${parseParams(params)} reward`
-    case TransactionAction.EarmarkRewards:
+    case TxAction.EarmarkRewards:
       return 'Harvest BAL reward'
-    case TransactionAction.ExitPool:
+    case TxAction.ExitPool:
       return `Exiting ${parseParams(params)} pool`
-    case TransactionAction.JoinPool:
+    case TxAction.JoinPool:
       return `Joining ${parseParams(params)} pool`
-    case TransactionAction.Stake:
+    case TxAction.Stake:
       return `Stake ${parseParams(params)}`
-    case TransactionAction.StartCooldown:
+    case TxAction.StartCooldown:
       return 'Start cooldown'
-    case TransactionAction.Withdraw:
-    case TransactionAction.WithdrawAndClaim:
+    case TxAction.Withdraw:
+    case TxAction.WithdrawAndClaim:
       return `Withdraw ${parseParams(params)}`
     default:
       assertUnreachable(action)
@@ -95,31 +89,31 @@ export function renderTxInfoMessage(
 }
 
 export function renderTxErrorMessage(
-  action: TransactionAction,
+  action: TxAction,
   params?: string | string[]
 ) {
   switch (action) {
-    case TransactionAction.Approve:
+    case TxAction.Approve:
       return `Failed to approve ${parseParams(params)}`
-    case TransactionAction.ClaimAllRewards:
+    case TxAction.ClaimAllRewards:
       return `Failed to claim ${parseParams(params)} & BAL rewards`
-    case TransactionAction.ClaimBalRewards:
+    case TxAction.ClaimBalRewards:
       return 'Failed to claim BAL reward'
-    case TransactionAction.ClaimWncgRewards:
+    case TxAction.ClaimWncgRewards:
       return `Failed to claim ${parseParams(params)} reward`
-    case TransactionAction.EarmarkRewards:
+    case TxAction.EarmarkRewards:
       return 'Failed to harvest BAL reward'
-    case TransactionAction.ExitPool:
+    case TxAction.ExitPool:
       return `Failed to exit ${parseParams(params)} pool`
-    case TransactionAction.JoinPool:
+    case TxAction.JoinPool:
       return `Failed to join ${parseParams(params)} pool`
-    case TransactionAction.Stake:
+    case TxAction.Stake:
       return `Failed to stake ${parseParams(params)}`
-    case TransactionAction.StartCooldown:
+    case TxAction.StartCooldown:
       return 'Failed to start cooldown'
-    case TransactionAction.Withdraw:
+    case TxAction.Withdraw:
       return `Failed to withdraw staked ${parseParams(params)}`
-    case TransactionAction.WithdrawAndClaim:
+    case TxAction.WithdrawAndClaim:
       return 'Failed to withdraw and claim'
     default:
       assertUnreachable(action)

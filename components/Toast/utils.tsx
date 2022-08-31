@@ -1,18 +1,15 @@
 import styles from './style.module.scss'
 
-import { TransactionAction } from 'services/transaction'
+import { TxAction } from 'services/transaction'
 
-export function getToastAudioFilename(
-  action: TransactionAction,
-  type: ToastType
-) {
+export function getToastAudioFilename(action: TxAction, type: ToastType) {
   switch (type) {
     case 'success':
       switch (action) {
-        case TransactionAction.ClaimAllRewards:
-        case TransactionAction.ClaimBalRewards:
-        case TransactionAction.ClaimWncgRewards:
-        case TransactionAction.EarmarkRewards:
+        case TxAction.ClaimAllRewards:
+        case TxAction.ClaimBalRewards:
+        case TxAction.ClaimWncgRewards:
+        case TxAction.EarmarkRewards:
           return '/alert-money.opus'
         default:
           return '/alert-success.opus'

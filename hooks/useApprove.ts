@@ -1,20 +1,20 @@
 import { useCallback } from 'react'
+import { useRecoilValue } from 'recoil'
 import { Contract } from 'ethers'
 
-import { getAccount } from 'app/states/connection'
+import { accountState } from 'app/states/connection'
 import { approve as initApprove } from 'contracts/erc20'
-import { TransactionAction } from 'services/transaction'
+import { TxAction } from 'services/transaction'
 import { Erc20Abi } from 'lib/abi'
 import { getTokenSymbol } from 'utils/token'
 import { useProvider } from './useProvider'
-import { useAppSelector } from './useRedux'
 import { useTransaction } from './useTransaction'
 
 export function useApprove() {
   const provider = useProvider()
   const { registerTx } = useTransaction()
 
-  const account = useAppSelector(getAccount)
+  const account = useRecoilValue(accountState)
 
   const approve = useCallback(
     async (address: string, spender: string) => {
@@ -27,7 +27,8 @@ export function useApprove() {
       )
 
       const response = await initApprove(contract, spender)
-      registerTx?.(response, TransactionAction.Approve, getTokenSymbol(address))
+      registerTx?.(response, TxAction.Approve, getTokenSymbol(address))
+      return response.hash
     },
     [account, provider, registerTx]
   )

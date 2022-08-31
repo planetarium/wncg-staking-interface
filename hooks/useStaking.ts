@@ -15,7 +15,7 @@ const options = {
   keepPreviousData: true,
 }
 
-// NOTE: Show data without connecting to Metamask
+// NOTE: Fetch data from downgraded staking contract
 export function useStaking() {
   const contract = useStakingContract()
 

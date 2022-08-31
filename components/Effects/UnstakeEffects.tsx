@@ -11,7 +11,7 @@ import {
   useTransaction,
   useUnstakeTimestamps,
 } from 'hooks'
-import { TransactionAction } from 'services/transaction'
+import { TxAction } from 'services/transaction'
 
 function UnstakeEffects() {
   const { fetchBalances } = useBalances()
@@ -20,37 +20,37 @@ function UnstakeEffects() {
   const { fetchStakedBalance } = useStakedBalance()
   const { fetchRewards } = useRewards()
   const { fetchTotalStaked } = useStaking()
-  const { updateTxStatus } = useTransaction()
+  const { handleTx } = useTransaction()
   const { fetchTimestamps } = useUnstakeTimestamps()
 
   const handleCooldownEvent = useCallback(
     async (event: Event) => {
-      await updateTxStatus?.(event, TransactionAction.StartCooldown, {
-        onFulfill: () => {
+      await handleTx?.(event, TxAction.StartCooldown, {
+        onTxConfirmed: () => {
           fetchTimestamps()
         },
       })
     },
-    [fetchTimestamps, updateTxStatus]
+    [fetchTimestamps, handleTx]
   )
 
   const handleWithdrawnEvent = useCallback(
     async (event: Event) => {
-      await updateTxStatus?.(event, TransactionAction.Withdraw, {
-        onFulfill: () => {
+      await handleTx?.(event, TxAction.Withdraw, {
+        onTxEvent: () => {
           fetchStakedBalance()
           fetchBalances()
           fetchTotalStaked()
         },
       })
     },
-    [fetchBalances, fetchStakedBalance, fetchTotalStaked, updateTxStatus]
+    [fetchBalances, fetchStakedBalance, fetchTotalStaked, handleTx]
   )
 
   const handleWithdrawnAndAllRewardsEvent = useCallback(
     async (event: Event) => {
-      await updateTxStatus?.(event, TransactionAction.WithdrawAndClaim, {
-        onFulfill: () => {
+      await handleTx?.(event, TxAction.WithdrawAndClaim, {
+        onTxEvent: () => {
           fetchRewards()
           fetchBalances()
           fetchStakedBalance()
@@ -63,7 +63,7 @@ function UnstakeEffects() {
       fetchRewards,
       fetchTotalStaked,
       fetchStakedBalance,
-      updateTxStatus,
+      handleTx,
     ]
   )
 

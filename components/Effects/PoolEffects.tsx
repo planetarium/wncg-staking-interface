@@ -7,24 +7,22 @@ import {
   useProvider,
   useTransaction,
 } from 'hooks'
-import { TransactionAction } from 'services/transaction'
+import { TxAction } from 'services/transaction'
 
 function PoolEffects() {
   const { fetchBalances } = useBalances()
   const { poolBalanceChangedEventFilter } = useEventFilters()
   const provider = useProvider()
-  const { updateTxStatus } = useTransaction()
+  const { handleTx } = useTransaction()
 
   const handlePoolBalanceChangedEvent = useCallback(
     async (event: Event) => {
-      console.log(3433, 'poolchangedevent', event)
-
-      // Join인지 Exit인지 어떻게 구별하지
-      await updateTxStatus?.(event, TransactionAction.JoinPool, {
-        onFulfill: fetchBalances,
+      // FIXME: How to identify join/exit pool transactions
+      await handleTx?.(event, TxAction.JoinPool, {
+        onTxEvent: fetchBalances,
       })
     },
-    [fetchBalances, updateTxStatus]
+    [fetchBalances, handleTx]
   )
 
   // NOTE: Pool balance changed event (Join / Exit)

@@ -1,4 +1,5 @@
 import axios from 'axios'
+
 import { configService } from './config'
 
 export class CoingeckoClientService {

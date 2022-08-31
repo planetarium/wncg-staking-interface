@@ -1,14 +1,15 @@
 import { memo, useState } from 'react'
 import NumberFormat from 'react-number-format'
 import { useInfiniteQuery } from '@tanstack/react-query'
+import { useRecoilValue } from 'recoil'
 import { formatDistanceToNow } from 'date-fns'
 import clsx from 'clsx'
 import styles from './styles/Investments.module.scss'
 
-import { getAccount } from 'app/states/connection'
+import { accountState } from 'app/states/connection'
 import { fetchPoolJoinExits, getNextPageParam } from 'lib/graphql'
 import { bnum } from 'utils/num'
-import { useAppSelector, usePool, useFiatCurrency } from 'hooks'
+import { usePool, useFiatCurrency } from 'hooks'
 
 import { Checkbox } from 'components/Checkbox'
 import { TokenIcon } from 'components/TokenIcon'
@@ -19,7 +20,7 @@ function PoolInvestments() {
   const { toFiat } = useFiatCurrency()
   const { poolTokenAddresses, poolTokenSymbols } = usePool()
 
-  const account = useAppSelector(getAccount)
+  const account = useRecoilValue(accountState)
   const showFilter = !!account
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =

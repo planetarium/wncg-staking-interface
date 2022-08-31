@@ -6,16 +6,16 @@ import { useToast } from './useToast'
 
 export function useTransaction() {
   const provider = useProvider()
-  const { sendToast } = useToast()
+  const { addTxToast } = useToast()
 
-  const transactionService = useMemo(() => {
+  const eventLogService = useMemo(() => {
     if (!provider) return null
-    return new TransactionService(provider, sendToast)
-  }, [provider, sendToast])
+    return new TransactionService(provider, addTxToast)
+  }, [provider, addTxToast])
 
   return {
-    transactionService,
-    registerTx: transactionService?.registerTx,
-    updateTxStatus: transactionService?.updateTxStatus,
+    eventLogService,
+    registerTx: eventLogService?.registerTx,
+    handleTx: eventLogService?.handleTx,
   }
 }

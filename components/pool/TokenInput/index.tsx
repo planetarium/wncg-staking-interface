@@ -1,15 +1,15 @@
 import type { MouseEvent } from 'react'
 import { Control, FieldValues, RegisterOptions } from 'react-hook-form'
 import NumberFormat from 'react-number-format'
+import { useRecoilValue } from 'recoil'
 import { AnimatePresence, motion } from 'framer-motion'
 import clsx from 'clsx'
 import styles from '../styles/TokenInput.module.scss'
 
-import { getIsMobile } from 'app/states/mediaQuery'
+import { isMobileState } from 'app/states/mediaQuery'
 import { bnum, isLessThanMinAmount } from 'utils/num'
 import { getTokenInfo } from 'utils/token'
 import { errorMessageVariants } from 'components/Input/constants'
-import { useAppSelector } from 'hooks'
 
 import { TokenBaseInput } from './BaseInput'
 import { TokenDropdown } from './Dropdown'
@@ -49,7 +49,7 @@ export function TokenInput({
   tokenList = [],
   warning,
 }: TokenInputProps) {
-  const isMobile = useAppSelector(getIsMobile)
+  const isMobile = useRecoilValue(isMobileState)
 
   const hasError = !!error
   const hasWarning = !!warning

@@ -9,12 +9,12 @@ import store from 'store'
 
 import { STORE_TRANSACTION_MAP_KEY } from 'constants/storeKeys'
 import {
-  renderTxInfoMessage,
-  renderTxSuccessMessage,
-  renderTxTitle,
+  txInfoMessage,
+  txSuccessMessage,
+  txToastTitle,
 } from 'utils/transaction'
 
-export const TransactionAction = {
+export const TxAction = {
   Approve: 'Approve',
   ClaimAllRewards: 'ClaimAllRewards',
   ClaimBalRewards: 'ClaimBalRewards',
@@ -28,51 +28,49 @@ export const TransactionAction = {
   WithdrawAndClaim: 'WithdrawAndClaim',
 } as const
 
-export type TransactionAction =
-  typeof TransactionAction[keyof typeof TransactionAction]
+export type TxAction = typeof TxAction[keyof typeof TxAction]
 
-export type TransactionStatus = 'pending' | 'fulfilled' | 'reverted'
+export type TxStatus = 'pending' | 'fulfilled' | 'reverted'
 
 export type Transaction = {
-  action: TransactionAction
+  action: TxAction
   hash: string
-  status: TransactionStatus
+  status: TxStatus
   addedTime: number
   finalizedTime?: number
   params?: string | string[]
 }
 
-export type TransactionNotificationParams = {
-  action: TransactionAction
+export type TxToastParams = {
+  action: TxAction
   hash: string
   title: string
   message: string
   type?: ToastType
 }
 
-type TransactionMap = {
+type TxMap = {
   [id: string]: Transaction
 }
 
-type UpdateTxOption = {
-  onFulfill?(): void
+type TxHandlerCallbacks = {
+  onTxEvent?(): void
+  onTxConfirmed?(): void
 }
 
 export class TransactionService {
   constructor(
     public readonly provider: Web3Provider,
-    public readonly sendNotification: (
-      params: TransactionNotificationParams
-    ) => string
+    public readonly showToast: (params: TxToastParams) => void
   ) {}
 
   registerTx = async (
     response: TransactionResponse,
-    action: TransactionAction,
+    action: TxAction,
     params?: string | string[]
   ) => {
     const hashKey = this.key(response.hash, action)
-    console.log('>>>> registerTx', hashKey, response)
+
     const newTx: Transaction = {
       action,
       hash: response.hash,
@@ -81,11 +79,11 @@ export class TransactionService {
       params,
     }
 
-    this.sendNotification({
+    this.showToast({
       action,
       hash: response.hash,
-      title: renderTxTitle(action),
-      message: renderTxInfoMessage(action, params),
+      title: txToastTitle(action),
+      message: txInfoMessage(action, params),
     })
 
     store.set(STORE_TRANSACTION_MAP_KEY, {
@@ -94,15 +92,15 @@ export class TransactionService {
     })
   }
 
-  updateTxStatus = async (
+  handleTx = async (
     event: Event,
-    action: TransactionAction,
-    option: UpdateTxOption = {}
+    action: TxAction,
+    callbacks: TxHandlerCallbacks = {}
   ) => {
     const hashKey = this.key(event.transactionHash, action)
-
     const target = this.txMap[hashKey]
-    console.log('>>>> updateTxStatus', hashKey, target?.status)
+
+    callbacks.onTxEvent?.()
 
     if (!target || target.status !== 'pending') return
     if (!!target.finalizedTime) return
@@ -112,15 +110,15 @@ export class TransactionService {
     newTarget.status = 'fulfilled'
     newTarget.finalizedTime = Date.now()
 
-    this.sendNotification({
+    this.showToast({
       action: target.action,
       hash: target.hash,
-      title: renderTxTitle(target.action),
-      message: renderTxSuccessMessage(target.action, target.params),
+      title: txToastTitle(target.action),
+      message: txSuccessMessage(target.action, target.params),
       type: 'success',
     })
 
-    option.onFulfill?.()
+    callbacks.onTxConfirmed?.()
 
     store.set(STORE_TRANSACTION_MAP_KEY, {
       ...this.txMap,
@@ -133,9 +131,8 @@ export class TransactionService {
   }
 
   flushOutdatedTx() {
-    const newTxMap: TransactionMap = {}
+    const newTxMap: TxMap = {}
     Object.entries(this.txMap).forEach(([hash, tx]) => {
-      console.log(isToday(tx.finalizedTime || 0))
       if (!!tx.finalizedTime && !isToday(tx.finalizedTime)) {
         return
       }
@@ -150,7 +147,7 @@ export class TransactionService {
     return await txInfo?.wait()
   }
 
-  get txMap(): TransactionMap {
+  get txMap(): TxMap {
     return store.get(STORE_TRANSACTION_MAP_KEY) || {}
   }
 
@@ -158,7 +155,7 @@ export class TransactionService {
     return Object.values(this.txMap).filter((tx) => tx.status === 'pending')
   }
 
-  private key(hash: string, action: TransactionAction) {
+  private key(hash: string, action: TxAction) {
     return `tx_${hash}_${action}`
   }
 }

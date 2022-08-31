@@ -1,11 +1,11 @@
 import { memo } from 'react'
 import NumberFormat from 'react-number-format'
+import { useRecoilValue } from 'recoil'
 import styles from './styles/MyPoolBalance.module.scss'
 
-import { getIsConnected } from 'app/states/connection'
+import { connectedState } from 'app/states/connection'
 import { isLessThanMinAmount } from 'utils/num'
 import {
-  useAppSelector,
   useBalances,
   useCalculator,
   useConnection,
@@ -25,7 +25,7 @@ function MyPoolBalance() {
   const { balanceFor } = useBalances()
 
   const bptBalance = balanceFor(bptAddress)
-  const isConnected = useAppSelector(getIsConnected)
+  const isConnected = useRecoilValue(connectedState)
 
   const propAmounts = calculator?.propAmountsGiven(bptBalance, 0, 'send')
     .receive || ['0', '0']

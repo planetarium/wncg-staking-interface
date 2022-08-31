@@ -14,13 +14,12 @@ type PendingTxButtonProps = {
 }
 
 export function PendingTxButton({ open }: PendingTxButtonProps) {
-  const { transactionService } = useTransaction()
+  const { eventLogService } = useTransaction()
 
   const pendingTxList = useMemo(
-    () => transactionService?.pendingTxList || [],
-    [transactionService?.pendingTxList]
+    () => eventLogService?.pendingTxList || [],
+    [eventLogService?.pendingTxList]
   )
-  console.log(pendingTxList)
 
   const hasPendingTx = !!pendingTxList.length
 

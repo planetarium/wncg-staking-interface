@@ -1,15 +1,15 @@
 import { MouseEvent, useCallback, useEffect, useState } from 'react'
 import { useMount } from 'react-use'
+import { useRecoilValue } from 'recoil'
 import styles from './ClaimRewardModal.module.scss'
 
-import { getIsConnected } from 'app/states/connection'
+import { connectedState } from 'app/states/connection'
 import { ModalCategory } from 'app/states/modal'
 import { gaEvent } from 'lib/gtag'
 import { countUpOption, usdCountUpOption } from 'utils/countUp'
 import { handleError } from 'utils/error'
 import { bnum } from 'utils/num'
 import {
-  useAppSelector,
   useClaim,
   useEventFilters,
   useModal,
@@ -35,9 +35,12 @@ export function ClaimRewardModal() {
     item.toLowerCase()
   )
 
-  const isConnected = useAppSelector(getIsConnected)
+  const isConnected = useRecoilValue(connectedState)
 
-  const claimAllDisabled = !isConnected || loadingStates.includes(loading)
+  const claimAllDisabled =
+    !isConnected ||
+    rewards.every((reward) => bnum(reward).isZero()) ||
+    loadingStates.includes(loading)
 
   async function handleClaim(e: MouseEvent) {
     const { name } = e.currentTarget as HTMLButtonElement

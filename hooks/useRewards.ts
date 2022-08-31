@@ -1,13 +1,13 @@
 import { useQueries } from '@tanstack/react-query'
+import { useRecoilValue } from 'recoil'
 import { parseUnits } from 'ethers/lib/utils'
 
-import { getAccount } from 'app/states/connection'
+import { accountState } from 'app/states/connection'
 import { configService } from 'services/config'
 import { getEarnedBal, getEarnedWncg } from 'contracts/staking'
 import { REFETCH_INTERVAL } from 'constants/time'
 import { getTokenInfo } from 'utils/token'
 import { useFiatCurrency } from './useFiatCurrency'
-import { useAppSelector } from './useRedux'
 import { useStakingContract } from './useStakingContract'
 
 const queryFnList = [getEarnedWncg, getEarnedBal]
@@ -16,7 +16,7 @@ export function useRewards() {
   const { toFiat } = useFiatCurrency()
   const contract = useStakingContract(true)
 
-  const account = useAppSelector(getAccount)
+  const account = useRecoilValue(accountState)
 
   const { rewardTokensList } = configService
   const rewardTokenDecimals = rewardTokensList.map(

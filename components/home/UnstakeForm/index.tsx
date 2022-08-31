@@ -4,7 +4,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import styles from '../styles/UnstakeForm.module.scss'
 
 import { ModalCategory } from 'app/states/modal'
-import { TransactionAction } from 'services/transaction'
+import { TxAction } from 'services/transaction'
 import { gaEvent } from 'lib/gtag'
 import { handleError } from 'utils/error'
 import { bnum } from 'utils/num'
@@ -110,7 +110,7 @@ export function UnstakeForm({ disabled }: UnstakeFormProps) {
       setLoading(false)
     } catch (error) {
       setLoading(false)
-      handleError(error, TransactionAction.Withdraw)
+      handleError(error, TxAction.Withdraw)
     }
   }
 

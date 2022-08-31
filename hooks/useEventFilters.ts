@@ -1,13 +1,13 @@
 import { useMemo } from 'react'
+import { useRecoilValue } from 'recoil'
 import { utils } from 'ethers'
 import { hexZeroPad } from 'ethers/lib/utils'
 
-import { getAccount } from 'app/states/connection'
+import { accountState } from 'app/states/connection'
 import { configService } from 'services/config'
-import { useAppSelector } from './useRedux'
 
 export function useEventFilters() {
-  const account = useAppSelector(getAccount)
+  const account = useRecoilValue(accountState)
 
   const stakedEventFilter = useMemo(() => {
     if (!account) return null

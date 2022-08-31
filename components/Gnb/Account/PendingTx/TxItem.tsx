@@ -5,7 +5,7 @@
 // import styles from './style.module.scss'
 
 // // import { Transaction } from 'app/states/transaction'
-// import { renderTxTitle } from 'utils/transaction'
+// import { txToastTitle } from 'utils/transaction'
 // import { getTxUrl } from 'utils/url'
 // // import { useAppDispatch, useTransaction } from 'hooks'
 // import { listItemVariants } from '../constants'
@@ -72,7 +72,7 @@ export function TxItem({ transaction }: TxItemProps) {
   //               <span>Canceled:</span>
   //             </>
   //           )}
-  //           {renderTxTitle(action)}
+  //           {txToastTitle(action)}
   //         </a>
   //       </h4>
   //       <a

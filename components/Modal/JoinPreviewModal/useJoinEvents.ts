@@ -1,15 +1,16 @@
 import { useCallback } from 'react'
+import { useRecoilValue } from 'recoil'
 
-import { getAccount } from 'app/states/connection'
+import { accountState } from 'app/states/connection'
 import { configService } from 'services/config'
 import { createApprovalEventFilter } from 'utils/event'
-import { useAllowances, useAppSelector, useEventFilters, usePool } from 'hooks'
+import { useAllowances, useEventFilters, usePool } from 'hooks'
 
 export function useJoinEvents(send: any) {
   const { allowanceFor } = useAllowances()
   const { poolBalanceChangedEventFilter } = useEventFilters()
   const { poolTokenAddresses, poolTokenSymbols } = usePool()
-  const account = useAppSelector(getAccount)
+  const account = useRecoilValue(accountState)
 
   const approvalEventFilters = poolTokenAddresses.map((address) => {
     if (allowanceFor(address, configService.vaultAddress)) return null

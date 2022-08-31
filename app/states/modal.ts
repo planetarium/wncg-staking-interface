@@ -1,5 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { RootState } from 'app/store'
+import { atom } from 'recoil'
 
 export const ModalCategory = {
   ClaimReward: 'MODAL_CATEGORY_CLAIM_REWARD',
@@ -17,48 +16,7 @@ export type Modal = {
   props?: any
 }
 
-type ModalState = {
-  modals: Modal[]
-}
-
-const INITIAL_STATE: ModalState = {
-  modals: [],
-}
-
-const modalSlice = createSlice({
-  name: '#modal',
-  initialState: INITIAL_STATE,
-  reducers: {
-    addModal(state: ModalState, action: PayloadAction<Modal>) {
-      const existingModalIndex = state.modals.findIndex(
-        (modal) => modal.category === action.payload.category
-      )
-      if (existingModalIndex < 0) {
-        state.modals.push(action.payload)
-      } else {
-        state.modals[existingModalIndex] = action.payload
-      }
-    },
-    removeModal(
-      state: ModalState,
-      action: PayloadAction<ModalCategory | undefined>
-    ) {
-      if (!action.payload) {
-        state.modals.pop()
-        return
-      }
-      const targetModalIndex = state.modals.findIndex(
-        (modal) => modal.category === action.payload
-      )
-      state.modals.splice(targetModalIndex, 1)
-    },
-  },
+export const modalListState = atom<Modal[]>({
+  key: '#modalList',
+  default: [],
 })
-
-export const { addModal, removeModal } = modalSlice.actions
-export default modalSlice.reducer
-
-// Selector
-export function getModals(state: RootState) {
-  return state.modal.modals
-}

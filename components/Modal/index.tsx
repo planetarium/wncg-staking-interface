@@ -1,18 +1,18 @@
+import { useRecoilValue } from 'recoil'
 import { AnimatePresence } from 'framer-motion'
 
-import { getModals } from 'app/states/modal'
-import { useAppSelector } from 'hooks'
+import { modalListState } from 'app/states/modal'
 
 import { ModalPortal } from './Portal'
 import { ModalView } from './View'
 
 export function Modal() {
-  const modals = useAppSelector(getModals)
+  const modalList = useRecoilValue(modalListState)
 
   return (
     <ModalPortal>
       <AnimatePresence>
-        {modals.map((modal) => (
+        {modalList.map((modal) => (
           <ModalView key={modal.category} modal={modal} />
         ))}
       </AnimatePresence>

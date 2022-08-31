@@ -3,19 +3,18 @@ import { useQuery } from '@tanstack/react-query'
 import { useRecoilValue } from 'recoil'
 import { isAddress } from 'ethers/lib/utils'
 
-import { getAccount } from 'app/states/connection'
-import { networkMismatchState } from 'app/states/network'
+import { accountState } from 'app/states/connection'
+import { networkMismatchState } from 'app/states/error'
 import { fetchAllowances } from 'contracts/erc20'
 import { configService } from 'services/config'
 import { usePool } from './usePool'
 import { useProvider } from './useProvider'
-import { useAppSelector } from './useRedux'
 
 export function useAllowances() {
   const provider = useProvider()
   const { bptAddress, poolTokenAddresses } = usePool()
 
-  const account = useAppSelector(getAccount)
+  const account = useRecoilValue(accountState)
   const networkMismatch = useRecoilValue(networkMismatchState)
 
   const addresses = [

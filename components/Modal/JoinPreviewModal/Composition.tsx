@@ -54,8 +54,12 @@ function JoinPreviewComposition({
 
         const amount = amounts[i]
         const usdValue = usdValues[i]
-        let pcnt = tokenRatios[i]
-        if (bnum(pcnt).isZero()) pcnt = '0'
+        const pcnt = bnum(tokenRatios[i])
+
+        let percent = tokenRatios[i]
+        if (pcnt.isZero()) percent = '0'
+        if (pcnt.eq(100)) percent = '100'
+        if (pcnt.isNaN() || !pcnt.isFinite()) percent = ''
 
         return (
           <div className={styles.detailItem} key={`JoinPreview.${symbol}`}>
@@ -63,7 +67,7 @@ function JoinPreviewComposition({
               <TokenIcon className={styles.token} symbol={symbol} />
               <strong className={styles.symbol}>{symbol}</strong>
               {!invalidPrice && (
-                <span className={styles.percent}>({pcnt}%)</span>
+                <span className={styles.percent}>({percent}%)</span>
               )}
             </dt>
             <dd>

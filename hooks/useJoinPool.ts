@@ -1,14 +1,14 @@
 import { useCallback } from 'react'
+import { useRecoilValue } from 'recoil'
 import { parseUnits } from 'ethers/lib/utils'
 import { isSameAddress } from '@balancer-labs/sdk'
 
-import { getAccount } from 'app/states/connection'
+import { accountState } from 'app/states/connection'
 import { joinPool as initJoinPool } from 'contracts/vault'
 import { configService } from 'services/config'
-import { TransactionAction } from 'services/transaction'
+import { TxAction } from 'services/transaction'
 import { useJoinMath } from './useJoinMath'
 import { usePool } from './usePool'
-import { useAppSelector } from './useRedux'
 import { useTransaction } from './useTransaction'
 import { useVaultContract } from './useVaultContract'
 
@@ -20,7 +20,7 @@ export function useJoinPool() {
   const { registerTx } = useTransaction()
   const vault = useVaultContract()
 
-  const account = useAppSelector(getAccount)
+  const account = useRecoilValue(accountState)
 
   const joinPool = useCallback(
     async (amounts: string[], isNativeAsset: boolean) => {
@@ -44,7 +44,7 @@ export function useJoinPool() {
         nativeAssetIndex,
         poolId: configService.poolId,
       })
-      registerTx?.(response, TransactionAction.JoinPool, poolName)
+      registerTx?.(response, TxAction.JoinPool, poolName)
     },
     [
       vault,

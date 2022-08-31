@@ -1,30 +1,31 @@
 import { useState } from 'react'
-import { toast } from 'react-toastify'
 import styles from './WithdrawPreviewModal.module.scss'
 
 import { ModalCategory } from 'app/states/modal'
-import { addToast } from 'app/states/toast'
-import { TransactionAction } from 'services/transaction'
+import { TxAction } from 'services/transaction'
 import { gaEvent } from 'lib/gtag'
 import { countUpOption, usdCountUpOption } from 'utils/countUp'
 import { handleError } from 'utils/error'
-import { toastAnimation } from 'utils/toast'
 import { getTokenSymbol } from 'utils/token'
 import {
-  useAppDispatch,
   useFiatCurrency,
   useModal,
+  usePool,
   useRewards,
   useTimer,
+  useToast,
   useUnstake,
   useUnstakeTimestamps,
-  usePool,
 } from 'hooks'
 
 import { Button } from 'components/Button'
 import { CountUp } from 'components/CountUp'
 import { TokenIcon } from 'components/TokenIcon'
-import { CustomToast } from 'components/Toast/CustomToast'
+
+const toastContent = {
+  title: 'Withdrawal window expired',
+  message: 'Withdrawal window expired. You need to cooldown again to withdraw.',
+}
 
 type WithdrawPreviewModalProps = {
   amount: string
@@ -39,9 +40,8 @@ export function WithdrawPreviewModal({
 
   const { poolTokenName, poolTokenSymbols } = usePool()
   const { rewards, rewardsInFiatValue, rewardTokensList } = useRewards()
+  const { addCustomToast } = useToast()
   const { withdrawEndsAt } = useUnstakeTimestamps()
-
-  const dispatch = useAppDispatch()
 
   const { removeModal } = useModal()
   const { getBptFiatValue } = useFiatCurrency()
@@ -63,24 +63,13 @@ export function WithdrawPreviewModal({
       close()
     } catch (error) {
       setLoading(false)
-      handleError(error, TransactionAction.Withdraw)
+      handleError(error, TxAction.Withdraw)
     }
   }
 
   function onExpiration() {
-    const toastId = `withdrawPreview-${Date.now()}`
+    addCustomToast(toastContent)
     close()
-    toast(
-      <CustomToast
-        title="Withdrawal window expired"
-        description="Withdrawal window expired. You need to cooldown again to withdraw."
-      />,
-      {
-        transition: toastAnimation,
-        toastId,
-      }
-    )
-    dispatch(addToast(toastId))
   }
 
   useTimer(withdrawEndsAt, onExpiration)

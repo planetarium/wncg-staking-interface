@@ -2,18 +2,17 @@ import { useCallback, useMemo } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useRecoilValue } from 'recoil'
 
-import { getAccount } from 'app/states/connection'
-import { networkMismatchState } from 'app/states/network'
+import { accountState } from 'app/states/connection'
+import { networkMismatchState } from 'app/states/error'
 import { fetchBalances } from 'contracts/erc20'
-import { configService } from 'services/config'
 import { REFETCH_INTERVAL } from 'constants/time'
-import { useAppSelector } from './useRedux'
+import { configService } from 'services/config'
 import { usePool } from './usePool'
 import { useProvider } from './useProvider'
 
 export function useBalances() {
   const provider = useProvider()
-  const account = useAppSelector(getAccount) || ''
+  const account = useRecoilValue(accountState)
 
   const { bptAddress, poolTokenAddresses } = usePool()
 

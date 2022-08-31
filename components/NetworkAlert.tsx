@@ -25,7 +25,7 @@ const motionTransition = { ease: 'easeOut', duration: 0.3 }
 
 export function NetworkAlert() {
   const { showNetworkAlert } = useAlert()
-  const { switchToMainnet } = useConnection()
+  const { switchNetwork } = useConnection()
 
   return (
     <AnimatePresence>
@@ -37,7 +37,7 @@ export function NetworkAlert() {
           exit="exit"
           transition={motionTransition}
           variants={motionVariants}
-          onClick={switchToMainnet}
+          onClick={switchNetwork}
         >
           <Icon className={styles.icon} id="alert" />
           <h1>Please switch to {getNetworkFullName(networkChainId)}</h1>

@@ -1,5 +1,5 @@
-import { isSameAddress, WeightedPoolEncoder } from '@balancer-labs/sdk'
 import { getAddress, parseUnits } from 'ethers/lib/utils'
+import { isSameAddress, WeightedPoolEncoder } from '@balancer-labs/sdk'
 
 import { bnum } from 'utils/num'
 import { configService } from './config'

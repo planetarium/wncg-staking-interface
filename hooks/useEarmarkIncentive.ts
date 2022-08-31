@@ -4,7 +4,7 @@ import { useRecoilValue } from 'recoil'
 import { Contract } from 'ethers'
 import type BigNumber from 'bignumber.js'
 
-import { networkMismatchState } from 'app/states/network'
+import { networkMismatchState } from 'app/states/error'
 import { getClaimableTokens } from 'contracts/liquidityGauge'
 import { getEarmarkIncentiveFee, getFeeDenominator } from 'contracts/staking'
 import { REFETCH_INTERVAL } from 'constants/time'

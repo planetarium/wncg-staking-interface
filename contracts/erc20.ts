@@ -24,7 +24,7 @@ export type BalanceMap = {
   [address: string]: string
 }
 
-const logger = createLogger('green')
+const logger = createLogger('orange')
 
 export async function fetchAllowances(
   provider: Web3Provider | null,

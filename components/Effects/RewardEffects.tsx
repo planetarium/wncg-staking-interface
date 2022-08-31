@@ -1,7 +1,7 @@
 import { memo, useCallback, useEffect, useMemo } from 'react'
 import { Event } from 'ethers'
 
-import { TransactionAction } from 'services/transaction'
+import { TxAction } from 'services/transaction'
 import {
   useEarmarkIncentive,
   useEventFilters,
@@ -19,47 +19,47 @@ function RewardEffects() {
   } = useEventFilters()
   const provider = useProvider()
   const { fetchEarmarkIncentive } = useEarmarkIncentive()
-  const { updateTxStatus } = useTransaction()
+  const { handleTx } = useTransaction()
   const { fetchRewards } = useRewards()
 
   const option = useMemo(
     () => ({
-      onFulfill: fetchRewards,
+      onTxConfirmed: fetchRewards,
     }),
     [fetchRewards]
   )
 
   const handleAllRewardEvent = useCallback(
     async (event: Event) => {
-      await updateTxStatus?.(event, TransactionAction.ClaimAllRewards, option)
+      await handleTx?.(event, TxAction.ClaimAllRewards, option)
     },
-    [option, updateTxStatus]
+    [option, handleTx]
   )
 
   const handleBalRewardEvent = useCallback(
     async (event: Event) => {
-      await updateTxStatus?.(event, TransactionAction.ClaimBalRewards, option)
+      await handleTx?.(event, TxAction.ClaimBalRewards, option)
     },
-    [option, updateTxStatus]
+    [option, handleTx]
   )
 
   const handleWncgRewardEvent = useCallback(
     async (event: Event) => {
-      await updateTxStatus?.(event, TransactionAction.ClaimWncgRewards, option)
+      await handleTx?.(event, TxAction.ClaimWncgRewards, option)
     },
-    [option, updateTxStatus]
+    [option, handleTx]
   )
 
   const handleEarmarkRewardsEvent = useCallback(
     async (event: Event) => {
-      await updateTxStatus?.(event, TransactionAction.EarmarkRewards, {
-        onFulfill: () => {
+      await handleTx?.(event, TxAction.EarmarkRewards, {
+        onTxConfirmed: () => {
           fetchEarmarkIncentive()
           fetchRewards()
         },
       })
     },
-    [fetchEarmarkIncentive, fetchRewards, updateTxStatus]
+    [fetchEarmarkIncentive, fetchRewards, handleTx]
   )
 
   // NOTE: Reward All event

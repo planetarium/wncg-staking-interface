@@ -1,8 +1,5 @@
-import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit'
-import store from 'store'
-
-import type { RootState } from 'app/store'
-import { STORE_ACCOUNT_KEY } from 'constants/storeKeys'
+import { atom, selector } from 'recoil'
+import type { Network } from '@balancer-labs/sdk'
 
 export const ConnectionStatus = {
   NotConnected: 'CONNECTION_STATUS_NOT_CONNECTED',
@@ -12,49 +9,26 @@ export const ConnectionStatus = {
 export type ConnectionStatus =
   typeof ConnectionStatus[keyof typeof ConnectionStatus]
 
-type ConnectionState = {
-  account: string | null
-  status: ConnectionStatus
-}
-
-const INITIAL_STATE: ConnectionState = {
-  account: null,
-  status: ConnectionStatus.NotConnected,
-}
-
-const connectionSlice = createSlice({
-  name: '#connection',
-  initialState: INITIAL_STATE,
-  reducers: {
-    setAccount: (state: ConnectionState, action: PayloadAction<string>) => {
-      state.account = action.payload
-      state.status = ConnectionStatus.Connected
-      store.set(STORE_ACCOUNT_KEY, action.payload)
-    },
-    setConnecting: (state: ConnectionState) => {
-      state.status = ConnectionStatus.Connecting
-      state.account = null
-      store.remove(STORE_ACCOUNT_KEY)
-    },
-    resetConnection: (state: ConnectionState) => {
-      state.account = null
-      state.status = ConnectionStatus.NotConnected
-      store.remove(STORE_ACCOUNT_KEY)
-    },
-  },
+export const accountState = atom<string | null>({
+  key: '#account',
+  default: null,
 })
 
-export const { setAccount, setConnecting, resetConnection } =
-  connectionSlice.actions
-export default connectionSlice.reducer
+export const currentNetworkIdState = atom<null | Network>({
+  key: '#currentNetworkId',
+  default: null,
+})
 
-// Selectors
-export function getStatus(state: RootState): ConnectionStatus {
-  return state.connection.status
-}
-export function getAccount(state: RootState): string | null {
-  return state.connection.account
-}
-export const getIsConnected = createSelector([getStatus], (status) => {
-  return status === ConnectionStatus.Connected
+export const connectionStatusState = atom<ConnectionStatus>({
+  key: '#connectionStatus',
+  default: ConnectionStatus.NotConnected,
+})
+
+export const connectedState = selector<boolean>({
+  key: '#connected',
+  get({ get }) {
+    const account = get(accountState)
+    const connectionStatus = get(connectionStatusState)
+    return !!account && !!connectionStatus
+  },
 })

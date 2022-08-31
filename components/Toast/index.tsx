@@ -4,7 +4,7 @@ import store from 'store'
 import styles from './style.module.scss'
 
 import { STORE_MUTED_KEY } from 'constants/storeKeys'
-import { TransactionAction } from 'services/transaction'
+import { TxAction } from 'services/transaction'
 import { gaEvent } from 'lib/gtag'
 import { getTxUrl } from 'utils/url'
 import { getToastAudioFilename, renderToastEmoji } from './utils'
@@ -12,7 +12,7 @@ import { getToastAudioFilename, renderToastEmoji } from './utils'
 import { Icon } from 'components/Icon'
 
 type ToastProps = {
-  action: TransactionAction
+  action: TxAction
   hash: string
   title: string
   message: string

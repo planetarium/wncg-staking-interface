@@ -1,10 +1,11 @@
 import { memo, ReactNode } from 'react'
+import { useRecoilValue } from 'recoil'
 import Image from 'next/image'
 import clsx from 'clsx'
 import styles from './styles/StakingPageWrapper.module.scss'
 
-import { getIsDesktop } from 'app/states/mediaQuery'
-import { useAlert, useAppSelector } from 'hooks'
+import { isDesktopState } from 'app/states/mediaQuery'
+import { useAlert } from 'hooks'
 
 import Effects from 'components/Effects'
 
@@ -15,7 +16,7 @@ type StakingPageWrapperProps = {
 
 function StakingPageWrapper({ children, showBg }: StakingPageWrapperProps) {
   const { showAlert } = useAlert()
-  const isDesktop = useAppSelector(getIsDesktop)
+  const isDesktop = useRecoilValue(isDesktopState)
 
   return (
     <>

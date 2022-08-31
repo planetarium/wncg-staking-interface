@@ -1,37 +1,32 @@
-import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit'
-import type { RootState } from 'app/store'
+import { atom, selector } from 'recoil'
 
 export type Breakpoint = 'xs' | 'sm' | 'md' | 'lg' | 'xl'
 
-type MediaQueryState = {
-  breakpoint: Breakpoint | null
-}
+export const breakpointState = atom<Breakpoint | null>({
+  key: '#breakpoint',
+  default: null,
+})
 
-const INITIAL_STATE: MediaQueryState = {
-  breakpoint: null,
-}
-
-const mediaQuerySlice = createSlice({
-  name: '#mediaQuery',
-  initialState: INITIAL_STATE,
-  reducers: {
-    setBreakpoint(state: MediaQueryState, action: PayloadAction<Breakpoint>) {
-      state.breakpoint = action.payload
-    },
+export const isMobileState = selector({
+  key: '#isMobile',
+  get({ get }) {
+    const bp = get(breakpointState)
+    return ['xs', 'sm'].includes(bp || '')
   },
 })
 
-export const { setBreakpoint } = mediaQuerySlice.actions
-export default mediaQuerySlice.reducer
+export const isTabletState = selector({
+  key: '#isTablet',
+  get({ get }) {
+    const bp = get(breakpointState)
+    return bp === 'md'
+  },
+})
 
-// Selectors
-export function getBreakpoint(state: RootState) {
-  return state.mediaQuery.breakpoint
-}
-export const getIsMobile = createSelector([getBreakpoint], (bp) =>
-  ['xs', 'sm'].includes(bp || '')
-)
-export const getIsTablet = createSelector([getBreakpoint], (bp) => bp === 'md')
-export const getIsDesktop = createSelector([getBreakpoint], (bp) =>
-  ['lg', 'xl'].includes(bp || '')
-)
+export const isDesktopState = selector({
+  key: '#isDesktop',
+  get({ get }) {
+    const bp = get(breakpointState)
+    return ['lg', 'xl'].includes(bp || '')
+  },
+})

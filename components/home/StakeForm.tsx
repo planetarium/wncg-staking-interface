@@ -4,7 +4,7 @@ import { useRecoilValue } from 'recoil'
 import { motion } from 'framer-motion'
 import styles from './styles/StakeForm.module.scss'
 
-import { networkMismatchState } from 'app/states/network'
+import { networkMismatchState } from 'app/states/error'
 import { gaEvent } from 'lib/gtag'
 import { bnum } from 'utils/num'
 import { useBalances, usePool } from 'hooks'

@@ -14,16 +14,15 @@ type PendingTxMenuProps = {
 
 export function PendingTxMenu({ close }: PendingTxMenuProps) {
   const menuRef = useRef<HTMLDivElement>(null)
-  const { transactionService } = useTransaction()
+  const { eventLogService } = useTransaction()
 
   const pendingTxList = useMemo(
-    () => transactionService?.pendingTxList || [],
-    [transactionService?.pendingTxList]
+    () => eventLogService?.pendingTxList || [],
+    [eventLogService?.pendingTxList]
   )
-  console.log(pendingTxList)
 
   function clearTransactions() {
-    transactionService?.resetTx()
+    eventLogService?.resetTx()
   }
 
   const closeOnBlur = useCallback(

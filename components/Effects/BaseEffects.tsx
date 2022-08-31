@@ -4,23 +4,19 @@ import { useSetRecoilState } from 'recoil'
 import type { Network } from '@ethersproject/networks'
 import store from 'store'
 
-import { currentNetworkIdState } from 'app/states/network'
-import { useConnection, useProvider, useTransaction } from 'hooks'
+import { currentNetworkIdState } from 'app/states/connection'
 import { STORE_ACCOUNT_KEY } from 'constants/storeKeys'
+import { useConnection, useProvider, useTransaction } from 'hooks'
 
 function BaseEffects() {
   const { disconnect, updateAccount } = useConnection()
   const provider = useProvider()
-  const { transactionService } = useTransaction()
+  const { eventLogService } = useTransaction()
 
   const setCurrentNetworkId = useSetRecoilState(currentNetworkIdState)
 
   function handleAccountsChanged(...args: unknown[]) {
-    console.log('handleAccountsChanged')
-
-    transactionService?.resetTx()
-    // resetConfirmations()
-    // resetTxList
+    eventLogService?.resetTx()
     const accounts = args[0] as string[]
 
     // NOTE: Disconnected
@@ -55,7 +51,7 @@ function BaseEffects() {
     provider?.on('network', handleNetworkChange)
     window?.ethereum?.on('accountsChanged', handleAccountsChanged)
     window?.ethereum?.on('chainChanged', handleChainChanged)
-    transactionService?.flushOutdatedTx()
+    eventLogService?.flushOutdatedTx()
   })
 
   useUnmount(() => {

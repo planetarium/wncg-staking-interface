@@ -1,8 +1,9 @@
 import { useCallback, useMemo } from 'react'
 import { useQuery } from '@tanstack/react-query'
+import { useRecoilValue } from 'recoil'
 import store from 'store'
 
-import { getAccount, getIsConnected } from 'app/states/connection'
+import { connectedState, accountState } from 'app/states/connection'
 import {
   getCooldownEndTimestamp,
   getWithdrawEndTimestamp,
@@ -14,7 +15,6 @@ import {
 } from 'constants/storeKeys'
 import { REFETCH_INTERVAL } from 'constants/time'
 import { bnum } from 'utils/num'
-import { useAppSelector } from './useRedux'
 import { useStakedBalance } from './useStakedBalance'
 import { useStakingContract } from './useStakingContract'
 
@@ -31,8 +31,8 @@ export function useUnstakeTimestamps() {
   const contract = useStakingContract(true)
   const { stakedBalance } = useStakedBalance()
 
-  const account = useAppSelector(getAccount)
-  const isConnected = useAppSelector(getIsConnected)
+  const account = useRecoilValue(accountState)
+  const isConnected = useRecoilValue(connectedState)
 
   const cooldownEndsAt = useQuery(
     ['cooldownEndsAt', account],

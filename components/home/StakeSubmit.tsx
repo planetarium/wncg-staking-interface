@@ -1,21 +1,21 @@
 import { useCallback, useEffect, useState } from 'react'
 import { usePrevious } from 'react-use'
 import Lottie from 'lottie-react'
-import { Event } from 'ethers'
+import { useRecoilValue } from 'recoil'
+import type { Event } from 'ethers'
 import clsx from 'clsx'
 import styles from './styles/StakeSubmit.module.scss'
 
-import { getAccount, getIsConnected } from 'app/states/connection'
+import { accountState, connectedState } from 'app/states/connection'
 import { ModalCategory } from 'app/states/modal'
 import { configService } from 'services/config'
-import { TransactionAction } from 'services/transaction'
+import { TxAction } from 'services/transaction'
 import { gaEvent } from 'lib/gtag'
 import { handleError } from 'utils/error'
 import { createApprovalEventFilter } from 'utils/event'
 import {
   useAllowances,
   useApprove,
-  useAppSelector,
   useConnection,
   useEventFilters,
   useModal,
@@ -62,8 +62,8 @@ export function StakeSubmit({
   const { stake } = useStake()
   const { unstakeStatus } = useUnstakeTimestamps()
 
-  const account = useAppSelector(getAccount)
-  const isConnected = useAppSelector(getIsConnected)
+  const account = useRecoilValue(accountState)
+  const isConnected = useRecoilValue(connectedState)
   const isUnstakeWindow = UNSTAKE_WINDOW.includes(unstakeStatus)
 
   const isApproved = allowanceFor(bptAddress, configService.stakingAddress)
@@ -90,7 +90,7 @@ export function StakeSubmit({
       }
       clearInput()
     } catch (error) {
-      handleError(error, TransactionAction.Stake)
+      handleError(error, TxAction.Stake)
       setActive(null)
     }
   }
@@ -102,9 +102,12 @@ export function StakeSubmit({
     })
 
     try {
-      await approve(bptAddress, configService.stakingAddress)
+      const hash = await approve(bptAddress, configService.stakingAddress)
+      if (hash) {
+        setPendingTx(hash)
+      }
     } catch (error) {
-      handleError(error, TransactionAction.Approve)
+      handleError(error, TxAction.Approve)
       setActive(null)
     }
   }
@@ -137,9 +140,14 @@ export function StakeSubmit({
     configService.stakingAddress
   )
 
-  const handleApprovalEvent = useCallback(() => {
-    setActive(null)
-  }, [])
+  const handleApprovalEvent = useCallback(
+    ({ transactionHash }: Event) => {
+      if (active === 'approval' && pendingTx === transactionHash) {
+        setActive(null)
+      }
+    },
+    [active, pendingTx]
+  )
 
   const handleStakedEvent = useCallback(
     async ({ transactionHash }: Event) => {

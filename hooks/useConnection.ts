@@ -1,12 +1,11 @@
-import { providers } from 'ethers'
-import type { ExternalProvider } from '@ethersproject/providers'
+import { useCallback } from 'react'
+import { useRecoilState, useResetRecoilState } from 'recoil'
 import store from 'store'
 
 import {
-  getAccount,
-  resetConnection,
-  setAccount,
-  setConnecting,
+  accountState,
+  ConnectionStatus,
+  connectionStatusState,
 } from 'app/states/connection'
 import { ModalCategory } from 'app/states/modal'
 import { STORE_ACCOUNT_KEY } from 'constants/storeKeys'
@@ -14,24 +13,40 @@ import { gaEvent } from 'lib/gtag'
 import { handleError } from 'utils/error'
 import { convertChainIdToHex, networkChainId } from 'utils/network'
 import { useModal } from './useModal'
-import { useAppDispatch, useAppSelector } from './useRedux'
+import { useProvider } from './useProvider'
 
 export function useConnection() {
+  const provider = useProvider()
   const { addModal, removeModal } = useModal()
 
-  const dispatch = useAppDispatch()
-  const account = useAppSelector(getAccount)
+  const [account, setAccount] = useRecoilState(accountState)
+  const [connectionStatus, setConnectionStatus] = useRecoilState(
+    connectionStatusState
+  )
+  const resetAccount = useResetRecoilState(accountState)
+  const resetConnectionStatus = useResetRecoilState(connectionStatusState)
 
-  async function sendConnectionRequest() {
-    dispatch(setConnecting())
+  const reset = useCallback(() => {
+    resetAccount()
+    resetConnectionStatus()
+  }, [resetAccount, resetConnectionStatus])
 
-    const provider = new providers.Web3Provider(
-      window.ethereum as any as ExternalProvider,
-      'any'
-    )
+  const updateAccount = useCallback(
+    (account: string) => {
+      setAccount(account)
+      setConnectionStatus(ConnectionStatus.Connected)
+      store.set(STORE_ACCOUNT_KEY, account)
+    },
+    [setAccount, setConnectionStatus]
+  )
+
+  const initConnect = useCallback(async () => {
+    if (!provider) return
 
     try {
+      setConnectionStatus(ConnectionStatus.Connecting)
       const accounts = await provider.send('eth_requestAccounts', [])
+
       if (accounts && accounts[0]) {
         updateAccount(accounts[0])
         gaEvent({
@@ -41,28 +56,37 @@ export function useConnection() {
           },
         })
       }
+
       removeModal(ModalCategory.Connect)
     } catch (error) {
-      dispatch(resetConnection())
+      reset()
       handleError(error)
     }
-  }
+  }, [provider, removeModal, reset, setConnectionStatus, updateAccount])
 
-  function disconnect() {
-    dispatch(resetConnection())
+  const connect = useCallback(() => {
+    if (!provider) {
+      addModal({
+        category: ModalCategory.MetaMaskGuide,
+      })
+      return
+    }
 
+    initConnect()
+  }, [addModal, initConnect, provider])
+
+  const disconnect = useCallback(() => {
+    reset()
     gaEvent({
       name: 'disconnect_metamask',
       params: {
         account,
       },
     })
-  }
+  }, [account, reset])
 
-  function switchToMainnet() {
-    if (typeof window === 'undefined' || !window.ethereum) {
-      return
-    }
+  const switchNetwork = useCallback(() => {
+    if (!provider) return
 
     gaEvent({
       name: 'switch_network',
@@ -71,32 +95,19 @@ export function useConnection() {
       },
     })
 
-    window.ethereum.request({
+    window.ethereum!.request({
       method: 'wallet_switchEthereumChain',
       params: [{ chainId: convertChainIdToHex(networkChainId) }],
     })
-  }
+  }, [provider])
 
-  function connect() {
-    if (typeof window === 'undefined' || !window.ethereum) {
-      addModal({
-        category: ModalCategory.MetaMaskGuide,
-      })
-      return
-    }
-
-    sendConnectionRequest()
-  }
-
-  function updateAccount(account: string) {
-    dispatch(setAccount(account))
-    store.set(STORE_ACCOUNT_KEY, account)
-  }
+  const isConnected = connectionStatus === ConnectionStatus.Connected
 
   return {
     connect,
     disconnect,
-    switchToMainnet,
+    switchNetwork,
     updateAccount,
+    isConnected,
   }
 }

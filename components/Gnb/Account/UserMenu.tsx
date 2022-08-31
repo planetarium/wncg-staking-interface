@@ -8,14 +8,14 @@ import store from 'store'
 import clsx from 'clsx'
 import styles from './style.module.scss'
 
-import { getAccount } from 'app/states/connection'
-import { networkMismatchState } from 'app/states/network'
+import { accountState } from 'app/states/connection'
+import { networkMismatchState } from 'app/states/error'
 import { STORE_MUTED_KEY } from 'constants/storeKeys'
 import { gaEvent } from 'lib/gtag'
 import { networkChainId, networkNameFor } from 'utils/network'
 import { truncateAddress } from 'utils/string'
 import { getEtherscanUrl } from 'utils/url'
-import { useAppSelector, useConnection } from 'hooks'
+import { useConnection } from 'hooks'
 import { menuTransition, menuVariants } from './constants'
 
 import { Button } from 'components/Button'
@@ -33,19 +33,20 @@ export function AccountUserMenu({ close }: AccountUserMenuProps) {
   )
   const menuRef = useRef<HTMLDivElement>(null)
 
-  const { disconnect, switchToMainnet } = useConnection()
+  const { disconnect: _disconnect, switchNetwork: _switchNetwork } =
+    useConnection()
 
+  const account = useRecoilValue(accountState)
   const networkMismatch = useRecoilValue(networkMismatchState)
-  const account = useAppSelector(getAccount)
 
-  function disconnectApp() {
+  function disconnect() {
     close()
-    setTimeout(disconnect, 300)
+    setTimeout(_disconnect, 300)
   }
 
   function switchNetwork() {
     close()
-    switchToMainnet()
+    _switchNetwork()
   }
 
   function handleCopy() {
@@ -169,7 +170,7 @@ export function AccountUserMenu({ close }: AccountUserMenuProps) {
         className={styles.disconnectButton}
         variant="danger"
         size="small"
-        onClick={disconnectApp}
+        onClick={disconnect}
         fullWidth
       >
         Disconnect

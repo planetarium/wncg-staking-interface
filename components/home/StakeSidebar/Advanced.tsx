@@ -3,15 +3,14 @@ import { useRecoilValue } from 'recoil'
 import { AnimatePresence, motion } from 'framer-motion'
 import styles from '../styles/StakeSidebar.module.scss'
 
-import { getIsConnected } from 'app/states/connection'
-import { getIsMobile } from 'app/states/mediaQuery'
-import { networkMismatchState } from 'app/states/network'
-import { TransactionAction } from 'services/transaction'
+import { connectedState } from 'app/states/connection'
+import { networkMismatchState } from 'app/states/error'
+import { isMobileState } from 'app/states/mediaQuery'
+import { TxAction } from 'services/transaction'
 import { gaEvent } from 'lib/gtag'
 import { countUpOption, usdCountUpOption } from 'utils/countUp'
 import { handleError } from 'utils/error'
 import {
-  useAppSelector,
   useConnection,
   useEarmark,
   useEarmarkIncentive,
@@ -40,8 +39,8 @@ export function StakeSidebarAdvanced() {
   const { earmarkRewards } = useEarmark()
 
   const networkMismatch = useRecoilValue(networkMismatchState)
-  const isConnected = useAppSelector(getIsConnected)
-  const isMobile = useAppSelector(getIsMobile)
+  const isConnected = useRecoilValue(connectedState)
+  const isMobile = useRecoilValue(isMobileState)
 
   const disabled = networkMismatch || loading
 
@@ -64,7 +63,7 @@ export function StakeSidebarAdvanced() {
       await earmarkRewards()
     } catch (error) {
       setLoading(false)
-      handleError(error, TransactionAction.EarmarkRewards)
+      handleError(error, TxAction.EarmarkRewards)
     }
   }
 

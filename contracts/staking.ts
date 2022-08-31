@@ -8,9 +8,8 @@ import { sanitizeNumber } from 'utils/num'
 
 type Account = string | null
 
-const logger = createLogger('white')
-
-const unstakeLogger = createLogger('black')
+const logger1 = createLogger('white')
+const logger2 = createLogger('black')
 
 //   NOTE: BAL reward contract address
 export async function getBalancerGaugeAddress(
@@ -19,10 +18,10 @@ export async function getBalancerGaugeAddress(
   const key = 'balancer gauge address'
 
   try {
-    logger(key)
+    logger1(key)
     return await contract.balancerGauge()
   } catch (error) {
-    logger(key, error)
+    logger1(key, error)
     throw error
   }
 }
@@ -36,11 +35,11 @@ export async function getEarnedBal(
   const key = 'earned BAL'
 
   try {
-    logger(key)
+    logger1(key)
     const data = await contract.earnedBAL(account)
     return data ? formatUnits(data, decimals) : '0'
   } catch (error) {
-    logger(key, error)
+    logger1(key, error)
     throw error
   }
 }
@@ -54,11 +53,11 @@ export async function getEarnedWncg(
   const key = 'earned wNCG'
 
   try {
-    logger(key)
+    logger1(key)
     const data = await contract.earnedWNCG(account)
     return data ? formatUnits(data, decimals) : '0'
   } catch (error) {
-    logger(key, error)
+    logger1(key, error)
     throw error
   }
 }
@@ -67,11 +66,11 @@ export async function getBalEmissionPerSec(contract: Contract) {
   const key = 'BAL emission/s'
 
   try {
-    logger(key)
+    logger1(key)
     const data = await contract.getBALRewardRate()
     return data ? formatEther(data) : '0'
   } catch (error) {
-    logger(key, error)
+    logger1(key, error)
     throw error
   }
 }
@@ -80,11 +79,11 @@ export async function getWncgEmissionPerSec(contract: Contract) {
   const key = 'wNCG emission/s'
 
   try {
-    logger(key)
+    logger1(key)
     const data = await contract.getWNCGEmissionPerSec()
     return data ? formatEther(data) : '0'
   } catch (error) {
-    logger(key, error)
+    logger1(key, error)
     throw error
   }
 }
@@ -97,11 +96,11 @@ export async function getStakedTokenBalance(
   const key = 'staked token balance'
 
   try {
-    logger(key)
+    logger1(key)
     const data = await contract.stakedTokenBalance(account)
     return data ? formatEther(data) : '0'
   } catch (error) {
-    logger(key, error)
+    logger1(key, error)
     throw error
   }
 }
@@ -110,11 +109,11 @@ export async function getTotalStaked(contract: Contract) {
   const key = 'total staked amount'
 
   try {
-    logger(key)
+    logger1(key)
     const data = await contract.totalStaked()
     return data ? formatEther(data) : '0'
   } catch (error) {
-    logger(key, error)
+    logger1(key, error)
     throw error
   }
 }
@@ -123,11 +122,11 @@ export async function getUnstakeWindow(contract: Contract): Promise<number> {
   const key = 'unstake window'
 
   try {
-    unstakeLogger(key)
+    logger2(key)
     const data = await contract.UNSTAKE_WINDOW()
     return data ? data.toNumber() : 0
   } catch (error) {
-    unstakeLogger(key, error)
+    logger2(key, error)
     throw error
   }
 }
@@ -138,11 +137,11 @@ export async function getEarmarkIncentiveFee(
   const key = 'earmark incentive fee'
 
   try {
-    logger(key)
+    logger1(key)
     const data = await contract.earmarkIncentive()
     return data ? data.toNumber() : 0
   } catch (error) {
-    logger(key, error)
+    logger1(key, error)
     throw error
   }
 }
@@ -151,11 +150,11 @@ export async function getFeeDenominator(contract: Contract): Promise<number> {
   const key = 'fee denominator'
 
   try {
-    logger(key)
+    logger1(key)
     const data = await contract.FEE_DENOMINATOR()
     return data ? data.toNumber() : 0
   } catch (error) {
-    logger(key, error)
+    logger1(key, error)
     throw error
   }
 }
@@ -166,7 +165,7 @@ export async function getCooldownEndTimestamp(
 ) {
   if (!account) return 0
 
-  unstakeLogger('cooldown end timestamp')
+  logger2('cooldown end timestamp')
   const data = await contract.getCooldownEndTimestamp(account)
   let timestamp = data ? data.toNumber() * 1_000 : 0
   if (isPast(timestamp)) timestamp = 0
@@ -179,7 +178,7 @@ export async function getWithdrawEndTimestamp(
   account: Account
 ) {
   if (!account) return 0
-  unstakeLogger('withdraw end timestamp')
+  logger2('withdraw end timestamp')
   const data = await contract.getWithdrawEndTimestamp(account)
   let timestamp = data ? data.toNumber() * 1_000 : 0
   if (isPast(timestamp)) timestamp = 0
@@ -219,7 +218,7 @@ export async function stakeBpt(
   return await contract.stake(parseEther(sanitizeNumber(amount)).toString())
 }
 
-export async function initCooldown(
+export async function cooldown(
   contract: Contract
 ): Promise<TransactionResponse> {
   return await contract.cooldown()

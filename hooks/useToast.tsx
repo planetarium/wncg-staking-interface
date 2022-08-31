@@ -1,15 +1,22 @@
 import { toast } from 'react-toastify'
+import { useSetRecoilState } from 'recoil'
 import { nanoid } from 'nanoid'
 
-import { addToast as addToastId } from 'app/states/toast'
-import type { TransactionAction } from 'services/transaction'
+import { toastIdListState } from 'app/states/toast'
+import type { TxAction } from 'services/transaction'
 import { toastAnimation } from 'utils/toast'
-import { useAppDispatch } from './useRedux'
 
 import { Toast } from 'components/Toast'
+import { CustomToast } from 'components/Toast/CustomToast'
 
-type AddToastParams = {
-  action: TransactionAction
+type AddCustomToast = {
+  title: string
+  message: string
+  type?: ToastType
+}
+
+type SendToastParams = {
+  action: TxAction
   hash: string
   title: string
   message: string
@@ -17,28 +24,19 @@ type AddToastParams = {
 }
 
 export function useToast() {
-  const dispatch = useAppDispatch()
+  const setToastIdList = useSetRecoilState(toastIdListState)
 
-  function addToast(
-    params: AddToastParams,
-    confirmationHash?: string,
-    data?: any
-  ) {
-    const toastId = `${params.hash}.${nanoid()}`
-
-    toast(<Toast {...params} />, {
+  function addCustomToast({ title, message, type }: AddCustomToast) {
+    const toastId = `toast.${nanoid()}`
+    toast(<CustomToast title={title} message={message} type={type} />, {
       transition: toastAnimation,
       toastId,
     })
 
-    dispatch(addToastId(toastId))
-
-    // if (confirmationHash) {
-    //   registerConfirmations(confirmationHash, data)
-    // }
+    setToastIdList((prev) => [...prev, toastId])
   }
 
-  const sendToast = (params: AddToastParams) => {
+  const addTxToast = (params: SendToastParams) => {
     const toastId = `${params.hash}.${nanoid()}`
 
     toast(<Toast {...params} />, {
@@ -46,11 +44,11 @@ export function useToast() {
       toastId,
     })
 
-    return toastId
+    setToastIdList((prev) => [...prev, toastId])
   }
 
   return {
-    addToast,
-    sendToast,
+    addCustomToast,
+    addTxToast,
   }
 }

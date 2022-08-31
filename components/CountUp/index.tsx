@@ -5,10 +5,9 @@ import { useRecoilValue } from 'recoil'
 import clsx from 'clsx'
 import styles from './style.module.scss'
 
-import { getIsConnected } from 'app/states/connection'
-import { networkMismatchState } from 'app/states/network'
+import { connectedState } from 'app/states/connection'
+import { networkMismatchState } from 'app/states/error'
 import { bnum, sanitizeNumber } from 'utils/num'
-import { useAppSelector } from 'hooks'
 
 import { Icon } from '../Icon'
 
@@ -30,7 +29,7 @@ export function CountUp({
   const [start, setStart] = useState(0)
   const prevEnd = usePrevious(Number(sanitizeNumber(end))) || 0
 
-  const isConnected = useAppSelector(getIsConnected)
+  const isConnected = useRecoilValue(connectedState)
   const networkMismatch = useRecoilValue(networkMismatchState)
 
   const bEnd = bnum(end)
