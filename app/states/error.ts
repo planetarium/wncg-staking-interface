@@ -8,6 +8,14 @@ export const invalidPriceState = atom<boolean>({
   default: false,
 })
 
+export const metamaskNotFoundState = selector({
+  key: '#metamaskNotFound',
+  get({ get }) {
+    const currentNetworkId = get(currentNetworkIdState)
+    return currentNetworkId === null
+  },
+})
+
 export const networkMismatchState = selector({
   key: '#networkMismatch',
   get({ get }) {

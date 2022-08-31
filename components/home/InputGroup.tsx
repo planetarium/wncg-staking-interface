@@ -4,7 +4,7 @@ import { useRecoilValue } from 'recoil'
 import styles from './styles/InputGroup.module.scss'
 
 import { connectedState } from 'app/states/connection'
-import Decimal, { sanitizeNumber } from 'utils/num'
+import { bnum } from 'utils/num'
 import { usePool } from 'hooks'
 
 import { Input } from 'components/Input'
@@ -32,7 +32,7 @@ export function InputGroup({
   const { poolTokenSymbols } = usePool()
 
   const isConnected = useRecoilValue(connectedState)
-  const isMaxAmountZero = new Decimal(sanitizeNumber(maxAmount)).isZero()
+  const isMaxAmountZero = bnum(maxAmount).isZero()
 
   return (
     <div className={styles.inputGroup}>

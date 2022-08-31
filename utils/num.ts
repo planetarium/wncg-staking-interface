@@ -1,15 +1,5 @@
 import { BigNumberish, utils } from 'ethers'
-import { Decimal } from 'decimal.js'
 import OldBigNumber from 'bignumber.js'
-
-Decimal.set({
-  precision: 20,
-  rounding: 4,
-  toExpNeg: -20,
-  toExpPos: 21,
-  modulo: 1,
-  crypto: false,
-})
 
 type SanitizeNumberValueOption = {
   allowEmptyString?: boolean
@@ -55,8 +45,6 @@ export function isLessThanMinAmount(
   const bAmount = bnum(amount)
   return !bAmount.isZero() && bAmount.lt(minAmount)
 }
-
-export default Decimal
 
 export function hasAmounts(amounts: string[]) {
   return amounts.some((amount) => bnum(amount).gt(0))

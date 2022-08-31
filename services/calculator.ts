@@ -9,7 +9,7 @@ import {
 } from '@balancer-labs/sdk'
 import { WeightedMath } from '@georgeroman/balancer-v2-pools'
 
-import Decimal, { bnum } from 'utils/num'
+import { bnum } from 'utils/num'
 import { getTokenInfo } from 'utils/token'
 import { configService } from './config'
 
@@ -110,7 +110,7 @@ export default class CalculatorService {
     const fixedTokenAddress = this.tokenOf(type, index)
     const fixedToken = getTokenInfo(fixedTokenAddress)
     const fixedTokenDecimals = fixedToken?.decimals || 18
-    const fixedAmount = new Decimal(amount).toFixed(fixedTokenDecimals)
+    const fixedAmount = bnum(amount).toFixed(fixedTokenDecimals)
     const fixedDenormAmount = parseUnits(fixedAmount, fixedTokenDecimals)
     const fixedRatio = this.ratioOf(type, index)
     const amounts = {
@@ -197,7 +197,7 @@ export default class CalculatorService {
   denormAmounts(amounts: string[]): BigNumber[] {
     return amounts.map((a, i) =>
       parseUnits(
-        new Decimal(a).toFixed(4, Decimal.ROUND_DOWN),
+        bnum(a).toFixed(4, OldBigNumber.ROUND_DOWN),
         this.poolTokenDecimals[i]
       )
     )
