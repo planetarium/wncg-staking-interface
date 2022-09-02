@@ -5,6 +5,7 @@ export const ModalCategory = {
   Connect: 'MODAL_CATEGORY_CONNECT',
   Error: 'MODAL_CATEGORY_ERROR',
   JoinPreview: 'MODAL_JOIN_POOL_PREVIEW',
+  ExitPreview: 'MODAL_EXIT_POOL_PREVIEW',
   MetaMaskGuide: 'MODAL_CATEGORY_METAMASK_GUIDE',
   StakeWarning: 'MODAL_CATEGORY_STAKE_WARNING',
   WithdrawPreview: 'MODAL_CATEGORY_WITHDRAW_PREVIEW',
