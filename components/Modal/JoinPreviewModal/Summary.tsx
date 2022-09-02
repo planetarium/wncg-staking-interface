@@ -9,12 +9,12 @@ import { Icon } from 'components/Icon'
 
 type JoinPreviewSummaryProps = {
   priceImpact: number
-  totalUsdValue: string
+  totalFiatValue: string
 }
 
 function JoinPreviewSummary({
   priceImpact,
-  totalUsdValue,
+  totalFiatValue,
 }: JoinPreviewSummaryProps) {
   const priceImpactPcnt = (priceImpact * 100).toFixed(2)
   const bPriceImpactPcnt = bnum(priceImpactPcnt)
@@ -29,7 +29,7 @@ function JoinPreviewSummary({
         <dd>
           <strong>
             <NumberFormat
-              value={totalUsdValue}
+              value={totalFiatValue}
               displayType="text"
               decimalScale={2}
               thousandSeparator

@@ -12,7 +12,7 @@ type JoinPreviewModalProps = {
   disabled: boolean
   isNativeAsset: boolean
   priceImpact: number
-  totalUsdValue: string
+  totalFiatValue: string
 }
 
 export function JoinPreviewModal({
@@ -20,7 +20,7 @@ export function JoinPreviewModal({
   disabled,
   isNativeAsset,
   priceImpact,
-  totalUsdValue,
+  totalFiatValue,
 }: JoinPreviewModalProps) {
   const { fetchAllowances } = useAllowances()
 
@@ -32,18 +32,17 @@ export function JoinPreviewModal({
       <JoinPreviewComposition
         amounts={amounts}
         isNativeAsset={isNativeAsset}
-        totalUsdValue={totalUsdValue}
+        totalFiatValue={totalFiatValue}
       />
       <JoinPreviewSummary
         priceImpact={priceImpact}
-        totalUsdValue={totalUsdValue}
+        totalFiatValue={totalFiatValue}
       />
       <JoinActions
         amounts={amounts}
         disabled={disabled}
         isNativeAsset={isNativeAsset}
       />
-      {/* <JoinEffects /> */}
     </div>
   )
 }

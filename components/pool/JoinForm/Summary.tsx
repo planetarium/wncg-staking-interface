@@ -15,7 +15,7 @@ type JoinFormSummaryProps = {
   optimized: boolean
   optDisabled: boolean
   priceImpact: number
-  totalUsdValue: string
+  totalFiatValue: string
 }
 
 function JoinFormSummary({
@@ -26,7 +26,7 @@ function JoinFormSummary({
   optimized,
   optDisabled,
   priceImpact,
-  totalUsdValue,
+  totalFiatValue,
 }: JoinFormSummaryProps) {
   const priceImpactPcnt = (priceImpact * 100).toFixed(2)
   const bPriceImpactPcnt = bnum(priceImpactPcnt)
@@ -41,7 +41,7 @@ function JoinFormSummary({
         <dd>
           <strong>
             <NumberFormat
-              value={totalUsdValue}
+              value={totalFiatValue}
               displayType="text"
               decimalScale={2}
               thousandSeparator

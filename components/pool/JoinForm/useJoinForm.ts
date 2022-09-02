@@ -112,7 +112,7 @@ export function useJoinForm(
     [priceImpact]
   )
 
-  const totalUsdValue = useMemo(
+  const totalFiatValue = useMemo(
     () =>
       poolTokenAddresses
         .reduce((total, address, i) => {
@@ -195,7 +195,7 @@ export function useJoinForm(
           disabled: joinDisabled,
           isNativeAsset,
           priceImpact,
-          totalUsdValue,
+          totalFiatValue,
         },
       })
     },
@@ -206,7 +206,7 @@ export function useJoinForm(
       joinDisabled,
       previewDisabled,
       priceImpact,
-      totalUsdValue,
+      totalFiatValue,
     ]
   )
 
@@ -226,6 +226,6 @@ export function useJoinForm(
     setPropAmount,
     showPropButton,
     togglePriceImpactAgreement,
-    totalUsdValue,
+    totalFiatValue,
   }
 }

@@ -14,13 +14,13 @@ import { TokenIcon } from 'components/TokenIcon'
 type JoinPreviewCompositionProps = {
   amounts: string[]
   isNativeAsset: boolean
-  totalUsdValue: string
+  totalFiatValue: string
 }
 
 function JoinPreviewComposition({
   amounts,
   isNativeAsset,
-  totalUsdValue,
+  totalFiatValue,
 }: JoinPreviewCompositionProps) {
   const { poolTokenAddresses, nativeAssetIndex } = usePool()
   const { toFiat } = useFiatCurrency()
@@ -35,14 +35,14 @@ function JoinPreviewComposition({
     const lastIndex = usdValues.length - 1
     const ratios = usdValues.map((value, i) => {
       if (i === lastIndex) return '0'
-      return bnum(value).div(totalUsdValue).times(100).toFixed(2)
+      return bnum(value).div(totalFiatValue).times(100).toFixed(2)
     })
     const pcntSum = ratios.reduce((total, pcnt) => {
       return bnum(total).plus(pcnt)
     }, bnum(0))
     ratios[lastIndex] = bnum(100).minus(pcntSum).toFixed(2)
     return ratios
-  }, [totalUsdValue, usdValues])
+  }, [totalFiatValue, usdValues])
 
   return (
     <dl className={styles.details}>
