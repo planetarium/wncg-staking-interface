@@ -6,7 +6,7 @@ import {
   useState,
 } from 'react'
 import clsx from 'clsx'
-import styles from '../styles/TokenInput.module.scss'
+import styles from '../styles/Dropdown.module.scss'
 
 import { renderTokenIcon } from './utils'
 
@@ -15,30 +15,28 @@ import { Icon } from 'components/Icon'
 
 type TokenDropdownProps = {
   id: string
-  selectedToken: string
-  tokenList: string[]
-  selectToken?(value: string): void
+  list: string[]
+  selected: string
+  select(value: string): void
+  className?: string
 }
 
 export function TokenDropdown({
   id,
-  selectedToken,
-  tokenList,
-  selectToken,
+  selected,
+  list: tokenList,
+  select,
+  className,
 }: TokenDropdownProps) {
   const [show, setShow] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
 
-  const hasList = !!tokenList.length && !!selectToken
-
   function handleClick(e: ReactMouseEvent) {
-    if (!hasList) return
-    selectToken((e.currentTarget as HTMLButtonElement).value)
+    select((e.currentTarget as HTMLButtonElement).value)
     setShow(false)
   }
 
   function toggle(e: ReactMouseEvent) {
-    if (!hasList) return
     e.preventDefault()
     setShow((prev) => !prev)
   }
@@ -57,7 +55,7 @@ export function TokenDropdown({
   return (
     <div
       id={`${id}Dropdown`}
-      className={clsx(styles.tokenDropdown, { [styles.show]: show })}
+      className={clsx(styles.tokenDropdown, className, { [styles.show]: show })}
       ref={dropdownRef}
     >
       <Button
@@ -65,31 +63,28 @@ export function TokenDropdown({
         variant="secondary"
         type="button"
         onClick={toggle}
-        disabled={!hasList}
       >
-        {renderTokenIcon(selectedToken, tokenList)}
-        {hasList && <Icon className={styles.caret} id="caret" ariaHidden />}
+        {renderTokenIcon(selected, tokenList)}
+        <Icon className={styles.caret} id="caret" ariaHidden />
       </Button>
 
-      {hasList && (
-        <ul className={styles.dropdownMenu}>
-          {tokenList.map((token) => {
-            const isSelected = token === selectedToken
+      <ul className={styles.dropdownMenu}>
+        {tokenList.map((token) => {
+          const isSelected = token === selected
 
-            return (
-              <li
-                key={`${token}.${id}`}
-                className={clsx({ [styles.selected]: isSelected })}
-              >
-                <button type="button" value={token} onClick={handleClick}>
-                  {renderTokenIcon(token, tokenList)}
-                  {isSelected && <Icon className={styles.check} id="check" />}
-                </button>
-              </li>
-            )
-          })}
-        </ul>
-      )}
+          return (
+            <li
+              key={`${token}.${id}`}
+              className={clsx({ [styles.selected]: isSelected })}
+            >
+              <button type="button" value={token} onClick={handleClick}>
+                {renderTokenIcon(token, tokenList)}
+                {isSelected && <Icon className={styles.check} id="check" />}
+              </button>
+            </li>
+          )
+        })}
+      </ul>
     </div>
   )
 }

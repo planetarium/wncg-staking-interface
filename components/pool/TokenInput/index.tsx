@@ -13,45 +13,52 @@ import { errorMessageVariants } from 'components/Input/constants'
 
 import { TokenBaseInput } from './BaseInput'
 import { TokenDropdown } from './Dropdown'
+import { TokenLabel } from './Label'
 
 type TokenInputProps = {
+  action: PoolAction
   address: string
-  balance: string
   control: Control
   id: string
+  max: string
   maximized: boolean
   name: string
-  rules: Partial<RegisterOptions>
   disabled?: boolean
   error?: string
   propButton?: boolean
+  rules?: Partial<RegisterOptions>
   selectToken?(value: string): void
   setMaxValue?(e: MouseEvent<HTMLButtonElement>): void
   setPropAmount?(e: MouseEvent<HTMLButtonElement>): void
+  showLabel?: boolean
   tokenList?: string[]
   warning?: string
 }
 
 export function TokenInput({
+  action,
   address,
-  balance,
   control,
+  max,
   maximized,
   name,
   id,
-  rules,
   disabled,
   error,
   propButton,
   selectToken,
   setMaxValue,
   setPropAmount,
+  rules = {},
+  showLabel = false,
   tokenList = [],
   warning,
 }: TokenInputProps) {
   const isMobile = useRecoilValue(isMobileState)
 
   const hasError = !!error
+  const hasDropdown = !!tokenList.length && !!selectToken
+  const hasLabel = showLabel
   const hasWarning = !!warning
   const showPropButton = propButton && !!setPropAmount
   const { decimals } = getTokenInfo(address)
@@ -62,15 +69,19 @@ export function TokenInput({
         className={clsx(styles.tokenInputGroup, { [styles.error]: hasError })}
       >
         <div className={styles.control}>
-          <TokenDropdown
-            id={id}
-            selectedToken={address}
-            selectToken={selectToken}
-            tokenList={tokenList}
-          />
+          {hasDropdown && (
+            <TokenDropdown
+              id={id}
+              list={tokenList}
+              selected={address}
+              select={selectToken}
+            />
+          )}
+          {hasLabel && <TokenLabel address={address} />}
+
           <TokenBaseInput
             id={id}
-            className={styles.tokenInput}
+            className={clsx(styles.tokenInput)}
             name={name}
             control={control as any as Control<FieldValues, 'any'>}
             rules={rules}
@@ -80,9 +91,11 @@ export function TokenInput({
         </div>
 
         <div className={styles.balanceGroup}>
-          <span className={styles.label}>Balance:</span>
+          <span className={styles.label}>
+            {action === 'join' ? 'Balance' : 'Single token max'}:
+          </span>
           <strong>
-            {isLessThanMinAmount(balance) ? (
+            {isLessThanMinAmount(max) ? (
               <span className={styles.balance}>&lt; 0.0001</span>
             ) : (
               <NumberFormat
@@ -91,12 +104,12 @@ export function TokenInput({
                 displayType="text"
                 isNumericString
                 thousandSeparator={true}
-                value={balance}
+                value={max}
               />
             )}
           </strong>
 
-          {!bnum(balance).isZero() && (
+          {!bnum(max).isZero() && (
             <button
               className={styles.maxButton}
               type="button"

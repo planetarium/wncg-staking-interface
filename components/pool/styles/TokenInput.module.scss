@@ -1,7 +1,3 @@
-$dropdown-offset: 16px;
-$dropdown-padding: 4px;
-$toggle-max-width: 169px;
-$toggle-min-width: 108px;
 $input-height: 60px;
 $input-padding: 16px;
 
@@ -15,6 +11,7 @@ $input-padding: 16px;
 }
 
 .tokenInputGroup {
+  position: relative;
   width: 100%;
   padding: 0 $input-padding;
   color: $white;
@@ -86,141 +83,33 @@ $input-padding: 16px;
   }
 }
 
-.tokenDropdown {
+.tokenLabel {
   @include flexbox;
   position: relative;
   z-index: 2;
+  flex-grow: 0;
   flex-shrink: 0;
 
-  &.show {
-    .dropdownToggle {
-      .caret {
-        transform: rotate(180deg);
-      }
-    }
+  .label {
+    @include inlineFlexbox;
+    @include textStyle(16, 700);
+    height: 36px;
+    padding-right: 16px;
+    padding-left: 14px;
 
-    .dropdownMenu {
-      transform: translate3d(0, 0, 0);
-      opacity: 1;
-      visibility: visible;
-    }
-  }
-
-  .tokenGroup {
-    @include inlineFlexbox(start);
-    margin-right: 8px;
-
-    .token {
-      position: relative;
-      margin-left: -10px;
-      margin-right: 0;
-      border: 1px solid $black;
-
-      &:first-child {
-        margin-left: 0;
-      }
-    }
-  }
-
-  button {
+    cursor: initial;
+    color: $white;
     font-style: normal;
     font-weight: 500;
+    white-space: nowrap;
+    background-color: $black;
+    border-radius: $radius-sm;
 
     .token {
       flex-shrink: 0;
       width: 20px;
       height: 20px;
       margin-right: 8px;
-    }
-
-    svg {
-      margin-right: 0;
-    }
-  }
-}
-
-.dropdownToggle {
-  position: relative;
-  min-width: $toggle-min-width;
-  max-width: $toggle-max-width;
-
-  &[disabled] {
-    cursor: initial;
-    opacity: 1;
-  }
-
-  .caret {
-    width: 16px;
-    height: 16px;
-    margin-left: 8px;
-    margin-right: -4px;
-    color: $gray-2;
-    transition: $transition-short;
-  }
-}
-
-.dropdownMenu {
-  @include flexbox(start, start);
-  position: absolute;
-  top: calc(100% + 8px);
-  left: 0;
-  flex-direction: column;
-  padding: $dropdown-padding;
-  background-color: $black;
-  border-radius: $radius-sm;
-  box-shadow: $dropdown-box-shadow;
-  transition: $transition-long;
-  transform: translate3d(0, -4px, 0);
-  opacity: 0;
-  visibility: hidden;
-
-  li {
-    @include inlineFlexbox;
-    width: 100%;
-
-    &.selected {
-      .label {
-        color: $primary;
-      }
-    }
-
-    button {
-      @include inlineFlexbox(start);
-      @include textStyle(16, 500);
-      width: 100%;
-      height: 36px;
-      padding-right: 16px - $dropdown-padding;
-      padding-left: 14px - $dropdown-padding;
-      color: $white;
-      font-style: normal;
-      white-space: nowrap;
-      cursor: pointer;
-      border-radius: $radius-sm;
-      transition: $transition-short;
-
-      &:hover {
-        opacity: 0.5;
-      }
-
-      .token {
-        flex-shrink: 0;
-        width: 20px;
-        height: 20px;
-        margin-right: 8px;
-      }
-
-      .label {
-        flex-grow: 1;
-        text-align: left;
-      }
-
-      .check {
-        flex-shrink: 0;
-        width: 20px;
-        height: 20px;
-        margin-left: 8px;
-        color: $primary;
-      }
     }
   }
 }
@@ -237,6 +126,10 @@ $input-padding: 16px;
   &::placeholder {
     color: rgba($white, 0.5);
   }
+}
+
+.percentageInput {
+  margin-bottom: 8px;
 }
 
 .errorMessage,

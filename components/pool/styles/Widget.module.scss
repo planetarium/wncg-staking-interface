@@ -1,5 +1,17 @@
 $nested-list-padding: 20px;
 
+.widget {
+  @include responsive(MD) {
+    padding: 20px;
+    background-color: rgba($black, 0.9);
+    border-radius: $radius-sm;
+  }
+
+  @include responsive(LG) {
+    padding: 30px;
+  }
+}
+
 .title {
   @include textStyle(16, 700);
   margin-bottom: 20px;

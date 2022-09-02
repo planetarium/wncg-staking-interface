@@ -8,19 +8,19 @@ type TokenBaseInputProps = {
   name: string
   id: string
   precision: number
-  rules: Partial<RegisterOptions>
   className?: string
   disabled?: boolean
+  rules?: Partial<RegisterOptions>
 }
 
 export function TokenBaseInput({
   control,
   name,
+  id,
   precision,
-  rules,
   className,
   disabled,
-  id,
+  rules = {},
 }: TokenBaseInputProps) {
   return (
     <Controller

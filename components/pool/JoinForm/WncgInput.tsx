@@ -51,12 +51,14 @@ function WncgInput({
       name="wncgAmount"
       control={control as any as Control<FieldValues, 'any'>}
       rules={rules}
+      action="join"
       address={address}
-      balance={balance}
       error={error}
+      max={balance}
       maximized={maximized}
       setMaxValue={setMaxValue}
       setPropAmount={setPropAmount}
+      showLabel
       propButton={showPropButton}
     />
   )

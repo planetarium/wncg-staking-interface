@@ -96,9 +96,10 @@ function EtherInput({
       name="ethAmount"
       control={control as any as Control<FieldValues, 'any'>}
       rules={rules}
+      action="join"
       address={currentEther}
-      balance={ethBalance}
       error={error}
+      max={ethBalance}
       maximized={maximized}
       selectToken={selectEther}
       tokenList={etherAddresses}

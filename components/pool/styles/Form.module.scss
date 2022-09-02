@@ -1,7 +1,13 @@
 .formSection {
   form {
+    position: relative;
     width: 100%;
-    overflow-x: auto;
+
+    > .dropdown {
+      position: absolute;
+      top: 12px;
+      left: 16px;
+    }
   }
 
   @include responsive(MD) {
@@ -65,6 +71,57 @@
   .optButton {
     @include posCenterY;
     right: 2px;
+  }
+
+  .detailItem {
+    @include flexbox(between);
+    flex-wrap: wrap;
+    width: 100%;
+    padding: 8px;
+    border-radius: $radius-sm;
+
+    dt {
+      @include flexbox(start);
+      width: auto;
+
+      strong {
+        @include textStyle(14, 700);
+        text-transform: uppercase;
+      }
+    }
+
+    dd {
+      @include flexbox(center, end);
+      @include textStyle(16, 700);
+      flex-direction: column;
+      text-align: right;
+    }
+
+    .token {
+      width: 28px;
+      height: 28px;
+      margin-right: 8px;
+      color: $white;
+    }
+
+    .usd {
+      @include inlineFlexbox(start);
+      @include textStyle(12, 500);
+      margin-top: 0px;
+      padding-right: 4px;
+      color: $gray-3;
+    }
+
+    .percent {
+      @include textStyle(12, 500);
+      margin-left: 4px;
+      color: $gray-4;
+    }
+
+    & + .priceImpact {
+      padding: 8px;
+      margin-top: 10px;
+    }
   }
 
   > div {
