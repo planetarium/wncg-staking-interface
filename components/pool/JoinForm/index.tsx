@@ -9,8 +9,8 @@ import { useJoinForm } from './useJoinForm'
 import type { JoinFormFields } from './type'
 
 import { Button } from 'components/Button'
+import HighPriceImpact from '../HighPriceImpact'
 import EtherInput from './EtherInput'
-import HighPriceImpact from './HighPriceImpact'
 import JoinFormSummary from './Summary'
 import WncgInput from './WncgInput'
 
@@ -47,7 +47,7 @@ function JoinForm({ currentEther, selectEther }: JoinFormProps) {
     setPropAmount,
     showPropButton,
     togglePriceImpactAgreement,
-    totalUsdValue,
+    totalFiatValue,
   } = useJoinForm(isNativeAsset, useFormReturn)
 
   const ethValue = sanitizeNumber(watch('ethAmount'))
@@ -93,7 +93,7 @@ function JoinForm({ currentEther, selectEther }: JoinFormProps) {
           maxDisabled={maxDisabled}
           optDisabled={optDisabled}
           priceImpact={priceImpact}
-          totalUsdValue={totalUsdValue}
+          totalFiatValue={totalFiatValue}
         />
         <HighPriceImpact
           checked={priceImpactAgreement}

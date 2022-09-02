@@ -1,6 +1,6 @@
 import { memo } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import styles from '../styles/HighPriceImpact.module.scss'
+import styles from './styles/HighPriceImpact.module.scss'
 
 import { blockVariants } from 'components/home/constants'
 
