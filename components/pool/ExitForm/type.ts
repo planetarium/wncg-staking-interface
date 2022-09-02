@@ -1,7 +1,6 @@
 export type ExitFormFields = {
+  exitAmount: string
   exitType: string
-  inputValue: string
-  tokenOutIndex: number
   percentage: number
   priceImpactAgreement: boolean
 }

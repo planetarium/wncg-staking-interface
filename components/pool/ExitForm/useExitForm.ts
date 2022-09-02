@@ -16,12 +16,23 @@ export function useExitForm(useFormReturn: UseFormReturn<ExitFormFields>) {
   const { clearErrors, setValue, trigger, watch } = useFormReturn
 
   const exitType = watch('exitType')
-  const inputValue = watch('inputValue')
-  const tokenOutIndex = watch('tokenOutIndex')
+  const exitAmount = watch('exitAmount')
+  const percentage = watch('percentage')
   const priceImpactAgreement = watch('priceImpactAgreement')
 
   const isProportional = exitType === 'all'
   const exactOut = !isProportional
+
+  const tokenOutIndex = useMemo(() => {
+    if (exitType === 'all') return 0
+
+    let tokenOut = exitType
+    if (exitType === configService.nativeAssetAddress) {
+      tokenOut = configService.weth
+    }
+
+    return poolTokenAddresses.findIndex((address) => address === tokenOut)
+  }, [exitType, poolTokenAddresses])
 
   const {
     amountExceedsPoolBalance,
@@ -29,7 +40,7 @@ export function useExitForm(useFormReturn: UseFormReturn<ExitFormFields>) {
     bptIn,
     priceImpact,
     singleAssetsMaxes,
-  } = useExitMath(isProportional, tokenOutIndex, inputValue)
+  } = useExitMath(isProportional, tokenOutIndex, exitAmount)
 
   const dropdownList = useMemo(
     () => ['all', configService.nativeAssetAddress, ...poolTokenAddresses],
@@ -37,27 +48,16 @@ export function useExitForm(useFormReturn: UseFormReturn<ExitFormFields>) {
   )
 
   const setMaxValue = useCallback(() => {
-    setValue('inputValue', singleAssetsMaxes[tokenOutIndex])
-    clearErrors('inputValue')
+    setValue('exitAmount', singleAssetsMaxes[tokenOutIndex])
+    clearErrors('exitAmount')
   }, [clearErrors, setValue, singleAssetsMaxes, tokenOutIndex])
 
-  function selectExitType(value: string) {
-    let tokenOut = value
-    if (value === configService.nativeAssetAddress) {
-      tokenOut = configService.weth
-    }
-    const tokenIndex = poolTokenAddresses.findIndex(
-      (address) => address === tokenOut
-    )
-
+  function setExitType(value: string) {
     setValue('exitType', value)
-    setValue('tokenOutIndex', tokenIndex)
     setValue('percentage', 100)
 
     if (value === 'all') {
-      setValue('inputValue', '')
-      clearErrors('inputValue')
-      return
+      setValue('exitAmount', '')
     }
 
     trigger()
@@ -72,18 +72,18 @@ export function useExitForm(useFormReturn: UseFormReturn<ExitFormFields>) {
     [priceImpact]
   )
 
-  const emptyAmounts = useMemo(() => bnum(inputValue).isZero(), [inputValue])
-
   const previewDisabled = useMemo(
     () =>
-      (exactOut && emptyAmounts) ||
+      (exactOut && bnum(exitAmount).isZero()) ||
+      (!exactOut && bnum(percentage).isZero()) ||
       amountExceedsPoolBalance ||
       (highPriceImpact && !priceImpactAgreement),
     [
       amountExceedsPoolBalance,
-      emptyAmounts,
       exactOut,
+      exitAmount,
       highPriceImpact,
+      percentage,
       priceImpactAgreement,
     ]
   )
@@ -159,10 +159,11 @@ export function useExitForm(useFormReturn: UseFormReturn<ExitFormFields>) {
     openPreviewModal,
     previewDisabled,
     priceImpact,
-    selectExitType,
+    setExitType,
     setMaxValue,
     singleAssetsMaxes,
     togglePriceImpactAgreement,
+    tokenOutIndex,
     totalFiatValue,
   }
 }
