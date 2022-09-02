@@ -4,8 +4,8 @@ import { configService } from 'services/config'
 import { bnum, hasAmounts } from 'utils/num'
 import { useBalances } from './useBalances'
 import { useCalculator } from './useCalculator'
-import { usePool } from './usePool'
 import { useFiatCurrency } from './useFiatCurrency'
+import { usePool } from './usePool'
 
 export function useJoinMath() {
   const { balanceFor } = useBalances()
