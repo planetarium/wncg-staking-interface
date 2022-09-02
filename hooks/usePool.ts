@@ -22,9 +22,11 @@ export function usePool() {
   const poolTokens = poolService?.poolTokens || []
   const poolTokenAddresses = poolService?.poolTokenAddresses || []
   const poolTokenDecimals = poolService?.poolTokenDecimals || []
+  const poolTokenWeights = poolService?.poolTokenWeights || []
   const poolTokenSymbols = poolTokenAddresses.map(
     (address) => getTokenInfo(address).symbol
   )
+  const poolTotalShares = poolService?.poolTotalShares || '0'
   const nativeAssetIndex = poolService?.nativeAssetIndex || 1
 
   const bptAddress = poolService?.bptAddress || ''
@@ -39,6 +41,8 @@ export function usePool() {
     poolTokenDecimals,
     poolTokenName,
     poolTokenSymbols,
+    poolTotalShares,
+    poolTokenWeights,
     nativeAssetIndex,
     bptAddress,
     fetchPool: refetch,

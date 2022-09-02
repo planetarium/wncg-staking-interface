@@ -106,6 +106,10 @@ export default class PoolService {
     return this.pool?.tokens || []
   }
 
+  get poolTokenAddresses() {
+    return this.pool?.tokensList.map((address) => address.toLowerCase()) || []
+  }
+
   get poolTokenBalances() {
     return this.poolTokens.map((token) => token.balance)
   }
@@ -114,8 +118,12 @@ export default class PoolService {
     return this.poolTokens.map((token) => token.decimals)
   }
 
-  get poolTokenAddresses() {
-    return this.pool?.tokensList.map((address) => address.toLowerCase()) || []
+  get poolTokenWeights() {
+    return this.poolTokens.map((token) => token.weight)
+  }
+
+  get poolTotalShares() {
+    return this.pool?.totalShares || '0'
   }
 
   get nativeAssetIndex() {

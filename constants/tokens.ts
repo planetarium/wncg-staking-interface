@@ -221,3 +221,5 @@ export const TOKENS: TokenConstants =
 export const TOKEN_PRICES_PLACEHOLDERS = Object.fromEntries(
   Object.keys(TOKENS.PriceChainMap || {}).map((key) => [key, '0'])
 )
+
+export const POOL_DECIMALS = 18
