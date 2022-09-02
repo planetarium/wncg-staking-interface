@@ -29,7 +29,7 @@ function MyBalance() {
   )
 
   return (
-    <section className={styles.myBalance}>
+    <section className={styles.widget}>
       <h3 className={styles.title}>My Pool Balance</h3>
       <dl className={styles.details}>
         {poolTokens.map((token, i) => {

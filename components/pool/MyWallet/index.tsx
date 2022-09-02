@@ -1,6 +1,5 @@
 import { memo, MouseEvent, useMemo } from 'react'
 import NumberFormat from 'react-number-format'
-import { isSameAddress } from '@balancer-labs/sdk'
 import clsx from 'clsx'
 import styles from '../styles/Widget.module.scss'
 
@@ -75,7 +74,7 @@ function MyWallet({ currentEther, selectEther }: MyWalletProps) {
   }
 
   return (
-    <section className={styles.myBalance}>
+    <section className={styles.widget}>
       <h3 className={styles.title}>Pool tokens in my wallet</h3>
       <dl className={styles.details}>
         {ercTokenAddresses.map((address) => {

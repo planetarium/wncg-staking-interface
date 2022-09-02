@@ -4,7 +4,6 @@
   display: grid;
   grid-gap: 20px;
   grid-template-columns: 1fr;
-  grid-template-rows: 1fr 1fr 1fr;
   grid-template-areas:
     'center'
     'left'
@@ -27,22 +26,18 @@
   }
 
   @include responsive(MD) {
-    max-width: $max-container-md;
+    max-width: 550px;
     padding: 0;
   }
 
   @include responsive(LG) {
-    max-width: $max-container-lg;
-    grid-template-columns:
-      getColumnWidth($column-lg, 3) getColumnWidth($column-lg, 6)
-      getColumnWidth($column-lg, 3);
+    max-width: 280px * 2 + 20px * 2 + 400px;
+    grid-template-columns: 280px 400px 280px;
     grid-template-areas: 'left   center   right';
   }
 
   @include responsive(XL) {
-    max-width: $max-container-xl;
-    grid-template-columns:
-      getColumnWidth($column-xl, 3) getColumnWidth($column-xl, 6)
-      getColumnWidth($column-xl, 3);
+    max-width: 300px * 2 + 20px * 2 + 480px;
+    grid-template-columns: 300px 480px 300px;
   }
 }
