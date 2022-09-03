@@ -9,17 +9,21 @@ import { useJoinEvents } from './useJoinEvents'
 import { useJoinMachine } from './useJoinMachine'
 
 import { Button } from 'components/Button'
-import { Icon } from 'components/Icon'
+import { PreviewWarning } from '../Warning'
 import { JoinActionStep } from './ActionStep'
 
 type JoinActionsProps = {
   amounts: string[]
-  disabled: boolean
   isNativeAsset: boolean
+  rektPriceImpact: boolean
 }
 
-function JoinActions({ amounts, disabled, isNativeAsset }: JoinActionsProps) {
-  const { handleJoin, send, state, stepsToSkip } = useJoinMachine(
+function JoinActions({
+  amounts,
+  isNativeAsset,
+  rektPriceImpact,
+}: JoinActionsProps) {
+  const { error, handleJoin, send, state, stepsToSkip } = useJoinMachine(
     amounts,
     isNativeAsset
   )
@@ -32,7 +36,7 @@ function JoinActions({ amounts, disabled, isNativeAsset }: JoinActionsProps) {
     isApprovingState(state.value) || state.value === 'joining'
   const isCompleted = state.value === 'completed'
   const isIdle = state.value === 'idle'
-  const showCloseButton = isCompleted || isIdle || disabled
+  const showCloseButton = isCompleted || isIdle || rektPriceImpact
 
   function closeModal() {
     removeModal(ModalCategory.JoinPreview)
@@ -41,10 +45,11 @@ function JoinActions({ amounts, disabled, isNativeAsset }: JoinActionsProps) {
   function handleSubmit(e: MouseEvent) {
     e.stopPropagation()
 
-    if (disabled) {
+    if (showCloseButton) {
       closeModal()
       return
     }
+
     handleJoin()
   }
 
@@ -95,20 +100,7 @@ function JoinActions({ amounts, disabled, isNativeAsset }: JoinActionsProps) {
         </ol>
       </div>
 
-      {disabled && (
-        <aside className={styles.warning}>
-          <h3>
-            <Icon id="info" />
-            This price impact is too high.
-            <br />
-            You cannot proceed.
-          </h3>
-          <p>
-            The likelyhood of you losing money is too high. For your protection,
-            you can&apos;t perform this transaction on this interface.
-          </p>
-        </aside>
-      )}
+      <PreviewWarning rektPriceImpact={rektPriceImpact} error={error} />
 
       {isCompleted && (
         <Button
@@ -130,7 +122,7 @@ function JoinActions({ amounts, disabled, isNativeAsset }: JoinActionsProps) {
         loading={submitDisabled}
         disabled={submitDisabled}
       >
-        {disabled ? 'Close' : getJoinActionButtonLabel(state.value)}
+        {showCloseButton ? 'Close' : getJoinActionButtonLabel(state.value)}
       </Button>
     </footer>
   )

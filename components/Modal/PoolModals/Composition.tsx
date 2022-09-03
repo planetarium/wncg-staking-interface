@@ -11,19 +11,19 @@ import { usePool, useFiatCurrency } from 'hooks'
 
 import { TokenIcon } from 'components/TokenIcon'
 
-type JoinPreviewCompositionProps = {
+type PreviewCompositionProps = {
   amounts: string[]
   isNativeAsset: boolean
   totalFiatValue: string
 }
 
-function JoinPreviewComposition({
+function PreviewComposition({
   amounts,
   isNativeAsset,
   totalFiatValue,
-}: JoinPreviewCompositionProps) {
-  const { poolTokenAddresses, nativeAssetIndex } = usePool()
+}: PreviewCompositionProps) {
   const { toFiat } = useFiatCurrency()
+  const { poolTokenAddresses, nativeAssetIndex } = usePool()
 
   const invalidPrice = useRecoilValue(invalidPriceState)
 
@@ -53,6 +53,8 @@ function JoinPreviewComposition({
         }
 
         const amount = amounts[i]
+        if (bnum(amount).isZero()) return null
+
         const usdValue = usdValues[i]
         const pcnt = bnum(tokenRatios[i])
 
@@ -62,7 +64,7 @@ function JoinPreviewComposition({
         if (pcnt.isNaN() || !pcnt.isFinite()) percent = ''
 
         return (
-          <div className={styles.detailItem} key={`JoinPreview.${symbol}`}>
+          <div className={styles.detailItem} key={`Preview.${symbol}`}>
             <dt>
               <TokenIcon className={styles.token} symbol={symbol} />
               <strong className={styles.symbol}>{symbol}</strong>
@@ -98,4 +100,4 @@ function JoinPreviewComposition({
   )
 }
 
-export default memo(JoinPreviewComposition)
+export default memo(PreviewComposition)

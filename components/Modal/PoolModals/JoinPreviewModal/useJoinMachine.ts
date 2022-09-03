@@ -1,25 +1,28 @@
-import { useCallback, useMemo, useRef } from 'react'
+import { useCallback, useMemo, useRef, useState } from 'react'
 import { useMachine } from '@xstate/react'
 
-import { ModalCategory } from 'app/states/modal'
 import { configService } from 'services/config'
+import { TxAction } from 'services/transaction'
 import { bnum } from 'utils/num'
+import { renderTxErrorMessage, txToastTitle } from 'utils/transaction'
 import {
   useAllowances,
   useApprove,
   useJoinPool,
-  useModal,
   usePool,
+  useToast,
 } from 'hooks'
 import { createJoinMachine } from './joinMachine'
 import { getSymbolNameFromState, isApprovalState } from './utils'
 
 export function useJoinMachine(amounts: string[], isNativeAsset: boolean) {
+  const [error, setError] = useState<any>(null)
   const { approve } = useApprove()
   const { poolTokenAllowances } = useAllowances()
   const { joinPool } = useJoinPool()
-  const { removeModal } = useModal()
-  const { nativeAssetIndex, poolTokenAddresses, poolTokenSymbols } = usePool()
+  const { nativeAssetIndex, poolName, poolTokenAddresses, poolTokenSymbols } =
+    usePool()
+  const { addTxToast } = useToast()
 
   const joinMachine = useRef(
     createJoinMachine(
@@ -37,6 +40,7 @@ export function useJoinMachine(amounts: string[], isNativeAsset: boolean) {
     const currentState = state.value
 
     try {
+      setError(null)
       if (isApprovalState(currentState)) {
         const symbol = getSymbolNameFromState(currentState)
         const tokenIndex = poolTokenSymbols.indexOf(symbol)
@@ -52,20 +56,26 @@ export function useJoinMachine(amounts: string[], isNativeAsset: boolean) {
         send(`JOINING`)
         return await joinPool(amounts, isNativeAsset)
       }
-
-      removeModal(ModalCategory.JoinPreview)
-    } catch (error) {
+    } catch (error: any) {
       send(`ROLLBACK`)
-      throw error
+      if (error?.code === 4001) return
+      setError(error)
+      addTxToast({
+        action: TxAction.JoinPool,
+        title: txToastTitle(TxAction.JoinPool),
+        message: renderTxErrorMessage(TxAction.JoinPool, poolName),
+        type: 'error',
+      })
     }
   }, [
+    addTxToast,
     amounts,
     approve,
     isNativeAsset,
     joinPool,
+    poolName,
     poolTokenAddresses,
     poolTokenSymbols,
-    removeModal,
     send,
     state.value,
   ])
@@ -81,6 +91,7 @@ export function useJoinMachine(amounts: string[], isNativeAsset: boolean) {
   )
 
   return {
+    error,
     handleJoin,
     send,
     state,
