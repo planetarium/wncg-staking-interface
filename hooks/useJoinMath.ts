@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
-
 import { configService } from 'services/config'
+
 import { bnum, hasAmounts } from 'utils/num'
 import { useBalances } from './useBalances'
 import { useCalculator } from './useCalculator'
@@ -10,8 +10,28 @@ import { usePool } from './usePool'
 export function useJoinMath() {
   const { balanceFor } = useBalances()
   const calculator = useCalculator('join')
-  const { poolTokenAddresses } = usePool()
+  const { nativeAssetIndex, poolTokenAddresses } = usePool()
   const { toFiat } = useFiatCurrency()
+
+  const calcUserPoolTokenBalances = useCallback(
+    (isNativeAsset: boolean) =>
+      poolTokenAddresses.map((address, i) => {
+        if (!isNativeAsset || i !== nativeAssetIndex) return balanceFor(address)
+        return balanceFor(configService.nativeAssetAddress)
+      }),
+    [balanceFor, nativeAssetIndex, poolTokenAddresses]
+  )
+
+  const calcUserPoolTokenBalancesAvailable = useCallback(
+    (isNativeAsset: boolean) => {
+      const _balances = calcUserPoolTokenBalances(isNativeAsset)
+      return _balances.map((amount, i) => {
+        if (!isNativeAsset || i !== nativeAssetIndex) return amount
+        return Math.max(bnum(amount).minus(0.05).toNumber(), 0).toString()
+      })
+    },
+    [calcUserPoolTokenBalances, nativeAssetIndex]
+  )
 
   const calcMinBptOut = useCallback(
     (amounts: string[]) => {
@@ -52,16 +72,9 @@ export function useJoinMath() {
 
   const calcOptimizedAmounts = useCallback(
     (isNativeAsset: boolean) => {
-      const userPoolBalances =
-        poolTokenAddresses.map((address) => {
-          address =
-            isNativeAsset && address === configService.weth
-              ? configService.nativeAssetAddress
-              : address
-          return balanceFor(address)
-        }) || []
+      const _balances = calcUserPoolTokenBalancesAvailable(isNativeAsset)
 
-      const propMinAmounts = userPoolBalances.map((balance, i) => {
+      const propMinAmounts = _balances.map((balance, i) => {
         return (
           calculator?.propAmountsGiven(balance, i, 'send')?.send || ['0', '0']
         )
@@ -82,7 +95,7 @@ export function useJoinMath() {
 
       return propMinAmounts[minIndex] || ['0', '0']
     },
-    [balanceFor, calculator, toFiat, poolTokenAddresses]
+    [calcUserPoolTokenBalancesAvailable, calculator, poolTokenAddresses, toFiat]
   )
 
   return {
@@ -90,5 +103,7 @@ export function useJoinMath() {
     calcOptimizedAmounts,
     calcPriceImpact,
     calcPropAmounts,
+    calcUserPoolTokenBalances,
+    calcUserPoolTokenBalancesAvailable,
   }
 }

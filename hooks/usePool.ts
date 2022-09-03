@@ -18,9 +18,11 @@ export function usePool() {
     return new PoolService(pool)
   }, [pool])
 
+  const poolId = poolService?.poolId || ''
   const poolName = poolService?.poolName || 'Balancer Weighted Pool'
   const poolTokens = poolService?.poolTokens || []
   const poolTokenAddresses = poolService?.poolTokenAddresses || []
+  const poolTokenBalances = poolService?.poolTokenBalances || []
   const poolTokenDecimals = poolService?.poolTokenDecimals || []
   const poolTokenWeights = poolService?.poolTokenWeights || []
   const poolTokenSymbols = poolTokenAddresses.map(
@@ -35,9 +37,11 @@ export function usePool() {
   return {
     pool,
     poolService,
+    poolId,
     poolName,
     poolTokens,
     poolTokenAddresses,
+    poolTokenBalances,
     poolTokenDecimals,
     poolTokenName,
     poolTokenSymbols,

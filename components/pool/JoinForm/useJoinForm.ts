@@ -4,14 +4,8 @@ import type { UseFormReturn } from 'react-hook-form'
 import { ModalCategory } from 'app/states/modal'
 import { HIGH_PRICE_IMPACT, REKT_PRICE_IMPACT } from 'constants/poolLiquidity'
 import { configService } from 'services/config'
-import { bnum, sanitizeNumber } from 'utils/num'
-import {
-  useBalances,
-  useJoinMath,
-  useModal,
-  usePool,
-  useFiatCurrency,
-} from 'hooks'
+import { bnum, hasAmounts, sanitizeNumber } from 'utils/num'
+import { useJoinMath, useModal, usePool, useFiatCurrency } from 'hooks'
 import type { JoinFormFields } from './type'
 
 export function useJoinForm(
@@ -20,33 +14,36 @@ export function useJoinForm(
 ) {
   const { clearErrors, formState, setValue, trigger, watch } = useFormReturn
 
-  const { balanceFor } = useBalances()
-  const { calcPriceImpact, calcPropAmounts, calcOptimizedAmounts } =
-    useJoinMath()
+  const {
+    calcPriceImpact,
+    calcPropAmounts,
+    calcOptimizedAmounts,
+    calcUserPoolTokenBalances,
+    calcUserPoolTokenBalancesAvailable,
+  } = useJoinMath()
   const { addModal } = useModal()
-  const { poolTokenAddresses: rawPoolTokenAddresses } = usePool()
+  const { nativeAssetIndex, poolTokenAddresses: rawPoolTokenAddresses } =
+    usePool()
   const { toFiat } = useFiatCurrency()
 
-  const poolTokenAddresses = useMemo(
+  const assets = useMemo(
     () =>
-      rawPoolTokenAddresses.map((address) => {
-        return address === configService.weth && isNativeAsset
+      rawPoolTokenAddresses.map((address, i) => {
+        return isNativeAsset && i === nativeAssetIndex
           ? configService.nativeAssetAddress
           : address
       }) || [],
-    [isNativeAsset, rawPoolTokenAddresses]
+    [isNativeAsset, nativeAssetIndex, rawPoolTokenAddresses]
   )
 
   const userTokenBalances = useMemo(
-    () =>
-      poolTokenAddresses.map((address) => {
-        const balance = balanceFor(address)
-        if (!isNativeAsset || address !== configService.nativeAssetAddress) {
-          return balance
-        }
-        return Math.max(bnum(balance).minus(0.05).toNumber(), 0).toString()
-      }),
-    [balanceFor, isNativeAsset, poolTokenAddresses]
+    () => calcUserPoolTokenBalances(isNativeAsset),
+    [calcUserPoolTokenBalances, isNativeAsset]
+  )
+
+  const userTokenBalancesAvailable = useMemo(
+    () => calcUserPoolTokenBalancesAvailable(isNativeAsset),
+    [calcUserPoolTokenBalancesAvailable, isNativeAsset]
   )
 
   const ethValue = sanitizeNumber(watch('ethAmount'))
@@ -64,12 +61,12 @@ export function useJoinForm(
       clearErrors(inputName)
 
       if (inputName === 'wncgAmount') {
-        setValue('wncgAmount', userTokenBalances[0])
+        setValue('wncgAmount', userTokenBalancesAvailable[0])
         return
       }
-      setValue('ethAmount', userTokenBalances[1])
+      setValue('ethAmount', userTokenBalancesAvailable[1])
     },
-    [clearErrors, setValue, userTokenBalances]
+    [clearErrors, setValue, userTokenBalancesAvailable]
   )
 
   const setPropAmount = useCallback(
@@ -89,10 +86,10 @@ export function useJoinForm(
   }
 
   const joinMax = useCallback(() => {
-    setValue('wncgAmount', userTokenBalances[0])
-    setValue('ethAmount', userTokenBalances[1])
+    setValue('wncgAmount', userTokenBalancesAvailable[0])
+    setValue('ethAmount', userTokenBalancesAvailable[1])
     clearErrors()
-  }, [clearErrors, setValue, userTokenBalances])
+  }, [clearErrors, setValue, userTokenBalancesAvailable])
 
   const joinOpt = useCallback(() => {
     const propMinAmounts = calcOptimizedAmounts(isNativeAsset)
@@ -112,23 +109,28 @@ export function useJoinForm(
     [priceImpact]
   )
 
+  const rektPriceImpact = useMemo(
+    () => bnum(priceImpact).gte(REKT_PRICE_IMPACT),
+    [priceImpact]
+  )
+
   const totalFiatValue = useMemo(
     () =>
-      poolTokenAddresses
+      assets
         .reduce((total, address, i) => {
           const sumValue = toFiat(address, amounts[i])
           return total.plus(sumValue)
         }, bnum(0))
         .toString(),
-    [amounts, toFiat, poolTokenAddresses]
+    [amounts, toFiat, assets]
   )
 
   const maximized = useMemo(
     () =>
-      bnum(wncgValue).eq(userTokenBalances[0]) &&
+      bnum(wncgValue).eq(userTokenBalancesAvailable[0]) &&
       !bnum(ethValue).isZero() &&
-      bnum(ethValue).eq(userTokenBalances[1]),
-    [ethValue, userTokenBalances, wncgValue]
+      bnum(ethValue).eq(userTokenBalancesAvailable[1]),
+    [ethValue, userTokenBalancesAvailable, wncgValue]
   )
 
   const optimized = useMemo(
@@ -147,24 +149,17 @@ export function useJoinForm(
     }
   }, [ethValue, formState, wncgValue])
 
-  const emptyAmounts = useMemo(
-    () => bnum(wncgValue).isZero() && bnum(ethValue).isZero(),
-    [ethValue, wncgValue]
-  )
-
   const excessiveAmounts = useMemo(
-    () =>
-      bnum(wncgValue).gt(userTokenBalances[0]) ||
-      bnum(ethValue).gt(userTokenBalances[1]),
-    [ethValue, userTokenBalances, wncgValue]
+    () => amounts.some((amount, i) => bnum(amount).gt(userTokenBalances[i])),
+    [amounts, userTokenBalances]
   )
 
   const previewDisabled = useMemo(
     () =>
-      emptyAmounts ||
+      !hasAmounts(amounts) ||
       excessiveAmounts ||
       (highPriceImpact && !priceImpactAgreement),
-    [emptyAmounts, excessiveAmounts, highPriceImpact, priceImpactAgreement]
+    [amounts, excessiveAmounts, highPriceImpact, priceImpactAgreement]
   )
 
   const joinDisabled = useMemo(
@@ -192,9 +187,9 @@ export function useJoinForm(
         category: ModalCategory.JoinPreview,
         props: {
           amounts,
-          disabled: joinDisabled,
           isNativeAsset,
           priceImpact,
+          rektPriceImpact,
           totalFiatValue,
         },
       })
@@ -203,9 +198,9 @@ export function useJoinForm(
       addModal,
       amounts,
       isNativeAsset,
-      joinDisabled,
       previewDisabled,
       priceImpact,
+      rektPriceImpact,
       totalFiatValue,
     ]
   )

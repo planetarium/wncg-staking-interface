@@ -4,7 +4,6 @@ import NumberFormat from 'react-number-format'
 import clsx from 'clsx'
 import styles from '../styles/TokenInput.module.scss'
 
-import { bnum } from 'utils/num'
 import type { ExitFormFields } from './type'
 
 import { RangeInput } from '../TokenInput/RangeInput'
@@ -20,8 +19,6 @@ function ProportionalExitInput({
   totalFiatValue,
   value,
 }: ProportionalExitInputProps) {
-  const fiatValue = bnum(totalFiatValue).times(value).div(100).toString()
-
   return (
     <div className={styles.tokenInputField}>
       <div className={clsx(styles.tokenInputGroup, { [styles.error]: false })}>
@@ -30,7 +27,7 @@ function ProportionalExitInput({
             className={clsx(styles.input, styles.tokenInput)}
             allowNegative={false}
             decimalScale={2}
-            value={fiatValue}
+            value={totalFiatValue}
             isNumericString
             thousandSeparator={true}
             prefix="$"
@@ -39,10 +36,10 @@ function ProportionalExitInput({
         </div>
 
         <RangeInput
-          className={styles.percentageInput}
-          id="percentage"
+          className={styles.percentInput}
+          id="percent"
           label="Proportional exit"
-          name="percentage"
+          name="percent"
           control={control as any as Control<FieldValues>}
           value={value}
         />

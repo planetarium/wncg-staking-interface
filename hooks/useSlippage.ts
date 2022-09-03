@@ -1,5 +1,5 @@
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
-import OldBigNumber from 'bignumber.js'
+import BigNumber from 'bignumber.js'
 
 import { bnum } from 'utils/num'
 
@@ -7,8 +7,13 @@ export function useSlippage() {
   // TODO: should be onfigurable
   const slippage = 0.005
 
+  const slippageBasisPoints = bnum(slippage).times(10000).toString()
+
   function addSlippageScaled(amount: string) {
-    const delta = bnum(amount).times(slippage).dp(0, OldBigNumber.ROUND_DOWN)
+    const delta = bnum(amount)
+      .times(slippageBasisPoints)
+      .div(10000)
+      .dp(0, BigNumber.ROUND_DOWN)
     return bnum(amount).plus(delta).toString()
   }
 
@@ -19,7 +24,10 @@ export function useSlippage() {
   }
 
   function minusSlippageScaled(amount: string) {
-    const delta = bnum(amount).times(slippage).dp(0, OldBigNumber.ROUND_UP)
+    const delta = bnum(amount)
+      .times(slippageBasisPoints)
+      .div(10000)
+      .dp(0, BigNumber.ROUND_UP)
     return bnum(amount).minus(delta).toString()
   }
 

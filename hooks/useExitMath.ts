@@ -1,6 +1,6 @@
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
-import OldBigNumber from 'bignumber.js'
+import BigNumber from 'bignumber.js'
 
 import { POOL_DECIMALS } from 'constants/tokens'
 import { bnum, hasAmounts } from 'utils/num'
@@ -9,105 +9,149 @@ import { useCalculator } from './useCalculator'
 import { usePool } from './usePool'
 import { useSlippage } from './useSlippage'
 
-export function useExitMath(
-  isProportional: boolean,
-  tokenOutIndex = 0,
-  tokenOutAmount = '0'
-) {
+type Params = {
+  exactOut: boolean
+  isProportional: boolean
+  tokenOutIndex: number
+  tokenOutAmount: string
+  percent: number
+}
+
+export function useExitMath() {
   const { bptBalance } = useBalances()
   const calculator = useCalculator('exit')
-  const { poolTokens, poolTotalShares } = usePool()
-  const { addSlippageScaled, minusSlippage } = useSlippage()
+  const { poolTokens, poolTokenBalances, poolTotalShares } = usePool()
+  const { addSlippageScaled } = useSlippage()
 
-  const exactOut = !isProportional
-  const _poolMax = bnum(poolTotalShares)
-    .times(0.3)
-    .toFixed(POOL_DECIMALS, OldBigNumber.ROUND_DOWN)
-  const absMaxBpt = OldBigNumber.min(bptBalance, _poolMax).toString()
+  const _amountsOutPlaceholder = useMemo(
+    () => poolTokens.map((_) => '0') || [],
+    [poolTokens]
+  )
 
-  const _tokenOutPoolBalance = poolTokens[tokenOutIndex]?.balance || '0'
-  const amountExceedsPoolBalance = bnum(tokenOutAmount).gt(_tokenOutPoolBalance)
+  // NOTE: Maximum BPT allowed: 30%
+  const _absMaxBpt = useMemo(() => {
+    const poolMax = bnum(poolTotalShares)
+      .times(0.3)
+      .toFixed(POOL_DECIMALS, BigNumber.ROUND_DOWN)
+    return BigNumber.min(bptBalance, poolMax).toString()
+  }, [bptBalance, poolTotalShares])
 
-  const _fullAmounts = useMemo(() => {
-    return isProportional
-      ? calculator?.propAmountsGiven(bptBalance, 0, 'send')?.receive || [
-          '0',
-          '0',
-        ]
-      : poolTokens.map((_, i) => {
-          if (i !== tokenOutIndex) return '0'
-          return tokenOutAmount || '0'
-        })
-  }, [
-    bptBalance,
-    calculator,
-    isProportional,
-    poolTokens,
-    tokenOutAmount,
-    tokenOutIndex,
-  ])
-  const amountsOut = _fullAmounts.map((amount, i) => {
-    // if (amount === '0' || exactOut) return amount
-    return amount
-    // return minusSlippage(amount, poolTokens[i]?.decimals || 18)
-  })
+  const _propBptIn = useCallback(
+    (percent: number) =>
+      formatUnits(
+        parseUnits(bptBalance, POOL_DECIMALS)
+          .mul(percent)
+          .div(100)
+          .toString() || '0',
+        POOL_DECIMALS
+      ),
+    [bptBalance]
+  )
 
-  const _fullBptIn = isProportional
-    ? parseUnits(bptBalance, POOL_DECIMALS).toString()
-    : exactOut
-    ? parseUnits(absMaxBpt, POOL_DECIMALS).toString()
-    : calculator
-        ?.bptInForExactTokenOut(tokenOutAmount, tokenOutIndex)
-        .toString() || '0'
-  const bptIn = exactOut ? addSlippageScaled(_fullBptIn) : _fullBptIn
+  const _propAmounts = useCallback(
+    (percent: number) =>
+      calculator?.propAmountsGiven(_propBptIn(percent), 0, 'send')?.receive ||
+      _amountsOutPlaceholder,
+    [_amountsOutPlaceholder, _propBptIn, calculator]
+  )
+
+  const calcAmountsOut = useCallback(
+    ({ isProportional, tokenOutIndex, tokenOutAmount, percent }: Params) => {
+      if (isProportional) return _propAmounts(percent)
+      return poolTokens.map((_, i) => {
+        if (i !== tokenOutIndex) return '0'
+        return tokenOutAmount || '0'
+      })
+    },
+    [_propAmounts, poolTokens]
+  )
+
+  const calcBptIn = useCallback(
+    ({
+      exactOut,
+      isProportional,
+      tokenOutIndex,
+      tokenOutAmount,
+      percent,
+    }: Params) => {
+      let _bptIn: string
+
+      if (isProportional) {
+        _bptIn = parseUnits(_propBptIn(percent), POOL_DECIMALS).toString()
+      } else if (!exactOut) {
+        _bptIn = parseUnits(_absMaxBpt, POOL_DECIMALS).toString()
+      } else {
+        _bptIn =
+          calculator
+            ?.bptInForExactTokenOut(tokenOutAmount, tokenOutIndex)
+            .toString() || '0'
+      }
+
+      if (exactOut) return addSlippageScaled(_bptIn)
+      return _bptIn.toString()
+    },
+    [_absMaxBpt, _propBptIn, addSlippageScaled, calculator]
+  )
 
   const singleAssetsMaxes = useMemo(() => {
     try {
-      const _bptBalanceScaled = parseUnits(bptBalance, POOL_DECIMALS).toString()
+      const _bptBalanceScaled =
+        parseUnits(bptBalance, POOL_DECIMALS).toString() || '0'
+
       return poolTokens.map((token, tokenIndex) => {
-        const maxTokenOut =
+        return formatUnits(
           calculator
             ?.exactBptInForTokenOut(_bptBalanceScaled, tokenIndex)
-            .toString() || '0'
-        return formatUnits(maxTokenOut, token?.decimals || 18)
+            .toString() || '0',
+          token?.decimals || 18
+        )
       })
     } catch (error) {
-      return []
+      return _amountsOutPlaceholder
     }
-  }, [bptBalance, calculator, poolTokens])
+  }, [_amountsOutPlaceholder, bptBalance, calculator, poolTokens])
 
-  const priceImpact = useMemo(() => {
-    if (amountExceedsPoolBalance) return 1
-    if (isProportional || !hasAmounts(_fullAmounts)) return 0
+  const amountExceedsPoolBalance = useCallback(
+    (tokenOutIndex: number, tokenOutAmount: string) => {
+      return poolTokenBalances[tokenOutIndex]
+        ? bnum(tokenOutAmount).gt(poolTokenBalances[tokenOutIndex])
+        : false
+    },
+    [poolTokenBalances]
+  )
 
-    try {
-      return (
-        calculator
-          ?.priceImpact(_fullAmounts, {
-            exactOut,
-            tokenIndex: tokenOutIndex,
-            queryBpt: bnum(_fullBptIn),
-          })
-          .toNumber() || 0
-      )
-    } catch (error) {
-      return 1
-    }
-  }, [
-    _fullAmounts,
-    _fullBptIn,
-    amountExceedsPoolBalance,
-    calculator,
-    exactOut,
-    isProportional,
-    tokenOutIndex,
-  ])
+  const calcPriceImpact = useCallback(
+    (params: Params) => {
+      const _amountsOut = calcAmountsOut(params)
+      const { exactOut, isProportional, tokenOutIndex, tokenOutAmount } = params
+
+      if (isProportional || !hasAmounts(_amountsOut)) return 0
+      if (amountExceedsPoolBalance(tokenOutIndex, tokenOutAmount)) return 1
+
+      const _bptIn = calcBptIn(params)
+
+      try {
+        return (
+          calculator
+            ?.priceImpact(_amountsOut, {
+              exactOut,
+              tokenIndex: tokenOutIndex,
+              queryBpt: bnum(_bptIn),
+            })
+            .toNumber() || 0
+        )
+      } catch (error) {
+        return 1
+      }
+    },
+    [calcAmountsOut, calcBptIn, calculator]
+  )
 
   return {
     amountExceedsPoolBalance,
-    amountsOut,
-    bptIn,
-    priceImpact,
+    calcAmountsOut,
+    calcBptIn,
+    calcPriceImpact,
     singleAssetsMaxes,
   }
 }

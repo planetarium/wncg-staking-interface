@@ -1,7 +1,6 @@
 import { useCallback } from 'react'
 import { useRecoilValue } from 'recoil'
 import { parseUnits } from 'ethers/lib/utils'
-import { isSameAddress } from '@balancer-labs/sdk'
 
 import { accountState } from 'app/states/connection'
 import { joinPool as initJoinPool } from 'contracts/vault'
@@ -14,35 +13,41 @@ import { useVaultContract } from './useVaultContract'
 
 export function useJoinPool() {
   const { calcMinBptOut } = useJoinMath()
-  const { poolTokenAddresses, poolTokenDecimals, poolName, nativeAssetIndex } =
-    usePool()
-
+  const {
+    nativeAssetIndex,
+    poolId,
+    poolName,
+    poolTokenAddresses,
+    poolTokenDecimals,
+  } = usePool()
   const { registerTx } = useTx()
   const vault = useVaultContract()
 
   const account = useRecoilValue(accountState)
 
   const joinPool = useCallback(
-    async (amounts: string[], isNativeAsset: boolean) => {
+    async (amountsIn: string[], isNativeAsset: boolean) => {
       if (!vault || !account) return
 
-      const assets = poolTokenAddresses.map((address) => {
-        if (isNativeAsset && isSameAddress(address, configService.weth))
+      const assets = poolTokenAddresses.map((address, i) => {
+        if (isNativeAsset && i === nativeAssetIndex)
           return configService.zeroAddress
         return address
       })
-      const maxAmountsIn = amounts.map((amount, i) =>
+
+      const amountsInScaled = amountsIn.map((amount, i) =>
         parseUnits(amount, poolTokenDecimals[i]).toString()
       )
-      const minBptOut = calcMinBptOut(amounts)
+
+      const minBptOut = calcMinBptOut(amountsIn)
 
       const response = await initJoinPool(vault, account, {
-        amounts: maxAmountsIn,
+        amounts: amountsInScaled,
         assets,
         isNativeAsset,
         minBptOut,
         nativeAssetIndex,
-        poolId: configService.poolId,
+        poolId,
       })
       registerTx?.(response, TxAction.JoinPool, poolName)
     },
@@ -52,6 +57,7 @@ export function useJoinPool() {
       poolTokenAddresses,
       calcMinBptOut,
       nativeAssetIndex,
+      poolId,
       registerTx,
       poolName,
       poolTokenDecimals,

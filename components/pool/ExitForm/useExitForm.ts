@@ -4,43 +4,41 @@ import type { UseFormReturn } from 'react-hook-form'
 import { ModalCategory } from 'app/states/modal'
 import { HIGH_PRICE_IMPACT, REKT_PRICE_IMPACT } from 'constants/poolLiquidity'
 import { configService } from 'services/config'
-import { bnum } from 'utils/num'
+import { bnum, hasAmounts, sanitizeNumber } from 'utils/num'
 import { useExitMath, useModal, usePool, useFiatCurrency } from 'hooks'
 import type { ExitFormFields } from './type'
 
 export function useExitForm(useFormReturn: UseFormReturn<ExitFormFields>) {
-  const { addModal } = useModal()
+  const {
+    amountExceedsPoolBalance,
+    calcAmountsOut,
+    calcPriceImpact,
+    singleAssetsMaxes,
+  } = useExitMath()
   const { toFiat } = useFiatCurrency()
-  const { poolTokenAddresses } = usePool()
+  const { addModal } = useModal()
+  const { nativeAssetIndex, poolTokenAddresses } = usePool()
 
   const { clearErrors, setValue, trigger, watch } = useFormReturn
 
   const exitType = watch('exitType')
-  const exitAmount = watch('exitAmount')
-  const percentage = watch('percentage')
+  const _tokenOutAmount = sanitizeNumber(watch('tokenOutAmount'))
+  const percent = watch('percent')
   const priceImpactAgreement = watch('priceImpactAgreement')
 
-  const isProportional = exitType === 'all'
-  const exactOut = !isProportional
+  const isNativeAsset = exitType === configService.nativeAssetAddress
 
   const tokenOutIndex = useMemo(() => {
-    if (exitType === 'all') return 0
-
     let tokenOut = exitType
-    if (exitType === configService.nativeAssetAddress) {
-      tokenOut = configService.weth
-    }
-
+    if (isNativeAsset) tokenOut = configService.weth
     return poolTokenAddresses.findIndex((address) => address === tokenOut)
-  }, [exitType, poolTokenAddresses])
+  }, [exitType, isNativeAsset, poolTokenAddresses])
 
-  const {
-    amountExceedsPoolBalance,
-    amountsOut,
-    bptIn,
-    priceImpact,
-    singleAssetsMaxes,
-  } = useExitMath(isProportional, tokenOutIndex, exitAmount)
+  const isProportional = exitType === 'all'
+  const singleAssetMaxedOut =
+    !isProportional &&
+    bnum(_tokenOutAmount).eq(singleAssetsMaxes[tokenOutIndex])
+  const exactOut = !isProportional && !singleAssetMaxedOut
 
   const dropdownList = useMemo(
     () => ['all', configService.nativeAssetAddress, ...poolTokenAddresses],
@@ -48,18 +46,14 @@ export function useExitForm(useFormReturn: UseFormReturn<ExitFormFields>) {
   )
 
   const setMaxValue = useCallback(() => {
-    setValue('exitAmount', singleAssetsMaxes[tokenOutIndex])
-    clearErrors('exitAmount')
+    setValue('tokenOutAmount', singleAssetsMaxes[tokenOutIndex] || '0')
+    clearErrors('tokenOutAmount')
   }, [clearErrors, setValue, singleAssetsMaxes, tokenOutIndex])
 
   function setExitType(value: string) {
     setValue('exitType', value)
-    setValue('percentage', 100)
-
-    if (value === 'all') {
-      setValue('exitAmount', '')
-    }
-
+    setValue('percent', 100)
+    setValue('tokenOutAmount', '')
     trigger()
   }
 
@@ -67,24 +61,74 @@ export function useExitForm(useFormReturn: UseFormReturn<ExitFormFields>) {
     setValue('priceImpactAgreement', value)
   }
 
+  const amountsOut = useMemo(() => {
+    return calcAmountsOut({
+      exactOut,
+      isProportional,
+      tokenOutIndex,
+      tokenOutAmount: _tokenOutAmount,
+      percent,
+    })
+  }, [
+    calcAmountsOut,
+    exactOut,
+    isProportional,
+    tokenOutIndex,
+    _tokenOutAmount,
+    percent,
+  ])
+
+  const tokenOutAmount = useMemo(
+    () => amountsOut[tokenOutIndex] || '0',
+    [amountsOut, tokenOutIndex]
+  )
+
+  const priceImpact = useMemo(() => {
+    return calcPriceImpact({
+      exactOut,
+      isProportional,
+      tokenOutIndex,
+      tokenOutAmount,
+      percent,
+    })
+  }, [
+    calcPriceImpact,
+    exactOut,
+    isProportional,
+    tokenOutIndex,
+    tokenOutAmount,
+    percent,
+  ])
+
   const highPriceImpact = useMemo(
     () => bnum(priceImpact).gte(HIGH_PRICE_IMPACT),
     [priceImpact]
   )
 
+  const rektPriceImpact = useMemo(
+    () => bnum(priceImpact).gte(REKT_PRICE_IMPACT),
+    [priceImpact]
+  )
+
+  const excessiveAmounts = useMemo(
+    () => amountsOut.some((amount, i) => bnum(amount).gt(singleAssetsMaxes[i])),
+    [amountsOut, singleAssetsMaxes]
+  )
+
   const previewDisabled = useMemo(
     () =>
-      (exactOut && bnum(exitAmount).isZero()) ||
-      (!exactOut && bnum(percentage).isZero()) ||
-      amountExceedsPoolBalance ||
-      (highPriceImpact && !priceImpactAgreement),
+      !hasAmounts(amountsOut) ||
+      excessiveAmounts ||
+      (highPriceImpact && !priceImpactAgreement) ||
+      amountExceedsPoolBalance(tokenOutIndex, tokenOutAmount),
     [
-      amountExceedsPoolBalance,
-      exactOut,
-      exitAmount,
+      amountsOut,
+      excessiveAmounts,
       highPriceImpact,
-      percentage,
       priceImpactAgreement,
+      amountExceedsPoolBalance,
+      tokenOutIndex,
+      tokenOutAmount,
     ]
   )
 
@@ -94,29 +138,19 @@ export function useExitForm(useFormReturn: UseFormReturn<ExitFormFields>) {
   )
 
   const totalFiatValue = useMemo(() => {
-    if (exactOut) {
-      return (
-        amountsOut
-          .reduce((total, amount, i) => {
-            if (i !== tokenOutIndex) {
-              return total
-            }
-            const sumValue = toFiat(poolTokenAddresses[i], amount)
-            return total.plus(sumValue)
-          }, bnum(0))
-          .toString() || '0'
-      )
-    }
-
     return (
       amountsOut
         .reduce((total, amount, i) => {
-          const sumValue = toFiat(poolTokenAddresses[i], amount)
+          let address = poolTokenAddresses[i]
+          if (isNativeAsset && i === nativeAssetIndex) {
+            address = configService.nativeAssetAddress
+          }
+          const sumValue = toFiat(address, amount)
           return total.plus(sumValue)
         }, bnum(0))
         .toString() || '0'
     )
-  }, [amountsOut, exactOut, poolTokenAddresses, toFiat, tokenOutIndex])
+  }, [amountsOut, isNativeAsset, nativeAssetIndex, poolTokenAddresses, toFiat])
 
   const openPreviewModal = useCallback(
     (e: MouseEvent) => {
@@ -128,10 +162,14 @@ export function useExitForm(useFormReturn: UseFormReturn<ExitFormFields>) {
         category: ModalCategory.ExitPreview,
         props: {
           amounts: amountsOut,
-          disabled: exitDisabled,
+          exactOut,
+          isNativeAsset,
           isProportional,
-          bptIn,
+          percent,
           priceImpact,
+          rektPriceImpact,
+          tokenOutAmount,
+          tokenOutIndex,
           totalFiatValue,
         },
       })
@@ -139,11 +177,15 @@ export function useExitForm(useFormReturn: UseFormReturn<ExitFormFields>) {
     [
       addModal,
       amountsOut,
-      bptIn,
-      exitDisabled,
+      exactOut,
+      isNativeAsset,
       isProportional,
+      percent,
       previewDisabled,
       priceImpact,
+      rektPriceImpact,
+      tokenOutAmount,
+      tokenOutIndex,
       totalFiatValue,
     ]
   )
@@ -151,14 +193,15 @@ export function useExitForm(useFormReturn: UseFormReturn<ExitFormFields>) {
   return {
     amountsOut,
     amountExceedsPoolBalance,
-    bptIn,
     dropdownList,
     exactOut,
     exitDisabled,
     highPriceImpact,
+    isProportional,
     openPreviewModal,
     previewDisabled,
     priceImpact,
+    rektPriceImpact,
     setExitType,
     setMaxValue,
     singleAssetsMaxes,

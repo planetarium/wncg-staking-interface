@@ -17,9 +17,9 @@ function ExitForm() {
   const useFormReturn = useForm<ExitFormFields>({
     mode: 'onChange',
     defaultValues: {
-      exitAmount: '',
+      tokenOutAmount: '',
       exitType: 'all',
-      percentage: 100,
+      percent: 100,
       priceImpactAgreement: false,
     },
   })
@@ -28,9 +28,9 @@ function ExitForm() {
   const {
     amountsOut,
     dropdownList,
-    exactOut,
     togglePriceImpactAgreement,
     highPriceImpact,
+    isProportional,
     setExitType,
     openPreviewModal,
     previewDisabled,
@@ -41,9 +41,9 @@ function ExitForm() {
     totalFiatValue,
   } = useExitForm(useFormReturn)
 
-  const exitAmount = sanitizeNumber(watch('exitAmount'))
+  const tokenOutAmount = sanitizeNumber(watch('tokenOutAmount'))
   const exitType = watch('exitType')
-  const percentage = watch('percentage')
+  const percent = watch('percent')
   const priceImpactAgreement = watch('priceImpactAgreement')
 
   return (
@@ -61,28 +61,27 @@ function ExitForm() {
           select={setExitType}
         />
 
-        {exactOut ? (
+        {isProportional ? (
+          <ProportionalExitInput
+            control={control}
+            totalFiatValue={totalFiatValue}
+            value={percent}
+          />
+        ) : (
           <SingleTokenExitInput
             clearErrors={clearErrors}
             control={control}
             setMaxValue={setMaxValue}
             singleAssetsMaxes={singleAssetsMaxes}
             tokenOutIndex={tokenOutIndex}
-            value={exitAmount}
-            error={formState.errors?.exitAmount?.message}
-          />
-        ) : (
-          <ProportionalExitInput
-            control={control}
-            totalFiatValue={totalFiatValue}
-            value={percentage}
+            value={tokenOutAmount}
+            error={formState.errors?.tokenOutAmount?.message}
           />
         )}
 
         <ExitFormSummary
           amountsOut={amountsOut}
-          exactOut={exactOut}
-          percentage={percentage}
+          isProportional={isProportional}
           priceImpact={priceImpact}
         />
 

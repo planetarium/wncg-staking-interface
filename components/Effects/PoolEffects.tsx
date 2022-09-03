@@ -1,8 +1,8 @@
 import { memo, useCallback, useEffect } from 'react'
 import type { Event } from 'ethers'
 
-import { useBalances, useEvents, useProvider, useTx } from 'hooks'
 import { TxAction } from 'services/transaction'
+import { useBalances, useEvents, useProvider, useTx } from 'hooks'
 
 function PoolEffects() {
   const { fetchBalances } = useBalances()
@@ -12,8 +12,11 @@ function PoolEffects() {
 
   const poolBalanceChangedHandler = useCallback(
     async (event: Event) => {
-      // FIXME: How to identify join/exit pool transactions
       await handleTx?.(event, TxAction.JoinPool, {
+        onTxEvent: fetchBalances,
+      })
+
+      await handleTx?.(event, TxAction.ExitPool, {
         onTxEvent: fetchBalances,
       })
     },

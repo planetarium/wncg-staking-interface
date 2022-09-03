@@ -195,11 +195,8 @@ export default class CalculatorService {
   }
 
   denormAmounts(amounts: string[]): BigNumber[] {
-    return amounts.map((a, i) =>
-      parseUnits(
-        bnum(a).toFixed(4, OldBigNumber.ROUND_DOWN),
-        this.poolTokenDecimals[i]
-      )
+    return amounts.map((amount, i) =>
+      parseUnits(amount, this.poolTokenDecimals[i])
     )
   }
 

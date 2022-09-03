@@ -26,21 +26,28 @@ function SingleTokenExitInput({
   value,
   error,
 }: SingleTokenExitInputProps) {
-  const { poolTokenAddresses } = usePool()
+  const { poolTokenAddresses, poolTokenBalances } = usePool()
   const max = singleAssetsMaxes[tokenOutIndex]
+  const poolTokenBalance = poolTokenBalances[tokenOutIndex]
 
   const rules = useMemo(
     () => ({
       validate: {
+        overflow(v: string) {
+          return (
+            bnum(v).lte(poolTokenBalance) ||
+            'Exceeds pool balance for this token'
+          )
+        },
         maxAmount(v: string) {
-          return bnum(v).lte(max) || 'Exceeds pool balance for this token'
+          return bnum(v).lte(max) || 'Exceeds wallet balance'
         },
       },
       onChange() {
-        clearErrors('exitAmount')
+        clearErrors('tokenOutAmount')
       },
     }),
-    [max, clearErrors]
+    [poolTokenBalance, max, clearErrors]
   )
 
   const maximized = useMemo(() => bnum(value).eq(max), [max, value])
@@ -50,7 +57,7 @@ function SingleTokenExitInput({
     <>
       <TokenInput
         id="singleTokenExit"
-        name="exitAmount"
+        name="tokenOutAmount"
         control={control as any as Control<FieldValues, 'any'>}
         rules={rules}
         action="exit"

@@ -12,15 +12,13 @@ import { TokenIcon } from 'components/TokenIcon'
 
 type ExitFormSummaryProps = {
   amountsOut: string[]
-  exactOut: boolean
-  percentage: number
+  isProportional: boolean
   priceImpact: number
 }
 
 function ExitFormSummary({
   amountsOut,
-  exactOut,
-  percentage,
+  isProportional,
   priceImpact,
 }: ExitFormSummaryProps) {
   const { toFiat } = useFiatCurrency()
@@ -34,12 +32,10 @@ function ExitFormSummary({
 
   return (
     <dl className={styles.formSummary}>
-      {!exactOut &&
+      {isProportional &&
         poolTokenAddresses.map((address, i) => {
           const symbol = getTokenSymbol(address)
-          let amount = amountsOut[i] || '0'
-          amount = bnum(amount).times(percentage).toString()
-
+          const amount = amountsOut[i] || '0'
           const fiatValue = toFiat(address, amount)
           const weight = bnum(poolTokenWeights[i]).times(100).toNumber()
 

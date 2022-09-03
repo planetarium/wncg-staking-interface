@@ -1,8 +1,9 @@
-import type { BigNumberish, Contract } from 'ethers'
+import type { Contract } from 'ethers'
 import type { TransactionResponse } from '@ethersproject/providers'
-import { WeightedPoolEncoder } from '@balancer-labs/sdk'
 
-type InitJoinPoolParams = {
+import { buildJoin, buildPropExit, buildSingleExit } from 'utils/joinExit'
+
+type JoinPoolParams = {
   amounts: string[]
   assets: string[]
   isNativeAsset: boolean
@@ -15,7 +16,7 @@ type InitJoinPoolParams = {
 export async function joinPool(
   contract: Contract,
   account: string,
-  params: InitJoinPoolParams
+  params: JoinPoolParams
 ): Promise<TransactionResponse> {
   const {
     poolId,
@@ -41,29 +42,43 @@ export async function joinPool(
     : await contract.joinPool(poolId, account, account, request)
 }
 
-type BuildJoinParams = {
+type ExitPoolParams = {
+  amounts: string[]
   assets: string[]
-  maxAmountsIn: BigNumberish[]
-  minBptOut: string
-  joinInit?: boolean
+  bptIn: string
+  exactOut: boolean
+  isProportional: boolean
+  poolId: string
+  tokenOutIndex: number
 }
 
-function buildJoin({
-  assets,
-  maxAmountsIn,
-  minBptOut,
-  joinInit = false,
-}: BuildJoinParams) {
-  const userData = joinInit
-    ? WeightedPoolEncoder.joinInit(maxAmountsIn)
-    : WeightedPoolEncoder.joinExactTokensInForBPTOut(maxAmountsIn, minBptOut)
-
-  const request = {
+export async function exitPool(
+  contract: Contract,
+  account: string,
+  params: ExitPoolParams
+): Promise<TransactionResponse> {
+  const {
+    amounts,
     assets,
-    maxAmountsIn,
-    userData,
-    fromInternalBalance: false,
-  }
+    bptIn,
+    exactOut,
+    isProportional,
+    poolId,
+    tokenOutIndex,
+  } = params
 
-  return request
+  const request = isProportional
+    ? buildPropExit({
+        assets,
+        bptIn,
+      })
+    : buildSingleExit({
+        assets,
+        bptIn,
+        minAmountsOut: amounts,
+        tokenOutIndex,
+        exactOut,
+      })
+
+  return await contract.exitPool(poolId, account, account, request)
 }
