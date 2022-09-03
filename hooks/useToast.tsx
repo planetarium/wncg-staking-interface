@@ -17,9 +17,9 @@ type AddCustomToast = {
 
 type SendToastParams = {
   action: TxAction
-  hash: string
   title: string
   message: string
+  hash?: string
   type?: ToastType
 }
 
@@ -37,7 +37,7 @@ export function useToast() {
   }
 
   const addTxToast = (params: SendToastParams) => {
-    const toastId = `${params.hash}.${nanoid()}`
+    const toastId = `${params.hash || ''}.${nanoid()}`
 
     toast(<Toast {...params} />, {
       transition: toastAnimation,

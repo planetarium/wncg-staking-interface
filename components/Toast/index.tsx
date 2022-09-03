@@ -12,33 +12,35 @@ import { getToastAudioFilename, renderToastEmoji } from './utils'
 import { Icon } from 'components/Icon'
 
 type ToastProps = {
-  action: TxAction
-  hash: string
   title: string
   message: string
+  action?: TxAction
+  hash?: string
   type?: ToastType
 }
 
 export function Toast({
   action,
-  hash,
   title,
   message,
+  hash = '',
   type = 'info',
 }: ToastProps) {
   const muted = store.get(STORAGE_KEYS.UserSettings.Muted) || false
   const txUrl = getTxUrl(hash)
-  const audioFilename = getToastAudioFilename(action, type)
+  const audioFilename = getToastAudioFilename(type, action)
   const audio = new Audio(audioFilename)
 
   function onClick() {
-    window?.open(txUrl)
-    gaEvent({
-      name: 'open_tx_etherscan',
-      params: {
-        tx: hash,
-      },
-    })
+    if (txUrl) {
+      window?.open(txUrl)
+      gaEvent({
+        name: 'open_tx_etherscan',
+        params: {
+          tx: hash,
+        },
+      })
+    }
   }
 
   useMount(() => {
@@ -57,9 +59,11 @@ export function Toast({
           <span className={styles.anchor}>{title}</span>
         </h4>
 
-        <span className={styles.link}>
-          <Icon id="externalLink" />
-        </span>
+        {txUrl && (
+          <span className={styles.link}>
+            <Icon id="externalLink" />
+          </span>
+        )}
       </header>
 
       <p className={styles.desc}>{message}</p>
