@@ -88,10 +88,7 @@ export function txInfoMessage(action: TxAction, params?: string | string[]) {
   }
 }
 
-export function renderTxErrorMessage(
-  action: TxAction,
-  params?: string | string[]
-) {
+export function txErrorMessage(action: TxAction, params?: string | string[]) {
   switch (action) {
     case TxAction.Approve:
       return `Failed to approve ${parseParams(params)}`

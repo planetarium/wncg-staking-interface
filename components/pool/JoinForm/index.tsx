@@ -69,6 +69,7 @@ function JoinForm({ currentEther, selectEther }: JoinFormProps) {
           setMaxValue={setMaxValue}
           setPropAmount={setPropAmount}
           showPropButton={showPropButton.wncgAmount}
+          trigger={trigger}
           value={wncgValue}
           error={formState.errors?.wncgAmount?.message}
         />

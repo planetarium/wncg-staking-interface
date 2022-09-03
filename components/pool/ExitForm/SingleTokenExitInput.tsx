@@ -1,11 +1,16 @@
-import { memo, MouseEvent, useMemo } from 'react'
-import type { Control, FieldValues, UseFormClearErrors } from 'react-hook-form'
+import { memo, MouseEvent, useEffect, useMemo } from 'react'
+import type {
+  Control,
+  FieldValues,
+  UseFormClearErrors,
+  UseFormTrigger,
+} from 'react-hook-form'
 
 import { bnum } from 'utils/num'
+import { usePool } from 'hooks'
 import type { ExitFormFields } from './type'
 
 import { TokenInput } from '../TokenInput'
-import { usePool } from 'hooks'
 
 type SingleTokenExitInputProps = {
   clearErrors: UseFormClearErrors<ExitFormFields>
@@ -13,6 +18,7 @@ type SingleTokenExitInputProps = {
   singleAssetsMaxes: string[]
   setMaxValue(e: MouseEvent<HTMLButtonElement>): void
   tokenOutIndex: number
+  trigger: UseFormTrigger<ExitFormFields>
   value: string
   error?: string
 }
@@ -23,6 +29,7 @@ function SingleTokenExitInput({
   singleAssetsMaxes,
   setMaxValue,
   tokenOutIndex,
+  trigger,
   value,
   error,
 }: SingleTokenExitInputProps) {
@@ -52,6 +59,10 @@ function SingleTokenExitInput({
 
   const maximized = useMemo(() => bnum(value).eq(max), [max, value])
   const address = poolTokenAddresses[tokenOutIndex]
+
+  useEffect(() => {
+    trigger('tokenOutAmount')
+  }, [max, trigger])
 
   return (
     <>

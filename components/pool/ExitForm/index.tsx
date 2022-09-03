@@ -24,7 +24,7 @@ function ExitForm() {
     },
   })
 
-  const { clearErrors, control, formState, watch } = useFormReturn
+  const { clearErrors, control, formState, trigger, watch } = useFormReturn
   const {
     amountsOut,
     dropdownList,
@@ -74,6 +74,7 @@ function ExitForm() {
             setMaxValue={setMaxValue}
             singleAssetsMaxes={singleAssetsMaxes}
             tokenOutIndex={tokenOutIndex}
+            trigger={trigger}
             value={tokenOutAmount}
             error={formState.errors?.tokenOutAmount?.message}
           />

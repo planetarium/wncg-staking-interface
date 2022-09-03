@@ -1,5 +1,10 @@
-import { memo, MouseEvent, useMemo } from 'react'
-import type { Control, FieldValues, UseFormClearErrors } from 'react-hook-form'
+import { memo, MouseEvent, useEffect, useMemo } from 'react'
+import type {
+  Control,
+  FieldValues,
+  UseFormClearErrors,
+  UseFormTrigger,
+} from 'react-hook-form'
 
 import { bnum } from 'utils/num'
 import type { JoinFormFields } from './type'
@@ -14,6 +19,7 @@ type WncgInputProps = {
   showPropButton: boolean
   setMaxValue(e: MouseEvent<HTMLButtonElement>): void
   setPropAmount(e: MouseEvent<HTMLButtonElement>): void
+  trigger: UseFormTrigger<JoinFormFields>
   value: string
   error?: string
 }
@@ -26,6 +32,7 @@ function WncgInput({
   showPropButton,
   setMaxValue,
   setPropAmount,
+  trigger,
   value,
   error,
 }: WncgInputProps) {
@@ -44,6 +51,10 @@ function WncgInput({
   )
 
   const maximized = useMemo(() => bnum(value).eq(balance), [balance, value])
+
+  useEffect(() => {
+    trigger('wncgAmount')
+  }, [balance, trigger])
 
   return (
     <TokenInput

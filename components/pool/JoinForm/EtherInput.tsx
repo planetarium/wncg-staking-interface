@@ -88,7 +88,7 @@ function EtherInput({
 
   useEffect(() => {
     trigger('ethAmount')
-  }, [isNativeAsset, trigger, value])
+  }, [ethBalance, isNativeAsset, trigger, value])
 
   return (
     <TokenInput
