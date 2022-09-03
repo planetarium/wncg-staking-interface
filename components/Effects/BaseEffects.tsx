@@ -16,7 +16,7 @@ function BaseEffects() {
   const setCurrentNetworkId = useSetRecoilState(currentNetworkIdState)
 
   function handleAccountsChanged(...args: unknown[]) {
-    txService?.resetTx()
+    txService?.resetTxMap()
     const accounts = args[0] as string[]
 
     // NOTE: Disconnected

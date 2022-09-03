@@ -4,7 +4,7 @@ import { useMachine } from '@xstate/react'
 import { configService } from 'services/config'
 import { TxAction } from 'services/transaction'
 import { bnum } from 'utils/num'
-import { renderTxErrorMessage, txToastTitle } from 'utils/transaction'
+import { txErrorMessage, txToastTitle } from 'utils/transaction'
 import {
   useAllowances,
   useApprove,
@@ -63,7 +63,7 @@ export function useJoinMachine(amounts: string[], isNativeAsset: boolean) {
       addTxToast({
         action: TxAction.JoinPool,
         title: txToastTitle(TxAction.JoinPool),
-        message: renderTxErrorMessage(TxAction.JoinPool, poolName),
+        message: txErrorMessage(TxAction.JoinPool, poolName),
         type: 'error',
       })
     }

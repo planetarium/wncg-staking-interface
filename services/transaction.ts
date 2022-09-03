@@ -52,7 +52,7 @@ type TxHandlerCallbacks = {
 export class TransactionService {
   constructor(
     public readonly provider: Web3Provider,
-    public readonly showToast: (params: TxToastParams) => void
+    public readonly addTxToast: (params: TxToastParams) => void
   ) {}
 
   registerTx = async (
@@ -70,14 +70,14 @@ export class TransactionService {
       params,
     }
 
-    this.showToast({
+    this.addTxToast({
       action,
       hash: response.hash,
       title: txToastTitle(action),
       message: txInfoMessage(action, params),
     })
 
-    store.set(STORAGE_KEYS.Transactions, {
+    this.updateTxMap({
       ...this.txMap,
       [hashKey]: newTx,
     })
@@ -101,7 +101,7 @@ export class TransactionService {
     newTarget.status = 'fulfilled'
     newTarget.finalizedTime = Date.now()
 
-    this.showToast({
+    this.addTxToast({
       action: target.action,
       hash: target.hash,
       title: txToastTitle(target.action),
@@ -111,13 +111,17 @@ export class TransactionService {
 
     callbacks.onTxConfirmed?.()
 
-    store.set(STORAGE_KEYS.Transactions, {
+    this.updateTxMap({
       ...this.txMap,
       [hashKey]: newTarget,
     })
   }
 
-  resetTx() {
+  updateTxMap(newTxMap: TxMap) {
+    store.set(STORAGE_KEYS.Transactions, newTxMap)
+  }
+
+  resetTxMap() {
     store.remove(STORAGE_KEYS.Transactions)
   }
 
@@ -130,7 +134,7 @@ export class TransactionService {
       newTxMap[hash] = tx
     })
 
-    store.set(STORAGE_KEYS.Transactions, newTxMap)
+    this.updateTxMap(newTxMap)
   }
 
   async getTxReceipt(hash: string): Promise<TransactionReceipt> {
@@ -146,7 +150,7 @@ export class TransactionService {
     return Object.values(this.txMap).filter((tx) => tx.status === 'pending')
   }
 
-  private key(hash: string, action: TxAction) {
+  key(hash: string, action: TxAction) {
     return `tx_${hash}_${action}`
   }
 }

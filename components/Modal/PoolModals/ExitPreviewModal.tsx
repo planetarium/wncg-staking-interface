@@ -4,7 +4,7 @@ import styles from './style.module.scss'
 
 import { ModalCategory } from 'app/states/modal'
 import { TxAction } from 'services/transaction'
-import { renderTxErrorMessage, txToastTitle } from 'utils/transaction'
+import { txErrorMessage, txToastTitle } from 'utils/transaction'
 import {
   useEvents,
   useExitPool,
@@ -91,7 +91,7 @@ export function ExitPreviewModal({
       setError(error)
       addCustomToast({
         title: txToastTitle(TxAction.ExitPool),
-        message: renderTxErrorMessage(TxAction.ExitPool, poolName),
+        message: txErrorMessage(TxAction.ExitPool, poolName),
         type: 'error',
       })
     }

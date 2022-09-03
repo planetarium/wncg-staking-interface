@@ -22,7 +22,7 @@ export function PendingTxMenu({ close }: PendingTxMenuProps) {
   )
 
   function clearTransactions() {
-    txService?.resetTx()
+    txService?.resetTxMap()
   }
 
   const closeOnBlur = useCallback(
