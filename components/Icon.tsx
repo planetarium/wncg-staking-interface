@@ -24,6 +24,7 @@ type Icon =
   | 'medium'
   | 'pulse'
   | 'question'
+  | 'settings'
   | 'telegram'
   | 'twitter'
   | 'balancer'
