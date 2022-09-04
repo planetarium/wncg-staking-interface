@@ -10,6 +10,7 @@ import type { JoinFormFields } from './type'
 
 import { Button } from 'components/Button'
 import HighPriceImpact from '../HighPriceImpact'
+import Slippage from '../Slippage'
 import EtherInput from './EtherInput'
 import JoinFormSummary from './Summary'
 import WncgInput from './WncgInput'
@@ -58,6 +59,7 @@ function JoinForm({ currentEther, selectEther }: JoinFormProps) {
     <section className={styles.formSection}>
       <header className={styles.header}>
         <h3 className={styles.title}>Join pool</h3>
+        <Slippage />
       </header>
 
       <form>

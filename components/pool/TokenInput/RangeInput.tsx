@@ -1,4 +1,5 @@
-import { Control, Controller } from 'react-hook-form'
+import { Controller } from 'react-hook-form'
+import type { Control } from 'react-hook-form'
 import clsx from 'clsx'
 import styles from '../styles/RangeInput.module.scss'
 
@@ -31,10 +32,10 @@ export function RangeInput({
           <div className={clsx(styles.rangeInput, className)}>
             {label && <strong className={styles.label}>{label}</strong>}
             <input
+              {...field}
               id={id}
               className={styles.input}
               type="range"
-              {...field}
               step={step}
               style={{ backgroundSize: `${value}% 100%` }}
             />

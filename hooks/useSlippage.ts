@@ -1,41 +1,58 @@
+import { useCallback, useMemo } from 'react'
+import { useRecoilValue } from 'recoil'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import BigNumber from 'bignumber.js'
 
+import { slippageSelector } from 'app/states/settings'
 import { bnum } from 'utils/num'
 
 export function useSlippage() {
-  // TODO: should be onfigurable
-  const slippage = 0.005
+  const slippage = useRecoilValue(slippageSelector)
 
-  const slippageBasisPoints = bnum(slippage).times(10000).toString()
+  const slippageBasisPoints = useMemo(
+    () => bnum(slippage).times(10000).toString(),
+    [slippage]
+  )
 
-  function addSlippageScaled(amount: string) {
-    const delta = bnum(amount)
-      .times(slippageBasisPoints)
-      .div(10000)
-      .dp(0, BigNumber.ROUND_DOWN)
-    return bnum(amount).plus(delta).toString()
-  }
+  const addSlippageScaled = useCallback(
+    (amount: string) => {
+      const delta = bnum(amount)
+        .times(slippageBasisPoints)
+        .div(10000)
+        .dp(0, BigNumber.ROUND_DOWN)
+      return bnum(amount).plus(delta).toString()
+    },
+    [slippageBasisPoints]
+  )
 
-  function addSlippage(_amount: string, decimals: number) {
-    let amount = parseUnits(_amount, decimals).toString()
-    amount = addSlippageScaled(amount)
-    return formatUnits(amount, decimals)
-  }
+  const addSlippage = useCallback(
+    (_amount: string, decimals: number) => {
+      let amount = parseUnits(_amount, decimals).toString()
+      amount = addSlippageScaled(amount)
+      return formatUnits(amount, decimals)
+    },
+    [addSlippageScaled]
+  )
 
-  function minusSlippageScaled(amount: string) {
-    const delta = bnum(amount)
-      .times(slippageBasisPoints)
-      .div(10000)
-      .dp(0, BigNumber.ROUND_UP)
-    return bnum(amount).minus(delta).toString()
-  }
+  const minusSlippageScaled = useCallback(
+    (amount: string) => {
+      const delta = bnum(amount)
+        .times(slippageBasisPoints)
+        .div(10000)
+        .dp(0, BigNumber.ROUND_UP)
+      return bnum(amount).minus(delta).toString()
+    },
+    [slippageBasisPoints]
+  )
 
-  function minusSlippage(_amount: string, decimals: number) {
-    let amount = parseUnits(_amount, decimals).toString()
-    amount = minusSlippageScaled(amount)
-    return formatUnits(amount, decimals)
-  }
+  const minusSlippage = useCallback(
+    (_amount: string, decimals: number) => {
+      let amount = parseUnits(_amount, decimals).toString()
+      amount = minusSlippageScaled(amount)
+      return formatUnits(amount, decimals)
+    },
+    [minusSlippageScaled]
+  )
 
   return {
     addSlippage,

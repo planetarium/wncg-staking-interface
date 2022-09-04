@@ -9,6 +9,7 @@ import { ExitFormFields } from './type'
 import { Button } from 'components/Button'
 import { TokenDropdown } from '../TokenInput/Dropdown'
 import HighPriceImpact from '../HighPriceImpact'
+import Slippage from '../Slippage'
 import ExitFormSummary from './Summary'
 import ProportionalExitInput from './ProportionalExitInput'
 import SingleTokenExitInput from './SingleTokenExitInput'
@@ -50,6 +51,7 @@ function ExitForm() {
     <section className={styles.formSection}>
       <header className={styles.header}>
         <h3 className={styles.title}>Exit pool</h3>
+        <Slippage />
       </header>
 
       <form>
