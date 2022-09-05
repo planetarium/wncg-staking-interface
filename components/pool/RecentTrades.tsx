@@ -7,6 +7,7 @@ import styles from './styles/RecentTrades.module.scss'
 import { fetchPoolSwaps, getNextPageParam } from 'lib/graphql'
 import { truncateAddress } from 'utils/string'
 import { getTokenSymbol } from 'utils/token'
+import { getTxUrl } from 'utils/url'
 
 import { Icon } from 'components/Icon'
 import { Jazzicon } from 'components/Jazzicon'
@@ -94,9 +95,19 @@ function PoolRecentTrades() {
                       </div>
                     </td>
                     <td>
-                      {formatDistanceToNow(swap.timestamp * 1_000, {
-                        addSuffix: true,
-                      })}
+                      <div className={styles.datetime}>
+                        {formatDistanceToNow(swap.timestamp * 1_000, {
+                          addSuffix: true,
+                        })}
+                        <a
+                          href={getTxUrl(swap.tx)}
+                          target="_blank"
+                          rel="noreferrer"
+                          aria-label="See transaction detail in Etherscan"
+                        >
+                          <Icon id="arrowRightUp" />
+                        </a>
+                      </div>
                     </td>
                   </tr>
                 )

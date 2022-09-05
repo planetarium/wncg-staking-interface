@@ -72,6 +72,7 @@ export async function fetchPoolSwaps({
             id: true,
           },
           timestamp: true,
+          tx: true,
         },
       },
     },

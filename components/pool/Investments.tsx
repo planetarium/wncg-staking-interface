@@ -9,9 +9,11 @@ import styles from './styles/Investments.module.scss'
 import { accountState } from 'app/states/connection'
 import { fetchPoolJoinExits, getNextPageParam } from 'lib/graphql'
 import { bnum } from 'utils/num'
+import { getTxUrl } from 'utils/url'
 import { usePool, useFiatCurrency } from 'hooks'
 
 import { Checkbox } from 'components/Checkbox'
+import { Icon } from 'components/Icon'
 import { TokenIcon } from 'components/TokenIcon'
 
 function PoolInvestments() {
@@ -102,9 +104,19 @@ function PoolInvestments() {
                       </div>
                     </td>
                     <td>
-                      {formatDistanceToNow(investment.timestamp * 1_000, {
-                        addSuffix: true,
-                      })}
+                      <div className={styles.datetime}>
+                        {formatDistanceToNow(investment.timestamp * 1_000, {
+                          addSuffix: true,
+                        })}
+                        <a
+                          href={getTxUrl(investment.tx)}
+                          target="_blank"
+                          rel="noreferrer"
+                          aria-label="See transaction detail in Etherscan"
+                        >
+                          <Icon id="arrowRightUp" />
+                        </a>
+                      </div>
                     </td>
                   </tr>
                 )

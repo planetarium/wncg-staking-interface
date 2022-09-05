@@ -8,4 +8,5 @@ type Swap = {
     id: string
   }
   timestamp: number
+  tx: string
 }
