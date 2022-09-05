@@ -1,3 +1,4 @@
+import type { SetterOrUpdater } from 'recoil'
 import type { Event } from 'ethers'
 import type {
   TransactionReceipt,
@@ -30,7 +31,7 @@ export const TxAction = {
 
 export type TxAction = typeof TxAction[keyof typeof TxAction]
 
-export type TxStatus = 'pending' | 'fulfilled' | 'reverted'
+export type TxStatus = 'pending' | 'fulfilled' | 'error' | 'canceled'
 
 export type TxToastParams = {
   action: TxAction
@@ -40,7 +41,7 @@ export type TxToastParams = {
   type?: ToastType
 }
 
-type TxMap = {
+export type TxMap = {
   [id: string]: Transaction
 }
 
@@ -52,6 +53,7 @@ type TxHandlerCallbacks = {
 export class TransactionService {
   constructor(
     public readonly provider: Web3Provider,
+    public readonly setTxMap: SetterOrUpdater<TxMap>,
     public readonly addTxToast: (params: TxToastParams) => void
   ) {}
 
@@ -60,7 +62,7 @@ export class TransactionService {
     action: TxAction,
     params?: string | string[]
   ) => {
-    const hashKey = this.key(response.hash, action)
+    const hashKey = this.encodeKey(response.hash, action)
 
     const newTx: Transaction = {
       action,
@@ -77,10 +79,7 @@ export class TransactionService {
       message: txInfoMessage(action, params),
     })
 
-    this.updateTxMap({
-      ...this.txMap,
-      [hashKey]: newTx,
-    })
+    this.updateTx(hashKey, newTx)
   }
 
   handleTx = async (
@@ -88,7 +87,7 @@ export class TransactionService {
     action: TxAction,
     callbacks: TxHandlerCallbacks = {}
   ) => {
-    const hashKey = this.key(event.transactionHash, action)
+    const hashKey = this.encodeKey(event.transactionHash, action)
     const target = this.txMap[hashKey]
 
     callbacks.onTxEvent?.()
@@ -111,30 +110,33 @@ export class TransactionService {
 
     callbacks.onTxConfirmed?.()
 
-    this.updateTxMap({
-      ...this.txMap,
-      [hashKey]: newTarget,
+    this.updateTx(hashKey, newTarget)
+  }
+
+  flushOutdatedTx() {
+    Object.entries(this.txMap).forEach(([hash, tx]) => {
+      if (!!tx.finalizedTime && !isToday(tx.finalizedTime)) {
+        this.removeTx(hash)
+      }
     })
   }
 
-  updateTxMap(newTxMap: TxMap) {
+  updateTx(hashKey: string, tx: Transaction) {
+    const newTxMap = { ...this.txMap, [hashKey]: tx }
     store.set(STORAGE_KEYS.Transactions, newTxMap)
+    this.setTxMap(newTxMap)
+  }
+
+  removeTx(hashKey: string) {
+    const newTxMap = { ...this.txMap }
+    delete newTxMap[hashKey]
+    store.set(STORAGE_KEYS.Transactions, newTxMap)
+    this.setTxMap(newTxMap)
   }
 
   resetTxMap() {
     store.remove(STORAGE_KEYS.Transactions)
-  }
-
-  flushOutdatedTx() {
-    const newTxMap: TxMap = {}
-    Object.entries(this.txMap).forEach(([hash, tx]) => {
-      if (!!tx.finalizedTime && !isToday(tx.finalizedTime)) {
-        return
-      }
-      newTxMap[hash] = tx
-    })
-
-    this.updateTxMap(newTxMap)
+    this.setTxMap({})
   }
 
   async getTxReceipt(hash: string): Promise<TransactionReceipt> {
@@ -146,11 +148,12 @@ export class TransactionService {
     return store.get(STORAGE_KEYS.Transactions) || {}
   }
 
-  get pendingTxList(): Transaction[] {
-    return Object.values(this.txMap).filter((tx) => tx.status === 'pending')
+  encodeKey(hash: string, action: TxAction) {
+    return `tx_${hash}_${action}`
   }
 
-  key(hash: string, action: TxAction) {
-    return `tx_${hash}_${action}`
+  decodeKey(hashKey?: string) {
+    if (!hashKey) return hashKey
+    return hashKey.split('_')[1] || hashKey
   }
 }
