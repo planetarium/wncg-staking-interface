@@ -148,7 +148,7 @@ export function useExitForm(useFormReturn: UseFormReturn<ExitFormFields>) {
           const sumValue = toFiat(address, amount)
           return total.plus(sumValue)
         }, bnum(0))
-        .toString() || '0'
+        .toFixed(2) || '0'
     )
   }, [amountsOut, isNativeAsset, nativeAssetIndex, poolTokenAddresses, toFiat])
 
