@@ -1,26 +1,29 @@
 import { useCallback, useEffect, useState } from 'react'
 import { usePrevious } from 'react-use'
 import Lottie from 'lottie-react'
-import { Event } from 'ethers'
+import { useRecoilValue } from 'recoil'
+import type { Event } from 'ethers'
 import clsx from 'clsx'
 import styles from './styles/StakeSubmit.module.scss'
 
-import { getIsApproved } from 'app/states/bpt'
-import { getIsConnected } from 'app/states/connection'
+import { connectedState } from 'app/states/connection'
 import { ModalCategory } from 'app/states/modal'
-import { TransactionAction } from 'app/states/transaction'
-import { getIsUnstakeWindow } from 'app/states/unstake'
+import { configService } from 'services/config'
+import { TxAction } from 'services/transaction'
 import { gaEvent } from 'lib/gtag'
 import { handleError } from 'utils/error'
 import {
-  useAppSelector,
-  useBpt,
+  useAllowances,
+  useApprove,
   useConnection,
-  useEventFilter,
+  useEvents,
   useModal,
+  usePool,
   useProvider,
   useStake,
+  useUnstakeTimestamps,
 } from 'hooks'
+import { UnstakeStatus } from 'hooks/useUnstakeTimestamps'
 
 import loadingAnimation from 'animations/spinner.json'
 
@@ -33,6 +36,11 @@ type StakeSubmitProps = {
   disabled: boolean
 }
 
+const UNSTAKE_WINDOW: UnstakeStatus[] = [
+  UnstakeStatus.CooldownInProgress,
+  UnstakeStatus.Withdrawable,
+]
+
 export function StakeSubmit({
   amount,
   clearInput,
@@ -43,16 +51,21 @@ export function StakeSubmit({
   const [pendingTx, setPendingTx] = useState('')
   const prevAmount = usePrevious(amount)
 
-  const { approve } = useBpt()
+  const { allowanceFor } = useAllowances()
+  const { approve } = useApprove()
   const { connect } = useConnection()
-  const { approvalEventFilter, stakedEventFilter } = useEventFilter()
+  const { createApprovalEvent, stakedEvent } = useEvents()
   const { addModal } = useModal()
+  const { bptAddress, poolTokenName } = usePool()
   const provider = useProvider()
   const { stake } = useStake()
+  const { unstakeStatus } = useUnstakeTimestamps()
 
-  const isApproved = useAppSelector(getIsApproved)
-  const isConnected = useAppSelector(getIsConnected)
-  const isUnstakeWindow = useAppSelector(getIsUnstakeWindow)
+  const isConnected = useRecoilValue(connectedState)
+  const isUnstakeWindow = UNSTAKE_WINDOW.includes(unstakeStatus)
+
+  const isApproved = allowanceFor(bptAddress, configService.stakingAddress)
+  const isLoading = active !== null
 
   function resetStatus() {
     setActive(null)
@@ -67,14 +80,13 @@ export function StakeSubmit({
         amount,
       },
     })
+
     try {
       const hash = await stake(amount)
-      if (hash) {
-        setPendingTx(hash)
-      }
+      if (hash) setPendingTx(hash)
       clearInput()
     } catch (error) {
-      handleError(error, TransactionAction.Stake)
+      handleError(error, TxAction.Stake)
       setActive(null)
     }
   }
@@ -84,10 +96,12 @@ export function StakeSubmit({
     gaEvent({
       name: 'approve_to_stake',
     })
+
     try {
-      await approve()
+      const hash = await approve(bptAddress, configService.stakingAddress)
+      if (hash) setPendingTx(hash)
     } catch (error) {
-      handleError(error, TransactionAction.Approve)
+      handleError(error, TxAction.Approve)
       setActive(null)
     }
   }
@@ -102,22 +116,30 @@ export function StakeSubmit({
       })
       return
     }
+
     proceedStake()
   }
 
   function handleClick() {
-    if (!isApproved) {
-      handleApprove()
-    } else {
-      handleStake()
-    }
+    if (!isApproved) handleApprove()
+    else handleStake()
   }
 
-  const handleApprovalEvent = useCallback(() => {
-    setActive(null)
-  }, [])
+  const approvalFilter = createApprovalEvent(
+    bptAddress,
+    configService.stakingAddress
+  )
 
-  const handleStakedEvent = useCallback(
+  const approvalHandler = useCallback(
+    ({ transactionHash }: Event) => {
+      if (active === 'approval' && pendingTx === transactionHash) {
+        setActive(null)
+      }
+    },
+    [active, pendingTx]
+  )
+
+  const stakedHandler = useCallback(
     async ({ transactionHash }: Event) => {
       if (pendingTx !== transactionHash) return
       if (active === 'stake') {
@@ -130,23 +152,23 @@ export function StakeSubmit({
 
   // NOTE: Approval event
   useEffect(() => {
-    if (approvalEventFilter) {
-      provider?.on(approvalEventFilter, handleApprovalEvent)
+    if (approvalFilter) {
+      provider?.on(approvalFilter, approvalHandler)
       return () => {
-        provider?.off(approvalEventFilter)
+        provider?.off(approvalFilter)
       }
     }
-  }, [approvalEventFilter, handleApprovalEvent, provider])
+  }, [approvalFilter, approvalHandler, isApproved, provider])
 
   // NOTE: Staked event
   useEffect(() => {
-    if (stakedEventFilter) {
-      provider?.on(stakedEventFilter, handleStakedEvent)
+    if (stakedEvent) {
+      provider?.on(stakedEvent, stakedHandler)
       return () => {
-        provider?.off(stakedEventFilter)
+        provider?.off(stakedEvent)
       }
     }
-  }, [handleStakedEvent, provider, stakedEventFilter])
+  }, [stakedHandler, provider, stakedEvent])
 
   useEffect(() => {
     if (amount && prevAmount !== amount) {
@@ -210,14 +232,21 @@ export function StakeSubmit({
                 loop
               />
             )}
-            <strong className={styles.tooltip}>Stake 20WETH-80WNCG</strong>
+            <strong className={styles.tooltip}>Stake {poolTokenName}</strong>
           </li>
         </ol>
       </div>
 
-      <Button size="large" onClick={handleClick} disabled={disabled} fullWidth>
-        {isApproved ? 'Stake' : 'Approve to stake'}
+      <Button
+        size="large"
+        onClick={handleClick}
+        disabled={disabled || isLoading}
+        loading={isLoading}
+        fullWidth
+      >
+        {renderButtonLabel(isApproved, isLoading)}
       </Button>
+
       {isApproved && (
         <dl className={styles.cooldown}>
           <dt>
@@ -235,4 +264,19 @@ export function StakeSubmit({
       )}
     </>
   )
+}
+
+function renderButtonLabel(isApproved: boolean, isLoading: boolean) {
+  switch (true) {
+    case isApproved && isLoading:
+      return 'Staking'
+    case isApproved && !isLoading:
+      return 'Stake'
+    case !isApproved && isLoading:
+      return 'Approving'
+    case !isApproved && !isLoading:
+      return 'Approve to stake'
+    default:
+      return ''
+  }
 }

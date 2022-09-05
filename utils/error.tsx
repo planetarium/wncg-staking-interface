@@ -1,11 +1,13 @@
 import { toast } from 'react-toastify'
-import { TransactionAction } from 'app/states/transaction'
-import { gaEvent } from 'lib/gtag'
+import { nanoid } from 'nanoid'
 
-import { CustomToast } from 'components/Toast/CustomToast'
+import { TxAction } from 'services/transaction'
+import { gaEvent } from 'lib/gtag'
 import { toastAnimation } from './toast'
 
-export function handleError(error: any, transactionType?: TransactionAction) {
+import { CustomToast } from 'components/Toast/CustomToast'
+
+export function handleError(error: any, transactionType?: TxAction) {
   //   TODO: Handle error
   console.debug(error)
 
@@ -24,11 +26,11 @@ export function handleError(error: any, transactionType?: TransactionAction) {
       toast(
         <CustomToast
           title="Login Required"
-          description="Please log in your Metamask account."
+          message="Please log in your Metamask account."
         />,
         {
           transition: toastAnimation,
-          toastId: `loginRequired-${Date.now()}`,
+          toastId: `loginRequired-${nanoid()}`,
         }
       )
       break

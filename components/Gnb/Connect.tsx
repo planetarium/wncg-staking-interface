@@ -1,13 +1,16 @@
-import { ConnectionStatus, getStatus } from 'app/states/connection'
-import { getIsMobile } from 'app/states/mediaQuery'
-import { useAppSelector, useConnection } from 'hooks'
+import { useRecoilValue } from 'recoil'
+
+import { ConnectionStatus, connectionStatusState } from 'app/states/connection'
+import { isMobileState } from 'app/states/mediaQuery'
+import { useConnection } from 'hooks'
 
 import { Button } from 'components/Button'
 
 export function GnbConnect() {
   const { connect } = useConnection()
-  const status = useAppSelector(getStatus)
-  const isMobile = useAppSelector(getIsMobile)
+
+  const status = useRecoilValue(connectionStatusState)
+  const isMobile = useRecoilValue(isMobileState)
 
   const buttonSize = isMobile ? 'small' : 'medium'
 

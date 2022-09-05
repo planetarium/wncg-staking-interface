@@ -1,41 +1,37 @@
 import { useEffect, useState } from 'react'
 import { useMount, usePrevious } from 'react-use'
+import { isPast } from 'date-fns'
 import store from 'store'
 
-import {
-  getUnstakeStatus,
-  STORE_COOLDOWN_ENDS_AT,
-  STORE_WITHDRAW_ENDS_AT,
-  UnstakeStatus,
-} from 'app/states/unstake'
-import { useAppSelector } from 'hooks'
+import STORAGE_KEYS from 'constants/storageKeys'
+import { useUnstakeTimestamps } from 'hooks'
+import { UnstakeStatus } from 'hooks/useUnstakeTimestamps'
 
 export function useWithdrawable() {
-  const status = useAppSelector(getUnstakeStatus)
-  const prevStatus = usePrevious(status)
+  const { unstakeStatus } = useUnstakeTimestamps()
+  const prevUnstakeStatus = usePrevious(unstakeStatus)
 
   const [isWithdrawable, setIsWithdrawable] = useState(false)
 
   useEffect(() => {
-    if (status === UnstakeStatus.Withdrawable) {
+    if (unstakeStatus === UnstakeStatus.Withdrawable) {
       setIsWithdrawable(true)
     }
-  }, [status])
+  }, [unstakeStatus])
 
   // NOTE: Only update state when status changes from Withdrawable -> anything else
   useEffect(() => {
-    if (prevStatus !== UnstakeStatus.Withdrawable) return
-    if (prevStatus !== status) {
+    if (prevUnstakeStatus !== UnstakeStatus.Withdrawable) return
+    if (prevUnstakeStatus !== unstakeStatus) {
       setIsWithdrawable(false)
     }
-  }, [prevStatus, status])
+  }, [prevUnstakeStatus, unstakeStatus])
 
   useMount(() => {
-    const now = Date.now()
-    const cooldownEndsAt = store.get(STORE_COOLDOWN_ENDS_AT) || 0
-    const withdrawEndsAt = store.get(STORE_WITHDRAW_ENDS_AT) || 0
+    const cooldownEndsAt = store.get(STORAGE_KEYS.Unstake.CooldownEndsAt) || 0
+    const withdrawEndsAt = store.get(STORAGE_KEYS.Unstake.WithdrawEndsAt) || 0
 
-    if (cooldownEndsAt < now && withdrawEndsAt > now) {
+    if (isPast(cooldownEndsAt) && !isPast(withdrawEndsAt)) {
       setIsWithdrawable(true)
     }
   })

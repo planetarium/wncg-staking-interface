@@ -11,15 +11,16 @@ import store from 'store'
 import clsx from 'clsx'
 import styles from './styles/EstimatedEarn.module.scss'
 
+import STORAGE_KEYS from 'constants/storageKeys'
+import { configService } from 'services/config'
 import { gaEvent } from 'lib/gtag'
 import { countUpOption, usdCountUpOption } from 'utils/countUp'
-import { useUsd } from 'hooks'
+import { getTokenSymbol } from 'utils/token'
+import { useFiatCurrency } from 'hooks'
 import { useEstimation } from './useEstimation'
 
 import { CountUp } from 'components/CountUp'
 import { TokenIcon } from 'components/TokenIcon'
-
-const STORE_OPTION_KEY = `wncgStaking.estimatedEarnOption`
 
 type EstimatedEarnProps = {
   amount?: string
@@ -27,22 +28,21 @@ type EstimatedEarnProps = {
 
 function EstimatedEarn({ amount = '' }: EstimatedEarnProps) {
   const [option, setOption] = useState('year')
-  const [wncg, setWncg] = useState(0)
-  const [bal, setBal] = useState(0)
+  const [estimation, setEstimation] = useState([0, 0])
 
-  const { getEstimation } = useEstimation()
-  const { calculateUsdValue } = useUsd()
+  const { calcEstimatedRevenue } = useEstimation()
+  const { toFiat } = useFiatCurrency()
 
   const updateEstimation = useCallback(() => {
-    const { bal: newBal, wncg: newWncg } = getEstimation(amount, option)
-    setWncg(newWncg || 0)
-    setBal(newBal || 0)
-  }, [amount, getEstimation, option])
+    const expectedRevenues = calcEstimatedRevenue(amount, option)
+    if (expectedRevenues.every((value, i) => value === estimation[i])) return
+    setEstimation(expectedRevenues)
+  }, [amount, estimation, calcEstimatedRevenue, option])
 
   function handleOption(e: MouseEvent<HTMLButtonElement>) {
     const newOption = e.currentTarget.value
     setOption(newOption)
-    store.set(STORE_OPTION_KEY, newOption)
+    store.set(STORAGE_KEYS.UserSettings.EstimatedEarnOption, newOption)
     gaEvent({
       name: 'estimated_earn_period',
       params: {
@@ -63,7 +63,9 @@ function EstimatedEarn({ amount = '' }: EstimatedEarnProps) {
   )
 
   useIsomorphicLayoutEffect(() => {
-    const initialOption = store.get(STORE_OPTION_KEY)
+    const initialOption = store.get(
+      STORAGE_KEYS.UserSettings.EstimatedEarnOption
+    )
     if (initialOption && initialOption !== option) {
       setOption(initialOption)
     }
@@ -117,6 +119,7 @@ function EstimatedEarn({ amount = '' }: EstimatedEarnProps) {
           </button>
         </div>
       </header>
+
       <p className={styles.desc}>
         Expected rewards in case the current APR persists for the selected time
         period. APR can fluctuate with several factors including staking pool
@@ -124,42 +127,37 @@ function EstimatedEarn({ amount = '' }: EstimatedEarnProps) {
       </p>
 
       <dl className={styles.detail}>
-        <div className={styles.detailItem}>
-          <dt>
-            <TokenIcon className={styles.token} symbol="wncg" />
-            <strong>WNCG</strong>
-          </dt>
-          <dd>
-            <CountUp
-              {...countUpOption}
-              end={wncg}
-              decimals={8}
-              duration={0.5}
-            />
-            <CountUp
-              {...usdCountUpOption}
-              className={styles.usd}
-              end={calculateUsdValue('wncg', wncg)}
-              isApproximate
-            />
-          </dd>
-        </div>
+        {configService.rewardTokensList.map((address, i) => {
+          const amount = estimation[i]
 
-        <div className={styles.detailItem}>
-          <dt>
-            <TokenIcon className={styles.token} symbol="bal" />
-            <strong>BAL</strong>
-          </dt>
-          <dd>
-            <CountUp {...countUpOption} end={bal} decimals={8} duration={0.5} />
-            <CountUp
-              {...usdCountUpOption}
-              className={styles.usd}
-              end={calculateUsdValue('bal', bal)}
-              isApproximate
-            />
-          </dd>
-        </div>
+          return (
+            <div key={`estimation.${address}`} className={styles.detailItem}>
+              <dt>
+                <TokenIcon
+                  className={styles.token}
+                  symbol={getTokenSymbol(address)}
+                />
+                <strong>{getTokenSymbol(address)}</strong>
+              </dt>
+              <dd>
+                <CountUp
+                  {...countUpOption}
+                  end={amount}
+                  decimals={8}
+                  duration={0.5}
+                  showAlways
+                />
+                <CountUp
+                  {...usdCountUpOption}
+                  className={styles.usd}
+                  end={toFiat(configService.rewardTokensList[i], amount)}
+                  isApproximate
+                  showAlways
+                />
+              </dd>
+            </div>
+          )
+        })}
       </dl>
     </div>
   )

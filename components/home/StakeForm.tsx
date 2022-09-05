@@ -1,13 +1,13 @@
 import { memo, useMemo } from 'react'
 import { Control, FieldValues, useForm } from 'react-hook-form'
+import { useRecoilValue } from 'recoil'
 import { motion } from 'framer-motion'
 import styles from './styles/StakeForm.module.scss'
 
-import { getBalance } from 'app/states/bpt'
-import { getIsValidNetwork } from 'app/states/connection'
+import { networkMismatchState } from 'app/states/error'
 import { gaEvent } from 'lib/gtag'
-import Decimal, { sanitizeNumber } from 'utils/num'
-import { useAppSelector } from 'hooks'
+import { bnum } from 'utils/num'
+import { useBalances, usePool } from 'hooks'
 import { formTransition, motionVariants, TabId, TabPanelId } from './constants'
 
 import { EstimatedEarn } from './EstimatedEarn'
@@ -17,8 +17,10 @@ import { StakeSubmit } from './StakeSubmit'
 const minAmount = 1e-18
 
 function StakeForm() {
-  const bptBalance = useAppSelector(getBalance)
-  const isValidNetwork = useAppSelector(getIsValidNetwork)
+  const networkMismatch = useRecoilValue(networkMismatchState)
+  const { bptBalance } = useBalances()
+  const { poolTokenName } = usePool()
+
   const { clearErrors, control, formState, setValue, watch } = useForm<{
     stakeAmount: string
   }>({
@@ -26,19 +28,18 @@ function StakeForm() {
   })
   const stakeAmountValue = watch('stakeAmount')
   const disabled =
+    networkMismatch ||
     Object.keys(formState.errors).length > 0 ||
-    new Decimal(sanitizeNumber(stakeAmountValue)).isZero() ||
-    !isValidNetwork
+    bnum(stakeAmountValue).isZero()
 
   const rules = useMemo(
     () => ({
       required: 'Please enter valid amount',
       validate: {
         maxAmount: (v: string) =>
-          new Decimal(sanitizeNumber(v)).lte(bptBalance) ||
-          'You don’t have enough balance',
+          bnum(v).lte(bptBalance) || 'You don’t have enough balance',
         minAmount: (v: string) =>
-          new Decimal(sanitizeNumber(v)).gte(minAmount) ||
+          bnum(v).gte(minAmount) ||
           'Please enter the amount bigger than or equal to 1e-18',
       },
       onChange: () => {
@@ -77,7 +78,7 @@ function StakeForm() {
       <InputGroup
         name="stakeAmount"
         control={control as any as Control<FieldValues, 'any'>}
-        label="20WETH-80WNCG"
+        label={poolTokenName}
         maxAmount={bptBalance}
         rules={rules}
         setMaxValue={setMaxValue}

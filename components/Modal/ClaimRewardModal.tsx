@@ -1,201 +1,159 @@
 import { MouseEvent, useCallback, useEffect, useState } from 'react'
 import { useMount } from 'react-use'
+import { useRecoilValue } from 'recoil'
 import styles from './ClaimRewardModal.module.scss'
 
+import { connectedState } from 'app/states/connection'
 import { ModalCategory } from 'app/states/modal'
-import { getEarnedBal, getEarnedWncg } from 'app/states/reward'
-import { TransactionAction } from 'app/states/transaction'
 import { gaEvent } from 'lib/gtag'
-import { assertUnreachable } from 'utils/assertion'
 import { countUpOption, usdCountUpOption } from 'utils/countUp'
 import { handleError } from 'utils/error'
-import Decimal, { sanitizeNumber } from 'utils/num'
-import {
-  useAppSelector,
-  useClaim,
-  useEventFilter,
-  useModal,
-  useProvider,
-  useReward,
-  useUsd,
-} from 'hooks'
+import { bnum } from 'utils/num'
+import { useClaim, useEvents, useModal, useProvider, useRewards } from 'hooks'
 
 import { Button } from 'components/Button'
 import { CountUp } from 'components/CountUp'
 import { TokenIcon } from 'components/TokenIcon'
 
-type ClaimLoading = 'all' | 'bal' | 'wncg' | null
-
 export function ClaimRewardModal() {
-  const [loading, setLoading] = useState<ClaimLoading>(null)
+  const [loading, setLoading] = useState('')
 
   const { claimAllRewards, claimBalRewards, claimWncgRewards } = useClaim()
-  const { rewardsBalEventFilter, rewardsWncgEventFilter } = useEventFilter()
+  const { rewardsClaimedBalEvent, rewardsClaimedWncgEvent } = useEvents()
   const { removeModal } = useModal()
   const provider = useProvider()
-  const { earnedBal, earnedWncg } = useReward()
-  const { calculateUsdValue } = useUsd()
+  const { rewards, rewardsInFiatValue, rewardTokenSymbols, fetchRewards } =
+    useRewards()
 
-  const balReward = useAppSelector(getEarnedBal)
-  const wncgReward = useAppSelector(getEarnedWncg)
-  const bal = parseFloat(sanitizeNumber(balReward))
-  const wncg = parseFloat(sanitizeNumber(wncgReward))
+  const loadingStates = ['all', ...rewardTokenSymbols].map((item) =>
+    item.toLowerCase()
+  )
 
-  const balDisabled =
-    new Decimal(balReward).isZero() || ['bal', 'all'].includes(loading || '')
-  const wncgDisabled =
-    new Decimal(wncgReward).isZero() || ['wncg', 'all'].includes(loading || '')
-  const disableAll = (balDisabled && wncgDisabled) || loading === 'all'
+  const isConnected = useRecoilValue(connectedState)
+
+  const claimAllDisabled =
+    !isConnected ||
+    rewards.every((reward) => bnum(reward).isZero()) ||
+    loadingStates.includes(loading)
 
   async function handleClaim(e: MouseEvent) {
     const { name } = e.currentTarget as HTMLButtonElement
 
-    let txAction: TransactionAction
-    switch (name) {
-      case 'all':
-        txAction = TransactionAction.ClaimAllRewards
-        break
-      case 'bal':
-        txAction = TransactionAction.ClaimBalRewards
-        break
-      case 'wncg':
-        txAction = TransactionAction.ClaimWncgRewards
-        break
-      default:
-        assertUnreachable(name)
-    }
+    setLoading(name)
+    gaEvent({
+      name: `claim_${name}`,
+    })
 
     try {
-      gaEvent({
-        name: `claim_${name}`,
-      })
-      if (name === 'bal') {
-        setLoading('bal')
-        await claimBalRewards()
-      } else if (name === 'wncg') {
-        setLoading('wncg')
-        await claimWncgRewards()
+      let handler: () => Promise<void>
+
+      if (name === 'all') {
+        handler = claimAllRewards
+      } else if (name === 'bal') {
+        handler = claimBalRewards
       } else {
-        setLoading('all')
-        await claimAllRewards()
+        handler = claimWncgRewards
       }
+
+      await handler()
       removeModal(ModalCategory.ClaimReward)
     } catch (error) {
-      setLoading(null)
-      handleError(error, txAction)
+      setLoading('')
+      handleError(error)
     }
   }
 
-  const handleRewardEvent = useCallback(() => {
-    setLoading(null)
+  const rewardsClaimedHandler = useCallback(() => {
+    setLoading('')
   }, [])
 
   useMount(() => {
-    earnedBal()
-    earnedWncg()
+    fetchRewards()
   })
 
   // NOTE: Reward BAL event
   useEffect(() => {
-    if (rewardsBalEventFilter) {
-      provider?.on(rewardsBalEventFilter, handleRewardEvent)
+    if (rewardsClaimedBalEvent) {
+      provider?.on(rewardsClaimedBalEvent, rewardsClaimedHandler)
       return () => {
-        provider?.off(rewardsBalEventFilter)
+        provider?.off(rewardsClaimedBalEvent)
       }
     }
-  }, [handleRewardEvent, provider, rewardsBalEventFilter])
+  }, [rewardsClaimedHandler, provider, rewardsClaimedBalEvent])
 
   // NOTE: Reward WNCG event
   useEffect(() => {
-    if (rewardsWncgEventFilter) {
-      provider?.on(rewardsWncgEventFilter, handleRewardEvent)
+    if (rewardsClaimedWncgEvent) {
+      provider?.on(rewardsClaimedWncgEvent, rewardsClaimedHandler)
       return () => {
-        provider?.off(rewardsWncgEventFilter)
+        provider?.off(rewardsClaimedWncgEvent)
       }
     }
-  }, [handleRewardEvent, provider, rewardsWncgEventFilter])
+  }, [rewardsClaimedHandler, provider, rewardsClaimedWncgEvent])
 
   return (
     <div className={styles.claimRewardModal}>
       <h1 className={styles.title}>Claim Rewards</h1>
 
       <dl className={styles.detail}>
-        <div className={styles.detailItem}>
-          <dt>
-            <TokenIcon className={styles.token} symbol="wncg" />
-            <strong className="hidden">WNCG</strong>
-          </dt>
-          <dd>
-            <CountUp
-              {...countUpOption}
-              className={styles.reward}
-              end={wncg}
-              decimals={8}
-              duration={0.5}
-            />
-            <CountUp
-              {...usdCountUpOption}
-              className={styles.usd}
-              end={calculateUsdValue('wncg', wncg)}
-              isApproximate
-            />
-          </dd>
-          <dd className={styles.isBig}>
-            <Button
-              variant="secondary"
-              size="small"
-              name="wncg"
-              onClick={handleClaim}
-              loading={loading === 'wncg'}
-              disabled={wncgDisabled}
-              fullWidth
-            >
-              Claim WNCG
-            </Button>
-          </dd>
-        </div>
+        {rewardTokenSymbols.map((symbol, i) => {
+          symbol = symbol.toLowerCase()
+          const amount = rewards[i]
+          const fiatValue = rewardsInFiatValue[i]
 
-        <div className={styles.detailItem}>
-          <dt>
-            <TokenIcon className={styles.token} symbol="bal" />
-            <strong className="hidden">BAL</strong>
-          </dt>
-          <dd>
-            <CountUp
-              {...countUpOption}
-              className={styles.reward}
-              end={bal}
-              decimals={8}
-              duration={0.5}
-            />
-            <CountUp
-              {...usdCountUpOption}
-              className={styles.usd}
-              end={calculateUsdValue('bal', bal)}
-              isApproximate
-            />
-          </dd>
-          <dd className={styles.isBig}>
-            <Button
-              variant="secondary"
-              size="small"
-              name="bal"
-              onClick={handleClaim}
-              loading={loading === 'bal'}
-              disabled={balDisabled}
-              fullWidth
+          const disabled =
+            !isConnected ||
+            bnum(amount).isZero() ||
+            [symbol, 'all'].includes(loading)
+
+          return (
+            <div
+              key={`claimRewardModal.${symbol}`}
+              className={styles.detailItem}
             >
-              Claim BAL
-            </Button>
-          </dd>
-        </div>
+              <dt>
+                <TokenIcon className={styles.token} symbol={symbol} />
+                <strong className="hidden">{symbol.toUpperCase()}</strong>
+              </dt>
+              <dd>
+                <CountUp
+                  {...countUpOption}
+                  className={styles.reward}
+                  end={amount}
+                  decimals={8}
+                  duration={0.5}
+                />
+                <CountUp
+                  {...usdCountUpOption}
+                  className={styles.usd}
+                  end={fiatValue}
+                  isApproximate
+                />
+              </dd>
+              <dd className={styles.isBig}>
+                <Button
+                  variant="secondary"
+                  size="small"
+                  name={symbol}
+                  onClick={handleClaim}
+                  loading={loading === symbol}
+                  disabled={disabled}
+                  fullWidth
+                >
+                  Claim {symbol.toUpperCase()}
+                </Button>
+              </dd>
+            </div>
+          )
+        })}
       </dl>
+
       <Button
         size="large"
         name="all"
         onClick={handleClaim}
         loading={loading === 'all'}
-        disabled={disableAll}
+        disabled={claimAllDisabled}
         fullWidth
       >
         Claim all rewards

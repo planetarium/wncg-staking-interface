@@ -1,14 +1,5 @@
-import { Decimal } from 'decimal.js'
 import { BigNumberish, utils } from 'ethers'
-
-Decimal.set({
-  precision: 20,
-  rounding: 4,
-  toExpNeg: -20,
-  toExpPos: 21,
-  modulo: 1,
-  crypto: false,
-})
+import OldBigNumber from 'bignumber.js'
 
 type SanitizeNumberValueOption = {
   allowEmptyString?: boolean
@@ -37,4 +28,24 @@ export function weiToEther(amount: BigNumberish) {
   return utils.formatEther(amount)
 }
 
-export default Decimal
+export function bnum(value: string | number | OldBigNumber): OldBigNumber {
+  const number =
+    typeof value === 'string' || typeof value === 'number'
+      ? sanitizeNumber(value)
+      : OldBigNumber.isBigNumber(value)
+      ? value.toString()
+      : '0'
+  return new OldBigNumber(number)
+}
+
+export function isLessThanMinAmount(
+  amount: string | number,
+  minAmount = 0.0001
+) {
+  const bAmount = bnum(amount)
+  return !bAmount.isZero() && bAmount.lt(minAmount)
+}
+
+export function hasAmounts(amounts: string[]) {
+  return amounts.some((amount) => bnum(amount).gt(0))
+}

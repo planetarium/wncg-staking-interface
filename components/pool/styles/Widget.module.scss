@@ -1,0 +1,140 @@
+$nested-list-padding: 20px;
+
+.widget {
+  @include responsive(MD) {
+    padding: 20px;
+    background-color: rgba($black, 0.9);
+    border-radius: $radius-sm;
+  }
+
+  @include responsive(LG) {
+    padding: 30px;
+  }
+}
+
+.title {
+  @include textStyle(16, 700);
+  margin-bottom: 20px;
+}
+
+.detailItem {
+  @include flexbox(between);
+  padding: 10px 0;
+
+  &.nested {
+    flex-wrap: wrap;
+    white-space: nowrap;
+
+    dd {
+      width: 100%;
+    }
+
+    .ethList {
+      position: relative;
+      width: 100%;
+      padding-left: $nested-list-padding;
+      margin-top: 4px;
+
+      &.selectable {
+        .detailItem {
+          cursor: pointer;
+          opacity: 0.3;
+          transition: $transition-short;
+
+          &.selected {
+            opacity: 1;
+          }
+        }
+      }
+
+      &::before {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 1px;
+        height: calc(100% - 26px);
+        background-color: $gray-4;
+        content: '';
+      }
+
+      .detailItem {
+        position: relative;
+        width: 100%;
+        padding: 4px 0;
+
+        dt {
+          &::before {
+            @include posCenterY;
+            left: -#{$nested-list-padding};
+            width: $nested-list-padding - 8px;
+            height: 1px;
+            background-color: $gray-4;
+            content: '';
+          }
+        }
+      }
+    }
+  }
+
+  .usd {
+    @include inlineFlexbox(start);
+    @include textStyle(12, 500);
+    margin-top: 2px;
+    color: $gray-3;
+  }
+
+  dt,
+  dd {
+    @include flexbox(center, start);
+    flex-direction: column;
+  }
+
+  dt {
+    @include textStyle(13, 700);
+  }
+
+  dd {
+    @include textStyle(14, 700);
+    text-align: right;
+  }
+
+  dt {
+    span {
+      @include textStyle(13, 400);
+      padding-left: 2px;
+      font-style: normal;
+    }
+  }
+
+  dd {
+    text-align: right;
+    align-items: flex-end;
+  }
+
+  @include responsive(MD) {
+    .usd {
+      @include textStyle(13);
+    }
+
+    dt {
+      span {
+        @include textStyle(14);
+      }
+    }
+  }
+}
+
+.total {
+  @include flexbox(between);
+  padding: 16px 0;
+  margin-top: 16px - 10px;
+  border-top: 1px solid $gray-5;
+
+  dt {
+    @include textStyle(16, 700);
+  }
+
+  dd {
+    @include textStyle(16, 700);
+  }
+}

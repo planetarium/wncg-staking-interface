@@ -8,6 +8,8 @@ import { assertUnreachable } from 'utils/assertion'
 import { useModal } from 'hooks'
 import { modalVariants, overlayVariants } from './constants'
 
+import { ExitPreviewModal } from './PoolModals/ExitPreviewModal'
+import { JoinPreviewModal } from './PoolModals/JoinPreviewModal'
 import { ClaimRewardModal } from './ClaimRewardModal'
 import { ConnectModal } from './ConnectModal'
 import { MetaMaskGuideModal } from './MetaMaskGuideModal'
@@ -72,6 +74,10 @@ function renderModal(modal: Modal) {
       return <ConnectModal {...props} />
     case ModalCategory.Error:
       return <div {...props}>ErrorModal</div>
+    case ModalCategory.ExitPreview:
+      return <ExitPreviewModal {...props} />
+    case ModalCategory.JoinPreview:
+      return <JoinPreviewModal {...props} />
     case ModalCategory.MetaMaskGuide:
       return <MetaMaskGuideModal {...props} />
     case ModalCategory.StakeWarning:

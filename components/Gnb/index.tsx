@@ -1,35 +1,33 @@
 import { useMemo } from 'react'
+import { useRecoilValue } from 'recoil'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import clsx from 'clsx'
 import styles from './style.module.scss'
 
-import {
-  ConnectionStatus,
-  getShowAlert,
-  getStatus,
-} from 'app/states/connection'
-import { getIsMobile } from 'app/states/mediaQuery'
-import { useAppSelector } from 'hooks'
+import { connectedState } from 'app/states/connection'
+import { isMobileState } from 'app/states/mediaQuery'
+import { useAlert } from 'hooks'
 
 import { GnbAccount } from './Account'
 import { GnbConnect } from './Connect'
 
 export function Gnb() {
+  const { showAlert } = useAlert()
   const { pathname } = useRouter()
-  const isStakingPage = ['/wncg', '/wncg/pool'].includes(pathname)
+  const isStakingPage =
+    pathname === '/wncg' || pathname.startsWith('/wncg/pool')
 
-  const showAlert = useAppSelector(getShowAlert(() => isStakingPage))
-  const status = useAppSelector(getStatus)
-  const isMobile = useAppSelector(getIsMobile)
+  const isMobile = useRecoilValue(isMobileState)
+  const isConnected = useRecoilValue(connectedState)
+
   const logoSize = useMemo(
     () => (isMobile ? { width: 40, height: 24 } : { width: 66, height: 40 }),
     [isMobile]
   )
 
-  const accountElement =
-    status === ConnectionStatus.Connected ? <GnbAccount /> : <GnbConnect />
+  const accountElement = isConnected ? <GnbAccount /> : <GnbConnect />
 
   return (
     <nav className={clsx(styles.gnb, { [styles.withAlert]: showAlert })}>

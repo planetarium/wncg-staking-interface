@@ -1,178 +1,94 @@
-import { useCallback, useEffect } from 'react'
+import { memo, useCallback, useEffect } from 'react'
 import { Event } from 'ethers'
 
-import { removeTx, TransactionAction } from 'app/states/transaction'
-
+import { TxAction } from 'services/transaction'
 import {
-  useAppDispatch,
-  useBpt,
-  useConfirmations,
-  useEventFilter,
+  useBalances,
+  useEvents,
   useProvider,
-  useReward,
-  useStake,
-  useToast,
-  useTransaction,
-  useUnstake,
+  useRewards,
+  useStakedBalance,
+  useStaking,
+  useTx,
+  useUnstakeTimestamps,
 } from 'hooks'
 
-export function UnstakeEffects() {
-  const { balanceOf, totalSupply } = useBpt()
-  const { getConfirmations, setConfirmations } = useConfirmations()
-  const { cooldownEventFilter, withdrawnEventFilter } = useEventFilter()
+function UnstakeEffects() {
+  const { fetchBalances } = useBalances()
+  const { cooldownEvent, withdrawnEvent } = useEvents()
   const provider = useProvider()
-  const { earnedBal, earnedWncg } = useReward()
-  const { stakedTokenBalance, totalStaked } = useStake()
-  const { addToast } = useToast()
-  const { getTransactionReceipt } = useTransaction()
-  const { getTimestamps, unstakeWindow } = useUnstake()
+  const { fetchStakedBalance } = useStakedBalance()
+  const { fetchRewards } = useRewards()
+  const { fetchTotalStaked } = useStaking()
+  const { handleTx } = useTx()
+  const { fetchTimestamps } = useUnstakeTimestamps()
 
-  const dispatch = useAppDispatch()
-
-  useEffect(() => {
-    getTimestamps()
-  }, [getTimestamps])
-
-  useEffect(() => {
-    unstakeWindow()
-  }, [unstakeWindow])
-
-  const handleCooldownEvent = useCallback(
-    async ({ transactionHash }: Event) => {
-      const receipt = await getTransactionReceipt(transactionHash)
-      if (!receipt) return
-
-      dispatch(removeTx(transactionHash))
-
-      const confirmations = getConfirmations(transactionHash)
-      if (!confirmations) return
-      if (confirmations !== 'fulfilled') {
-        addToast({
-          action: TransactionAction.StartCooldown,
-          hash: transactionHash,
-          summary: 'Successfully started cooldown',
-          showPartyEmoji: true,
-        })
-      }
-      setConfirmations(transactionHash)
-
-      getTimestamps()
+  const cooldownHandler = useCallback(
+    async (event: Event) => {
+      await handleTx?.(event, TxAction.Cooldown, {
+        onTxConfirmed: () => {
+          fetchTimestamps()
+        },
+      })
     },
-    [
-      addToast,
-      dispatch,
-      getConfirmations,
-      getTimestamps,
-      getTransactionReceipt,
-      setConfirmations,
-    ]
+    [fetchTimestamps, handleTx]
   )
 
-  const handleWithdrawnEvent = useCallback(
-    async ({ transactionHash }: Event) => {
-      const receipt = await getTransactionReceipt(transactionHash)
-      if (!receipt) return
-
-      dispatch(removeTx(transactionHash))
-
-      const confirmations = getConfirmations(transactionHash)
-      if (!confirmations) return
-      if (confirmations !== 'fulfilled') {
-        addToast({
-          action: TransactionAction.Withdraw,
-          hash: transactionHash,
-          summary: 'Successfully withdrew staked 20WETH-80WNCG',
-          showPartyEmoji: true,
-        })
-      }
-      setConfirmations(transactionHash)
-
-      stakedTokenBalance()
-      balanceOf()
-      totalSupply()
-      totalStaked()
+  const withdrawnHandler = useCallback(
+    async (event: Event) => {
+      await handleTx?.(event, TxAction.Withdraw, {
+        onTxEvent: () => {
+          fetchStakedBalance()
+          fetchBalances()
+          fetchTotalStaked()
+        },
+      })
     },
-    [
-      addToast,
-      balanceOf,
-      dispatch,
-      getConfirmations,
-      getTransactionReceipt,
-      setConfirmations,
-      stakedTokenBalance,
-      totalStaked,
-      totalSupply,
-    ]
+    [fetchBalances, fetchStakedBalance, fetchTotalStaked, handleTx]
   )
 
-  const handleWithdrawnAndAllRewardsEvent = useCallback(
-    async ({ transactionHash }: Event) => {
-      const receipt = await getTransactionReceipt(transactionHash)
-      if (!receipt) return
-
-      dispatch(removeTx(transactionHash))
-
-      const confirmations = getConfirmations(
-        `${transactionHash}_withdrawAndClaim`
-      )
-      if (!confirmations) return
-      if (confirmations !== 'fulfilled') {
-        addToast({
-          action: TransactionAction.Withdraw,
-          hash: transactionHash,
-          summary: 'Successfully withdrew and claimed',
-          showPartyEmoji: true,
-        })
-      }
-      setConfirmations(`${transactionHash}_withdrawAndClaim`)
-
-      balanceOf()
-      earnedBal()
-      earnedWncg()
-      stakedTokenBalance()
-      totalSupply()
-      totalStaked()
+  const withdrawnAndClaimedHandler = useCallback(
+    async (event: Event) => {
+      await handleTx?.(event, TxAction.WithdrawAndClaim, {
+        onTxEvent: () => {
+          fetchRewards()
+          fetchBalances()
+          fetchStakedBalance()
+          fetchTotalStaked()
+        },
+      })
     },
     [
-      addToast,
-      balanceOf,
-      dispatch,
-      earnedBal,
-      earnedWncg,
-      getConfirmations,
-      getTransactionReceipt,
-      setConfirmations,
-      stakedTokenBalance,
-      totalStaked,
-      totalSupply,
+      fetchBalances,
+      fetchRewards,
+      fetchTotalStaked,
+      fetchStakedBalance,
+      handleTx,
     ]
   )
 
   // NOTE: Cooldown event
   useEffect(() => {
-    if (cooldownEventFilter) {
-      provider?.on(cooldownEventFilter, handleCooldownEvent)
+    if (cooldownEvent) {
+      provider?.on(cooldownEvent, cooldownHandler)
       return () => {
-        provider?.off(cooldownEventFilter)
+        provider?.off(cooldownEvent)
       }
     }
-  }, [cooldownEventFilter, handleCooldownEvent, provider])
+  }, [cooldownEvent, cooldownHandler, provider])
 
   // NOTE: Withdrawn event
   useEffect(() => {
-    if (withdrawnEventFilter) {
-      provider?.on(withdrawnEventFilter, handleWithdrawnEvent)
-      provider?.on(withdrawnEventFilter, handleWithdrawnAndAllRewardsEvent)
+    if (withdrawnEvent) {
+      provider?.on(withdrawnEvent, withdrawnHandler)
+      provider?.on(withdrawnEvent, withdrawnAndClaimedHandler)
       return () => {
-        provider?.off(withdrawnEventFilter)
+        provider?.off(withdrawnEvent)
       }
     }
-  }, [
-    handleWithdrawnAndAllRewardsEvent,
-    handleWithdrawnEvent,
-    provider,
-    withdrawnEventFilter,
-  ])
+  }, [provider, withdrawnAndClaimedHandler, withdrawnEvent, withdrawnHandler])
 
   return null
 }
+
+export default memo(UnstakeEffects)

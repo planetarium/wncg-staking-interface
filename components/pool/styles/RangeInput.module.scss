@@ -1,0 +1,56 @@
+$input-height: 4px;
+$thumb-size: 16px;
+
+.rangeInput {
+  position: relative;
+  padding-top: 12px;
+
+  input[type='range'] {
+    appearance: none;
+    margin-right: 15px;
+    width: 100%;
+    height: $input-height;
+    cursor: pointer;
+    background-color: $black;
+    background-image: $orange-gradient;
+    background-repeat: no-repeat;
+    border-radius: $radius-sm;
+
+    &::-webkit-slider-thumb {
+      appearance: none;
+      height: $thumb-size;
+      width: $thumb-size;
+      background-color: $primary;
+      border: 0;
+      border-radius: 50%;
+      box-shadow: 0 0 10px rgba($primary, 0.2);
+      transition: $transition-short;
+    }
+
+    &::-webkit-slider-runnable-track {
+      appearance: none;
+      border: none;
+      box-shadow: none;
+    }
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  .label,
+  .value {
+    @include textStyle(13, 400);
+    position: absolute;
+    bottom: 16px;
+  }
+
+  .label {
+    left: 0;
+  }
+
+  .value {
+    right: 0;
+    text-align: right;
+  }
+}

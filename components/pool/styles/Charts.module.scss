@@ -1,6 +1,15 @@
 .poolCharts {
-  color: $black;
-  height: 100px;
+  padding: 20px;
+  margin-bottom: $gutter * 2;
+  background-color: rgba($black, 0.9);
+  border-radius: $radius-sm;
+
+  @include responsive(LG) {
+    padding: 30px;
+  }
+}
+
+.title {
+  @include textStyle(16, 700);
   margin-bottom: 20px;
-  background-color: red;
 }

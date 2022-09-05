@@ -2,9 +2,9 @@ import { useState } from 'react'
 import clsx from 'clsx'
 import styles from '../styles/UnstakeSidebar.module.scss'
 
-import { getUnstakeStatus, UnstakeStatus } from 'app/states/unstake'
 import { gaEvent } from 'lib/gtag'
-import { useAppSelector, useConnection, useUnstake } from 'hooks'
+import { useConnection, usePool, useUnstake, useUnstakeTimestamps } from 'hooks'
+import { UnstakeStatus } from 'hooks/useUnstakeTimestamps'
 
 import { Button } from 'components/Button'
 
@@ -12,8 +12,9 @@ export function UnstakeSidebarCooldown() {
   const [loading, setLoading] = useState(false)
 
   const { connect } = useConnection()
+  const { poolTokenName } = usePool()
   const { startCooldown } = useUnstake()
-  const status = useAppSelector(getUnstakeStatus)
+  const { unstakeStatus } = useUnstakeTimestamps()
 
   async function handleStartCooldown() {
     setLoading(true)
@@ -28,7 +29,7 @@ export function UnstakeSidebarCooldown() {
   }
 
   let button: JSX.Element | null
-  switch (status) {
+  switch (unstakeStatus) {
     case UnstakeStatus.NotConnected:
       button = (
         <Button size="large" onClick={connect} fullWidth>
@@ -75,7 +76,7 @@ export function UnstakeSidebarCooldown() {
 
   return (
     <>
-      <h1 className={styles.title}>Withdraw 20WETH-80WNCG</h1>
+      <h1 className={styles.title}>Withdraw {poolTokenName}</h1>
       <p className={styles.desc}>
         Staked tokens can be withdrawn after the cooldown period ends and the
         withdrawal window is active. Currently cooldown period and withdrawal

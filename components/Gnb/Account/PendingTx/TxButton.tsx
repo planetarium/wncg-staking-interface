@@ -1,9 +1,9 @@
 import Lottie from 'lottie-react'
+import { useRecoilValue } from 'recoil'
 import clsx from 'clsx'
 import styles from './style.module.scss'
 
-import { getTxList } from 'app/states/transaction'
-import { useAppSelector } from 'hooks'
+import { pendingTxListState } from 'app/states/transaction'
 
 import loadingAnimation from 'animations/spinner.json'
 
@@ -14,24 +14,24 @@ type PendingTxButtonProps = {
 }
 
 export function PendingTxButton({ open }: PendingTxButtonProps) {
-  const txList = useAppSelector(getTxList)
-  const hasPendingTx = !!txList.length
+  const pendingTxList = useRecoilValue(pendingTxListState)
+  const hasList = !!pendingTxList.length
 
   return (
     <button
-      className={clsx(styles.txButton, { [styles.active]: hasPendingTx })}
+      className={clsx(styles.txButton, { [styles.active]: hasList })}
       type="button"
       onClick={open}
       aria-label="Open pending transaction menu"
     >
-      {hasPendingTx ? (
+      {hasList ? (
         <div className={styles.ongoing}>
           <Lottie
             className={styles.lottie}
             animationData={loadingAnimation}
             loop
           />
-          <span>{txList.length}</span>
+          <span>{pendingTxList.length}</span>
         </div>
       ) : (
         <Icon id="pulse" />

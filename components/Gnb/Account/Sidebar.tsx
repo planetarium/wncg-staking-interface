@@ -1,18 +1,21 @@
 /* eslint-disable react/jsx-no-target-blank */
 import { useRef, useState } from 'react'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
+import { useRecoilValue } from 'recoil'
 import { motion } from 'framer-motion'
 import store from 'store'
 import clsx from 'clsx'
 import styles from './style.module.scss'
 
-import { getAccount, getIsValidNetwork } from 'app/states/connection'
+import { accountState } from 'app/states/connection'
+import { networkMismatchState } from 'app/states/error'
+import STORAGE_KEYS from 'constants/storageKeys'
 import { gaEvent } from 'lib/gtag'
-import { IS_ETHEREUM } from 'utils/env'
+import { networkChainId, networkNameFor } from 'utils/network'
 import { truncateAddress } from 'utils/string'
 import { getEtherscanUrl } from 'utils/url'
-import { useAppSelector, useConnection } from 'hooks'
-import { sidebarVariants, STORE_MUTED_KEY } from './constants'
+import { useConnection } from 'hooks'
+import { sidebarVariants } from './constants'
 
 import { Button } from 'components/Button'
 import { Icon } from 'components/Icon'
@@ -25,22 +28,24 @@ type AccountSidebarProps = {
 export function AccountSidebar({ close }: AccountSidebarProps) {
   const [copied, setCopied] = useState(false)
   const [muted, setMuted] = useState<boolean>(
-    store.get(STORE_MUTED_KEY) || false
+    store.get(STORAGE_KEYS.UserSettings.Muted) || false
   )
   const menuRef = useRef<HTMLDivElement>(null)
 
-  const { disconnect, switchToMainnet } = useConnection()
-  const account = useAppSelector(getAccount)
-  const isValidNetwork = useAppSelector(getIsValidNetwork)
+  const { disconnect: _disconnect, switchNetwork: _switchNetwork } =
+    useConnection()
 
-  function disconnectApp() {
+  const account = useRecoilValue(accountState)
+  const networkMismatch = useRecoilValue(networkMismatchState)
+
+  function disconnect() {
     close()
-    setTimeout(disconnect, 500)
+    setTimeout(_disconnect, 500)
   }
 
   function switchNetwork() {
     close()
-    switchToMainnet()
+    _switchNetwork()
   }
 
   function handleCopy() {
@@ -53,7 +58,7 @@ export function AccountSidebar({ close }: AccountSidebarProps) {
 
   function handleMute() {
     setMuted((prev) => {
-      store.set(STORE_MUTED_KEY, !prev)
+      store.set(STORAGE_KEYS.UserSettings.Muted, !prev)
       gaEvent({
         name: 'mute_sound',
         params: {
@@ -122,17 +127,17 @@ export function AccountSidebar({ close }: AccountSidebarProps) {
         <div>
           <dt>Network</dt>
           <dd>
-            {isValidNetwork ? (
+            {networkMismatch ? (
+              <Button variant="tertiary" size="small" onClick={switchNetwork}>
+                Switch Network
+              </Button>
+            ) : (
               <>
                 <span className={styles.ethereum}>
                   <Icon id="ethereumSimple" />
                 </span>
-                {IS_ETHEREUM ? 'Ethereum' : 'Kovan'}
+                {networkNameFor(networkChainId)}
               </>
-            ) : (
-              <Button variant="tertiary" size="small" onClick={switchNetwork}>
-                Switch Network
-              </Button>
             )}
           </dd>
         </div>
@@ -150,7 +155,7 @@ export function AccountSidebar({ close }: AccountSidebarProps) {
         className={styles.disconnectButton}
         variant="danger"
         size="small"
-        onClick={disconnectApp}
+        onClick={disconnect}
         fullWidth
       >
         Disconnect

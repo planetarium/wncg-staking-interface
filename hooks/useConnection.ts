@@ -1,40 +1,52 @@
-import { providers } from 'ethers'
-import type { ExternalProvider } from '@ethersproject/providers'
+import { useCallback } from 'react'
+import { useRecoilState, useResetRecoilState } from 'recoil'
+import store from 'store'
 
-import { resetBpt } from 'app/states/bpt'
 import {
-  getAccount,
-  resetConnection,
-  setAccount,
-  setChainId,
-  setConnecting,
+  accountState,
+  ConnectionStatus,
+  connectionStatusState,
 } from 'app/states/connection'
 import { ModalCategory } from 'app/states/modal'
-import { resetRewards } from 'app/states/reward'
-import { resetStakedBalance } from 'app/states/stake'
-import { resetTimestamps } from 'app/states/unstake'
+import STORAGE_KEYS from 'constants/storageKeys'
 import { gaEvent } from 'lib/gtag'
-import { IS_ETHEREUM } from 'utils/env'
 import { handleError } from 'utils/error'
+import { convertChainIdToHex, networkChainId } from 'utils/network'
 import { useModal } from './useModal'
-import { useAppDispatch, useAppSelector } from './useRedux'
+import { useProvider } from './useProvider'
 
 export function useConnection() {
+  const provider = useProvider()
   const { addModal, removeModal } = useModal()
 
-  const dispatch = useAppDispatch()
-  const account = useAppSelector(getAccount)
+  const [account, setAccount] = useRecoilState(accountState)
+  const [connectionStatus, setConnectionStatus] = useRecoilState(
+    connectionStatusState
+  )
+  const resetAccount = useResetRecoilState(accountState)
+  const resetConnectionStatus = useResetRecoilState(connectionStatusState)
 
-  async function sendConnectionRequest() {
-    dispatch(setConnecting())
+  const reset = useCallback(() => {
+    resetAccount()
+    resetConnectionStatus()
+  }, [resetAccount, resetConnectionStatus])
 
-    const provider = new providers.Web3Provider(
-      window.ethereum as any as ExternalProvider,
-      'any'
-    )
+  const updateAccount = useCallback(
+    (account: string) => {
+      setAccount(account)
+      setConnectionStatus(ConnectionStatus.Connected)
+      store.set(STORAGE_KEYS.Account, account)
+    },
+    [setAccount, setConnectionStatus]
+  )
+
+  const initConnect = useCallback(async () => {
+    if (!provider) return
 
     try {
+      setConnectionStatus(ConnectionStatus.Connecting)
       const accounts = await provider.send('eth_requestAccounts', [])
+
       if (accounts && accounts[0]) {
         updateAccount(accounts[0])
         gaEvent({
@@ -44,31 +56,37 @@ export function useConnection() {
           },
         })
       }
+
       removeModal(ModalCategory.Connect)
     } catch (error) {
-      dispatch(resetConnection())
+      reset()
       handleError(error)
     }
-  }
+  }, [provider, removeModal, reset, setConnectionStatus, updateAccount])
 
-  function disconnect() {
-    dispatch(resetConnection())
-    dispatch(resetBpt())
-    dispatch(resetRewards())
-    dispatch(resetStakedBalance())
-    dispatch(resetTimestamps())
+  const connect = useCallback(() => {
+    if (!provider) {
+      addModal({
+        category: ModalCategory.MetaMaskGuide,
+      })
+      return
+    }
+
+    initConnect()
+  }, [addModal, initConnect, provider])
+
+  const disconnect = useCallback(() => {
+    reset()
     gaEvent({
       name: 'disconnect_metamask',
       params: {
         account,
       },
     })
-  }
+  }, [account, reset])
 
-  function switchToMainnet() {
-    if (typeof window === 'undefined' || !window.ethereum) {
-      return
-    }
+  const switchNetwork = useCallback(() => {
+    if (!provider) return
 
     gaEvent({
       name: 'switch_network',
@@ -77,36 +95,19 @@ export function useConnection() {
       },
     })
 
-    window.ethereum.request({
+    window.ethereum!.request({
       method: 'wallet_switchEthereumChain',
-      params: [{ chainId: IS_ETHEREUM ? '0x1' : '0x2a' }],
+      params: [{ chainId: convertChainIdToHex(networkChainId) }],
     })
-  }
+  }, [provider])
 
-  function connect() {
-    if (typeof window === 'undefined' || !window.ethereum) {
-      addModal({
-        category: ModalCategory.MetaMaskGuide,
-      })
-      return
-    }
-
-    sendConnectionRequest()
-  }
-
-  function updateAccount(account: string) {
-    dispatch(setAccount(account))
-  }
-
-  function updateChainId(chainId: number) {
-    dispatch(setChainId(chainId))
-  }
+  const isConnected = connectionStatus === ConnectionStatus.Connected
 
   return {
     connect,
     disconnect,
-    switchToMainnet,
+    switchNetwork,
     updateAccount,
-    updateChainId,
+    isConnected,
   }
 }

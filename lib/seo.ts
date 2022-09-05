@@ -1,15 +1,18 @@
+import { configService } from 'services/config'
+import { getOgImageUrl } from 'utils/url'
+
 export const DEFAULT_SEO = {
   title: 'Nine Chronicles Staking',
   description: 'Nine Chronicles Staking',
-  canonical: process.env.NEXT_PUBLIC_SITE_URL as string,
+  canonical: configService.siteUrl,
   openGraph: {
     type: 'website',
-    url: process.env.NEXT_PUBLIC_SITE_URL as string,
+    url: configService.siteUrl,
     title: 'Nine Chronicles Staking',
     site_name: 'Nine Chronicles Staking',
     images: [
       {
-        url: process.env.NEXT_PUBLIC_OG_IMAGE_ROOT as string,
+        url: getOgImageUrl('og-root.png'),
         width: 1200,
         height: 630,
         alt: 'Nine Chronicles Staking',
@@ -26,15 +29,15 @@ export const DEFAULT_SEO = {
 export const STAKING_SEO = {
   title: 'WNCG Staking',
   description: 'Stake Balancer LP token and earn rewards!',
-  canonical: `${process.env.NEXT_PUBLIC_SITE_URL as string}/wncg`,
+  canonical: `${configService.siteUrl}/wncg`,
   openGraph: {
     type: 'website',
-    url: `${process.env.NEXT_PUBLIC_SITE_URL as string}/wncg`,
+    url: `${configService.siteUrl}/wncg`,
     title: 'WNCG Staking',
     site_name: 'WNCG Staking',
     images: [
       {
-        url: process.env.NEXT_PUBLIC_OG_IMAGE_STAKING as string,
+        url: getOgImageUrl('og-staking.png'),
         width: 1200,
         height: 630,
         alt: 'WNCG Staking',
@@ -51,15 +54,15 @@ export const STAKING_SEO = {
 export const TERMS_SEO = {
   title: 'Terms of Service / WNCG Staking',
   description: 'Stake Balancer LP token and earn rewards!',
-  canonical: `${process.env.NEXT_PUBLIC_SITE_URL as string}/wncg/terms`,
+  canonical: `${configService.siteUrl}/wncg/terms`,
   openGraph: {
     type: 'website',
-    url: `${process.env.NEXT_PUBLIC_SITE_URL as string}/wncg/terms`,
+    url: `${configService.siteUrl}/wncg/terms`,
     title: 'Terms of Service / WNCG Staking',
     site_name: 'WNCG Staking',
     images: [
       {
-        url: process.env.NEXT_PUBLIC_OG_IMAGE_DOCUMENT as string,
+        url: getOgImageUrl('og-document.png'),
         width: 1200,
         height: 630,
         alt: 'WNCG Staking',
@@ -76,15 +79,15 @@ export const TERMS_SEO = {
 export const PRIVACY_SEO = {
   title: 'Privacy Policy / WNCG Staking',
   description: 'Stake Balancer LP token and earn rewards!',
-  canonical: `${process.env.NEXT_PUBLIC_SITE_URL as string}/wncg/privacy`,
+  canonical: `${configService.siteUrl}/wncg/privacy`,
   openGraph: {
     type: 'website',
-    url: `${process.env.NEXT_PUBLIC_SITE_URL as string}/wncg/privacy`,
+    url: `${configService.siteUrl}/wncg/privacy`,
     title: 'Privacy Policy / WNCG Staking',
     site_name: 'WNCG Staking',
     images: [
       {
-        url: process.env.NEXT_PUBLIC_OG_IMAGE_DOCUMENT as string,
+        url: getOgImageUrl('og-document.png'),
         width: 1200,
         height: 630,
         alt: 'WNCG Staking',

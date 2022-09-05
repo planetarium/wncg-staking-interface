@@ -1,0 +1,119 @@
+.slippage {
+  position: relative;
+}
+
+.toggle {
+  @include flexbox;
+  width: 40px;
+  height: 40px;
+  color: $gray-3;
+  transition: $transition-short;
+
+  &.open {
+    color: $primary;
+    transform: rotate(45deg);
+  }
+
+  svg {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+.slippageMenu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  padding: 16px 20px;
+  color: $black;
+  background-color: $white;
+  border-radius: $radius-sm;
+  box-shadow: $modal-box-shadow;
+
+  .title {
+    @include textStyle(16, 700);
+    margin-bottom: 10px;
+  }
+
+  .buttonGroup {
+    @include flexbox(between);
+  }
+
+  .button {
+    @include inlineFlexbox;
+    @include textStyle(14, 700);
+    flex-shrink: 0;
+    height: 28px;
+    padding-right: 10px;
+    padding-left: 8px;
+    margin-right: 8px;
+    cursor: pointer;
+    white-space: nowrap;
+    background-color: $gray-2;
+    border-radius: $radius-sm;
+    transition: $transition-short;
+
+    &:not(:disabled),
+    &:not(.disabled) {
+      &:hover {
+        background-color: darken($gray-2, 10);
+      }
+
+      &:active {
+        background-color: darken($gray-2, 20);
+      }
+    }
+
+    &.selected {
+      background-color: $primary;
+
+      &:not(:disabled),
+      &:not(.disabled) {
+        &:hover {
+          background-color: darken($primary, 10);
+        }
+
+        &:active {
+          background-color: darken($primary, 20);
+        }
+      }
+    }
+  }
+
+  .inputGroup {
+    position: relative;
+
+    &.selected {
+      .input {
+        border-color: $ethereum;
+      }
+
+      .pcnt {
+        color: $ethereum;
+      }
+    }
+  }
+
+  .input {
+    @include textStyle(14, 400);
+    width: 80px;
+    height: 28px;
+    padding-right: 10px;
+    padding-left: 8px;
+    border: 1px solid $gray-4;
+    border-radius: $radius-sm;
+    transition: $transition-short;
+
+    &:focus {
+      border-color: $ethereum;
+    }
+  }
+
+  .pcnt {
+    @include posCenterY;
+    @include flexbox;
+    @include textStyle(14, 400);
+    right: 0;
+    width: 24px;
+  }
+}

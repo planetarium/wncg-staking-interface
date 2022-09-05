@@ -1,5 +1,12 @@
 .poolRecentTrades {
-  margin-bottom: 50px;
+  padding: 20px;
+  margin-bottom: $gutter * 2;
+  background-color: rgba($black, 0.9);
+  border-radius: $radius-sm;
+
+  @include responsive(LG) {
+    padding: 30px;
+  }
 }
 
 .title {
@@ -40,6 +47,26 @@
   td {
     @include textStyle(14, 400);
     height: 44px;
+
+    &.loadMore {
+      width: 100%;
+      padding: 0;
+      text-align: center;
+      cursor: pointer;
+      transition: $transition-short;
+
+      &:hover {
+        opacity: 0.5;
+      }
+    }
+
+    &.empty {
+      @include textStyle(14, 500);
+      padding: 0;
+      height: 44px * 6;
+      color: $gray-3;
+      text-align: center;
+    }
   }
 
   @include responsive(MD) {
@@ -51,6 +78,11 @@
     td {
       @include textStyle(16);
       height: 50px;
+
+      &.empty {
+        @include textStyle(16);
+        height: 50px * 6;
+      }
     }
   }
 
@@ -100,6 +132,17 @@
   &:hover {
     opacity: 0.5;
   }
+
+  @include responsive(MD) {
+    @include textStyle(16);
+  }
+}
+
+.empty {
+  @include textStyle(14, 500);
+  height: 100px;
+  color: $gray-3;
+  text-align: center !important;
 
   @include responsive(MD) {
     @include textStyle(16);

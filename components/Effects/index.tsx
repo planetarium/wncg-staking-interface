@@ -1,15 +1,18 @@
 import { memo } from 'react'
-import { BaseEffects } from './BaseEffects'
-import { BptEffects } from './BptEffects'
-import { RewardEffects } from './RewardEffects'
-import { StakeEffects } from './StakeEffects'
-import { UnstakeEffects } from './UnstakeEffects'
+
+import ApprovalEffects from './ApprovalEffects'
+import BaseEffects from './BaseEffects'
+import PoolEffects from './PoolEffects'
+import RewardEffects from './RewardEffects'
+import StakeEffects from './StakeEffects'
+import UnstakeEffects from './UnstakeEffects'
 
 function Effects() {
   return (
     <>
+      <ApprovalEffects />
       <BaseEffects />
-      <BptEffects />
+      <PoolEffects />
       <RewardEffects />
       <StakeEffects />
       <UnstakeEffects />
@@ -17,5 +20,4 @@ function Effects() {
   )
 }
 
-const MemoizedEffects = memo(Effects)
-export default MemoizedEffects
+export default memo(Effects)

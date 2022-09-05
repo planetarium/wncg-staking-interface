@@ -2,16 +2,15 @@ import { memo } from 'react'
 import NumberFormat from 'react-number-format'
 import styles from './styles/PoolComposition.module.scss'
 
-import { getPoolTokens } from 'app/states/pool'
 import { getEtherscanUrl } from 'utils/url'
-import { useAppSelector, useUsd } from 'hooks'
+import { usePool, useFiatCurrency } from 'hooks'
 
 import { Icon } from 'components/Icon'
 import { TokenIcon } from 'components/TokenIcon'
 
 function PoolComposition() {
-  const { calculateUsdValue } = useUsd()
-  const tokens = useAppSelector(getPoolTokens)
+  const { toFiat } = useFiatCurrency()
+  const { poolTokens } = usePool()
 
   return (
     <section className={styles.poolComposition}>
@@ -28,11 +27,9 @@ function PoolComposition() {
             </tr>
           </thead>
           <tbody>
-            {tokens.map((token) => {
-              const symbol = (
-                token.symbol === 'WBTC' ? 'WNCG' : token.symbol
-              ).toLowerCase() as 'wncg' | 'weth'
-              const usdValue = calculateUsdValue(symbol, token.balance)
+            {poolTokens.map((token) => {
+              const symbol = token.symbol.toLowerCase()
+              const usdValue = toFiat(token.address, token.balance)
               const url = getEtherscanUrl(token.address)
 
               return (

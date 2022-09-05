@@ -4,10 +4,9 @@ import { useMount } from 'react-use'
 import { motion } from 'framer-motion'
 import styles from './style.module.scss'
 
-import { removeTx, Transaction } from 'app/states/transaction'
-import { renderTxTitle } from 'utils/transaction'
+import { txErrorMessage, txInfoMessage, txToastTitle } from 'utils/transaction'
 import { getTxUrl } from 'utils/url'
-import { useAppDispatch, useConfirmations, useTransaction } from 'hooks'
+import { useTx } from 'hooks'
 import { listItemVariants } from '../constants'
 
 import { Icon } from 'components/Icon'
@@ -17,36 +16,41 @@ type TxItemProps = {
 }
 
 export function TxItem({ transaction }: TxItemProps) {
-  const [isCanceled, setIsCanceled] = useState(false)
-  const [isFailed, setIsFailed] = useState(false)
-  const { hash, summary, action } = transaction
+  const { txService } = useTx()
+  const [error, setError] = useState<any>(false)
 
-  const { setConfirmations } = useConfirmations()
-  const { getTransactionReceipt } = useTransaction()
-  const dispatch = useAppDispatch()
+  const { action, finalizedTime, hash, params, status } = transaction
+  const txUrl = getTxUrl(hash)
 
   async function checkTxStatus() {
-    try {
-      const receipt = await getTransactionReceipt(hash)
+    if (!txService) return
+    if (finalizedTime && status === 'error') {
+      setError(true)
+      return
+    }
 
-      if (receipt?.status === 1) {
-        // NOTE: Fulfilled tx
-        // dispatch(removeTx(hash))
-      } else {
-        // NOTE: Canceled tx
-        setIsCanceled(true)
-        setConfirmations(hash)
-      }
+    try {
+      await txService.getTxReceipt(hash)
     } catch (error) {
       // NOTE: Failed tx
-      setIsFailed(true)
-      setConfirmations(hash)
+      setError(true)
+      const newTx: Transaction = {
+        ...transaction,
+        status: 'error',
+        finalizedTime: Date.now(),
+      }
+
+      const hashKey = txService.encodeKey(hash, action)
+      txService.updateTx(hashKey, newTx)
     }
   }
 
   function handleDelete(e: MouseEvent<HTMLButtonElement>) {
     e.stopPropagation()
-    dispatch(removeTx(hash))
+
+    if (!txService) return
+    const hashKey = txService.encodeKey(hash, action)
+    txService.removeTx(hashKey)
   }
 
   useMount(() => {
@@ -64,33 +68,24 @@ export function TxItem({ transaction }: TxItemProps) {
     >
       <header>
         <h4>
-          <a href={getTxUrl(hash)} target="_blank" rel="noopener">
-            {isFailed && (
+          <a href={txUrl} target="_blank" rel="noopener">
+            {!!error && (
               <>
                 <span className={styles.emoji}>💥</span>
                 <span>Failed:</span>
               </>
             )}
-            {isCanceled && (
-              <>
-                <span className={styles.emoji}>❌</span>
-                <span>Canceled:</span>
-              </>
-            )}
-            {renderTxTitle(action)}
+            {txToastTitle(action)}
           </a>
         </h4>
-        <a
-          className={styles.link}
-          href={getTxUrl(hash)}
-          target="_blank"
-          rel="noopener"
-        >
+        <a className={styles.link} href={txUrl} target="_blank" rel="noopener">
           <Icon id="externalLink" />
         </a>
       </header>
 
-      <p>{summary}</p>
+      <p>
+        {error ? txErrorMessage(action, params) : txInfoMessage(action, params)}
+      </p>
 
       <button
         className={styles.deleteButton}

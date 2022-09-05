@@ -1,83 +1,57 @@
-import { useCallback, useEffect } from 'react'
+import { memo, useCallback, useEffect } from 'react'
 import { Event } from 'ethers'
 
-import { removeTx, TransactionAction } from 'app/states/transaction'
 import {
-  useAppDispatch,
-  useBpt,
-  useConfirmations,
-  useEventFilter,
+  useBalances,
+  useEvents,
   useProvider,
-  useStake,
-  useToast,
-  useTransaction,
-  useUnstake,
+  useStakedBalance,
+  useStaking,
+  useTx,
+  useUnstakeTimestamps,
 } from 'hooks'
+import { TxAction } from 'services/transaction'
 
-export function StakeEffects() {
-  const { balanceOf, totalSupply } = useBpt()
-  const { getConfirmations, setConfirmations } = useConfirmations()
-  const { stakedEventFilter } = useEventFilter()
+function StakeEffects() {
+  const { fetchBalances } = useBalances()
+  const { stakedEvent } = useEvents()
   const provider = useProvider()
-  const { stakedTokenBalance, totalStaked } = useStake()
-  const { addToast } = useToast()
-  const { getTransactionReceipt } = useTransaction()
-  const { getTimestamps } = useUnstake()
+  const { fetchStakedBalance } = useStakedBalance()
+  const { fetchTotalStaked } = useStaking()
+  const { handleTx } = useTx()
+  const { fetchTimestamps } = useUnstakeTimestamps()
 
-  const dispatch = useAppDispatch()
-
-  useEffect(() => {
-    stakedTokenBalance()
-  }, [stakedTokenBalance])
-
-  const handleStakedEvent = useCallback(
-    async ({ transactionHash }: Event) => {
-      const receipt = await getTransactionReceipt(transactionHash)
-      if (!receipt) return
-
-      dispatch(removeTx(transactionHash))
-
-      const confirmations = getConfirmations(transactionHash)
-      if (!confirmations) return
-      if (confirmations !== 'fulfilled') {
-        addToast({
-          action: TransactionAction.Stake,
-          hash: transactionHash,
-          summary: 'Successfully staked 20WETH-80WNCG',
-          showPartyEmoji: true,
-        })
-      }
-      setConfirmations(transactionHash)
-
-      stakedTokenBalance()
-      balanceOf()
-      totalSupply()
-      totalStaked()
-      getTimestamps()
+  const stakedHandler = useCallback(
+    async (event: Event) => {
+      await handleTx?.(event, TxAction.Stake, {
+        onTxEvent: () => {
+          fetchStakedBalance()
+          fetchBalances()
+          fetchTotalStaked()
+          fetchTimestamps()
+        },
+      })
     },
     [
-      addToast,
-      balanceOf,
-      dispatch,
-      getConfirmations,
-      getTimestamps,
-      getTransactionReceipt,
-      setConfirmations,
-      stakedTokenBalance,
-      totalStaked,
-      totalSupply,
+      fetchBalances,
+      fetchTimestamps,
+      fetchTotalStaked,
+      fetchStakedBalance,
+      handleTx,
     ]
   )
 
   // NOTE: Staked event
   useEffect(() => {
-    if (stakedEventFilter) {
-      provider?.on(stakedEventFilter, handleStakedEvent)
+    if (stakedEvent) {
+      provider?.on(stakedEvent, stakedHandler)
       return () => {
-        provider?.off(stakedEventFilter)
+        provider?.off(stakedEvent)
       }
     }
-  }, [handleStakedEvent, provider, stakedEventFilter])
+  }, [stakedHandler, provider, stakedEvent])
 
   return null
 }
+
+export default memo(StakeEffects)

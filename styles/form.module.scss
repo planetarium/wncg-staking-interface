@@ -1,0 +1,43 @@
+.container {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-gap: 20px;
+  grid-template-columns: 1fr;
+  grid-template-areas:
+    'center'
+    'left'
+    'right';
+  width: 100%;
+  max-width: $max-container-sm;
+  padding: 0 20px;
+  margin: 0 auto;
+
+  .left {
+    grid-area: left;
+  }
+
+  .right {
+    grid-area: right;
+  }
+
+  .center {
+    grid-area: center;
+  }
+
+  @include responsive(MD) {
+    max-width: 550px;
+    padding: 0;
+  }
+
+  @include responsive(LG) {
+    max-width: 280px * 2 + 20px * 2 + 400px;
+    grid-template-columns: 280px 400px 280px;
+    grid-template-areas: 'left   center   right';
+  }
+
+  @include responsive(XL) {
+    max-width: 300px * 2 + 20px * 2 + 480px;
+    grid-template-columns: 300px 480px 300px;
+  }
+}

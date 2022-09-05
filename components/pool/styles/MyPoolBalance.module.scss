@@ -1,5 +1,67 @@
 .myPoolBalance {
-  color: $black;
-  height: 100px;
-  background-color: $primary;
+  padding: 20px;
+  margin-bottom: $gutter * 2;
+  background-color: rgba($black, 0.9);
+  border-radius: $radius-sm;
+
+  @include responsive(LG) {
+    padding: 30px;
+  }
+}
+
+.title {
+  @include textStyle(16, 700);
+  margin-bottom: 20px;
+}
+
+.detailItem {
+  @include flexbox(between);
+  margin-bottom: 20px;
+
+  .token {
+    width: 40px !important;
+    height: 40px !important;
+    margin-right: 10px;
+  }
+
+  .symbol {
+    @include flexbox(start, start);
+    flex-direction: column;
+
+    strong {
+      @include textStyle(16, 700);
+    }
+
+    span {
+      @include textStyle(13, 400);
+      padding-left: 2px;
+    }
+  }
+
+  .usd {
+    @include inlineFlexbox(start);
+    @include textStyle(12, 500);
+    margin-top: 2px;
+    padding-right: 4px;
+    color: $gray-3;
+  }
+
+  dt {
+    @include flexbox(start);
+    white-space: nowrap;
+  }
+
+  dd {
+    @include flexbox(center, end);
+    flex-direction: column;
+    text-align: right;
+  }
+}
+
+.buttonGroup {
+  button {
+    &:first-child:not(:last-child) {
+      margin-bottom: 10px;
+    }
+  }
 }

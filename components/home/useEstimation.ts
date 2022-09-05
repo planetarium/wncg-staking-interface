@@ -1,98 +1,74 @@
 import { useCallback } from 'react'
 
-import { getTotalStaked } from 'app/states/bpt'
-import { getBalEmissionPerSec, getWncgEmissionPerSec } from 'app/states/reward'
-import { getBalPrice, getBptPrice, getWncgPrice } from 'app/states/token'
-import { assertUnreachable } from 'utils/assertion'
-import Decimal, { sanitizeNumber } from 'utils/num'
-import { useAppSelector } from 'hooks'
-import { calculateApr } from 'hooks/useApr'
+import { calcApr } from 'utils/calculator'
+import { bnum } from 'utils/num'
+import { useStaking, usePrices, useFiatCurrency, useApr } from 'hooks'
 
 export function useEstimation() {
-  const balEmissionPerSec = useAppSelector(getBalEmissionPerSec)
-  const balPrice = useAppSelector(getBalPrice)
-  const bptPrice = useAppSelector(getBptPrice)
-  const wncgEmissionPerSec = useAppSelector(getWncgEmissionPerSec)
-  const wncgPrice = useAppSelector(getWncgPrice)
-  const totalStaked = useAppSelector(getTotalStaked)
+  const { emissionPerSecList, rewardTokenPriceList } = useApr()
+  const { getBptFiatValue } = useFiatCurrency()
+  const { bptPrice } = usePrices()
+  const { totalStaked } = useStaking()
 
-  const getEstimation = useCallback(
+  const calcEstimatedRevenue = useCallback(
     (amount: string, option: string) => {
-      const value = sanitizeNumber(amount, { allowEmptyString: false })
-      const totalStakedValue = new Decimal(totalStaked)
-        .plus(value)
-        .mul(bptPrice)
-        .toNumber()
-
-      const balApr = calculateApr(balEmissionPerSec, balPrice, totalStakedValue)
-      const wncgApr = calculateApr(
-        wncgEmissionPerSec,
-        wncgPrice,
-        totalStakedValue
+      const totalStakedValue = getBptFiatValue(
+        bnum(totalStaked).plus(bnum(amount)).toNumber()
+      )
+      const aprs = emissionPerSecList.map((emission, i) =>
+        calcApr(emission, rewardTokenPriceList[i], totalStakedValue)
       )
 
-      const newBal = calculateEstimatedToken(
-        amount,
-        balApr,
-        option,
-        bptPrice,
-        balPrice
+      return aprs.map((apr, i) =>
+        calcRevenue(amount, apr, option, bptPrice, rewardTokenPriceList[i])
       )
-      const newWncg = calculateEstimatedToken(
-        amount,
-        wncgApr,
-        option,
-        bptPrice,
-        wncgPrice
-      )
-
-      return {
-        bal: newBal,
-        wncg: newWncg,
-      }
     },
     [
-      balEmissionPerSec,
-      balPrice,
       bptPrice,
+      emissionPerSecList,
+      getBptFiatValue,
+      rewardTokenPriceList,
       totalStaked,
-      wncgEmissionPerSec,
-      wncgPrice,
     ]
   )
 
   return {
-    getEstimation,
+    calcEstimatedRevenue,
   }
 }
 
-function getOptionPercentage(option: string) {
+function calcRevenue(
+  amount: string,
+  tokenApr: number | string,
+  option: string,
+  bptPrice: number | string,
+  tokenPrice: number | string
+) {
+  let pcnt = 0
+
   switch (option) {
     case 'day':
-      return 1 / 365
+      pcnt = 1 / 365
+      break
     case 'week':
-      return 1 / 52
+      pcnt = 1 / 52
+      break
     case 'month':
-      return 1 / 12
+      pcnt = 1 / 12
+      break
     case 'year':
-      return 1
+      pcnt = 1
+      break
     default:
-      assertUnreachable(option)
+      break
   }
-}
 
-function calculateEstimatedToken(
-  amount: string,
-  tokenApr: number,
-  option: string,
-  bptPrice: number,
-  tokenPrice: number
-) {
-  return new Decimal(sanitizeNumber(amount, { allowEmptyString: false }))
-    .mul(tokenApr)
-    .mul(getOptionPercentage(option))
-    .mul(bptPrice)
+  const value = bnum(amount)
+    .times(tokenApr)
+    .times(pcnt)
+    .times(bptPrice)
     .div(tokenPrice)
     .div(100)
-    .toNumber()
+
+  return value.isFinite() && !value.isNaN() ? value.toNumber() : 0
 }

@@ -3,40 +3,44 @@ import { useMount } from 'react-use'
 import store from 'store'
 import styles from './style.module.scss'
 
-import { TransactionAction } from 'app/states/transaction'
+import STORAGE_KEYS from 'constants/storageKeys'
+import { TxAction } from 'services/transaction'
 import { gaEvent } from 'lib/gtag'
-import { renderTxTitle } from 'utils/transaction'
 import { getTxUrl } from 'utils/url'
-import { STORE_MUTED_KEY } from 'components/Gnb/Account/constants'
+import { getToastAudioFilename, renderToastEmoji } from './utils'
 
 import { Icon } from 'components/Icon'
 
 type ToastProps = {
-  action: TransactionAction
-  hash: string
-  summary: string
-  showPartyEmoji?: boolean
+  title: string
+  message: string
+  action?: TxAction
+  hash?: string
+  type?: ToastType
 }
 
 export function Toast({
   action,
-  hash,
-  summary,
-  showPartyEmoji = false,
+  title,
+  message,
+  hash = '',
+  type = 'info',
 }: ToastProps) {
-  const muted = store.get(STORE_MUTED_KEY) || false
+  const muted = store.get(STORAGE_KEYS.UserSettings.Muted) || false
   const txUrl = getTxUrl(hash)
-  const audioFilename = getAudioFilename(action, showPartyEmoji)
+  const audioFilename = getToastAudioFilename(type, action)
   const audio = new Audio(audioFilename)
 
   function onClick() {
-    window?.open(txUrl)
-    gaEvent({
-      name: 'open_tx_etherscan',
-      params: {
-        tx: hash,
-      },
-    })
+    if (txUrl) {
+      window?.open(txUrl)
+      gaEvent({
+        name: 'open_tx_etherscan',
+        params: {
+          tx: hash,
+        },
+      })
+    }
   }
 
   useMount(() => {
@@ -51,36 +55,18 @@ export function Toast({
     <aside className={styles.toast} onClick={onClick}>
       <header className={styles.header}>
         <h4 className={styles.title}>
-          {showPartyEmoji && (
-            <span className={styles.emoji} aria-hidden>
-              🎉
-            </span>
-          )}
-          <span className={styles.anchor}>{renderTxTitle(action)}</span>
+          {renderToastEmoji(type)}
+          <span className={styles.anchor}>{title}</span>
         </h4>
 
-        <span className={styles.link}>
-          <Icon id="externalLink" />
-        </span>
+        {txUrl && (
+          <span className={styles.link}>
+            <Icon id="externalLink" />
+          </span>
+        )}
       </header>
 
-      <p className={styles.desc}>{summary}</p>
+      <p className={styles.desc}>{message}</p>
     </aside>
   )
-}
-
-function getAudioFilename(action: TransactionAction, showPartyEmoji: boolean) {
-  if (!showPartyEmoji) {
-    return '/alert-default.opus'
-  }
-
-  switch (action) {
-    case TransactionAction.ClaimAllRewards:
-    case TransactionAction.ClaimBalRewards:
-    case TransactionAction.ClaimWncgRewards:
-    case TransactionAction.EarmarkRewards:
-      return '/alert-money.opus'
-    default:
-      return '/alert-success.opus'
-  }
 }
