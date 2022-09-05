@@ -1,4 +1,5 @@
 import { memo, ReactNode } from 'react'
+import { useMount } from 'react-use'
 import { useRecoilValue } from 'recoil'
 import Image from 'next/image'
 import clsx from 'clsx'
@@ -17,6 +18,10 @@ type StakingPageWrapperProps = {
 function StakingPageWrapper({ children, showBg }: StakingPageWrapperProps) {
   const { showAlert } = useAlert()
   const isDesktop = useRecoilValue(isDesktopState)
+
+  useMount(() => {
+    document.body.scrollTo(0, 0)
+  })
 
   return (
     <>
