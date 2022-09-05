@@ -14,6 +14,7 @@ import { useClaim, useEvents, useModal, useProvider, useRewards } from 'hooks'
 import { Button } from 'components/Button'
 import { CountUp } from 'components/CountUp'
 import { TokenIcon } from 'components/TokenIcon'
+import { Icon } from 'components/Icon'
 
 export function ClaimRewardModal() {
   const [loading, setLoading] = useState('')
@@ -36,6 +37,10 @@ export function ClaimRewardModal() {
     rewards.every((reward) => bnum(reward).isZero()) ||
     loadingStates.includes(loading)
 
+  function close() {
+    removeModal(ModalCategory.ClaimReward)
+  }
+
   async function handleClaim(e: MouseEvent) {
     const { name } = e.currentTarget as HTMLButtonElement
 
@@ -56,7 +61,7 @@ export function ClaimRewardModal() {
       }
 
       await handler()
-      removeModal(ModalCategory.ClaimReward)
+      close()
     } catch (error) {
       setLoading('')
       handleError(error)
@@ -93,7 +98,17 @@ export function ClaimRewardModal() {
 
   return (
     <div className={styles.claimRewardModal}>
-      <h1 className={styles.title}>Claim Rewards</h1>
+      <header className={styles.header}>
+        <h1 className={styles.title}>Claim Rewards</h1>
+        <button
+          className={styles.closeButton}
+          type="button"
+          onClick={close}
+          aria-label="Close"
+        >
+          <Icon id="close" />
+        </button>
+      </header>
 
       <dl className={styles.detail}>
         {rewardTokenSymbols.map((symbol, i) => {

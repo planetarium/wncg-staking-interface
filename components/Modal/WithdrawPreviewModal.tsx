@@ -20,6 +20,7 @@ import {
 
 import { Button } from 'components/Button'
 import { CountUp } from 'components/CountUp'
+import { Icon } from 'components/Icon'
 import { TokenIcon } from 'components/TokenIcon'
 
 const toastContent = {
@@ -76,7 +77,17 @@ export function WithdrawPreviewModal({
 
   return (
     <div className={styles.withdrawPreviewModal}>
-      <h1 className={styles.title}>Withdrawal Preview</h1>
+      <header className={styles.header}>
+        <h1 className={styles.title}>Withdrawal Preview</h1>
+        <button
+          className={styles.closeButton}
+          type="button"
+          onClick={close}
+          aria-label="Close"
+        >
+          <Icon id="close" />
+        </button>
+      </header>
 
       <h3 className={styles.subtitle}>Withdraw amount</h3>
 

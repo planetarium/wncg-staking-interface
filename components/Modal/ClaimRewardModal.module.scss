@@ -11,9 +11,32 @@
   }
 }
 
+.header {
+  @include flexbox(between);
+  margin-bottom: 20px;
+}
+
+.closeButton {
+  @include flexbox;
+  width: 40px;
+  height: 40px;
+  margin-right: -8px;
+  color: $gray-4;
+  transition: $transition-short;
+
+  &:hover {
+    color: $gray-3;
+  }
+
+  svg {
+    width: 24px;
+    height: 24px;
+  }
+}
+
 .title {
   @include textStyle(18, 700);
-  margin-bottom: 20px;
+
   color: $black;
 }
 

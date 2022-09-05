@@ -16,11 +16,18 @@ export function MetaMaskGuideModal() {
 
   return (
     <div className={styles.metamaskGuideModal}>
-      <h1 className={styles.title}>
-        Oops!
-        <br />
-        You don't have MetaMask
-      </h1>
+      <header className={styles.header}>
+        <h1 className={styles.title}>You don't have MetaMask</h1>
+        <button
+          className={styles.closeButton}
+          type="button"
+          onClick={close}
+          aria-label="Close"
+        >
+          <Icon id="close" />
+        </button>
+      </header>
+
       <p className={styles.desc}>Please install MetaMask to connect</p>
 
       <Button
