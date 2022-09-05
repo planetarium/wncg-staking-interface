@@ -2,7 +2,6 @@ import { atom } from 'recoil'
 
 export const ModalCategory = {
   ClaimReward: 'MODAL_CATEGORY_CLAIM_REWARD',
-  Connect: 'MODAL_CATEGORY_CONNECT',
   Error: 'MODAL_CATEGORY_ERROR',
   JoinPreview: 'MODAL_JOIN_POOL_PREVIEW',
   ExitPreview: 'MODAL_EXIT_POOL_PREVIEW',

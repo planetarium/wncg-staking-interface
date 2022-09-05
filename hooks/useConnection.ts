@@ -17,12 +17,13 @@ import { useProvider } from './useProvider'
 
 export function useConnection() {
   const provider = useProvider()
-  const { addModal, removeModal } = useModal()
+  const { addModal } = useModal()
 
   const [account, setAccount] = useRecoilState(accountState)
   const [connectionStatus, setConnectionStatus] = useRecoilState(
     connectionStatusState
   )
+
   const resetAccount = useResetRecoilState(accountState)
   const resetConnectionStatus = useResetRecoilState(connectionStatusState)
 
@@ -56,13 +57,11 @@ export function useConnection() {
           },
         })
       }
-
-      removeModal(ModalCategory.Connect)
     } catch (error) {
       reset()
       handleError(error)
     }
-  }, [provider, removeModal, reset, setConnectionStatus, updateAccount])
+  }, [provider, reset, setConnectionStatus, updateAccount])
 
   const connect = useCallback(() => {
     if (!provider) {
