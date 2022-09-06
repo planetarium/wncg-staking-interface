@@ -8,6 +8,7 @@
 
   .backButton {
     @include flexbox(start);
+    @include textStyle(16, 700);
     position: absolute;
     top: 0;
     left: 20px;
