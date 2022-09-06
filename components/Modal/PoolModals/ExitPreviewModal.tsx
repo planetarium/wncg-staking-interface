@@ -15,6 +15,7 @@ import {
 } from 'hooks'
 
 import { Button } from 'components/Button'
+import { Icon } from 'components/Icon'
 import PreviewComposition from './Composition'
 import PreviewSummary from './Summary'
 import { PreviewWarning } from './Warning'
@@ -58,7 +59,7 @@ export function ExitPreviewModal({
   const provider = useProvider()
   const { addCustomToast } = useToast()
 
-  function closeModal() {
+  function close() {
     removeModal(ModalCategory.ExitPreview)
   }
 
@@ -66,7 +67,7 @@ export function ExitPreviewModal({
     e.stopPropagation()
 
     if (showClose) {
-      closeModal()
+      close()
       return
     }
 
@@ -119,7 +120,17 @@ export function ExitPreviewModal({
 
   return (
     <div className={styles.previewModal}>
-      <h1 className={styles.title}>Exit Pool Preview</h1>
+      <header className={styles.header}>
+        <h1 className={styles.title}>Exit Pool Preview</h1>
+        <button
+          className={styles.closeButton}
+          type="button"
+          onClick={close}
+          aria-label="Close"
+        >
+          <Icon id="close" />
+        </button>
+      </header>
 
       <PreviewComposition
         amounts={amounts}

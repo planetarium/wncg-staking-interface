@@ -1,8 +1,10 @@
 import { useMount } from 'react-use'
 import styles from '../style.module.scss'
 
-import { useAllowances } from 'hooks'
+import { ModalCategory } from 'app/states/modal'
+import { useAllowances, useModal } from 'hooks'
 
+import { Icon } from 'components/Icon'
 import PreviewComposition from '../Composition'
 import PreviewSummary from '../Summary'
 import JoinActions from './Actions'
@@ -23,12 +25,27 @@ export function JoinPreviewModal({
   totalFiatValue,
 }: JoinPreviewModalProps) {
   const { fetchAllowances } = useAllowances()
+  const { removeModal } = useModal()
+
+  function close() {
+    removeModal(ModalCategory.JoinPreview)
+  }
 
   useMount(fetchAllowances)
 
   return (
     <div className={styles.previewModal}>
-      <h1 className={styles.title}>Join Pool Preview</h1>
+      <header className={styles.header}>
+        <h1 className={styles.title}>Join Pool Preview</h1>
+        <button
+          className={styles.closeButton}
+          type="button"
+          onClick={close}
+          aria-label="Close"
+        >
+          <Icon id="close" />
+        </button>
+      </header>
 
       <PreviewComposition
         amounts={amounts}
