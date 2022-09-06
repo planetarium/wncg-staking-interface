@@ -3,8 +3,27 @@
   z-index: 1;
   width: 100%;
   max-width: $max-container-sm;
-  padding: 0 20px;
+  padding: 40px 20px 0;
   margin: 0 auto;
+
+  .backButton {
+    @include flexbox(start);
+    position: absolute;
+    top: 0;
+    left: 20px;
+    transition: $transition-short;
+
+    &:hover {
+      opacity: 0.5;
+    }
+
+    svg {
+      width: 24px;
+      height: 24px;
+      margin-right: 8px;
+      transform: rotate(180deg);
+    }
+  }
 
   .right {
     margin-bottom: 20px;
@@ -13,6 +32,11 @@
   @include responsive(MD) {
     max-width: $max-container-md;
     padding: 0;
+    padding-top: 40px;
+
+    .backButton {
+      left: 0;
+    }
   }
 
   @include responsive(LG) {
