@@ -121,7 +121,7 @@ export function useJoinForm(
           const sumValue = toFiat(address, amounts[i])
           return total.plus(sumValue)
         }, bnum(0))
-        .toString(),
+        .toFixed(2),
     [amounts, toFiat, assets]
   )
 

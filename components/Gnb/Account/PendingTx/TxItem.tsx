@@ -2,6 +2,7 @@
 import { MouseEvent, useState } from 'react'
 import { useMount } from 'react-use'
 import { motion } from 'framer-motion'
+import { formatDistanceToNow } from 'date-fns'
 import styles from './style.module.scss'
 
 import { txErrorMessage, txInfoMessage, txToastTitle } from 'utils/transaction'
@@ -19,8 +20,9 @@ export function TxItem({ transaction }: TxItemProps) {
   const { txService } = useTx()
   const [error, setError] = useState<any>(false)
 
-  const { action, finalizedTime, hash, params, status } = transaction
+  const { action, addedTime, finalizedTime, hash, params, status } = transaction
   const txUrl = getTxUrl(hash)
+  const timestamp = finalizedTime || addedTime
 
   async function checkTxStatus() {
     if (!txService) return
@@ -86,6 +88,9 @@ export function TxItem({ transaction }: TxItemProps) {
       <p>
         {error ? txErrorMessage(action, params) : txInfoMessage(action, params)}
       </p>
+      <span className={styles.timestamp}>
+        {formatDistanceToNow(timestamp, { addSuffix: true })}
+      </span>
 
       <button
         className={styles.deleteButton}

@@ -59,9 +59,12 @@
 }
 
 .buttonGroup {
+  a,
   button {
-    &:first-child:not(:last-child) {
-      margin-bottom: 10px;
+    margin-bottom: 10px;
+
+    &:last-child {
+      margin-bottom: 0;
     }
   }
 }

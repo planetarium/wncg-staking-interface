@@ -47,11 +47,13 @@ function MyWallet({ currentEther, selectEther }: MyWalletProps) {
       toFiat(addressesToSum[i], balance)
     )
 
-    return fiatValues
-      .reduce((total, value) => {
-        return total.plus(value)
-      }, bnum(0))
-      .toNumber()
+    return (
+      fiatValues
+        .reduce((total, value) => {
+          return total.plus(value)
+        }, bnum(0))
+        .toFixed(2) || '0'
+    )
   }, [
     isSelectable,
     ercTokenAddresses,

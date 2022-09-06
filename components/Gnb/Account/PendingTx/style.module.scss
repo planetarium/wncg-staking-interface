@@ -148,6 +148,11 @@
     }
   }
 
+  .timestamp {
+    @include textStyle(12, 400);
+    color: $gray-3;
+  }
+
   p {
     @include textStyle(13, 400);
     color: $gray-5;

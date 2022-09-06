@@ -32,7 +32,7 @@ export function Gnb() {
   return (
     <nav className={clsx(styles.gnb, { [styles.withAlert]: showAlert })}>
       <h1 className={styles.logo}>
-        <Link href="/">
+        <Link href="/wncg">
           <a>
             <Image
               {...logoSize}
