@@ -1,0 +1,89 @@
+$toggle-shadow: rgba(15, 22, 36, 0.1);
+$toggle-gradient-on: linear-gradient(82.85deg, #ffb800 5.57%, #ff5c00 94.43%);
+
+.header {
+  @include flexbox(between);
+  margin-bottom: 16px;
+
+  @include responsive(LG) {
+    flex-wrap: wrap;
+    width: getColumnWidth($column-lg, 10);
+  }
+
+  @include responsive(XL) {
+    width: getColumnWidth($column-xl, 8);
+  }
+}
+
+.audit {
+  @include flexbox(start);
+  @include textStyle(12, 500);
+  padding: 8px 0;
+  font-size: 11px;
+  color: $gray-3;
+
+  a {
+    text-decoration: underline;
+  }
+
+  @include responsive(MD) {
+    @include textStyle(13);
+    padding: 0;
+  }
+}
+
+.toggle {
+  @include flexbox(end);
+  flex-shrink: 0;
+  margin-left: 8px;
+}
+
+.label {
+  @include textStyle(14, 700);
+  margin-right: 8px;
+  white-space: nowrap;
+  font-style: normal;
+  transition: $transition-short;
+
+  &.off {
+    font-weight: 400;
+  }
+}
+
+.toggleButton {
+  position: relative;
+  width: 52px;
+  height: 24px;
+  background-color: #edeff2;
+  background-image: $toggle-gradient-on;
+  background-size: 120% 120%;
+  border-radius: 100px;
+  box-shadow: 0 0 0 1px inset $toggle-shadow;
+  transition: $transition-short;
+
+  &.off {
+    background-image: none;
+    box-shadow: 0 0 0 1px inset $toggle-shadow;
+
+    .knob {
+      transform: translate3d(-24px, -50%, 0);
+      box-shadow: 0 0 0 1px $toggle-shadow, 2px 0px 2px rgba(0, 0, 0, 0.04),
+        0px 0px 8px rgba(0, 0, 0, 0.04);
+    }
+  }
+}
+
+.knob {
+  @include posCenterY;
+  box-sizing: content-box;
+  right: 0;
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  text-indent: -10000px;
+  background-color: $white;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px $toggle-shadow, 2px 0px 2px rgba(0, 0, 0, 0.04),
+    0px 0px 8px rgba(0, 0, 0, 0.04);
+  transition: $transition-short;
+}

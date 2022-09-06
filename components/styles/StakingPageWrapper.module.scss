@@ -2,7 +2,7 @@
   width: 100%;
   max-width: 100%;
   min-height: 100vh;
-  padding: #{$gnb-height-sm + 20px} 0 60px;
+  padding: #{$gnb-height-sm + 16px} 0 60px;
   overflow-x: hidden;
   transition: $transition-network-alert;
 
@@ -12,6 +12,10 @@
 
   &::-webkit-scrollbar {
     display: none;
+  }
+
+  @include responsive(MD) {
+    padding: #{$gnb-height-md + 24px} 0 80px;
   }
 }
 

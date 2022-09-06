@@ -19,19 +19,3 @@
     max-width: $max-container-xl;
   }
 }
-
-.audit {
-  @include flexbox(start);
-  @include textStyle(12, 500);
-  padding: 8px 0;
-  font-size: 11px;
-  color: $gray-3;
-
-  a {
-    text-decoration: underline;
-  }
-
-  @include responsive(MD) {
-    @include textStyle(13);
-  }
-}

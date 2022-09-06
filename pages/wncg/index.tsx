@@ -3,12 +3,12 @@ import Head from 'next/head'
 import { NextSeo } from 'next-seo'
 import styles from 'styles/Wncg.module.scss'
 
-import { configService } from 'services/config'
 import { STAKING_SEO } from 'lib/seo'
 
 import PageWrapper from 'components/StakingPageWrapper'
 import { Content } from 'components/home/Content'
 import { Dashboard } from 'components/home/Dashboard'
+import { HomeHeader } from 'components/home/Header'
 
 const WncgStaking: NextPage = () => {
   return (
@@ -24,26 +24,7 @@ const WncgStaking: NextPage = () => {
 
       <PageWrapper showBg>
         <div className={styles.container}>
-          <div className={styles.audit}>
-            <p>
-              Smart contracts are{' '}
-              <a
-                href={configService.github.auditReportUrl}
-                target="_blank"
-                rel="noreferrer"
-              >
-                audited
-              </a>{' '}
-              by{' '}
-              <a
-                href="https://blog.theori.io/about"
-                target="_blank"
-                rel="noreferrer"
-              >
-                Theori
-              </a>
-            </p>
-          </div>
+          <HomeHeader />
           <Dashboard />
           <Content />
         </div>
