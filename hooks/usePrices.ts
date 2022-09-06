@@ -9,9 +9,8 @@ import { fetchNativeAssetPrice, fetchTokenPrices } from 'services/price'
 import { usePool } from './usePool'
 
 const options = {
-  retry: false,
-  staleTime: (30 - 10) * 1_000,
-  refetchInterval: 30 * 1_000,
+  staleTime: (60 - 10) * 1_000,
+  refetchInterval: 60 * 1_000,
   keepPreviousData: true,
 }
 
