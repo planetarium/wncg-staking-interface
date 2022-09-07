@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react'
+import { useCallback } from 'react'
 import { useRecoilValue } from 'recoil'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import BigNumber from 'bignumber.js'
@@ -8,17 +8,12 @@ import { bnum } from 'utils/num'
 
 export function useSlippage() {
   const slippage = useRecoilValue(slippageSelector)
-
-  const slippageBasisPoints = useMemo(
-    () => bnum(slippage).times(10000).toString(),
-    [slippage]
-  )
+  const slippageBasisPoints = bnum(slippage).div(100).toNumber()
 
   const addSlippageScaled = useCallback(
     (amount: string) => {
       const delta = bnum(amount)
         .times(slippageBasisPoints)
-        .div(10000)
         .dp(0, BigNumber.ROUND_DOWN)
       return bnum(amount).plus(delta).toString()
     },
@@ -38,7 +33,6 @@ export function useSlippage() {
     (amount: string) => {
       const delta = bnum(amount)
         .times(slippageBasisPoints)
-        .div(10000)
         .dp(0, BigNumber.ROUND_UP)
       return bnum(amount).minus(delta).toString()
     },

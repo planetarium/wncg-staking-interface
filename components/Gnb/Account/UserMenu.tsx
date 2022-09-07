@@ -4,18 +4,17 @@ import { useMount, useUnmount } from 'react-use'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { useRecoilValue } from 'recoil'
 import { motion } from 'framer-motion'
-import store from 'store'
 import clsx from 'clsx'
 import styles from './style.module.scss'
 
 import { accountState } from 'app/states/connection'
 import { networkMismatchState } from 'app/states/error'
-import STORAGE_KEYS from 'constants/storageKeys'
+import { mutedState } from 'app/states/settings'
 import { gaEvent } from 'lib/gtag'
 import { networkChainId, networkNameFor } from 'utils/network'
 import { truncateAddress } from 'utils/string'
 import { getEtherscanUrl } from 'utils/url'
-import { useConnection } from 'hooks'
+import { useConnection, useSettings } from 'hooks'
 import { menuTransition, menuVariants } from './constants'
 
 import { Button } from 'components/Button'
@@ -28,15 +27,14 @@ type AccountUserMenuProps = {
 
 export function AccountUserMenu({ close }: AccountUserMenuProps) {
   const [copied, setCopied] = useState(false)
-  const [muted, setMuted] = useState<boolean>(
-    store.get(STORAGE_KEYS.UserSettings.Muted) || false
-  )
   const menuRef = useRef<HTMLDivElement>(null)
 
   const { disconnect: _disconnect, switchNetwork: _switchNetwork } =
     useConnection()
+  const { toggleMuted } = useSettings()
 
   const account = useRecoilValue(accountState)
+  const muted = useRecoilValue(mutedState)
   const networkMismatch = useRecoilValue(networkMismatchState)
 
   function disconnect() {
@@ -54,19 +52,6 @@ export function AccountUserMenu({ close }: AccountUserMenuProps) {
     setTimeout(() => setCopied(false), 500)
     gaEvent({
       name: 'copy_address',
-    })
-  }
-
-  function handleMute() {
-    setMuted((prev) => {
-      store.set(STORAGE_KEYS.UserSettings.Muted, !prev)
-      gaEvent({
-        name: 'mute_sound',
-        params: {
-          muted: !prev,
-        },
-      })
-      return !prev
     })
   }
 
@@ -159,7 +144,7 @@ export function AccountUserMenu({ close }: AccountUserMenuProps) {
         <div>
           <dt>Sound</dt>
           <dd>
-            <Button variant="tertiary" size="small" onClick={handleMute}>
+            <Button variant="tertiary" size="small" onClick={toggleMuted}>
               {muted ? 'Unmute' : 'Mute'}
             </Button>
           </dd>
