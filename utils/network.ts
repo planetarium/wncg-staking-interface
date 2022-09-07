@@ -31,3 +31,9 @@ export function explorerUrlFor(network: Network): string {
 export function convertChainIdToHex(network: Network): string {
   return `0x${network.toString(16)}`
 }
+
+export function balancerUrlFor(network: Network) {
+  let networkName = networkNameFor(network).toLowerCase()
+  if (network === Network.MAINNET) networkName = 'app'
+  return `https://${networkName}.balancer.fi/#`
+}

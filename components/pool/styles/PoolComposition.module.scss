@@ -9,9 +9,30 @@
   }
 }
 
+.header {
+  @include flexbox(between);
+  margin-bottom: 20px;
+}
+
 .title {
   @include textStyle(16, 700);
-  margin-bottom: 20px;
+}
+
+.balancerLink {
+  @include flexbox(end);
+  @include textStyle(14, 400);
+  transition: $transition-short;
+
+  &:hover {
+    opacity: 0.5;
+  }
+
+  svg {
+    width: 20px;
+    height: 20px;
+    margin-left: 4px;
+    color: $gray-3;
+  }
 }
 
 .tableWrapper {
