@@ -1,15 +1,17 @@
 import { memo, useMemo } from 'react'
-import NumberFormat from 'react-number-format'
 import styles from './styles/Widget.module.scss'
 
+import { countUpOption, usdCountUpOption } from 'utils/countUp'
 import { bnum, isLessThanMinAmount } from 'utils/num'
 import { useBalances, useCalculator, usePool, useFiatCurrency } from 'hooks'
+
+import { CountUp } from 'components/CountUp'
 
 function MyBalance() {
   const { bptBalance } = useBalances()
   const calculator = useCalculator('exit')
-  const { poolTokenAddresses, poolTokens } = usePool()
   const { toFiat } = useFiatCurrency()
+  const { poolTokenAddresses, poolTokens } = usePool()
 
   const propAmounts = useMemo(
     () =>
@@ -17,7 +19,7 @@ function MyBalance() {
     [bptBalance, calculator]
   )
 
-  const totalValue = useMemo(
+  const totalFiatValue = useMemo(
     () =>
       propAmounts
         .reduce((total, amount, i) => {
@@ -35,7 +37,7 @@ function MyBalance() {
         {poolTokens.map((token, i) => {
           const symbol = token.symbol.toLowerCase()
           const amount = propAmounts[i]
-          const amountUsdValue = toFiat(token.address, amount)
+          const fiatValue = toFiat(token.address, amount)
 
           return (
             <div
@@ -50,22 +52,9 @@ function MyBalance() {
                 {isLessThanMinAmount(amount) ? (
                   <span title={amount}>&lt; 0.0001</span>
                 ) : (
-                  <NumberFormat
-                    value={amount}
-                    displayType="text"
-                    thousandSeparator
-                    decimalScale={4}
-                    title={amount}
-                  />
+                  <CountUp {...countUpOption} decimals={4} end={amount} />
                 )}
-                <NumberFormat
-                  className={styles.usd}
-                  value={amountUsdValue}
-                  displayType="text"
-                  thousandSeparator
-                  decimalScale={2}
-                  prefix="$"
-                />
+                <CountUp {...usdCountUpOption} end={fiatValue} isApproximate />
               </dd>
             </div>
           )
@@ -74,13 +63,7 @@ function MyBalance() {
         <div className={styles.total}>
           <dt>Total</dt>
           <dd>
-            <NumberFormat
-              value={totalValue}
-              displayType="text"
-              thousandSeparator
-              decimalScale={2}
-              prefix="$"
-            />
+            <CountUp {...usdCountUpOption} end={totalFiatValue} />
           </dd>
         </div>
       </dl>

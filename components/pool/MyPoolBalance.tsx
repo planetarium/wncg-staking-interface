@@ -1,9 +1,10 @@
 import { memo } from 'react'
-import NumberFormat from 'react-number-format'
+
 import { useRecoilValue } from 'recoil'
 import styles from './styles/MyPoolBalance.module.scss'
 
 import { connectedState } from 'app/states/connection'
+import { countUpOption, usdCountUpOption } from 'utils/countUp'
 import { isLessThanMinAmount } from 'utils/num'
 import {
   useBalances,
@@ -14,6 +15,7 @@ import {
 } from 'hooks'
 
 import { Button } from 'components/Button'
+import { CountUp } from 'components/CountUp'
 import { TokenIcon } from 'components/TokenIcon'
 
 function MyPoolBalance() {
@@ -59,20 +61,12 @@ function MyPoolBalance() {
                     {isLessThanMinAmount(amount) ? (
                       <span title={amount}>&lt; 0.0001</span>
                     ) : (
-                      <NumberFormat
-                        value={amount}
-                        displayType="text"
-                        thousandSeparator
-                        decimalScale={4}
-                      />
+                      <CountUp {...countUpOption} decimals={4} end={amount} />
                     )}
-                    <NumberFormat
-                      className={styles.usd}
-                      value={fiatValue}
-                      displayType="text"
-                      thousandSeparator
-                      decimalScale={2}
-                      prefix="$"
+                    <CountUp
+                      {...usdCountUpOption}
+                      end={fiatValue}
+                      isApproximate
                     />
                   </>
                 ) : (

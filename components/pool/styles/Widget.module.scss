@@ -25,10 +25,6 @@ $nested-list-padding: 20px;
     flex-wrap: wrap;
     white-space: nowrap;
 
-    dd {
-      width: 100%;
-    }
-
     .ethList {
       position: relative;
       width: 100%;
@@ -36,6 +32,12 @@ $nested-list-padding: 20px;
       margin-top: 4px;
 
       &.selectable {
+        &.weth {
+          &::after {
+            transform: scaleY(3);
+          }
+        }
+
         .detailItem {
           cursor: pointer;
           opacity: 0.3;
@@ -52,8 +54,20 @@ $nested-list-padding: 20px;
         top: 0;
         left: 0;
         width: 1px;
-        height: calc(100% - 26px);
+        height: calc(100% - 25px);
+        background-color: rgba($gray-4, 0.3);
+        content: '';
+      }
+
+      &::after {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 1px;
+        height: calc(50% - 25px);
         background-color: $gray-4;
+        transform-origin: 0 0;
+        transition: $transition-short;
         content: '';
       }
 
@@ -73,6 +87,10 @@ $nested-list-padding: 20px;
           }
         }
       }
+    }
+
+    dd {
+      width: 100%;
     }
   }
 
