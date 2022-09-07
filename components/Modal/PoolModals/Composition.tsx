@@ -12,14 +12,12 @@ import { usePool, useFiatCurrency } from 'hooks'
 import { TokenIcon } from 'components/TokenIcon'
 
 type PreviewCompositionProps = {
-  action: PoolAction
   amounts: string[]
   isNativeAsset: boolean
   totalFiatValue: string
 }
 
 function PreviewComposition({
-  action,
   amounts,
   isNativeAsset,
   totalFiatValue,
@@ -55,22 +53,20 @@ function PreviewComposition({
         }
         const amount = amounts[i]
 
-        if (action === 'exit' && bnum(amount).isZero()) return null
+        if (bnum(amount).isZero()) return null
 
         const usdValue = usdValues[i]
         const pcnt = bnum(tokenRatios[i])
 
         let percent = tokenRatios[i]
-        if (pcnt.isZero()) percent = '0'
-        if (pcnt.eq(100)) percent = '100'
-        if (pcnt.isNaN() || !pcnt.isFinite()) percent = ''
+        if (pcnt.eq(100) || pcnt.isNaN() || !pcnt.isFinite()) percent = ''
 
         return (
           <div className={styles.detailItem} key={`Preview.${symbol}`}>
             <dt>
               <TokenIcon className={styles.token} symbol={symbol} />
               <strong className={styles.symbol}>{symbol}</strong>
-              {!invalidPrice && (
+              {!invalidPrice && percent && (
                 <span className={styles.percent}>({percent}%)</span>
               )}
             </dt>

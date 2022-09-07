@@ -126,7 +126,6 @@ export function ExitPreviewModal({
       </header>
 
       <PreviewComposition
-        action="exit"
         amounts={amounts}
         isNativeAsset={isNativeAsset}
         totalFiatValue={totalFiatValue}

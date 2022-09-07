@@ -48,7 +48,6 @@ export function JoinPreviewModal({
       </header>
 
       <PreviewComposition
-        action="join"
         amounts={amounts}
         isNativeAsset={isNativeAsset}
         totalFiatValue={totalFiatValue}
