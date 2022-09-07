@@ -1,37 +1,45 @@
 /* eslint-disable react/jsx-no-target-blank */
 import { useMount } from 'react-use'
-import store from 'store'
+import { useRecoilValue } from 'recoil'
+import clsx from 'clsx'
 import styles from './style.module.scss'
 
-import STORAGE_KEYS from 'constants/storageKeys'
+import { mutedState } from 'app/states/settings'
+import { latestToastIdState } from 'app/states/toast'
 import { TxAction } from 'services/transaction'
 import { gaEvent } from 'lib/gtag'
+import { parseMarkdown } from 'utils/transaction'
 import { getTxUrl } from 'utils/url'
 import { getToastAudioFilename, renderToastEmoji } from './utils'
 
 import { Icon } from 'components/Icon'
 
-type ToastProps = {
-  title: string
+type TxToastProps = {
+  action: TxAction
+  id: string
   message: string
-  action?: TxAction
+  title: string
   hash?: string
   type?: ToastType
 }
 
-export function Toast({
+export function TxToast({
+  id,
   action,
   title,
   message,
   hash = '',
   type = 'info',
-}: ToastProps) {
-  const muted = store.get(STORAGE_KEYS.UserSettings.Muted) || false
+}: TxToastProps) {
+  const muted = useRecoilValue(mutedState)
+  const latestToastId = useRecoilValue(latestToastIdState)
+
   const txUrl = getTxUrl(hash)
   const audioFilename = getToastAudioFilename(type, action)
   const audio = new Audio(audioFilename)
+  const content = parseMarkdown(message)
 
-  function onClick() {
+  function handleClick() {
     if (txUrl) {
       window?.open(txUrl)
       gaEvent({
@@ -52,7 +60,12 @@ export function Toast({
   })
 
   return (
-    <aside className={styles.toast} onClick={onClick}>
+    <aside
+      className={clsx(styles.toast, {
+        [styles.latest]: id === latestToastId,
+      })}
+      onClick={handleClick}
+    >
       <header className={styles.header}>
         <h4 className={styles.title}>
           {renderToastEmoji(type)}
@@ -66,7 +79,10 @@ export function Toast({
         )}
       </header>
 
-      <p className={styles.desc}>{message}</p>
+      <p
+        className={styles.desc}
+        dangerouslySetInnerHTML={{ __html: content }}
+      />
     </aside>
   )
 }

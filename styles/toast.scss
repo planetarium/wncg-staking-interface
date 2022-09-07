@@ -7,10 +7,11 @@
 
   @include responsive(MD) {
     top: auto;
-    right: 30px;
-    bottom: 30px;
+    right: 48px;
+    bottom: 48px;
     left: auto;
-    width: 290px !important;
+    width: 360px !important;
+    padding: 0;
     transform: none;
   }
 }
@@ -22,17 +23,40 @@
 
 .toast {
   margin-bottom: 8px;
-  overflow: hidden;
-  border-radius: $radius-sm !important;
+  border-radius: $radius-md !important;
+  transition: $transition-short;
 
   &:last-child {
     margin-bottom: 0;
-  }
-}
+    //   box-shadow: 0px 4px 64px 0px hsla(274, 100%, 84%, 0.48);
 
-.progressBar {
-  height: 6px;
-  background: $orange-gradient !important;
+    //   aside {
+    //     background-color: #8905ff;
+    //     border: 1px solid rgba(15, 22, 36, 0.1);
+
+    //     h4 {
+    //       color: $white;
+    //     }
+
+    //     p {
+    //       color: rgba($white, 0.6);
+    //     }
+    //   }
+
+    //   > button {
+    //     color: $white;
+    //     opacity: 0.5;
+
+    //     &:hover {
+    //       opacity: 0.8;
+    //     }
+    //   }
+    // }
+  }
+
+  @include responsive(MD) {
+    margin-bottom: 20px;
+  }
 }
 
 .fadeIn,

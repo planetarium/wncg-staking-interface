@@ -4,12 +4,19 @@ import { toast } from 'react-toastify'
 
 import { isDesktopState } from 'app/states/mediaQuery'
 import { toastIdListState } from 'app/states/toast'
+import {
+  MAX_TOAST_LENGTH_DESKTOP,
+  MAX_TOAST_LENGTH_MOBILE,
+} from 'constants/toast'
 
 export function ToastEffects() {
   const [toastIdList, setToastIdList] = useRecoilState(toastIdListState)
   const isDesktop = useRecoilValue(isDesktopState)
 
-  const maxToasts = useMemo(() => (isDesktop ? 6 : 4), [isDesktop])
+  const maxToasts = useMemo(
+    () => (isDesktop ? MAX_TOAST_LENGTH_DESKTOP : MAX_TOAST_LENGTH_MOBILE),
+    [isDesktop]
+  )
 
   useEffect(() => {
     if (toastIdList.length === maxToasts) {

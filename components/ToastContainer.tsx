@@ -6,6 +6,10 @@ import {
 import { useRecoilValue } from 'recoil'
 
 import { isDesktopState } from 'app/states/mediaQuery'
+import {
+  MAX_TOAST_LENGTH_DESKTOP,
+  MAX_TOAST_LENGTH_MOBILE,
+} from 'constants/toast'
 
 import { ToastCloseButton } from 'components/Toast/CloseButton'
 
@@ -18,16 +22,18 @@ const config: ToastContainerProps = {
   closeButton: false,
   closeOnClick: true,
   draggable: true,
-  limit: 6,
+  limit: MAX_TOAST_LENGTH_DESKTOP,
   pauseOnHover: true,
 }
 
 export function ToastContainer() {
   const isDesktop = useRecoilValue(isDesktopState)
-  const toastConfig = useMemo(
-    () => (isDesktop ? config : { ...config, limit: 4 }),
-    [isDesktop]
-  )
+
+  const toastConfig = useMemo(() => {
+    return isDesktop
+      ? config
+      : { ...config, limit: MAX_TOAST_LENGTH_MOBILE, autoClose: 5000 }
+  }, [isDesktop])
 
   return <ReactToastContainer {...toastConfig} closeButton={ToastCloseButton} />
 }

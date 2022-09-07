@@ -6,7 +6,7 @@ import { toastIdListState } from 'app/states/toast'
 import type { TxAction } from 'services/transaction'
 import { toastAnimation } from 'utils/toast'
 
-import { Toast } from 'components/Toast'
+import { TxToast } from 'components/Toast/TxToast'
 import { CustomToast } from 'components/Toast/CustomToast'
 
 type AddCustomToast = {
@@ -28,10 +28,13 @@ export function useToast() {
 
   function addCustomToast({ title, message, type }: AddCustomToast) {
     const toastId = `toast.${nanoid()}`
-    toast(<CustomToast title={title} message={message} type={type} />, {
-      transition: toastAnimation,
-      toastId,
-    })
+    toast(
+      <CustomToast id={toastId} title={title} message={message} type={type} />,
+      {
+        transition: toastAnimation,
+        toastId,
+      }
+    )
 
     setToastIdList((prev) => [...prev, toastId])
   }
@@ -43,7 +46,7 @@ export function useToast() {
   const addTxToast = (params: SendToastParams) => {
     const toastId = `${params.hash || ''}.${nanoid()}`
 
-    toast(<Toast {...params} />, {
+    toast(<TxToast id={toastId} {...params} />, {
       transition: toastAnimation,
       toastId,
     })

@@ -38,6 +38,7 @@ export type TxToastParams = {
   hash: string
   title: string
   message: string
+  data?: any
   type?: ToastType
 }
 
@@ -136,6 +137,7 @@ export class TransactionService {
 
   resetTxMap() {
     store.remove(STORAGE_KEYS.Transactions)
+    this.setTxMap({})
   }
 
   async getTxReceipt(hash: string): Promise<TransactionReceipt> {
