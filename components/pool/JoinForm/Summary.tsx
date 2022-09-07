@@ -50,24 +50,8 @@ function JoinFormSummary({
           </strong>
 
           {!maxDisabled && (
-            <button
-              className={styles.maxButton}
-              type="button"
-              onClick={joinMax}
-              disabled={maximized}
-            >
+            <button type="button" onClick={joinMax} disabled={maximized}>
               {maximized ? 'Maxed' : 'Max'}
-            </button>
-          )}
-
-          {!optDisabled && (
-            <button
-              className={styles.optButton}
-              type="button"
-              onClick={joinOpt}
-              disabled={optimized}
-            >
-              {optimized ? 'Optimized' : 'Optimize'}
             </button>
           )}
         </dd>
@@ -78,6 +62,12 @@ function JoinFormSummary({
         <dd>
           {lowPriceImpact ? '< 0.01%' : `${priceImpactPcnt}%`}
           {highPriceImpact && <Icon id="alert" ariaHidden />}
+
+          {!optDisabled && (
+            <button type="button" onClick={joinOpt} disabled={optimized}>
+              {optimized ? 'Optimized' : 'Optimize'}
+            </button>
+          )}
         </dd>
       </div>
     </dl>

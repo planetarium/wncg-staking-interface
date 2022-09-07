@@ -49,9 +49,9 @@
     }
   }
 
-  .maxButton,
-  .optButton {
+  button {
     @include textStyle(13, 700);
+    margin-left: 8px;
     color: $primary;
     transition: $transition-short;
 
@@ -64,15 +64,6 @@
       cursor: not-allowed;
       color: $gray-3;
     }
-  }
-
-  .maxButton {
-    margin-left: 8px;
-  }
-
-  .optButton {
-    @include posCenterY;
-    right: 2px;
   }
 
   .detailItem {
