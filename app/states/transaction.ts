@@ -18,6 +18,8 @@ export const unresolvedTxListState = selector<Transaction[]>({
   key: '#unresolvedTxList',
   get({ get }) {
     const txMap = get(txMapState)
-    return Object.values(txMap).filter((tx) => tx.status !== 'fulfilled')
+    return Object.values(txMap)
+      .filter((tx) => tx.status !== 'fulfilled')
+      .reverse()
   },
 })

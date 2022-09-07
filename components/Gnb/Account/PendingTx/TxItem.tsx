@@ -1,7 +1,6 @@
 /* eslint-disable react/jsx-no-target-blank */
 import { MouseEvent, useState } from 'react'
 import { useMount } from 'react-use'
-import { motion } from 'framer-motion'
 import { formatDistanceToNow } from 'date-fns'
 import styles from './style.module.scss'
 
@@ -10,7 +9,6 @@ import { txInfoMessage, txToastTitle } from 'utils/transaction'
 import { getTxUrl } from 'utils/url'
 import { useTx } from 'hooks'
 import { renderToastEmoji } from 'components/Toast/utils'
-import { listItemVariants } from '../constants'
 
 import { Icon } from 'components/Icon'
 
@@ -77,14 +75,7 @@ export function TxItem({ transaction }: TxItemProps) {
   })
 
   return (
-    <motion.li
-      className={styles.txItem}
-      key={`txItem.${hash}`}
-      initial="initial"
-      animate="animate"
-      exit="exit"
-      variants={listItemVariants}
-    >
+    <li className={styles.txItem}>
       <header>
         <h4>
           <a href={txUrl} target="_blank" rel="noopener">
@@ -109,6 +100,6 @@ export function TxItem({ transaction }: TxItemProps) {
       >
         <Icon id="bin" ariaLabel="Delete this item" />
       </button>
-    </motion.li>
+    </li>
   )
 }
