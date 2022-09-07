@@ -1,10 +1,12 @@
 import { useState } from 'react'
 import type { NextPage } from 'next'
+import Link from 'next/link'
 import Head from 'next/head'
 import styles from 'styles/form.module.scss'
 
 import { configService } from 'services/config'
 
+import { Icon } from 'components/Icon'
 import PageWrapper from 'components/StakingPageWrapper'
 import JoinForm from 'components/pool/JoinForm'
 import MyBalance from 'components/pool/MyBalance'
@@ -27,6 +29,13 @@ const WncgJoinPool: NextPage = () => {
 
       <PageWrapper>
         <div className={styles.container}>
+          <Link href="/wncg">
+            <a className={styles.backButton}>
+              <Icon id="arrowRight" />
+              Go Main
+            </a>
+          </Link>
+
           <h1 className="hidden">Join Pool</h1>
           <div className={styles.left}>
             <MyWallet currentEther={currentEther} selectEther={selectEther} />
