@@ -29,6 +29,8 @@ export function weiToEther(amount: BigNumberish) {
   return utils.formatEther(amount)
 }
 
+OldBigNumber.config({ EXPONENTIAL_AT: [-25, 25] })
+
 export function bnum(value: string | number | OldBigNumber): OldBigNumber {
   const number =
     typeof value === 'string' || typeof value === 'number'
