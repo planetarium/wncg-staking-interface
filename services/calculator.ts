@@ -48,7 +48,7 @@ export default class CalculatorService {
       balances,
       weights,
       amountsIn,
-      bnum(this.poolTotalSupply.toString()),
+      bnum(this.poolTotalShares.toString()),
       bnum(this.poolSwapFee.toString())
     )
   }
@@ -64,7 +64,7 @@ export default class CalculatorService {
       balances,
       weights,
       amountsOut,
-      bnum(this.poolTotalSupply.toString()),
+      bnum(this.poolTotalShares.toString()),
       bnum(this.poolSwapFee.toString())
     )
   }
@@ -80,7 +80,7 @@ export default class CalculatorService {
       balance,
       weight,
       amountOut,
-      bnum(this.poolTotalSupply.toString()),
+      bnum(this.poolTotalShares.toString()),
       bnum(this.poolSwapFee.toString())
     )
   }
@@ -93,7 +93,7 @@ export default class CalculatorService {
       balance,
       weight,
       bnum(bptAmount),
-      bnum(this.poolTotalSupply.toString()),
+      bnum(this.poolTotalShares.toString()),
       bnum(this.poolSwapFee.toString())
     )
   }
@@ -190,7 +190,7 @@ export default class CalculatorService {
         this.poolTokenDecimals,
         this.poolTokenWeights,
         denormAmounts,
-        this.poolTotalSupply
+        this.poolTotalShares
       ).toString()
     )
   }
@@ -244,7 +244,7 @@ export default class CalculatorService {
     return normalizedWeights.map((w) => parseUnits(w, 18))
   }
 
-  get poolTotalSupply(): BigNumber {
+  get poolTotalShares(): BigNumber {
     return parseUnits(this.pool.totalShares || '0', POOL_DECIMALS)
   }
 
@@ -264,11 +264,11 @@ export default class CalculatorService {
 
   private get sendRatios(): BigNumberish[] {
     if (this.action === 'join') return this.poolTokenBalances
-    return [this.poolTotalSupply]
+    return [this.poolTotalShares]
   }
 
   private get receiveRatios(): BigNumberish[] {
-    if (this.action === 'join') return [this.poolTotalSupply]
+    if (this.action === 'join') return [this.poolTotalShares]
     return this.poolTokenBalances
   }
 }

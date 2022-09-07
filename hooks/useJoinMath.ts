@@ -50,13 +50,13 @@ export function useJoinMath() {
 
       try {
         const fullBptOut = calculator?.exactTokensInForBptOut(amounts)
-        return (
+        const impact =
           calculator
             ?.priceImpact(amounts, {
               queryBpt: fullBptOut,
             })
             .toNumber() || 0
-        )
+        return Math.min(impact, 1)
       } catch (error) {
         return 1
       }
