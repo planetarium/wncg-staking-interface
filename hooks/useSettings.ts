@@ -1,5 +1,5 @@
 import { MouseEvent, useCallback } from 'react'
-import { useSetRecoilState } from 'recoil'
+import { useResetRecoilState, useSetRecoilState } from 'recoil'
 import store from 'store'
 
 import {
@@ -15,6 +15,10 @@ export function useSettings() {
   const setEstimatedEarnPeriod = useSetRecoilState(estimatedEarnPeriodState)
   const setMuted = useSetRecoilState(mutedState)
   const setSlippage = useSetRecoilState(slippageState)
+
+  const resetEstimatedEarnPeriod = useResetRecoilState(estimatedEarnPeriodState)
+  const resetMuted = useResetRecoilState(mutedState)
+  const resetSlippage = useResetRecoilState(slippageState)
 
   const toggleMuted = useCallback(() => {
     setMuted((prev) => {
@@ -63,7 +67,17 @@ export function useSettings() {
     [setSlippage]
   )
 
+  const resetSettings = useCallback(() => {
+    resetEstimatedEarnPeriod()
+    resetMuted()
+    resetSlippage()
+    store.remove(STORAGE_KEYS.UserSettings.EstimatedEarnPeriod)
+    store.remove(STORAGE_KEYS.UserSettings.Muted)
+    store.remove(STORAGE_KEYS.UserSettings.Slippage)
+  }, [resetEstimatedEarnPeriod, resetMuted, resetSlippage])
+
   return {
+    resetSettings,
     toggleMuted,
     updateEstimatedEarnPeriod,
     updateSlippage,

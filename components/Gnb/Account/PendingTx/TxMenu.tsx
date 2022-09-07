@@ -16,14 +16,10 @@ type PendingTxMenuProps = {
 
 export function PendingTxMenu({ close }: PendingTxMenuProps) {
   const menuRef = useRef<HTMLDivElement>(null)
-  const { txService } = useTx()
+  const { resetTx } = useTx()
 
   const unresolvedTxList = useRecoilValue(unresolvedTxListState)
   const hasList = !!unresolvedTxList.length
-
-  function clearTransactions() {
-    txService?.resetTxMap()
-  }
 
   const closeOnBlur = useCallback(
     (e: MouseEvent) => {
@@ -67,7 +63,7 @@ export function PendingTxMenu({ close }: PendingTxMenuProps) {
           <button
             className={styles.clearButton}
             type="button"
-            onClick={clearTransactions}
+            onClick={resetTx}
           >
             Clear transactions
           </button>

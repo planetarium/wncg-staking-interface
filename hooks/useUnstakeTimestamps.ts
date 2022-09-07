@@ -87,10 +87,17 @@ export function useUnstakeTimestamps() {
     withdrawEndsAt.refetch()
   }, [cooldownEndsAt, withdrawEndsAt])
 
+  const resetTimestamps = useCallback(() => {
+    store.remove(STORAGE_KEYS.Unstake.CooldownEndsAt)
+    store.remove(STORAGE_KEYS.Unstake.WithdrawEndsAt)
+    store.remove(STORAGE_KEYS.Unstake.Initiated)
+  }, [])
+
   return {
     cooldownEndsAt: cooldownEndsAt.data || 0,
     withdrawEndsAt: withdrawEndsAt.data || 0,
     unstakeStatus,
     fetchTimestamps,
+    resetTimestamps,
   }
 }

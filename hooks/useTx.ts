@@ -21,5 +21,6 @@ export function useTx() {
     txService,
     registerTx: txService?.registerTx,
     handleTx: txService?.handleTx,
+    resetTx: txService?.resetTxMap,
   }
 }
