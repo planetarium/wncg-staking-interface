@@ -1,17 +1,19 @@
 import { useCallback } from 'react'
-import { configService } from 'services/config'
 
+import { configService } from 'services/config'
 import { bnum, hasAmounts } from 'utils/num'
 import { useBalances } from './useBalances'
 import { useCalculator } from './useCalculator'
 import { useFiatCurrency } from './useFiatCurrency'
 import { usePool } from './usePool'
+import { useSlippage } from './useSlippage'
 
 export function useJoinMath() {
   const { balanceFor } = useBalances()
   const calculator = useCalculator('join')
   const { nativeAssetIndex, poolTokenAddresses } = usePool()
   const { toFiat } = useFiatCurrency()
+  const { minusSlippageScaled } = useSlippage()
 
   const calcUserPoolTokenBalances = useCallback(
     (isNativeAsset: boolean) =>
@@ -35,9 +37,11 @@ export function useJoinMath() {
 
   const calcMinBptOut = useCallback(
     (amounts: string[]) => {
-      return calculator?.exactTokensInForBptOut(amounts).toString() || '0'
+      const minBpt =
+        calculator?.exactTokensInForBptOut(amounts).toString() || '0'
+      return minusSlippageScaled(minBpt)
     },
-    [calculator]
+    [calculator, minusSlippageScaled]
   )
 
   const calcPriceImpact = useCallback(
