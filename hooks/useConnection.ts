@@ -14,12 +14,18 @@ import { parseTxError } from 'utils/error'
 import { convertChainIdToHex, networkChainId } from 'utils/network'
 import { useModal } from './useModal'
 import { useProvider } from './useProvider'
+import { useSettings } from './useSettings'
 import { useToast } from './useToast'
+import { useTx } from './useTx'
+import { useUnstakeTimestamps } from './useUnstakeTimestamps'
 
 export function useConnection() {
   const { addModal } = useModal()
   const provider = useProvider()
+  const { resetSettings } = useSettings()
   const { addErrorToast } = useToast()
+  const { resetTx } = useTx()
+  const { resetTimestamps } = useUnstakeTimestamps()
 
   const [account, setAccount] = useRecoilState(accountState)
   const [connectionStatus, setConnectionStatus] = useRecoilState(
@@ -32,7 +38,17 @@ export function useConnection() {
   const reset = useCallback(() => {
     resetAccount()
     resetConnectionStatus()
-  }, [resetAccount, resetConnectionStatus])
+    resetSettings()
+    resetTimestamps()
+    resetTx?.()
+    store.remove(STORAGE_KEYS.Account)
+  }, [
+    resetAccount,
+    resetConnectionStatus,
+    resetSettings,
+    resetTimestamps,
+    resetTx,
+  ])
 
   const updateAccount = useCallback(
     (account: string) => {

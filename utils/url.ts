@@ -1,5 +1,9 @@
 import { configService } from 'services/config'
-import { explorerUrlFor, networkChainId } from './network'
+import { balancerUrlFor, explorerUrlFor, networkChainId } from './network'
+
+export function getBalancerPoolUrl(poolId: string) {
+  return `${balancerUrlFor(networkChainId)}/pool/${poolId}`
+}
 
 export function getEtherscanUrl(address?: string) {
   if (!address) return ''

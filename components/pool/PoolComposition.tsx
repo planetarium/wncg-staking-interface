@@ -1,8 +1,9 @@
+/* eslint-disable react/jsx-no-target-blank */
 import { memo } from 'react'
 import NumberFormat from 'react-number-format'
 import styles from './styles/PoolComposition.module.scss'
 
-import { getEtherscanUrl } from 'utils/url'
+import { getBalancerPoolUrl, getEtherscanUrl } from 'utils/url'
 import { usePool, useFiatCurrency } from 'hooks'
 
 import { Icon } from 'components/Icon'
@@ -10,11 +11,24 @@ import { TokenIcon } from 'components/TokenIcon'
 
 function PoolComposition() {
   const { toFiat } = useFiatCurrency()
-  const { poolTokens } = usePool()
+  const { poolId, poolTokens } = usePool()
+
+  const balancerUrl = getBalancerPoolUrl(poolId)
 
   return (
     <section className={styles.poolComposition}>
-      <h3 className={styles.title}>Pool Composition</h3>
+      <header className={styles.header}>
+        <h3 className={styles.title}>Pool Composition</h3>
+        <a
+          className={styles.balancerLink}
+          href={balancerUrl}
+          target="_blank"
+          rel="noopener"
+        >
+          Go to Balancer
+          <Icon id="arrowRightUp" />
+        </a>
+      </header>
 
       <div className={styles.tableWrapper}>
         <table className={styles.table}>
