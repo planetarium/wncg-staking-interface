@@ -36,6 +36,10 @@ export function useToast() {
     setToastIdList((prev) => [...prev, toastId])
   }
 
+  function addErrorToast({ title, message }: Omit<AddCustomToast, 'type'>) {
+    addCustomToast({ title, message, type: 'error' })
+  }
+
   const addTxToast = (params: SendToastParams) => {
     const toastId = `${params.hash || ''}.${nanoid()}`
 
@@ -49,6 +53,7 @@ export function useToast() {
 
   return {
     addCustomToast,
+    addErrorToast,
     addTxToast,
   }
 }

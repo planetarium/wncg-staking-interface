@@ -2,10 +2,9 @@ import { useState } from 'react'
 import styles from './WithdrawPreviewModal.module.scss'
 
 import { ModalCategory } from 'app/states/modal'
-import { TxAction } from 'services/transaction'
 import { gaEvent } from 'lib/gtag'
 import { countUpOption, usdCountUpOption } from 'utils/countUp'
-import { handleError } from 'utils/error'
+import { parseTxError } from 'utils/error'
 import { getTokenSymbol } from 'utils/token'
 import {
   useFiatCurrency,
@@ -41,7 +40,7 @@ export function WithdrawPreviewModal({
 
   const { poolTokenName, poolTokenSymbols } = usePool()
   const { rewards, rewardsInFiatValue, rewardTokensList } = useRewards()
-  const { addCustomToast } = useToast()
+  const { addCustomToast, addErrorToast } = useToast()
   const { withdrawEndsAt } = useUnstakeTimestamps()
 
   const { removeModal } = useModal()
@@ -64,7 +63,12 @@ export function WithdrawPreviewModal({
       close()
     } catch (error) {
       setLoading(false)
-      handleError(error, TxAction.Withdraw)
+      const errorMsg = parseTxError(error)
+      if (errorMsg) {
+        addErrorToast({
+          ...errorMsg,
+        })
+      }
     }
   }
 

@@ -10,14 +10,16 @@ import {
 import { ModalCategory } from 'app/states/modal'
 import STORAGE_KEYS from 'constants/storageKeys'
 import { gaEvent } from 'lib/gtag'
-import { handleError } from 'utils/error'
+import { parseTxError } from 'utils/error'
 import { convertChainIdToHex, networkChainId } from 'utils/network'
 import { useModal } from './useModal'
 import { useProvider } from './useProvider'
+import { useToast } from './useToast'
 
 export function useConnection() {
-  const provider = useProvider()
   const { addModal } = useModal()
+  const provider = useProvider()
+  const { addErrorToast } = useToast()
 
   const [account, setAccount] = useRecoilState(accountState)
   const [connectionStatus, setConnectionStatus] = useRecoilState(
@@ -59,9 +61,14 @@ export function useConnection() {
       }
     } catch (error) {
       reset()
-      handleError(error)
+      const errorMsg = parseTxError(error)
+      if (errorMsg) {
+        addErrorToast({
+          ...errorMsg,
+        })
+      }
     }
-  }, [provider, reset, setConnectionStatus, updateAccount])
+  }, [addErrorToast, provider, reset, setConnectionStatus, updateAccount])
 
   const connect = useCallback(() => {
     if (!provider) {

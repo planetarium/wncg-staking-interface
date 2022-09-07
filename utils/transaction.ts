@@ -2,57 +2,74 @@ import { TxAction } from 'services/transaction'
 import { assertUnreachable } from './assertion'
 import { bnum } from './num'
 
-export function txToastTitle(action: TxAction) {
+export function txToastTitle(action: TxAction, type?: ToastType) {
+  let title: string
+
   switch (action) {
     case TxAction.Approve:
-      return 'Approve'
+      title = 'Approve'
+      break
     case TxAction.ClaimAll:
-      return 'Claim all rewards'
+      title = 'Claim all rewards'
+      break
     case TxAction.ClaimBal:
-      return 'Claim BAL reward'
+      title = 'Claim BAL reward'
+      break
     case TxAction.ClaimWncg:
-      return 'Claim WNCG reward'
+      title = 'Claim WNCG reward'
+      break
     case TxAction.EarmarkRewards:
-      return 'Harvest'
+      title = 'Harvest'
+      break
     case TxAction.ExitPool:
-      return 'Exit pool'
+      title = 'Exit pool'
+      break
     case TxAction.JoinPool:
-      return 'Join pool'
+      title = 'Join pool'
+      break
     case TxAction.Stake:
-      return 'Stake'
+      title = 'Stake'
+      break
     case TxAction.Cooldown:
-      return 'Cooldown'
+      title = 'Cooldown'
+      break
     case TxAction.Withdraw:
-      return 'Withdraw'
+      title = 'Withdraw'
+      break
     case TxAction.WithdrawAndClaim:
-      return 'Withdraw & claim'
+      title = 'Withdraw & claim'
+      break
     default:
       assertUnreachable(action)
   }
+
+  if (type === 'error') return `Failed: ${title}`
+  if (type === 'success') return `Success: ${title}`
+  return title
 }
 
 export function txSuccessMessage(action: TxAction, params?: string | string[]) {
   switch (action) {
     case TxAction.Approve:
-      return `Successfully approved ${parseParams(params)}`
+      return `Successfully approved ${parseTxActionParams(params)}`
     case TxAction.ClaimAll:
-      return `Successfully claimed ${parseParams(params)} & BAL rewards`
+      return `Successfully claimed ${parseTxActionParams(params)} & BAL rewards`
     case TxAction.ClaimBal:
       return 'Successfully claimed BAL reward'
     case TxAction.ClaimWncg:
-      return `Successfully claimed ${parseParams(params)} reward`
+      return `Successfully claimed ${parseTxActionParams(params)} reward`
     case TxAction.EarmarkRewards:
       return 'Successfully harvested BAL reward'
     case TxAction.ExitPool:
-      return `Successfully exited ${parseParams(params)} pool`
+      return `Successfully exited ${parseTxActionParams(params)} pool`
     case TxAction.JoinPool:
-      return `Successfully joined ${parseParams(params)} pool`
+      return `Successfully joined ${parseTxActionParams(params)} pool`
     case TxAction.Stake:
-      return `Successfully staked ${parseParams(params)}`
+      return `Successfully staked ${parseTxActionParams(params)}`
     case TxAction.Cooldown:
       return 'Successfully started cooldown'
     case TxAction.Withdraw:
-      return `Successfully withdrew staked ${parseParams(params)}`
+      return `Successfully withdrew staked ${parseTxActionParams(params)}`
     case TxAction.WithdrawAndClaim:
       return 'Successfully withdrew and claimed all rewards'
     default:
@@ -63,61 +80,32 @@ export function txSuccessMessage(action: TxAction, params?: string | string[]) {
 export function txInfoMessage(action: TxAction, params?: string | string[]) {
   switch (action) {
     case TxAction.Approve:
-      return `Approving ${parseParams(params)}`
+      return `Approving ${parseTxActionParams(params)}`
     case TxAction.ClaimAll:
-      return `Claim ${parseParams(params)} & BAL rewards`
+      return `Claim ${parseTxActionParams(params)} & BAL rewards`
     case TxAction.ClaimBal:
       return 'Claim BAL reward'
     case TxAction.ClaimWncg:
-      return `Claim ${parseParams(params)} reward`
+      return `Claim ${parseTxActionParams(params)} reward`
     case TxAction.EarmarkRewards:
       return 'Harvest BAL reward'
     case TxAction.ExitPool:
-      return `Exiting ${parseParams(params)} pool`
+      return `Exiting ${parseTxActionParams(params)} pool`
     case TxAction.JoinPool:
-      return `Joining ${parseParams(params)} pool`
+      return `Joining ${parseTxActionParams(params)} pool`
     case TxAction.Stake:
-      return `Stake ${parseParams(params)}`
+      return `Stake ${parseTxActionParams(params)}`
     case TxAction.Cooldown:
       return 'Start cooldown'
     case TxAction.Withdraw:
     case TxAction.WithdrawAndClaim:
-      return `Withdraw ${parseParams(params)}`
+      return `Withdraw ${parseTxActionParams(params)}`
     default:
       assertUnreachable(action)
   }
 }
 
-export function txErrorMessage(action: TxAction, params?: string | string[]) {
-  switch (action) {
-    case TxAction.Approve:
-      return `Failed to approve ${parseParams(params)}`
-    case TxAction.ClaimAll:
-      return `Failed to claim ${parseParams(params)} & BAL rewards`
-    case TxAction.ClaimBal:
-      return 'Failed to claim BAL reward'
-    case TxAction.ClaimWncg:
-      return `Failed to claim ${parseParams(params)} reward`
-    case TxAction.EarmarkRewards:
-      return 'Failed to harvest BAL reward'
-    case TxAction.ExitPool:
-      return `Failed to exit ${parseParams(params)} pool`
-    case TxAction.JoinPool:
-      return `Failed to join ${parseParams(params)} pool`
-    case TxAction.Stake:
-      return `Failed to stake ${parseParams(params)}`
-    case TxAction.Cooldown:
-      return 'Failed to start cooldown'
-    case TxAction.Withdraw:
-      return `Failed to withdraw staked ${parseParams(params)}`
-    case TxAction.WithdrawAndClaim:
-      return 'Failed to withdraw and claim'
-    default:
-      assertUnreachable(action)
-  }
-}
-
-function parseParams(params?: string | string[]) {
+function parseTxActionParams(params?: string | string[]) {
   if (!params || typeof params === 'string') return params
   return `${bnum(params[0] || 0).toFixed(8)} ${params?.[1]}`
 }

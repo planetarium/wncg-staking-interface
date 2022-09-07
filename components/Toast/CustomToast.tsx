@@ -35,6 +35,7 @@ export function CustomToast({
           {title}
         </h4>
       </header>
+
       <p className={styles.desc}>{message}</p>
     </aside>
   )

@@ -7,8 +7,9 @@ import { connectedState } from 'app/states/connection'
 import { ModalCategory } from 'app/states/modal'
 import { TxAction } from 'services/transaction'
 import { gaEvent } from 'lib/gtag'
+import { parseTxError } from 'utils/error'
 import { bnum } from 'utils/num'
-import { txErrorMessage, txToastTitle } from 'utils/transaction'
+import { txToastTitle } from 'utils/transaction'
 import { useClaim, useModal, useRewards, useToast } from 'hooks'
 
 import { Button } from 'components/Button'
@@ -24,7 +25,7 @@ export function ClaimRewardModal() {
   const { removeModal } = useModal()
   const { rewards, rewardsInFiatValue, rewardTokenSymbols, fetchRewards } =
     useRewards()
-  const { addCustomToast } = useToast()
+  const { addTxToast } = useToast()
 
   const claimTypes = ['all', ...rewardTokenSymbols].map((item) =>
     item.toLowerCase()
@@ -57,13 +58,13 @@ export function ClaimRewardModal() {
       await claimMethods[index]()
     } catch (error: any) {
       setLoading(null)
-
       if (error.code === 4001) return
-
       const action = claimActions[index]
-      addCustomToast({
-        title: txToastTitle(action),
-        message: txErrorMessage(action),
+      const errorMsg = parseTxError(error)
+      addTxToast({
+        action,
+        title: txToastTitle(action, 'error'),
+        message: errorMsg!.message,
         type: 'error',
       })
     }
