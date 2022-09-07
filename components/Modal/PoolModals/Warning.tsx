@@ -1,70 +1,66 @@
+import { motion } from 'framer-motion'
 import styles from './style.module.scss'
 
+import { parseTxError } from 'utils/error'
+
 import { Icon } from 'components/Icon'
+
+const motionVariants = {
+  initial: {
+    opacity: 0,
+    y: -20,
+  },
+  animate: {
+    opacity: 1,
+    y: 0,
+  },
+  exit: {
+    opacity: 0,
+    y: -20,
+  },
+}
+
+const motionTransition = {
+  ease: 'easeOut',
+  duration: 0.25,
+}
 
 type PreviewWarningProps = {
   error?: any
   rektPriceImpact?: boolean
 }
 
-export function PreviewWarning({
-  error,
-  rektPriceImpact,
-}: PreviewWarningProps) {
-  if (rektPriceImpact) {
-    return (
-      <aside className={styles.warning}>
-        <h3>
-          <Icon id="info" />
-          This price impact is too high.
-          <br />
-          You cannot proceed.
-        </h3>
-        <p>
-          The likelyhood of you losing money is too high. For your protection,
-          you can&apos;t perform this transaction on this interface.
-        </p>
-      </aside>
-    )
-  }
-
-  const errorText = parseError(error)
-
-  if (error) {
-    return (
-      <div>
-        <aside className={styles.warning}>
-          <h3>
-            <Icon id="info" />
-            {errorText.title}
-          </h3>
-          {errorText.message && <p>{errorText.message}</p>}
-        </aside>
-      </div>
-    )
-  }
-
-  return null
+const REKT_PRICE_IMPACT_MESSAGE = {
+  title: 'This price impact is too high. You cannot proceed.',
+  message:
+    "The likelyhood of you losing money is too high. For your protection, you can't perform this transaction on this interface.",
 }
 
-function parseError(error: any) {
-  switch (true) {
-    case /transfer amount exceeds/.test(error?.reason):
-      return {
-        title: 'Insufficient balance',
-        message:
-          "You don't have enough balance in your account for the transaction.",
-      }
-    case /BAL#207/.test(error?.reason):
-    case /BAL#406/.test(error?.reason):
-      return {
-        title: 'Cannot estimate gas',
-        message: 'Transaction may fail or require manual gas limit.',
-      }
-    default:
-      return {
-        title: 'Something went wrong',
-        message: 'Sorry for the inconvenience. Please try again later.',
-      }
-  }
+export function PreviewWarning({
+  error,
+  rektPriceImpact = false,
+}: PreviewWarningProps) {
+  const errorText = rektPriceImpact
+    ? REKT_PRICE_IMPACT_MESSAGE
+    : parseTxError(error)
+
+  if (!errorText) return null
+
+  return (
+    <motion.aside
+      className={styles.warning}
+      key="previewWarning"
+      variants={motionVariants}
+      transition={motionTransition}
+      initial="initial"
+      animate="animate"
+      exit="exit"
+    >
+      <h3>
+        <Icon id="info" />
+        {errorText.title}
+      </h3>
+      {errorText.message && <p>{errorText.message}</p>}
+    </motion.aside>
+  )
 }

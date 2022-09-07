@@ -1,5 +1,6 @@
 import { memo } from 'react'
 import { useMount, useUnmount } from 'react-use'
+import { AnimatePresence } from 'framer-motion'
 import styles from './Actions.module.scss'
 
 import { ModalCategory } from 'app/states/modal'
@@ -31,6 +32,8 @@ function JoinActions({
   const { removeModal } = useModal()
   const { poolTokenAddresses, poolTokenSymbols } = usePool()
   const provider = useProvider()
+
+  const showWarning = rektPriceImpact || !!error
 
   const isInProgress =
     isApprovingState(state.value) || state.value === 'joining'
@@ -89,7 +92,11 @@ function JoinActions({
         </ol>
       </div>
 
-      <PreviewWarning rektPriceImpact={rektPriceImpact} error={error} />
+      <AnimatePresence>
+        {showWarning && (
+          <PreviewWarning rektPriceImpact={rektPriceImpact} error={error} />
+        )}
+      </AnimatePresence>
 
       {isCompleted && (
         <Button
