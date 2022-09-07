@@ -19,6 +19,7 @@ type EtherInputProps = {
   control: Control<JoinFormFields>
   currentEther: string
   isNativeAsset: boolean
+  maximized: boolean
   selectEther(value: string): void
   setMaxValue(e: MouseEvent<HTMLButtonElement>): void
   setPropAmount(e: MouseEvent<HTMLButtonElement>): void
@@ -33,6 +34,7 @@ function EtherInput({
   control,
   currentEther,
   isNativeAsset,
+  maximized,
   selectEther,
   setMaxValue,
   setPropAmount,
@@ -62,7 +64,9 @@ function EtherInput({
     () => ({
       validate: {
         maxAmount(v: string) {
-          return bnum(v).lte(ethBalance) || 'Exceeds wallet balance'
+          const bValue = bnum(v)
+          if (bValue.isNaN()) return true
+          return bValue.lte(ethBalance) || 'Exceeds wallet balance'
         },
       },
       onChange() {
@@ -72,14 +76,9 @@ function EtherInput({
     [clearErrors, ethBalance]
   )
 
-  const maximized = useMemo(
-    () => !bnum(value).isZero() && bnum(value).eq(ethBalanceAvailable),
-    [ethBalanceAvailable, value]
-  )
-
   const showWarning = useMemo(() => {
     if (!isNativeAsset) return false
-    if (error || bnum(value).isZero()) return false
+    if (error || value === '') return false
     if (bnum(ethBalanceAvailable).minus(value).lte(0.05)) {
       return true
     }
@@ -108,7 +107,7 @@ function EtherInput({
       propButton={showPropButton}
       warning={
         showWarning
-          ? 'To ensure a smooth transaction, at least 0.05 ETH must be left in your wallet to pay for gas fees.'
+          ? 'To ensure a smooth transaction, at least 0.05 ETH is required.'
           : undefined
       }
     />

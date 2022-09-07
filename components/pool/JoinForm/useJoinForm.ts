@@ -46,8 +46,10 @@ export function useJoinForm(
     [calcUserPoolTokenBalancesAvailable, isNativeAsset]
   )
 
-  const ethValue = sanitizeNumber(watch('ethAmount'))
-  const wncgValue = sanitizeNumber(watch('wncgAmount'))
+  const _ethValue = watch('ethAmount')
+  const _wncgValue = watch('wncgAmount')
+  const ethValue = sanitizeNumber(_ethValue)
+  const wncgValue = sanitizeNumber(_wncgValue)
   const priceImpactAgreement = watch('priceImpactAgreement')
   const amounts = useMemo(() => [wncgValue, ethValue], [ethValue, wncgValue])
 
@@ -65,8 +67,9 @@ export function useJoinForm(
         return
       }
       setValue('ethAmount', userTokenBalancesAvailable[1])
+      trigger()
     },
-    [clearErrors, setValue, userTokenBalancesAvailable]
+    [clearErrors, setValue, trigger, userTokenBalancesAvailable]
   )
 
   const setPropAmount = useCallback(
@@ -88,16 +91,19 @@ export function useJoinForm(
   const joinMax = useCallback(() => {
     setValue('wncgAmount', userTokenBalancesAvailable[0])
     setValue('ethAmount', userTokenBalancesAvailable[1])
+
     clearErrors()
-  }, [clearErrors, setValue, userTokenBalancesAvailable])
+    trigger()
+  }, [clearErrors, setValue, trigger, userTokenBalancesAvailable])
 
   const joinOpt = useCallback(() => {
     const propMinAmounts = calcOptimizedAmounts(isNativeAsset)
-
     setValue('wncgAmount', propMinAmounts[0])
     setValue('ethAmount', propMinAmounts[1])
+
+    clearErrors()
     trigger()
-  }, [calcOptimizedAmounts, isNativeAsset, setValue, trigger])
+  }, [calcOptimizedAmounts, clearErrors, isNativeAsset, setValue, trigger])
 
   const priceImpact = useMemo(
     () => calcPriceImpact([wncgValue, ethValue]),
@@ -121,16 +127,24 @@ export function useJoinForm(
           const sumValue = toFiat(address, amounts[i])
           return total.plus(sumValue)
         }, bnum(0))
-        .toFixed(2),
+        .toFixed(2) || '0',
     [amounts, toFiat, assets]
   )
 
-  const maximized = useMemo(
+  const wncgMaximized = useMemo(
     () =>
-      bnum(wncgValue).eq(userTokenBalancesAvailable[0]) &&
-      !bnum(ethValue).isZero() &&
-      bnum(ethValue).eq(userTokenBalancesAvailable[1]),
-    [ethValue, userTokenBalancesAvailable, wncgValue]
+      _wncgValue !== '' && bnum(_wncgValue).eq(userTokenBalancesAvailable[0]),
+    [_wncgValue, userTokenBalancesAvailable]
+  )
+
+  const ethMaximized = useMemo(
+    () => _ethValue !== '' && bnum(_ethValue).eq(userTokenBalancesAvailable[1]),
+    [_ethValue, userTokenBalancesAvailable]
+  )
+
+  const maximized = useMemo(
+    () => wncgMaximized && ethMaximized,
+    [ethMaximized, wncgMaximized]
   )
 
   const optimized = useMemo(
@@ -140,14 +154,12 @@ export function useJoinForm(
 
   const showPropButton = useMemo(() => {
     const hasError = !!Object.keys(formState.errors).length
-    const wncg = bnum(wncgValue)
-    const eth = bnum(ethValue)
 
     return {
-      wncgAmount: !hasError && wncg.isZero() && !eth.isZero(),
-      ethAmount: !hasError && eth.isZero() && !wncg.isZero(),
+      wncgAmount: !hasError && _wncgValue === '' && !bnum(_ethValue).isZero(),
+      ethAmount: !hasError && _ethValue === '' && !bnum(_wncgValue).isZero(),
     }
-  }, [ethValue, formState, wncgValue])
+  }, [_ethValue, _wncgValue, formState.errors])
 
   const excessiveAmounts = useMemo(
     () => amounts.some((amount, i) => bnum(amount).gt(userTokenBalances[i])),
@@ -206,6 +218,7 @@ export function useJoinForm(
   )
 
   return {
+    ethMaximized,
     highPriceImpact,
     joinDisabled,
     joinMax,
@@ -222,5 +235,6 @@ export function useJoinForm(
     showPropButton,
     togglePriceImpactAgreement,
     totalFiatValue,
+    wncgMaximized,
   }
 }

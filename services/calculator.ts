@@ -1,6 +1,7 @@
 // https://github.com/balancer-labs/frontend-v2
 
-import { BigNumber, BigNumberish } from 'ethers'
+import { BigNumber } from 'ethers'
+import type { BigNumberish } from 'ethers'
 import { formatUnits, getAddress, parseUnits } from 'ethers/lib/utils'
 import OldBigNumber from 'bignumber.js'
 import {

@@ -1,4 +1,5 @@
-import { BigNumberish, utils } from 'ethers'
+import { utils } from 'ethers'
+import type { BigNumberish } from 'ethers'
 import OldBigNumber from 'bignumber.js'
 
 type SanitizeNumberValueOption = {

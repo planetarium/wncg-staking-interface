@@ -1,4 +1,5 @@
-import { BigNumberish, constants, Contract } from 'ethers'
+import { constants, Contract } from 'ethers'
+import type { BigNumberish } from 'ethers'
 import { formatUnits } from 'ethers/lib/utils'
 import type {
   TransactionResponse,

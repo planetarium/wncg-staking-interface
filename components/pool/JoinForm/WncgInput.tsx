@@ -16,6 +16,7 @@ type WncgInputProps = {
   balance: string
   clearErrors: UseFormClearErrors<JoinFormFields>
   control: Control<JoinFormFields>
+  maximized: boolean
   showPropButton: boolean
   setMaxValue(e: MouseEvent<HTMLButtonElement>): void
   setPropAmount(e: MouseEvent<HTMLButtonElement>): void
@@ -29,6 +30,7 @@ function WncgInput({
   balance,
   clearErrors,
   control,
+  maximized,
   showPropButton,
   setMaxValue,
   setPropAmount,
@@ -40,7 +42,9 @@ function WncgInput({
     () => ({
       validate: {
         maxAmount(v: string) {
-          return bnum(v).lte(balance) || 'Exceeds wallet balance'
+          const bValue = bnum(v)
+          if (bValue.isNaN()) return true
+          return bValue.lte(balance) || 'Exceeds wallet balance'
         },
       },
       onChange() {
@@ -49,8 +53,6 @@ function WncgInput({
     }),
     [clearErrors, balance]
   )
-
-  const maximized = useMemo(() => bnum(value).eq(balance), [balance, value])
 
   useEffect(() => {
     trigger('wncgAmount')
