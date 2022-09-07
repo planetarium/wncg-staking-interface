@@ -51,8 +51,11 @@ function parseError(error: any) {
   switch (true) {
     case /transfer amount exceeds/.test(error?.reason):
       return {
-        title: '',
+        title: 'Insufficient balance',
+        message:
+          "You don't have enough balance in your account for the transaction.",
       }
+    case /BAL#207/.test(error?.reason):
     case /BAL#406/.test(error?.reason):
       return {
         title: 'Cannot estimate gas',
@@ -61,6 +64,7 @@ function parseError(error: any) {
     default:
       return {
         title: 'Something went wrong',
+        message: 'Sorry for the inconvenience. Please try again later.',
       }
   }
 }
