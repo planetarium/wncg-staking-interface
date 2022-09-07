@@ -1,7 +1,7 @@
 const storeKeys = {
   Account: `wncgStaking.account`,
   UserSettings: {
-    EstimatedEarnOption: `wncgStaking.estimatedEarnOption`,
+    EstimatedEarnPeriod: `wncgStaking.estimatedEarnPeriod`,
     Muted: `wncgStaking.muted`,
     Slippage: `wncgStaking.slippage`,
   },

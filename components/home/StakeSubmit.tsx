@@ -9,9 +9,8 @@ import styles from './styles/StakeSubmit.module.scss'
 import { connectedState } from 'app/states/connection'
 import { ModalCategory } from 'app/states/modal'
 import { configService } from 'services/config'
-import { TxAction } from 'services/transaction'
 import { gaEvent } from 'lib/gtag'
-import { handleError } from 'utils/error'
+import { parseTxError } from 'utils/error'
 import {
   useAllowances,
   useApprove,
@@ -21,6 +20,7 @@ import {
   usePool,
   useProvider,
   useStake,
+  useToast,
   useUnstakeTimestamps,
 } from 'hooks'
 import { UnstakeStatus } from 'hooks/useUnstakeTimestamps'
@@ -59,6 +59,7 @@ export function StakeSubmit({
   const { bptAddress, poolTokenName } = usePool()
   const provider = useProvider()
   const { stake } = useStake()
+  const { addErrorToast } = useToast()
   const { unstakeStatus } = useUnstakeTimestamps()
 
   const isConnected = useRecoilValue(connectedState)
@@ -70,6 +71,16 @@ export function StakeSubmit({
   function resetStatus() {
     setActive(null)
     setPendingTx('')
+  }
+
+  function handleError(error: any) {
+    const errorMsg = parseTxError(error)
+    if (errorMsg) {
+      addErrorToast({
+        ...errorMsg,
+      })
+    }
+    resetStatus()
   }
 
   async function proceedStake() {
@@ -86,8 +97,7 @@ export function StakeSubmit({
       if (hash) setPendingTx(hash)
       clearInput()
     } catch (error) {
-      handleError(error, TxAction.Stake)
-      setActive(null)
+      handleError(error)
     }
   }
 
@@ -101,8 +111,7 @@ export function StakeSubmit({
       const hash = await approve(bptAddress, configService.stakingAddress)
       if (hash) setPendingTx(hash)
     } catch (error) {
-      handleError(error, TxAction.Approve)
-      setActive(null)
+      handleError(error)
     }
   }
 

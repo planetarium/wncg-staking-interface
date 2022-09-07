@@ -131,7 +131,7 @@ export function useExitMath() {
       const _bptIn = calcBptIn(params)
 
       try {
-        return (
+        const impact =
           calculator
             ?.priceImpact(_amountsOut, {
               exactOut,
@@ -139,12 +139,12 @@ export function useExitMath() {
               queryBpt: bnum(_bptIn),
             })
             .toNumber() || 0
-        )
+        return Math.min(impact, 1)
       } catch (error) {
         return 1
       }
     },
-    [calcAmountsOut, calcBptIn, calculator]
+    [amountExceedsPoolBalance, calcAmountsOut, calcBptIn, calculator]
   )
 
   return {

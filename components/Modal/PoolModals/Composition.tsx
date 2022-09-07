@@ -12,12 +12,14 @@ import { usePool, useFiatCurrency } from 'hooks'
 import { TokenIcon } from 'components/TokenIcon'
 
 type PreviewCompositionProps = {
+  action: PoolAction
   amounts: string[]
   isNativeAsset: boolean
   totalFiatValue: string
 }
 
 function PreviewComposition({
+  action,
   amounts,
   isNativeAsset,
   totalFiatValue,
@@ -51,9 +53,9 @@ function PreviewComposition({
         if (i === nativeAssetIndex && isNativeAsset) {
           symbol = configService.nativeAsset.symbol
         }
-
         const amount = amounts[i]
-        if (bnum(amount).isZero()) return null
+
+        if (action === 'exit' && bnum(amount).isZero()) return null
 
         const usdValue = usdValues[i]
         const pcnt = bnum(tokenRatios[i])

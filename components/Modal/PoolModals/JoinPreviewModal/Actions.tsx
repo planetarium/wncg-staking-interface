@@ -1,5 +1,6 @@
-import { memo, MouseEvent } from 'react'
+import { memo } from 'react'
 import { useMount, useUnmount } from 'react-use'
+import { AnimatePresence } from 'framer-motion'
 import styles from './Actions.module.scss'
 
 import { ModalCategory } from 'app/states/modal'
@@ -32,25 +33,16 @@ function JoinActions({
   const { poolTokenAddresses, poolTokenSymbols } = usePool()
   const provider = useProvider()
 
-  const submitDisabled =
+  const showWarning = rektPriceImpact || !!error
+
+  const isInProgress =
     isApprovingState(state.value) || state.value === 'joining'
+  const submitDisabled = isInProgress || rektPriceImpact
   const isCompleted = state.value === 'completed'
-  const isIdle = state.value === 'idle'
-  const showCloseButton = isCompleted || isIdle || rektPriceImpact
+  const hideSubmitButton = rektPriceImpact || isCompleted
 
   function closeModal() {
     removeModal(ModalCategory.JoinPreview)
-  }
-
-  function handleSubmit(e: MouseEvent) {
-    e.stopPropagation()
-
-    if (showCloseButton) {
-      closeModal()
-      return
-    }
-
-    handleJoin()
   }
 
   useMount(() => {
@@ -100,7 +92,11 @@ function JoinActions({
         </ol>
       </div>
 
-      <PreviewWarning rektPriceImpact={rektPriceImpact} error={error} />
+      <AnimatePresence>
+        {showWarning && (
+          <PreviewWarning rektPriceImpact={rektPriceImpact} error={error} />
+        )}
+      </AnimatePresence>
 
       {isCompleted && (
         <Button
@@ -110,20 +106,21 @@ function JoinActions({
           href="/wncg"
           fullWidth
         >
-          Stake
+          Go Main & Stake
         </Button>
       )}
 
-      <Button
-        variant={showCloseButton ? 'secondary' : 'primary'}
-        size="large"
-        onClick={handleSubmit}
-        fullWidth
-        loading={submitDisabled}
-        disabled={submitDisabled}
-      >
-        {showCloseButton ? 'Close' : getJoinActionButtonLabel(state.value)}
-      </Button>
+      {!hideSubmitButton && (
+        <Button
+          size="large"
+          onClick={handleJoin}
+          fullWidth
+          loading={submitDisabled}
+          disabled={submitDisabled}
+        >
+          {getJoinActionButtonLabel(state.value)}
+        </Button>
+      )}
     </footer>
   )
 }

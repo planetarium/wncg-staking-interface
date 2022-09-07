@@ -1,22 +1,13 @@
-import {
-  memo,
-  MouseEvent,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react'
-import { useIsomorphicLayoutEffect } from 'react-use'
-import store from 'store'
+import { memo, useCallback, useEffect, useMemo, useState } from 'react'
+import { useRecoilValue } from 'recoil'
 import clsx from 'clsx'
 import styles from './styles/EstimatedEarn.module.scss'
 
-import STORAGE_KEYS from 'constants/storageKeys'
+import { estimatedEarnPeriodState } from 'app/states/settings'
 import { configService } from 'services/config'
-import { gaEvent } from 'lib/gtag'
 import { countUpOption, usdCountUpOption } from 'utils/countUp'
 import { getTokenSymbol } from 'utils/token'
-import { useFiatCurrency } from 'hooks'
+import { useFiatCurrency, useSettings } from 'hooks'
 import { useEstimation } from './useEstimation'
 
 import { CountUp } from 'components/CountUp'
@@ -27,49 +18,30 @@ type EstimatedEarnProps = {
 }
 
 function EstimatedEarn({ amount = '' }: EstimatedEarnProps) {
-  const [option, setOption] = useState('year')
   const [estimation, setEstimation] = useState([0, 0])
 
   const { calcEstimatedRevenue } = useEstimation()
   const { toFiat } = useFiatCurrency()
+  const { updateEstimatedEarnPeriod } = useSettings()
+
+  const period = useRecoilValue(estimatedEarnPeriodState)
 
   const updateEstimation = useCallback(() => {
-    const expectedRevenues = calcEstimatedRevenue(amount, option)
+    const expectedRevenues = calcEstimatedRevenue(amount, period)
     if (expectedRevenues.every((value, i) => value === estimation[i])) return
     setEstimation(expectedRevenues)
-  }, [amount, estimation, calcEstimatedRevenue, option])
+  }, [amount, estimation, calcEstimatedRevenue, period])
 
-  function handleOption(e: MouseEvent<HTMLButtonElement>) {
-    const newOption = e.currentTarget.value
-    setOption(newOption)
-    store.set(STORAGE_KEYS.UserSettings.EstimatedEarnOption, newOption)
-    gaEvent({
-      name: 'estimated_earn_period',
-      params: {
-        period: newOption,
-      },
-    })
-  }
-
-  const optionsClassName = useMemo(
+  const periodClassName = useMemo(
     () =>
-      clsx(styles.options, {
-        [styles.day]: option === 'day',
-        [styles.week]: option === 'week',
-        [styles.month]: option === 'month',
-        [styles.year]: option === 'year',
+      clsx(styles.periods, {
+        [styles.day]: period === 'day',
+        [styles.week]: period === 'week',
+        [styles.month]: period === 'month',
+        [styles.year]: period === 'year',
       }),
-    [option]
+    [period]
   )
-
-  useIsomorphicLayoutEffect(() => {
-    const initialOption = store.get(
-      STORAGE_KEYS.UserSettings.EstimatedEarnOption
-    )
-    if (initialOption && initialOption !== option) {
-      setOption(initialOption)
-    }
-  }, [option])
 
   useEffect(() => {
     updateEstimation()
@@ -80,12 +52,12 @@ function EstimatedEarn({ amount = '' }: EstimatedEarnProps) {
       <header className={styles.header}>
         <h2 className={styles.title}>Estimated Earn</h2>
 
-        <div className={optionsClassName}>
+        <div className={periodClassName}>
           <button
             className={styles.day}
             type="button"
             value="day"
-            onClick={handleOption}
+            onClick={updateEstimatedEarnPeriod}
             aria-label="per day"
           >
             1d
@@ -94,7 +66,7 @@ function EstimatedEarn({ amount = '' }: EstimatedEarnProps) {
             className={styles.week}
             type="button"
             value="week"
-            onClick={handleOption}
+            onClick={updateEstimatedEarnPeriod}
             aria-label="per week"
           >
             1w
@@ -103,7 +75,7 @@ function EstimatedEarn({ amount = '' }: EstimatedEarnProps) {
             className={styles.month}
             type="button"
             value="month"
-            onClick={handleOption}
+            onClick={updateEstimatedEarnPeriod}
             aria-label="per month"
           >
             1m
@@ -112,7 +84,7 @@ function EstimatedEarn({ amount = '' }: EstimatedEarnProps) {
             className={styles.year}
             type="button"
             value="year"
-            onClick={handleOption}
+            onClick={updateEstimatedEarnPeriod}
             aria-label="per year"
           >
             1y

@@ -1,7 +1,9 @@
 import type { NextPage } from 'next'
+import Link from 'next/link'
 import Head from 'next/head'
 import styles from 'styles/form.module.scss'
 
+import { Icon } from 'components/Icon'
 import PageWrapper from 'components/StakingPageWrapper'
 import ExitForm from 'components/pool/ExitForm'
 import MyWallet from 'components/pool/MyWallet'
@@ -16,6 +18,13 @@ const WncgExitPool: NextPage = () => {
 
       <PageWrapper>
         <div className={styles.container}>
+          <Link href="/wncg">
+            <a className={styles.backButton}>
+              <Icon id="arrowRight" />
+              Go Main
+            </a>
+          </Link>
+
           <h1 className="hidden">Exit Pool</h1>
 
           <div className={styles.left}>

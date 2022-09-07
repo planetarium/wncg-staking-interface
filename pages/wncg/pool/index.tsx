@@ -22,7 +22,7 @@ const WncgPool: NextPage = () => {
           <Link href="/wncg">
             <a className={styles.backButton}>
               <Icon id="arrowRight" />
-              Go main
+              Go Main
             </a>
           </Link>
 

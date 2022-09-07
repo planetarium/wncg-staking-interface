@@ -4,15 +4,15 @@ import { AnimatePresence, motion } from 'framer-motion'
 import styles from '../styles/UnstakeForm.module.scss'
 
 import { ModalCategory } from 'app/states/modal'
-import { TxAction } from 'services/transaction'
 import { gaEvent } from 'lib/gtag'
-import { handleError } from 'utils/error'
+import { parseTxError } from 'utils/error'
 import { bnum } from 'utils/num'
 import {
   useModal,
   usePool,
   useRewards,
   useStakedBalance,
+  useToast,
   useUnstake,
 } from 'hooks'
 import { formTransition, motionVariants, TabId, TabPanelId } from '../constants'
@@ -36,6 +36,7 @@ export function UnstakeForm({ disabled }: UnstakeFormProps) {
   const { poolTokenName } = usePool()
   const { rewardTokenSymbols } = useRewards()
   const { stakedBalance } = useStakedBalance()
+  const { addErrorToast } = useToast()
   const { withdraw } = useUnstake()
 
   const { clearErrors, control, setValue, watch } = useForm({
@@ -110,7 +111,12 @@ export function UnstakeForm({ disabled }: UnstakeFormProps) {
       setLoading(false)
     } catch (error) {
       setLoading(false)
-      handleError(error, TxAction.Withdraw)
+      const errorMsg = parseTxError(error)
+      if (errorMsg) {
+        addErrorToast({
+          ...errorMsg,
+        })
+      }
     }
   }
 

@@ -103,7 +103,7 @@ export class TransactionService {
     this.addTxToast({
       action: target.action,
       hash: target.hash,
-      title: txToastTitle(target.action),
+      title: txToastTitle(target.action, 'success'),
       message: txSuccessMessage(target.action, target.params),
       type: 'success',
     })

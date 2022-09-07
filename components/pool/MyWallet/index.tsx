@@ -1,13 +1,14 @@
 import { memo, MouseEvent, useMemo } from 'react'
-import NumberFormat from 'react-number-format'
 import clsx from 'clsx'
 import styles from '../styles/Widget.module.scss'
 
 import { configService } from 'services/config'
 import { uniqAddress } from 'utils/address'
+import { usdCountUpOption } from 'utils/countUp'
 import { bnum } from 'utils/num'
 import { useBalances, usePool, useFiatCurrency } from 'hooks'
 
+import { CountUp } from 'components/CountUp'
 import MyWalletItem from './Item'
 
 type MyWalletProps = {
@@ -97,6 +98,7 @@ function MyWallet({ currentEther, selectEther }: MyWalletProps) {
             <dl
               className={clsx(styles.ethList, {
                 [styles.selectable]: isSelectable,
+                [styles.weth]: currentEther === etherAddresses[1],
               })}
             >
               {etherAddresses.map((address) => (
@@ -115,12 +117,10 @@ function MyWallet({ currentEther, selectEther }: MyWalletProps) {
         <div className={styles.total}>
           <dt>Total</dt>
           <dd>
-            <NumberFormat
-              value={totalFiatValue}
-              displayType="text"
-              thousandSeparator
-              decimalScale={2}
-              prefix="$"
+            <CountUp
+              {...usdCountUpOption}
+              className={styles.usd}
+              end={totalFiatValue}
             />
           </dd>
         </div>

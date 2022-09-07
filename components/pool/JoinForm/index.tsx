@@ -3,7 +3,6 @@ import { useForm } from 'react-hook-form'
 import styles from '../styles/Form.module.scss'
 
 import { configService } from 'services/config'
-import { sanitizeNumber } from 'utils/num'
 import { useBalances, usePool } from 'hooks'
 import { useJoinForm } from './useJoinForm'
 import type { JoinFormFields } from './type'
@@ -29,11 +28,14 @@ function JoinForm({ currentEther, selectEther }: JoinFormProps) {
   const useFormReturn = useForm<JoinFormFields>({
     mode: 'onChange',
     defaultValues: {
+      ethAmount: '',
+      wncgAmount: '',
       priceImpactAgreement: false,
     },
   })
   const { clearErrors, control, formState, trigger, watch } = useFormReturn
   const {
+    ethMaximized,
     highPriceImpact,
     joinMax,
     joinOpt,
@@ -49,10 +51,11 @@ function JoinForm({ currentEther, selectEther }: JoinFormProps) {
     showPropButton,
     togglePriceImpactAgreement,
     totalFiatValue,
+    wncgMaximized,
   } = useJoinForm(isNativeAsset, useFormReturn)
 
-  const ethValue = sanitizeNumber(watch('ethAmount'))
-  const wncgValue = sanitizeNumber(watch('wncgAmount'))
+  const ethValue = watch('ethAmount')
+  const wncgValue = watch('wncgAmount')
   const priceImpactAgreement = watch('priceImpactAgreement')
 
   return (
@@ -68,6 +71,7 @@ function JoinForm({ currentEther, selectEther }: JoinFormProps) {
           balance={balanceFor(poolTokenAddresses[0])}
           clearErrors={clearErrors}
           control={control}
+          maximized={wncgMaximized}
           setMaxValue={setMaxValue}
           setPropAmount={setPropAmount}
           showPropButton={showPropButton.wncgAmount}
@@ -80,6 +84,7 @@ function JoinForm({ currentEther, selectEther }: JoinFormProps) {
           control={control}
           currentEther={currentEther}
           isNativeAsset={isNativeAsset}
+          maximized={ethMaximized}
           showPropButton={showPropButton.ethAmount}
           selectEther={selectEther}
           setMaxValue={setMaxValue}

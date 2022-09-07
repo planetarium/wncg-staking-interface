@@ -6,16 +6,16 @@ import styles from '../styles/StakeSidebar.module.scss'
 import { connectedState } from 'app/states/connection'
 import { networkMismatchState } from 'app/states/error'
 import { isMobileState } from 'app/states/mediaQuery'
-import { TxAction } from 'services/transaction'
 import { gaEvent } from 'lib/gtag'
 import { countUpOption, usdCountUpOption } from 'utils/countUp'
-import { handleError } from 'utils/error'
+import { parseTxError } from 'utils/error'
 import {
   useConnection,
   useEarmark,
   useEarmarkIncentive,
   useEvents,
   useProvider,
+  useToast,
 } from 'hooks'
 import { motionVariants } from '../constants'
 
@@ -28,15 +28,15 @@ export function StakeSidebarAdvanced() {
   const [loading, setLoading] = useState(false)
 
   const { connect } = useConnection()
+  const { earmarkRewards } = useEarmark()
   const {
     earmarkIncentive,
     earmarkIncentiveInFiatValue,
     fetchEarmarkIncentive,
   } = useEarmarkIncentive()
-
   const { earmarkRewardsEvent } = useEvents()
   const provider = useProvider()
-  const { earmarkRewards } = useEarmark()
+  const { addErrorToast } = useToast()
 
   const networkMismatch = useRecoilValue(networkMismatchState)
   const isConnected = useRecoilValue(connectedState)
@@ -63,7 +63,12 @@ export function StakeSidebarAdvanced() {
       await earmarkRewards()
     } catch (error) {
       setLoading(false)
-      handleError(error, TxAction.EarmarkRewards)
+      const errorMsg = parseTxError(error)
+      if (errorMsg) {
+        addErrorToast({
+          ...errorMsg,
+        })
+      }
     }
   }
 

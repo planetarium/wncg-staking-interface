@@ -7,14 +7,13 @@ import {
 } from 'react'
 import { useMount, useUnmount } from 'react-use'
 import NumberFormat from 'react-number-format'
-import { useRecoilState } from 'recoil'
+import { useRecoilValue } from 'recoil'
 import { motion } from 'framer-motion'
 import clsx from 'clsx'
-import store from 'store'
 import styles from '../styles/Slippage.module.scss'
 
 import { slippageState } from 'app/states/settings'
-import STORAGE_KEYS from 'constants/storageKeys'
+import { useSettings } from 'hooks'
 import { menuTransition, menuVariants, SLIPPAGES } from './constants'
 
 type SlippageMenuProps = {
@@ -22,16 +21,12 @@ type SlippageMenuProps = {
 }
 
 function SlippageMenu({ close }: SlippageMenuProps) {
-  const [slippage, setSlippage] = useRecoilState(slippageState)
+  const { updateSlippage } = useSettings()
+
+  const slippage = useRecoilValue(slippageState) || 0
   const menuRef = useRef<HTMLDivElement>(null)
 
-  const customSlippage = !SLIPPAGES.includes(slippage || 0)
-
-  function updateSlippage(value: string | null) {
-    const newSlippage = value ? Number(value) : null
-    setSlippage(newSlippage)
-    store.set(STORAGE_KEYS.UserSettings.Slippage, newSlippage)
-  }
+  const customSlippage = !SLIPPAGES.includes(slippage)
 
   function handleButtonClick(e: ReactMouseEvent<HTMLButtonElement>) {
     updateSlippage(e.currentTarget.value)
@@ -57,10 +52,6 @@ function SlippageMenu({ close }: SlippageMenuProps) {
 
   useMount(() => {
     window.addEventListener('click', closeOnBlur, { passive: false })
-    const storedSlippage = store.get(STORAGE_KEYS.UserSettings.Slippage)
-    if (storedSlippage) {
-      updateSlippage(storedSlippage)
-    }
   })
 
   useUnmount(() => {

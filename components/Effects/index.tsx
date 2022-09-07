@@ -2,6 +2,7 @@ import { memo } from 'react'
 
 import ApprovalEffects from './ApprovalEffects'
 import BaseEffects from './BaseEffects'
+import ConfigEffects from './ConfigEffects'
 import PoolEffects from './PoolEffects'
 import RewardEffects from './RewardEffects'
 import StakeEffects from './StakeEffects'
@@ -12,6 +13,7 @@ function Effects() {
     <>
       <ApprovalEffects />
       <BaseEffects />
+      <ConfigEffects />
       <PoolEffects />
       <RewardEffects />
       <StakeEffects />

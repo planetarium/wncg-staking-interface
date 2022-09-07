@@ -1,4 +1,5 @@
-import { BigNumberish, utils } from 'ethers'
+import { utils } from 'ethers'
+import type { BigNumberish } from 'ethers'
 import OldBigNumber from 'bignumber.js'
 
 type SanitizeNumberValueOption = {
@@ -27,6 +28,8 @@ export function etherToWei(amount: string) {
 export function weiToEther(amount: BigNumberish) {
   return utils.formatEther(amount)
 }
+
+OldBigNumber.config({ EXPONENTIAL_AT: [-25, 25] })
 
 export function bnum(value: string | number | OldBigNumber): OldBigNumber {
   const number =

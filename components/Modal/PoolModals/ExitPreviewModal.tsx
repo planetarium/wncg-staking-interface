@@ -1,23 +1,19 @@
 import { MouseEvent, useCallback, useEffect, useState } from 'react'
+import { AnimatePresence } from 'framer-motion'
 import type { Event } from 'ethers'
 import styles from './style.module.scss'
 
 import { ModalCategory } from 'app/states/modal'
 import { TxAction } from 'services/transaction'
-import { txErrorMessage, txToastTitle } from 'utils/transaction'
-import {
-  useEvents,
-  useExitPool,
-  useModal,
-  usePool,
-  useProvider,
-  useToast,
-} from 'hooks'
+import { txToastTitle } from 'utils/transaction'
+import { useEvents, useExitPool, useModal, useProvider, useToast } from 'hooks'
 
 import { Button } from 'components/Button'
+import { Icon } from 'components/Icon'
 import PreviewComposition from './Composition'
 import PreviewSummary from './Summary'
 import { PreviewWarning } from './Warning'
+import { parseTxError } from 'utils/error'
 
 type ExitPreviewModalProps = {
   amounts: string[]
@@ -54,21 +50,17 @@ export function ExitPreviewModal({
   const { poolBalanceChangedEvent } = useEvents()
   const { exitPool } = useExitPool()
   const { removeModal } = useModal()
-  const { poolName } = usePool()
   const provider = useProvider()
-  const { addCustomToast } = useToast()
+  const { addTxToast } = useToast()
 
-  function closeModal() {
+  const showWarning = rektPriceImpact || !!error
+
+  function close() {
     removeModal(ModalCategory.ExitPreview)
   }
 
   async function handleExit(e: MouseEvent) {
     e.stopPropagation()
-
-    if (showClose) {
-      closeModal()
-      return
-    }
 
     setError(null)
     setLoading(true)
@@ -88,10 +80,12 @@ export function ExitPreviewModal({
     } catch (error: any) {
       setLoading(false)
       if (error.code === 4001) return
+      const errorMsg = parseTxError(error)
       setError(error)
-      addCustomToast({
-        title: txToastTitle(TxAction.ExitPool),
-        message: txErrorMessage(TxAction.ExitPool, poolName),
+      addTxToast({
+        action: TxAction.ExitPool,
+        title: txToastTitle(TxAction.ExitPool, 'error'),
+        message: errorMsg!.message,
         type: 'error',
       })
     }
@@ -119,9 +113,20 @@ export function ExitPreviewModal({
 
   return (
     <div className={styles.previewModal}>
-      <h1 className={styles.title}>Exit Pool Preview</h1>
+      <header className={styles.header}>
+        <h1 className={styles.title}>Exit Pool Preview</h1>
+        <button
+          className={styles.closeButton}
+          type="button"
+          onClick={close}
+          aria-label="Close"
+        >
+          <Icon id="close" />
+        </button>
+      </header>
 
       <PreviewComposition
+        action="exit"
         amounts={amounts}
         isNativeAsset={isNativeAsset}
         totalFiatValue={totalFiatValue}
@@ -131,20 +136,25 @@ export function ExitPreviewModal({
         totalFiatValue={totalFiatValue}
       />
 
-      <PreviewWarning rektPriceImpact={rektPriceImpact} error={error} />
+      <AnimatePresence>
+        {showWarning && (
+          <PreviewWarning rektPriceImpact={rektPriceImpact} error={error} />
+        )}
+      </AnimatePresence>
 
-      <footer className={styles.footer}>
-        <Button
-          variant={showClose ? 'secondary' : 'primary'}
-          size="large"
-          onClick={handleExit}
-          fullWidth
-          loading={loading}
-          disabled={disabled || loading}
-        >
-          {showClose ? 'Close' : 'Exit pool'}
-        </Button>
-      </footer>
+      {!showClose && (
+        <footer className={styles.footer}>
+          <Button
+            size="large"
+            onClick={handleExit}
+            fullWidth
+            loading={loading}
+            disabled={disabled || loading}
+          >
+            Exit pool
+          </Button>
+        </footer>
+      )}
     </div>
   )
 }

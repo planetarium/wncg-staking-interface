@@ -34,6 +34,10 @@ export function renderToastEmoji(type: ToastType) {
         </span>
       )
     default:
-      return null
+      return (
+        <span className={styles.emoji} aria-hidden>
+          💫
+        </span>
+      )
   }
 }
