@@ -38,6 +38,10 @@ $nested-list-padding: 20px;
           }
         }
 
+        &::after {
+          height: calc(50% - 25px);
+        }
+
         .detailItem {
           cursor: pointer;
           opacity: 0.3;
@@ -64,7 +68,7 @@ $nested-list-padding: 20px;
         top: 0;
         left: 0;
         width: 1px;
-        height: calc(50% - 25px);
+        height: calc(100% - 25px);
         background-color: $gray-4;
         transform-origin: 0 0;
         transition: $transition-short;
