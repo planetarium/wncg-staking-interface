@@ -15,8 +15,6 @@ export function CooldownButton() {
   const { unstakeStatus } = useUnstakeTimestamps()
 
   async function handleStartCooldown() {
-    console.log('1')
-
     setLoading(true)
     gaEvent({
       name: 'start_cooldown',

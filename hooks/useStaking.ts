@@ -19,8 +19,6 @@ const options = {
 export function useStaking() {
   const { contract, stakingAddress } = useStakingContract()
 
-  console.log('stakingAddress: ', stakingAddress)
-
   const balancerGaugeAddress = useQuery(
     ['balancerGaugeAddress', stakingAddress],
     () => getBalancerGaugeAddress(contract!),
