@@ -1,15 +1,22 @@
 import { useState } from 'react'
 import styles from './style.module.scss'
 
-import { useConnection } from 'hooks'
+import { ModalCategory } from 'app/states/modal'
+import { useConnection, useModal } from 'hooks'
 
 import { Button } from 'components/Button'
 import { Checkbox } from 'components/Checkbox'
 import { Icon } from 'components/Icon'
 
 export function ConnectModal() {
-  const [checked, setChecked] = useState(false)
   const { connect } = useConnection()
+  const { removeModal } = useModal()
+
+  const [checked, setChecked] = useState(false)
+
+  function close() {
+    removeModal(ModalCategory.Connect)
+  }
 
   function handleCheck(value: boolean) {
     setChecked(value)
@@ -17,7 +24,18 @@ export function ConnectModal() {
 
   return (
     <div className={styles.connectModal}>
-      <h1 className={styles.title}>Connect Your Wallet</h1>
+      <header className={styles.header}>
+        <h1 className={styles.title}>Connect Your Wallet</h1>
+        <button
+          className={styles.closeButton}
+          type="button"
+          onClick={close}
+          aria-label="Close"
+        >
+          <Icon id="close" />
+        </button>
+      </header>
+
       <div className={styles.agreement}>
         <Checkbox
           className={styles.checkbox}

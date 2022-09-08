@@ -101,16 +101,18 @@ export function ClaimRewardModal() {
         ))}
       </dl>
 
-      <Button
-        size="large"
-        name="all"
-        onClick={handleClaim}
-        loading={loading === 'all'}
-        disabled={claimAllDisabled}
-        fullWidth
-      >
-        Claim all rewards
-      </Button>
+      <footer className={styles.footer}>
+        <Button
+          size="large"
+          name="all"
+          onClick={handleClaim}
+          loading={loading === 'all'}
+          disabled={claimAllDisabled}
+          fullWidth
+        >
+          Claim all rewards
+        </Button>
+      </footer>
 
       <ClaimRewardEffects setLoading={setLoading} />
     </div>
