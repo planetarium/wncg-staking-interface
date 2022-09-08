@@ -49,6 +49,8 @@ const WncgStaking: NextPage = () => {
           <Content />
         </div>
       </PageWrapper>
+
+      {legacyMode && <MigrationModal close={close} showModal={showModal} />}
     </>
   )
 }
