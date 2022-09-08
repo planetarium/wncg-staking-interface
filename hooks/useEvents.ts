@@ -4,10 +4,12 @@ import { utils } from 'ethers'
 import { hexZeroPad } from 'ethers/lib/utils'
 
 import { accountState } from 'app/states/connection'
+import { stakingContractAddressState } from 'app/states/settings'
 import { configService } from 'services/config'
 
 export function useEvents() {
   const account = useRecoilValue(accountState)
+  const stakingAddress = useRecoilValue(stakingContractAddressState)
 
   const createApprovalEvent = useCallback(
     (address?: string, spender?: string) => {
@@ -28,71 +30,71 @@ export function useEvents() {
   const stakedEvent = useMemo(() => {
     if (!account) return null
     return {
-      address: configService.stakingAddress,
+      address: stakingAddress,
       topics: [utils.id('Staked(address,uint256)'), hexZeroPad(account, 32)],
     }
-  }, [account])
+  }, [account, stakingAddress])
 
   const cooldownEvent = useMemo(() => {
     if (!account) return null
     return {
-      address: configService.stakingAddress,
+      address: stakingAddress,
       topics: [utils.id('Cooldown(address)'), hexZeroPad(account, 32)],
     }
-  }, [account])
+  }, [account, stakingAddress])
 
   const withdrawnEvent = useMemo(() => {
     if (!account) return null
     return {
-      address: configService.stakingAddress,
+      address: stakingAddress,
       topics: [utils.id('Withdrawn(address,uint256)'), hexZeroPad(account, 32)],
     }
-  }, [account])
+  }, [account, stakingAddress])
 
   const rewardsClaimedAllEvent = useMemo(() => {
     if (!account) return null
     return {
-      address: configService.stakingAddress,
+      address: stakingAddress,
       topics: [utils.id('RewardsClaimedAll(address)'), hexZeroPad(account, 32)],
     }
-  }, [account])
+  }, [account, stakingAddress])
 
   const rewardsClaimedBalEvent = useMemo(() => {
     if (!account) return null
     return {
-      address: configService.stakingAddress,
+      address: stakingAddress,
       topics: [
         utils.id('RewardsClaimed_BAL(address,uint256)'),
         hexZeroPad(account, 32),
       ],
     }
-  }, [account])
+  }, [account, stakingAddress])
 
   const rewardsClaimedWncgEvent = useMemo(() => {
     if (!account) return null
     return {
-      address: configService.stakingAddress,
+      address: stakingAddress,
       topics: [
         utils.id('RewardsClaimed_WNCG(address,uint256)'),
         hexZeroPad(account, 32),
       ],
     }
-  }, [account])
+  }, [account, stakingAddress])
 
   const earmarkRewardsEvent = useMemo(() => {
     if (!account) return null
     return {
-      address: configService.stakingAddress,
+      address: stakingAddress,
       topics: [
         utils.id('EarmarkRewards(address,uint256)'),
         hexZeroPad(account, 32),
       ],
     }
-  }, [account])
+  }, [account, stakingAddress])
 
   const feeUpdateEvent = useMemo(
     () => ({
-      address: configService.stakingAddress,
+      address: stakingAddress,
       topics: [utils.id('FeeUpdate()')],
     }),
     []

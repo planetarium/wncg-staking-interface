@@ -8,7 +8,7 @@ import styles from './styles/StakeSubmit.module.scss'
 
 import { connectedState } from 'app/states/connection'
 import { ModalCategory } from 'app/states/modal'
-import { configService } from 'services/config'
+import { stakingContractAddressState } from 'app/states/settings'
 import { gaEvent } from 'lib/gtag'
 import { parseTxError } from 'utils/error'
 import {
@@ -63,9 +63,10 @@ export function StakeSubmit({
   const { unstakeStatus } = useUnstakeTimestamps()
 
   const isConnected = useRecoilValue(connectedState)
+  const stakingAddress = useRecoilValue(stakingContractAddressState)
   const isUnstakeWindow = UNSTAKE_WINDOW.includes(unstakeStatus)
 
-  const isApproved = allowanceFor(bptAddress, configService.stakingAddress)
+  const isApproved = allowanceFor(bptAddress, stakingAddress)
   const isLoading = active !== null
 
   function resetStatus() {
@@ -108,7 +109,7 @@ export function StakeSubmit({
     })
 
     try {
-      const hash = await approve(bptAddress, configService.stakingAddress)
+      const hash = await approve(bptAddress, stakingAddress)
       if (hash) setPendingTx(hash)
     } catch (error) {
       handleError(error)
@@ -134,10 +135,7 @@ export function StakeSubmit({
     else handleStake()
   }
 
-  const approvalFilter = createApprovalEvent(
-    bptAddress,
-    configService.stakingAddress
-  )
+  const approvalFilter = createApprovalEvent(bptAddress, stakingAddress)
 
   const approvalHandler = useCallback(
     ({ transactionHash }: Event) => {

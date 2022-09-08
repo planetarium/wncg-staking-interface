@@ -5,10 +5,10 @@ import { Contract } from 'ethers'
 import type BigNumber from 'bignumber.js'
 
 import { networkMismatchState } from 'app/states/error'
+import { stakingContractAddressState } from 'app/states/settings'
 import { getClaimableTokens } from 'contracts/liquidityGauge'
 import { getEarmarkIncentiveFee, getFeeDenominator } from 'contracts/staking'
 import { REFETCH_INTERVAL } from 'constants/time'
-import { configService } from 'services/config'
 import { LiquidityGaugeAbi, StakingAbi } from 'lib/abi'
 import { bnum } from 'utils/num'
 import { useFiatCurrency } from './useFiatCurrency'
@@ -26,18 +26,15 @@ export function useEarmarkIncentive() {
   const { toFiat } = useFiatCurrency()
 
   const networkMismatch = useRecoilValue(networkMismatchState)
+  const stakingAddress = useRecoilValue(stakingContractAddressState)
 
   const stakingContract = useMemo(() => {
-    if (!provider || networkMismatch) {
-      return null
-    }
-    return new Contract(configService.stakingAddress, StakingAbi, provider)
-  }, [networkMismatch, provider])
+    if (!provider || networkMismatch) return null
+    return new Contract(stakingAddress, StakingAbi, provider)
+  }, [networkMismatch, provider, stakingAddress])
 
   const liquidityGaugeContract = useMemo(() => {
-    if (!provider || networkMismatch || !liquidityGaugeAddress) {
-      return null
-    }
+    if (!provider || networkMismatch || !liquidityGaugeAddress) return null
     return new Contract(liquidityGaugeAddress, LiquidityGaugeAbi, provider)
   }, [liquidityGaugeAddress, networkMismatch, provider])
 
@@ -63,7 +60,7 @@ export function useEarmarkIncentive() {
 
   const claimableTokens = useQuery(
     ['claimableTokens'],
-    () => getClaimableTokens(liquidityGaugeContract),
+    () => getClaimableTokens(liquidityGaugeContract, stakingAddress),
     {
       refetchInterval: REFETCH_INTERVAL,
       placeholderData: '0',
