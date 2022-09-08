@@ -17,6 +17,14 @@ export function parseTxError(error: any): TransactionError | void {
           'The market price changed beyond your slippage tolerance due to other trades processed before yours. Try again or increase your slippage tolerance.',
       }
 
+    case error?.code === 'INSUFFICIENT_FUNDS':
+    case error?.message?.includes('INSUFFICIENT_BALANCE'):
+      return {
+        title: 'Insufficient balance',
+        message:
+          "The account doesn't have enough balance to perform this transaction.",
+      }
+
     case error?.code === 4100:
       return {
         title: 'Authentication required',
@@ -27,12 +35,6 @@ export function parseTxError(error: any): TransactionError | void {
       return {
         title: 'Cannot estimate gas',
         message: 'Transaction may fail or require manual gas limit.',
-      }
-    case error?.code === 'INSUFFICIENT_FUNDS':
-      return {
-        title: 'Insufficient funds',
-        message:
-          "The account doesn't have enough funds to perform this transaction.",
       }
 
     case error?.message?.includes('-32010'):
