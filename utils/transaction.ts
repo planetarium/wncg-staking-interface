@@ -10,22 +10,18 @@ export function txToastTitle(action: TxAction, type?: ToastType) {
       title = 'Approve'
       break
     case TxAction.ClaimAll:
-      title = 'Claim all rewards'
-      break
     case TxAction.ClaimBal:
-      title = 'Claim BAL reward'
-      break
     case TxAction.ClaimWncg:
-      title = 'Claim WNCG reward'
+      title = 'Claim Rewards'
       break
     case TxAction.EarmarkRewards:
       title = 'Harvest'
       break
     case TxAction.ExitPool:
-      title = 'Exit pool'
+      title = 'Exit Pool'
       break
     case TxAction.JoinPool:
-      title = 'Join pool'
+      title = 'Join Pool'
       break
     case TxAction.Stake:
       title = 'Stake'
@@ -37,7 +33,7 @@ export function txToastTitle(action: TxAction, type?: ToastType) {
       title = 'Withdraw'
       break
     case TxAction.WithdrawAndClaim:
-      title = 'Withdraw & claim'
+      title = 'Withdraw & Claim'
       break
     default:
       assertUnreachable(action)
@@ -51,15 +47,17 @@ export function txToastTitle(action: TxAction, type?: ToastType) {
 export function txSuccessMessage(action: TxAction, params?: string | string[]) {
   switch (action) {
     case TxAction.Approve:
-      return `Successfully approved ${parseTxActionParams(params)}`
+      return `Successfully approved **${parseTxActionParams(params)}**`
     case TxAction.ClaimAll:
-      return `Successfully claimed ${parseTxActionParams(params)} & BAL rewards`
+      return `Successfully claimed **${parseTxActionParams(
+        params
+      )} & BAL** rewards`
     case TxAction.ClaimBal:
-      return 'Successfully claimed BAL reward'
+      return 'Successfully claimed **BAL** reward'
     case TxAction.ClaimWncg:
-      return `Successfully claimed ${parseTxActionParams(params)} reward`
+      return `Successfully claimed **${parseTxActionParams(params)}** reward`
     case TxAction.EarmarkRewards:
-      return 'Successfully harvested BAL reward'
+      return 'Successfully harvested **BAL** reward'
     case TxAction.ExitPool:
       return `Successfully exited ${parseTxActionParams(params)} pool`
     case TxAction.JoinPool:
@@ -80,19 +78,19 @@ export function txSuccessMessage(action: TxAction, params?: string | string[]) {
 export function txInfoMessage(action: TxAction, params?: string | string[]) {
   switch (action) {
     case TxAction.Approve:
-      return `Approving ${parseTxActionParams(params)}`
+      return `Approving **${parseTxActionParams(params)}**`
     case TxAction.ClaimAll:
-      return `Claim ${parseTxActionParams(params)} & BAL rewards`
+      return `Claim **${parseTxActionParams(params)} & BAL** rewards`
     case TxAction.ClaimBal:
-      return 'Claim BAL reward'
+      return 'Claim **BAL** reward'
     case TxAction.ClaimWncg:
-      return `Claim ${parseTxActionParams(params)} reward`
+      return `Claim **${parseTxActionParams(params)}** reward`
     case TxAction.EarmarkRewards:
       return 'Harvest BAL reward'
     case TxAction.ExitPool:
-      return `Exiting ${parseTxActionParams(params)} pool`
+      return `Exiting **${parseTxActionParams(params)}** pool`
     case TxAction.JoinPool:
-      return `Joining ${parseTxActionParams(params)} pool`
+      return `Joining **${parseTxActionParams(params)}** pool`
     case TxAction.Stake:
       return `Stake ${parseTxActionParams(params)}`
     case TxAction.Cooldown:
@@ -105,7 +103,21 @@ export function txInfoMessage(action: TxAction, params?: string | string[]) {
   }
 }
 
+export function isClaimAction(action: TxAction) {
+  return (
+    [TxAction.ClaimAll, TxAction.ClaimBal, TxAction.ClaimWncg] as TxAction[]
+  ).includes(action)
+}
+
+export function parseMarkdown(value: string) {
+  const rawHtmlString = value
+    .replace(/\*\*(.*)\*\*/gim, '<strong>$1</strong>') // NOTE: bold
+    .replace(/\*(.*)\*/gim, '<em>$1</em>') // NOTE: italic
+    .replace(/\n$/gim, '<br />')
+  return rawHtmlString.trim()
+}
+
 function parseTxActionParams(params?: string | string[]) {
   if (!params || typeof params === 'string') return params
-  return `${bnum(params[0] || 0).toFixed(8)} ${params?.[1]}`
+  return `**${bnum(params[0] || 0).toFixed(8)}** ${params?.[1]}`
 }

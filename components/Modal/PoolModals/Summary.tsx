@@ -1,7 +1,7 @@
 import { memo } from 'react'
 import NumberFormat from 'react-number-format'
 import clsx from 'clsx'
-import styles from './style.module.scss'
+import styles from './Summary.module.scss'
 
 import { bnum } from 'utils/num'
 

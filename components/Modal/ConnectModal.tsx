@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import styles from './ConnectModal.module.scss'
+import styles from './style.module.scss'
 
 import { useConnection } from 'hooks'
 

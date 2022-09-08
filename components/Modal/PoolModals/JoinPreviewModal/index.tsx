@@ -1,5 +1,5 @@
 import { useMount } from 'react-use'
-import styles from '../style.module.scss'
+import styles from '../../style.module.scss'
 
 import { ModalCategory } from 'app/states/modal'
 import { useAllowances, useModal } from 'hooks'
@@ -48,7 +48,6 @@ export function JoinPreviewModal({
       </header>
 
       <PreviewComposition
-        action="join"
         amounts={amounts}
         isNativeAsset={isNativeAsset}
         totalFiatValue={totalFiatValue}

@@ -1,6 +1,6 @@
 import { MouseEvent } from 'react'
 import { useRecoilValue } from 'recoil'
-import styles from './ClaimRewardModal.module.scss'
+import styles from './RewardItem.module.scss'
 
 import { connectedState } from 'app/states/connection'
 import { countUpOption, usdCountUpOption } from 'utils/countUp'

@@ -1,16 +1,18 @@
 // Global Toast
 .toastContainer {
   @include posCenterX(fixed);
-  top: 10px;
+  top: 0;
   z-index: 20;
-  width: calc(100% - 20px) !important;
+  padding: 24px 0 10px;
+  width: calc(100% - #{24px * 2}) !important;
 
   @include responsive(MD) {
     top: auto;
-    right: 30px;
-    bottom: 30px;
+    right: 48px;
+    bottom: 48px;
     left: auto;
-    width: 290px !important;
+    width: 320px !important;
+    padding: 0;
     transform: none;
   }
 }
@@ -22,17 +24,16 @@
 
 .toast {
   margin-bottom: 8px;
-  overflow: hidden;
-  border-radius: $radius-sm !important;
+  border-radius: $radius-md !important;
+  transition: $transition-short;
 
   &:last-child {
     margin-bottom: 0;
   }
-}
 
-.progressBar {
-  height: 6px;
-  background: $orange-gradient !important;
+  @include responsive(MD) {
+    margin-bottom: 16px;
+  }
 }
 
 .fadeIn,

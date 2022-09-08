@@ -1,7 +1,7 @@
 import { MouseEvent, useCallback, useEffect, useState } from 'react'
 import { AnimatePresence } from 'framer-motion'
 import type { Event } from 'ethers'
-import styles from './style.module.scss'
+import styles from '../style.module.scss'
 
 import { ModalCategory } from 'app/states/modal'
 import { TxAction } from 'services/transaction'
@@ -126,7 +126,6 @@ export function ExitPreviewModal({
       </header>
 
       <PreviewComposition
-        action="exit"
         amounts={amounts}
         isNativeAsset={isNativeAsset}
         totalFiatValue={totalFiatValue}

@@ -1,7 +1,7 @@
 import { MouseEvent, useState } from 'react'
 import { useMount } from 'react-use'
 import { useRecoilValue } from 'recoil'
-import styles from './ClaimRewardModal.module.scss'
+import styles from '../style.module.scss'
 
 import { connectedState } from 'app/states/connection'
 import { ModalCategory } from 'app/states/modal'
