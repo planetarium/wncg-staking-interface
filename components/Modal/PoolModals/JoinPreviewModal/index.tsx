@@ -1,5 +1,5 @@
 import { useMount } from 'react-use'
-import styles from '../style.module.scss'
+import styles from '../../style.module.scss'
 
 import { ModalCategory } from 'app/states/modal'
 import { useAllowances, useModal } from 'hooks'

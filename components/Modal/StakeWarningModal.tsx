@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import styles from './StakeWarningModal.module.scss'
+import styles from './style.module.scss'
 
 import { ModalCategory } from 'app/states/modal'
 import { useModal, useUnstakeTimestamps } from 'hooks'

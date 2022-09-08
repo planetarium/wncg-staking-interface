@@ -1,0 +1,37 @@
+.summary {
+  width: 100%;
+  margin-top: 20px;
+
+  .danger {
+    dd {
+      color: $red;
+    }
+
+    svg {
+      width: 16px;
+      height: 16px;
+      margin-left: 4px;
+      color: lighten($red, 10);
+    }
+  }
+
+  > div {
+    @include flexbox(start);
+    width: 100%;
+    padding: 4px 0;
+
+    dt {
+      @include textStyle(14, 400);
+      width: 100px;
+    }
+
+    dd {
+      @include flexbox(end);
+      flex-grow: 1;
+
+      strong {
+        @include textStyle(18, 700);
+      }
+    }
+  }
+}

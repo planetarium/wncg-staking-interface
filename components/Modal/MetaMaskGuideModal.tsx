@@ -1,5 +1,5 @@
 /* eslint-disable react/no-unescaped-entities */
-import styles from './MetaMaskGuideModal.module.scss'
+import styles from './style.module.scss'
 
 import { ModalCategory } from 'app/states/modal'
 import { useModal } from 'hooks'
@@ -15,7 +15,7 @@ export function MetaMaskGuideModal() {
   }
 
   return (
-    <div className={styles.metamaskGuideModal}>
+    <div>
       <header className={styles.header}>
         <h1 className={styles.title}>You don't have MetaMask</h1>
         <button

@@ -1,7 +1,7 @@
 import { memo, useMemo } from 'react'
 import NumberFormat from 'react-number-format'
 import { useRecoilValue } from 'recoil'
-import styles from './style.module.scss'
+import styles from './Composition.module.scss'
 
 import { invalidPriceState } from 'app/states/error'
 import { configService } from 'services/config'

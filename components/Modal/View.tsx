@@ -1,9 +1,15 @@
+import { useRecoilValue } from 'recoil'
 import { motion } from 'framer-motion'
 import styles from './style.module.scss'
 
+import { isMobileState } from 'app/states/mediaQuery'
 import { Modal, ModalCategory } from 'app/states/modal'
 import { assertUnreachable } from 'utils/assertion'
-import { modalVariants, overlayVariants } from './constants'
+import {
+  modalDesktopVariants,
+  modalMobileVariants,
+  overlayVariants,
+} from './constants'
 
 import { ExitPreviewModal } from './PoolModals/ExitPreviewModal'
 import { JoinPreviewModal } from './PoolModals/JoinPreviewModal'
@@ -17,6 +23,10 @@ type ModalViewProps = {
 }
 
 export function ModalView({ modal }: ModalViewProps) {
+  const isMobile = useRecoilValue(isMobileState)
+
+  const variants = isMobile ? modalMobileVariants : modalDesktopVariants
+
   return (
     <motion.div
       className={styles.overlay}
@@ -30,7 +40,7 @@ export function ModalView({ modal }: ModalViewProps) {
       <motion.aside
         className={styles.modalWrapper}
         key={`${modal.category}.modal`}
-        variants={modalVariants}
+        variants={variants}
         initial="initial"
         animate="animate"
         exit="exit"

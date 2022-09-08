@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import styles from './style.module.scss'
+import styles from './Warning.module.scss'
 
 import { parseTxError } from 'utils/error'
 
