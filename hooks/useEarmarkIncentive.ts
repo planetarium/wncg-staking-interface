@@ -39,7 +39,7 @@ export function useEarmarkIncentive() {
   }, [liquidityGaugeAddress, networkMismatch, provider])
 
   const earmarkIncentiveFee = useQuery(
-    ['earmarkIncentiveFee'],
+    ['earmarkIncentiveFee', stakingAddress],
     () => getEarmarkIncentiveFee(stakingContract!),
     {
       ...options,

@@ -28,7 +28,7 @@ export function useAllowances() {
   const spenders = [stakingAddress, configService.vaultAddress]
 
   const allowances = useQuery(
-    ['allowances', account, addresses],
+    ['allowances', account, addresses, stakingAddress],
     () => fetchAllowances(provider, account, addresses, spenders),
     {
       enabled: !networkMismatch,

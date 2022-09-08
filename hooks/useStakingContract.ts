@@ -24,5 +24,8 @@ export function useStakingContract(signer?: boolean) {
     return new Contract(stakingAddress, StakingAbi, signerOrProvider)
   }, [provider, networkMismatch, signer, account, stakingAddress])
 
-  return contract
+  return {
+    contract,
+    stakingAddress,
+  }
 }

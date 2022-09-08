@@ -15,12 +15,12 @@ const options = {
   keepPreviousData: true,
 }
 
-// NOTE: Fetch data from downgraded staking contract
+// NOTE: Fetch data with downgraded staking contract
 export function useStaking() {
-  const contract = useStakingContract()
+  const { contract, stakingAddress } = useStakingContract()
 
   const balancerGaugeAddress = useQuery(
-    ['balancerGaugeAddress'],
+    ['balancerGaugeAddress', stakingAddress],
     () => getBalancerGaugeAddress(contract!),
     {
       ...options,
@@ -30,7 +30,7 @@ export function useStaking() {
   )
 
   const balEmissionPerSec = useQuery(
-    ['balEmissionPerSec'],
+    ['balEmissionPerSec', stakingAddress],
     () => getBalEmissionPerSec(contract!),
     {
       ...options,
@@ -40,7 +40,7 @@ export function useStaking() {
   )
 
   const wncgEmissionPerSec = useQuery(
-    ['wncgEmissionPerSec'],
+    ['wncgEmissionPerSec', stakingAddress],
     () => getWncgEmissionPerSec(contract!),
     {
       ...options,
@@ -50,7 +50,7 @@ export function useStaking() {
   )
 
   const totalStaked = useQuery(
-    ['totalStaked'],
+    ['totalStaked', stakingAddress],
     () => getTotalStaked(contract!),
     {
       enabled: !!contract,
@@ -61,7 +61,7 @@ export function useStaking() {
   )
 
   const unstakeWindow = useQuery(
-    ['unstakeWindow'],
+    ['unstakeWindow', stakingAddress],
     () => getUnstakeWindow(contract!),
     {
       ...options,

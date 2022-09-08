@@ -12,7 +12,7 @@ import { useTx } from './useTx'
 
 export function useClaim() {
   const { rewardTokenSymbols, scaledRewards } = useRewards()
-  const contract = useStakingContract(true)
+  const { contract } = useStakingContract(true)
   const { registerTx } = useTx()
 
   const claimAllRewards = useCallback(async () => {
