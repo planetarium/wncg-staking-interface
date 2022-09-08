@@ -1,0 +1,117 @@
+$gradient-default: linear-gradient(
+  82.85deg,
+  #0066ff 5.57%,
+  #4534ff 48.75%,
+  #532bff 57.15%,
+  #8f00ff 94.43%
+);
+
+$gradient-active: linear-gradient(
+  82.85deg,
+  #0029ff 5.57%,
+  #5134ff 44.4%,
+  #7400cf 94.43%
+);
+
+.migrationNotice {
+  @include flexbox(between);
+  z-index: 0;
+  margin-bottom: 16px;
+  width: 100%;
+  padding: 16px;
+  overflow: hidden;
+  color: $white;
+  background-image: $gradient-default;
+  cursor: pointer;
+  border-radius: $radius-sm;
+  transition: $transition-short;
+
+  @include responsive(MD) {
+    padding: 24px 32px;
+
+    &::before {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: $gradient-active;
+      content: '';
+      opacity: 0;
+      transition: $transition-short;
+    }
+
+    &:hover {
+      &::before {
+        opacity: 1;
+      }
+
+      .title svg {
+        opacity: 1;
+      }
+    }
+  }
+
+  @include responsive(LG) {
+    width: getColumnWidth($column-lg, 10);
+  }
+
+  @include responsive(XL) {
+    width: getColumnWidth($column-xl, 8);
+  }
+}
+
+.title,
+.desc,
+.figure {
+  @include responsive(MD) {
+    position: relative;
+    z-index: 1;
+  }
+}
+
+.title {
+  @include textStyle(14, 700);
+  position: relative;
+  z-index: 1;
+  margin-bottom: 8px;
+  line-height: 1.2;
+  font-style: normal;
+
+  svg {
+    display: none;
+    transition: $transition-short;
+  }
+
+  @include responsive(MD) {
+    @include flexbox(start);
+    @include textStyle(20);
+
+    svg {
+      display: block;
+      width: 24px;
+      height: 24px;
+      margin-left: 4px;
+      opacity: 0;
+    }
+  }
+}
+
+.desc {
+  @include textStyle(13, 400);
+  line-height: 1.25;
+  color: rgba($white, 0.6);
+
+  @include responsive(MD) {
+    @include textStyle(16);
+  }
+}
+
+.figure {
+  @include imageContainer(70px);
+  display: none;
+
+  @include responsive(MD) {
+    display: block;
+  }
+}
