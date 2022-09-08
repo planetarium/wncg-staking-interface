@@ -15,9 +15,11 @@ const options = {
   keepPreviousData: true,
 }
 
-// NOTE: Fetch data with downgraded staking contract
+// NOTE: Fetch data from downgraded staking contract
 export function useStaking() {
   const { contract, stakingAddress } = useStakingContract()
+
+  console.log('stakingAddress: ', stakingAddress)
 
   const balancerGaugeAddress = useQuery(
     ['balancerGaugeAddress', stakingAddress],

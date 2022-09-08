@@ -25,6 +25,8 @@ function ConfigEffects() {
     const storedMuted = store.get(STORAGE_KEYS.UserSettings.Muted)
     const storedLegacyMode = store.get(STORAGE_KEYS.UserSettings.LegacyMode)
 
+    console.log('storedLegacyMode: ', storedLegacyMode)
+
     if (storedPeriod) setEstimatedEarnPeriod(storedPeriod)
     if (storedSlippage) setSlippage(storedSlippage)
     if (storedMuted) setMuted(storedMuted)

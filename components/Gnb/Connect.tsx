@@ -1,4 +1,5 @@
 import { useRecoilValue } from 'recoil'
+import styles from './style.module.scss'
 
 import { ConnectionStatus, connectionStatusState } from 'app/states/connection'
 import { isMobileState } from 'app/states/mediaQuery'
@@ -16,7 +17,11 @@ export function GnbConnect() {
 
   if (status === ConnectionStatus.NotConnected) {
     return (
-      <Button size={buttonSize} onClick={connect}>
+      <Button
+        className={styles.connectButton}
+        size={buttonSize}
+        onClick={connect}
+      >
         Connect
       </Button>
     )
@@ -24,7 +29,12 @@ export function GnbConnect() {
 
   if (status === ConnectionStatus.Connecting) {
     return (
-      <Button variant="secondary" size={buttonSize} loading>
+      <Button
+        className={styles.connectButton}
+        variant="secondary"
+        size={buttonSize}
+        loading
+      >
         Connecting
       </Button>
     )
