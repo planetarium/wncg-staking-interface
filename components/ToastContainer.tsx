@@ -18,6 +18,7 @@ const config: ToastContainerProps = {
   toastClassName: 'toast',
   bodyClassName: 'toastBody',
   progressClassName: 'progressBar',
+  hideProgressBar: true,
   autoClose: false,
   closeButton: false,
   closeOnClick: true,
