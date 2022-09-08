@@ -13,7 +13,11 @@ import {
 
 import { Icon } from 'components/Icon'
 
-export function MigrationNotice() {
+type MigrationNoticeProps = {
+  open(): void
+}
+
+export function MigrationNotice({ open }: MigrationNoticeProps) {
   const isMobile = useRecoilValue(isMobileState)
 
   const transition = useMemo(
@@ -33,6 +37,8 @@ export function MigrationNotice() {
       exit="exit"
       transition={transition}
       variants={migrationGuideVariants}
+      onClick={open}
+      role="button"
     >
       <div className={styles.content}>
         <h1 className={styles.title}>

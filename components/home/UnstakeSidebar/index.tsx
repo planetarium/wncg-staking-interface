@@ -3,8 +3,9 @@ import { motion } from 'framer-motion'
 
 import { motionVariants, sidebarTransition } from '../constants'
 
-import { UnstakeSidebarCooldown } from './Cooldown'
-import { UnstakeSidebarWithdrawWindow } from './WithdrawWindow'
+// import { UnstakeSidebarCooldown } from './Cooldown'
+// import { UnstakeSidebarWithdrawWindow } from './WithdrawWindow'
+import { UnstakeSidebarMigration } from './Migration'
 
 type UnstakeSidebarProps = {
   isWithdrawable: boolean
@@ -19,11 +20,12 @@ function UnstakeSidebar({ isWithdrawable }: UnstakeSidebarProps) {
       transition={sidebarTransition}
       variants={motionVariants}
     >
-      {isWithdrawable ? (
+      <UnstakeSidebarMigration isWithdrawable={isWithdrawable} />
+      {/* {isWithdrawable ? (
         <UnstakeSidebarWithdrawWindow />
       ) : (
         <UnstakeSidebarCooldown />
-      )}
+      )} */}
     </motion.div>
   )
 }
