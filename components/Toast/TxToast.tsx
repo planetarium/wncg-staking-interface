@@ -8,11 +8,12 @@ import { mutedState } from 'app/states/settings'
 import { latestToastIdState } from 'app/states/toast'
 import { TxAction } from 'services/transaction'
 import { gaEvent } from 'lib/gtag'
-import { parseMarkdown } from 'utils/transaction'
+import { isClaimAction, parseMarkdown } from 'utils/transaction'
 import { getTxUrl } from 'utils/url'
 import { getToastAudioFilename, renderToastEmoji } from './utils'
 
 import { Icon } from 'components/Icon'
+import { ImportTokens } from './ImportTokens'
 
 type TxToastProps = {
   action: TxAction
@@ -38,6 +39,8 @@ export function TxToast({
   const audioFilename = getToastAudioFilename(type, action)
   const audio = new Audio(audioFilename)
   const content = parseMarkdown(message)
+
+  const showImportTokens = isClaimAction(action) && type === 'success'
 
   function handleClick() {
     if (txUrl) {
@@ -83,6 +86,8 @@ export function TxToast({
         className={styles.desc}
         dangerouslySetInnerHTML={{ __html: content }}
       />
+
+      {showImportTokens && <ImportTokens action={action} hash={hash} />}
     </aside>
   )
 }

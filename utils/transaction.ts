@@ -103,6 +103,12 @@ export function txInfoMessage(action: TxAction, params?: string | string[]) {
   }
 }
 
+export function isClaimAction(action: TxAction) {
+  return (
+    [TxAction.ClaimAll, TxAction.ClaimBal, TxAction.ClaimWncg] as TxAction[]
+  ).includes(action)
+}
+
 export function parseMarkdown(value: string) {
   const rawHtmlString = value
     .replace(/\*\*(.*)\*\*/gim, '<strong>$1</strong>') // NOTE: bold

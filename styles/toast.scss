@@ -1,16 +1,17 @@
 // Global Toast
 .toastContainer {
   @include posCenterX(fixed);
-  top: 10px;
+  top: 0;
   z-index: 20;
-  width: calc(100% - 20px) !important;
+  padding: 24px 0 10px;
+  width: calc(100% - #{24px * 2}) !important;
 
   @include responsive(MD) {
     top: auto;
     right: 48px;
     bottom: 48px;
     left: auto;
-    width: 360px !important;
+    width: 320px !important;
     padding: 0;
     transform: none;
   }
@@ -28,34 +29,10 @@
 
   &:last-child {
     margin-bottom: 0;
-    //   box-shadow: 0px 4px 64px 0px hsla(274, 100%, 84%, 0.48);
-
-    //   aside {
-    //     background-color: #8905ff;
-    //     border: 1px solid rgba(15, 22, 36, 0.1);
-
-    //     h4 {
-    //       color: $white;
-    //     }
-
-    //     p {
-    //       color: rgba($white, 0.6);
-    //     }
-    //   }
-
-    //   > button {
-    //     color: $white;
-    //     opacity: 0.5;
-
-    //     &:hover {
-    //       opacity: 0.8;
-    //     }
-    //   }
-    // }
   }
 
   @include responsive(MD) {
-    margin-bottom: 20px;
+    margin-bottom: 16px;
   }
 }
 
