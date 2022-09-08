@@ -14,6 +14,7 @@ import {
 import { ExitPreviewModal } from './PoolModals/ExitPreviewModal'
 import { JoinPreviewModal } from './PoolModals/JoinPreviewModal'
 import { ClaimRewardModal } from './ClaimRewardModal'
+import { ConnectModal } from './ConnectModal'
 import { MetaMaskGuideModal } from './MetaMaskGuideModal'
 import { StakeWarningModal } from './StakeWarningModal'
 import { WithdrawPreviewModal } from './WithdrawPreviewModal'
@@ -58,6 +59,8 @@ function renderModal(modal: Modal) {
   switch (category) {
     case ModalCategory.ClaimReward:
       return <ClaimRewardModal {...props} />
+    case ModalCategory.Connect:
+      return <ConnectModal {...props} />
     case ModalCategory.Error:
       return <div {...props}>ErrorModal</div>
     case ModalCategory.ExitPreview:

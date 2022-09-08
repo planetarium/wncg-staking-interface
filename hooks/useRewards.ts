@@ -14,7 +14,7 @@ const queryFnList = [getEarnedWncg, getEarnedBal]
 
 export function useRewards() {
   const { toFiat } = useFiatCurrency()
-  const contract = useStakingContract(true)
+  const { contract, stakingAddress } = useStakingContract(true)
 
   const account = useRecoilValue(accountState)
 
@@ -28,7 +28,7 @@ export function useRewards() {
 
   const rewardsQuery = useQueries({
     queries: rewardTokensList.map((address, i) => ({
-      queryKey: ['claimableRewards', address],
+      queryKey: ['claimableRewards', address, stakingAddress],
       queryFn: () =>
         queryFnList[i]?.(contract!, account, rewardTokenDecimals[i]),
       enabled: !!contract,

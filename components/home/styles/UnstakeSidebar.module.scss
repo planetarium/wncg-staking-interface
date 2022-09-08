@@ -17,6 +17,14 @@
 .cooldownGraph {
   margin-bottom: 30px;
 
+  &.migration {
+    .bar {
+      &.cooldown {
+        width: 4px;
+      }
+    }
+  }
+
   .barGroup {
     @include flexbox;
   }

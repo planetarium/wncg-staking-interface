@@ -6,7 +6,7 @@ import { useStakingContract } from './useStakingContract'
 import { useTx } from './useTx'
 
 export function useEarmark() {
-  const contract = useStakingContract(true)
+  const { contract } = useStakingContract(true)
   const { registerTx } = useTx()
 
   const earmarkRewards = useCallback(async () => {

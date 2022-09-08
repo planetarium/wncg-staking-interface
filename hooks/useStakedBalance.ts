@@ -7,11 +7,11 @@ import { REFETCH_INTERVAL } from 'constants/time'
 import { useStakingContract } from './useStakingContract'
 
 export function useStakedBalance() {
-  const contract = useStakingContract(true)
+  const { contract, stakingAddress } = useStakingContract(true)
   const account = useRecoilValue(accountState)
 
   const stakedBalance = useQuery(
-    ['stakedBalance', account],
+    ['stakedBalance', account, stakingAddress],
     () => getStakedTokenBalance(contract!, account),
     {
       enabled: !!contract,

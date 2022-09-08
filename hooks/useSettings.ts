@@ -5,6 +5,7 @@ import store from 'store'
 import {
   EstimatedEarnPeriod,
   estimatedEarnPeriodState,
+  legacyModeState,
   mutedState,
   slippageState,
 } from 'app/states/settings'
@@ -15,10 +16,12 @@ export function useSettings() {
   const setEstimatedEarnPeriod = useSetRecoilState(estimatedEarnPeriodState)
   const setMuted = useSetRecoilState(mutedState)
   const setSlippage = useSetRecoilState(slippageState)
+  const setLegacyMode = useSetRecoilState(legacyModeState)
 
   const resetEstimatedEarnPeriod = useResetRecoilState(estimatedEarnPeriodState)
   const resetMuted = useResetRecoilState(mutedState)
   const resetSlippage = useResetRecoilState(slippageState)
+  const resetLegacyMode = useResetRecoilState(legacyModeState)
 
   const toggleMuted = useCallback(() => {
     setMuted((prev) => {
@@ -32,6 +35,19 @@ export function useSettings() {
       return !prev
     })
   }, [setMuted])
+
+  const toggleLegacyMode = useCallback(() => {
+    setLegacyMode((prev) => {
+      store.set(STORAGE_KEYS.UserSettings.LegacyMode, !prev)
+      gaEvent({
+        name: 'legacy_contract',
+        params: {
+          isLegacyContract: !prev,
+        },
+      })
+      return !prev
+    })
+  }, [setLegacyMode])
 
   const updateEstimatedEarnPeriod = useCallback(
     <T extends HTMLButtonElement>(e: MouseEvent<T>) => {
@@ -71,13 +87,16 @@ export function useSettings() {
     resetEstimatedEarnPeriod()
     resetMuted()
     resetSlippage()
+    resetLegacyMode()
     store.remove(STORAGE_KEYS.UserSettings.EstimatedEarnPeriod)
     store.remove(STORAGE_KEYS.UserSettings.Muted)
     store.remove(STORAGE_KEYS.UserSettings.Slippage)
-  }, [resetEstimatedEarnPeriod, resetMuted, resetSlippage])
+    store.remove(STORAGE_KEYS.UserSettings.LegacyMode)
+  }, [resetEstimatedEarnPeriod, resetLegacyMode, resetMuted, resetSlippage])
 
   return {
     resetSettings,
+    toggleLegacyMode,
     toggleMuted,
     updateEstimatedEarnPeriod,
     updateSlippage,

@@ -3,6 +3,7 @@ import { useRecoilValue } from 'recoil'
 import type { Event } from 'ethers'
 
 import { accountState } from 'app/states/connection'
+import { stakingContractAddressState } from 'app/states/settings'
 import { configService } from 'services/config'
 import { TxAction } from 'services/transaction'
 import { useAllowances, useEvents, usePool, useProvider, useTx } from 'hooks'
@@ -15,6 +16,7 @@ function ApprovalEffects() {
   const { handleTx } = useTx()
 
   const account = useRecoilValue(accountState)
+  const stakingAddress = useRecoilValue(stakingContractAddressState)
 
   const eventFilters = useMemo(() => {
     if (!account) return null
@@ -23,9 +25,15 @@ function ApprovalEffects() {
       ...poolTokenAddresses.map((address) =>
         createApprovalEvent(address, configService.vaultAddress)
       ),
-      createApprovalEvent(bptAddress, configService.stakingAddress),
+      createApprovalEvent(bptAddress, stakingAddress),
     ]
-  }, [account, bptAddress, createApprovalEvent, poolTokenAddresses])
+  }, [
+    account,
+    bptAddress,
+    createApprovalEvent,
+    poolTokenAddresses,
+    stakingAddress,
+  ])
 
   const eventHandler = useCallback(
     async (event: Event) => {

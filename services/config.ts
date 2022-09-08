@@ -18,6 +18,7 @@ interface Env {
     repositoryName: string
     repositoryUrl: string
   }
+  legacyStakingAddress: string
   network: Network
   ogImageUrl: string
   poolId: string
@@ -71,6 +72,9 @@ export class ConfigService {
           process.env.NEXT_PUBLIC_GITHUB_REPO_URL ||
           'https://github.com/planetarium/wncg-staking',
       },
+      legacyStakingAddress:
+        process.env.NEXT_PUBLIC_STAKING_CONTRACT_ADDRESS_LEGACY ||
+        '0xCC2db561d149A6d2F071A2809492d72E07838F69',
       network:
         process.env.NEXT_PUBLIC_NETWORK_ID != null
           ? (Number(process.env.NEXT_PUBLIC_NETWORK_ID) as Network)
@@ -144,6 +148,10 @@ export class ConfigService {
 
   get github() {
     return this.env.github
+  }
+
+  get legacyStakingAddress() {
+    return this.env.legacyStakingAddress.toLowerCase()
   }
 
   get networkId() {

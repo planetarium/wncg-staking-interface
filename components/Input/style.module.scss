@@ -30,6 +30,10 @@ $max-button-offset: 16px;
   color: $white;
   background-color: transparent;
 
+  &:disabled {
+    user-select: none;
+  }
+
   &::placeholder {
     color: rgba($white, 0.5);
   }
@@ -39,6 +43,11 @@ $max-button-offset: 16px;
   @include posCenterY;
   right: $max-button-offset;
   width: $max-button-width;
+
+  &:disabled {
+    user-select: none;
+    cursor: default;
+  }
 }
 
 .errorMessage {

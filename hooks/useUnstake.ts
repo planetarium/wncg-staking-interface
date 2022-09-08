@@ -8,7 +8,7 @@ import { useTx } from './useTx'
 
 export function useUnstake() {
   const { poolTokenName } = usePool()
-  const contract = useStakingContract(true)
+  const { contract } = useStakingContract(true)
   const { registerTx } = useTx()
 
   const startCooldown = useCallback(async () => {

@@ -1,4 +1,5 @@
 import { atom, selector } from 'recoil'
+import { configService } from 'services/config'
 
 const DEFAULT_SLIPPAGE = 1 // 1%
 
@@ -25,4 +26,19 @@ export type EstimatedEarnPeriod = 'year' | 'month' | 'week' | 'day'
 export const estimatedEarnPeriodState = atom<EstimatedEarnPeriod>({
   key: '#estimatedEarnPeriod',
   default: 'year',
+})
+
+export const legacyModeState = atom<boolean>({
+  key: '#legacyMode',
+  default: false,
+})
+
+export const stakingContractAddressState = selector<string>({
+  key: '#stakingContractAddress',
+  get({ get }) {
+    const isLegacyMode = get(legacyModeState)
+    return isLegacyMode
+      ? configService.legacyStakingAddress
+      : configService.stakingAddress
+  },
 })

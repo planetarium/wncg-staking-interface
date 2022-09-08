@@ -24,14 +24,14 @@ export const UnstakeStatus = {
 export type UnstakeStatus = typeof UnstakeStatus[keyof typeof UnstakeStatus]
 
 export function useUnstakeTimestamps() {
-  const contract = useStakingContract(true)
+  const { contract, stakingAddress } = useStakingContract(true)
   const { stakedBalance } = useStakedBalance()
 
   const account = useRecoilValue(accountState)
   const isConnected = useRecoilValue(connectedState)
 
   const cooldownEndsAt = useQuery(
-    ['cooldownEndsAt', account],
+    ['cooldownEndsAt', account, stakingAddress],
     () => getCooldownEndTimestamp(contract!, account),
     {
       enabled: !!contract,

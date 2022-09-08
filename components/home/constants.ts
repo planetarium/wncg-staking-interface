@@ -25,14 +25,44 @@ export const blockVariants = {
   },
 }
 
+export const migrationGuideVariants = {
+  initial: {
+    opacity: 0,
+    y: '100%',
+  },
+  animate: {
+    opacity: 1,
+    y: 0,
+  },
+  exit: {
+    opacity: 0,
+    y: '100%',
+  },
+}
+
 export const formTransition = {
   duration: 0.3,
   ease: 'easeOut',
 }
+
 export const sidebarTransition = {
   delay: 0.1,
   duration: 0.3,
   ease: 'easeOut',
+}
+
+export const migrationGuideTransitionDesktop = {
+  type: 'spring',
+  stiffness: 80,
+  restDelta: 12,
+  restSpeed: 0.35,
+}
+
+export const migrationGuideTransitionMobile = {
+  type: 'spring',
+  stiffness: 80,
+  restDelta: 12,
+  restSpeed: 0.5,
 }
 
 export const Tab = {
