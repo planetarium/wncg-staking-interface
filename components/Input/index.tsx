@@ -40,8 +40,8 @@ export function Input({
             precision={precision}
             setMaxValue={setMaxValue}
             disabled={disabled}
-            maxButtonDisabled={maxButtonDisabled}
-            placeholder={placeholder}
+            maxButtonDisabled={disabled || maxButtonDisabled}
+            placeholder={disabled ? undefined : placeholder}
           />
         )}
         rules={rules}

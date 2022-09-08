@@ -5,6 +5,7 @@ import { motion } from 'framer-motion'
 import styles from './styles/StakeForm.module.scss'
 
 import { networkMismatchState } from 'app/states/error'
+import { legacyModeState } from 'app/states/settings'
 import { gaEvent } from 'lib/gtag'
 import { bnum } from 'utils/num'
 import { useBalances, usePool } from 'hooks'
@@ -17,9 +18,11 @@ import { StakeSubmit } from './StakeSubmit'
 const minAmount = 1e-18
 
 function StakeForm() {
-  const networkMismatch = useRecoilValue(networkMismatchState)
   const { bptBalance } = useBalances()
   const { poolTokenName } = usePool()
+
+  const legacyMode = useRecoilValue(legacyModeState)
+  const networkMismatch = useRecoilValue(networkMismatchState)
 
   const { clearErrors, control, formState, setValue, watch } = useForm<{
     stakeAmount: string
@@ -28,6 +31,7 @@ function StakeForm() {
   })
   const stakeAmountValue = watch('stakeAmount')
   const disabled =
+    legacyMode ||
     networkMismatch ||
     Object.keys(formState.errors).length > 0 ||
     bnum(stakeAmountValue).isZero()
@@ -81,6 +85,7 @@ function StakeForm() {
         label={poolTokenName}
         maxAmount={bptBalance}
         rules={rules}
+        disabled={legacyMode}
         setMaxValue={setMaxValue}
       />
       <EstimatedEarn amount={stakeAmountValue} />

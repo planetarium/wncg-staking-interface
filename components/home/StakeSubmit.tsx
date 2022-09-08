@@ -131,6 +131,7 @@ export function StakeSubmit({
   }
 
   function handleClick() {
+    if (disabled) return
     if (!isApproved) handleApprove()
     else handleStake()
   }

@@ -1,6 +1,7 @@
 import type { Control, RegisterOptions } from 'react-hook-form'
 import NumberFormat from 'react-number-format'
 import { useRecoilValue } from 'recoil'
+import clsx from 'clsx'
 import styles from './styles/InputGroup.module.scss'
 
 import { connectedState } from 'app/states/connection'
@@ -46,7 +47,9 @@ export function InputGroup({
         maxButtonDisabled={isMaxAmountZero}
       />
 
-      <div className={styles.balanceGroup}>
+      <div
+        className={clsx(styles.balanceGroup, { [styles.disabled]: disabled })}
+      >
         {poolTokenSymbols.map((symbol) => (
           <TokenIcon
             key={`inputGroup.${symbol}`}
@@ -55,6 +58,7 @@ export function InputGroup({
           />
         ))}
         <strong>{label}</strong>
+
         {isConnected ? (
           <NumberFormat
             className={styles.balance}

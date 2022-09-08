@@ -12,6 +12,11 @@
   margin-top: 4px;
   white-space: nowrap;
 
+  &.disabled {
+    opacity: 0.5;
+    user-select: none;
+  }
+
   strong {
     @include textStyle(13, 500);
     margin-left: 6px;
