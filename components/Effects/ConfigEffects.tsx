@@ -5,6 +5,7 @@ import store from 'store'
 
 import {
   estimatedEarnPeriodState,
+  legacyModeState,
   mutedState,
   slippageState,
 } from 'app/states/settings'
@@ -14,6 +15,7 @@ function ConfigEffects() {
   const setMuted = useSetRecoilState(mutedState)
   const setSlippage = useSetRecoilState(slippageState)
   const setEstimatedEarnPeriod = useSetRecoilState(estimatedEarnPeriodState)
+  const setLegacyMode = useSetRecoilState(legacyModeState)
 
   useMount(() => {
     const storedPeriod = store.get(
@@ -21,10 +23,12 @@ function ConfigEffects() {
     )
     const storedSlippage = store.get(STORAGE_KEYS.UserSettings.Slippage)
     const storedMuted = store.get(STORAGE_KEYS.UserSettings.Muted)
+    const storedLegacyMode = store.get(STORAGE_KEYS.UserSettings.LegacyMode)
 
     if (storedPeriod) setEstimatedEarnPeriod(storedPeriod)
     if (storedSlippage) setSlippage(storedSlippage)
     if (storedMuted) setMuted(storedMuted)
+    if (storedLegacyMode) setLegacyMode(storedLegacyMode)
   })
 
   return null
