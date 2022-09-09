@@ -7,8 +7,8 @@
   bottom: 0;
   left: 0;
   z-index: 1;
-  background-color: rgba(15, 22, 36, 0.4);
-  backdrop-filter: blur(80px);
+  background-color: rgba(15, 22, 36, 0.1);
+  backdrop-filter: blur(15px);
 
   @include responsive(MD) {
     justify-content: center;
