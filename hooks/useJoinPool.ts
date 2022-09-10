@@ -13,13 +13,8 @@ import { useVaultContract } from './useVaultContract'
 
 export function useJoinPool() {
   const { calcMinBptOut } = useJoinMath()
-  const {
-    nativeAssetIndex,
-    poolId,
-    poolName,
-    poolTokenAddresses,
-    poolTokenDecimals,
-  } = usePool()
+  const { nativeAssetIndex, poolId, poolTokenAddresses, poolTokenDecimals } =
+    usePool()
   const { registerTx } = useTx()
   const vault = useVaultContract()
 
@@ -49,7 +44,7 @@ export function useJoinPool() {
         nativeAssetIndex,
         poolId,
       })
-      registerTx?.(response.hash, TxAction.JoinPool, poolName)
+      registerTx?.(response.hash, TxAction.JoinPool)
     },
     [
       vault,
@@ -59,7 +54,6 @@ export function useJoinPool() {
       nativeAssetIndex,
       poolId,
       registerTx,
-      poolName,
       poolTokenDecimals,
     ]
   )

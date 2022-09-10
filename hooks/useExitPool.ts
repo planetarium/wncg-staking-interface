@@ -22,13 +22,8 @@ type ExitPoolParams = {
 
 export function useExitPool() {
   const { calcAmountsOut, calcBptIn } = useExitMath()
-  const {
-    nativeAssetIndex,
-    poolId,
-    poolName,
-    poolTokenAddresses,
-    poolTokenDecimals,
-  } = usePool()
+  const { nativeAssetIndex, poolId, poolTokenAddresses, poolTokenDecimals } =
+    usePool()
   const { registerTx } = useTx()
   const vault = useVaultContract()
 
@@ -83,7 +78,7 @@ export function useExitPool() {
         poolId,
         tokenOutIndex,
       })
-      registerTx?.(response.hash, TxAction.ExitPool, poolName)
+      registerTx?.(response.hash, TxAction.ExitPool)
       return response.hash
     },
     [
@@ -92,7 +87,6 @@ export function useExitPool() {
       calcBptIn,
       nativeAssetIndex,
       poolId,
-      poolName,
       poolTokenAddresses,
       poolTokenDecimals,
       registerTx,

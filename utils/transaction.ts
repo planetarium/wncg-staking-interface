@@ -2,46 +2,31 @@ import { TxAction } from 'services/transaction'
 import { assertUnreachable } from './assertion'
 import { bnum } from './num'
 
-export function txToastTitle(action: TxAction, type?: ToastType) {
-  let title: string
-
+export function txToastTitle(action: TxAction) {
   switch (action) {
     case TxAction.Approve:
-      title = 'Approve'
-      break
+      return 'Approve'
     case TxAction.ClaimAll:
     case TxAction.ClaimBal:
     case TxAction.ClaimWncg:
-      title = 'Claim Rewards'
-      break
+      return 'Claim Rewards'
     case TxAction.EarmarkRewards:
-      title = 'Harvest'
-      break
+      return 'Harvest'
     case TxAction.ExitPool:
-      title = 'Exit Pool'
-      break
+      return 'Exit Pool'
     case TxAction.JoinPool:
-      title = 'Join Pool'
-      break
+      return 'Join Pool'
     case TxAction.Stake:
-      title = 'Stake'
-      break
+      return 'Stake'
     case TxAction.Cooldown:
-      title = 'Cooldown'
-      break
+      return 'Cooldown'
     case TxAction.Withdraw:
-      title = 'Withdraw'
-      break
+      return 'Withdraw'
     case TxAction.WithdrawAndClaim:
-      title = 'Withdraw & Claim'
-      break
+      return 'Withdraw & Claim'
     default:
       assertUnreachable(action)
   }
-
-  if (type === 'error') return `Failed: ${title}`
-  if (type === 'success') return `Success: ${title}`
-  return title
 }
 
 export function txSuccessMessage(action: TxAction, params?: string | string[]) {

@@ -23,7 +23,7 @@ export function TxItem({ transaction }: TxItemProps) {
   const txUrl = getTxUrl(hash)
   const isFailed = status === 'error'
   const txType = isFailed ? 'error' : 'info'
-  const title = txToastTitle(action, txType)
+  const title = txToastTitle(action)
   const message = isFailed
     ? parseTxError(error)!.message
     : txInfoMessage(action, params)

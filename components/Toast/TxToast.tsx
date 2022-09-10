@@ -72,6 +72,8 @@ export function TxToast({
       <header className={styles.header}>
         <h4 className={styles.title}>
           {renderToastEmoji(type)}
+          {type === 'error' && 'Failed: '}
+          {type === 'success' && 'Completed: '}
           <span className={styles.anchor}>{title}</span>
         </h4>
 

@@ -23,16 +23,15 @@ export function useTx() {
   }, [provider, setTxMap])
 
   const registerTx = useCallback(
-    (hash: string, action: TxAction, params?: string | string[]) => {
+    (hash: string, action: TxAction) => {
       if (!txService) return
 
       txService.registerTx(hash, action)
-
       addTxToast({
         action,
         hash,
         title: txToastTitle(action),
-        message: txInfoMessage(action, params),
+        message: txInfoMessage(action),
         type: 'info',
       })
     },
@@ -48,11 +47,10 @@ export function useTx() {
       addTxToast({
         action,
         hash,
-        title: txToastTitle(action, 'success'),
+        title: txToastTitle(action),
         message: txInfoMessage(action),
         type: 'success',
       })
-
       callback?.()
     },
     [addTxToast, txService]
@@ -64,16 +62,16 @@ export function useTx() {
 
       try {
         await txService.getTxReceipt(hash)
-      } catch (error) {
+      } catch (error: any) {
         const tx = txService.rejectTx(hash, error)
         if (!tx) return
 
-        console.log(11, JSON.parse(JSON.stringify(error)))
+        console.log(11, error.transaction, error.reason, Object.keys(error))
 
         addTxToast({
           action: tx.action,
           hash: tx.hash,
-          title: txToastTitle(tx.action, 'error'),
+          title: txToastTitle(tx.action),
           message: parseTxError(error)!.message,
           type: 'error',
         })
