@@ -49,7 +49,7 @@ export function useJoinPool() {
         nativeAssetIndex,
         poolId,
       })
-      registerTx?.(response, TxAction.JoinPool, poolName)
+      registerTx?.(response.hash, TxAction.JoinPool, poolName)
     },
     [
       vault,

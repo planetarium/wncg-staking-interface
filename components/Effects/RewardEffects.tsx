@@ -19,47 +19,38 @@ function RewardEffects() {
   } = useEvents()
   const provider = useProvider()
   const { fetchEarmarkIncentive } = useEarmarkIncentive()
-  const { handleTx } = useTx()
   const { fetchRewards } = useRewards()
-
-  const option = useMemo(
-    () => ({
-      onTxConfirmed: fetchRewards,
-    }),
-    [fetchRewards]
-  )
+  const { fulfillTx } = useTx()
 
   const rewardsClaimedAllHandler = useCallback(
-    async (event: Event) => {
-      await handleTx?.(event, TxAction.ClaimAll, option)
+    async ({ transactionHash }: Event) => {
+      await fulfillTx?.(transactionHash, TxAction.ClaimAll)
     },
-    [handleTx, option]
+    [fulfillTx]
   )
 
   const rewardsClaimedBalHandler = useCallback(
-    async (event: Event) => {
-      await handleTx?.(event, TxAction.ClaimBal, option)
+    async ({ transactionHash }: Event) => {
+      await fulfillTx?.(transactionHash, TxAction.ClaimBal)
     },
-    [handleTx, option]
+    [fulfillTx]
   )
 
   const rewardsClaimedWncgHandler = useCallback(
-    async (event: Event) => {
-      await handleTx?.(event, TxAction.ClaimWncg, option)
+    async ({ transactionHash }: Event) => {
+      await fulfillTx?.(transactionHash, TxAction.ClaimWncg, fetchRewards)
     },
-    [handleTx, option]
+    [fetchRewards, fulfillTx]
   )
 
   const earmarkRewardsHandler = useCallback(
-    async (event: Event) => {
-      await handleTx?.(event, TxAction.EarmarkRewards, {
-        onTxConfirmed: () => {
-          fetchEarmarkIncentive()
-          fetchRewards()
-        },
+    async ({ transactionHash }: Event) => {
+      await fulfillTx?.(transactionHash, TxAction.EarmarkRewards, () => {
+        fetchEarmarkIncentive()
+        fetchRewards()
       })
     },
-    [fetchEarmarkIncentive, fetchRewards, handleTx]
+    [fetchEarmarkIncentive, fetchRewards, fulfillTx]
   )
 
   // NOTE: Reward All event

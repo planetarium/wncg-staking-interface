@@ -1,19 +1,9 @@
 import type { SetterOrUpdater } from 'recoil'
-import type { Event } from 'ethers'
-import type {
-  TransactionReceipt,
-  TransactionResponse,
-  Web3Provider,
-} from '@ethersproject/providers'
+import type { Web3Provider } from '@ethersproject/providers'
 import { isToday } from 'date-fns'
 import store from 'store'
 
 import STORAGE_KEYS from 'constants/storageKeys'
-import {
-  txInfoMessage,
-  txSuccessMessage,
-  txToastTitle,
-} from 'utils/transaction'
 
 export const TxAction = {
   Approve: 'Approve',
@@ -31,8 +21,6 @@ export const TxAction = {
 
 export type TxAction = typeof TxAction[keyof typeof TxAction]
 
-export type TxStatus = 'pending' | 'fulfilled' | 'error' | 'canceled'
-
 export type TxToastParams = {
   action: TxAction
   hash: string
@@ -46,72 +34,57 @@ export type TxMap = {
   [id: string]: Transaction
 }
 
-type TxHandlerCallbacks = {
-  onTxEvent?(): void
-  onTxConfirmed?(): void
-}
-
 export class TransactionService {
   constructor(
     public readonly provider: Web3Provider,
-    public readonly setTxMap: SetterOrUpdater<TxMap>,
-    public readonly addTxToast: (params: TxToastParams) => void
+    public readonly setTxMap: SetterOrUpdater<TxMap>
   ) {}
 
-  registerTx = async (
-    response: TransactionResponse,
+  registerTx = (
+    hash: string,
     action: TxAction,
     params?: string | string[]
-  ) => {
-    const hashKey = this.encodeKey(response.hash, action)
+  ): Transaction => {
+    const hashKey = this.encodeKey(hash, action)
 
-    const newTx: Transaction = {
+    const tx: Transaction = {
       action,
-      hash: response.hash,
+      hash,
       status: 'pending',
       addedTime: Date.now(),
       params,
     }
 
-    this.addTxToast({
-      action,
-      hash: response.hash,
-      title: txToastTitle(action),
-      message: txInfoMessage(action, params),
-    })
-
-    this.updateTx(hashKey, newTx)
+    this.updateTx(hashKey, tx)
+    return tx
   }
 
-  handleTx = async (
-    event: Event,
-    action: TxAction,
-    callbacks: TxHandlerCallbacks = {}
-  ) => {
-    const hashKey = this.encodeKey(event.transactionHash, action)
-    const target = this.txMap[hashKey]
+  fulfillTx = (hash: string, action: TxAction) => {
+    const hashKey = this.encodeKey(hash, action)
+    const tx = this.findTx(hashKey)
+    if (!tx || !!tx?.finalizedTime) return
 
-    callbacks.onTxEvent?.()
+    const newTx: Transaction = { ...tx }
+    newTx.status = 'fulfilled'
+    newTx.finalizedTime = Date.now()
 
-    if (!target || target.status !== 'pending') return
-    if (!!target.finalizedTime) return
+    this.updateTx(hashKey, newTx)
+    return newTx
+  }
 
-    const newTarget: Transaction = { ...target }
+  rejectTx = (hash: string, error: any) => {
+    const hashKey = this.findHashKey(hash)
+    if (!hashKey) return
 
-    newTarget.status = 'fulfilled'
-    newTarget.finalizedTime = Date.now()
+    const tx = this.findTx(hashKey)
+    if (!tx || !!tx?.finalizedTime) return
 
-    this.addTxToast({
-      action: target.action,
-      hash: target.hash,
-      title: txToastTitle(target.action, 'success'),
-      message: txSuccessMessage(target.action, target.params),
-      type: 'success',
-    })
+    const newTx: Transaction = { ...tx, error }
+    newTx.status = 'error'
+    newTx.finalizedTime = Date.now()
 
-    callbacks.onTxConfirmed?.()
-
-    this.updateTx(hashKey, newTarget)
+    this.updateTx(hashKey, newTx)
+    return newTx
   }
 
   flushOutdatedTx() {
@@ -135,25 +108,28 @@ export class TransactionService {
     this.setTxMap(newTxMap)
   }
 
-  resetTxMap() {
-    store.remove(STORAGE_KEYS.Transactions)
+  getTxReceipt = async (hash: string) => {
+    const tx = await this.provider?.getTransaction(hash)
+    return await tx?.wait()
   }
 
-  async getTxReceipt(hash: string): Promise<TransactionReceipt> {
-    const txInfo = await this.provider?.getTransaction(hash)
-    return await txInfo?.wait()
+  private findTx(hashKey: string) {
+    return this.txMap[hashKey]
+  }
+
+  findHashKey = (hash: string): string | void => {
+    return this.findTxEntry(hash)?.[0]
+  }
+
+  private findTxEntry = (hash: string) => {
+    return Object.entries(this.txMap).find(([, tx]) => tx.hash === hash)
+  }
+
+  private encodeKey(hash: string, action: TxAction) {
+    return `tx_${hash}_${action}`
   }
 
   get txMap(): TxMap {
     return store.get(STORAGE_KEYS.Transactions) || {}
-  }
-
-  encodeKey(hash: string, action: TxAction) {
-    return `tx_${hash}_${action}`
-  }
-
-  decodeKey(hashKey?: string) {
-    if (!hashKey) return hashKey
-    return hashKey.split('_')[1] || hashKey
   }
 }

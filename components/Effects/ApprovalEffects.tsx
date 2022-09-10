@@ -13,7 +13,7 @@ function ApprovalEffects() {
   const { createApprovalEvent } = useEvents()
   const { bptAddress, poolTokenAddresses } = usePool()
   const provider = useProvider()
-  const { handleTx } = useTx()
+  const { fulfillTx } = useTx()
 
   const account = useRecoilValue(accountState)
   const stakingAddress = useRecoilValue(stakingContractAddressState)
@@ -36,13 +36,10 @@ function ApprovalEffects() {
   ])
 
   const eventHandler = useCallback(
-    async (event: Event) => {
-      await handleTx?.(event, TxAction.Approve, {
-        onTxEvent: fetchAllowances,
-        onTxConfirmed: fetchAllowances,
-      })
+    async ({ transactionHash }: Event) => {
+      await fulfillTx?.(transactionHash, TxAction.Approve, fetchAllowances)
     },
-    [fetchAllowances, handleTx]
+    [fetchAllowances, fulfillTx]
   )
 
   useEffect(() => {

@@ -27,7 +27,7 @@ export function useApprove() {
       )
 
       const response = await initApprove(contract, spender)
-      registerTx?.(response, TxAction.Approve, getTokenSymbol(address))
+      registerTx?.(response.hash, TxAction.Approve, getTokenSymbol(address))
       return response.hash
     },
     [account, provider, registerTx]

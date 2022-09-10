@@ -15,7 +15,7 @@ export function useStake() {
     async (amount: string) => {
       if (!contract) return
       const response = await stakeBpt(contract, amount)
-      registerTx?.(response, TxAction.Stake, [amount, poolTokenName])
+      registerTx?.(response.hash, TxAction.Stake, [amount, poolTokenName])
       return response.hash
     },
     [contract, poolTokenName, registerTx]

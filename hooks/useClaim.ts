@@ -18,13 +18,13 @@ export function useClaim() {
   const claimAllRewards = useCallback(async () => {
     if (!contract) return
     const response = await initClaimAllRewards(contract)
-    registerTx?.(response, TxAction.ClaimAll, rewardTokenSymbols[0])
+    registerTx?.(response.hash, TxAction.ClaimAll, rewardTokenSymbols[0])
   }, [contract, rewardTokenSymbols, registerTx])
 
   const claimBalRewards = useCallback(async () => {
     if (!contract) return
     const response = await initClaimBalRewards(contract)
-    registerTx?.(response, TxAction.ClaimBal)
+    registerTx?.(response.hash, TxAction.ClaimBal)
   }, [contract, registerTx])
 
   const claimWncgRewards = useCallback(async () => {
@@ -33,7 +33,7 @@ export function useClaim() {
       contract,
       scaledRewards[0].toString()
     )
-    registerTx?.(response, TxAction.ClaimWncg, rewardTokenSymbols[0])
+    registerTx?.(response.hash, TxAction.ClaimWncg, rewardTokenSymbols[0])
   }, [contract, rewardTokenSymbols, scaledRewards, registerTx])
 
   return {

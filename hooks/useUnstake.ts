@@ -14,7 +14,7 @@ export function useUnstake() {
   const startCooldown = useCallback(async () => {
     if (!contract) return
     const response = await initCooldown(contract)
-    registerTx?.(response, TxAction.Cooldown)
+    registerTx?.(response.hash, TxAction.Cooldown)
   }, [contract, registerTx])
 
   const withdraw = useCallback(
@@ -24,7 +24,7 @@ export function useUnstake() {
       const action = isClaimAllRewards
         ? TxAction.WithdrawAndClaim
         : TxAction.Withdraw
-      registerTx?.(response, action, [amount, poolTokenName])
+      registerTx?.(response.hash, action, [amount, poolTokenName])
     },
     [contract, poolTokenName, registerTx]
   )

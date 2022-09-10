@@ -18,18 +18,16 @@ function StakeEffects() {
   const provider = useProvider()
   const { fetchStakedBalance } = useStakedBalance()
   const { fetchTotalStaked } = useStaking()
-  const { handleTx } = useTx()
+  const { fulfillTx } = useTx()
   const { fetchTimestamps } = useUnstakeTimestamps()
 
   const stakedHandler = useCallback(
-    async (event: Event) => {
-      await handleTx?.(event, TxAction.Stake, {
-        onTxEvent: () => {
-          fetchStakedBalance()
-          fetchBalances()
-          fetchTotalStaked()
-          fetchTimestamps()
-        },
+    async ({ transactionHash }: Event) => {
+      await fulfillTx?.(transactionHash, TxAction.Stake, () => {
+        fetchStakedBalance()
+        fetchBalances()
+        fetchTotalStaked()
+        fetchTimestamps()
       })
     },
     [
@@ -37,7 +35,7 @@ function StakeEffects() {
       fetchTimestamps,
       fetchTotalStaked,
       fetchStakedBalance,
-      handleTx,
+      fulfillTx,
     ]
   )
 

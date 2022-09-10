@@ -6,6 +6,7 @@ import ConfigEffects from './ConfigEffects'
 import PoolEffects from './PoolEffects'
 import RewardEffects from './RewardEffects'
 import StakeEffects from './StakeEffects'
+import TxEffects from './TxEffects'
 import UnstakeEffects from './UnstakeEffects'
 
 function Effects() {
@@ -17,6 +18,7 @@ function Effects() {
       <PoolEffects />
       <RewardEffects />
       <StakeEffects />
+      <TxEffects />
       <UnstakeEffects />
     </>
   )

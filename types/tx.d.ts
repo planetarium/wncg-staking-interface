@@ -1,3 +1,5 @@
+type TxStatus = 'pending' | 'fulfilled' | 'error' | 'canceled'
+
 type Transaction = {
   action: TxAction
   hash: string

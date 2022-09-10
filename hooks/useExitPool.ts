@@ -83,7 +83,7 @@ export function useExitPool() {
         poolId,
         tokenOutIndex,
       })
-      registerTx?.(response, TxAction.ExitPool, poolName)
+      registerTx?.(response.hash, TxAction.ExitPool, poolName)
       return response.hash
     },
     [

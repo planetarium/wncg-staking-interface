@@ -8,19 +8,14 @@ function PoolEffects() {
   const { fetchBalances } = useBalances()
   const { poolBalanceChangedEvent } = useEvents()
   const provider = useProvider()
-  const { handleTx } = useTx()
+  const { fulfillTx } = useTx()
 
   const poolBalanceChangedHandler = useCallback(
-    async (event: Event) => {
-      await handleTx?.(event, TxAction.JoinPool, {
-        onTxEvent: fetchBalances,
-      })
-
-      await handleTx?.(event, TxAction.ExitPool, {
-        onTxEvent: fetchBalances,
-      })
+    async ({ transactionHash }: Event) => {
+      await fulfillTx?.(transactionHash, TxAction.JoinPool, fetchBalances)
+      await fulfillTx?.(transactionHash, TxAction.ExitPool, fetchBalances)
     },
-    [fetchBalances, handleTx]
+    [fetchBalances, fulfillTx]
   )
 
   // NOTE: Pool balance changed event (Join / Exit)

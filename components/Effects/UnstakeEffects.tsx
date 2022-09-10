@@ -20,42 +20,34 @@ function UnstakeEffects() {
   const { fetchStakedBalance } = useStakedBalance()
   const { fetchRewards } = useRewards()
   const { fetchTotalStaked } = useStaking()
-  const { handleTx } = useTx()
+  const { fulfillTx } = useTx()
   const { fetchTimestamps } = useUnstakeTimestamps()
 
   const cooldownHandler = useCallback(
-    async (event: Event) => {
-      await handleTx?.(event, TxAction.Cooldown, {
-        onTxConfirmed: () => {
-          fetchTimestamps()
-        },
-      })
+    async ({ transactionHash }: Event) => {
+      await fulfillTx?.(transactionHash, TxAction.Cooldown, fetchTimestamps)
     },
-    [fetchTimestamps, handleTx]
+    [fetchTimestamps, fulfillTx]
   )
 
   const withdrawnHandler = useCallback(
-    async (event: Event) => {
-      await handleTx?.(event, TxAction.Withdraw, {
-        onTxEvent: () => {
-          fetchStakedBalance()
-          fetchBalances()
-          fetchTotalStaked()
-        },
+    async ({ transactionHash }: Event) => {
+      await fulfillTx?.(transactionHash, TxAction.Withdraw, () => {
+        fetchStakedBalance()
+        fetchBalances()
+        fetchTotalStaked()
       })
     },
-    [fetchBalances, fetchStakedBalance, fetchTotalStaked, handleTx]
+    [fetchBalances, fetchStakedBalance, fetchTotalStaked, fulfillTx]
   )
 
   const withdrawnAndClaimedHandler = useCallback(
-    async (event: Event) => {
-      await handleTx?.(event, TxAction.WithdrawAndClaim, {
-        onTxEvent: () => {
-          fetchRewards()
-          fetchBalances()
-          fetchStakedBalance()
-          fetchTotalStaked()
-        },
+    async ({ transactionHash }: Event) => {
+      await fulfillTx?.(transactionHash, TxAction.WithdrawAndClaim, () => {
+        fetchRewards()
+        fetchBalances()
+        fetchStakedBalance()
+        fetchTotalStaked()
       })
     },
     [
@@ -63,7 +55,7 @@ function UnstakeEffects() {
       fetchRewards,
       fetchTotalStaked,
       fetchStakedBalance,
-      handleTx,
+      fulfillTx,
     ]
   )
 

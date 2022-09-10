@@ -1,8 +1,12 @@
 import { useCallback, useMemo } from 'react'
 import { useResetRecoilState, useSetRecoilState } from 'recoil'
+import store from 'store'
 
 import { txMapState } from 'app/states/transaction'
-import { TransactionService } from 'services/transaction'
+import { TransactionService, TxAction } from 'services/transaction'
+import STORAGE_KEYS from 'constants/storageKeys'
+import { parseTxError } from 'utils/error'
+import { txInfoMessage, txToastTitle } from 'utils/transaction'
 import { useProvider } from './useProvider'
 import { useToast } from './useToast'
 
@@ -15,18 +19,79 @@ export function useTx() {
 
   const txService = useMemo(() => {
     if (!provider) return null
-    return new TransactionService(provider, setTxMap, addTxToast)
-  }, [provider, addTxToast, setTxMap])
+    return new TransactionService(provider, setTxMap)
+  }, [provider, setTxMap])
+
+  const registerTx = useCallback(
+    (hash: string, action: TxAction, params?: string | string[]) => {
+      if (!txService) return
+
+      txService.registerTx(hash, action)
+
+      addTxToast({
+        action,
+        hash,
+        title: txToastTitle(action),
+        message: txInfoMessage(action, params),
+        type: 'info',
+      })
+    },
+    [addTxToast, txService]
+  )
+
+  const fulfillTx = useCallback(
+    (hash: string, action: TxAction, callback?: () => void) => {
+      if (!txService) return
+      const tx = txService.fulfillTx(hash, action)
+      if (!tx) return
+
+      addTxToast({
+        action,
+        hash,
+        title: txToastTitle(action, 'success'),
+        message: txInfoMessage(action),
+        type: 'success',
+      })
+
+      callback?.()
+    },
+    [addTxToast, txService]
+  )
+
+  const resolvePendingTx = useCallback(
+    async (hash: string) => {
+      if (!txService) return
+
+      try {
+        await txService.getTxReceipt(hash)
+      } catch (error) {
+        const tx = txService.rejectTx(hash, error)
+        if (!tx) return
+
+        console.log(11, JSON.parse(JSON.stringify(error)))
+
+        addTxToast({
+          action: tx.action,
+          hash: tx.hash,
+          title: txToastTitle(tx.action, 'error'),
+          message: parseTxError(error)!.message,
+          type: 'error',
+        })
+      }
+    },
+    [addTxToast, txService]
+  )
 
   const resetTx = useCallback(() => {
-    txService?.resetTxMap()
+    store.remove(STORAGE_KEYS.Transactions)
     resetTxMap()
-  }, [resetTxMap, txService])
+  }, [resetTxMap])
 
   return {
-    txService,
-    registerTx: txService?.registerTx,
-    handleTx: txService?.handleTx,
+    fulfillTx,
+    registerTx,
     resetTx,
+    resolvePendingTx,
+    txService,
   }
 }

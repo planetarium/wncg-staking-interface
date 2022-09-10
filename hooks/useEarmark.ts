@@ -12,7 +12,7 @@ export function useEarmark() {
   const earmarkRewards = useCallback(async () => {
     if (!contract) return
     const response = await initEarmarkRewards(contract)
-    registerTx?.(response, TxAction.EarmarkRewards)
+    registerTx?.(response.hash, TxAction.EarmarkRewards)
   }, [contract, registerTx])
 
   return {
