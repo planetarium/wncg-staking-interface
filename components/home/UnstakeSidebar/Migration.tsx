@@ -59,7 +59,7 @@ export function UnstakeSidebarMigration({
               <div className={styles.detailItem}>
                 <dt>Withdraw window</dt>
                 <dd>
-                  <strong>∞</strong>
+                  <strong>60 days</strong>
                 </dd>
               </div>
             </dl>
