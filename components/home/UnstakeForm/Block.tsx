@@ -1,6 +1,6 @@
 import { memo } from 'react'
 import { motion } from 'framer-motion'
-import styles from '../styles/UnstakeForm.module.scss'
+import styles from '../styles/Block.module.scss'
 
 import { formTransition, blockVariants } from '../constants'
 

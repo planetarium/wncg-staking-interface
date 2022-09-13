@@ -1,19 +1,20 @@
 import { memo, useMemo } from 'react'
 import { Control, FieldValues, useForm } from 'react-hook-form'
 import { useRecoilValue } from 'recoil'
-import { motion } from 'framer-motion'
-import styles from './styles/StakeForm.module.scss'
+import { AnimatePresence, motion } from 'framer-motion'
+import styles from '../styles/Forms.module.scss'
 
 import { networkMismatchState } from 'app/states/error'
 import { legacyModeState } from 'app/states/settings'
 import { gaEvent } from 'lib/gtag'
 import { bnum } from 'utils/num'
 import { useBalances, usePool } from 'hooks'
-import { formTransition, motionVariants, TabId, TabPanelId } from './constants'
+import { formTransition, motionVariants, TabId, TabPanelId } from '../constants'
 
 import { EstimatedEarn } from './EstimatedEarn'
-import { InputGroup } from './InputGroup'
+import { InputGroup } from '../InputGroup'
 import { StakeSubmit } from './StakeSubmit'
+import { StakeFormBlock } from './Block'
 
 const minAmount = 1e-18
 
@@ -67,7 +68,7 @@ function StakeForm() {
 
   return (
     <motion.section
-      className={styles.stakeForm}
+      className={styles.form}
       id={TabPanelId.Stake}
       initial="initial"
       animate="animate"
@@ -94,6 +95,8 @@ function StakeForm() {
         clearInput={clearInput}
         disabled={disabled}
       />
+
+      <AnimatePresence>{legacyMode && <StakeFormBlock />}</AnimatePresence>
     </motion.section>
   )
 }

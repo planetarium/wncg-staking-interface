@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState } from 'react'
 import { Control, FieldValues, useForm } from 'react-hook-form'
 import { AnimatePresence, motion } from 'framer-motion'
-import styles from '../styles/UnstakeForm.module.scss'
+import styles from '../styles/Forms.module.scss'
 
 import { ModalCategory } from 'app/states/modal'
 import { gaEvent } from 'lib/gtag'
@@ -123,7 +123,7 @@ export function UnstakeForm({ disabled }: UnstakeFormProps) {
 
   return (
     <motion.section
-      className={styles.unstakeForm}
+      className={styles.form}
       id={TabPanelId.Unstake}
       initial="initial"
       animate="animate"

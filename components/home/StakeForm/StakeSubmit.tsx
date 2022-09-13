@@ -4,7 +4,7 @@ import Lottie from 'lottie-react'
 import { useRecoilValue } from 'recoil'
 import type { Event } from 'ethers'
 import clsx from 'clsx'
-import styles from './styles/StakeSubmit.module.scss'
+import styles from '../styles/StakeSubmit.module.scss'
 
 import { connectedState } from 'app/states/connection'
 import { ModalCategory } from 'app/states/modal'
