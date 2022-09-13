@@ -14,7 +14,11 @@ function StakeFormBlock() {
       transition={formTransition}
       variants={blockVariants}
     >
-      <h1>Staking is halted due to the migration</h1>
+      <h1>
+        Staking is halted due to the migration.
+        <br />
+        You can still unstake if you have any in the old contract.
+      </h1>
     </motion.section>
   )
 }
