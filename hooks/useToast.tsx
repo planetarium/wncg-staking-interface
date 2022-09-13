@@ -5,6 +5,7 @@ import { nanoid } from 'nanoid'
 import { toastIdListState } from 'app/states/toast'
 
 import { Toast } from 'components/Toast'
+import { configService } from 'services/config'
 
 const toastAnimation = cssTransition({
   enter: 'fadeIn',
@@ -23,7 +24,9 @@ export function useToast() {
 
   function addToast(params: AddToast) {
     const toastId = `toast.${nanoid()}`
-    toast(<Toast id={toastId} {...params} />, {
+    const tokensToImport = getTokensToImport(params.title, params.type)
+
+    toast(<Toast id={toastId} {...params} tokensToImport={tokensToImport} />, {
       transition: toastAnimation,
       toastId,
     })
@@ -33,5 +36,26 @@ export function useToast() {
 
   return {
     addToast,
+  }
+}
+
+function getTokensToImport(
+  title: string,
+  type?: ToastType
+): string[] | undefined {
+  if (type !== 'success') return
+
+  title = title.toLowerCase()
+
+  if (title.includes('wncg')) {
+    return [configService.rewardTokensList[0]]
+  }
+
+  if (title.includes('bal')) {
+    return [configService.rewardTokensList[1]]
+  }
+
+  if (title.includes('claim all')) {
+    return configService.rewardTokensList
   }
 }

@@ -11,16 +11,25 @@ import { renderToastBadge } from 'utils/toast'
 import { getTxUrl } from 'utils/url'
 
 import { Icon } from 'components/Icon'
+import { ImportTokens } from './ImportTokens'
 
 type ToastProps = {
   id: string
   message: string
   title: string
   hash?: string
+  tokensToImport?: string[]
   type?: ToastType
 }
 
-export function Toast({ id, title, message, hash, type = 'info' }: ToastProps) {
+export function Toast({
+  id,
+  title,
+  message,
+  hash,
+  tokensToImport,
+  type = 'info',
+}: ToastProps) {
   const muted = useRecoilValue(mutedState)
   const latestToastId = useRecoilValue(latestToastIdState)
 
@@ -56,10 +65,8 @@ export function Toast({ id, title, message, hash, type = 'info' }: ToastProps) {
       {...attributes}
     >
       <header className={styles.header}>
-        <h4 className={styles.title}>
-          {renderToastBadge(type)}
-          {title}
-        </h4>
+        {renderToastBadge(type)}
+        <h4 className={styles.title}>{title}</h4>
         {txUrl && (
           <a
             className={styles.link}
@@ -76,6 +83,12 @@ export function Toast({ id, title, message, hash, type = 'info' }: ToastProps) {
         className={styles.desc}
         dangerouslySetInnerHTML={{ __html: content }}
       />
+
+      {tokensToImport && (
+        <footer className={styles.footer}>
+          <ImportTokens id={id} addresses={tokensToImport} />
+        </footer>
+      )}
     </aside>
   )
 }

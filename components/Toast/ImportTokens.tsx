@@ -1,16 +1,15 @@
-/* eslint-disable react/jsx-no-target-blank */
-import { MouseEvent } from 'react'
+import type { MouseEvent } from 'react'
 import styles from './style.module.scss'
 
-import { useImportToken } from 'hooks'
 import { getTokenSymbol } from 'utils/token'
+import { useImportToken } from 'hooks'
 
 type ImportTokensType = {
   addresses: string[]
-  hash: string
+  id: string
 }
 
-export function ImportTokens({ addresses, hash }: ImportTokensType) {
+export function ImportTokens({ addresses, id }: ImportTokensType) {
   const { importToken } = useImportToken()
 
   function handleImport(e: MouseEvent<HTMLButtonElement>) {
@@ -25,7 +24,7 @@ export function ImportTokens({ addresses, hash }: ImportTokensType) {
     <footer className={styles.footer}>
       {addresses.map((address) => (
         <button
-          key={`importTokens.${address}.${hash}`}
+          key={`importTokens.${id}`}
           type="button"
           value={address}
           onClick={handleImport}
