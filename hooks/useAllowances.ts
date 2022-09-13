@@ -5,19 +5,19 @@ import { isAddress } from 'ethers/lib/utils'
 
 import { accountState } from 'app/states/connection'
 import { networkMismatchState } from 'app/states/error'
-import { stakingContractAddressState } from 'app/states/settings'
 import { fetchAllowances } from 'contracts/erc20'
 import { configService } from 'services/config'
 import { usePool } from './usePool'
 import { useProvider } from './useProvider'
+import { useStakingContract } from './useStakingContract'
 
 export function useAllowances() {
   const provider = useProvider()
   const { bptAddress, poolTokenAddresses } = usePool()
+  const { stakingAddress } = useStakingContract()
 
   const account = useRecoilValue(accountState)
   const networkMismatch = useRecoilValue(networkMismatchState)
-  const stakingAddress = useRecoilValue(stakingContractAddressState)
 
   const addresses = [
     ...poolTokenAddresses,
@@ -28,7 +28,7 @@ export function useAllowances() {
   const spenders = [stakingAddress, configService.vaultAddress]
 
   const allowances = useQuery(
-    ['allowances', account, addresses, stakingAddress],
+    ['allowances', account, addresses, spenders],
     () => fetchAllowances(provider, account, addresses, spenders),
     {
       enabled: !networkMismatch,

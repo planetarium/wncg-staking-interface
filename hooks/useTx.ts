@@ -110,9 +110,9 @@ export function useTx() {
   }, [resetTxList])
 
   return {
-    subscribeTx,
-    resetTx,
     pingPendingTx,
+    resetTx,
+    subscribeTx,
     txService,
   }
 }

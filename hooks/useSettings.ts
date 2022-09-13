@@ -11,8 +11,11 @@ import {
 } from 'app/states/settings'
 import STORAGE_KEYS from 'constants/storageKeys'
 import { gaEvent } from 'lib/gtag'
+import { useTx } from './useTx'
 
 export function useSettings() {
+  const { resetTx } = useTx()
+
   const setEstimatedEarnPeriod = useSetRecoilState(estimatedEarnPeriodState)
   const setMuted = useSetRecoilState(mutedState)
   const setSlippage = useSetRecoilState(slippageState)
@@ -47,7 +50,8 @@ export function useSettings() {
       })
       return !prev
     })
-  }, [setLegacyMode])
+    resetTx()
+  }, [resetTx, setLegacyMode])
 
   const updateEstimatedEarnPeriod = useCallback(
     <T extends HTMLButtonElement>(e: MouseEvent<T>) => {
