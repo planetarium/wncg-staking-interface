@@ -1,11 +1,15 @@
-import { toast } from 'react-toastify'
+import { cssTransition, toast } from 'react-toastify'
 import { useSetRecoilState } from 'recoil'
 import { nanoid } from 'nanoid'
 
 import { toastIdListState } from 'app/states/toast'
-import { toastAnimation } from 'utils/toast'
 
 import { Toast } from 'components/Toast'
+
+const toastAnimation = cssTransition({
+  enter: 'fadeIn',
+  exit: 'fadeOut',
+})
 
 type AddToast = {
   title: string

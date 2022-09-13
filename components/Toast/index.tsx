@@ -6,8 +6,8 @@ import styles from './style.module.scss'
 import { mutedState } from 'app/states/settings'
 import { latestToastIdState } from 'app/states/toast'
 import { parseMarkdown } from 'utils/string'
+import { renderToastBadge } from 'utils/toast'
 import { getTxUrl } from 'utils/url'
-import { renderToastEmoji } from './utils'
 
 type ToastProps = {
   id: string
@@ -54,7 +54,7 @@ export function Toast({ id, title, message, hash, type = 'info' }: ToastProps) {
     >
       <header className={styles.header}>
         <h4 className={styles.title}>
-          {renderToastEmoji(type)}
+          {renderToastBadge(type)}
           {title}
         </h4>
       </header>

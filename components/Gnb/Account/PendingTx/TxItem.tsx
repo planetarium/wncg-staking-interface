@@ -3,10 +3,10 @@ import { MouseEvent } from 'react'
 import { formatDistanceToNow } from 'date-fns'
 import styles from './style.module.scss'
 
+import { renderToastBadge } from 'utils/toast'
 import { getTxUrl } from 'utils/url'
 import { useTx } from 'hooks'
 
-import { renderToastEmoji } from 'components/Toast/utils'
 import { Icon } from 'components/Icon'
 
 type TxItemProps = {
@@ -34,7 +34,7 @@ export function TxItem({ transaction }: TxItemProps) {
       <header>
         <h4>
           <a href={txUrl} target="_blank" rel="noopener">
-            {renderToastEmoji(txType)}
+            {renderToastBadge(txType)}
             {title}
           </a>
         </h4>

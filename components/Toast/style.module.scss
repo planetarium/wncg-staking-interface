@@ -49,6 +49,7 @@
 
 .title {
   @include textStyle(14, 700);
+  font-style: normal;
   color: $black;
 
   .anchor {
@@ -64,8 +65,28 @@
   }
 }
 
-.emoji {
-  margin-right: 0.25em;
+.badge {
+  @include inlineFlexbox;
+  padding: 2px 8px;
+  margin-right: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 18px;
+  letter-spacing: -0.01em;
+  color: $white;
+  border-radius: $radius-sm;
+
+  &.success {
+    background-color: hsl(173, 81%, 39%);
+  }
+
+  &.fail {
+    background-color: hsl(346, 49%, 55%);
+  }
+
+  @include responsive(MD) {
+    line-height: 22px;
+  }
 }
 
 .link {
