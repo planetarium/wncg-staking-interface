@@ -1,6 +1,7 @@
 .toast {
   padding: 16px;
   background-color: $white;
+  border-radius: $radius-md;
   transition: $transition-short;
 
   &.latest {

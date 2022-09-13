@@ -2,8 +2,8 @@ import { useCallback, useMemo, useRef, useState } from 'react'
 import { useMachine } from '@xstate/react'
 
 import { configService } from 'services/config'
-import { parseTxError } from 'utils/error'
 import { bnum } from 'utils/num'
+import { parseTxError } from 'utils/tx'
 import {
   useAllowances,
   useApprove,

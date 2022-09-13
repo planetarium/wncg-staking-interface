@@ -5,8 +5,8 @@ import styles from '../styles/UnstakeForm.module.scss'
 
 import { ModalCategory } from 'app/states/modal'
 import { gaEvent } from 'lib/gtag'
-import { parseTxError } from 'utils/error'
 import { bnum } from 'utils/num'
+import { parseTxError } from 'utils/tx'
 import {
   useModal,
   usePool,

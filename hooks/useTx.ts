@@ -7,7 +7,7 @@ import { txListState } from 'app/states/transaction'
 import STORAGE_KEYS from 'constants/storageKeys'
 import { MessageService } from 'services/message'
 import { TransactionSubscriptionService } from 'services/transactionSubscription'
-import { parseTxError } from 'utils/error'
+import { parseTxError } from 'utils/tx'
 import { useProvider } from './useProvider'
 import { useToast } from './useToast'
 

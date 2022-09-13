@@ -1,9 +1,4 @@
-export type TransactionError = {
-  title: string
-  message: string
-}
-
-export function parseTxError(error: any): TransactionError | void {
+export function parseTxError(error: any): TxError | void {
   if (error?.code === 4001) {
     return
   }

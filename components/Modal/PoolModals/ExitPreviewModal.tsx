@@ -4,6 +4,7 @@ import type { Event } from 'ethers'
 import styles from '../style.module.scss'
 
 import { ModalCategory } from 'app/states/modal'
+import { parseTxError } from 'utils/tx'
 import { useEvents, useExitPool, useModal, useProvider, useToast } from 'hooks'
 
 import { Button } from 'components/Button'
@@ -11,7 +12,6 @@ import { Icon } from 'components/Icon'
 import PreviewComposition from './Composition'
 import PreviewSummary from './Summary'
 import { PreviewWarning } from './Warning'
-import { parseTxError } from 'utils/error'
 
 type ExitPreviewModalProps = {
   amounts: string[]

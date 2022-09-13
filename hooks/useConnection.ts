@@ -10,8 +10,8 @@ import {
 import { ModalCategory } from 'app/states/modal'
 import STORAGE_KEYS from 'constants/storageKeys'
 import { gaEvent } from 'lib/gtag'
-import { parseTxError } from 'utils/error'
 import { convertChainIdToHex, networkChainId } from 'utils/network'
+import { parseTxError } from 'utils/tx'
 import { useModal } from './useModal'
 import { useProvider } from './useProvider'
 import { useSettings } from './useSettings'
@@ -23,7 +23,7 @@ export function useConnection() {
   const { addModal } = useModal()
   const provider = useProvider()
   const { resetSettings } = useSettings()
-  const { addErrorToast } = useToast()
+  const { addToast } = useToast()
   const { resetTx } = useTx()
   const { resetTimestamps } = useUnstakeTimestamps()
 
@@ -79,12 +79,13 @@ export function useConnection() {
       reset()
       const errorMsg = parseTxError(error)
       if (errorMsg) {
-        addErrorToast({
+        addToast({
           ...errorMsg,
+          type: 'error',
         })
       }
     }
-  }, [addErrorToast, provider, reset, setConnectionStatus, updateAccount])
+  }, [addToast, provider, reset, setConnectionStatus, updateAccount])
 
   const connect = useCallback(() => {
     if (!provider) {

@@ -10,7 +10,7 @@ import { connectedState } from 'app/states/connection'
 import { ModalCategory } from 'app/states/modal'
 import { stakingContractAddressState } from 'app/states/settings'
 import { gaEvent } from 'lib/gtag'
-import { parseTxError } from 'utils/error'
+import { parseTxError } from 'utils/tx'
 import {
   useAllowances,
   useApprove,
@@ -59,7 +59,7 @@ export function StakeSubmit({
   const { bptAddress, poolTokenName } = usePool()
   const provider = useProvider()
   const { stake } = useStake()
-  const { addErrorToast } = useToast()
+  const { addToast } = useToast()
   const { unstakeStatus } = useUnstakeTimestamps()
 
   const isConnected = useRecoilValue(connectedState)
@@ -77,8 +77,9 @@ export function StakeSubmit({
   function handleError(error: any) {
     const errorMsg = parseTxError(error)
     if (errorMsg) {
-      addErrorToast({
+      addToast({
         ...errorMsg,
+        type: 'error',
       })
     }
     resetStatus()

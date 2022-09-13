@@ -3,7 +3,7 @@ import styles from '../style.module.scss'
 
 import { ModalCategory } from 'app/states/modal'
 import { gaEvent } from 'lib/gtag'
-import { parseTxError } from 'utils/error'
+import { parseTxError } from 'utils/tx'
 import {
   useModal,
   useTimer,

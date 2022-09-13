@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion'
 import styles from './Warning.module.scss'
 
-import { parseTxError } from 'utils/error'
+import { parseTxError } from 'utils/tx'
 
 import { Icon } from 'components/Icon'
 

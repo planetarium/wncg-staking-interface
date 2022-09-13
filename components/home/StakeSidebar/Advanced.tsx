@@ -8,7 +8,7 @@ import { networkMismatchState } from 'app/states/error'
 import { isMobileState } from 'app/states/mediaQuery'
 import { gaEvent } from 'lib/gtag'
 import { countUpOption, usdCountUpOption } from 'utils/countUp'
-import { parseTxError } from 'utils/error'
+import { parseTxError } from 'utils/tx'
 import {
   useConnection,
   useEarmark,
@@ -36,7 +36,7 @@ export function StakeSidebarAdvanced() {
   } = useEarmarkIncentive()
   const { earmarkRewardsEvent } = useEvents()
   const provider = useProvider()
-  const { addErrorToast } = useToast()
+  const { addToast } = useToast()
 
   const networkMismatch = useRecoilValue(networkMismatchState)
   const isConnected = useRecoilValue(connectedState)
@@ -65,8 +65,9 @@ export function StakeSidebarAdvanced() {
       setLoading(false)
       const errorMsg = parseTxError(error)
       if (errorMsg) {
-        addErrorToast({
+        addToast({
           ...errorMsg,
+          type: 'error',
         })
       }
     }

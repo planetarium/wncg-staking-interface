@@ -14,3 +14,8 @@ type Tx = {
 type TxMap = {
   [id: string]: Tx
 }
+
+type TxError = {
+  title: string
+  message: string
+}
