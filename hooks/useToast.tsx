@@ -14,15 +14,16 @@ const toastAnimation = cssTransition({
 type AddToast = {
   title: string
   message: string
+  hash?: string
   type?: ToastType
 }
 
 export function useToast() {
   const setToastIdList = useSetRecoilState(toastIdListState)
 
-  function addToast({ title, message, type }: AddToast) {
+  function addToast(params: AddToast) {
     const toastId = `toast.${nanoid()}`
-    toast(<Toast id={toastId} title={title} message={message} type={type} />, {
+    toast(<Toast id={toastId} {...params} />, {
       transition: toastAnimation,
       toastId,
     })

@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-target-blank */
 import { useMount } from 'react-use'
 import { useRecoilValue } from 'recoil'
 import clsx from 'clsx'
@@ -8,6 +9,8 @@ import { latestToastIdState } from 'app/states/toast'
 import { parseMarkdown } from 'utils/string'
 import { renderToastBadge } from 'utils/toast'
 import { getTxUrl } from 'utils/url'
+
+import { Icon } from 'components/Icon'
 
 type ToastProps = {
   id: string
@@ -57,6 +60,16 @@ export function Toast({ id, title, message, hash, type = 'info' }: ToastProps) {
           {renderToastBadge(type)}
           {title}
         </h4>
+        {txUrl && (
+          <a
+            className={styles.link}
+            href={txUrl}
+            target="_blank"
+            rel="noopener"
+          >
+            <Icon id="externalLink" />
+          </a>
+        )}
       </header>
 
       <p

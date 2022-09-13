@@ -26,7 +26,7 @@ export class MessageService {
     return {
       success: `Successfully approved ${token}`,
       error: `Failed to approve ${token}`,
-      info: `Approve ${token}`,
+      info: `Approving ${token}`,
     }
   }
 
@@ -92,7 +92,7 @@ export class MessageService {
 
   private exitMessages(): ToastMessages {
     return {
-      success: `Successfully exited the pool pool`,
+      success: `Successfully exited the pool`,
       error: `Failed to exit the pool`,
       info: `Exiting pool`,
     }

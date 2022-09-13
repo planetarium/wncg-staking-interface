@@ -7,7 +7,6 @@ import { txListState } from 'app/states/transaction'
 import STORAGE_KEYS from 'constants/storageKeys'
 import { MessageService } from 'services/message'
 import { TransactionSubscriptionService } from 'services/transactionSubscription'
-import { parseTxError } from 'utils/tx'
 import { useProvider } from './useProvider'
 import { useToast } from './useToast'
 
@@ -44,6 +43,7 @@ export function useTx() {
       addToast({
         title,
         message: messages.info,
+        hash: tx.hash,
         type: 'info',
       })
     },
@@ -52,8 +52,7 @@ export function useTx() {
 
   const resolveTx = useCallback(
     (transaction: Transaction, callback?: () => void) => {
-      if (!txService) return
-      const tx = txService.resolve(transaction)
+      const tx = txService!.resolve(transaction)
       if (!tx) return
 
       setTxList((prev) => {
@@ -67,12 +66,28 @@ export function useTx() {
       addToast({
         title: tx.toast.title,
         message: tx.toast.messages.success,
+        hash: tx.hash,
         type: 'success',
       })
 
       callback?.()
     },
     [addToast, setTxList, txService]
+  )
+
+  const rejectTx = useCallback(
+    (hash: string, error: any) => {
+      const tx = txService!.reject(hash, error)
+      if (!tx) return
+
+      addToast({
+        title: tx.toast.title,
+        message: tx.toast.messages.error,
+        hash: tx.hash,
+        type: 'error',
+      })
+    },
+    [addToast, txService]
   )
 
   const pingPendingTx = useCallback(
@@ -83,17 +98,10 @@ export function useTx() {
         await txService.getTxReceipt(transaction.hash)
         resolveTx(transaction)
       } catch (error: any) {
-        const tx = txService.reject(transaction.hash, error)
-        if (!tx) return
-
-        addToast({
-          title: tx.toast.title,
-          message: parseTxError(error)?.message || tx.toast.messages.error,
-          type: 'error',
-        })
+        rejectTx(transaction.hash, error)
       }
     },
-    [addToast, resolveTx, txService]
+    [rejectTx, resolveTx, txService]
   )
 
   const resetTx = useCallback(() => {
@@ -102,7 +110,6 @@ export function useTx() {
   }, [resetTxList])
 
   return {
-    resolveTx,
     subscribeTx,
     resetTx,
     pingPendingTx,
