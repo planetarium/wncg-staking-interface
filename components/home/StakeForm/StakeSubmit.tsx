@@ -8,7 +8,10 @@ import styles from '../styles/StakeSubmit.module.scss'
 
 import { connectedState } from 'app/states/connection'
 import { ModalCategory } from 'app/states/modal'
-import { stakingContractAddressState } from 'app/states/settings'
+import {
+  legacyModeState,
+  stakingContractAddressState,
+} from 'app/states/settings'
 import { gaEvent } from 'lib/gtag'
 import { parseTxError } from 'utils/tx'
 import {
@@ -62,6 +65,7 @@ export function StakeSubmit({
   const { addToast } = useToast()
   const { unstakeStatus } = useUnstakeTimestamps()
 
+  const legacyMode = useRecoilValue(legacyModeState)
   const isConnected = useRecoilValue(connectedState)
   const stakingAddress = useRecoilValue(stakingContractAddressState)
   const isUnstakeWindow = UNSTAKE_WINDOW.includes(unstakeStatus)
@@ -256,7 +260,7 @@ export function StakeSubmit({
         {renderButtonLabel(isApproved, isLoading)}
       </Button>
 
-      {isApproved && (
+      {isApproved && !legacyMode && (
         <dl className={styles.cooldown}>
           <dt>
             Cooldown period
