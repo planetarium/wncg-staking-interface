@@ -8,10 +8,12 @@ import STORAGE_KEYS from 'constants/storageKeys'
 import { MessageService } from 'services/message'
 import { TransactionSubscriptionService } from 'services/transactionSubscription'
 import { useProvider } from './useProvider'
+import { useRefetch } from './useRefetch'
 import { useToast } from './useToast'
 
 export function useTx() {
   const provider = useProvider()
+  const refetch = useRefetch()
   const { addToast } = useToast()
 
   const setTxList = useSetRecoilState(txListState)
@@ -51,7 +53,7 @@ export function useTx() {
   )
 
   const resolveTx = useCallback(
-    (transaction: Transaction, callback?: () => void) => {
+    (transaction: Transaction) => {
       const tx = txService!.resolve(transaction)
       if (!tx) return
 
@@ -69,8 +71,6 @@ export function useTx() {
         hash: tx.hash,
         type: 'success',
       })
-
-      callback?.()
     },
     [addToast, setTxList, txService]
   )
@@ -100,8 +100,10 @@ export function useTx() {
       } catch (error: any) {
         rejectTx(transaction.hash, error)
       }
+
+      refetch()
     },
-    [rejectTx, resolveTx, txService]
+    [refetch, rejectTx, resolveTx, txService]
   )
 
   const resetTx = useCallback(() => {
