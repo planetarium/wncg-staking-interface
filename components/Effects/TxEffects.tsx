@@ -5,13 +5,13 @@ import { pendingTxListState } from 'app/states/transaction'
 import { useTx } from 'hooks'
 
 function TxEffects() {
-  const { resolvePendingTx } = useTx()
+  const { pingPendingTx } = useTx()
   const pendingTxList = useRecoilValue(pendingTxListState)
 
   useEffect(() => {
-    if (!resolvePendingTx) return
-    pendingTxList.forEach((tx) => resolvePendingTx(tx.hash))
-  }, [resolvePendingTx, pendingTxList])
+    if (!pingPendingTx) return
+    pendingTxList.forEach((tx) => pingPendingTx(tx.transaction))
+  }, [pingPendingTx, pendingTxList])
 
   return null
 }

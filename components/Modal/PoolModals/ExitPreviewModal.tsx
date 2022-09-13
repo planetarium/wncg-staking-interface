@@ -4,8 +4,6 @@ import type { Event } from 'ethers'
 import styles from '../style.module.scss'
 
 import { ModalCategory } from 'app/states/modal'
-import { TxAction } from 'services/transaction'
-import { txToastTitle } from 'utils/transaction'
 import { useEvents, useExitPool, useModal, useProvider, useToast } from 'hooks'
 
 import { Button } from 'components/Button'
@@ -51,7 +49,7 @@ export function ExitPreviewModal({
   const { exitPool } = useExitPool()
   const { removeModal } = useModal()
   const provider = useProvider()
-  const { addTxToast } = useToast()
+  const { addToast } = useToast()
 
   const showWarning = rektPriceImpact || !!error
 
@@ -79,15 +77,14 @@ export function ExitPreviewModal({
       }
     } catch (error: any) {
       setLoading(false)
-      if (error.code === 4001) return
-      const errorMsg = parseTxError(error)
       setError(error)
-      addTxToast({
-        action: TxAction.ExitPool,
-        title: txToastTitle(TxAction.ExitPool, 'error'),
-        message: errorMsg!.message,
-        type: 'error',
-      })
+      const errorMsg = parseTxError(error)
+      if (errorMsg) {
+        addToast({
+          ...errorMsg,
+          type: 'error',
+        })
+      }
     }
   }
 

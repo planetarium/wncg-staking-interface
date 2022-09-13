@@ -5,7 +5,6 @@ import { parseUnits } from 'ethers/lib/utils'
 import { accountState } from 'app/states/connection'
 import { exitPool as initExitPool } from 'contracts/vault'
 import { configService } from 'services/config'
-import { TxAction } from 'services/transaction'
 import { useExitMath } from './useExitMath'
 import { usePool } from './usePool'
 import { useTx } from './useTx'
@@ -24,7 +23,7 @@ export function useExitPool() {
   const { calcAmountsOut, calcBptIn } = useExitMath()
   const { nativeAssetIndex, poolId, poolTokenAddresses, poolTokenDecimals } =
     usePool()
-  const { registerTx } = useTx()
+  const { subscribeTx } = useTx()
   const vault = useVaultContract()
 
   const account = useRecoilValue(accountState)
@@ -78,7 +77,7 @@ export function useExitPool() {
         poolId,
         tokenOutIndex,
       })
-      registerTx?.(response.hash, TxAction.ExitPool)
+      subscribeTx?.(response)
       return response.hash
     },
     [
@@ -89,7 +88,7 @@ export function useExitPool() {
       poolId,
       poolTokenAddresses,
       poolTokenDecimals,
-      registerTx,
+      subscribeTx,
       vault,
     ]
   )

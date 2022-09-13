@@ -2,10 +2,8 @@ import { useCallback, useMemo, useRef, useState } from 'react'
 import { useMachine } from '@xstate/react'
 
 import { configService } from 'services/config'
-import { TxAction } from 'services/transaction'
 import { parseTxError } from 'utils/error'
 import { bnum } from 'utils/num'
-import { txToastTitle } from 'utils/transaction'
 import {
   useAllowances,
   useApprove,
@@ -22,7 +20,7 @@ export function useJoinMachine(amounts: string[], isNativeAsset: boolean) {
   const { poolTokenAllowances } = useAllowances()
   const { joinPool } = useJoinPool()
   const { nativeAssetIndex, poolTokenAddresses, poolTokenSymbols } = usePool()
-  const { addTxToast } = useToast()
+  const { addToast } = useToast()
 
   const joinMachine = useRef(
     createJoinMachine(
@@ -58,18 +56,17 @@ export function useJoinMachine(amounts: string[], isNativeAsset: boolean) {
       }
     } catch (error: any) {
       send(`ROLLBACK`)
-      if (error?.code === 4001) return
-      const errorMsg = parseTxError(error)
       setError(error)
-      addTxToast({
-        action: TxAction.JoinPool,
-        title: txToastTitle(TxAction.JoinPool, 'error'),
-        message: errorMsg!.message,
-        type: 'error',
-      })
+      const errorMsg = parseTxError(error)
+      if (errorMsg) {
+        addToast({
+          ...errorMsg,
+          type: 'error',
+        })
+      }
     }
   }, [
-    addTxToast,
+    addToast,
     amounts,
     approve,
     isNativeAsset,

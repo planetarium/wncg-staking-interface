@@ -3,39 +3,30 @@ import { MouseEvent } from 'react'
 import { formatDistanceToNow } from 'date-fns'
 import styles from './style.module.scss'
 
-import { txInfoMessage, txToastTitle } from 'utils/transaction'
-import { parseTxError } from 'utils/error'
 import { getTxUrl } from 'utils/url'
 import { useTx } from 'hooks'
-import { renderToastEmoji } from 'components/Toast/utils'
 
+import { renderToastEmoji } from 'components/Toast/utils'
 import { Icon } from 'components/Icon'
 
 type TxItemProps = {
-  transaction: Transaction
+  transaction: Tx
 }
 
 export function TxItem({ transaction }: TxItemProps) {
   const { txService } = useTx()
 
-  const { action, addedTime, finalizedTime, hash, status, params, error } =
-    transaction
+  const { addedTime, finalizedTime, hash, status, toast } = transaction
   const txUrl = getTxUrl(hash)
-  const isFailed = status === 'error'
-  const txType = isFailed ? 'error' : 'info'
-  const title = txToastTitle(action)
-  const message = isFailed
-    ? parseTxError(error)!.message
-    : txInfoMessage(action, params)
+  const txType = status === 'error' ? 'error' : 'info'
+  const { title, messages } = toast
+  const message = messages[txType]
   const timestamp = finalizedTime || addedTime
 
   function handleDelete(e: MouseEvent<HTMLButtonElement>) {
     e.stopPropagation()
-
     if (!txService) return
-    const hashKey = txService.findHashKey(hash)
-    if (!hashKey) return
-    txService.removeTx(hashKey)
+    txService.removeTx(hash)
   }
 
   return (

@@ -86,7 +86,11 @@ export class TransactionSubscriptionService {
     return `tx_${hash}`
   }
 
-  get txMap(): TxMap {
+  private get txMap(): TxMap {
     return store.get(STORAGE_KEYS.Transactions) || {}
+  }
+
+  get txList(): Tx[] {
+    return Object.values(this.txMap)
   }
 }

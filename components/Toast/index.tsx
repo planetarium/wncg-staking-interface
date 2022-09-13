@@ -5,22 +5,17 @@ import styles from './style.module.scss'
 
 import { mutedState } from 'app/states/settings'
 import { latestToastIdState } from 'app/states/toast'
-import { parseMarkdown } from 'utils/transaction'
+import { parseMarkdown } from 'utils/string'
 import { renderToastEmoji } from './utils'
 
-type CustomToastProps = {
+type ToastProps = {
   id: string
   message: string
   title: string
   type?: ToastType
 }
 
-export function CustomToast({
-  id,
-  title,
-  message,
-  type = 'info',
-}: CustomToastProps) {
+export function Toast({ id, title, message, type = 'info' }: ToastProps) {
   const muted = useRecoilValue(mutedState)
   const latestToastId = useRecoilValue(latestToastIdState)
 

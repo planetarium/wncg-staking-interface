@@ -5,7 +5,6 @@ import { parseUnits } from 'ethers/lib/utils'
 import { accountState } from 'app/states/connection'
 import { joinPool as initJoinPool } from 'contracts/vault'
 import { configService } from 'services/config'
-import { TxAction } from 'services/transaction'
 import { useJoinMath } from './useJoinMath'
 import { usePool } from './usePool'
 import { useTx } from './useTx'
@@ -15,7 +14,7 @@ export function useJoinPool() {
   const { calcMinBptOut } = useJoinMath()
   const { nativeAssetIndex, poolId, poolTokenAddresses, poolTokenDecimals } =
     usePool()
-  const { registerTx } = useTx()
+  const { subscribeTx } = useTx()
   const vault = useVaultContract()
 
   const account = useRecoilValue(accountState)
@@ -44,17 +43,17 @@ export function useJoinPool() {
         nativeAssetIndex,
         poolId,
       })
-      registerTx?.(response.hash, TxAction.JoinPool)
+      subscribeTx?.(response)
     },
     [
-      vault,
       account,
-      poolTokenAddresses,
       calcMinBptOut,
       nativeAssetIndex,
       poolId,
-      registerTx,
+      poolTokenAddresses,
       poolTokenDecimals,
+      subscribeTx,
+      vault,
     ]
   )
 

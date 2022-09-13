@@ -36,7 +36,7 @@ export function UnstakeForm({ disabled }: UnstakeFormProps) {
   const { poolTokenName } = usePool()
   const { rewardTokenSymbols } = useRewards()
   const { stakedBalance } = useStakedBalance()
-  const { addErrorToast } = useToast()
+  const { addToast } = useToast()
   const { withdraw } = useUnstake()
 
   const { clearErrors, control, setValue, watch } = useForm({
@@ -113,8 +113,9 @@ export function UnstakeForm({ disabled }: UnstakeFormProps) {
       setLoading(false)
       const errorMsg = parseTxError(error)
       if (errorMsg) {
-        addErrorToast({
+        addToast({
           ...errorMsg,
+          type: 'error',
         })
       }
     }
