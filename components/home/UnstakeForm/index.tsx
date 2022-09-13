@@ -1,12 +1,12 @@
 import { useCallback, useMemo, useState } from 'react'
 import { Control, FieldValues, useForm } from 'react-hook-form'
 import { AnimatePresence, motion } from 'framer-motion'
-import styles from '../styles/UnstakeForm.module.scss'
+import styles from '../styles/Forms.module.scss'
 
 import { ModalCategory } from 'app/states/modal'
 import { gaEvent } from 'lib/gtag'
-import { parseTxError } from 'utils/error'
 import { bnum } from 'utils/num'
+import { parseTxError } from 'utils/tx'
 import {
   useModal,
   usePool,
@@ -36,7 +36,7 @@ export function UnstakeForm({ disabled }: UnstakeFormProps) {
   const { poolTokenName } = usePool()
   const { rewardTokenSymbols } = useRewards()
   const { stakedBalance } = useStakedBalance()
-  const { addErrorToast } = useToast()
+  const { addToast } = useToast()
   const { withdraw } = useUnstake()
 
   const { clearErrors, control, setValue, watch } = useForm({
@@ -113,8 +113,9 @@ export function UnstakeForm({ disabled }: UnstakeFormProps) {
       setLoading(false)
       const errorMsg = parseTxError(error)
       if (errorMsg) {
-        addErrorToast({
+        addToast({
           ...errorMsg,
+          type: 'error',
         })
       }
     }
@@ -122,7 +123,7 @@ export function UnstakeForm({ disabled }: UnstakeFormProps) {
 
   return (
     <motion.section
-      className={styles.unstakeForm}
+      className={styles.form}
       id={TabPanelId.Unstake}
       initial="initial"
       animate="animate"

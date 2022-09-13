@@ -1,6 +1,7 @@
 .toast {
   padding: 16px;
   background-color: $white;
+  border-radius: $radius-md;
   transition: $transition-short;
 
   &.latest {
@@ -39,15 +40,19 @@
 
 .header {
   @include flexbox(start);
+  flex-wrap: wrap;
+  padding-right: 8px;
   margin-bottom: 4px;
 
   @include responsive(MD) {
+    padding-right: 10px;
     margin-bottom: 8px;
   }
 }
 
 .title {
   @include textStyle(14, 700);
+  font-style: normal;
   color: $black;
 
   .anchor {
@@ -63,8 +68,28 @@
   }
 }
 
-.emoji {
-  margin-right: 0.25em;
+.badge {
+  @include inlineFlexbox;
+  padding: 2px 8px;
+  margin-right: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 18px;
+  letter-spacing: -0.01em;
+  color: $white;
+  border-radius: $radius-sm;
+
+  &.success {
+    background-color: hsl(173, 81%, 39%);
+  }
+
+  &.fail {
+    background-color: hsl(346, 49%, 55%);
+  }
+
+  @include responsive(MD) {
+    line-height: 22px;
+  }
 }
 
 .link {
@@ -72,9 +97,9 @@
   position: relative;
   bottom: 1px;
   flex-shrink: 0;
-  width: 18px;
-  height: 18px;
-  margin-left: 8px;
+  width: 22px;
+  height: 22px;
+  margin-left: 4px;
   color: $gray-3;
 
   &:hover {
@@ -84,6 +109,11 @@
   svg {
     width: 18px;
     height: 18px;
+  }
+
+  @include responsive(MD) {
+    width: 27px;
+    height: 27px;
   }
 }
 

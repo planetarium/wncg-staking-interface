@@ -4,13 +4,16 @@ import Lottie from 'lottie-react'
 import { useRecoilValue } from 'recoil'
 import type { Event } from 'ethers'
 import clsx from 'clsx'
-import styles from './styles/StakeSubmit.module.scss'
+import styles from '../styles/StakeSubmit.module.scss'
 
 import { connectedState } from 'app/states/connection'
 import { ModalCategory } from 'app/states/modal'
-import { stakingContractAddressState } from 'app/states/settings'
+import {
+  legacyModeState,
+  stakingContractAddressState,
+} from 'app/states/settings'
 import { gaEvent } from 'lib/gtag'
-import { parseTxError } from 'utils/error'
+import { parseTxError } from 'utils/tx'
 import {
   useAllowances,
   useApprove,
@@ -59,9 +62,10 @@ export function StakeSubmit({
   const { bptAddress, poolTokenName } = usePool()
   const provider = useProvider()
   const { stake } = useStake()
-  const { addErrorToast } = useToast()
+  const { addToast } = useToast()
   const { unstakeStatus } = useUnstakeTimestamps()
 
+  const legacyMode = useRecoilValue(legacyModeState)
   const isConnected = useRecoilValue(connectedState)
   const stakingAddress = useRecoilValue(stakingContractAddressState)
   const isUnstakeWindow = UNSTAKE_WINDOW.includes(unstakeStatus)
@@ -77,8 +81,9 @@ export function StakeSubmit({
   function handleError(error: any) {
     const errorMsg = parseTxError(error)
     if (errorMsg) {
-      addErrorToast({
+      addToast({
         ...errorMsg,
+        type: 'error',
       })
     }
     resetStatus()
@@ -255,7 +260,7 @@ export function StakeSubmit({
         {renderButtonLabel(isApproved, isLoading)}
       </Button>
 
-      {isApproved && (
+      {isApproved && !legacyMode && (
         <dl className={styles.cooldown}>
           <dt>
             Cooldown period

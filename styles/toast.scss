@@ -4,6 +4,7 @@
   top: 0;
   z-index: 20;
   padding: 24px 0 10px;
+  overflow: visible;
   width: calc(100% - #{24px * 2}) !important;
 
   @include responsive(MD) {
@@ -20,11 +21,12 @@
 .toast,
 .toastBody {
   padding: 0 !important;
+  background-color: transparent;
 }
 
 .toast {
   margin-bottom: 8px;
-  border-radius: $radius-md !important;
+  overflow: visible !important;
   transition: $transition-short;
 
   &:last-child {

@@ -1,3 +1,4 @@
+import { useCallback } from 'react'
 import { useQuery } from '@tanstack/react-query'
 
 import {
@@ -70,12 +71,19 @@ export function useStaking() {
     }
   )
 
+  const fetchStaking = useCallback(() => {
+    balEmissionPerSec.refetch()
+    wncgEmissionPerSec.refetch()
+    totalStaked.refetch()
+    unstakeWindow.refetch()
+  }, [balEmissionPerSec, totalStaked, unstakeWindow, wncgEmissionPerSec])
+
   return {
     liquidityGaugeAddress: balancerGaugeAddress.data || '',
     balEmissionPerSec: balEmissionPerSec.data || '0',
     wncgEmissionPerSec: wncgEmissionPerSec.data || '0',
     totalStaked: totalStaked.data || '0',
     unstakeWindow: unstakeWindow.data || 0,
-    fetchTotalStaked: totalStaked.refetch,
+    fetchStaking,
   }
 }

@@ -3,7 +3,7 @@ import styles from '../style.module.scss'
 
 import { ModalCategory } from 'app/states/modal'
 import { gaEvent } from 'lib/gtag'
-import { parseTxError } from 'utils/error'
+import { parseTxError } from 'utils/tx'
 import {
   useModal,
   useTimer,
@@ -33,12 +33,10 @@ export function WithdrawPreviewModal({
 }: WithdrawPreviewModalProps) {
   const [loading, setLoading] = useState(false)
 
-  const { addCustomToast, addErrorToast } = useToast()
-  const { withdrawEndsAt } = useUnstakeTimestamps()
-
   const { removeModal } = useModal()
-
+  const { addToast } = useToast()
   const { withdraw } = useUnstake()
+  const { withdrawEndsAt } = useUnstakeTimestamps()
 
   function close() {
     removeModal(ModalCategory.WithdrawPreview)
@@ -58,15 +56,16 @@ export function WithdrawPreviewModal({
       setLoading(false)
       const errorMsg = parseTxError(error)
       if (errorMsg) {
-        addErrorToast({
+        addToast({
           ...errorMsg,
+          type: 'error',
         })
       }
     }
   }
 
   function onExpiration() {
-    addCustomToast(toastContent)
+    addToast(toastContent)
     close()
   }
 

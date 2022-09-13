@@ -6,53 +6,48 @@ import styles from './style.module.scss'
 
 import { mutedState } from 'app/states/settings'
 import { latestToastIdState } from 'app/states/toast'
-import { TxAction } from 'services/transaction'
-import { gaEvent } from 'lib/gtag'
-import { isClaimAction, parseMarkdown } from 'utils/transaction'
+import { parseMarkdown } from 'utils/string'
+import { renderToastBadge } from 'utils/toast'
 import { getTxUrl } from 'utils/url'
-import { getToastAudioFilename, renderToastEmoji } from './utils'
 
 import { Icon } from 'components/Icon'
 import { ImportTokens } from './ImportTokens'
 
-type TxToastProps = {
-  action: TxAction
+type ToastProps = {
   id: string
   message: string
   title: string
   hash?: string
+  tokensToImport?: string[]
   type?: ToastType
 }
 
-export function TxToast({
+export function Toast({
   id,
-  action,
   title,
   message,
-  hash = '',
+  hash,
+  tokensToImport,
   type = 'info',
-}: TxToastProps) {
+}: ToastProps) {
   const muted = useRecoilValue(mutedState)
   const latestToastId = useRecoilValue(latestToastIdState)
 
-  const txUrl = getTxUrl(hash)
-  const audioFilename = getToastAudioFilename(type, action)
-  const audio = new Audio(audioFilename)
+  const audio = new Audio('/alert-default.opus')
   const content = parseMarkdown(message)
+  const txUrl = getTxUrl(hash)
 
-  const showImportTokens = isClaimAction(action) && type === 'success'
-
-  function handleClick() {
-    if (txUrl) {
-      window?.open(txUrl)
-      gaEvent({
-        name: 'open_tx_etherscan',
-        params: {
-          tx: hash,
-        },
-      })
-    }
+  function openExplorer() {
+    if (txUrl) return
+    window.open(txUrl)
   }
+
+  const attributes = txUrl
+    ? {
+        onClick: openExplorer,
+        role: 'button',
+      }
+    : {}
 
   useMount(() => {
     if (!muted) {
@@ -67,18 +62,20 @@ export function TxToast({
       className={clsx(styles.toast, {
         [styles.latest]: id === latestToastId,
       })}
-      onClick={handleClick}
+      {...attributes}
     >
       <header className={styles.header}>
-        <h4 className={styles.title}>
-          {renderToastEmoji(type)}
-          <span className={styles.anchor}>{title}</span>
-        </h4>
-
+        {renderToastBadge(type)}
+        <h4 className={styles.title}>{title}</h4>
         {txUrl && (
-          <span className={styles.link}>
+          <a
+            className={styles.link}
+            href={txUrl}
+            target="_blank"
+            rel="noopener"
+          >
             <Icon id="externalLink" />
-          </span>
+          </a>
         )}
       </header>
 
@@ -87,7 +84,11 @@ export function TxToast({
         dangerouslySetInnerHTML={{ __html: content }}
       />
 
-      {showImportTokens && <ImportTokens action={action} hash={hash} />}
+      {tokensToImport && (
+        <footer className={styles.footer}>
+          <ImportTokens id={id} addresses={tokensToImport} />
+        </footer>
+      )}
     </aside>
   )
 }

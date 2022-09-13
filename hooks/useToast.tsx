@@ -1,22 +1,18 @@
-import { toast } from 'react-toastify'
+import { cssTransition, toast } from 'react-toastify'
 import { useSetRecoilState } from 'recoil'
 import { nanoid } from 'nanoid'
 
 import { toastIdListState } from 'app/states/toast'
-import type { TxAction } from 'services/transaction'
-import { toastAnimation } from 'utils/toast'
 
-import { TxToast } from 'components/Toast/TxToast'
-import { CustomToast } from 'components/Toast/CustomToast'
+import { Toast } from 'components/Toast'
+import { configService } from 'services/config'
 
-type AddCustomToast = {
-  title: string
-  message: string
-  type?: ToastType
-}
+const toastAnimation = cssTransition({
+  enter: 'fadeIn',
+  exit: 'fadeOut',
+})
 
-type SendToastParams = {
-  action: TxAction
+type AddToast = {
   title: string
   message: string
   hash?: string
@@ -26,27 +22,11 @@ type SendToastParams = {
 export function useToast() {
   const setToastIdList = useSetRecoilState(toastIdListState)
 
-  function addCustomToast({ title, message, type }: AddCustomToast) {
+  function addToast(params: AddToast) {
     const toastId = `toast.${nanoid()}`
-    toast(
-      <CustomToast id={toastId} title={title} message={message} type={type} />,
-      {
-        transition: toastAnimation,
-        toastId,
-      }
-    )
+    const tokensToImport = getTokensToImport(params.title, params.type)
 
-    setToastIdList((prev) => [...prev, toastId])
-  }
-
-  function addErrorToast({ title, message }: Omit<AddCustomToast, 'type'>) {
-    addCustomToast({ title, message, type: 'error' })
-  }
-
-  const addTxToast = (params: SendToastParams) => {
-    const toastId = `${params.hash || ''}.${nanoid()}`
-
-    toast(<TxToast id={toastId} {...params} />, {
+    toast(<Toast id={toastId} {...params} tokensToImport={tokensToImport} />, {
       transition: toastAnimation,
       toastId,
     })
@@ -55,8 +35,27 @@ export function useToast() {
   }
 
   return {
-    addCustomToast,
-    addErrorToast,
-    addTxToast,
+    addToast,
+  }
+}
+
+function getTokensToImport(
+  title: string,
+  type?: ToastType
+): string[] | undefined {
+  if (type !== 'success') return
+
+  title = title.toLowerCase()
+
+  if (title.includes('wncg')) {
+    return [configService.rewardTokensList[0]]
+  }
+
+  if (title.includes('bal')) {
+    return [configService.rewardTokensList[1]]
+  }
+
+  if (title.includes('claim all')) {
+    return configService.rewardTokensList
   }
 }

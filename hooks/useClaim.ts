@@ -5,27 +5,26 @@ import {
   claimBalRewards as initClaimBalRewards,
   claimWncgRewards as initClaimWncgRewards,
 } from 'contracts/staking'
-import { TxAction } from 'services/transaction'
 import { useRewards } from './useRewards'
 import { useStakingContract } from './useStakingContract'
 import { useTx } from './useTx'
 
 export function useClaim() {
-  const { rewardTokenSymbols, scaledRewards } = useRewards()
+  const { scaledRewards } = useRewards()
   const { contract } = useStakingContract(true)
-  const { registerTx } = useTx()
+  const { subscribeTx } = useTx()
 
   const claimAllRewards = useCallback(async () => {
     if (!contract) return
     const response = await initClaimAllRewards(contract)
-    registerTx?.(response, TxAction.ClaimAll, rewardTokenSymbols[0])
-  }, [contract, rewardTokenSymbols, registerTx])
+    subscribeTx?.(response)
+  }, [contract, subscribeTx])
 
   const claimBalRewards = useCallback(async () => {
     if (!contract) return
     const response = await initClaimBalRewards(contract)
-    registerTx?.(response, TxAction.ClaimBal)
-  }, [contract, registerTx])
+    subscribeTx?.(response)
+  }, [contract, subscribeTx])
 
   const claimWncgRewards = useCallback(async () => {
     if (!contract) return
@@ -33,8 +32,8 @@ export function useClaim() {
       contract,
       scaledRewards[0].toString()
     )
-    registerTx?.(response, TxAction.ClaimWncg, rewardTokenSymbols[0])
-  }, [contract, rewardTokenSymbols, scaledRewards, registerTx])
+    subscribeTx?.(response)
+  }, [contract, scaledRewards, subscribeTx])
 
   return {
     claimAllRewards,

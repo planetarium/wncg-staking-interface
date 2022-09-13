@@ -1,9 +1,21 @@
-type Transaction = {
-  action: TxAction
+type TxStatus = 'pending' | 'fulfilled' | 'error' | 'canceled'
+
+type Tx = {
+  addedTime: number
+  data: string
   hash: string
   status: TxStatus
-  addedTime: number
-  finalizedTime?: number
+  toast: ToastContent
+  transaction: Transaction
   error?: any
-  params?: string | string[]
+  finalizedTime?: number
+}
+
+type TxMap = {
+  [id: string]: Tx
+}
+
+type TxError = {
+  title: string
+  message: string
 }

@@ -4,15 +4,13 @@ import { Contract } from 'ethers'
 
 import { accountState } from 'app/states/connection'
 import { approve as initApprove } from 'contracts/erc20'
-import { TxAction } from 'services/transaction'
 import { Erc20Abi } from 'lib/abi'
-import { getTokenSymbol } from 'utils/token'
 import { useProvider } from './useProvider'
 import { useTx } from './useTx'
 
 export function useApprove() {
   const provider = useProvider()
-  const { registerTx } = useTx()
+  const { subscribeTx } = useTx()
 
   const account = useRecoilValue(accountState)
 
@@ -27,10 +25,10 @@ export function useApprove() {
       )
 
       const response = await initApprove(contract, spender)
-      registerTx?.(response, TxAction.Approve, getTokenSymbol(address))
+      subscribeTx?.(response)
       return response.hash
     },
-    [account, provider, registerTx]
+    [account, provider, subscribeTx]
   )
 
   return {

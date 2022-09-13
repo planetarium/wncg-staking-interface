@@ -1,23 +1,15 @@
 import { memo } from 'react'
 
-import ApprovalEffects from './ApprovalEffects'
 import BaseEffects from './BaseEffects'
 import ConfigEffects from './ConfigEffects'
-import PoolEffects from './PoolEffects'
-import RewardEffects from './RewardEffects'
-import StakeEffects from './StakeEffects'
-import UnstakeEffects from './UnstakeEffects'
+import TxEffects from './TxEffects'
 
 function Effects() {
   return (
     <>
-      <ApprovalEffects />
       <BaseEffects />
       <ConfigEffects />
-      <PoolEffects />
-      <RewardEffects />
-      <StakeEffects />
-      <UnstakeEffects />
+      <TxEffects />
     </>
   )
 }

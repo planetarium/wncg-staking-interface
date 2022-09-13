@@ -1,25 +1,22 @@
 import { atom, selector } from 'recoil'
-import { TxMap } from 'services/transaction'
 
-export const txMapState = atom<TxMap>({
-  key: '#txMap',
-  default: {},
+export const txListState = atom<Tx[]>({
+  key: '#txList',
+  default: [],
 })
 
-export const pendingTxListState = selector<Transaction[]>({
+export const pendingTxListState = selector<Tx[]>({
   key: '#pendingTxList',
   get({ get }) {
-    const txMap = get(txMapState)
-    return Object.values(txMap).filter((tx) => tx.status === 'pending')
+    const list = get(txListState)
+    return list.filter((tx) => tx.status === 'pending')
   },
 })
 
-export const unresolvedTxListState = selector<Transaction[]>({
+export const unresolvedTxListState = selector<Tx[]>({
   key: '#unresolvedTxList',
   get({ get }) {
-    const txMap = get(txMapState)
-    return Object.values(txMap)
-      .filter((tx) => tx.status !== 'fulfilled')
-      .reverse()
+    const list = get(txListState)
+    return list.filter((tx) => tx.status !== 'fulfilled').reverse()
   },
 })

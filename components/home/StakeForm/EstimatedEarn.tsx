@@ -1,7 +1,7 @@
 import { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { useRecoilValue } from 'recoil'
 import clsx from 'clsx'
-import styles from './styles/EstimatedEarn.module.scss'
+import styles from '../styles/EstimatedEarn.module.scss'
 
 import { estimatedEarnPeriodState } from 'app/states/settings'
 import { configService } from 'services/config'

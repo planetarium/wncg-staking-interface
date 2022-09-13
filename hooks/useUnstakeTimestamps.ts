@@ -47,7 +47,7 @@ export function useUnstakeTimestamps() {
   )
 
   const withdrawEndsAt = useQuery(
-    ['withdrawEndsAt', account],
+    ['withdrawEndsAt', account, stakingAddress],
     () => getWithdrawEndTimestamp(contract!, account),
     {
       enabled: !!contract,

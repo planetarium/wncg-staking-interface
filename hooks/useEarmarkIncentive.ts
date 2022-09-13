@@ -59,7 +59,7 @@ export function useEarmarkIncentive() {
   )
 
   const claimableTokens = useQuery(
-    ['claimableTokens'],
+    ['claimableTokens', stakingAddress],
     () => getClaimableTokens(liquidityGaugeContract, stakingAddress),
     {
       refetchInterval: REFETCH_INTERVAL,

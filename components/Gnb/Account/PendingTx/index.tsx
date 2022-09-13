@@ -4,7 +4,7 @@ import { useSetRecoilState } from 'recoil'
 import { AnimatePresence } from 'framer-motion'
 import styles from './style.module.scss'
 
-import { txMapState } from 'app/states/transaction'
+import { txListState } from 'app/states/transaction'
 import { useTx } from 'hooks'
 
 import { PendingTxButton } from './TxButton'
@@ -14,7 +14,7 @@ export function AccountPendingTx() {
   const { txService } = useTx()
 
   const [show, setShow] = useState(false)
-  const setTxMap = useSetRecoilState(txMapState)
+  const setTxList = useSetRecoilState(txListState)
 
   function open() {
     setShow(true)
@@ -24,12 +24,12 @@ export function AccountPendingTx() {
     setShow(false)
   }
 
-  function getTxMap() {
+  function getTxList() {
     if (!txService) return
-    setTxMap(txService.txMap)
+    setTxList(txService.txList)
   }
 
-  useMount(getTxMap)
+  useMount(getTxList)
 
   return (
     <div className={styles.pendingTx}>

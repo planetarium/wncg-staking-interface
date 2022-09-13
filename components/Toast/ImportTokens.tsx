@@ -1,37 +1,16 @@
-/* eslint-disable react/jsx-no-target-blank */
-import { MouseEvent } from 'react'
+import type { MouseEvent } from 'react'
 import styles from './style.module.scss'
 
-import { TxAction } from 'services/transaction'
-
-import { configService } from 'services/config'
-import { useImportToken } from 'hooks'
-import { assertUnreachable } from 'utils/assertion'
 import { getTokenSymbol } from 'utils/token'
+import { useImportToken } from 'hooks'
 
 type ImportTokensType = {
-  action: TxAction
-  hash: string
+  addresses: string[]
+  id: string
 }
 
-export function ImportTokens({ action, hash }: ImportTokensType) {
+export function ImportTokens({ addresses, id }: ImportTokensType) {
   const { importToken } = useImportToken()
-
-  const tokensToImport: string[] = []
-
-  switch (action) {
-    case TxAction.ClaimAll:
-      tokensToImport.push(...configService.rewardTokensList)
-      break
-    case TxAction.ClaimWncg:
-      tokensToImport.push(configService.rewardTokensList[0])
-      break
-    case TxAction.ClaimBal:
-      tokensToImport.push(configService.rewardTokensList[1])
-      break
-    default:
-      assertUnreachable(action)
-  }
 
   function handleImport(e: MouseEvent<HTMLButtonElement>) {
     e.stopPropagation()
@@ -39,16 +18,18 @@ export function ImportTokens({ action, hash }: ImportTokensType) {
     importToken(address)
   }
 
+  if (!addresses.length) return null
+
   return (
     <footer className={styles.footer}>
-      {tokensToImport.map((token) => (
+      {addresses.map((address) => (
         <button
-          key={`importTokens.${token}.${hash}`}
+          key={`importTokens.${id}`}
           type="button"
-          value={token}
+          value={address}
           onClick={handleImport}
         >
-          Import <strong>{getTokenSymbol(token)}</strong> in my wallet
+          Import <strong>{getTokenSymbol(address)}</strong> in my wallet
         </button>
       ))}
     </footer>

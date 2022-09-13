@@ -9,12 +9,14 @@ import { REFETCH_INTERVAL } from 'constants/time'
 import { configService } from 'services/config'
 import { usePool } from './usePool'
 import { useProvider } from './useProvider'
+import { useStakingContract } from './useStakingContract'
 
 export function useBalances() {
   const provider = useProvider()
   const account = useRecoilValue(accountState)
 
   const { bptAddress, poolTokenAddresses } = usePool()
+  const { stakingAddress } = useStakingContract()
 
   const networkMismatch = useRecoilValue(networkMismatchState)
 
@@ -26,7 +28,7 @@ export function useBalances() {
   ]
 
   const { data: balances, refetch } = useQuery(
-    ['userBalances', account, addresses],
+    ['userBalances', account, addresses, stakingAddress],
     () => fetchBalances(provider, account, addresses),
     {
       enabled: !networkMismatch,
