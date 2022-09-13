@@ -49,10 +49,13 @@ export class MessageService {
   }
 
   private stakeMessages(args: Result): ToastMessages {
+    const [_amount] = args
+    const amount = formatUnits(_amount, POOL_DECIMALS)
+
     return {
-      success: `Successfully staked ${args[0]}`,
-      error: `Failed to stake ${args[0]}`,
-      info: `Stake ${args[0]}`,
+      success: `Successfully staked ${amount}`,
+      error: `Failed to stake ${amount}`,
+      info: `Stake ${amount}`,
     }
   }
 
