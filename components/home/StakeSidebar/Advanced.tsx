@@ -6,8 +6,8 @@ import styles from '../styles/StakeSidebar.module.scss'
 import { connectedState } from 'app/states/connection'
 import { networkMismatchState } from 'app/states/error'
 import { isMobileState } from 'app/states/mediaQuery'
+import { countUpOption, usdCountUpOption } from 'constants/countUp'
 import { gaEvent } from 'lib/gtag'
-import { countUpOption, usdCountUpOption } from 'utils/countUp'
 import { parseTxError } from 'utils/tx'
 import {
   useConnection,

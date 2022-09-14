@@ -1,6 +1,6 @@
 import styles from './WithdrawSummary.module.scss'
 
-import { countUpOption, usdCountUpOption } from 'utils/countUp'
+import { countUpOption, usdCountUpOption } from 'constants/countUp'
 import { useFiatCurrency, usePool } from 'hooks'
 
 import { CountUp } from 'components/CountUp'

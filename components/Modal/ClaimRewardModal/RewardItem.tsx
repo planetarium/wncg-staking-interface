@@ -3,7 +3,7 @@ import { useRecoilValue } from 'recoil'
 import styles from './RewardItem.module.scss'
 
 import { connectedState } from 'app/states/connection'
-import { countUpOption, usdCountUpOption } from 'utils/countUp'
+import { countUpOption, usdCountUpOption } from 'constants/countUp'
 import { bnum } from 'utils/num'
 
 import { Button } from 'components/Button'

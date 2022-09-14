@@ -7,7 +7,7 @@ import styles from './style.module.scss'
 
 import { connectedState } from 'app/states/connection'
 import { networkMismatchState } from 'app/states/error'
-import { bnum, sanitizeNumber } from 'utils/num'
+import { bnum, isLessThanMinAmount, sanitizeNumber } from 'utils/num'
 
 import { Icon } from '../Icon'
 
@@ -16,6 +16,7 @@ type CountUpProps = Omit<ReactCountUpProps, 'end'> & {
   isApproximate?: boolean
   showAlways?: boolean
   showTitle?: boolean
+  minAmount?: number
 }
 
 export function CountUp({
@@ -24,6 +25,7 @@ export function CountUp({
   isApproximate = false,
   showAlways = false,
   showTitle = true,
+  minAmount = 0.0001,
   ...countUpProps
 }: CountUpProps) {
   const [start, setStart] = useState(0)
@@ -57,7 +59,13 @@ export function CountUp({
       title={showTitle ? sanitizeNumber(end) : undefined}
     >
       {isApproximate && <Icon id="approximate" ariaHidden />}
-      <ReactCountUp {...countUpProps} start={start} end={bEnd.toNumber()} />
+      {isLessThanMinAmount(bEnd.toNumber(), minAmount) ? (
+        `< ${countUpProps.prefix ? countUpProps.prefix : ''}${minAmount}${
+          countUpProps.suffix ? countUpProps.suffix : ''
+        }`
+      ) : (
+        <ReactCountUp {...countUpProps} start={start} end={bEnd.toNumber()} />
+      )}
     </div>
   )
 }

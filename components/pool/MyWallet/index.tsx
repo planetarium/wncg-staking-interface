@@ -2,9 +2,9 @@ import { memo, MouseEvent, useMemo } from 'react'
 import clsx from 'clsx'
 import styles from '../styles/Widget.module.scss'
 
+import { usdCountUpOption } from 'constants/countUp'
 import { configService } from 'services/config'
 import { uniqAddress } from 'utils/address'
-import { usdCountUpOption } from 'utils/countUp'
 import { bnum } from 'utils/num'
 import { useBalances, usePool, useFiatCurrency } from 'hooks'
 

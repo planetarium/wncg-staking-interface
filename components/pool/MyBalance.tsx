@@ -1,8 +1,8 @@
 import { memo, useMemo } from 'react'
 import styles from './styles/Widget.module.scss'
 
-import { countUpOption, usdCountUpOption } from 'utils/countUp'
-import { bnum, isLessThanMinAmount } from 'utils/num'
+import { countUpOption, usdCountUpOption } from 'constants/countUp'
+import { bnum } from 'utils/num'
 import { useBalances, useCalculator, usePool, useFiatCurrency } from 'hooks'
 
 import { CountUp } from 'components/CountUp'
@@ -49,11 +49,7 @@ function MyBalance() {
                 <span>{token.name}</span>
               </dt>
               <dd>
-                {isLessThanMinAmount(amount) ? (
-                  <span title={amount}>&lt; 0.0001</span>
-                ) : (
-                  <CountUp {...countUpOption} decimals={4} end={amount} />
-                )}
+                <CountUp {...countUpOption} end={amount} />
                 <CountUp {...usdCountUpOption} end={fiatValue} isApproximate />
               </dd>
             </div>

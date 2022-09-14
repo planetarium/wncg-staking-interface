@@ -1,6 +1,6 @@
 import styles from './RewardsSummary.module.scss'
 
-import { countUpOption, usdCountUpOption } from 'utils/countUp'
+import { countUpOption, usdCountUpOption } from 'constants/countUp'
 import { getTokenSymbol } from 'utils/token'
 import { useRewards } from 'hooks'
 

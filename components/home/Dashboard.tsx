@@ -6,13 +6,13 @@ import styles from './styles/Dashboard.module.scss'
 
 import { ModalCategory } from 'app/states/modal'
 import { legacyModeState } from 'app/states/settings'
-import { configService } from 'services/config'
-import { gaEvent } from 'lib/gtag'
 import {
   countUpOption,
   percentCountUpOption,
   usdCountUpOption,
-} from 'utils/countUp'
+} from 'constants/countUp'
+import { configService } from 'services/config'
+import { gaEvent } from 'lib/gtag'
 import { getTokenSymbol } from 'utils/token'
 import {
   useApr,
