@@ -38,7 +38,7 @@ function renderBlockMessage(status: UnstakeStatus, legacyMode: boolean) {
       <h1>
         Start cooldown to withdraw your stake.
         <br />
-        It will only take 1 block to start unstaking.
+        It will only take 1 minute to start unstaking.
         <span className={styles.misc}>( instead of ordinary 14 days )</span>
       </h1>
     )
