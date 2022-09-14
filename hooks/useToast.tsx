@@ -1,40 +1,61 @@
-import { toast } from 'react-toastify'
+import { cssTransition, toast } from 'react-toastify'
+import { useSetRecoilState } from 'recoil'
+import { nanoid } from 'nanoid'
 
-import { addToast as addToastId } from 'app/states/toast'
-import type { TransactionAction } from 'app/states/transaction'
-import { toastAnimation } from 'utils/toast'
-import { useConfirmations } from './useConfirmations'
-import { useAppDispatch } from './useRedux'
+import { toastIdListState } from 'app/states/toast'
 
 import { Toast } from 'components/Toast'
+import { configService } from 'services/config'
 
-type AddToastParams = {
-  action: TransactionAction
-  hash: string
-  summary: string
-  showPartyEmoji?: boolean
+const toastAnimation = cssTransition({
+  enter: 'fadeIn',
+  exit: 'fadeOut',
+})
+
+type AddToast = {
+  title: string
+  message: string
+  hash?: string
+  type?: ToastType
 }
 
 export function useToast() {
-  const dispatch = useAppDispatch()
-  const { registerConfirmations } = useConfirmations()
+  const setToastIdList = useSetRecoilState(toastIdListState)
 
-  function addToast(params: AddToastParams, confirmationHash?: string) {
-    const { hash, summary } = params
-    const toastId = `${hash}.${summary}`
+  function addToast(params: AddToast) {
+    const toastId = `toast.${nanoid()}`
+    const tokensToImport = getTokensToImport(params.title, params.type)
 
-    toast(<Toast {...params} />, {
+    toast(<Toast id={toastId} {...params} tokensToImport={tokensToImport} />, {
       transition: toastAnimation,
       toastId,
     })
-    dispatch(addToastId(toastId))
 
-    if (confirmationHash) {
-      registerConfirmations(confirmationHash)
-    }
+    setToastIdList((prev) => [...prev, toastId])
   }
 
   return {
     addToast,
+  }
+}
+
+function getTokensToImport(
+  title: string,
+  type?: ToastType
+): string[] | undefined {
+  if (type !== 'success') return
+
+  title = title.toLowerCase()
+
+  if (title.includes('wncg')) {
+    return [configService.rewardTokensList[0]]
+  }
+
+  if (title.includes('bal')) {
+    return [configService.rewardTokensList[1]]
+  }
+
+  if (title.includes('claim all')) {
+    return configService.rewardTokensList
   }
 }

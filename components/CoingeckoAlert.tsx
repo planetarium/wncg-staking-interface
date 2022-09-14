@@ -1,10 +1,7 @@
-import { useRouter } from 'next/router'
 import { AnimatePresence, motion } from 'framer-motion'
 import styles from './styles/Alert.module.scss'
 
-import { getShowNetworkAlert } from 'app/states/connection'
-import { getIsPriceInvalid } from 'app/states/token'
-import { useAppSelector } from 'hooks'
+import { useAlert } from 'hooks'
 
 import { Button } from './Button'
 import { Icon } from './Icon'
@@ -25,10 +22,7 @@ const motionVariants = {
 const motionTransition = { ease: 'easeOut', duration: 0.3 }
 
 export function CoingeckoAlert() {
-  const { pathname } = useRouter()
-  const isPriceInvalid = useAppSelector(getIsPriceInvalid)
-  const showNetworkAlert = useAppSelector(getShowNetworkAlert)
-  const showAlert = pathname === '/wncg' && !showNetworkAlert && isPriceInvalid
+  const { showCoingeckoAlert } = useAlert()
 
   function refresh() {
     window?.location.reload()
@@ -36,7 +30,7 @@ export function CoingeckoAlert() {
 
   return (
     <AnimatePresence>
-      {showAlert && (
+      {showCoingeckoAlert && (
         <motion.aside
           className={styles.alert}
           initial="initial"

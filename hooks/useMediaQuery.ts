@@ -1,8 +1,8 @@
 import { useMemo } from 'react'
 import { useMount, useUnmount } from 'react-use'
+import { useSetRecoilState } from 'recoil'
 
-import { Breakpoint, setBreakpoint } from 'app/states/mediaQuery'
-import { useAppDispatch } from './useRedux'
+import { Breakpoint, breakpointState } from 'app/states/mediaQuery'
 
 // NOTE: styles/constancts/_breakpoints.scss
 const BP: Record<Breakpoint, number> = {
@@ -28,7 +28,7 @@ const MEDIA_QUERIES = BP_ENTRIES.map(([, value], i) => {
 })
 
 export function useMediaQuery() {
-  const dispatch = useAppDispatch()
+  const setBreakpoint = useSetRecoilState(breakpointState)
 
   const mqlList = useMemo(
     () =>
@@ -44,7 +44,7 @@ export function useMediaQuery() {
 
     if (matchIndex > -1) {
       const newBreakpoint = BP_KEYS[matchIndex]
-      dispatch(setBreakpoint(newBreakpoint))
+      setBreakpoint(newBreakpoint)
     }
   }
 

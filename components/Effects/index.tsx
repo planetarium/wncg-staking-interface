@@ -1,21 +1,17 @@
 import { memo } from 'react'
-import { BaseEffects } from './BaseEffects'
-import { BptEffects } from './BptEffects'
-import { RewardEffects } from './RewardEffects'
-import { StakeEffects } from './StakeEffects'
-import { UnstakeEffects } from './UnstakeEffects'
+
+import BaseEffects from './BaseEffects'
+import ConfigEffects from './ConfigEffects'
+import TxEffects from './TxEffects'
 
 function Effects() {
   return (
     <>
       <BaseEffects />
-      <BptEffects />
-      <RewardEffects />
-      <StakeEffects />
-      <UnstakeEffects />
+      <ConfigEffects />
+      <TxEffects />
     </>
   )
 }
 
-const MemoizedEffects = memo(Effects)
-export default MemoizedEffects
+export default memo(Effects)

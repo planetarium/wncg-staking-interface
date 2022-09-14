@@ -1,17 +1,18 @@
 import { useRef } from 'react'
 import ReactGA from 'react-ga4'
-import { Provider } from 'react-redux'
-import { Hydrate, QueryClient, QueryClientProvider } from 'react-query'
+import {
+  Hydrate,
+  QueryClient,
+  QueryClientProvider,
+} from '@tanstack/react-query'
 import { useMount } from 'react-use'
+import { RecoilRoot } from 'recoil'
 import type { AppProps, NextWebVitalsMetric } from 'next/app'
 import { DefaultSeo } from 'next-seo'
-import { ApolloProvider } from '@apollo/client'
 import 'react-toastify/dist/ReactToastify.css'
 import 'styles/globals.scss'
 import 'styles/toast.scss'
 
-import { store } from 'app/store'
-import { client } from 'lib/graphql'
 import { DEFAULT_SEO } from 'lib/seo'
 
 import { CoingeckoAlert } from 'components/CoingeckoAlert'
@@ -33,20 +34,18 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <QueryClientProvider client={queryClient.current}>
       <Hydrate state={pageProps.dehydratedState}>
-        <ApolloProvider client={client}>
-          <Provider store={store}>
-            <DefaultSeo {...DEFAULT_SEO} />
-            <CoingeckoAlert />
-            <NetworkAlert />
-            <Gnb />
-            <Component {...pageProps} />
-            <ToastEffects />
-            <Modal />
-            <ToastContainer />
-            <GlobalFooter />
-            <MediaQueryEffects />
-          </Provider>
-        </ApolloProvider>
+        <RecoilRoot>
+          <DefaultSeo {...DEFAULT_SEO} />
+          <CoingeckoAlert />
+          <NetworkAlert />
+          <Gnb />
+          <Component {...pageProps} />
+          <ToastEffects />
+          <Modal />
+          <ToastContainer />
+          <GlobalFooter />
+          <MediaQueryEffects />
+        </RecoilRoot>
       </Hydrate>
     </QueryClientProvider>
   )

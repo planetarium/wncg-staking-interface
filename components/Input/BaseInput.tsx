@@ -8,22 +8,9 @@ import { AnimatePresence, motion } from 'framer-motion'
 import clsx from 'clsx'
 import styles from './style.module.scss'
 
-import { Button } from 'components/Button'
+import { errorMessageVariants } from './constants'
 
-const motionVariants = {
-  initial: {
-    opacity: 0,
-    y: '-100%',
-  },
-  animate: {
-    opacity: 1,
-    y: 0,
-  },
-  exit: {
-    opacity: 0,
-    y: '-100%',
-  },
-}
+import { Button } from 'components/Button'
 
 type BaseInputProps = {
   field: ControllerRenderProps<FieldValues>
@@ -31,6 +18,7 @@ type BaseInputProps = {
   precision: number
   setMaxValue(): void
   disabled?: boolean
+  id?: string
   maxButtonDisabled?: boolean
   placeholder?: string
 }
@@ -41,6 +29,7 @@ export function BaseInput({
   precision,
   setMaxValue,
   disabled,
+  id,
   maxButtonDisabled,
   placeholder,
 }: BaseInputProps) {
@@ -54,6 +43,7 @@ export function BaseInput({
       <div className={nestedClassName}>
         <NumberFormat
           {...field}
+          id={id}
           className={styles.input}
           allowNegative={false}
           decimalScale={precision}
@@ -79,7 +69,7 @@ export function BaseInput({
             initial="initial"
             animate="animate"
             exit="exit"
-            variants={motionVariants}
+            variants={errorMessageVariants}
           >
             {fieldState.error.message}
           </motion.p>

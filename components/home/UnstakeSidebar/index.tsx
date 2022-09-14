@@ -1,16 +1,26 @@
 import { memo } from 'react'
+import { useRecoilValue } from 'recoil'
 import { motion } from 'framer-motion'
 
+import { legacyModeState } from 'app/states/settings'
 import { motionVariants, sidebarTransition } from '../constants'
 
 import { UnstakeSidebarCooldown } from './Cooldown'
 import { UnstakeSidebarWithdrawWindow } from './WithdrawWindow'
+import { UnstakeSidebarMigration } from './Migration'
 
 type UnstakeSidebarProps = {
   isWithdrawable: boolean
 }
 
 function UnstakeSidebar({ isWithdrawable }: UnstakeSidebarProps) {
+  const legacyMode = useRecoilValue(legacyModeState)
+  const content = isWithdrawable ? (
+    <UnstakeSidebarWithdrawWindow />
+  ) : (
+    <UnstakeSidebarCooldown />
+  )
+
   return (
     <motion.div
       initial="initial"
@@ -19,10 +29,10 @@ function UnstakeSidebar({ isWithdrawable }: UnstakeSidebarProps) {
       transition={sidebarTransition}
       variants={motionVariants}
     >
-      {isWithdrawable ? (
-        <UnstakeSidebarWithdrawWindow />
+      {legacyMode ? (
+        <UnstakeSidebarMigration isWithdrawable={isWithdrawable} />
       ) : (
-        <UnstakeSidebarCooldown />
+        content
       )}
     </motion.div>
   )

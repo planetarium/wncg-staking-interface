@@ -9,6 +9,7 @@ type InputProps = {
   setMaxValue(): void
   className?: string
   disabled?: boolean
+  id?: string
   maxButtonDisabled?: boolean
   placeholder?: string
   precision?: number
@@ -21,6 +22,7 @@ export function Input({
   setMaxValue,
   className,
   disabled,
+  id,
   maxButtonDisabled,
   placeholder,
   precision = 18,
@@ -32,13 +34,14 @@ export function Input({
         control={control}
         render={({ field, fieldState }) => (
           <BaseInput
+            id={id}
             field={field}
             fieldState={fieldState}
             precision={precision}
             setMaxValue={setMaxValue}
             disabled={disabled}
-            maxButtonDisabled={maxButtonDisabled}
-            placeholder={placeholder}
+            maxButtonDisabled={disabled || maxButtonDisabled}
+            placeholder={disabled ? undefined : placeholder}
           />
         )}
         rules={rules}

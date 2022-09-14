@@ -1,0 +1,146 @@
+.formSection {
+  form {
+    position: relative;
+    width: 100%;
+
+    > .dropdown {
+      position: absolute;
+      top: 12px;
+      left: 16px;
+    }
+  }
+
+  @include responsive(MD) {
+    padding: 20px;
+    background-color: rgba($black, 0.9);
+    border-radius: $radius-sm;
+  }
+
+  @include responsive(LG) {
+    padding: 30px;
+  }
+}
+
+.header {
+  @include flexbox(between);
+  position: relative;
+  z-index: 3;
+  margin-bottom: 20px;
+
+  .title {
+    @include textStyle(18, 700);
+  }
+}
+
+.formSummary {
+  margin-top: 20px;
+  margin-bottom: 20px;
+
+  .warning {
+    dd {
+      color: $red;
+    }
+
+    svg {
+      width: 16px;
+      height: 16px;
+      margin-left: 4px;
+      color: lighten($red, 10);
+    }
+  }
+
+  button {
+    @include textStyle(13, 700);
+    margin-left: 8px;
+    color: $primary;
+    transition: $transition-short;
+
+    &[disabled],
+    &:hover {
+      opacity: 0.5;
+    }
+
+    &[disabled] {
+      cursor: not-allowed;
+      color: $gray-3;
+    }
+  }
+
+  .detailItem {
+    @include flexbox(between);
+    flex-wrap: wrap;
+    width: 100%;
+    padding: 8px;
+    border-radius: $radius-sm;
+
+    dt {
+      @include flexbox(start);
+      width: auto;
+
+      strong {
+        @include textStyle(14, 700);
+        text-transform: uppercase;
+      }
+    }
+
+    dd {
+      @include flexbox(center, end);
+      @include textStyle(16, 700);
+      flex-direction: column;
+      text-align: right;
+    }
+
+    .token {
+      width: 28px;
+      height: 28px;
+      margin-right: 8px;
+      color: $white;
+    }
+
+    .usd {
+      @include inlineFlexbox(start);
+      @include textStyle(12, 500);
+      margin-top: 0px;
+      padding-right: 4px;
+      color: $gray-3;
+    }
+
+    .percent {
+      @include textStyle(12, 500);
+      margin-left: 4px;
+      color: $gray-4;
+    }
+
+    & + .priceImpact {
+      padding: 8px;
+      margin-top: 10px;
+    }
+  }
+
+  > div {
+    @include flexbox(start);
+    width: 100%;
+    padding: 4px 0;
+
+    dt {
+      @include textStyle(14, 400);
+      width: 100px;
+    }
+
+    dd {
+      @include flexbox(start);
+      position: relative;
+      flex-grow: 1;
+
+      strong {
+        @include textStyle(18, 700);
+      }
+    }
+  }
+}
+
+.misc {
+  @include textStyle(12);
+  padding: 4px 20px;
+  color: $primary;
+}

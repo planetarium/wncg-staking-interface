@@ -1,0 +1,179 @@
+.poolInvestments {
+  padding: 20px;
+  margin-bottom: $gutter * 2;
+  background-color: rgba($black, 0.9);
+  border-radius: $radius-sm;
+
+  @include responsive(LG) {
+    padding: 30px;
+  }
+}
+
+.header {
+  @include flexbox(between);
+  margin-bottom: 20px;
+}
+
+.title {
+  @include textStyle(16, 700);
+}
+
+.checkboxGroup {
+  @include flexbox(end);
+  @include textStyle(14, 400);
+
+  label {
+    margin-left: 8px;
+  }
+}
+
+.tableWrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  white-space: nowrap;
+
+  th,
+  td {
+    text-align: right;
+    padding-left: 20px;
+
+    &:first-child {
+      padding-right: 20px;
+      padding-left: 0;
+      text-align: left;
+    }
+
+    &:nth-child(3) {
+      padding-left: 40px;
+      text-align: left;
+    }
+  }
+
+  th {
+    @include textStyle(12, 700);
+    height: 32px;
+  }
+
+  td {
+    @include textStyle(14, 400);
+    height: 44px;
+
+    &.loadMore {
+      width: 100%;
+      padding: 0;
+      text-align: center;
+      cursor: pointer;
+      transition: $transition-short;
+
+      &:hover {
+        opacity: 0.5;
+      }
+    }
+
+    &.empty {
+      @include textStyle(14, 500);
+      padding: 0;
+      height: 44px * 6;
+      color: $gray-3;
+      text-align: center;
+    }
+
+    .datetime {
+      @include flexbox(end);
+
+      a {
+        @include flexbox(start);
+        width: 30px;
+        height: 30px;
+        margin-left: 8px;
+        color: $gray-3;
+        transition: $transition-short;
+
+        &:hover {
+          color: $gray-1;
+        }
+
+        svg {
+          width: 24px;
+          height: 24px;
+        }
+      }
+    }
+  }
+
+  @include responsive(MD) {
+    th {
+      @include textStyle(14);
+      height: 40px;
+    }
+
+    td {
+      @include textStyle(16);
+      height: 50px;
+
+      &.empty {
+        @include textStyle(16);
+        height: 50px * 6;
+      }
+    }
+  }
+
+  @include responsive(LG) {
+    th,
+    td {
+      &:nth-child(3) {
+        padding-left: 60px;
+      }
+    }
+  }
+}
+
+.type {
+  @include flexbox(start);
+
+  &.invest {
+    span {
+      color: $green;
+    }
+  }
+
+  &.withdraw {
+    span {
+      color: $red;
+    }
+  }
+
+  span {
+    font-size: 1.5em;
+    margin-right: 8px;
+  }
+}
+
+.investmentDetails {
+  @include flexbox(start);
+}
+
+.detail {
+  @include inlineFlexbox(start);
+
+  &:first-child {
+    margin-right: 16px;
+  }
+
+  .token {
+    width: 20px !important;
+    height: 20px !important;
+    margin-right: 8px;
+  }
+
+  > svg {
+    width: 20px;
+    height: 20px;
+    color: $gray-2;
+    margin: 0 8px;
+  }
+}

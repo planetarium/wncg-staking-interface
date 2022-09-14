@@ -1,20 +1,21 @@
 import { useCallback, useEffect, useState } from 'react'
+import { useRecoilValue } from 'recoil'
 import { AnimatePresence, motion } from 'framer-motion'
 import styles from '../styles/StakeSidebar.module.scss'
 
-import { getIsConnected, getIsValidNetwork } from 'app/states/connection'
-import { getIsMobile } from 'app/states/mediaQuery'
-import { getEarmarkIncentive } from 'app/states/reward'
-import { TransactionAction } from 'app/states/transaction'
+import { connectedState } from 'app/states/connection'
+import { networkMismatchState } from 'app/states/error'
+import { isMobileState } from 'app/states/mediaQuery'
+import { countUpOption, usdCountUpOption } from 'constants/countUp'
 import { gaEvent } from 'lib/gtag'
-import { countUpOption, usdCountUpOption } from 'utils/countUp'
-import { handleError } from 'utils/error'
+import { parseTxError } from 'utils/tx'
 import {
-  useAppSelector,
-  useEventFilter,
+  useConnection,
+  useEarmark,
+  useEarmarkIncentive,
+  useEvents,
   useProvider,
-  useReward,
-  useUsd,
+  useToast,
 } from 'hooks'
 import { motionVariants } from '../constants'
 
@@ -26,21 +27,26 @@ export function StakeSidebarAdvanced() {
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
 
-  const { earmarkEventFilter } = useEventFilter()
+  const { connect } = useConnection()
+  const { earmarkRewards } = useEarmark()
+  const {
+    earmarkIncentive,
+    earmarkIncentiveInFiatValue,
+    fetchEarmarkIncentive,
+  } = useEarmarkIncentive()
+  const { earmarkRewardsEvent } = useEvents()
   const provider = useProvider()
-  const { earmarkIncentive, earmarkRewards } = useReward()
-  const { calculateUsdValue } = useUsd()
+  const { addToast } = useToast()
 
-  const incentive = useAppSelector(getEarmarkIncentive)
-  const isConnected = useAppSelector(getIsConnected)
-  const isMobile = useAppSelector(getIsMobile)
-  const isValidNetwork = useAppSelector(getIsValidNetwork)
+  const networkMismatch = useRecoilValue(networkMismatchState)
+  const isConnected = useRecoilValue(connectedState)
+  const isMobile = useRecoilValue(isMobileState)
 
-  const disabled = loading || !isValidNetwork || !isConnected
+  const disabled = networkMismatch || loading
 
   function toggle() {
     if (!open) {
-      earmarkIncentive()
+      fetchEarmarkIncentive()
       gaEvent({
         name: 'open_advanced',
       })
@@ -57,23 +63,29 @@ export function StakeSidebarAdvanced() {
       await earmarkRewards()
     } catch (error) {
       setLoading(false)
-      handleError(error, TransactionAction.EarmarkRewards)
+      const errorMsg = parseTxError(error)
+      if (errorMsg) {
+        addToast({
+          ...errorMsg,
+          type: 'error',
+        })
+      }
     }
   }
 
-  const resetLoading = useCallback(() => {
+  const earmarkRewardsHandler = useCallback(() => {
     setLoading(false)
   }, [])
 
   // NOTE: Earmark rewards event
   useEffect(() => {
-    if (earmarkEventFilter) {
-      provider?.on(earmarkEventFilter, resetLoading)
+    if (earmarkRewardsEvent) {
+      provider?.on(earmarkRewardsEvent, earmarkRewardsHandler)
       return () => {
-        provider?.off(earmarkEventFilter)
+        provider?.off(earmarkRewardsEvent)
       }
     }
-  }, [earmarkEventFilter, provider, resetLoading])
+  }, [earmarkRewardsEvent, earmarkRewardsHandler, provider])
 
   return (
     <div className={styles.advanced}>
@@ -125,29 +137,37 @@ export function StakeSidebarAdvanced() {
                     </span>
                     <CountUp
                       {...countUpOption}
-                      end={parseFloat(incentive)}
+                      end={earmarkIncentive}
                       decimals={8}
                       duration={0.5}
+                      showAlways
                     />
                   </div>
                   <CountUp
                     {...usdCountUpOption}
                     className={styles.usd}
-                    end={calculateUsdValue('bal', incentive)}
+                    end={earmarkIncentiveInFiatValue}
                     isApproximate
+                    showAlways
                   />
                 </dd>
               </div>
             </dl>
 
-            <Button
-              onClick={handleHarvest}
-              loading={loading}
-              disabled={disabled}
-              fullWidth
-            >
-              Harvest BAL
-            </Button>
+            {isConnected ? (
+              <Button
+                onClick={handleHarvest}
+                loading={loading}
+                disabled={disabled}
+                fullWidth
+              >
+                Harvest BAL
+              </Button>
+            ) : (
+              <Button size="large" onClick={connect} fullWidth>
+                Connect
+              </Button>
+            )}
           </motion.div>
         )}
       </AnimatePresence>

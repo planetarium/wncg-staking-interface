@@ -1,15 +1,20 @@
 import { useCallback, useMemo, useState } from 'react'
 import { Control, FieldValues, useForm } from 'react-hook-form'
 import { AnimatePresence, motion } from 'framer-motion'
-import styles from '../styles/UnstakeForm.module.scss'
+import styles from '../styles/Forms.module.scss'
 
 import { ModalCategory } from 'app/states/modal'
-import { getStakedBalance } from 'app/states/stake'
-import { TransactionAction } from 'app/states/transaction'
 import { gaEvent } from 'lib/gtag'
-import { handleError } from 'utils/error'
-import Decimal, { sanitizeNumber } from 'utils/num'
-import { useAppSelector, useModal, useUnstake } from 'hooks'
+import { bnum } from 'utils/num'
+import { parseTxError } from 'utils/tx'
+import {
+  useModal,
+  usePool,
+  useRewards,
+  useStakedBalance,
+  useToast,
+  useUnstake,
+} from 'hooks'
 import { formTransition, motionVariants, TabId, TabPanelId } from '../constants'
 
 import { Button } from 'components/Button'
@@ -28,9 +33,11 @@ export function UnstakeForm({ disabled }: UnstakeFormProps) {
   const [loading, setLoading] = useState(false)
 
   const { addModal } = useModal()
+  const { poolTokenName } = usePool()
+  const { rewardTokenSymbols } = useRewards()
+  const { stakedBalance } = useStakedBalance()
+  const { addToast } = useToast()
   const { withdraw } = useUnstake()
-
-  const stakedBalance = useAppSelector(getStakedBalance)
 
   const { clearErrors, control, setValue, watch } = useForm({
     mode: 'onBlur',
@@ -44,10 +51,10 @@ export function UnstakeForm({ disabled }: UnstakeFormProps) {
             required: 'Please enter valid amount',
             validate: {
               maxAmount: (v: string) =>
-                new Decimal(sanitizeNumber(v)).lte(stakedBalance) ||
+                bnum(v).lte(stakedBalance) ||
                 'You cannot withdraw more than the staked amount',
               minAmount: (v: string) =>
-                new Decimal(sanitizeNumber(v)).gte(minAmount) ||
+                bnum(v).gte(minAmount) ||
                 'Please enter the amount bigger than or equal to 1e-18',
             },
             onChange: () => clearErrors('unstakeAmount'),
@@ -55,8 +62,7 @@ export function UnstakeForm({ disabled }: UnstakeFormProps) {
     [clearErrors, disabled, stakedBalance]
   )
 
-  const withdrawalDisabled =
-    disabled || new Decimal(sanitizeNumber(unstakeAmountValue)).isZero()
+  const withdrawalDisabled = disabled || bnum(unstakeAmountValue).isZero()
 
   function setMaxValue() {
     setValue('unstakeAmount', stakedBalance)
@@ -100,18 +106,24 @@ export function UnstakeForm({ disabled }: UnstakeFormProps) {
       name: 'withdraw',
     })
     try {
-      await withdraw(unstakeAmountValue)
+      await withdraw(unstakeAmountValue, false)
       resetForm()
       setLoading(false)
     } catch (error) {
       setLoading(false)
-      handleError(error, TransactionAction.Withdraw)
+      const errorMsg = parseTxError(error)
+      if (errorMsg) {
+        addToast({
+          ...errorMsg,
+          type: 'error',
+        })
+      }
     }
   }
 
   return (
     <motion.section
-      className={styles.unstakeForm}
+      className={styles.form}
       id={TabPanelId.Unstake}
       initial="initial"
       animate="animate"
@@ -126,7 +138,7 @@ export function UnstakeForm({ disabled }: UnstakeFormProps) {
       <InputGroup
         name="unstakeAmount"
         control={control as any as Control<FieldValues, 'any'>}
-        label="Staked 20WETH-80WNCG"
+        label={`Staked ${poolTokenName}`}
         maxAmount={stakedBalance}
         rules={rules}
         setMaxValue={setMaxValue}
@@ -140,7 +152,9 @@ export function UnstakeForm({ disabled }: UnstakeFormProps) {
           onChange={handleCheck}
           disabled={disabled}
         />
-        <label htmlFor="withdrawAndClaim">Claim all BAL & WNCG rewards</label>
+        <label htmlFor="withdrawAndClaim">
+          Claim all {rewardTokenSymbols.join(' & ')} rewards
+        </label>
       </div>
 
       <Button

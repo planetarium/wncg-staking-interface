@@ -2,18 +2,20 @@
 import { useCallback, useRef, useState } from 'react'
 import { useMount, useUnmount } from 'react-use'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
+import { useRecoilValue } from 'recoil'
 import { motion } from 'framer-motion'
-import store from 'store'
 import clsx from 'clsx'
 import styles from './style.module.scss'
 
-import { getAccount, getIsValidNetwork } from 'app/states/connection'
+import { accountState } from 'app/states/connection'
+import { networkMismatchState } from 'app/states/error'
+import { mutedState } from 'app/states/settings'
 import { gaEvent } from 'lib/gtag'
-import { IS_ETHEREUM } from 'utils/env'
+import { networkChainId, networkNameFor } from 'utils/network'
 import { truncateAddress } from 'utils/string'
 import { getEtherscanUrl } from 'utils/url'
-import { useAppSelector, useConnection } from 'hooks'
-import { menuTransition, menuVariants, STORE_MUTED_KEY } from './constants'
+import { useConnection, useSettings } from 'hooks'
+import { menuTransition, menuVariants } from './constants'
 
 import { Button } from 'components/Button'
 import { Icon } from 'components/Icon'
@@ -25,23 +27,24 @@ type AccountUserMenuProps = {
 
 export function AccountUserMenu({ close }: AccountUserMenuProps) {
   const [copied, setCopied] = useState(false)
-  const [muted, setMuted] = useState<boolean>(
-    store.get(STORE_MUTED_KEY) || false
-  )
   const menuRef = useRef<HTMLDivElement>(null)
 
-  const { disconnect, switchToMainnet } = useConnection()
-  const account = useAppSelector(getAccount)
-  const isValidNetwork = useAppSelector(getIsValidNetwork)
+  const { disconnect: _disconnect, switchNetwork: _switchNetwork } =
+    useConnection()
+  const { toggleMuted } = useSettings()
 
-  function disconnectApp() {
+  const account = useRecoilValue(accountState)
+  const muted = useRecoilValue(mutedState)
+  const networkMismatch = useRecoilValue(networkMismatchState)
+
+  function disconnect() {
     close()
-    setTimeout(disconnect, 300)
+    setTimeout(_disconnect, 300)
   }
 
   function switchNetwork() {
     close()
-    switchToMainnet()
+    _switchNetwork()
   }
 
   function handleCopy() {
@@ -49,19 +52,6 @@ export function AccountUserMenu({ close }: AccountUserMenuProps) {
     setTimeout(() => setCopied(false), 500)
     gaEvent({
       name: 'copy_address',
-    })
-  }
-
-  function handleMute() {
-    setMuted((prev) => {
-      store.set(STORE_MUTED_KEY, !prev)
-      gaEvent({
-        name: 'mute_sound',
-        params: {
-          muted: !prev,
-        },
-      })
-      return !prev
     })
   }
 
@@ -137,24 +127,24 @@ export function AccountUserMenu({ close }: AccountUserMenuProps) {
         <div>
           <dt>Network</dt>
           <dd>
-            {isValidNetwork ? (
+            {networkMismatch ? (
+              <Button variant="tertiary" size="small" onClick={switchNetwork}>
+                Switch Network
+              </Button>
+            ) : (
               <>
                 <span className={styles.ethereum}>
                   <Icon id="ethereumSimple" />
                 </span>
-                {IS_ETHEREUM ? 'Ethereum' : 'Kovan'}
+                {networkNameFor(networkChainId)}
               </>
-            ) : (
-              <Button variant="tertiary" size="small" onClick={switchNetwork}>
-                Switch Network
-              </Button>
             )}
           </dd>
         </div>
         <div>
           <dt>Sound</dt>
           <dd>
-            <Button variant="tertiary" size="small" onClick={handleMute}>
+            <Button variant="tertiary" size="small" onClick={toggleMuted}>
               {muted ? 'Unmute' : 'Mute'}
             </Button>
           </dd>
@@ -165,7 +155,7 @@ export function AccountUserMenu({ close }: AccountUserMenuProps) {
         className={styles.disconnectButton}
         variant="danger"
         size="small"
-        onClick={disconnectApp}
+        onClick={disconnect}
         fullWidth
       >
         Disconnect

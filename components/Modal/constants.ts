@@ -1,4 +1,4 @@
-export const modalVariants = {
+export const modalDesktopVariants = {
   initial: {
     opacity: 0,
     y: 20,
@@ -7,6 +7,18 @@ export const modalVariants = {
   exit: {
     opacity: 0,
     y: 20,
+  },
+}
+
+export const modalMobileVariants = {
+  initial: {
+    opacity: 0.5,
+    y: '100%',
+  },
+  animate: { opacity: 1, y: 0 },
+  exit: {
+    opacity: 0.5,
+    y: '100%',
   },
 }
 

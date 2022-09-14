@@ -1,15 +1,15 @@
 import type { Control, RegisterOptions } from 'react-hook-form'
 import NumberFormat from 'react-number-format'
-import Image from 'next/image'
+import { useRecoilValue } from 'recoil'
 import clsx from 'clsx'
 import styles from './styles/InputGroup.module.scss'
 
-import { getIsConnected } from 'app/states/connection'
-import Decimal, { sanitizeNumber } from 'utils/num'
-import { useAppSelector } from 'hooks'
+import { connectedState } from 'app/states/connection'
+import { bnum } from 'utils/num'
+import { usePool } from 'hooks'
 
-import { Icon } from 'components/Icon'
 import { Input } from 'components/Input'
+import { TokenIcon } from 'components/TokenIcon'
 
 type InputGroupProps = {
   control: Control
@@ -30,8 +30,10 @@ export function InputGroup({
   setMaxValue,
   disabled,
 }: InputGroupProps) {
-  const isConnected = useAppSelector(getIsConnected)
-  const isMaxAmountZero = new Decimal(sanitizeNumber(maxAmount)).isZero()
+  const { poolTokenSymbols } = usePool()
+
+  const isConnected = useRecoilValue(connectedState)
+  const isMaxAmountZero = bnum(maxAmount).isZero()
 
   return (
     <div className={styles.inputGroup}>
@@ -45,20 +47,18 @@ export function InputGroup({
         maxButtonDisabled={isMaxAmountZero}
       />
 
-      <div className={styles.balanceGroup}>
-        <span className={clsx(styles.token, styles.ether)}>
-          <Icon id="ethereumSimple" />
-        </span>
-        <span className={clsx(styles.token, styles.wncg)}>
-          <Image
-            src="/img-wncg.png"
-            layout="fill"
-            objectFit="contain"
-            priority
-            alt=""
+      <div
+        className={clsx(styles.balanceGroup, { [styles.disabled]: disabled })}
+      >
+        {poolTokenSymbols.map((symbol) => (
+          <TokenIcon
+            key={`inputGroup.${symbol}`}
+            className={styles.token}
+            symbol={symbol}
           />
-        </span>
+        ))}
         <strong>{label}</strong>
+
         {isConnected ? (
           <NumberFormat
             className={styles.balance}

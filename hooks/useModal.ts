@@ -1,19 +1,44 @@
-import { addModal, Modal, ModalCategory, removeModal } from 'app/states/modal'
-import { useAppDispatch } from './useRedux'
+import { Modal, ModalCategory, modalListState } from 'app/states/modal'
+import { useSetRecoilState } from 'recoil'
 
 export function useModal() {
-  const dispatch = useAppDispatch()
+  const setModalList = useSetRecoilState(modalListState)
 
-  function dispatchAddModal(modal: Modal) {
-    dispatch(addModal(modal))
+  function addModal(modal: Modal) {
+    setModalList((prev) => {
+      const newModalList = [...prev]
+      const existingModalIndex = newModalList.findIndex(
+        (item) => item.category === modal.category
+      )
+
+      if (existingModalIndex < 0) {
+        newModalList.push(modal)
+      } else {
+        newModalList[existingModalIndex] = modal
+      }
+
+      return newModalList
+    })
   }
 
-  function dispatchRemoveModal(category?: ModalCategory) {
-    dispatch(removeModal(category))
+  function removeModal(category?: ModalCategory) {
+    setModalList((prev) => {
+      const newModalList = [...prev]
+      if (category == null) {
+        newModalList.pop()
+      } else {
+        const targetModalIndex = newModalList.findIndex(
+          (modal) => modal.category === category
+        )
+        newModalList.splice(targetModalIndex, 1)
+      }
+
+      return newModalList
+    })
   }
 
   return {
-    addModal: dispatchAddModal,
-    removeModal: dispatchRemoveModal,
+    addModal,
+    removeModal,
   }
 }

@@ -1,57 +1,39 @@
 import { useCallback } from 'react'
 
-import { getEarnedWncg } from 'app/states/reward'
-import { addTx, TransactionAction } from 'app/states/transaction'
-import { etherToWei } from 'utils/num'
-import { useContract } from './useContract'
-import { useAppDispatch, useAppSelector } from './useRedux'
-import { useToast } from './useToast'
+import {
+  claimAllRewards as initClaimAllRewards,
+  claimBalRewards as initClaimBalRewards,
+  claimWncgRewards as initClaimWncgRewards,
+} from 'contracts/staking'
+import { useRewards } from './useRewards'
+import { useStakingContract } from './useStakingContract'
+import { useTx } from './useTx'
 
 export function useClaim() {
-  const contract = useContract()
-  const { addToast } = useToast()
-
-  const dispatch = useAppDispatch()
-  const earnedWncg = useAppSelector(getEarnedWncg)
+  const { scaledRewards } = useRewards()
+  const { contract } = useStakingContract(true)
+  const { subscribeTx } = useTx()
 
   const claimAllRewards = useCallback(async () => {
-    const data = await contract?.claimAllRewards()
-    if (data) {
-      const tx = {
-        hash: data.hash,
-        action: TransactionAction.ClaimAllRewards,
-        summary: 'Claim WNCG & BAL rewards',
-      }
-      dispatch(addTx(tx))
-      addToast(tx, `${data.hash}_claimAll`)
-    }
-  }, [addToast, contract, dispatch])
+    if (!contract) return
+    const response = await initClaimAllRewards(contract)
+    subscribeTx?.(response)
+  }, [contract, subscribeTx])
 
   const claimBalRewards = useCallback(async () => {
-    const data = await contract?.claimBALRewards()
-    if (data) {
-      const tx = {
-        hash: data.hash,
-        action: TransactionAction.ClaimBalRewards,
-        summary: 'Claim BAL reward',
-      }
-      dispatch(addTx(tx))
-      addToast(tx, data.hash)
-    }
-  }, [addToast, contract, dispatch])
+    if (!contract) return
+    const response = await initClaimBalRewards(contract)
+    subscribeTx?.(response)
+  }, [contract, subscribeTx])
 
   const claimWncgRewards = useCallback(async () => {
-    const data = await contract?.claimWNCGRewards(etherToWei(earnedWncg))
-    if (data) {
-      const tx = {
-        hash: data.hash,
-        action: TransactionAction.ClaimWncgRewards,
-        summary: 'Claim WNCG reward',
-      }
-      dispatch(addTx(tx))
-      addToast(tx, data.hash)
-    }
-  }, [addToast, contract, dispatch, earnedWncg])
+    if (!contract) return
+    const response = await initClaimWncgRewards(
+      contract,
+      scaledRewards[0].toString()
+    )
+    subscribeTx?.(response)
+  }, [contract, scaledRewards, subscribeTx])
 
   return {
     claimAllRewards,

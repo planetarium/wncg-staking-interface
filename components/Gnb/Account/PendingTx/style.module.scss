@@ -1,6 +1,7 @@
 .pendingTx {
   position: relative;
   margin-right: 16px;
+  pointer-events: initial;
 }
 
 .txButton {
@@ -104,7 +105,8 @@
   }
 
   h4 {
-    @include textStyle(14, 500);
+    @include textStyle(14, 700);
+    font-style: normal;
     text-indent: -1px;
 
     a {
@@ -115,16 +117,9 @@
       }
     }
 
-    .emoji {
-      position: relative;
-      bottom: 2px;
-      margin-right: 0.5em;
-      font-size: 0.8em;
-      font-style: normal;
-    }
-
     span {
-      margin-right: 0.3em;
+      margin-right: 4px;
+      line-height: 16px;
     }
   }
 
@@ -146,6 +141,11 @@
       width: 16px;
       height: 16px;
     }
+  }
+
+  .timestamp {
+    @include textStyle(12, 400);
+    color: $gray-3;
   }
 
   p {

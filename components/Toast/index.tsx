@@ -1,43 +1,53 @@
 /* eslint-disable react/jsx-no-target-blank */
 import { useMount } from 'react-use'
-import store from 'store'
+import { useRecoilValue } from 'recoil'
+import clsx from 'clsx'
 import styles from './style.module.scss'
 
-import { TransactionAction } from 'app/states/transaction'
-import { gaEvent } from 'lib/gtag'
-import { renderTxTitle } from 'utils/transaction'
+import { mutedState } from 'app/states/settings'
+import { latestToastIdState } from 'app/states/toast'
+import { parseMarkdown } from 'utils/string'
+import { renderToastBadge } from 'utils/toast'
 import { getTxUrl } from 'utils/url'
-import { STORE_MUTED_KEY } from 'components/Gnb/Account/constants'
 
 import { Icon } from 'components/Icon'
+import { ImportTokens } from './ImportTokens'
 
 type ToastProps = {
-  action: TransactionAction
-  hash: string
-  summary: string
-  showPartyEmoji?: boolean
+  id: string
+  message: string
+  title: string
+  hash?: string
+  tokensToImport?: string[]
+  type?: ToastType
 }
 
 export function Toast({
-  action,
+  id,
+  title,
+  message,
   hash,
-  summary,
-  showPartyEmoji = false,
+  tokensToImport,
+  type = 'info',
 }: ToastProps) {
-  const muted = store.get(STORE_MUTED_KEY) || false
-  const txUrl = getTxUrl(hash)
-  const audioFilename = getAudioFilename(action, showPartyEmoji)
-  const audio = new Audio(audioFilename)
+  const muted = useRecoilValue(mutedState)
+  const latestToastId = useRecoilValue(latestToastIdState)
 
-  function onClick() {
-    window?.open(txUrl)
-    gaEvent({
-      name: 'open_tx_etherscan',
-      params: {
-        tx: hash,
-      },
-    })
+  const audio = new Audio('/alert-default.opus')
+  const content = parseMarkdown(message)
+  const txUrl = getTxUrl(hash)
+
+  function openExplorer() {
+    if (!txUrl) return
+    window.open(txUrl, '_blank')
   }
+
+  const attributes = txUrl
+    ? {
+        onClick: openExplorer,
+        role: 'button',
+      }
+    : {}
 
   useMount(() => {
     if (!muted) {
@@ -48,39 +58,37 @@ export function Toast({
   })
 
   return (
-    <aside className={styles.toast} onClick={onClick}>
+    <aside
+      className={clsx(styles.toast, {
+        [styles.latest]: id === latestToastId,
+      })}
+      {...attributes}
+    >
       <header className={styles.header}>
-        <h4 className={styles.title}>
-          {showPartyEmoji && (
-            <span className={styles.emoji} aria-hidden>
-              🎉
-            </span>
-          )}
-          <span className={styles.anchor}>{renderTxTitle(action)}</span>
-        </h4>
-
-        <span className={styles.link}>
-          <Icon id="externalLink" />
-        </span>
+        {renderToastBadge(type)}
+        <h4 className={styles.title}>{title}</h4>
+        {txUrl && (
+          <a
+            className={styles.link}
+            href={txUrl}
+            target="_blank"
+            rel="noopener"
+          >
+            <Icon id="externalLink" />
+          </a>
+        )}
       </header>
 
-      <p className={styles.desc}>{summary}</p>
+      <p
+        className={styles.desc}
+        dangerouslySetInnerHTML={{ __html: content }}
+      />
+
+      {tokensToImport && (
+        <footer className={styles.footer}>
+          <ImportTokens id={id} addresses={tokensToImport} />
+        </footer>
+      )}
     </aside>
   )
-}
-
-function getAudioFilename(action: TransactionAction, showPartyEmoji: boolean) {
-  if (!showPartyEmoji) {
-    return '/alert-default.opus'
-  }
-
-  switch (action) {
-    case TransactionAction.ClaimAllRewards:
-    case TransactionAction.ClaimBalRewards:
-    case TransactionAction.ClaimWncgRewards:
-    case TransactionAction.EarmarkRewards:
-      return '/alert-money.opus'
-    default:
-      return '/alert-success.opus'
-  }
 }

@@ -1,20 +1,116 @@
 .overlay {
-  @include flexbox;
+  @include flexbox(end);
+  flex-direction: column;
   position: fixed;
   top: 0;
   right: 0;
   bottom: 0;
   left: 0;
   z-index: 1;
-  background-color: rgba($black, 0.75);
+  background-color: rgba(15, 22, 36, 0.1);
+  backdrop-filter: blur(15px);
+
+  @include responsive(MD) {
+    justify-content: center;
+  }
 }
 
 .modalWrapper {
+  width: 100%;
+
   > * {
+    position: relative;
+    flex-grow: 1;
+    width: 100%;
     margin: 0 auto;
+    padding: 40px 24px;
+    color: $black;
+    background-color: $white;
+    border-radius: $radius-lg $radius-lg 0 0;
+  }
+
+  .header {
+    @include flexbox(between);
+    margin-bottom: 20px;
+  }
+
+  .title {
+    @include textStyle(20, 700);
+    color: $black;
+  }
+
+  .closeButton {
+    @include flexbox;
+    width: 40px;
+    height: 40px;
+    margin-right: -8px;
+    color: $gray-4;
+    transition: $transition-short;
+
+    &:hover {
+      color: $gray-3;
+    }
+
+    svg {
+      width: 24px;
+      height: 24px;
+    }
+  }
+
+  .desc {
+    @include textStyle(14, 400);
+    margin-bottom: 20px;
+  }
+
+  .subtitle {
+    @include textStyle(14, 700);
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  .agreement {
+    @include flexbox(start);
+    @include textStyle(14, 400);
+    margin-bottom: 20px;
+    color: $black;
+
+    .checkbox {
+      flex-shrink: 0;
+      margin-right: 10px;
+    }
+
+    a {
+      margin: 0 0.2em;
+      text-decoration: underline;
+
+      &:hover {
+        opacity: 0.5;
+      }
+    }
+  }
+
+  .footer {
+    margin-top: 20px;
   }
 
   @include responsive(MD) {
-    min-width: 320px;
+    max-width: 360px;
+    padding: 0;
+
+    > * {
+      padding: 36px 30px 40px;
+      border-radius: $radius-md;
+    }
+
+    .subtitle {
+      @include textStyle(16);
+    }
+
+    .closeButton {
+      svg {
+        width: 28px;
+        height: 28px;
+      }
+    }
   }
 }

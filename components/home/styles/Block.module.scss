@@ -1,0 +1,32 @@
+.block {
+  @include flexbox;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  flex-direction: column;
+  width: 101%;
+  height: 101%;
+  padding-top: 20px;
+  background-color: rgba($black, 0.8);
+  backdrop-filter: blur(3px);
+
+  h1 {
+    @include textStyle(14, 700);
+    text-align: center;
+    color: $white;
+  }
+
+  .misc {
+    @include textStyle(13, 500);
+    display: block;
+    margin-top: 4px;
+    color: $gray-4;
+  }
+
+  svg {
+    width: 24px;
+    height: 24px;
+    margin-bottom: 8px;
+  }
+}

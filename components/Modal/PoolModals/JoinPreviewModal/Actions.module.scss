@@ -1,0 +1,158 @@
+$step-size: 32px;
+$step-margin: 40px;
+
+.stepsWrapper {
+  @include flexbox;
+  position: relative;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.divider {
+  @include posCenter;
+  width: $step-size * 3 + $step-margin * 2;
+  height: 2px;
+  background-color: rgba($gray-3, 0.5);
+  transition: $transition-short;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    z-index: 1;
+    width: 100%;
+    background-image: linear-gradient(
+      to right,
+      $white 25%,
+      transparent 25%,
+      transparent 50%,
+      $white 50%,
+      $white 75%,
+      transparent 75%,
+      transparent
+    );
+    background-size: 20px 10px;
+    animation: move 3s linear infinite;
+    transition: $transition-short;
+  }
+}
+
+.steps {
+  @include inlineFlexbox;
+  position: relative;
+}
+
+.step {
+  @include flexbox;
+  @include textStyle(14, 700);
+  position: relative;
+  width: $step-size;
+  height: $step-size;
+  padding-right: 3px;
+  margin-right: $step-margin;
+  color: $gray-3;
+  background-color: $white;
+  border: 2.5px solid $gray-3;
+  border-radius: 50%;
+  transition: $transition-short;
+  user-select: none;
+
+  &.active {
+    color: $black;
+    background-color: $primary;
+    border-color: $black;
+  }
+
+  &.pending {
+    color: $black;
+    background-color: $primary;
+    border-color: transparent;
+  }
+
+  &.done {
+    padding-right: 0;
+    color: rgba($gray-3, 0.3);
+    border-color: rgba($gray-3, 0.3);
+    background-color: $gray-1;
+
+    svg {
+      width: 24px;
+      height: 24px;
+    }
+  }
+
+  &.disabled {
+    color: rgba($gray-3, 0.3);
+    border-color: rgba($gray-3, 0.3);
+    background-color: $gray-1;
+  }
+
+  &:hover {
+    .tooltip {
+      opacity: 1;
+      visibility: visible;
+      transform: translate3d(-50%, 0, 0);
+    }
+  }
+
+  &:last-child {
+    margin-right: 0 !important;
+  }
+}
+
+.lottie {
+  @include posCenter;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  transform: translate(-50%, -50%) scale(1.84);
+}
+
+.tooltip {
+  @include posCenterX;
+  @include textStyle(12, 500);
+  min-width: 200px;
+  bottom: calc(100% + 12px);
+  padding: 8px;
+  color: $white;
+  font-style: normal;
+  background-color: $black;
+  border-radius: $radius-sm;
+  opacity: 0;
+  visibility: hidden;
+  transform: translate3d(-50%, 5px, 0);
+  transition: $transition-long;
+  user-select: text;
+
+  &.small {
+    min-width: unset;
+    white-space: nowrap;
+  }
+
+  &::before {
+    @include posCenterX;
+    top: calc(100% - 1px);
+    width: 0;
+    height: 0;
+    border-top: 5px solid $black;
+    border-right: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    border-left: 5px solid transparent;
+    content: '';
+  }
+}
+
+.stakeButton {
+  margin-bottom: 8px;
+}
+
+@keyframes move {
+  0% {
+    background-position: 0 0;
+  }
+
+  100% {
+    background-position: 50px 50px;
+  }
+}

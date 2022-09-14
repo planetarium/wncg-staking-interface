@@ -1,0 +1,65 @@
+.detail {
+  margin-bottom: 20px;
+}
+
+.detailItem {
+  @include flexbox(between);
+  flex-wrap: wrap;
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 8px;
+  background-color: $gray-1;
+  border-radius: $radius-sm;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  dt {
+    @include flexbox(start);
+
+    strong {
+      @include textStyle(14, 700);
+    }
+  }
+
+  dd {
+    @include flexbox(center, end);
+    @include textStyle(16, 700);
+    flex-direction: column;
+    text-align: right;
+
+    &.isBig {
+      width: 100%;
+      margin-top: 8px;
+    }
+  }
+}
+
+.token {
+  @include flexbox;
+  width: 28px;
+  height: 28px;
+  margin-right: 8px;
+  border: 1px solid $gray-2;
+  border-radius: 50%;
+  overflow: hidden;
+
+  &.wncg {
+    @include imageContainer(28px);
+    background-color: $white;
+  }
+}
+
+.usd {
+  @include inlineFlexbox(start);
+  @include textStyle(12, 500);
+  color: $gray-3;
+
+  svg {
+    width: 0.8em;
+    height: 0.8em;
+    margin-right: 0.2em;
+    margin-bottom: -0.005em;
+  }
+}

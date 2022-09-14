@@ -1,6 +1,7 @@
 .gnbAccount {
   @include flexbox(end);
   position: relative;
+  pointer-events: initial;
 }
 
 .accountButton {
