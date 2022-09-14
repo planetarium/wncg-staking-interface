@@ -2,6 +2,7 @@ import { memo } from 'react'
 import { motion } from 'framer-motion'
 import styles from '../styles/StakeSidebar.module.scss'
 
+import { getBalancerPoolUrl } from 'utils/url'
 import { usePool, useRewards } from 'hooks'
 import { motionVariants, sidebarTransition } from '../constants'
 
@@ -10,8 +11,10 @@ import { StakeSidebarAdvanced } from './Advanced'
 import { StakeSidebarBalance } from './Balance'
 
 function StakeSidebar() {
-  const { poolName, poolTokenName } = usePool()
+  const { poolName, poolId, poolTokenName } = usePool()
   const { rewardTokenSymbols } = useRewards()
+
+  const balancerUrl = getBalancerPoolUrl(poolId)
 
   return (
     <motion.aside
@@ -33,7 +36,7 @@ function StakeSidebar() {
 
       <StakeSidebarBalance />
 
-      <Button href="/wncg/pool" fullWidth>
+      <Button href={balancerUrl} target="_blank" fullWidth>
         Get {poolTokenName || 'BPT'}
       </Button>
 
