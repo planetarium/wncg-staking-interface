@@ -1,5 +1,6 @@
 import { memo } from 'react'
 import { useForm } from 'react-hook-form'
+import { isSameAddress } from '@balancer-labs/sdk'
 import styles from '../styles/Form.module.scss'
 
 import { configService } from 'services/config'
@@ -22,6 +23,9 @@ type JoinFormProps = {
 function JoinForm({ currentEther, selectEther }: JoinFormProps) {
   const { balanceFor } = useBalances()
   const { poolTokenAddresses } = usePool()
+  const wncgIndex = poolTokenAddresses.findIndex(
+    (address) => !isSameAddress(address, configService.weth)
+  )
 
   const isNativeAsset = currentEther === configService.nativeAssetAddress
 
@@ -55,7 +59,6 @@ function JoinForm({ currentEther, selectEther }: JoinFormProps) {
   } = useJoinForm(isNativeAsset, useFormReturn)
 
   const ethValue = watch('ethAmount')
-  const wncgValue = watch('wncgAmount')
   const priceImpactAgreement = watch('priceImpactAgreement')
 
   return (
@@ -67,8 +70,8 @@ function JoinForm({ currentEther, selectEther }: JoinFormProps) {
 
       <form>
         <WncgInput
-          address={poolTokenAddresses[0]}
-          balance={balanceFor(poolTokenAddresses[0])}
+          address={poolTokenAddresses[wncgIndex]}
+          balance={balanceFor(poolTokenAddresses[wncgIndex])}
           clearErrors={clearErrors}
           control={control}
           maximized={wncgMaximized}
@@ -76,7 +79,6 @@ function JoinForm({ currentEther, selectEther }: JoinFormProps) {
           setPropAmount={setPropAmount}
           showPropButton={showPropButton.wncgAmount}
           trigger={trigger}
-          value={wncgValue}
           error={formState.errors?.wncgAmount?.message}
         />
         <EtherInput
