@@ -23,9 +23,6 @@ type JoinFormProps = {
 function JoinForm({ currentEther, selectEther }: JoinFormProps) {
   const { balanceFor } = useBalances()
   const { poolTokenAddresses } = usePool()
-  const wncgIndex = poolTokenAddresses.findIndex(
-    (address) => !isSameAddress(address, configService.weth)
-  )
 
   const isNativeAsset = currentEther === configService.nativeAssetAddress
 
@@ -55,6 +52,7 @@ function JoinForm({ currentEther, selectEther }: JoinFormProps) {
     showPropButton,
     togglePriceImpactAgreement,
     totalFiatValue,
+    wncgIndex,
     wncgMaximized,
   } = useJoinForm(isNativeAsset, useFormReturn)
 

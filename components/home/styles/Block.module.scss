@@ -17,6 +17,13 @@
     color: $white;
   }
 
+  .misc {
+    @include textStyle(13, 500);
+    display: block;
+    margin-top: 4px;
+    color: $gray-4;
+  }
+
   svg {
     width: 24px;
     height: 24px;

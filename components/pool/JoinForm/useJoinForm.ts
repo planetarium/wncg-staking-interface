@@ -22,8 +22,11 @@ export function useJoinForm(
     calcUserPoolTokenBalancesAvailable,
   } = useJoinMath()
   const { addModal } = useModal()
-  const { nativeAssetIndex, poolTokenAddresses: rawPoolTokenAddresses } =
-    usePool()
+  const {
+    ercTokenIndex,
+    nativeAssetIndex,
+    poolTokenAddresses: rawPoolTokenAddresses,
+  } = usePool()
   const { toFiat } = useFiatCurrency()
 
   const assets = useMemo(
@@ -35,6 +38,8 @@ export function useJoinForm(
       }) || [],
     [isNativeAsset, nativeAssetIndex, rawPoolTokenAddresses]
   )
+
+  const wncgIndex = ercTokenIndex
 
   const userTokenBalances = useMemo(
     () => calcUserPoolTokenBalances(isNativeAsset),
@@ -63,25 +68,33 @@ export function useJoinForm(
       clearErrors(inputName)
 
       if (inputName === 'wncgAmount') {
-        setValue('wncgAmount', userTokenBalancesAvailable[0])
+        setValue('wncgAmount', userTokenBalancesAvailable[wncgIndex])
         return
       }
-      setValue('ethAmount', userTokenBalancesAvailable[1])
+      setValue('ethAmount', userTokenBalancesAvailable[nativeAssetIndex])
       trigger()
     },
-    [clearErrors, setValue, trigger, userTokenBalancesAvailable]
+    [
+      clearErrors,
+      nativeAssetIndex,
+      setValue,
+      trigger,
+      userTokenBalancesAvailable,
+      wncgIndex,
+    ]
   )
 
   const setPropAmount = useCallback(
     (e: MouseEvent<HTMLButtonElement>) => {
       const inputName = e.currentTarget.value as keyof JoinFormFields
-      const currentTokenIndex = inputName === 'wncgAmount' ? 0 : 1
+      const currentTokenIndex =
+        inputName === 'wncgAmount' ? wncgIndex : nativeAssetIndex
 
       const propAmounts = calcPropAmounts(amounts, currentTokenIndex)
       setValue(inputName, propAmounts[currentTokenIndex])
       trigger(inputName)
     },
-    [amounts, calcPropAmounts, setValue, trigger]
+    [amounts, calcPropAmounts, nativeAssetIndex, setValue, trigger, wncgIndex]
   )
 
   function togglePriceImpactAgreement(value: boolean) {
@@ -89,21 +102,36 @@ export function useJoinForm(
   }
 
   const joinMax = useCallback(() => {
-    setValue('wncgAmount', userTokenBalancesAvailable[0])
-    setValue('ethAmount', userTokenBalancesAvailable[1])
+    setValue('wncgAmount', userTokenBalancesAvailable[wncgIndex])
+    setValue('ethAmount', userTokenBalancesAvailable[nativeAssetIndex])
 
     clearErrors()
     trigger()
-  }, [clearErrors, setValue, trigger, userTokenBalancesAvailable])
+  }, [
+    clearErrors,
+    nativeAssetIndex,
+    setValue,
+    trigger,
+    userTokenBalancesAvailable,
+    wncgIndex,
+  ])
 
   const joinOpt = useCallback(() => {
     const propMinAmounts = calcOptimizedAmounts(isNativeAsset)
-    setValue('wncgAmount', propMinAmounts[0])
-    setValue('ethAmount', propMinAmounts[1])
+    setValue('wncgAmount', propMinAmounts[wncgIndex])
+    setValue('ethAmount', propMinAmounts[nativeAssetIndex])
 
     clearErrors()
     trigger()
-  }, [calcOptimizedAmounts, clearErrors, isNativeAsset, setValue, trigger])
+  }, [
+    calcOptimizedAmounts,
+    clearErrors,
+    isNativeAsset,
+    nativeAssetIndex,
+    setValue,
+    trigger,
+    wncgIndex,
+  ])
 
   const priceImpact = useMemo(
     () => calcPriceImpact([wncgValue, ethValue]),
@@ -133,13 +161,16 @@ export function useJoinForm(
 
   const wncgMaximized = useMemo(
     () =>
-      _wncgValue !== '' && bnum(_wncgValue).eq(userTokenBalancesAvailable[0]),
-    [_wncgValue, userTokenBalancesAvailable]
+      _wncgValue !== '' &&
+      bnum(_wncgValue).eq(userTokenBalancesAvailable[wncgIndex]),
+    [_wncgValue, userTokenBalancesAvailable, wncgIndex]
   )
 
   const ethMaximized = useMemo(
-    () => _ethValue !== '' && bnum(_ethValue).eq(userTokenBalancesAvailable[1]),
-    [_ethValue, userTokenBalancesAvailable]
+    () =>
+      _ethValue !== '' &&
+      bnum(_ethValue).eq(userTokenBalancesAvailable[nativeAssetIndex]),
+    [_ethValue, nativeAssetIndex, userTokenBalancesAvailable]
   )
 
   const maximized = useMemo(
@@ -235,6 +266,7 @@ export function useJoinForm(
     showPropButton,
     togglePriceImpactAgreement,
     totalFiatValue,
+    wncgIndex,
     wncgMaximized,
   }
 }

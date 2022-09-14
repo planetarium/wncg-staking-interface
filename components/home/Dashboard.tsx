@@ -98,7 +98,7 @@ function Dashboard() {
               <div key={`rewardApr.${address}`} className={styles.detailItem}>
                 <dt>{symbol} APR</dt>
                 <dd>
-                  {legacyMode && isSameAddress(address, configService.bal) ? (
+                  {!legacyMode && isSameAddress(address, configService.bal) ? (
                     'Bootstrapping...'
                   ) : (
                     <CountUp
