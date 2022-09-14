@@ -98,7 +98,7 @@ export class ConfigService {
       },
       stakingAddress:
         process.env.NEXT_PUBLIC_STAKING_CONTRACT_ADDRESS ||
-        '0xCC2db561d149A6d2F071A2809492d72E07838F69',
+        '0xc53b567A70dB04E928FB96D6A417971aa88fdA38',
       rewardTokensList: process.env.NEXT_PUBLIC_REWARD_TOKENS_LIST?.split(
         ','
       ) || [
