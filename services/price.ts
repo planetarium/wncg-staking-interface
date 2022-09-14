@@ -1,4 +1,4 @@
-import { convertAddress } from 'utils/address'
+import { convertAddress, uniqAddress } from 'utils/address'
 import { createLogger } from 'utils/log'
 import { coingeckoClient } from './coingeckoClient'
 import { configService } from './config'
@@ -32,7 +32,9 @@ export async function fetchNativeAssetPrice(): Promise<TokenPrices> {
 export async function fetchTokenPrices(
   addresses: string[] = []
 ): Promise<TokenPrices> {
-  const tokenAddresses = addresses.map((address) => convertAddress(address))
+  const tokenAddresses = uniqAddress(
+    addresses.map((address) => convertAddress(address))
+  )
   const key = `${tokenAddresses.length} token price${
     tokenAddresses.length === 1 ? '' : 's'
   }`
@@ -47,7 +49,7 @@ export async function fetchTokenPrices(
 
     logger(key)
     const responses = await Promise.all(requests)
-    return parsePriceResponses(responses, addresses)
+    return parsePriceResponses(responses, tokenAddresses)
   } catch (error) {
     logger(key, error)
     throw error
