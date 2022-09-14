@@ -36,7 +36,7 @@ export function Gnb() {
           <a>
             <Image
               {...logoSize}
-              src="/logo.png"
+              src="/img-logo.png"
               layout="fill"
               objectFit="cover"
               priority
