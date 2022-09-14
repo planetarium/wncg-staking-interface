@@ -1,8 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { usePrevious } from 'react-use'
-import Lottie from 'lottie-react'
 import { useRecoilValue } from 'recoil'
-import type { Event } from 'ethers'
 import clsx from 'clsx'
 import styles from '../styles/StakeSubmit.module.scss'
 
@@ -18,7 +16,6 @@ import {
   useAllowances,
   useApprove,
   useConnection,
-  useEvents,
   useModal,
   usePool,
   useProvider,
@@ -27,11 +24,13 @@ import {
   useUnstakeTimestamps,
 } from 'hooks'
 import { UnstakeStatus } from 'hooks/useUnstakeTimestamps'
+import { approvalTooltips, renderButtonLabel, stakeTooltips } from './utils'
 
-import loadingAnimation from 'animations/spinner.json'
-
+import { ActionStep } from 'components/ActionStep'
 import { Button } from 'components/Button'
 import { Icon } from 'components/Icon'
+
+type StakeSubmitState = 'approval' | 'stake' | null
 
 type StakeSubmitProps = {
   amount: string
@@ -49,7 +48,7 @@ export function StakeSubmit({
   clearInput,
   disabled,
 }: StakeSubmitProps) {
-  const [active, setActive] = useState<'approval' | 'stake' | null>(null)
+  const [currentState, setCurrentState] = useState<StakeSubmitState>(null)
   const [isStaked, setIsStaked] = useState(false)
   const [pendingTx, setPendingTx] = useState('')
   const prevAmount = usePrevious(amount)
@@ -57,9 +56,8 @@ export function StakeSubmit({
   const { allowanceFor } = useAllowances()
   const { approve } = useApprove()
   const { connect } = useConnection()
-  const { createApprovalEvent, stakedEvent } = useEvents()
   const { addModal } = useModal()
-  const { bptAddress, poolTokenName } = usePool()
+  const { bptAddress } = usePool()
   const provider = useProvider()
   const { stake } = useStake()
   const { addToast } = useToast()
@@ -71,26 +69,29 @@ export function StakeSubmit({
   const isUnstakeWindow = UNSTAKE_WINDOW.includes(unstakeStatus)
 
   const isApproved = allowanceFor(bptAddress, stakingAddress)
-  const isLoading = active !== null
+  const isLoading = currentState !== null
 
   function resetStatus() {
-    setActive(null)
+    setCurrentState(null)
     setPendingTx('')
   }
 
-  function handleError(error: any) {
-    const errorMsg = parseTxError(error)
-    if (errorMsg) {
-      addToast({
-        ...errorMsg,
-        type: 'error',
-      })
-    }
-    resetStatus()
-  }
+  const handleError = useCallback(
+    (error: any) => {
+      const errorMsg = parseTxError(error)
+      if (errorMsg) {
+        addToast({
+          ...errorMsg,
+          type: 'error',
+        })
+      }
+      resetStatus()
+    },
+    [addToast]
+  )
 
-  async function proceedStake() {
-    setActive('stake')
+  async function initStake() {
+    setCurrentState('stake')
     gaEvent({
       name: 'stake',
       params: {
@@ -108,7 +109,7 @@ export function StakeSubmit({
   }
 
   async function handleApprove() {
-    setActive('approval')
+    setCurrentState('approval')
     gaEvent({
       name: 'approve_to_stake',
     })
@@ -126,62 +127,37 @@ export function StakeSubmit({
       addModal({
         category: ModalCategory.StakeWarning,
         props: {
-          stake: proceedStake,
+          stake: initStake,
         },
       })
       return
     }
-
-    proceedStake()
+    initStake()
   }
 
-  function handleClick() {
+  function handleSubmit() {
     if (disabled) return
     if (!isApproved) handleApprove()
     else handleStake()
   }
 
-  const approvalFilter = createApprovalEvent(bptAddress, stakingAddress)
+  const pingPendingTx = useCallback(async () => {
+    if (!provider || !pendingTx) return
 
-  const approvalHandler = useCallback(
-    ({ transactionHash }: Event) => {
-      if (active === 'approval' && pendingTx === transactionHash) {
-        setActive(null)
-      }
-    },
-    [active, pendingTx]
-  )
-
-  const stakedHandler = useCallback(
-    async ({ transactionHash }: Event) => {
-      if (pendingTx !== transactionHash) return
-      if (active === 'stake') {
-        setIsStaked(true)
-        resetStatus()
-      }
-    },
-    [active, pendingTx]
-  )
-
-  // NOTE: Approval event
-  useEffect(() => {
-    if (approvalFilter) {
-      provider?.on(approvalFilter, approvalHandler)
-      return () => {
-        provider?.off(approvalFilter)
-      }
+    try {
+      const tx = await provider.getTransaction(pendingTx)
+      await tx.wait()
+      resetStatus()
+      if (currentState === 'stake') setIsStaked(true)
+      setCurrentState(null)
+    } catch (error) {
+      handleError(error)
     }
-  }, [approvalFilter, approvalHandler, isApproved, provider])
+  }, [currentState, handleError, pendingTx, provider])
 
-  // NOTE: Staked event
   useEffect(() => {
-    if (stakedEvent) {
-      provider?.on(stakedEvent, stakedHandler)
-      return () => {
-        provider?.off(stakedEvent)
-      }
-    }
-  }, [stakedHandler, provider, stakedEvent])
+    pingPendingTx()
+  }, [pendingTx, pingPendingTx])
 
   useEffect(() => {
     if (amount && prevAmount !== amount) {
@@ -210,49 +186,33 @@ export function StakeSubmit({
         />
 
         <ol className={styles.steps}>
-          <li
-            className={clsx(styles.step, {
-              [styles.current]: !isApproved,
-              [styles.active]: active === 'approval',
-              [styles.completed]: isApproved,
-            })}
-          >
-            {isApproved ? <Icon id="check" /> : 1}
-            {active === 'approval' && (
-              <Lottie
-                className={styles.lottie}
-                animationData={loadingAnimation}
-                loop
-              />
-            )}
-            <strong className={styles.tooltip}>
-              {isApproved ? 'Approved' : 'Approve to stake'}
-            </strong>
-          </li>
-
-          <li
-            className={clsx(styles.step, {
-              [styles.current]: isApproved,
-              [styles.active]: active === 'stake',
-              [styles.completed]: isStaked,
-            })}
-          >
-            {isStaked ? <Icon id="check" /> : 2}
-            {active === 'stake' && (
-              <Lottie
-                className={styles.lottie}
-                animationData={loadingAnimation}
-                loop
-              />
-            )}
-            <strong className={styles.tooltip}>Stake {poolTokenName}</strong>
-          </li>
+          <ActionStep<StakeSubmitState>
+            action="approval"
+            completed={isApproved}
+            currentState={currentState}
+            label={1}
+            pending="approval"
+            isDark
+            tooltip={approvalTooltips}
+            approvalStep
+            smallTooltip
+          />
+          <ActionStep<StakeSubmitState>
+            action="stake"
+            completed={isStaked}
+            currentState={currentState}
+            label={2}
+            pending="stake"
+            isDark
+            tooltip={stakeTooltips}
+            smallTooltip
+          />
         </ol>
       </div>
 
       <Button
         size="large"
-        onClick={handleClick}
+        onClick={handleSubmit}
         disabled={disabled || isLoading}
         loading={isLoading}
         fullWidth
@@ -277,19 +237,4 @@ export function StakeSubmit({
       )}
     </>
   )
-}
-
-function renderButtonLabel(isApproved: boolean, isLoading: boolean) {
-  switch (true) {
-    case isApproved && isLoading:
-      return 'Staking'
-    case isApproved && !isLoading:
-      return 'Stake'
-    case !isApproved && isLoading:
-      return 'Approving'
-    case !isApproved && !isLoading:
-      return 'Approve to stake'
-    default:
-      return ''
-  }
 }
