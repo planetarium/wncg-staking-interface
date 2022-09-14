@@ -1,7 +1,9 @@
 import { useMemo } from 'react'
 import { useQuery } from '@tanstack/react-query'
+import { isSameAddress } from '@balancer-labs/sdk'
 
 import { REFETCH_INTERVAL, STALE_TIME } from 'constants/time'
+import { configService } from 'services/config'
 import PoolService from 'services/pool'
 import { fetchPool } from 'lib/graphql'
 import { getTokenInfo, getTokenSymbol } from 'utils/token'
@@ -32,7 +34,10 @@ export function usePool() {
   const nativeAssetIndex =
     typeof poolService?.nativeAssetIndex === 'number'
       ? poolService?.nativeAssetIndex
-      : 1
+      : 0
+  const ercTokenIndex = poolTokenAddresses.findIndex(
+    (address) => !isSameAddress(address, configService.weth)
+  )
 
   const bptAddress = poolService?.bptAddress || ''
   const poolTokenName = getTokenSymbol(bptAddress)
@@ -50,6 +55,7 @@ export function usePool() {
     poolTokenSymbols,
     poolTotalShares,
     poolTokenWeights,
+    ercTokenIndex,
     nativeAssetIndex,
     bptAddress,
     fetchPool: refetch,

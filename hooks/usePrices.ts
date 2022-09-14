@@ -18,7 +18,8 @@ const options = {
 export function usePrices() {
   const setInvalidPrice = useSetRecoilState(invalidPriceState)
 
-  const { bptAddress, poolService, poolTokenAddresses } = usePool()
+  const { bptAddress, ercTokenIndex, poolService, poolTokenAddresses } =
+    usePool()
 
   const addresses = [
     ...poolTokenAddresses,
@@ -65,16 +66,14 @@ export function usePrices() {
   }, [bptAddress, bptPrice, nativeAssetPrice, prices])
 
   const priceFor = useCallback(
-    (address = '') => {
-      return priceMap[address.toLowerCase()] || '0'
-    },
+    (address = '') => priceMap[address.toLowerCase()] || '0',
     [priceMap]
   )
 
   const balPrice = useMemo(() => priceFor(configService.bal), [priceFor])
   const wncgPrice = useMemo(
-    () => priceFor(poolTokenAddresses[0]),
-    [poolTokenAddresses, priceFor]
+    () => priceFor(poolTokenAddresses[ercTokenIndex]),
+    [ercTokenIndex, poolTokenAddresses, priceFor]
   )
 
   return {
