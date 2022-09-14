@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-target-blank */
 import { useRecoilValue } from 'recoil'
 import { AnimatePresence, motion } from 'framer-motion'
 import styles from './styles/MigrationModal.module.scss'
@@ -59,7 +60,11 @@ export function MigrationModal({ close, showModal }: MigrationModalProps) {
             </header>
 
             <p className={styles.desc}>
-              <a href="#" target="_blank" rel="noopener">
+              <a
+                href="https://forum.balancer.fi/t/bip-57-introduce-gauge-framework-v1/3604"
+                target="_blank"
+                rel="noopener"
+              >
                 As of the Balancer gauge update,
               </a>{' '}
               you need to unstake your assets from the old contract and stake to
@@ -68,7 +73,12 @@ export function MigrationModal({ close, showModal }: MigrationModalProps) {
             </p>
 
             <footer className={styles.footer}>
-              <Button href="#" size="large" target="_blank" fullWidth>
+              <Button
+                href="https://planetarium.notion.site/WNCG-Staking-Migration-Step-by-step-guide-draft-98ea0e277e9d49d0a5ac573459bd3124"
+                size="large"
+                target="_blank"
+                fullWidth
+              >
                 See step-by-step guide
               </Button>
             </footer>
