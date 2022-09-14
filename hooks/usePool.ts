@@ -29,7 +29,10 @@ export function usePool() {
     (address) => getTokenInfo(address).symbol
   )
   const poolTotalShares = poolService?.poolTotalShares || '0'
-  const nativeAssetIndex = poolService?.nativeAssetIndex || 1
+  const nativeAssetIndex =
+    typeof poolService?.nativeAssetIndex === 'number'
+      ? poolService?.nativeAssetIndex
+      : 1
 
   const bptAddress = poolService?.bptAddress || ''
   const poolTokenName = getTokenSymbol(bptAddress)
