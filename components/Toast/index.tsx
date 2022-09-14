@@ -38,8 +38,8 @@ export function Toast({
   const txUrl = getTxUrl(hash)
 
   function openExplorer() {
-    if (txUrl) return
-    window.open(txUrl)
+    if (!txUrl) return
+    window.open(txUrl, '_blank')
   }
 
   const attributes = txUrl
