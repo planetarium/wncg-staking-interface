@@ -4,8 +4,7 @@ import { useRecoilValue } from 'recoil'
 import styles from './styles/MyPoolBalance.module.scss'
 
 import { connectedState } from 'app/states/connection'
-import { countUpOption, usdCountUpOption } from 'utils/countUp'
-import { isLessThanMinAmount } from 'utils/num'
+import { countUpOption, usdCountUpOption } from 'constants/countUp'
 import {
   useBalances,
   useCalculator,
@@ -58,11 +57,7 @@ function MyPoolBalance() {
               <dd>
                 {isConnected ? (
                   <>
-                    {isLessThanMinAmount(amount) ? (
-                      <span title={amount}>&lt; 0.0001</span>
-                    ) : (
-                      <CountUp {...countUpOption} decimals={4} end={amount} />
-                    )}
+                    <CountUp {...countUpOption} end={amount} />
                     <CountUp
                       {...usdCountUpOption}
                       end={fiatValue}

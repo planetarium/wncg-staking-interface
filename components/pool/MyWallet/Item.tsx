@@ -1,10 +1,8 @@
 import { memo, MouseEvent } from 'react'
-
 import clsx from 'clsx'
 import styles from '../styles/Widget.module.scss'
 
-import { countUpOption, usdCountUpOption } from 'utils/countUp'
-import { isLessThanMinAmount } from 'utils/num'
+import { countUpOption, usdCountUpOption } from 'constants/countUp'
 import { getTokenInfo } from 'utils/token'
 import { useFiatCurrency } from 'hooks'
 
@@ -43,11 +41,7 @@ function MyWalletItem({
         <span>{name}</span>
       </dt>
       <dd>
-        {isLessThanMinAmount(balance) ? (
-          <span title={balance}>&lt; 0.0001</span>
-        ) : (
-          <CountUp {...countUpOption} decimals={4} end={balance} />
-        )}
+        <CountUp {...countUpOption} end={balance} />
         <CountUp {...usdCountUpOption} end={fiatValue} isApproximate />
       </dd>
     </div>

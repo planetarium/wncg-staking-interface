@@ -1,6 +1,6 @@
 import styles from '../styles/StakeSidebar.module.scss'
 
-import { countUpOption, usdCountUpOption } from 'utils/countUp'
+import { countUpOption, usdCountUpOption } from 'constants/countUp'
 import { bnum, sanitizeNumber } from 'utils/num'
 import {
   useBalances,
