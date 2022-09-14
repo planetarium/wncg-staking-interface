@@ -1,6 +1,5 @@
 import { memo } from 'react'
 import { useForm } from 'react-hook-form'
-import { isSameAddress } from '@balancer-labs/sdk'
 import styles from '../styles/Form.module.scss'
 
 import { configService } from 'services/config'
