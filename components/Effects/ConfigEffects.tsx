@@ -1,9 +1,7 @@
-import { memo, useCallback } from 'react'
-import { useMount } from 'react-use'
-import { useRecoilValue, useSetRecoilState } from 'recoil'
+import { memo, useCallback, useEffect } from 'react'
+import { useSetRecoilState } from 'recoil'
 import store from 'store'
 
-import { connectedState } from 'app/states/connection'
 import {
   estimatedEarnPeriodState,
   legacyModeState,
@@ -11,13 +9,8 @@ import {
   slippageState,
 } from 'app/states/settings'
 import STORAGE_KEYS from 'constants/storageKeys'
-import { bnum } from 'utils/num'
-import { useStakedBalance } from 'hooks'
 
 function ConfigEffects() {
-  const { stakedBalance } = useStakedBalance()
-
-  const isConnected = useRecoilValue(connectedState)
   const setMuted = useSetRecoilState(mutedState)
   const setSlippage = useSetRecoilState(slippageState)
   const setEstimatedEarnPeriod = useSetRecoilState(estimatedEarnPeriodState)
@@ -25,15 +18,9 @@ function ConfigEffects() {
 
   const setInitialLegacyMode = useCallback(() => {
     const storedLegacyMode = store.get(STORAGE_KEYS.UserSettings.LegacyMode)
-    if (storedLegacyMode) {
-      setLegacyMode(storedLegacyMode)
-      return
-    }
-
-    if (!isConnected || bnum(stakedBalance).isZero()) {
-      setLegacyMode(true)
-    }
-  }, [isConnected, setLegacyMode, stakedBalance])
+    if (storedLegacyMode) setLegacyMode(storedLegacyMode)
+    else setLegacyMode(false)
+  }, [setLegacyMode])
 
   const setInitialSettings = useCallback(() => {
     const storedPeriod = store.get(
@@ -47,10 +34,10 @@ function ConfigEffects() {
     if (storedMuted) setMuted(storedMuted)
   }, [setEstimatedEarnPeriod, setMuted, setSlippage])
 
-  useMount(() => {
+  useEffect(() => {
     setInitialLegacyMode()
     setInitialSettings()
-  })
+  }, [setInitialLegacyMode, setInitialSettings])
 
   return null
 }
