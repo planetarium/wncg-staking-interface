@@ -34,6 +34,10 @@ function UnstakeFormBlock() {
 
 function renderBlockMessage(status: UnstakeStatus, legacyMode: boolean) {
   if (legacyMode) {
+    if (status === UnstakeStatus.NoStake) {
+      return <h1>Nothing to cooldown & withdraw</h1>
+    }
+
     return (
       <h1>
         Start cooldown to withdraw your stake.

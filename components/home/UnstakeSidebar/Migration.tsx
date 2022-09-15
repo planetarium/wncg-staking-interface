@@ -53,7 +53,7 @@ export function UnstakeSidebarMigration({
               <div className={styles.detailItem}>
                 <dt>Cooldown period</dt>
                 <dd>
-                  <strong>-</strong>
+                  <strong>60 seconds</strong>
                 </dd>
               </div>
               <div className={styles.detailItem}>

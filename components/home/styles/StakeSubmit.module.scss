@@ -92,8 +92,29 @@ $step-margin: 40px;
     }
 
     .tooltip {
+      position: absolute;
+      top: 30px;
+      left: 50%;
       width: 240px;
+      padding: 4px;
       white-space: initial;
+      border-radius: $radius-sm;
+      background-color: $gray-6;
+      opacity: 0;
+      transform: translate3d(-50%, 10px, 0);
+      transition: $transition-short;
+
+      &::before {
+        @include posCenterX;
+        top: -16px;
+        width: 0;
+        height: 0;
+        border-top: 8px solid transparent;
+        border-right: 8px solid transparent;
+        border-bottom: 8px solid $gray-6;
+        border-left: 8px solid transparent;
+        content: '';
+      }
     }
 
     svg {
