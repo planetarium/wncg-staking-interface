@@ -8,6 +8,7 @@ import {
 import { useMount } from 'react-use'
 import { RecoilRoot } from 'recoil'
 import type { AppProps, NextWebVitalsMetric } from 'next/app'
+import Script from 'next/script'
 import { DefaultSeo } from 'next-seo'
 import 'react-toastify/dist/ReactToastify.css'
 import 'styles/globals.scss'
@@ -32,22 +33,38 @@ function MyApp({ Component, pageProps }: AppProps) {
   })
 
   return (
-    <QueryClientProvider client={queryClient.current}>
-      <Hydrate state={pageProps.dehydratedState}>
-        <RecoilRoot>
-          <DefaultSeo {...DEFAULT_SEO} />
-          <CoingeckoAlert />
-          <NetworkAlert />
-          <Gnb />
-          <Component {...pageProps} />
-          <ToastEffects />
-          <Modal />
-          <ToastContainer />
-          <GlobalFooter />
-          <MediaQueryEffects />
-        </RecoilRoot>
-      </Hydrate>
-    </QueryClientProvider>
+    <>
+      <Script
+        id="hotjar"
+        strategy="afterInteractive"
+        dangerouslySetInnerHTML={{
+          __html: `(function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:${process.env.NEXT_PUBLIC_HOTJAR_SITE_ID},hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');`,
+        }}
+      />
+      <QueryClientProvider client={queryClient.current}>
+        <Hydrate state={pageProps.dehydratedState}>
+          <RecoilRoot>
+            <DefaultSeo {...DEFAULT_SEO} />
+            <CoingeckoAlert />
+            <NetworkAlert />
+            <Gnb />
+            <Component {...pageProps} />
+            <ToastEffects />
+            <Modal />
+            <ToastContainer />
+            <GlobalFooter />
+            <MediaQueryEffects />
+          </RecoilRoot>
+        </Hydrate>
+      </QueryClientProvider>
+    </>
   )
 }
 

@@ -17,7 +17,6 @@ import { useProvider } from './useProvider'
 import { useSettings } from './useSettings'
 import { useToast } from './useToast'
 import { useTx } from './useTx'
-import { useUnstakeTimestamps } from './useUnstakeTimestamps'
 
 export function useConnection() {
   const { addModal } = useModal()
@@ -25,7 +24,6 @@ export function useConnection() {
   const { resetSettings } = useSettings()
   const { addToast } = useToast()
   const { resetTx } = useTx()
-  const { resetTimestamps } = useUnstakeTimestamps()
 
   const [account, setAccount] = useRecoilState(accountState)
   const [connectionStatus, setConnectionStatus] = useRecoilState(
@@ -39,16 +37,9 @@ export function useConnection() {
     resetAccount()
     resetConnectionStatus()
     resetSettings()
-    resetTimestamps()
     resetTx?.()
     store.remove(STORAGE_KEYS.Account)
-  }, [
-    resetAccount,
-    resetConnectionStatus,
-    resetSettings,
-    resetTimestamps,
-    resetTx,
-  ])
+  }, [resetAccount, resetConnectionStatus, resetSettings, resetTx])
 
   const updateAccount = useCallback(
     (account: string) => {

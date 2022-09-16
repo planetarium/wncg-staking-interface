@@ -1,14 +1,12 @@
 import { useCallback, useMemo } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useRecoilValue } from 'recoil'
-import store from 'store'
 
 import { connectedState, accountState } from 'app/states/connection'
 import {
   getCooldownEndTimestamp,
   getWithdrawEndTimestamp,
 } from 'contracts/staking'
-import STORAGE_KEYS from 'constants/storageKeys'
 import { REFETCH_INTERVAL } from 'constants/time'
 import { bnum } from 'utils/num'
 import { useStakedBalance } from './useStakedBalance'
@@ -36,13 +34,6 @@ export function useUnstakeTimestamps() {
     {
       enabled: !!contract,
       refetchInterval: REFETCH_INTERVAL,
-      onSuccess(data) {
-        if (bnum(data).gt(0)) {
-          store.set(STORAGE_KEYS.Unstake.CooldownEndsAt, data)
-        } else {
-          store.remove(STORAGE_KEYS.Unstake.CooldownEndsAt)
-        }
-      },
     }
   )
 
@@ -51,15 +42,6 @@ export function useUnstakeTimestamps() {
     () => getWithdrawEndTimestamp(contract!, account),
     {
       enabled: !!contract,
-      onSuccess(data) {
-        if (bnum(data).gt(0)) {
-          store.set(STORAGE_KEYS.Unstake.Initiated, true)
-          store.set(STORAGE_KEYS.Unstake.WithdrawEndsAt, data)
-        } else {
-          store.remove(STORAGE_KEYS.Unstake.Initiated)
-          store.remove(STORAGE_KEYS.Unstake.WithdrawEndsAt)
-        }
-      },
     }
   )
 
@@ -87,17 +69,10 @@ export function useUnstakeTimestamps() {
     withdrawEndsAt.refetch()
   }, [cooldownEndsAt, withdrawEndsAt])
 
-  const resetTimestamps = useCallback(() => {
-    store.remove(STORAGE_KEYS.Unstake.CooldownEndsAt)
-    store.remove(STORAGE_KEYS.Unstake.WithdrawEndsAt)
-    store.remove(STORAGE_KEYS.Unstake.Initiated)
-  }, [])
-
   return {
     cooldownEndsAt: cooldownEndsAt.data || 0,
     withdrawEndsAt: withdrawEndsAt.data || 0,
     unstakeStatus,
     fetchTimestamps,
-    resetTimestamps,
   }
 }
