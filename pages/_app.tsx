@@ -14,6 +14,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import 'styles/globals.scss'
 import 'styles/toast.scss'
 
+import { configService } from 'services/config'
 import { DEFAULT_SEO } from 'lib/seo'
 
 import { CoingeckoAlert } from 'components/CoingeckoAlert'
@@ -27,27 +28,32 @@ import { ToastEffects } from 'components/Effects/ToastEffects'
 
 function MyApp({ Component, pageProps }: AppProps) {
   const queryClient = useRef(new QueryClient())
+  const config = configService.env.env
+  const isProd = config === 'production'
 
   useMount(() => {
+    if (!isProd) return
     ReactGA.initialize(process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID as string)
   })
 
   return (
     <>
-      <Script
-        id="hotjar"
-        strategy="afterInteractive"
-        dangerouslySetInnerHTML={{
-          __html: `(function(h,o,t,j,a,r){
-        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
-        h._hjSettings={hjid:${process.env.NEXT_PUBLIC_HOTJAR_SITE_ID},hjsv:6};
-        a=o.getElementsByTagName('head')[0];
-        r=o.createElement('script');r.async=1;
-        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
-        a.appendChild(r);
-    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');`,
-        }}
-      />
+      {isProd && (
+        <Script
+          id="hotjar"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `(function(h,o,t,j,a,r){
+                h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+                h._hjSettings={hjid:${process.env.NEXT_PUBLIC_HOTJAR_SITE_ID},hjsv:6};
+                a=o.getElementsByTagName('head')[0];
+                r=o.createElement('script');r.async=1;
+                r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+                a.appendChild(r);
+              })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');`,
+          }}
+        />
+      )}
       <QueryClientProvider client={queryClient.current}>
         <Hydrate state={pageProps.dehydratedState}>
           <RecoilRoot>
