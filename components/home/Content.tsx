@@ -1,11 +1,11 @@
-import { useState } from 'react'
-import { useMount } from 'react-use'
+import { useEffect, useState } from 'react'
+import { useRecoilValue } from 'recoil'
 import { AnimatePresence } from 'framer-motion'
-import store from 'store'
 import styles from './styles/Content.module.scss'
 
-import STORAGE_KEYS from 'constants/storageKeys'
-import { useWithdrawable } from './useWithdrawable'
+import { legacyModeState } from 'app/states/settings'
+import { useUnstakeTimestamps } from 'hooks'
+import { UnstakeStatus } from 'hooks/useUnstakeTimestamps'
 import { Tab } from './constants'
 
 import { StakeForm } from './StakeForm'
@@ -15,15 +15,16 @@ import { UnstakeSidebar } from './UnstakeSidebar'
 import { TabMenu } from './TabMenu'
 
 export function Content() {
+  const { unstakeStatus } = useUnstakeTimestamps()
   const [tab, setTab] = useState<Tab>(Tab.Stake)
-  const { isWithdrawable } = useWithdrawable()
 
-  useMount(() => {
-    const isUnstakeWindow = store.get(STORAGE_KEYS.Unstake.Initiated)
-    if (isUnstakeWindow) {
-      setTab(isUnstakeWindow ? Tab.Unstake : Tab.Stake)
-    }
-  })
+  const legacyMode = useRecoilValue(legacyModeState)
+
+  const isWithdrawable = unstakeStatus === UnstakeStatus.Withdrawable
+
+  useEffect(() => {
+    setTab(Tab.Stake)
+  }, [legacyMode])
 
   return (
     <div className={styles.content}>
