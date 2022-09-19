@@ -1,7 +1,7 @@
+import { coingeckoClient } from 'services/coingeckoClient'
+import { configService } from 'services/config'
 import { convertAddress, uniqAddress } from 'utils/address'
 import { createLogger } from 'utils/log'
-import { coingeckoClient } from './coingeckoClient'
-import { configService } from './config'
 
 type PriceResponse = { [id: string]: TokenFiatPrice }
 

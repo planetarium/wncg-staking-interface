@@ -5,7 +5,7 @@ import { useSetRecoilState } from 'recoil'
 import { invalidPriceState } from 'app/states/error'
 import { TOKEN_PRICES_PLACEHOLDERS } from 'constants/tokens'
 import { configService } from 'services/config'
-import { fetchNativeAssetPrice, fetchTokenPrices } from 'services/price'
+import { fetchNativeAssetPrice, fetchTokenPrices } from 'lib/coingecko'
 import { usePool } from './usePool'
 
 const options = {
