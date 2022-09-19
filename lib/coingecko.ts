@@ -30,11 +30,13 @@ export async function fetchNativeAssetPrice(): Promise<TokenPrices> {
 }
 
 export async function fetchTokenPrices(
-  addresses: string[] = []
+  _addresses: string[] = []
 ): Promise<TokenPrices> {
+  const addresses = uniqAddress(_addresses)
   const tokenAddresses = uniqAddress(
     addresses.map((address) => convertAddress(address))
   )
+
   const key = `${tokenAddresses.length} token price${
     tokenAddresses.length === 1 ? '' : 's'
   }`
@@ -49,7 +51,7 @@ export async function fetchTokenPrices(
 
     logger(key)
     const responses = await Promise.all(requests)
-    return parsePriceResponses(responses, tokenAddresses)
+    return parsePriceResponses(responses, addresses)
   } catch (error) {
     logger(key, error)
     throw error
@@ -69,9 +71,11 @@ function parsePriceResponses(
   )
 
   const prices = Object.values(results)
+
   const parsedPrices = prices.map((price, i) => [
     addresses[i],
     price?.usd?.toString() || '0',
   ])
+
   return Object.fromEntries(parsedPrices)
 }

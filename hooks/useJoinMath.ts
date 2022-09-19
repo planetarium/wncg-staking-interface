@@ -78,26 +78,36 @@ export function useJoinMath() {
     (isNativeAsset: boolean) => {
       const _balances = calcUserPoolTokenBalancesAvailable(isNativeAsset)
 
-      const propMinAmounts = _balances.map((balance, i) => {
+      const _propMinAmounts = _balances.map((balance, i) => {
         return (
           calculator?.propAmountsGiven(balance, i, 'send')?.send || ['0', '0']
         )
       })
 
-      const propMinAmountsInFiatValue = propMinAmounts.map((amounts) => {
-        return amounts
-          .reduce((total, amount, i) => {
-            const address = poolTokenAddresses[i]
-            if (!address) return total
-            return total.plus(toFiat(address, amount))
-          }, bnum(0))
-          .toNumber()
+      const feasiblePropMinAmounts = _propMinAmounts.filter((amounts, i) => {
+        const counterIndex = i === 0 ? 1 : 0
+        return bnum(amounts[counterIndex]).isLessThanOrEqualTo(
+          _balances[counterIndex]
+        )
       })
+
+      const propMinAmountsInFiatValue = feasiblePropMinAmounts.map(
+        (amounts) => {
+          return amounts
+            .reduce((total, amount, i) => {
+              const address = poolTokenAddresses[i]
+              if (!address) return total
+              return total.plus(toFiat(address, amount))
+            }, bnum(0))
+            .toNumber()
+        }
+      )
+
       const minIndex = propMinAmountsInFiatValue.indexOf(
         Math.min(...propMinAmountsInFiatValue)
       )
 
-      return propMinAmounts[minIndex] || ['0', '0']
+      return feasiblePropMinAmounts[minIndex] || ['0', '0']
     },
     [calcUserPoolTokenBalancesAvailable, calculator, poolTokenAddresses, toFiat]
   )
