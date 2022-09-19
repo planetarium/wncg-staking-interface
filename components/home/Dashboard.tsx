@@ -1,17 +1,13 @@
 import { memo, MouseEvent } from 'react'
-import { useRecoilValue } from 'recoil'
-import { isSameAddress } from '@balancer-labs/sdk'
 import clsx from 'clsx'
 import styles from './styles/Dashboard.module.scss'
 
 import { ModalCategory } from 'app/states/modal'
-import { legacyModeState } from 'app/states/settings'
 import {
   countUpOption,
   percentCountUpOption,
   usdCountUpOption,
 } from 'constants/countUp'
-import { configService } from 'services/config'
 import { gaEvent } from 'lib/gtag'
 import { getTokenSymbol } from 'utils/token'
 import {
@@ -31,8 +27,6 @@ function Dashboard() {
   const { addModal } = useModal()
   const { rewards, rewardsInFiatValue, rewardTokensList } = useRewards()
   const { totalStaked } = useStaking()
-
-  const legacyMode = useRecoilValue(legacyModeState)
 
   function handleClaim(e: MouseEvent) {
     e.stopPropagation()
@@ -98,15 +92,7 @@ function Dashboard() {
               <div key={`rewardApr.${address}`} className={styles.detailItem}>
                 <dt>{symbol} APR</dt>
                 <dd>
-                  {!legacyMode && isSameAddress(address, configService.bal) ? (
-                    'Bootstrapping...'
-                  ) : (
-                    <CountUp
-                      {...percentCountUpOption}
-                      end={aprs[i]}
-                      showAlways
-                    />
-                  )}
+                  <CountUp {...percentCountUpOption} end={aprs[i]} showAlways />
                 </dd>
               </div>
             )
