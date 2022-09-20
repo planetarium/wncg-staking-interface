@@ -4,7 +4,8 @@ import { useInfiniteQuery } from '@tanstack/react-query'
 import { formatDistanceToNow } from 'date-fns'
 import styles from './styles/RecentTrades.module.scss'
 
-import { fetchPoolSwaps, getNextPageParam } from 'lib/graphql'
+import { fetchPoolSwaps, getNextPageParam, itemsPerPage } from 'lib/graphql'
+import { gaEvent } from 'lib/gtag'
 import { truncateAddress } from 'utils/string'
 import { getTokenSymbol } from 'utils/token'
 import { getTxUrl } from 'utils/url'
@@ -12,6 +13,19 @@ import { getTxUrl } from 'utils/url'
 import { Icon } from 'components/Icon'
 import { Jazzicon } from 'components/Jazzicon'
 import { TokenIcon } from 'components/TokenIcon'
+
+function createOpenEtherscanHandler(address: string) {
+  return function () {
+    gaEvent({
+      name: 'open_etherscan',
+      params: {
+        type: 'tx',
+        dataType: 'swap',
+        address,
+      },
+    })
+  }
+}
 
 function PoolRecentTrades() {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
@@ -24,6 +38,13 @@ function PoolRecentTrades() {
   function loadMore() {
     if (!hasNextPage || isFetchingNextPage) return
     fetchNextPage()
+    const length = ((data?.pages.length || 0) + 1) * itemsPerPage
+    gaEvent({
+      name: `load_more_swaps`,
+      params: {
+        length,
+      },
+    })
   }
 
   const isEmpty = data?.pages[0]?.length === 0
@@ -101,6 +122,7 @@ function PoolRecentTrades() {
                         })}
                         <a
                           href={getTxUrl(swap.tx)}
+                          onClick={createOpenEtherscanHandler(swap.tx)}
                           target="_blank"
                           rel="noreferrer"
                           aria-label="See transaction detail in Etherscan"

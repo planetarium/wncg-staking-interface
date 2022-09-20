@@ -56,9 +56,10 @@ export function AccountSidebar({ close }: AccountSidebarProps) {
 
   function handleEtherscan() {
     gaEvent({
-      name: 'open_account_etherscan',
+      name: 'open_etherscan',
       params: {
-        account,
+        type: 'account',
+        address: account,
       },
     })
   }

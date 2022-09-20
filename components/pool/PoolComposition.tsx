@@ -1,19 +1,42 @@
 /* eslint-disable react/jsx-no-target-blank */
-import { memo } from 'react'
+import { memo, useMemo } from 'react'
 import NumberFormat from 'react-number-format'
 import styles from './styles/PoolComposition.module.scss'
 
+import { gaEvent } from 'lib/gtag'
 import { getBalancerPoolUrl, getEtherscanUrl } from 'utils/url'
 import { usePool, useFiatCurrency } from 'hooks'
 
 import { Icon } from 'components/Icon'
 import { TokenIcon } from 'components/TokenIcon'
 
+function handleGoToBalancer() {
+  gaEvent({
+    name: `open_balancer_pool`,
+  })
+}
+
+function createOpenEtherscanHandler(address: string) {
+  return function () {
+    gaEvent({
+      name: 'open_etherscan',
+      params: {
+        type: 'token',
+        address,
+      },
+    })
+  }
+}
+
 function PoolComposition() {
   const { toFiat } = useFiatCurrency()
   const { poolId, poolTokens } = usePool()
 
   const balancerUrl = getBalancerPoolUrl(poolId)
+  const openEtherscanHandlers = useMemo(
+    () => poolTokens.map((token) => createOpenEtherscanHandler(token.address)),
+    [poolTokens]
+  )
 
   return (
     <section className={styles.poolComposition}>
@@ -22,6 +45,7 @@ function PoolComposition() {
         <a
           className={styles.balancerLink}
           href={balancerUrl}
+          onClick={handleGoToBalancer}
           target="_blank"
           rel="noopener"
         >
@@ -41,7 +65,7 @@ function PoolComposition() {
             </tr>
           </thead>
           <tbody>
-            {poolTokens.map((token) => {
+            {poolTokens.map((token, i) => {
               const symbol = token.symbol.toLowerCase()
               const usdValue = toFiat(token.address, token.balance)
               const url = getEtherscanUrl(token.address)
@@ -55,6 +79,7 @@ function PoolComposition() {
                       <a
                         className={styles.externalLink}
                         href={url}
+                        onClick={openEtherscanHandlers[i]}
                         target="_blank"
                         rel="noreferrer"
                         aria-label="Open Etherscan"

@@ -3,6 +3,8 @@ import Link from 'next/link'
 import Head from 'next/head'
 import styles from 'styles/Pool.module.scss'
 
+import { gaEvent } from 'lib/gtag'
+
 import { Icon } from 'components/Icon'
 import PageWrapper from 'components/StakingPageWrapper'
 import MyPoolBalance from 'components/pool/MyPoolBalance'
@@ -11,6 +13,15 @@ import PoolInvestments from 'components/pool/Investments'
 import PoolRecentTrades from 'components/pool/RecentTrades'
 
 const WncgPool: NextPage = () => {
+  function handleClick() {
+    gaEvent({
+      name: `go_main`,
+      params: {
+        from: `pool`,
+      },
+    })
+  }
+
   return (
     <>
       <Head>
@@ -20,7 +31,7 @@ const WncgPool: NextPage = () => {
       <PageWrapper>
         <div className={styles.container}>
           <Link href="/wncg">
-            <a className={styles.backButton}>
+            <a className={styles.backButton} onClick={handleClick}>
               <Icon id="arrowRight" />
               Go Main
             </a>

@@ -4,7 +4,9 @@ import type { UseFormReturn } from 'react-hook-form'
 import { ModalCategory } from 'app/states/modal'
 import { HIGH_PRICE_IMPACT, REKT_PRICE_IMPACT } from 'constants/poolLiquidity'
 import { configService } from 'services/config'
+import { gaEvent } from 'lib/gtag'
 import { bnum, hasAmounts, sanitizeNumber } from 'utils/num'
+import { getTokenSymbol } from 'utils/token'
 import { useJoinMath, useModal, usePool, useFiatCurrency } from 'hooks'
 import type { JoinFormFields } from './type'
 
@@ -69,13 +71,20 @@ export function useJoinForm(
 
       if (inputName === 'wncgAmount') {
         setValue('wncgAmount', userTokenBalancesAvailable[wncgIndex])
+        gaEvent({
+          name: `max_wncg`,
+        })
         return
       }
       setValue('ethAmount', userTokenBalancesAvailable[nativeAssetIndex])
+      gaEvent({
+        name: `max_${isNativeAsset ? 'eth' : 'weth'}`,
+      })
       trigger()
     },
     [
       clearErrors,
+      isNativeAsset,
       nativeAssetIndex,
       setValue,
       trigger,
@@ -93,8 +102,23 @@ export function useJoinForm(
       const propAmounts = calcPropAmounts(amounts, currentTokenIndex)
       setValue(inputName, propAmounts[currentTokenIndex])
       trigger(inputName)
+
+      gaEvent({
+        name: `join_proportional_to`,
+        params: {
+          token: getTokenSymbol(rawPoolTokenAddresses[currentTokenIndex]),
+        },
+      })
     },
-    [amounts, calcPropAmounts, nativeAssetIndex, setValue, trigger, wncgIndex]
+    [
+      amounts,
+      calcPropAmounts,
+      nativeAssetIndex,
+      rawPoolTokenAddresses,
+      setValue,
+      trigger,
+      wncgIndex,
+    ]
   )
 
   function togglePriceImpactAgreement(value: boolean) {
@@ -107,6 +131,10 @@ export function useJoinForm(
 
     clearErrors()
     trigger()
+
+    gaEvent({
+      name: `join_max`,
+    })
   }, [
     clearErrors,
     nativeAssetIndex,
@@ -123,6 +151,10 @@ export function useJoinForm(
 
     clearErrors()
     trigger()
+
+    gaEvent({
+      name: `join_optimized`,
+    })
   }, [
     calcOptimizedAmounts,
     clearErrors,

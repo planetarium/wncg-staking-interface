@@ -3,6 +3,8 @@ import { AnimatePresence } from 'framer-motion'
 import clsx from 'clsx'
 import styles from '../styles/Slippage.module.scss'
 
+import { gaEvent } from 'lib/gtag'
+
 import { Icon } from 'components/Icon'
 import SlippageMenu from './Menu'
 
@@ -11,7 +13,14 @@ function Slippage() {
 
   function toggle(e: MouseEvent<HTMLButtonElement>) {
     e.stopPropagation()
-    setShow((prev) => !prev)
+    setShow((prev) => {
+      if (!prev) {
+        gaEvent({
+          name: `open_slippage`,
+        })
+      }
+      return !prev
+    })
   }
 
   function close() {

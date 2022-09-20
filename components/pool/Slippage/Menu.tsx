@@ -13,6 +13,7 @@ import clsx from 'clsx'
 import styles from '../styles/Slippage.module.scss'
 
 import { slippageState } from 'app/states/settings'
+import { gaEvent } from 'lib/gtag'
 import { useSettings } from 'hooks'
 import { menuTransition, menuVariants, SLIPPAGES } from './constants'
 
@@ -30,10 +31,22 @@ function SlippageMenu({ close }: SlippageMenuProps) {
 
   function handleButtonClick(e: ReactMouseEvent<HTMLButtonElement>) {
     updateSlippage(e.currentTarget.value)
+    gaEvent({
+      name: `set_slippage`,
+      params: {
+        tolerance: e.currentTarget.value,
+      },
+    })
   }
 
   function handleInputBlur(e: FocusEvent<HTMLInputElement>) {
     updateSlippage(e.currentTarget.value)
+    gaEvent({
+      name: `set_slippage`,
+      params: {
+        tolerance: e.currentTarget.value,
+      },
+    })
   }
 
   function handleInputChange() {

@@ -23,6 +23,7 @@ type ButtonProps = DetailedHTMLProps<
 > & {
   children: ReactNode
   ariaLabel?: string
+  dataset?: Record<string, string>
   fullWidth?: boolean
   href?: string
   loading?: boolean
@@ -38,6 +39,7 @@ function Button(
     children,
     ariaLabel,
     className,
+    dataset = {},
     disabled,
     fullWidth,
     href,
@@ -53,6 +55,9 @@ function Button(
   }: ButtonProps,
   ref: ForwardedRef<HTMLButtonElement | HTMLAnchorElement>
 ) {
+  const datasetMap = Object.fromEntries(
+    Object.entries(dataset).map(([key, value]) => [`data-${key}`, value])
+  )
   const nestedClassName = useMemo(
     () =>
       clsx(
@@ -81,6 +86,7 @@ function Button(
         disabled={disabled}
         onClick={onClick}
         aria-label={ariaLabel}
+        {...datasetMap}
         {...props}
       >
         {loading && (
@@ -105,6 +111,7 @@ function Button(
       target={target}
       rel={target === '_blank' ? 'noopener' : undefined}
       aria-label={ariaLabel}
+      {...datasetMap}
     >
       {loading && (
         <Lottie

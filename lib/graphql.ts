@@ -9,7 +9,7 @@ const logger = createLogger('purple')
 
 const endpoint = configService.subgraph
 const poolId = configService.env.poolId
-const itemsPerPage = 5
+export const itemsPerPage = 5
 
 const fetchPoolQuery = {
   query: {

@@ -3,6 +3,7 @@ import clsx from 'clsx'
 import styles from '../styles/Widget.module.scss'
 
 import { countUpOption, usdCountUpOption } from 'constants/countUp'
+import { gaEvent } from 'lib/gtag'
 import { getTokenInfo } from 'utils/token'
 import { useFiatCurrency } from 'hooks'
 
@@ -12,20 +13,31 @@ type MyWalletItemProps = {
   address: string
   balance: string
   isSelected?: boolean
-  handleSelect?(e: MouseEvent<HTMLDivElement>): void
+  select?(e: MouseEvent<HTMLDivElement>): void
 }
 
 function MyWalletItem({
   address,
   balance,
   isSelected,
-  handleSelect,
+  select,
 }: MyWalletItemProps) {
   const { toFiat } = useFiatCurrency()
   const fiatValue = toFiat(address, balance)
 
   const { symbol, name } = getTokenInfo(address)
-  const isSelectable = !!handleSelect
+  const isSelectable = !!select
+
+  function handleSelect(e: MouseEvent<HTMLDivElement>) {
+    if (!select) return
+    select(e)
+    gaEvent({
+      name: `select_ether`,
+      params: {
+        ether: symbol.toLowerCase(),
+      },
+    })
+  }
 
   return (
     <div

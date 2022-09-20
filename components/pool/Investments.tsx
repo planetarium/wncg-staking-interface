@@ -7,7 +7,8 @@ import clsx from 'clsx'
 import styles from './styles/Investments.module.scss'
 
 import { accountState } from 'app/states/connection'
-import { fetchPoolJoinExits, getNextPageParam } from 'lib/graphql'
+import { fetchPoolJoinExits, getNextPageParam, itemsPerPage } from 'lib/graphql'
+import { gaEvent } from 'lib/gtag'
 import { bnum } from 'utils/num'
 import { getTxUrl } from 'utils/url'
 import { usePool, useFiatCurrency } from 'hooks'
@@ -15,6 +16,19 @@ import { usePool, useFiatCurrency } from 'hooks'
 import { Checkbox } from 'components/Checkbox'
 import { Icon } from 'components/Icon'
 import { TokenIcon } from 'components/TokenIcon'
+
+function createOpenEtherscanHandler(address: string) {
+  return function () {
+    gaEvent({
+      name: 'open_etherscan',
+      params: {
+        type: 'tx',
+        dataType: 'joinExit',
+        address,
+      },
+    })
+  }
+}
 
 function PoolInvestments() {
   const [showMine, setShowMine] = useState(false)
@@ -34,7 +48,17 @@ function PoolInvestments() {
 
   function loadMore() {
     if (!hasNextPage || isFetchingNextPage) return
+
     fetchNextPage()
+
+    const length = ((data?.pages.length || 0) + 1) * itemsPerPage
+    gaEvent({
+      name: `load_more_investments`,
+      params: {
+        length,
+        showMine: showMine,
+      },
+    })
   }
 
   const isEmpty = data?.pages[0]?.length === 0
@@ -43,7 +67,16 @@ function PoolInvestments() {
 
   function toggleShowMine() {
     if (!account) return
-    setShowMine((prev) => !prev)
+    setShowMine((prev) => {
+      gaEvent({
+        name: `show_my_investments`,
+        params: {
+          account,
+          show: !prev,
+        },
+      })
+      return !prev
+    })
   }
 
   return (
@@ -110,6 +143,7 @@ function PoolInvestments() {
                         })}
                         <a
                           href={getTxUrl(investment.tx)}
+                          onClick={createOpenEtherscanHandler(investment.tx)}
                           target="_blank"
                           rel="noreferrer"
                           aria-label="See transaction detail in Etherscan"
