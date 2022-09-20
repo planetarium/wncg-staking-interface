@@ -5,12 +5,22 @@ import Head from 'next/head'
 import styles from 'styles/form.module.scss'
 
 import { configService } from 'services/config'
+import { gaEvent } from 'lib/gtag'
 
 import { Icon } from 'components/Icon'
 import PageWrapper from 'components/StakingPageWrapper'
 import JoinForm from 'components/pool/JoinForm'
 import MyBalance from 'components/pool/MyBalance'
 import MyWallet from 'components/pool/MyWallet'
+
+function handleClick() {
+  gaEvent({
+    name: `go_main`,
+    params: {
+      from: `join`,
+    },
+  })
+}
 
 const WncgJoinPool: NextPage = () => {
   const [currentEther, setCurrentEther] = useState(
@@ -30,7 +40,7 @@ const WncgJoinPool: NextPage = () => {
       <PageWrapper>
         <div className={styles.container}>
           <Link href="/wncg">
-            <a className={styles.backButton}>
+            <a className={styles.backButton} onClick={handleClick}>
               <Icon id="arrowRight" />
               Go Main
             </a>

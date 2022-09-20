@@ -107,7 +107,7 @@ function MyWallet({ currentEther, selectEther }: MyWalletProps) {
                   address={address}
                   balance={balanceFor(address)}
                   isSelected={address === currentEther}
-                  handleSelect={handleSelectEther}
+                  select={handleSelectEther}
                 />
               ))}
             </dl>

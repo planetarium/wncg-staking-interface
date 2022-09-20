@@ -1,10 +1,11 @@
-import { memo } from 'react'
+import { memo, MouseEvent } from 'react'
 
 import { useRecoilValue } from 'recoil'
 import styles from './styles/MyPoolBalance.module.scss'
 
 import { connectedState } from 'app/states/connection'
 import { countUpOption, usdCountUpOption } from 'constants/countUp'
+import { gaEvent } from 'lib/gtag'
 import {
   useBalances,
   useCalculator,
@@ -30,6 +31,15 @@ function MyPoolBalance() {
 
   const propAmounts = calculator?.propAmountsGiven(bptBalance, 0, 'send')
     .receive || ['0', '0']
+
+  function handlePoolAction(e: MouseEvent) {
+    const { action } = (e.currentTarget as HTMLAnchorElement).dataset
+    return function () {
+      gaEvent({
+        name: `${action}_pool`,
+      })
+    }
+  }
 
   return (
     <section className={styles.myPoolBalance}>
@@ -79,11 +89,19 @@ function MyPoolBalance() {
       <div className={styles.buttonGroup}>
         {isConnected ? (
           <>
-            <Button href="/wncg/pool/join" size="large" fullWidth>
+            <Button
+              href="/wncg/pool/join"
+              onClick={handlePoolAction}
+              dataset={{ action: 'join' }}
+              size="large"
+              fullWidth
+            >
               Join Pool
             </Button>
             <Button
               href="/wncg/pool/exit"
+              onClick={handlePoolAction}
+              dataset={{ action: 'exit' }}
               variant="secondary"
               size="large"
               fullWidth

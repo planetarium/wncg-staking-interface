@@ -3,11 +3,22 @@ import Link from 'next/link'
 import Head from 'next/head'
 import styles from 'styles/form.module.scss'
 
+import { gaEvent } from 'lib/gtag'
+
 import { Icon } from 'components/Icon'
 import PageWrapper from 'components/StakingPageWrapper'
 import ExitForm from 'components/pool/ExitForm'
 import MyWallet from 'components/pool/MyWallet'
 import MyBalance from 'components/pool/MyBalance'
+
+function handleClick() {
+  gaEvent({
+    name: `go_main`,
+    params: {
+      from: `exit`,
+    },
+  })
+}
 
 const WncgExitPool: NextPage = () => {
   return (
@@ -19,7 +30,7 @@ const WncgExitPool: NextPage = () => {
       <PageWrapper>
         <div className={styles.container}>
           <Link href="/wncg">
-            <a className={styles.backButton}>
+            <a className={styles.backButton} onClick={handleClick}>
               <Icon id="arrowRight" />
               Go Main
             </a>
