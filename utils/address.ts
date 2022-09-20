@@ -10,7 +10,7 @@ export function revertAddress(address: string) {
 
 export function convertAddress(address: string) {
   const addressMap = TOKENS.PriceChainMap
-  return addressMap[address.toLowerCase()] || address
+  return addressMap[address.toLowerCase()] || address.toLowerCase()
 }
 
 export function uniqAddress(_addresses: string[]) {
