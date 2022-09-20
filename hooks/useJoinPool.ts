@@ -5,6 +5,7 @@ import { parseUnits } from 'ethers/lib/utils'
 import { accountState } from 'app/states/connection'
 import { joinPool as initJoinPool } from 'contracts/vault'
 import { configService } from 'services/config'
+import { gaEvent } from 'lib/gtag'
 import { useJoinMath } from './useJoinMath'
 import { usePool } from './usePool'
 import { useTx } from './useTx'
@@ -44,6 +45,14 @@ export function useJoinPool() {
         poolId,
       })
       subscribeTx?.(response)
+
+      gaEvent({
+        name: `join_pool`,
+        params: {
+          account,
+          amounts: amountsIn,
+        },
+      })
     },
     [
       account,

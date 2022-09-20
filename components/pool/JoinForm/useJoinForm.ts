@@ -131,6 +131,10 @@ export function useJoinForm(
 
     clearErrors()
     trigger()
+
+    gaEvent({
+      name: `join_max`,
+    })
   }, [
     clearErrors,
     nativeAssetIndex,
@@ -147,6 +151,10 @@ export function useJoinForm(
 
     clearErrors()
     trigger()
+
+    gaEvent({
+      name: `join_optimized`,
+    })
   }, [
     calcOptimizedAmounts,
     clearErrors,

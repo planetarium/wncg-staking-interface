@@ -6,6 +6,7 @@ import styles from 'styles/form.module.scss'
 
 import { configService } from 'services/config'
 import { gaEvent } from 'lib/gtag'
+import { getTokenSymbol } from 'utils/token'
 
 import { Icon } from 'components/Icon'
 import PageWrapper from 'components/StakingPageWrapper'
@@ -29,6 +30,12 @@ const WncgJoinPool: NextPage = () => {
 
   function selectEther(value: string) {
     setCurrentEther(value)
+    gaEvent({
+      name: `select_ether`,
+      params: {
+        ether: getTokenSymbol(value),
+      },
+    })
   }
 
   return (

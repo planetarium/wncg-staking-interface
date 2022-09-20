@@ -4,7 +4,9 @@ import type { UseFormReturn } from 'react-hook-form'
 import { ModalCategory } from 'app/states/modal'
 import { HIGH_PRICE_IMPACT, REKT_PRICE_IMPACT } from 'constants/poolLiquidity'
 import { configService } from 'services/config'
+import { gaEvent } from 'lib/gtag'
 import { bnum, hasAmounts, sanitizeNumber } from 'utils/num'
+import { getTokenSymbol } from 'utils/token'
 import { useExitMath, useModal, usePool, useFiatCurrency } from 'hooks'
 import type { ExitFormFields } from './type'
 
@@ -48,13 +50,29 @@ export function useExitForm(useFormReturn: UseFormReturn<ExitFormFields>) {
   const setMaxValue = useCallback(() => {
     setValue('tokenOutAmount', singleAssetsMaxes[tokenOutIndex] || '0')
     clearErrors('tokenOutAmount')
-  }, [clearErrors, setValue, singleAssetsMaxes, tokenOutIndex])
+    gaEvent({
+      name: `exit_max`,
+      params: {
+        token: getTokenSymbol(exitType),
+      },
+    })
+  }, [clearErrors, exitType, setValue, singleAssetsMaxes, tokenOutIndex])
 
   function setExitType(value: string) {
     setValue('exitType', value)
     setValue('percent', 100)
     setValue('tokenOutAmount', '')
     trigger()
+
+    const _isProportional = value === 'all'
+
+    gaEvent({
+      name: `select_exit_type`,
+      params: {
+        type: _isProportional ? `proportional_exit` : `single_token_out`,
+        token: _isProportional ? undefined : getTokenSymbol(value),
+      },
+    })
   }
 
   function togglePriceImpactAgreement(value: boolean) {

@@ -5,6 +5,7 @@ import { parseUnits } from 'ethers/lib/utils'
 import { accountState } from 'app/states/connection'
 import { exitPool as initExitPool } from 'contracts/vault'
 import { configService } from 'services/config'
+import { gaEvent } from 'lib/gtag'
 import { useExitMath } from './useExitMath'
 import { usePool } from './usePool'
 import { useTx } from './useTx'
@@ -78,6 +79,14 @@ export function useExitPool() {
         tokenOutIndex,
       })
       subscribeTx?.(response)
+      gaEvent({
+        name: `exit_pool`,
+        params: {
+          account,
+          amounts: amountsOut,
+          bptIn,
+        },
+      })
       return response.hash
     },
     [
