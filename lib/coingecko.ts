@@ -33,12 +33,10 @@ export async function fetchTokenPrices(
   _addresses: string[] = []
 ): Promise<TokenPrices> {
   const addresses = uniqAddress(_addresses)
-  const tokenAddresses = uniqAddress(
-    addresses.map((address) => convertAddress(address))
-  )
+  const tokenAddresses = addresses.map((address) => convertAddress(address))
 
-  const key = `${tokenAddresses.length} token price${
-    tokenAddresses.length === 1 ? '' : 's'
+  const key = `${addresses.length} token price${
+    addresses.length === 1 ? '' : 's'
   }`
 
   try {
