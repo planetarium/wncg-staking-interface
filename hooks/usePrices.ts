@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from 'react'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useSetRecoilState } from 'recoil'
 
 import { invalidPriceState } from 'app/states/error'
@@ -15,6 +15,8 @@ const options = {
 }
 
 export function usePrices() {
+  const queryClient = useQueryClient()
+
   const setInvalidPrice = useSetRecoilState(invalidPriceState)
 
   const { bptAddress, ercTokenIndex, poolService, poolTokenAddresses } =
@@ -33,7 +35,13 @@ export function usePrices() {
       ...options,
       placeholderData: TOKEN_PRICES_PLACEHOLDERS,
       onError() {
-        setInvalidPrice(true)
+        const state = queryClient.getQueryData<TokenPrices>([
+          'fallbackTokenPrices',
+        ])
+        queryClient.setQueryData(
+          ['tokenPrices', addresses],
+          state || TOKEN_PRICES_PLACEHOLDERS
+        )
       },
       onSuccess() {
         setInvalidPrice(false)
