@@ -58,7 +58,11 @@ export function useJoinForm(
   const ethValue = sanitizeNumber(_ethValue)
   const wncgValue = sanitizeNumber(_wncgValue)
   const priceImpactAgreement = watch('priceImpactAgreement')
-  const amounts = useMemo(() => [wncgValue, ethValue], [ethValue, wncgValue])
+  const amounts = useMemo(
+    () =>
+      nativeAssetIndex === 0 ? [ethValue, wncgValue] : [wncgValue, ethValue],
+    [ethValue, nativeAssetIndex, wncgValue]
+  )
 
   const optimizedMinAmounts = calcOptimizedAmounts(isNativeAsset)
 
