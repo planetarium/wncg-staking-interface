@@ -27,7 +27,7 @@ type WithdrawPreviewModalProps = {
   resetForm(): void
 }
 
-export function WithdrawPreviewModal({
+function WithdrawPreviewModal({
   amount,
   resetForm,
 }: WithdrawPreviewModalProps) {
@@ -103,3 +103,5 @@ export function WithdrawPreviewModal({
     </div>
   )
 }
+
+export default WithdrawPreviewModal

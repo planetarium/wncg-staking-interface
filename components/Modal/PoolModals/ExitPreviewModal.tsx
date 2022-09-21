@@ -26,7 +26,7 @@ type ExitPreviewModalProps = {
   totalFiatValue: string
 }
 
-export function ExitPreviewModal({
+function ExitPreviewModal({
   amounts,
   exactOut,
   isProportional,
@@ -154,3 +154,5 @@ export function ExitPreviewModal({
     </div>
   )
 }
+
+export default ExitPreviewModal

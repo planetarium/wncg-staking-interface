@@ -17,7 +17,7 @@ type JoinPreviewModalProps = {
   totalFiatValue: string
 }
 
-export function JoinPreviewModal({
+function JoinPreviewModal({
   amounts,
   isNativeAsset,
   priceImpact,
@@ -64,3 +64,5 @@ export function JoinPreviewModal({
     </div>
   )
 }
+
+export default JoinPreviewModal

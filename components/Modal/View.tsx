@@ -10,14 +10,15 @@ import {
   modalMobileVariants,
   overlayVariants,
 } from './constants'
+import dynamic from 'next/dynamic'
 
-import { ExitPreviewModal } from './PoolModals/ExitPreviewModal'
-import { JoinPreviewModal } from './PoolModals/JoinPreviewModal'
-import { ClaimRewardModal } from './ClaimRewardModal'
-import { ConnectModal } from './ConnectModal'
-import { MetaMaskGuideModal } from './MetaMaskGuideModal'
-import { StakeWarningModal } from './StakeWarningModal'
-import { WithdrawPreviewModal } from './WithdrawPreviewModal'
+const ExitPreviewModal = dynamic(() => import('./PoolModals/ExitPreviewModal'))
+const JoinPreviewModal = dynamic(() => import('./PoolModals/JoinPreviewModal'))
+const ClaimRewardModal = dynamic(() => import('./ClaimRewardModal'))
+const ConnectModal = dynamic(() => import('./ConnectModal'))
+const MetaMaskGuideModal = dynamic(() => import('./MetaMaskGuideModal'))
+const StakeWarningModal = dynamic(() => import('./StakeWarningModal'))
+const WithdrawPreviewModal = dynamic(() => import('./WithdrawPreviewModal'))
 
 type ModalViewProps = {
   modal: Modal

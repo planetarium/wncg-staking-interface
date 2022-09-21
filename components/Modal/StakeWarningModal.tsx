@@ -13,7 +13,7 @@ type StakeWarningModalProps = {
   stake(): void
 }
 
-export function StakeWarningModal({ stake }: StakeWarningModalProps) {
+function StakeWarningModal({ stake }: StakeWarningModalProps) {
   const [checked, setChecked] = useState(false)
 
   const { removeModal } = useModal()
@@ -73,3 +73,5 @@ export function StakeWarningModal({ stake }: StakeWarningModalProps) {
     </div>
   )
 }
+
+export default StakeWarningModal

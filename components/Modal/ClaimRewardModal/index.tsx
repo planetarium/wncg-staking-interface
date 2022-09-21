@@ -15,7 +15,7 @@ import { Icon } from 'components/Icon'
 import { ClaimRewardEffects } from './Effects'
 import { RewardItem } from './RewardItem'
 
-export function ClaimRewardModal() {
+function ClaimRewardModal() {
   const [loading, setLoading] = useState<string | null>(null)
   const isConnected = useRecoilValue(connectedState)
 
@@ -109,3 +109,5 @@ export function ClaimRewardModal() {
     </div>
   )
 }
+
+export default ClaimRewardModal

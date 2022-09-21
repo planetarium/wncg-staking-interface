@@ -6,7 +6,7 @@ import { modalListState } from 'app/states/modal'
 import { ModalPortal } from './Portal'
 import { ModalView } from './View'
 
-export function Modal() {
+function Modal() {
   const modalList = useRecoilValue(modalListState)
 
   return (
@@ -19,3 +19,5 @@ export function Modal() {
     </ModalPortal>
   )
 }
+
+export default Modal

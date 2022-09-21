@@ -8,6 +8,7 @@ import {
 import { useMount } from 'react-use'
 import { RecoilRoot } from 'recoil'
 import type { AppProps, NextWebVitalsMetric } from 'next/app'
+import dynamic from 'next/dynamic'
 import Script from 'next/script'
 import { DefaultSeo } from 'next-seo'
 import 'react-toastify/dist/ReactToastify.css'
@@ -20,11 +21,12 @@ import { DEFAULT_SEO } from 'lib/seo'
 import { CoingeckoAlert } from 'components/CoingeckoAlert'
 import { GlobalFooter } from 'components/GlobalFooter'
 import { Gnb } from 'components/Gnb'
-import { Modal } from 'components/Modal'
 import { NetworkAlert } from 'components/NetworkAlert'
 import { ToastContainer } from 'components/ToastContainer'
 import MediaQueryEffects from 'components/Effects/MediaQueryEffects'
 import { ToastEffects } from 'components/Effects/ToastEffects'
+
+const Modal = dynamic(() => import('components/Modal'))
 
 function MyApp({ Component, pageProps }: AppProps) {
   const queryClient = useRef(new QueryClient())

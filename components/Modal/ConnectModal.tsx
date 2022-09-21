@@ -8,7 +8,7 @@ import { Button } from 'components/Button'
 import { Checkbox } from 'components/Checkbox'
 import { Icon } from 'components/Icon'
 
-export function ConnectModal() {
+function ConnectModal() {
   const { connect } = useConnection()
   const { removeModal } = useModal()
 
@@ -63,3 +63,5 @@ export function ConnectModal() {
     </div>
   )
 }
+
+export default ConnectModal

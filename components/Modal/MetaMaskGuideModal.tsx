@@ -7,7 +7,7 @@ import { useModal } from 'hooks'
 import { Button } from 'components/Button'
 import { Icon } from 'components/Icon'
 
-export function MetaMaskGuideModal() {
+function MetaMaskGuideModal() {
   const { removeModal } = useModal()
 
   function close() {
@@ -43,3 +43,5 @@ export function MetaMaskGuideModal() {
     </div>
   )
 }
+
+export default MetaMaskGuideModal
