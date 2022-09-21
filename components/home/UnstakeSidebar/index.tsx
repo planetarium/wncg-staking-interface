@@ -38,5 +38,4 @@ function UnstakeSidebar({ isWithdrawable }: UnstakeSidebarProps) {
   )
 }
 
-const MemoizedUnstakeSidebar = memo(UnstakeSidebar)
-export { MemoizedUnstakeSidebar as UnstakeSidebar }
+export default memo(UnstakeSidebar)

@@ -28,7 +28,7 @@ type UnstakeFormProps = {
   disabled: boolean
 }
 
-export function UnstakeForm({ disabled }: UnstakeFormProps) {
+function UnstakeForm({ disabled }: UnstakeFormProps) {
   const [checked, setChecked] = useState(false)
   const [loading, setLoading] = useState(false)
 
@@ -171,3 +171,5 @@ export function UnstakeForm({ disabled }: UnstakeFormProps) {
     </motion.section>
   )
 }
+
+export default UnstakeForm

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useRecoilValue } from 'recoil'
+import dynamic from 'next/dynamic'
 import { AnimatePresence } from 'framer-motion'
 import styles from './styles/Content.module.scss'
 
@@ -10,9 +11,10 @@ import { Tab } from './constants'
 
 import { StakeForm } from './StakeForm'
 import { StakeSidebar } from './StakeSidebar'
-import { UnstakeForm } from './UnstakeForm'
-import { UnstakeSidebar } from './UnstakeSidebar'
 import { TabMenu } from './TabMenu'
+
+const UnstakeForm = dynamic(() => import('./UnstakeForm'))
+const UnstakeSidebar = dynamic(() => import('./UnstakeSidebar'))
 
 export function Content() {
   const { unstakeStatus } = useUnstakeTimestamps()
