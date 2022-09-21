@@ -31,6 +31,9 @@ function StakingPageWrapper({ children, showBg }: StakingPageWrapperProps) {
     onError() {
       setInvalidPrice(true)
     },
+    onSuccess() {
+      setInvalidPrice(false)
+    },
   })
 
   useMount(() => {
