@@ -35,9 +35,6 @@ export async function fetchTokenPrices(
   const addresses = uniqAddress(_addresses)
   const tokenAddresses = addresses.map((address) => convertAddress(address))
 
-  console.log('addresses', addresses)
-  console.log('tokenAddresses', tokenAddresses)
-
   const key = `${tokenAddresses.length} token price${
     tokenAddresses.length === 1 ? '' : 's'
   }`

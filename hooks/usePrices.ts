@@ -72,8 +72,6 @@ export function usePrices() {
     }
   }, [bptAddress, bptPrice, nativeAssetPrice, prices])
 
-  console.log('priceMap', priceMap)
-
   const priceFor = useCallback(
     (address = '') => priceMap[address.toLowerCase()] || '0',
     [priceMap]
