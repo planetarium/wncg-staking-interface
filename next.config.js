@@ -1,6 +1,9 @@
 const path = require('path')
 
 const nextConfig = {
+  compiler: {
+    styledComponents: true,
+  },
   images: {
     loader: 'imgix',
     path: 'https://planetarium-gamefi.imgix.net',

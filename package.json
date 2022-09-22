@@ -46,6 +46,7 @@
     "recoil": "^0.7.4",
     "sass": "^1.50.1",
     "store": "^2.0.12",
+    "styled-components": "^5.3.5",
     "xstate": "^4.33.2"
   },
   "devDependencies": {
@@ -64,6 +65,7 @@
     "@types/react-toastify": "^4.1.0",
     "@types/sass": "^1.43.1",
     "@types/store": "^2.0.2",
+    "@types/styled-components": "^5.1.26",
     "eslint": "8.14.0",
     "eslint-config-next": "12.1.5",
     "eslint-plugin-react-hooks": "^4.6.0",

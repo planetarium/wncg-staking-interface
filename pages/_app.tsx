@@ -12,6 +12,7 @@ import dynamic from 'next/dynamic'
 import Script from 'next/script'
 import { DefaultSeo } from 'next-seo'
 import 'react-toastify/dist/ReactToastify.css'
+import { ThemeProvider } from 'styled-components'
 import 'styles/globals.scss'
 import 'styles/toast.scss'
 
@@ -20,7 +21,6 @@ import { DEFAULT_SEO } from 'lib/seo'
 
 import { CoingeckoAlert } from 'components/CoingeckoAlert'
 import { GlobalFooter } from 'components/GlobalFooter'
-import { Gnb } from 'components/Gnb'
 import { NetworkAlert } from 'components/NetworkAlert'
 import { ToastContainer } from 'components/ToastContainer'
 import MediaQueryEffects from 'components/Effects/MediaQueryEffects'
@@ -56,22 +56,24 @@ function MyApp({ Component, pageProps }: AppProps) {
           }}
         />
       )}
-      <QueryClientProvider client={queryClient.current}>
-        <Hydrate state={pageProps.dehydratedState}>
-          <RecoilRoot>
-            <DefaultSeo {...DEFAULT_SEO} />
-            <CoingeckoAlert />
-            <NetworkAlert />
-            <Gnb />
-            <Component {...pageProps} />
-            <ToastEffects />
-            <Modal />
-            <ToastContainer />
-            <GlobalFooter />
-            <MediaQueryEffects />
-          </RecoilRoot>
-        </Hydrate>
-      </QueryClientProvider>
+
+      <ThemeProvider theme={{}}>
+        <QueryClientProvider client={queryClient.current}>
+          <Hydrate state={pageProps.dehydratedState}>
+            <RecoilRoot>
+              <DefaultSeo {...DEFAULT_SEO} />
+              <CoingeckoAlert />
+              <NetworkAlert />
+              <Component {...pageProps} />
+              <ToastEffects />
+              <Modal />
+              <ToastContainer />
+              <GlobalFooter />
+              <MediaQueryEffects />
+            </RecoilRoot>
+          </Hydrate>
+        </QueryClientProvider>
+      </ThemeProvider>
     </>
   )
 }
