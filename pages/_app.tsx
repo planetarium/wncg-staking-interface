@@ -21,6 +21,7 @@ import { DEFAULT_SEO } from 'lib/seo'
 
 import { CoingeckoAlert } from 'components/CoingeckoAlert'
 import { GlobalFooter } from 'components/GlobalFooter'
+import Gnb from 'new/Gnb'
 import { NetworkAlert } from 'components/NetworkAlert'
 import { ToastContainer } from 'components/ToastContainer'
 import MediaQueryEffects from 'components/Effects/MediaQueryEffects'
@@ -64,6 +65,7 @@ function MyApp({ Component, pageProps }: AppProps) {
               <DefaultSeo {...DEFAULT_SEO} />
               <CoingeckoAlert />
               <NetworkAlert />
+              <Gnb />
               <Component {...pageProps} />
               <ToastEffects />
               <Modal />
