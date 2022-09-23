@@ -26,6 +26,7 @@ interface Env {
   socialMedia: {
     discord: string
     medium: string
+    telegram: string
     twitter: string
   }
   stakingAddress: string
@@ -92,6 +93,7 @@ export class ConfigService {
           process.env.NEXT_PUBLIC_DISCORD || 'https://discord.gg/planetarium',
         medium:
           process.env.NEXT_PUBLIC_MEDIUM || 'https://ninechronicles.medium.com',
+        telegram: process.env.NEXT_PUBLIC_TELEGRAM || '', // FIXME: Telegram link
         twitter:
           process.env.NEXT_PUBLIC_TWITTER ||
           'https://twitter.com/NineChronicles',
