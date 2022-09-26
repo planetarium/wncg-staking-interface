@@ -21,9 +21,6 @@ export function Toggle() {
 
   return (
     <div className={styles.toggle}>
-      <span style={{ color: 'white' }}>
-        {JSON.stringify(hasBalanceInLegacyContract)}
-      </span>
       <label
         className={clsx(styles.label, { [styles.off]: legacyMode })}
         htmlFor="contractToggle"

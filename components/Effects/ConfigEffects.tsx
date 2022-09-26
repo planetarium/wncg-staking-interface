@@ -19,15 +19,11 @@ function ConfigEffects() {
   const setLegacyMode = useSetRecoilState(legacyModeState)
 
   const setInitialLegacyMode = useCallback(() => {
-    const storedLegacyMode = store.get(STORAGE_KEYS.UserSettings.LegacyMode)
-    if (typeof storedLegacyMode === 'boolean' && storedLegacyMode === true) {
-      if (hasBalanceInLegacyContract) {
-        setLegacyMode(true)
-        return
-      }
+    if (hasBalanceInLegacyContract) {
+      setLegacyMode(true)
+    } else {
+      setLegacyMode(false)
     }
-
-    setLegacyMode(false)
   }, [hasBalanceInLegacyContract, setLegacyMode])
 
   const setInitialSettings = useCallback(() => {
