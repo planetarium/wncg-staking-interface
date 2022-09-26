@@ -5,15 +5,15 @@ import { Contract } from 'ethers'
 import type BigNumber from 'bignumber.js'
 
 import { networkMismatchState } from 'app/states/error'
-import { stakingContractAddressState } from 'app/states/settings'
 import { getClaimableTokens } from 'contracts/liquidityGauge'
 import { getEarmarkIncentiveFee, getFeeDenominator } from 'contracts/staking'
 import { REFETCH_INTERVAL } from 'constants/time'
-import { LiquidityGaugeAbi, StakingAbi } from 'lib/abi'
+import { LiquidityGaugeAbi } from 'lib/abi'
 import { bnum } from 'utils/num'
 import { useFiatCurrency } from './useFiatCurrency'
 import { useProvider } from './useProvider'
 import { useStaking } from './useStaking'
+import { useStakingContract } from './useStakingContract'
 
 const options = {
   staleTime: Infinity,
@@ -23,15 +23,11 @@ const options = {
 export function useEarmarkIncentive() {
   const provider = useProvider()
   const { liquidityGaugeAddress } = useStaking()
+  const { contract: stakingContract, stakingAddress } =
+    useStakingContract(false)
   const { toFiat } = useFiatCurrency()
 
   const networkMismatch = useRecoilValue(networkMismatchState)
-  const stakingAddress = useRecoilValue(stakingContractAddressState)
-
-  const stakingContract = useMemo(() => {
-    if (!provider || networkMismatch) return null
-    return new Contract(stakingAddress, StakingAbi, provider)
-  }, [networkMismatch, provider, stakingAddress])
 
   const liquidityGaugeContract = useMemo(() => {
     if (!provider || networkMismatch || !liquidityGaugeAddress) return null

@@ -4,7 +4,8 @@ import { Contract } from 'ethers'
 
 import { accountState } from 'app/states/connection'
 import { networkMismatchState } from 'app/states/error'
-import { stakingContractAddressState } from 'app/states/settings'
+import { legacyModeState } from 'app/states/settings'
+import { configService } from 'services/config'
 import { StakingAbi } from 'lib/abi'
 import { useProvider } from './useProvider'
 
@@ -12,20 +13,52 @@ export function useStakingContract(signer?: boolean) {
   const provider = useProvider()
 
   const account = useRecoilValue(accountState)
+  const legacyMode = useRecoilValue(legacyModeState)
   const networkMismatch = useRecoilValue(networkMismatchState)
-  const stakingAddress = useRecoilValue(stakingContractAddressState)
 
-  const contract = useMemo(() => {
+  const newContract = useMemo(() => {
     if (!provider || networkMismatch) return null
     if (signer && !account) return null
 
     const signerOrProvider = signer ? provider.getSigner(account!) : provider
 
-    return new Contract(stakingAddress, StakingAbi, signerOrProvider)
-  }, [provider, networkMismatch, signer, account, stakingAddress])
+    return new Contract(
+      configService.stakingAddress,
+      StakingAbi,
+      signerOrProvider
+    )
+  }, [provider, networkMismatch, signer, account])
+
+  const legacyContract = useMemo(() => {
+    if (!provider || networkMismatch) return null
+    if (signer && !account) return null
+
+    const signerOrProvider = signer ? provider.getSigner(account!) : provider
+
+    return new Contract(
+      configService.legacyStakingAddress,
+      StakingAbi,
+      signerOrProvider
+    )
+  }, [provider, networkMismatch, signer, account])
+
+  const contract = useMemo(
+    () => (legacyMode ? legacyContract : newContract),
+    [legacyContract, legacyMode, newContract]
+  )
+
+  const stakingAddress = useMemo(
+    () =>
+      legacyContract
+        ? configService.legacyStakingAddress
+        : configService.stakingAddress,
+    [legacyContract]
+  )
 
   return {
     contract,
+    legacyContract,
+    newContract,
     stakingAddress,
   }
 }
