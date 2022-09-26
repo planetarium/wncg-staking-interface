@@ -2,15 +2,28 @@ import { useRecoilValue } from 'recoil'
 import clsx from 'clsx'
 import styles from './styles/Header.module.scss'
 
+import { connectedState } from 'app/states/connection'
 import { legacyModeState } from 'app/states/settings'
-import { useSettings } from 'hooks'
+import { useSettings, useStakedBalance } from 'hooks'
 
 export function Toggle() {
   const { toggleLegacyMode } = useSettings()
+  const { hasBalanceInLegacyContract } = useStakedBalance()
+
+  const isConnected = useRecoilValue(connectedState)
   const legacyMode = useRecoilValue(legacyModeState)
+
+  const hideToggle = !isConnected || !hasBalanceInLegacyContract
+
+  if (hideToggle) {
+    return null
+  }
 
   return (
     <div className={styles.toggle}>
+      <span style={{ color: 'white' }}>
+        {JSON.stringify(hasBalanceInLegacyContract)}
+      </span>
       <label
         className={clsx(styles.label, { [styles.off]: legacyMode })}
         htmlFor="contractToggle"
