@@ -6,6 +6,7 @@ import styles from '../styles/StakeSidebar.module.scss'
 import { connectedState } from 'app/states/connection'
 import { networkMismatchState } from 'app/states/error'
 import { isMobileState } from 'app/states/mediaQuery'
+import { legacyModeState } from 'app/states/settings'
 import { countUpOption, usdCountUpOption } from 'constants/countUp'
 import { gaEvent } from 'lib/gtag'
 import { parseTxError } from 'utils/tx'
@@ -41,6 +42,7 @@ export function StakeSidebarAdvanced() {
   const networkMismatch = useRecoilValue(networkMismatchState)
   const isConnected = useRecoilValue(connectedState)
   const isMobile = useRecoilValue(isMobileState)
+  const legacyMode = useRecoilValue(legacyModeState)
 
   const disabled = networkMismatch || loading
 
@@ -86,6 +88,8 @@ export function StakeSidebarAdvanced() {
       }
     }
   }, [earmarkRewardsEvent, earmarkRewardsHandler, provider])
+
+  if (legacyMode) return null
 
   return (
     <div className={styles.advanced}>

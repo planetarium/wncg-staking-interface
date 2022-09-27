@@ -1,6 +1,8 @@
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useQuery } from '@tanstack/react-query'
+import { useRecoilValue } from 'recoil'
 
+import { legacyModeState } from 'app/states/settings'
 import {
   getBalancerGaugeAddress,
   getBalEmissionPerSec,
@@ -19,6 +21,7 @@ const options = {
 // NOTE: Fetch data from downgraded staking contract
 export function useStaking() {
   const { contract, stakingAddress } = useStakingContract()
+  const legacyMode = useRecoilValue(legacyModeState)
 
   const balancerGaugeAddress = useQuery(
     ['balancerGaugeAddress', stakingAddress],
@@ -30,7 +33,7 @@ export function useStaking() {
     }
   )
 
-  const balEmissionPerSec = useQuery(
+  const _balEmissionPerSec = useQuery(
     ['balEmissionPerSec', stakingAddress],
     () => getBalEmissionPerSec(contract!),
     {
@@ -72,15 +75,20 @@ export function useStaking() {
   )
 
   const fetchStaking = useCallback(() => {
-    balEmissionPerSec.refetch()
+    _balEmissionPerSec.refetch()
     wncgEmissionPerSec.refetch()
     totalStaked.refetch()
     unstakeWindow.refetch()
-  }, [balEmissionPerSec, totalStaked, unstakeWindow, wncgEmissionPerSec])
+  }, [_balEmissionPerSec, totalStaked, unstakeWindow, wncgEmissionPerSec])
+
+  const balEmissionPerSec = useMemo(
+    () => (legacyMode ? '0' : _balEmissionPerSec.data),
+    [_balEmissionPerSec.data, legacyMode]
+  )
 
   return {
     liquidityGaugeAddress: balancerGaugeAddress.data || '',
-    balEmissionPerSec: balEmissionPerSec.data || '0',
+    balEmissionPerSec: balEmissionPerSec || '0',
     wncgEmissionPerSec: wncgEmissionPerSec.data || '0',
     totalStaked: totalStaked.data || '0',
     unstakeWindow: unstakeWindow.data || 0,
