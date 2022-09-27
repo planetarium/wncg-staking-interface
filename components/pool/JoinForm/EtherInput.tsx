@@ -27,6 +27,7 @@ type EtherInputProps = {
   trigger: UseFormTrigger<JoinFormFields>
   value: string
   error?: string
+  fiatValue?: number
 }
 
 function EtherInput({
@@ -42,6 +43,7 @@ function EtherInput({
   trigger,
   value,
   error,
+  fiatValue,
 }: EtherInputProps) {
   const { balanceFor } = useBalances()
   const { nativeAssetIndex, poolTokenAddresses } = usePool()
@@ -98,6 +100,7 @@ function EtherInput({
       action="join"
       address={currentEther}
       error={error}
+      fiatValue={fiatValue}
       max={ethBalance}
       maximized={maximized}
       selectToken={selectEther}

@@ -21,7 +21,7 @@ type JoinFormProps = {
 
 function JoinForm({ currentEther, selectEther }: JoinFormProps) {
   const { balanceFor } = useBalances()
-  const { poolTokenAddresses } = usePool()
+  const { ercTokenIndex, nativeAssetIndex, poolTokenAddresses } = usePool()
 
   const isNativeAsset = currentEther === configService.nativeAssetAddress
 
@@ -51,6 +51,7 @@ function JoinForm({ currentEther, selectEther }: JoinFormProps) {
     showPropButton,
     togglePriceImpactAgreement,
     totalFiatValue,
+    tokenFiatValues,
     wncgIndex,
     wncgMaximized,
   } = useJoinForm(isNativeAsset, useFormReturn)
@@ -77,6 +78,7 @@ function JoinForm({ currentEther, selectEther }: JoinFormProps) {
           showPropButton={showPropButton.wncgAmount}
           trigger={trigger}
           error={formState.errors?.wncgAmount?.message}
+          fiatValue={tokenFiatValues[ercTokenIndex]}
         />
         <EtherInput
           clearErrors={clearErrors}
@@ -91,6 +93,7 @@ function JoinForm({ currentEther, selectEther }: JoinFormProps) {
           trigger={trigger}
           value={ethValue}
           error={formState.errors?.ethAmount?.message}
+          fiatValue={tokenFiatValues[nativeAssetIndex]}
         />
         <JoinFormSummary
           joinMax={joinMax}

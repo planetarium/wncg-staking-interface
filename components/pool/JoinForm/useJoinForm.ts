@@ -184,15 +184,18 @@ export function useJoinForm(
     [priceImpact]
   )
 
+  const tokenFiatValues = useMemo(() => {
+    return assets.map((address, i) => toFiat(address, amounts[i]) || 0)
+  }, [amounts, assets, toFiat])
+
+  console.log(tokenFiatValues)
+
   const totalFiatValue = useMemo(
     () =>
-      assets
-        .reduce((total, address, i) => {
-          const sumValue = toFiat(address, amounts[i])
-          return total.plus(sumValue)
-        }, bnum(0))
+      tokenFiatValues
+        .reduce((total, value) => total.plus(value), bnum(0))
         .toFixed(2) || '0',
-    [amounts, toFiat, assets]
+    [tokenFiatValues]
   )
 
   const wncgMaximized = useMemo(
@@ -302,6 +305,7 @@ export function useJoinForm(
     showPropButton,
     togglePriceImpactAgreement,
     totalFiatValue,
+    tokenFiatValues,
     wncgIndex,
     wncgMaximized,
   }

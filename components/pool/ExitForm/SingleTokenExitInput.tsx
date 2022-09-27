@@ -7,7 +7,7 @@ import type {
 } from 'react-hook-form'
 
 import { bnum } from 'utils/num'
-import { usePool } from 'hooks'
+import { useFiatCurrency, usePool } from 'hooks'
 import type { ExitFormFields } from './type'
 
 import { TokenInput } from '../TokenInput'
@@ -33,7 +33,9 @@ function SingleTokenExitInput({
   value,
   error,
 }: SingleTokenExitInputProps) {
+  const { toFiat } = useFiatCurrency()
   const { poolTokenAddresses, poolTokenBalances } = usePool()
+
   const max = singleAssetsMaxes[tokenOutIndex]
   const poolTokenBalance = poolTokenBalances[tokenOutIndex]
 
@@ -59,6 +61,7 @@ function SingleTokenExitInput({
 
   const maximized = useMemo(() => bnum(value).eq(max), [max, value])
   const address = poolTokenAddresses[tokenOutIndex]
+  const fiatValue = toFiat(address, value)
 
   useEffect(() => {
     trigger('tokenOutAmount')
@@ -74,6 +77,7 @@ function SingleTokenExitInput({
         action="exit"
         address={address}
         max={max}
+        fiatValue={fiatValue}
         maximized={maximized}
         setMaxValue={setMaxValue}
         error={error}

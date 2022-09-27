@@ -49,6 +49,14 @@ $input-padding: 16px;
     margin-left: 8px;
   }
 
+  .usd {
+    @include textStyle(13, 400);
+    flex-grow: 1;
+    margin-left: 8px;
+    text-align: right;
+    color: $gray-3;
+  }
+
   .maxButton,
   .propButton {
     transition: $transition-short;
