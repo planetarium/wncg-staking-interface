@@ -41,7 +41,6 @@ export function useSettings() {
 
   const toggleLegacyMode = useCallback(() => {
     setLegacyMode((prev) => {
-      store.set(STORAGE_KEYS.UserSettings.LegacyMode, !prev)
       gaEvent({
         name: 'legacy_contract',
         params: {
@@ -95,7 +94,6 @@ export function useSettings() {
     store.remove(STORAGE_KEYS.UserSettings.EstimatedEarnPeriod)
     store.remove(STORAGE_KEYS.UserSettings.Muted)
     store.remove(STORAGE_KEYS.UserSettings.Slippage)
-    store.remove(STORAGE_KEYS.UserSettings.LegacyMode)
   }, [resetEstimatedEarnPeriod, resetLegacyMode, resetMuted, resetSlippage])
 
   return {

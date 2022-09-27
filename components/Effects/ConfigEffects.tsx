@@ -9,18 +9,22 @@ import {
   slippageState,
 } from 'app/states/settings'
 import STORAGE_KEYS from 'constants/storageKeys'
+import { useStakedBalance } from 'hooks'
 
 function ConfigEffects() {
+  const { hasBalanceInLegacyContract } = useStakedBalance()
   const setMuted = useSetRecoilState(mutedState)
   const setSlippage = useSetRecoilState(slippageState)
   const setEstimatedEarnPeriod = useSetRecoilState(estimatedEarnPeriodState)
   const setLegacyMode = useSetRecoilState(legacyModeState)
 
   const setInitialLegacyMode = useCallback(() => {
-    const storedLegacyMode = store.get(STORAGE_KEYS.UserSettings.LegacyMode)
-    if (storedLegacyMode) setLegacyMode(storedLegacyMode)
-    else setLegacyMode(false)
-  }, [setLegacyMode])
+    if (hasBalanceInLegacyContract) {
+      setLegacyMode(true)
+    } else {
+      setLegacyMode(false)
+    }
+  }, [hasBalanceInLegacyContract, setLegacyMode])
 
   const setInitialSettings = useCallback(() => {
     const storedPeriod = store.get(
