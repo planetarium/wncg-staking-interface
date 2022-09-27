@@ -22,6 +22,7 @@ type WncgInputProps = {
   setPropAmount(e: MouseEvent<HTMLButtonElement>): void
   trigger: UseFormTrigger<JoinFormFields>
   error?: string
+  fiatValue?: number
 }
 
 function WncgInput({
@@ -35,6 +36,7 @@ function WncgInput({
   setPropAmount,
   trigger,
   error,
+  fiatValue,
 }: WncgInputProps) {
   const rules = useMemo(
     () => ({
@@ -65,6 +67,7 @@ function WncgInput({
       action="join"
       address={address}
       error={error}
+      fiatValue={fiatValue}
       max={balance}
       maximized={maximized}
       setMaxValue={setMaxValue}

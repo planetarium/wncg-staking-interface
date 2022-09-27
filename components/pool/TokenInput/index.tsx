@@ -25,6 +25,7 @@ type TokenInputProps = {
   name: string
   disabled?: boolean
   error?: string
+  fiatValue?: number
   propButton?: boolean
   rules?: Partial<RegisterOptions>
   selectToken?(value: string): void
@@ -45,6 +46,7 @@ export function TokenInput({
   id,
   disabled,
   error,
+  fiatValue,
   propButton,
   selectToken,
   setMaxValue,
@@ -121,7 +123,7 @@ export function TokenInput({
             </button>
           )}
 
-          {showPropButton && (
+          {showPropButton ? (
             <button
               className={styles.propButton}
               type="button"
@@ -130,7 +132,17 @@ export function TokenInput({
             >
               {isMobile ? 'suggestion' : 'proportional suggestion'}
             </button>
-          )}
+          ) : fiatValue ? (
+            <NumberFormat
+              className={styles.usd}
+              decimalScale={4}
+              displayType="text"
+              isNumericString
+              prefix="$"
+              thousandSeparator={true}
+              value={fiatValue}
+            />
+          ) : null}
         </div>
       </div>
 
