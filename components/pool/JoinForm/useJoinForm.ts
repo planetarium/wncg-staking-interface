@@ -170,8 +170,8 @@ export function useJoinForm(
   ])
 
   const priceImpact = useMemo(
-    () => calcPriceImpact([wncgValue, ethValue]),
-    [ethValue, calcPriceImpact, wncgValue]
+    () => calcPriceImpact(amounts),
+    [calcPriceImpact, amounts]
   )
 
   const highPriceImpact = useMemo(
