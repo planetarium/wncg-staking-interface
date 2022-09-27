@@ -49,10 +49,10 @@ export function useStakingContract(signer?: boolean) {
 
   const stakingAddress = useMemo(
     () =>
-      legacyContract
+      legacyMode
         ? configService.legacyStakingAddress
         : configService.stakingAddress,
-    [legacyContract]
+    [legacyMode]
   )
 
   return {
