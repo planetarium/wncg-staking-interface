@@ -1,8 +1,7 @@
 import { useCallback } from 'react'
-import { useRecoilValue } from 'recoil'
 import { parseUnits } from 'ethers/lib/utils'
+import { useAccount } from 'wagmi'
 
-import { accountState } from 'app/states/connection'
 import { exitPool as initExitPool } from 'contracts/vault'
 import { configService } from 'services/config'
 import { gaEvent } from 'lib/gtag'
@@ -27,7 +26,7 @@ export function useExitPool() {
   const { subscribeTx } = useTx()
   const vault = useVaultContract()
 
-  const account = useRecoilValue(accountState)
+  const { address: account } = useAccount()
 
   const exitPool = useCallback(
     async (params: ExitPoolParams) => {

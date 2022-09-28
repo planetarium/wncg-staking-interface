@@ -2,10 +2,10 @@ import { useEffect, useState } from 'react'
 import { usePrevious } from 'react-use'
 import ReactCountUp, { CountUpProps as ReactCountUpProps } from 'react-countup'
 import { useRecoilValue } from 'recoil'
+import { useAccount } from 'wagmi'
 import clsx from 'clsx'
 import styles from './style.module.scss'
 
-import { connectedState } from 'app/states/connection'
 import { networkMismatchState } from 'app/states/error'
 import { bnum, isLessThanMinAmount, sanitizeNumber } from 'utils/num'
 
@@ -31,7 +31,7 @@ export function CountUp({
   const [start, setStart] = useState(0)
   const prevEnd = usePrevious(Number(sanitizeNumber(end))) || 0
 
-  const isConnected = useRecoilValue(connectedState)
+  const { isConnected } = useAccount()
   const networkMismatch = useRecoilValue(networkMismatchState)
 
   const bEnd = bnum(end)

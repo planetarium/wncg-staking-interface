@@ -1,9 +1,8 @@
 import { MouseEvent, useState } from 'react'
 import { useMount } from 'react-use'
-import { useRecoilValue } from 'recoil'
+import { useAccount } from 'wagmi'
 import styles from '../style.module.scss'
 
-import { connectedState } from 'app/states/connection'
 import { ModalCategory } from 'app/states/modal'
 import { gaEvent } from 'lib/gtag'
 import { bnum } from 'utils/num'
@@ -17,8 +16,8 @@ import { RewardItem } from './RewardItem'
 
 function ClaimRewardModal() {
   const [loading, setLoading] = useState<string | null>(null)
-  const isConnected = useRecoilValue(connectedState)
 
+  const { isConnected } = useAccount()
   const { claimAllRewards, claimBalRewards, claimWncgRewards } = useClaim()
   const { removeModal } = useModal()
   const { rewards, rewardsInFiatValue, rewardTokenSymbols, fetchRewards } =

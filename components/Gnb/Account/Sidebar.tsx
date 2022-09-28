@@ -3,10 +3,10 @@ import { useRef, useState } from 'react'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { useRecoilValue } from 'recoil'
 import { motion } from 'framer-motion'
+import { useAccount } from 'wagmi'
 import clsx from 'clsx'
 import styles from './style.module.scss'
 
-import { accountState } from 'app/states/connection'
 import { networkMismatchState } from 'app/states/error'
 import { mutedState } from 'app/states/settings'
 import { gaEvent } from 'lib/gtag'
@@ -32,7 +32,7 @@ export function AccountSidebar({ close }: AccountSidebarProps) {
     useConnection()
   const { toggleMuted } = useSettings()
 
-  const account = useRecoilValue(accountState)
+  const { address: account } = useAccount()
   const muted = useRecoilValue(mutedState)
   const networkMismatch = useRecoilValue(networkMismatchState)
 

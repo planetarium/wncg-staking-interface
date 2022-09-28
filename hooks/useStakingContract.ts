@@ -1,8 +1,8 @@
 import { useMemo } from 'react'
 import { useRecoilValue } from 'recoil'
 import { Contract } from 'ethers'
+import { useAccount } from 'wagmi'
 
-import { accountState } from 'app/states/connection'
 import { networkMismatchState } from 'app/states/error'
 import { legacyModeState } from 'app/states/settings'
 import { configService } from 'services/config'
@@ -12,7 +12,7 @@ import { useProvider } from './useProvider'
 export function useStakingContract(signer?: boolean) {
   const provider = useProvider()
 
-  const account = useRecoilValue(accountState)
+  const { address: account } = useAccount()
   const legacyMode = useRecoilValue(legacyModeState)
   const networkMismatch = useRecoilValue(networkMismatchState)
 

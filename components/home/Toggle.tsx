@@ -1,16 +1,16 @@
 import { useRecoilValue } from 'recoil'
+import { useAccount } from 'wagmi'
 import clsx from 'clsx'
 import styles from './styles/Header.module.scss'
 
-import { connectedState } from 'app/states/connection'
 import { legacyModeState } from 'app/states/settings'
 import { useSettings, useStakedBalance } from 'hooks'
 
 export function Toggle() {
+  const { isConnected } = useAccount()
   const { toggleLegacyMode } = useSettings()
   const { hasBalanceInLegacyContract } = useStakedBalance()
 
-  const isConnected = useRecoilValue(connectedState)
   const legacyMode = useRecoilValue(legacyModeState)
 
   const hideToggle = !isConnected || !hasBalanceInLegacyContract

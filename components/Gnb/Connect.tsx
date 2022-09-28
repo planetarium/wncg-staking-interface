@@ -1,21 +1,21 @@
 import { useRecoilValue } from 'recoil'
 import styles from './style.module.scss'
 
-import { ConnectionStatus, connectionStatusState } from 'app/states/connection'
 import { isMobileState } from 'app/states/mediaQuery'
 import { useConnection } from 'hooks'
 
 import { Button } from 'components/Button'
+import { useAccount } from 'wagmi'
 
 export function GnbConnect() {
+  const { isConnecting, isDisconnected } = useAccount()
   const { connect } = useConnection()
 
-  const status = useRecoilValue(connectionStatusState)
   const isMobile = useRecoilValue(isMobileState)
 
   const buttonSize = isMobile ? 'small' : 'medium'
 
-  if (status === ConnectionStatus.NotConnected) {
+  if (isDisconnected) {
     return (
       <Button
         className={styles.connectButton}
@@ -27,7 +27,7 @@ export function GnbConnect() {
     )
   }
 
-  if (status === ConnectionStatus.Connecting) {
+  if (isConnecting) {
     return (
       <Button
         className={styles.connectButton}

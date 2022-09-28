@@ -1,8 +1,8 @@
 import { useMemo } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useRecoilValue } from 'recoil'
+import { useAccount } from 'wagmi'
 
-import { accountState } from 'app/states/connection'
 import { legacyModeState } from 'app/states/settings'
 import { getStakedTokenBalance } from 'contracts/staking'
 import { REFETCH_INTERVAL } from 'constants/time'
@@ -12,14 +12,14 @@ import { useStakingContract } from './useStakingContract'
 export function useStakedBalance() {
   const { legacyContract, newContract } = useStakingContract(true)
 
-  const account = useRecoilValue(accountState)
+  const { address: account } = useAccount()
   const legacyMode = useRecoilValue(legacyModeState)
 
   const newStakedBalance = useQuery(
     ['newStakedBalance', account],
-    () => getStakedTokenBalance(newContract!, account),
+    () => getStakedTokenBalance(newContract!, account!),
     {
-      enabled: !!newContract,
+      enabled: !!newContract && !!account,
       refetchInterval: REFETCH_INTERVAL,
       keepPreviousData: true,
       placeholderData: '0',
@@ -28,9 +28,9 @@ export function useStakedBalance() {
 
   const legacyStakedBalance = useQuery(
     ['legacyStakedBalance', account],
-    () => getStakedTokenBalance(legacyContract!, account),
+    () => getStakedTokenBalance(legacyContract!, account!),
     {
-      enabled: !!legacyContract,
+      enabled: !!legacyContract && !!account,
       refetchInterval: REFETCH_INTERVAL,
       keepPreviousData: true,
       placeholderData: '0',

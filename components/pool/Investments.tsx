@@ -1,12 +1,11 @@
 import { memo, useState } from 'react'
 import NumberFormat from 'react-number-format'
 import { useInfiniteQuery } from '@tanstack/react-query'
-import { useRecoilValue } from 'recoil'
+import { useAccount } from 'wagmi'
 import { formatDistanceToNow } from 'date-fns'
 import clsx from 'clsx'
 import styles from './styles/Investments.module.scss'
 
-import { accountState } from 'app/states/connection'
 import { fetchPoolJoinExits, getNextPageParam, itemsPerPage } from 'lib/graphql'
 import { gaEvent } from 'lib/gtag'
 import { bnum } from 'utils/num'
@@ -36,7 +35,7 @@ function PoolInvestments() {
   const { toFiat } = useFiatCurrency()
   const { poolTokenAddresses, poolTokenSymbols } = usePool()
 
-  const account = useRecoilValue(accountState)
+  const { address: account } = useAccount()
   const showFilter = !!account
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =

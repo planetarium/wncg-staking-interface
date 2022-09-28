@@ -1,9 +1,7 @@
 import { memo, MouseEvent } from 'react'
-
-import { useRecoilValue } from 'recoil'
+import { useAccount } from 'wagmi'
 import styles from './styles/MyPoolBalance.module.scss'
 
-import { connectedState } from 'app/states/connection'
 import { countUpOption, usdCountUpOption } from 'constants/countUp'
 import { gaEvent } from 'lib/gtag'
 import {
@@ -19,6 +17,7 @@ import { CountUp } from 'components/CountUp'
 import { TokenIcon } from 'components/TokenIcon'
 
 function MyPoolBalance() {
+  const { isConnected } = useAccount()
   const calculator = useCalculator('exit')
   const { connect } = useConnection()
   const { toFiat } = useFiatCurrency()
@@ -27,7 +26,6 @@ function MyPoolBalance() {
   const { balanceFor } = useBalances()
 
   const bptBalance = balanceFor(bptAddress)
-  const isConnected = useRecoilValue(connectedState)
 
   const propAmounts = calculator?.propAmountsGiven(bptBalance, 0, 'send')
     .receive || ['0', '0']

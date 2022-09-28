@@ -3,11 +3,11 @@ import { useCallback, useRef, useState } from 'react'
 import { useMount, useUnmount } from 'react-use'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { useRecoilValue } from 'recoil'
+import { useAccount } from 'wagmi'
 import { motion } from 'framer-motion'
 import clsx from 'clsx'
 import styles from './style.module.scss'
 
-import { accountState } from 'app/states/connection'
 import { networkMismatchState } from 'app/states/error'
 import { mutedState } from 'app/states/settings'
 import { gaEvent } from 'lib/gtag'
@@ -33,7 +33,7 @@ export function AccountUserMenu({ close }: AccountUserMenuProps) {
     useConnection()
   const { toggleMuted } = useSettings()
 
-  const account = useRecoilValue(accountState)
+  const { address: account } = useAccount()
   const muted = useRecoilValue(mutedState)
   const networkMismatch = useRecoilValue(networkMismatchState)
 

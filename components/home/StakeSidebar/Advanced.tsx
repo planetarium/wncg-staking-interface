@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useRecoilValue } from 'recoil'
 import { AnimatePresence, motion } from 'framer-motion'
+import { useAccount } from 'wagmi'
 import styles from '../styles/StakeSidebar.module.scss'
 
-import { connectedState } from 'app/states/connection'
 import { networkMismatchState } from 'app/states/error'
 import { isMobileState } from 'app/states/mediaQuery'
 import { legacyModeState } from 'app/states/settings'
@@ -28,6 +28,7 @@ export function StakeSidebarAdvanced() {
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
 
+  const { isConnected } = useAccount()
   const { connect } = useConnection()
   const { earmarkRewards } = useEarmark()
   const {
@@ -40,7 +41,6 @@ export function StakeSidebarAdvanced() {
   const { addToast } = useToast()
 
   const networkMismatch = useRecoilValue(networkMismatchState)
-  const isConnected = useRecoilValue(connectedState)
   const isMobile = useRecoilValue(isMobileState)
   const legacyMode = useRecoilValue(legacyModeState)
 

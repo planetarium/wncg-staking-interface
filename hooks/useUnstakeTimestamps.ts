@@ -1,8 +1,7 @@
 import { useCallback, useMemo } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { useRecoilValue } from 'recoil'
+import { useAccount } from 'wagmi'
 
-import { connectedState, accountState } from 'app/states/connection'
 import {
   getCooldownEndTimestamp,
   getWithdrawEndTimestamp,
@@ -25,23 +24,22 @@ export function useUnstakeTimestamps() {
   const { contract, stakingAddress } = useStakingContract(true)
   const { stakedBalance } = useStakedBalance()
 
-  const account = useRecoilValue(accountState)
-  const isConnected = useRecoilValue(connectedState)
+  const { address: account, isConnected } = useAccount()
 
   const cooldownEndsAt = useQuery(
     ['cooldownEndsAt', account, stakingAddress],
-    () => getCooldownEndTimestamp(contract!, account),
+    () => getCooldownEndTimestamp(contract!, account!),
     {
-      enabled: !!contract,
+      enabled: !!contract && !!account,
       refetchInterval: REFETCH_INTERVAL,
     }
   )
 
   const withdrawEndsAt = useQuery(
     ['withdrawEndsAt', account, stakingAddress],
-    () => getWithdrawEndTimestamp(contract!, account),
+    () => getWithdrawEndTimestamp(contract!, account!),
     {
-      enabled: !!contract,
+      enabled: !!contract && !!account,
     }
   )
 

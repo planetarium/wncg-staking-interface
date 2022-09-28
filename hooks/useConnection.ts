@@ -1,12 +1,6 @@
 import { useCallback } from 'react'
-import { useRecoilState, useResetRecoilState } from 'recoil'
 import store from 'store'
 
-import {
-  accountState,
-  ConnectionStatus,
-  connectionStatusState,
-} from 'app/states/connection'
 import { ModalCategory } from 'app/states/modal'
 import STORAGE_KEYS from 'constants/storageKeys'
 import { gaEvent } from 'lib/gtag'
@@ -25,36 +19,32 @@ export function useConnection() {
   const { addToast } = useToast()
   const { resetTx } = useTx()
 
-  const [account, setAccount] = useRecoilState(accountState)
-  const [connectionStatus, setConnectionStatus] = useRecoilState(
-    connectionStatusState
-  )
+  // const [account, setAccount] = useRecoilState(accountState)
+  // const [connectionStatus, setConnectionStatus] = useRecoilState(
+  //   connectionStatusState
+  // )
 
-  const resetAccount = useResetRecoilState(accountState)
-  const resetConnectionStatus = useResetRecoilState(connectionStatusState)
+  // const resetAccount = useResetRecoilState(accountState)
+  // const resetConnectionStatus = useResetRecoilState(connectionStatusState)
 
   const reset = useCallback(() => {
-    resetAccount()
-    resetConnectionStatus()
+    // resetAccount()
+    // resetConnectionStatus()
     resetSettings()
     resetTx?.()
     store.remove(STORAGE_KEYS.Account)
-  }, [resetAccount, resetConnectionStatus, resetSettings, resetTx])
+  }, [resetSettings, resetTx])
 
-  const updateAccount = useCallback(
-    (account: string) => {
-      setAccount(account)
-      setConnectionStatus(ConnectionStatus.Connected)
-      store.set(STORAGE_KEYS.Account, account)
-    },
-    [setAccount, setConnectionStatus]
-  )
+  const updateAccount = useCallback((account: string) => {
+    // setAccount(account)
+    // setConnectionStatus(ConnectionStatus.Connected)
+  }, [])
 
   const initConnect = useCallback(async () => {
     if (!provider) return
 
     try {
-      setConnectionStatus(ConnectionStatus.Connecting)
+      // setConnectionStatus(ConnectionStatus.Connecting)
       const accounts = await provider.send('eth_requestAccounts', [])
 
       if (accounts && accounts[0]) {
@@ -76,7 +66,7 @@ export function useConnection() {
         })
       }
     }
-  }, [addToast, provider, reset, setConnectionStatus, updateAccount])
+  }, [addToast, provider, reset, updateAccount])
 
   const connect = useCallback(() => {
     if (!provider) {
@@ -86,28 +76,32 @@ export function useConnection() {
       return
     }
 
-    initConnect()
-  }, [addModal, initConnect, provider])
+    addModal({
+      category: ModalCategory.Connect,
+    })
+
+    // initConnect()
+  }, [addModal, provider])
 
   const disconnect = useCallback(() => {
     reset()
-    gaEvent({
-      name: 'disconnect_metamask',
-      params: {
-        account,
-      },
-    })
-  }, [account, reset])
+    // gaEvent({
+    //   name: 'disconnect_metamask',
+    //   params: {
+    //     account,
+    //   },
+    // })
+  }, [reset])
 
   const switchNetwork = useCallback(() => {
     if (!provider) return
 
-    gaEvent({
-      name: 'switch_network',
-      params: {
-        oldNetwork: window?.ethereum?.chainId,
-      },
-    })
+    // gaEvent({
+    //   name: 'switch_network',
+    //   params: {
+    //     oldNetwork: window?.ethereum?.chainId,
+    //   },
+    // })
 
     window.ethereum!.request({
       method: 'wallet_switchEthereumChain',
@@ -115,13 +109,10 @@ export function useConnection() {
     })
   }, [provider])
 
-  const isConnected = connectionStatus === ConnectionStatus.Connected
-
   return {
     connect,
     disconnect,
     switchNetwork,
     updateAccount,
-    isConnected,
   }
 }
