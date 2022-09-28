@@ -7,9 +7,9 @@ import { gaEvent } from 'lib/gtag'
 import {
   useBalances,
   useCalculator,
-  useConnection,
   usePool,
   useFiatCurrency,
+  useWeb3,
 } from 'hooks'
 
 import { Button } from 'components/Button'
@@ -19,7 +19,7 @@ import { TokenIcon } from 'components/TokenIcon'
 function MyPoolBalance() {
   const { isConnected } = useAccount()
   const calculator = useCalculator('exit')
-  const { connect } = useConnection()
+  const { openConnectModal } = useWeb3()
   const { toFiat } = useFiatCurrency()
 
   const { bptAddress, poolTokens } = usePool()
@@ -108,7 +108,7 @@ function MyPoolBalance() {
             </Button>
           </>
         ) : (
-          <Button onClick={connect} size="large" fullWidth>
+          <Button onClick={openConnectModal} size="large" fullWidth>
             Connect
           </Button>
         )}

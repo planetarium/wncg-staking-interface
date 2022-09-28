@@ -2,6 +2,7 @@ import styled from 'styled-components'
 import { motion } from 'framer-motion'
 
 import { truncateAddress } from 'utils/string'
+import { useWeb3 } from 'hooks'
 
 import { Jazzicon } from 'components/Jazzicon'
 
@@ -33,6 +34,8 @@ type AccountMenuProps = {
 }
 
 export function AccountMenu({ account }: AccountMenuProps) {
+  const { disconnect } = useWeb3()
+
   return (
     <StyledAccounMenu
       initial="initial"
@@ -46,6 +49,9 @@ export function AccountMenu({ account }: AccountMenuProps) {
           {truncateAddress(account, 6, 6)}
         </h2>
       </header>
+      <button type="button" onClick={disconnect}>
+        Disconnect
+      </button>
     </StyledAccounMenu>
   )
 }

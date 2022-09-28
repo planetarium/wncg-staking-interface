@@ -2,14 +2,14 @@ import { useRecoilValue } from 'recoil'
 import styles from './style.module.scss'
 
 import { isMobileState } from 'app/states/mediaQuery'
-import { useConnection } from 'hooks'
+import { useWeb3 } from 'hooks'
 
 import { Button } from 'components/Button'
 import { useAccount } from 'wagmi'
 
 export function GnbConnect() {
   const { isConnecting, isDisconnected } = useAccount()
-  const { connect } = useConnection()
+  const { openConnectModal } = useWeb3()
 
   const isMobile = useRecoilValue(isMobileState)
 
@@ -20,7 +20,7 @@ export function GnbConnect() {
       <Button
         className={styles.connectButton}
         size={buttonSize}
-        onClick={connect}
+        onClick={openConnectModal}
       >
         Connect
       </Button>

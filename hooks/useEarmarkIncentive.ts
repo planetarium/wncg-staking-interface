@@ -1,14 +1,14 @@
 import { useMemo } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { useRecoilValue } from 'recoil'
 import { Contract } from 'ethers'
+import { useNetwork } from 'wagmi'
 import type BigNumber from 'bignumber.js'
 
-import { networkMismatchState } from 'app/states/error'
 import { getClaimableTokens } from 'contracts/liquidityGauge'
 import { getEarmarkIncentiveFee, getFeeDenominator } from 'contracts/staking'
 import { REFETCH_INTERVAL } from 'constants/time'
 import { LiquidityGaugeAbi } from 'lib/abi'
+import { networkChainId } from 'utils/network'
 import { bnum } from 'utils/num'
 import { useFiatCurrency } from './useFiatCurrency'
 import { useProvider } from './useProvider'
@@ -21,13 +21,14 @@ const options = {
 }
 
 export function useEarmarkIncentive() {
+  const { toFiat } = useFiatCurrency()
+  const { chain } = useNetwork()
   const provider = useProvider()
   const { liquidityGaugeAddress } = useStaking()
   const { contract: stakingContract, stakingAddress } =
     useStakingContract(false)
-  const { toFiat } = useFiatCurrency()
 
-  const networkMismatch = useRecoilValue(networkMismatchState)
+  const networkMismatch = chain && chain.id !== networkChainId
 
   const liquidityGaugeContract = useMemo(() => {
     if (!provider || networkMismatch || !liquidityGaugeAddress) return null

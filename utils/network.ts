@@ -20,8 +20,12 @@ export function networkFor(network: Network): Network {
   }
 }
 
-export function networkNameFor(network: Network): string {
+export function networkShortNameFor(network: Network): string {
   return config[network].shortName
+}
+
+export function networkNameFor(network: Network): string {
+  return config[network].name
 }
 
 export function explorerUrlFor(network: Network): string {
@@ -33,7 +37,7 @@ export function convertChainIdToHex(network: Network): string {
 }
 
 export function balancerUrlFor(network: Network) {
-  let networkName = networkNameFor(network).toLowerCase()
+  let networkName = networkShortNameFor(network).toLowerCase()
   if (network === Network.MAINNET) networkName = 'app'
   return `https://${networkName}.balancer.fi/#`
 }

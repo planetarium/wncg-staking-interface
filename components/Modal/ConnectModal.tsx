@@ -2,6 +2,7 @@ import type { MouseEvent } from 'react'
 import { useAccount, useConnect } from 'wagmi'
 
 import { ModalCategory } from 'app/states/modal'
+import { gaEvent } from 'lib/gtag'
 import { useModal } from 'hooks'
 
 function ConnectModal() {
@@ -16,9 +17,14 @@ function ConnectModal() {
 
   function handleConnect(e: MouseEvent<HTMLButtonElement>) {
     const index = Number(e.currentTarget.value)
+    const connector = connectors[index]
 
-    connect({
-      connector: connectors[index],
+    connect({ connector })
+    gaEvent({
+      name: 'connect_metamask',
+      params: {
+        walletProvider: connector.name,
+      },
     })
   }
 

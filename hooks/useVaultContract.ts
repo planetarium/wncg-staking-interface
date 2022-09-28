@@ -1,18 +1,18 @@
 import { useMemo } from 'react'
-import { useRecoilValue } from 'recoil'
 import { Contract } from 'ethers'
-import { useAccount } from 'wagmi'
+import { useAccount, useNetwork } from 'wagmi'
 
-import { networkMismatchState } from 'app/states/error'
 import { configService } from 'services/config'
 import { BalancerVaultAbi } from 'lib/abi'
+import { networkChainId } from 'utils/network'
 import { useProvider } from './useProvider'
 
 export function useVaultContract() {
+  const { address: account } = useAccount()
+  const { chain } = useNetwork()
   const provider = useProvider()
 
-  const networkMismatch = useRecoilValue(networkMismatchState)
-  const { address: account } = useAccount()
+  const networkMismatch = chain && chain.id !== networkChainId
 
   const vault = useMemo(() => {
     if (!provider || networkMismatch || !account) return null

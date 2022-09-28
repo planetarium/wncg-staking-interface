@@ -4,7 +4,7 @@ import { useAccount } from 'wagmi'
 import { AnimatePresence, motion } from 'framer-motion'
 
 import { truncateAddress } from 'utils/string'
-import { useConnection } from 'hooks'
+import { useWeb3 } from 'hooks'
 
 import { AccountMenu } from './Menu'
 
@@ -37,7 +37,7 @@ const StyledConnectButton = styled(motion.button)`
 function Account() {
   const [showMenu, setShowMenu] = useState(false)
   const { address: account } = useAccount()
-  const { connect } = useConnection()
+  const { openConnectModal } = useWeb3()
 
   function toggle() {
     setShowMenu((prev) => !prev)
@@ -62,7 +62,7 @@ function Account() {
       ) : (
         <StyledConnectButton
           type="button"
-          onClick={connect}
+          onClick={openConnectModal}
           initial="initial"
           animate="animate"
           exit="exit"

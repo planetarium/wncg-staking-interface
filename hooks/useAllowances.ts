@@ -1,23 +1,23 @@
 import { useCallback, useMemo } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { useRecoilValue } from 'recoil'
 import { isAddress } from 'ethers/lib/utils'
-import { useAccount } from 'wagmi'
+import { useAccount, useNetwork } from 'wagmi'
 
-import { networkMismatchState } from 'app/states/error'
 import { fetchAllowances } from 'contracts/erc20'
 import { configService } from 'services/config'
+import { networkChainId } from 'utils/network'
 import { usePool } from './usePool'
 import { useProvider } from './useProvider'
 import { useStakingContract } from './useStakingContract'
 
 export function useAllowances() {
-  const provider = useProvider()
+  const { address: account } = useAccount()
+  const { chain } = useNetwork()
   const { bptAddress, poolTokenAddresses } = usePool()
+  const provider = useProvider()
   const { stakingAddress } = useStakingContract()
 
-  const { address: account } = useAccount()
-  const networkMismatch = useRecoilValue(networkMismatchState)
+  const networkMismatch = chain && chain.id !== networkChainId
 
   const addresses = [
     ...poolTokenAddresses,

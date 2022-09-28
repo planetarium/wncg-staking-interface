@@ -1,12 +1,13 @@
 import { memo, useMemo } from 'react'
 import { Control, FieldValues, useForm } from 'react-hook-form'
 import { useRecoilValue } from 'recoil'
+import { useNetwork } from 'wagmi'
 import { AnimatePresence, motion } from 'framer-motion'
 import styles from '../styles/Forms.module.scss'
 
-import { networkMismatchState } from 'app/states/error'
 import { legacyModeState } from 'app/states/settings'
 import { gaEvent } from 'lib/gtag'
+import { networkChainId } from 'utils/network'
 import { bnum } from 'utils/num'
 import { useBalances, usePool } from 'hooks'
 import { formTransition, motionVariants, TabId, TabPanelId } from '../constants'
@@ -20,10 +21,11 @@ const minAmount = 1e-18
 
 function StakeForm() {
   const { bptBalance } = useBalances()
+  const { chain } = useNetwork()
   const { poolTokenName } = usePool()
 
   const legacyMode = useRecoilValue(legacyModeState)
-  const networkMismatch = useRecoilValue(networkMismatchState)
+  const networkMismatch = chain && chain.id !== networkChainId
 
   const { clearErrors, control, formState, setValue, watch } = useForm<{
     stakeAmount: string

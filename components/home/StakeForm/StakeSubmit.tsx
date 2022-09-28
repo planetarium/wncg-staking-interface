@@ -15,13 +15,13 @@ import { parseTxError } from 'utils/tx'
 import {
   useAllowances,
   useApprove,
-  useConnection,
   useModal,
   usePool,
   useProvider,
   useStake,
   useToast,
   useUnstakeTimestamps,
+  useWeb3,
 } from 'hooks'
 import { UnstakeStatus } from 'hooks/useUnstakeTimestamps'
 import { approvalTooltips, renderButtonLabel, stakeTooltips } from './utils'
@@ -56,7 +56,7 @@ export function StakeSubmit({
   const { isConnected } = useAccount()
   const { allowanceFor } = useAllowances()
   const { approve } = useApprove()
-  const { connect } = useConnection()
+  const { openConnectModal } = useWeb3()
   const { addModal } = useModal()
   const { bptAddress } = usePool()
   const provider = useProvider()
@@ -168,7 +168,7 @@ export function StakeSubmit({
 
   if (!isConnected) {
     return (
-      <Button size="large" onClick={connect} fullWidth>
+      <Button size="large" onClick={openConnectModal} fullWidth>
         Connect
       </Button>
     )
