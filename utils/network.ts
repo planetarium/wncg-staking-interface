@@ -7,8 +7,8 @@ export const networkChainId =
     ? (Number(process.env.NEXT_PUBLIC_NETWORK_ID) as Network)
     : Network.MAINNET
 
-export function networkFor(key: string | number): Network {
-  switch (key.toString()) {
+export function networkFor(network: Network): Network {
+  switch (network.toString()) {
     case '1':
       return Network.MAINNET
     case '5':
