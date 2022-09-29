@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react'
 import { usePrevious } from 'react-use'
 import ReactCountUp, { CountUpProps as ReactCountUpProps } from 'react-countup'
-import { useAccount, useNetwork } from 'wagmi'
+import { useAccount } from 'wagmi'
 import clsx from 'clsx'
 import styles from './style.module.scss'
 
-import { networkChainId } from 'utils/network'
 import { bnum, isLessThanMinAmount, sanitizeNumber } from 'utils/num'
 
 import { Icon } from '../Icon'
@@ -31,13 +30,10 @@ export function CountUp({
   const prevEnd = usePrevious(Number(sanitizeNumber(end))) || 0
 
   const { isConnected } = useAccount()
-  const { chain } = useNetwork()
-  const networkMismatch = chain && chain.id !== networkChainId
 
   const bEnd = bnum(end)
   const invalidValue = !bEnd.isFinite() || bEnd.isNaN()
-  const showDash =
-    invalidValue || networkMismatch || (!showAlways && !isConnected)
+  const showDash = invalidValue || (!showAlways && !isConnected)
 
   const nestedClassName = clsx(className, { [styles.usd]: isApproximate })
 
