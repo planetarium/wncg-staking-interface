@@ -9,6 +9,7 @@ import { Jazzicon } from 'components/Jazzicon'
 const StyledAccounMenu = styled(motion.aside)`
   position: absolute;
   right: 0;
+  z-index: 100;
   top: calc(100% + 8px);
   background-color: yellow;
   color: black;
