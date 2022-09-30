@@ -11,7 +11,7 @@ export function useConnectWallets() {
   const { resetSettings } = useSettings()
   const { resetTx } = useTx()
 
-  const { disconnect } = useDisconnect({
+  const { disconnect: initDisconnect } = useDisconnect({
     onSuccess() {
       resetSettings()
       resetTx?.()
@@ -30,6 +30,10 @@ export function useConnectWallets() {
       category: ModalCategory.Connect,
     })
   }, [addModal])
+
+  const disconnect = useCallback(() => {
+    initDisconnect()
+  }, [initDisconnect])
 
   return {
     connect,
