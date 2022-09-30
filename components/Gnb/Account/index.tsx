@@ -8,7 +8,6 @@ import { isMobileState } from 'app/states/mediaQuery'
 
 import { Jazzicon } from 'components/Jazzicon'
 import { AccountPendingTx } from './PendingTx'
-import { AccountSidebar } from './Sidebar'
 import { AccountUserMenu } from './UserMenu'
 
 export function GnbAccount() {
@@ -30,12 +29,6 @@ export function GnbAccount() {
     setShow(false)
   }
 
-  const accountMenu = isMobile ? (
-    <AccountSidebar close={close} />
-  ) : (
-    <AccountUserMenu close={close} />
-  )
-
   return (
     <div className={styles.gnbAccount}>
       {!isMobile && <AccountPendingTx />}
@@ -49,7 +42,9 @@ export function GnbAccount() {
         <Jazzicon address={account} diameter={jazziconSize} />
       </button>
 
-      <AnimatePresence>{show && accountMenu}</AnimatePresence>
+      <AnimatePresence>
+        {show && <AccountUserMenu close={close} />}
+      </AnimatePresence>
     </div>
   )
 }

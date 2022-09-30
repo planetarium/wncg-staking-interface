@@ -2,7 +2,7 @@ import styled from 'styled-components'
 import { motion } from 'framer-motion'
 
 import { truncateAddress } from 'utils/string'
-import { useWeb3 } from 'hooks'
+import { useConnectWallets } from 'hooks'
 
 import { Jazzicon } from 'components/Jazzicon'
 
@@ -35,7 +35,7 @@ type AccountMenuProps = {
 }
 
 export function AccountMenu({ account }: AccountMenuProps) {
-  const { disconnect } = useWeb3()
+  const { disconnect } = useConnectWallets()
 
   return (
     <StyledAccounMenu

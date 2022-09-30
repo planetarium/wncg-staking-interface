@@ -13,7 +13,7 @@ import { gaEvent } from 'lib/gtag'
 import { networkChainId, networkShortNameFor } from 'utils/network'
 import { truncateAddress } from 'utils/string'
 import { getEtherscanUrl } from 'utils/url'
-import { useSettings, useSwitchNetwork, useWeb3 } from 'hooks'
+import { useConnectWallets, useSettings, useSwitchNetwork } from 'hooks'
 import { menuTransition, menuVariants } from './constants'
 
 import { Button } from 'components/Button'
@@ -28,7 +28,7 @@ export function AccountUserMenu({ close }: AccountUserMenuProps) {
   const [copied, setCopied] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
 
-  const { disconnect: _disconnect } = useWeb3()
+  const { disconnect: _disconnect } = useConnectWallets()
   const { toggleMuted } = useSettings()
   const { switchNetwork } = useSwitchNetwork()
 

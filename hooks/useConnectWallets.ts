@@ -6,19 +6,19 @@ import { useModal } from './useModal'
 import { useSettings } from './useSettings'
 import { useTx } from './useTx'
 
-export function useWeb3() {
+export function useConnectWallets() {
   const { addModal } = useModal()
   const { resetSettings } = useSettings()
   const { resetTx } = useTx()
 
-  const { disconnect: initDisconnect } = useDisconnect({
+  const { disconnect } = useDisconnect({
     onSuccess() {
       resetSettings()
       resetTx?.()
     },
   })
 
-  const openConnectModal = useCallback(() => {
+  const connect = useCallback(() => {
     if (typeof window === 'undefined' || !window.ethereum) {
       addModal({
         category: ModalCategory.MetaMaskGuide,
@@ -31,12 +31,8 @@ export function useWeb3() {
     })
   }, [addModal])
 
-  const disconnect = useCallback(() => {
-    initDisconnect()
-  }, [initDisconnect])
-
   return {
+    connect,
     disconnect,
-    openConnectModal,
   }
 }

@@ -11,12 +11,12 @@ import { gaEvent } from 'lib/gtag'
 import { networkChainId } from 'utils/network'
 import { parseTxError } from 'utils/tx'
 import {
+  useConnectWallets,
   useEarmark,
   useEarmarkIncentive,
   useEvents,
   useProvider,
   useToast,
-  useWeb3,
 } from 'hooks'
 import { motionVariants } from '../constants'
 
@@ -29,7 +29,7 @@ export function StakeSidebarAdvanced() {
   const [loading, setLoading] = useState(false)
 
   const { isConnected } = useAccount()
-  const { openConnectModal } = useWeb3()
+  const { connect } = useConnectWallets()
   const { earmarkRewards } = useEarmark()
   const {
     earmarkIncentive,
@@ -169,7 +169,7 @@ export function StakeSidebarAdvanced() {
                 Harvest BAL
               </Button>
             ) : (
-              <Button size="large" onClick={openConnectModal} fullWidth>
+              <Button size="large" onClick={connect} fullWidth>
                 Connect
               </Button>
             )}

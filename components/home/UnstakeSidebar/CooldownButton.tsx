@@ -2,7 +2,7 @@ import { useState } from 'react'
 import styles from '../styles/UnstakeSidebar.module.scss'
 
 import { gaEvent } from 'lib/gtag'
-import { useUnstake, useUnstakeTimestamps, useWeb3 } from 'hooks'
+import { useConnectWallets, useUnstake, useUnstakeTimestamps } from 'hooks'
 import { UnstakeStatus } from 'hooks/useUnstakeTimestamps'
 
 import { Button } from 'components/Button'
@@ -10,7 +10,7 @@ import { Button } from 'components/Button'
 export function CooldownButton() {
   const [loading, setLoading] = useState(false)
 
-  const { openConnectModal } = useWeb3()
+  const { connect } = useConnectWallets()
   const { startCooldown } = useUnstake()
   const { unstakeStatus } = useUnstakeTimestamps()
 
@@ -29,7 +29,7 @@ export function CooldownButton() {
   switch (unstakeStatus) {
     case UnstakeStatus.NotConnected:
       return (
-        <Button size="large" onClick={openConnectModal} fullWidth>
+        <Button size="large" onClick={connect} fullWidth>
           Connect
         </Button>
       )
