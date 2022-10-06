@@ -6,7 +6,7 @@ import {
   QueryClientProvider,
 } from '@tanstack/react-query'
 import { useMount } from 'react-use'
-import { RecoilRoot } from 'recoil'
+import { Provider } from 'jotai'
 import type { AppProps, NextWebVitalsMetric } from 'next/app'
 import dynamic from 'next/dynamic'
 import Script from 'next/script'
@@ -63,7 +63,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       <ThemeProvider theme={{}}>
         <QueryClientProvider client={queryClient.current}>
           <Hydrate state={pageProps.dehydratedState}>
-            <RecoilRoot>
+            <Provider>
               <WagmiConfig client={wagmiClient}>
                 <DefaultSeo {...DEFAULT_SEO} />
                 <CoingeckoAlert />
@@ -76,7 +76,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                 <GlobalFooter />
                 <MediaQueryEffects />
               </WagmiConfig>
-            </RecoilRoot>
+            </Provider>
           </Hydrate>
         </QueryClientProvider>
       </ThemeProvider>
