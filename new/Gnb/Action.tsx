@@ -1,6 +1,9 @@
-import { motion } from 'framer-motion'
 import { memo } from 'react'
+import { useRecoilValue } from 'recoil'
+import { AnimatePresence, motion } from 'framer-motion'
 import styled from 'styled-components'
+
+import { accountState } from 'app/states/connection'
 
 const StyledAction = styled(motion.div)`
   background-color: blue;
@@ -20,15 +23,21 @@ const motionVariants = {
 }
 
 function Action() {
+  const account = useRecoilValue(accountState)
+
   return (
-    <StyledAction
-      initial="initial"
-      animate="animate"
-      exit="exit"
-      variants={motionVariants}
-    >
-      Action
-    </StyledAction>
+    <AnimatePresence>
+      {account && (
+        <StyledAction
+          initial="initial"
+          animate="animate"
+          exit="exit"
+          variants={motionVariants}
+        >
+          Action
+        </StyledAction>
+      )}
+    </AnimatePresence>
   )
 }
 
