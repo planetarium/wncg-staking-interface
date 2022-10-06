@@ -1,15 +1,18 @@
-import { useCallback, useMemo } from 'react'
-import { useQuery } from '@tanstack/react-query'
-import { useAccount } from 'wagmi'
+import { useMemo } from 'react'
+import { useAtomValue, useSetAtom } from 'jotai'
+import type { BigNumber } from 'ethers'
+import { useAccount, useContractReads } from 'wagmi'
+import { isPast } from 'date-fns'
 
-import {
-  getCooldownEndTimestamp,
-  getWithdrawEndTimestamp,
-} from 'contracts/staking'
-import { REFETCH_INTERVAL } from 'constants/time'
+import { stakingContractAddressAtom } from 'states/staking'
+import { timestampsAtom } from 'states/user'
 import { bnum } from 'utils/num'
+import { networkChainId } from 'utils/network'
+import { findAbiFromStaking } from 'utils/wagmi'
 import { useStakedBalance } from './useStakedBalance'
-import { useStakingContract } from './useStakingContract'
+
+const FNS = ['getCooldownEndTimestamp', 'getWithdrawEndTimestamp']
+const ABIS = findAbiFromStaking(...FNS)
 
 export const UnstakeStatus = {
   NoCooldown: 'UNSTAKE_STATUS_NO_COOLDOWN',
@@ -21,56 +24,61 @@ export const UnstakeStatus = {
 export type UnstakeStatus = typeof UnstakeStatus[keyof typeof UnstakeStatus]
 
 export function useUnstakeTimestamps() {
-  const { contract, stakingAddress } = useStakingContract(true)
+  const { isConnected } = useAccount()
   const { stakedBalance } = useStakedBalance()
 
-  const { address: account, isConnected } = useAccount()
+  const { address: account } = useAccount()
 
-  const cooldownEndsAt = useQuery(
-    ['cooldownEndsAt', account, stakingAddress],
-    () => getCooldownEndTimestamp(contract!, account!),
-    {
-      enabled: !!contract && !!account,
-      refetchInterval: REFETCH_INTERVAL,
-    }
+  const stakingAddress = useAtomValue(stakingContractAddressAtom)
+  const [cooldownEndsAt, withdrawEndsAt] = useAtomValue(timestampsAtom)
+  const setTimestamps = useSetAtom(timestampsAtom)
+
+  const contracts = useMemo(
+    () =>
+      FNS.map((fn) => ({
+        addressOrName: stakingAddress,
+        contractInterface: ABIS,
+        functionName: fn,
+        chainId: networkChainId,
+        args: [account],
+      })),
+    [account, stakingAddress]
   )
 
-  const withdrawEndsAt = useQuery(
-    ['withdrawEndsAt', account, stakingAddress],
-    () => getWithdrawEndTimestamp(contract!, account!),
-    {
-      enabled: !!contract && !!account,
-    }
-  )
+  const { refetch } = useContractReads({
+    contracts,
+    enabled: !!account,
+    onSuccess(data: unknown = []) {
+      const timestamps = (data as BigNumber[]).map((timestamp) => {
+        let timestampInMs = timestamp?.toNumber() * 1_000 || 0
+        if (isPast(timestampInMs)) timestampInMs = 0
+        return timestampInMs
+      })
+      setTimestamps(timestamps)
+    },
+  })
 
   const unstakeStatus = useMemo(() => {
-    const cooldownEndTimestamp = cooldownEndsAt.data || 0
-    const withdrawEndTimestamp = withdrawEndsAt.data || 0
     const now = Date.now()
 
     switch (true) {
       case !isConnected:
         return UnstakeStatus.NotConnected
-      case now < withdrawEndTimestamp && cooldownEndTimestamp < now:
+      case now < withdrawEndsAt && cooldownEndsAt < now:
         return UnstakeStatus.Withdrawable
-      case now < cooldownEndTimestamp:
+      case now < cooldownEndsAt:
         return UnstakeStatus.CooldownInProgress
       case bnum(stakedBalance).isZero():
         return UnstakeStatus.NoStake
       default:
         return UnstakeStatus.NoCooldown
     }
-  }, [cooldownEndsAt.data, isConnected, stakedBalance, withdrawEndsAt.data])
-
-  const fetchTimestamps = useCallback(() => {
-    cooldownEndsAt.refetch()
-    withdrawEndsAt.refetch()
-  }, [cooldownEndsAt, withdrawEndsAt])
+  }, [cooldownEndsAt, isConnected, stakedBalance, withdrawEndsAt])
 
   return {
-    cooldownEndsAt: cooldownEndsAt.data || 0,
-    withdrawEndsAt: withdrawEndsAt.data || 0,
+    cooldownEndsAt,
+    withdrawEndsAt,
     unstakeStatus,
-    fetchTimestamps,
+    refetchTimestamps: refetch,
   }
 }
