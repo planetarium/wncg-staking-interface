@@ -1,8 +1,8 @@
-import { useRecoilValue } from 'recoil'
+import { useAtomValue } from 'jotai'
 import { useAccount } from 'wagmi'
 import styles from './style.module.scss'
 
-import { isMobileState } from 'app/states/mediaQuery'
+import { isMobileAtom } from 'states/ui'
 import { useConnectWallets } from 'hooks'
 
 import { Button } from 'components/Button'
@@ -11,7 +11,7 @@ export function GnbConnect() {
   const { isConnecting, isDisconnected } = useAccount()
   const { connect } = useConnectWallets()
 
-  const isMobile = useRecoilValue(isMobileState)
+  const isMobile = useAtomValue(isMobileAtom)
 
   const buttonSize = isMobile ? 'small' : 'medium'
 

@@ -1,8 +1,8 @@
 import { useRouter } from 'next/router'
-import { useRecoilValue } from 'recoil'
+import { useAtomValue } from 'jotai'
 import { useNetwork } from 'wagmi'
 
-import { invalidPriceState } from 'app/states/error'
+import { invalidPriceAtom } from 'states/error'
 import { networkChainId } from 'utils/network'
 
 export function useAlert() {
@@ -11,9 +11,9 @@ export function useAlert() {
   const isStakingPage =
     pathname === '/wncg' || pathname.startsWith('/wncg/pool')
 
+  const invalidPrice = useAtomValue(invalidPriceAtom)
   const ethereumNotDetected = typeof window !== 'undefined' && !window.ethereum
   const networkMismatch = chain && chain.id !== networkChainId
-  const invalidPrice = useRecoilValue(invalidPriceState)
 
   const showNetworkAlert =
     isStakingPage && !ethereumNotDetected && networkMismatch

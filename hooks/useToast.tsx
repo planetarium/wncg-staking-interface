@@ -1,11 +1,11 @@
 import { cssTransition, toast } from 'react-toastify'
-import { useSetRecoilState } from 'recoil'
+import { useSetAtom } from 'jotai'
 import { nanoid } from 'nanoid'
 
-import { toastIdListState } from 'app/states/toast'
+import { toastIdsAtom } from 'states/ui'
+import { configService } from 'services/config'
 
 import { Toast } from 'components/Toast'
-import { configService } from 'services/config'
 
 const toastAnimation = cssTransition({
   enter: 'fadeIn',
@@ -20,7 +20,7 @@ type AddToast = {
 }
 
 export function useToast() {
-  const setToastIdList = useSetRecoilState(toastIdListState)
+  const setToastIdList = useSetAtom(toastIdsAtom)
 
   function addToast(params: AddToast) {
     const toastId = `toast.${nanoid()}`
@@ -39,6 +39,7 @@ export function useToast() {
   }
 }
 
+// FIXME: Refactor
 function getTokensToImport(
   title: string,
   type?: ToastType
@@ -48,14 +49,14 @@ function getTokensToImport(
   title = title.toLowerCase()
 
   if (title.includes('wncg')) {
-    return [configService.rewardTokensList[0]]
+    return ['']
   }
 
   if (title.includes('bal')) {
-    return [configService.rewardTokensList[1]]
+    return [configService.bal]
   }
 
   if (title.includes('claim all')) {
-    return configService.rewardTokensList
+    return ['', configService.bal]
   }
 }

@@ -1,9 +1,9 @@
 import { memo } from 'react'
-import { useRecoilValue } from 'recoil'
+import { useAtomValue } from 'jotai'
 import { motion } from 'framer-motion'
 import styles from '../styles/Block.module.scss'
 
-import { legacyModeState } from 'app/states/settings'
+import { legacyModeAtom } from 'states/userSettings'
 import { UnstakeStatus, useUnstakeTimestamps } from 'hooks/useUnstakeTimestamps'
 import { formTransition, blockVariants } from '../constants'
 
@@ -11,8 +11,10 @@ import { UnstakeFormTimer } from './Timer'
 
 function UnstakeFormBlock() {
   const { unstakeStatus } = useUnstakeTimestamps()
+
+  const legacyMode = useAtomValue(legacyModeAtom)
+
   const isCoolingDown = unstakeStatus === UnstakeStatus.CooldownInProgress
-  const legacyMode = useRecoilValue(legacyModeState)
 
   return (
     <motion.section

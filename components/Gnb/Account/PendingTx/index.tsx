@@ -1,20 +1,21 @@
 import { useState } from 'react'
 import { useMount } from 'react-use'
-import { useSetRecoilState } from 'recoil'
+import { useSetAtom } from 'jotai'
 import { AnimatePresence } from 'framer-motion'
 import styles from './style.module.scss'
 
-import { txListState } from 'app/states/transaction'
+import { txListAtom } from 'states/tx'
 import { useTx } from 'hooks'
 
 import { PendingTxButton } from './TxButton'
 import { PendingTxMenu } from './TxMenu'
 
 export function AccountPendingTx() {
+  const [show, setShow] = useState(false)
+
   const { txService } = useTx()
 
-  const [show, setShow] = useState(false)
-  const setTxList = useSetRecoilState(txListState)
+  const setTxList = useSetAtom(txListAtom)
 
   function open() {
     setShow(true)

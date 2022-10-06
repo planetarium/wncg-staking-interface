@@ -1,12 +1,11 @@
-/* eslint-disable react/jsx-no-target-blank */
 import { memo, MouseEvent, ReactNode } from 'react'
-import { useRecoilValue } from 'recoil'
+import { useAtomValue } from 'jotai'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import clsx from 'clsx'
 import styles from './styles/GlobalFooter.module.scss'
 
-import { stakingContractAddressState } from 'app/states/settings'
+import { stakingContractAddressAtom } from 'states/staking'
 import { configService } from 'services/config'
 import { gaEvent } from 'lib/gtag'
 import { getEtherscanUrl } from 'utils/url'
@@ -24,7 +23,7 @@ function GlobalFooter() {
   const isStakingPage = pathname.startsWith('/wncg')
   const isDocumentPage = ['/wncg/terms', '/wncg/privacy'].includes(pathname)
 
-  const stakingAddress = useRecoilValue(stakingContractAddressState)
+  const stakingAddress = useAtomValue(stakingContractAddressAtom)
   const stakingContractUrl = getEtherscanUrl(stakingAddress)
 
   const snsLinks = (

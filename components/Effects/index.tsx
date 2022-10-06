@@ -2,6 +2,7 @@ import { memo } from 'react'
 
 import BaseEffects from './BaseEffects'
 import ConfigEffects from './ConfigEffects'
+import ContractEffects from './ContractEffects'
 import TxEffects from './TxEffects'
 
 function Effects() {
@@ -9,6 +10,7 @@ function Effects() {
     <>
       <BaseEffects />
       <ConfigEffects />
+      <ContractEffects />
       <TxEffects />
     </>
   )

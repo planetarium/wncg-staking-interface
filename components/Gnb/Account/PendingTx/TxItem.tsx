@@ -1,5 +1,4 @@
-/* eslint-disable react/jsx-no-target-blank */
-import { MouseEvent } from 'react'
+import type { MouseEvent } from 'react'
 import { formatDistanceToNow } from 'date-fns'
 import styles from './style.module.scss'
 

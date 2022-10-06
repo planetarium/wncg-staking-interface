@@ -3,9 +3,9 @@ import {
   ToastContainer as ReactToastContainer,
   ToastContainerProps,
 } from 'react-toastify'
-import { useRecoilValue } from 'recoil'
+import { useAtomValue } from 'jotai'
 
-import { isDesktopState } from 'app/states/mediaQuery'
+import { isDesktopAtom } from 'states/ui'
 import {
   MAX_TOAST_LENGTH_DESKTOP,
   MAX_TOAST_LENGTH_MOBILE,
@@ -28,7 +28,7 @@ const config: ToastContainerProps = {
 }
 
 export function ToastContainer() {
-  const isDesktop = useRecoilValue(isDesktopState)
+  const isDesktop = useAtomValue(isDesktopAtom)
 
   const toastConfig = useMemo(() => {
     return isDesktop

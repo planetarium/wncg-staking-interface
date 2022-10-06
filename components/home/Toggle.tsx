@@ -1,9 +1,9 @@
-import { useRecoilValue } from 'recoil'
+import { useAtomValue } from 'jotai'
 import { useAccount } from 'wagmi'
 import clsx from 'clsx'
 import styles from './styles/Header.module.scss'
 
-import { legacyModeState } from 'app/states/settings'
+import { legacyModeAtom } from 'states/userSettings'
 import { useSettings, useStakedBalance } from 'hooks'
 
 export function Toggle() {
@@ -11,7 +11,7 @@ export function Toggle() {
   const { toggleLegacyMode } = useSettings()
   const { hasBalanceInLegacyContract } = useStakedBalance()
 
-  const legacyMode = useRecoilValue(legacyModeState)
+  const legacyMode = useAtomValue(legacyModeAtom)
 
   const hideToggle = !isConnected || !hasBalanceInLegacyContract
 

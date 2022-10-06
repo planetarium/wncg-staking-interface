@@ -1,9 +1,9 @@
 import { memo, useMemo } from 'react'
 import NumberFormat from 'react-number-format'
-import { useRecoilValue } from 'recoil'
+import { useAtomValue } from 'jotai'
 import styles from './Composition.module.scss'
 
-import { invalidPriceState } from 'app/states/error'
+import { invalidPriceAtom } from 'states/error'
 import { configService } from 'services/config'
 import { bnum, isLessThanMinAmount } from 'utils/num'
 import { getTokenInfo } from 'utils/token'
@@ -25,7 +25,7 @@ function PreviewComposition({
   const { toFiat } = useFiatCurrency()
   const { poolTokenAddresses, nativeAssetIndex } = usePool()
 
-  const invalidPrice = useRecoilValue(invalidPriceState)
+  const invalidPrice = useAtomValue(invalidPriceAtom)
 
   const usdValues = amounts.map((amount, i) =>
     toFiat(poolTokenAddresses[i], amount)

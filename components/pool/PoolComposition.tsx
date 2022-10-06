@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-no-target-blank */
 import { memo, useMemo } from 'react'
 import NumberFormat from 'react-number-format'
 import styles from './styles/PoolComposition.module.scss'

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import styles from './style.module.scss'
 
-import { ModalCategory } from 'app/states/modal'
+import { ModalCategory } from 'states/ui'
 import { useModal, useUnstakeTimestamps } from 'hooks'
 import { UnstakeStatus } from 'hooks/useUnstakeTimestamps'
 

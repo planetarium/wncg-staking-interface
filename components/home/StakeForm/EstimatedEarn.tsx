@@ -1,11 +1,11 @@
 import { memo, useCallback, useEffect, useMemo, useState } from 'react'
-import { useRecoilValue } from 'recoil'
+import { useAtomValue } from 'jotai'
 import clsx from 'clsx'
 import styles from '../styles/EstimatedEarn.module.scss'
 
-import { estimatedEarnPeriodState } from 'app/states/settings'
+import { rewardTokensListAtom } from 'states/staking'
+import { estimationPeriodAtom } from 'states/userSettings'
 import { countUpOption, usdCountUpOption } from 'constants/countUp'
-import { configService } from 'services/config'
 import { getTokenSymbol } from 'utils/token'
 import { useFiatCurrency, useSettings } from 'hooks'
 import { useEstimation } from './useEstimation'
@@ -22,9 +22,10 @@ function EstimatedEarn({ amount = '' }: EstimatedEarnProps) {
 
   const { calcEstimatedRevenue } = useEstimation()
   const { toFiat } = useFiatCurrency()
-  const { updateEstimatedEarnPeriod } = useSettings()
+  const { updateEstimationPeriod } = useSettings()
 
-  const period = useRecoilValue(estimatedEarnPeriodState)
+  const period = useAtomValue(estimationPeriodAtom)
+  const rewardTokensList = useAtomValue(rewardTokensListAtom)
 
   const updateEstimation = useCallback(() => {
     const expectedRevenues = calcEstimatedRevenue(amount, period)
@@ -57,7 +58,7 @@ function EstimatedEarn({ amount = '' }: EstimatedEarnProps) {
             className={styles.day}
             type="button"
             value="day"
-            onClick={updateEstimatedEarnPeriod}
+            onClick={updateEstimationPeriod}
             aria-label="per day"
           >
             1d
@@ -66,7 +67,7 @@ function EstimatedEarn({ amount = '' }: EstimatedEarnProps) {
             className={styles.week}
             type="button"
             value="week"
-            onClick={updateEstimatedEarnPeriod}
+            onClick={updateEstimationPeriod}
             aria-label="per week"
           >
             1w
@@ -75,7 +76,7 @@ function EstimatedEarn({ amount = '' }: EstimatedEarnProps) {
             className={styles.month}
             type="button"
             value="month"
-            onClick={updateEstimatedEarnPeriod}
+            onClick={updateEstimationPeriod}
             aria-label="per month"
           >
             1m
@@ -84,7 +85,7 @@ function EstimatedEarn({ amount = '' }: EstimatedEarnProps) {
             className={styles.year}
             type="button"
             value="year"
-            onClick={updateEstimatedEarnPeriod}
+            onClick={updateEstimationPeriod}
             aria-label="per year"
           >
             1y
@@ -99,7 +100,7 @@ function EstimatedEarn({ amount = '' }: EstimatedEarnProps) {
       </p>
 
       <dl className={styles.detail}>
-        {configService.rewardTokensList.map((address, i) => {
+        {rewardTokensList.map((address, i) => {
           const amount = estimation[i]
 
           return (
@@ -122,7 +123,7 @@ function EstimatedEarn({ amount = '' }: EstimatedEarnProps) {
                 <CountUp
                   {...usdCountUpOption}
                   className={styles.usd}
-                  end={toFiat(configService.rewardTokensList[i], amount)}
+                  end={toFiat(rewardTokensList[i], amount)}
                   isApproximate
                   showAlways
                 />

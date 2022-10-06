@@ -1,14 +1,14 @@
 import type { MouseEvent } from 'react'
 import type { CloseButtonProps } from 'react-toastify'
-import { useRecoilValue } from 'recoil'
+import { useAtomValue } from 'jotai'
 import styles from './style.module.scss'
 
-import { isMobileState } from 'app/states/mediaQuery'
+import { isMobileAtom } from 'states/ui'
 
 import { Icon } from 'components/Icon'
 
 export function ToastCloseButton({ closeToast }: CloseButtonProps) {
-  const isMobile = useRecoilValue(isMobileState)
+  const isMobile = useAtomValue(isMobileAtom)
 
   if (isMobile) {
     return null

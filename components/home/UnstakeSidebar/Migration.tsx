@@ -1,9 +1,10 @@
-/* eslint-disable react/no-unescaped-entities */
+import { useAtomValue } from 'jotai'
 import clsx from 'clsx'
 import styles from '../styles/UnstakeSidebar.module.scss'
 
-import { usePool, useStaking, useTimer, useUnstakeTimestamps } from 'hooks'
+import { unstakeWindowAtom } from 'states/staking'
 import { formatTimer } from 'utils/string'
+import { usePool, useTimer, useUnstakeTimestamps } from 'hooks'
 
 import { CooldownButton } from './CooldownButton'
 
@@ -15,12 +16,13 @@ export function UnstakeSidebarMigration({
   isWithdrawable,
 }: UnstakeSidebarMigrationProps) {
   const { poolTokenName } = usePool()
-  const { unstakeWindow } = useStaking()
-  const { fetchTimestamps, withdrawEndsAt } = useUnstakeTimestamps()
+  const { refetchTimestamps, withdrawEndsAt } = useUnstakeTimestamps()
+
+  const unstakeWindow = useAtomValue(unstakeWindowAtom)
 
   function onExpiration() {
     if (!withdrawEndsAt) return
-    fetchTimestamps()
+    refetchTimestamps()
   }
 
   const { days, hours, minutes, seconds, isExpired, timeRemaining } = useTimer(
@@ -29,8 +31,7 @@ export function UnstakeSidebarMigration({
   )
 
   const percentRemaining = (
-    (Math.floor(timeRemaining / 1_000) / unstakeWindow) *
-    100
+    Math.min(Math.floor(timeRemaining / 1_000) / unstakeWindow, 1) * 100
   ).toFixed(2)
 
   return (

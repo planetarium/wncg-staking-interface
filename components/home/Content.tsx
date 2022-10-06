@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
-import { useRecoilValue } from 'recoil'
+import { useAtomValue } from 'jotai'
 import dynamic from 'next/dynamic'
 import { AnimatePresence } from 'framer-motion'
 import styles from './styles/Content.module.scss'
 
-import { legacyModeState } from 'app/states/settings'
+import { legacyModeAtom } from 'states/userSettings'
 import { useUnstakeTimestamps } from 'hooks'
 import { UnstakeStatus } from 'hooks/useUnstakeTimestamps'
 import { Tab } from './constants'
@@ -20,7 +20,7 @@ export function Content() {
   const { unstakeStatus } = useUnstakeTimestamps()
   const [tab, setTab] = useState<Tab>(Tab.Stake)
 
-  const legacyMode = useRecoilValue(legacyModeState)
+  const legacyMode = useAtomValue(legacyModeAtom)
 
   const isWithdrawable = unstakeStatus === UnstakeStatus.Withdrawable
 

@@ -3,7 +3,7 @@ import { useMount, useUnmount } from 'react-use'
 import { AnimatePresence } from 'framer-motion'
 import styles from './Actions.module.scss'
 
-import { ModalCategory } from 'app/states/modal'
+import { ModalCategory } from 'states/ui'
 import { useModal, usePool, useProvider } from 'hooks'
 import { getJoinActionButtonLabel, isApprovingState } from './utils'
 import { useJoinEvents } from './useJoinEvents'

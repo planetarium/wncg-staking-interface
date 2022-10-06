@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import styles from '../style.module.scss'
 
-import { ModalCategory } from 'app/states/modal'
+import { ModalCategory } from 'states/ui'
 import { gaEvent } from 'lib/gtag'
 import { parseTxError } from 'utils/tx'
 import {

@@ -1,8 +1,10 @@
 import { memo } from 'react'
+import { useAtomValue } from 'jotai'
 import { motion } from 'framer-motion'
 import styles from '../styles/StakeSidebar.module.scss'
 
-import { usePool, useRewards } from 'hooks'
+import { rewardTokenSymbolsAtom } from 'states/staking'
+import { usePool } from 'hooks'
 import { motionVariants, sidebarTransition } from '../constants'
 
 import { Button } from 'components/Button'
@@ -11,7 +13,8 @@ import { StakeSidebarBalance } from './Balance'
 
 function StakeSidebar() {
   const { poolName, poolTokenName } = usePool()
-  const { rewardTokenSymbols } = useRewards()
+
+  const rewardTokenSymbols = useAtomValue(rewardTokenSymbolsAtom)
 
   return (
     <motion.aside

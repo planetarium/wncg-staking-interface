@@ -1,11 +1,15 @@
 import { useCallback, useMemo } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { useSetRecoilState } from 'recoil'
+import { useAtomValue, useSetAtom } from 'jotai'
 
-import { invalidPriceState } from 'app/states/error'
+import { invalidPriceAtom } from 'states/error'
+import { rewardTokensListAtom } from 'states/staking'
 import { TOKEN_PRICES_PLACEHOLDERS } from 'constants/tokens'
 import { configService } from 'services/config'
 import { fetchNativeAssetPrice, fetchTokenPrices } from 'lib/coingecko'
+import { uniqAddress } from 'utils/address'
+import { calcPoolTotalValue } from 'utils/calculator'
+import { bnum } from 'utils/num'
 import { usePool } from './usePool'
 
 const options = {
@@ -17,16 +21,26 @@ const options = {
 export function usePrices() {
   const queryClient = useQueryClient()
 
-  const setInvalidPrice = useSetRecoilState(invalidPriceState)
+  const {
+    bptAddress,
+    ercTokenIndex,
+    poolTokenAddresses,
+    poolTokens,
+    poolTotalShares,
+  } = usePool()
 
-  const { bptAddress, ercTokenIndex, poolService, poolTokenAddresses } =
-    usePool()
+  const rewardTokensList = useAtomValue(rewardTokensListAtom)
+  const setInvalidPrice = useSetAtom(invalidPriceAtom)
 
-  const addresses = [
-    ...poolTokenAddresses,
-    ...configService.rewardTokensList,
-    configService.bal,
-  ]
+  const addresses = useMemo(
+    () =>
+      uniqAddress([
+        ...poolTokenAddresses,
+        ...rewardTokensList,
+        configService.bal,
+      ]),
+    [poolTokenAddresses, rewardTokensList]
+  )
 
   const { data: prices } = useQuery<TokenPrices>(
     ['tokenPrices', addresses],
@@ -58,10 +72,12 @@ export function usePrices() {
     }
   )
 
-  const bptPrice = useMemo(
-    () => poolService?.bptPrice(prices) || '0',
-    [poolService, prices]
-  )
+  const bptPrice = useMemo(() => {
+    if (!prices) return '0'
+    return bnum(calcPoolTotalValue(poolTokens, prices))
+      .div(poolTotalShares)
+      .toString()
+  }, [poolTokens, poolTotalShares, prices])
 
   const priceMap = useMemo(() => {
     const map = { ...prices, ...nativeAssetPrice } || {}

@@ -1,13 +1,13 @@
-import { useRecoilValue } from 'recoil'
+import { useAtomValue } from 'jotai'
 import { AnimatePresence } from 'framer-motion'
 
-import { modalListState } from 'app/states/modal'
+import { modalsAtom } from 'states/ui'
 
 import { ModalPortal } from './Portal'
 import { ModalView } from './View'
 
 function Modal() {
-  const modalList = useRecoilValue(modalListState)
+  const modalList = useAtomValue(modalsAtom)
 
   return (
     <ModalPortal>

@@ -1,11 +1,10 @@
-/* eslint-disable react/jsx-no-target-blank */
 import { useMount } from 'react-use'
-import { useRecoilValue } from 'recoil'
+import { useAtomValue } from 'jotai'
 import clsx from 'clsx'
 import styles from './style.module.scss'
 
-import { mutedState } from 'app/states/settings'
-import { latestToastIdState } from 'app/states/toast'
+import { latestToastIdAtom } from 'states/ui'
+import { mutedAtom } from 'states/userSettings'
 import { parseMarkdown } from 'utils/string'
 import { renderToastBadge } from 'utils/toast'
 import { getTxUrl } from 'utils/url'
@@ -30,8 +29,8 @@ export function Toast({
   tokensToImport,
   type = 'info',
 }: ToastProps) {
-  const muted = useRecoilValue(mutedState)
-  const latestToastId = useRecoilValue(latestToastIdState)
+  const latestToastId = useAtomValue(latestToastIdAtom)
+  const muted = useAtomValue(mutedAtom)
 
   const audio = new Audio('/alert-default.opus')
   const content = parseMarkdown(message)

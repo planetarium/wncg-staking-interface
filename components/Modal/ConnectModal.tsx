@@ -1,7 +1,7 @@
 import type { MouseEvent } from 'react'
 import { useAccount, useConnect } from 'wagmi'
 
-import { ModalCategory } from 'app/states/modal'
+import { ModalCategory } from 'states/ui'
 import { gaEvent } from 'lib/gtag'
 import { useModal } from 'hooks'
 

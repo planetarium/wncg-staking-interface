@@ -7,12 +7,12 @@ import {
 } from 'react'
 import { useMount, useUnmount } from 'react-use'
 import NumberFormat from 'react-number-format'
-import { useRecoilValue } from 'recoil'
+import { useAtomValue } from 'jotai'
 import { motion } from 'framer-motion'
 import clsx from 'clsx'
 import styles from '../styles/Slippage.module.scss'
 
-import { slippageState } from 'app/states/settings'
+import { slippageAtom } from 'states/userSettings'
 import { gaEvent } from 'lib/gtag'
 import { useSettings } from 'hooks'
 import { menuTransition, menuVariants, SLIPPAGES } from './constants'
@@ -24,7 +24,7 @@ type SlippageMenuProps = {
 function SlippageMenu({ close }: SlippageMenuProps) {
   const { updateSlippage } = useSettings()
 
-  const slippage = useRecoilValue(slippageState) || 0
+  const slippage = useAtomValue(slippageAtom) || 0
   const menuRef = useRef<HTMLDivElement>(null)
 
   const customSlippage = !SLIPPAGES.includes(slippage)

@@ -4,11 +4,11 @@ import { useTimer, useUnstakeTimestamps } from 'hooks'
 import { Icon } from 'components/Icon'
 
 export function UnstakeFormTimer() {
-  const { cooldownEndsAt, fetchTimestamps } = useUnstakeTimestamps()
+  const { cooldownEndsAt, refetchTimestamps } = useUnstakeTimestamps()
 
   const { days, hours, minutes, seconds, isExpired } = useTimer(
     cooldownEndsAt || 0,
-    fetchTimestamps
+    refetchTimestamps
   )
 
   if (isExpired) {

@@ -1,56 +1,39 @@
 import { useMemo } from 'react'
-import { useQuery } from '@tanstack/react-query'
-import { useRecoilValue } from 'recoil'
-import { useAccount } from 'wagmi'
+import { useAtomValue } from 'jotai'
 
-import { legacyModeState } from 'app/states/settings'
-import { getStakedTokenBalance } from 'contracts/staking'
-import { REFETCH_INTERVAL } from 'constants/time'
+import { stakedTokenBalancesAtom } from 'states/user'
+import { legacyModeAtom } from 'states/userSettings'
+import { configService } from 'services/config'
 import { bnum } from 'utils/num'
-import { useStakingContract } from './useStakingContract'
+
+const legacyContractIndex = configService.stakingContractAddresses.findIndex(
+  (address) => address === configService.legacyStakingAddress
+)
+const stakingContractIndex = configService.stakingContractAddresses.indexOf(
+  configService.stakingAddress
+)
 
 export function useStakedBalance() {
-  const { legacyContract, newContract } = useStakingContract(true)
+  const legacyMode = useAtomValue(legacyModeAtom)
 
-  const { address: account } = useAccount()
-  const legacyMode = useRecoilValue(legacyModeState)
+  const stakedBalances = useAtomValue(stakedTokenBalancesAtom)
 
-  const newStakedBalance = useQuery(
-    ['newStakedBalance', account],
-    () => getStakedTokenBalance(newContract!, account!),
-    {
-      enabled: !!newContract && !!account,
-      refetchInterval: REFETCH_INTERVAL,
-      keepPreviousData: true,
-      placeholderData: '0',
-    }
+  const currentVersionIndex = useMemo(
+    () => (legacyMode ? legacyContractIndex : stakingContractIndex),
+    [legacyMode]
   )
 
-  const legacyStakedBalance = useQuery(
-    ['legacyStakedBalance', account],
-    () => getStakedTokenBalance(legacyContract!, account!),
-    {
-      enabled: !!legacyContract && !!account,
-      refetchInterval: REFETCH_INTERVAL,
-      keepPreviousData: true,
-      placeholderData: '0',
-      staleTime: 60 * 1_000,
-    }
-  )
-
-  const stakedBalance = useMemo(
-    () => (legacyMode ? legacyStakedBalance : newStakedBalance),
-    [legacyMode, legacyStakedBalance, newStakedBalance]
-  )
+  const stakedBalance = useMemo(() => {
+    return stakedBalances[currentVersionIndex]
+  }, [currentVersionIndex, stakedBalances])
 
   const hasBalanceInLegacyContract = useMemo(
-    () => bnum(legacyStakedBalance?.data || '0').gt(0),
-    [legacyStakedBalance.data]
+    () => bnum(stakedBalances[legacyContractIndex]).gt(0),
+    [stakedBalances]
   )
 
   return {
     hasBalanceInLegacyContract,
-    stakedBalance: stakedBalance.data || '0',
-    fetchStakedBalance: stakedBalance.refetch,
+    stakedBalance,
   }
 }

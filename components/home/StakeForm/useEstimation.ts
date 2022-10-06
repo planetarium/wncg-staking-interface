@@ -1,14 +1,17 @@
 import { useCallback } from 'react'
+import { useAtomValue } from 'jotai'
 
+import { totalStakedAtom } from 'states/staking'
 import { calcApr } from 'utils/calculator'
 import { bnum } from 'utils/num'
-import { useStaking, usePrices, useFiatCurrency, useApr } from 'hooks'
+import { useApr, useFiatCurrency, usePrices } from 'hooks'
 
 export function useEstimation() {
   const { emissionPerSecList, rewardTokenPriceList } = useApr()
   const { getBptFiatValue } = useFiatCurrency()
   const { bptPrice } = usePrices()
-  const { totalStaked } = useStaking()
+
+  const totalStaked = useAtomValue(totalStakedAtom)
 
   const calcEstimatedRevenue = useCallback(
     (amount: string, option: string) => {

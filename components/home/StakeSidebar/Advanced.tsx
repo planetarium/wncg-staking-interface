@@ -1,23 +1,18 @@
-import { useCallback, useEffect, useState } from 'react'
-import { useRecoilValue } from 'recoil'
+import { useState } from 'react'
+import { useAtomValue } from 'jotai'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useAccount, useNetwork } from 'wagmi'
 import styles from '../styles/StakeSidebar.module.scss'
 
-import { isMobileState } from 'app/states/mediaQuery'
-import { legacyModeState } from 'app/states/settings'
+import { earmarkIncentiveAtom } from 'states/staking'
+import { legacyModeAtom } from 'states/userSettings'
+import { isMobileAtom } from 'states/ui'
 import { countUpOption, usdCountUpOption } from 'constants/countUp'
+import { configService } from 'services/config'
 import { gaEvent } from 'lib/gtag'
 import { networkChainId } from 'utils/network'
 import { parseTxError } from 'utils/tx'
-import {
-  useConnectWallets,
-  useEarmark,
-  useEarmarkIncentive,
-  useEvents,
-  useProvider,
-  useToast,
-} from 'hooks'
+import { useConnectWallets, useEarmark, useFiatCurrency, useToast } from 'hooks'
 import { motionVariants } from '../constants'
 
 import { Button } from 'components/Button'
@@ -31,25 +26,23 @@ export function StakeSidebarAdvanced() {
   const { isConnected } = useAccount()
   const { connect } = useConnectWallets()
   const { earmarkRewards } = useEarmark()
-  const {
-    earmarkIncentive,
-    earmarkIncentiveInFiatValue,
-    fetchEarmarkIncentive,
-  } = useEarmarkIncentive()
-  const { earmarkRewardsEvent } = useEvents()
+  const { toFiat } = useFiatCurrency()
   const { chain } = useNetwork()
-  const provider = useProvider()
   const { addToast } = useToast()
 
-  const isMobile = useRecoilValue(isMobileState)
-  const legacyMode = useRecoilValue(legacyModeState)
-  const networkMismatch = chain && chain.id !== networkChainId
+  const isMobile = useAtomValue(isMobileAtom)
+  const earmarkIncentive = useAtomValue(earmarkIncentiveAtom)
+  const legacyMode = useAtomValue(legacyModeAtom)
 
+  const earmarkIncentiveInFiatValue = toFiat(
+    configService.bal,
+    earmarkIncentive
+  )
+  const networkMismatch = chain && chain.id !== networkChainId
   const disabled = networkMismatch || loading
 
   function toggle() {
     if (!open) {
-      fetchEarmarkIncentive()
       gaEvent({
         name: 'open_advanced',
       })
@@ -76,19 +69,20 @@ export function StakeSidebarAdvanced() {
     }
   }
 
-  const earmarkRewardsHandler = useCallback(() => {
-    setLoading(false)
-  }, [])
+  // FIXME: Handle event in different PR
+  // const earmarkRewardsHandler = useCallback(() => {
+  //   setLoading(false)
+  // }, [])
 
-  // NOTE: Earmark rewards event
-  useEffect(() => {
-    if (earmarkRewardsEvent) {
-      provider?.on(earmarkRewardsEvent, earmarkRewardsHandler)
-      return () => {
-        provider?.off(earmarkRewardsEvent)
-      }
-    }
-  }, [earmarkRewardsEvent, earmarkRewardsHandler, provider])
+  // // NOTE: Earmark rewards event
+  // useEffect(() => {
+  //   if (earmarkRewardsEvent) {
+  //     provider?.on(earmarkRewardsEvent, earmarkRewardsHandler)
+  //     return () => {
+  //       provider?.off(earmarkRewardsEvent)
+  //     }
+  //   }
+  // }, [earmarkRewardsEvent, earmarkRewardsHandler, provider])
 
   if (legacyMode) return null
 

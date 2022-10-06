@@ -3,7 +3,7 @@ import { AnimatePresence } from 'framer-motion'
 import type { Event } from 'ethers'
 import styles from '../style.module.scss'
 
-import { ModalCategory } from 'app/states/modal'
+import { ModalCategory } from 'states/ui'
 import { parseTxError } from 'utils/tx'
 import { useEvents, useExitPool, useModal, useProvider, useToast } from 'hooks'
 

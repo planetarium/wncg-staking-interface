@@ -1,23 +1,24 @@
 import { useCallback, useMemo } from 'react'
-import { useResetRecoilState, useSetRecoilState } from 'recoil'
+import { useSetAtom } from 'jotai'
+import { useResetAtom } from 'jotai/utils'
 import type { Transaction } from 'ethers'
 import store from 'store'
 
-import { txListState } from 'app/states/transaction'
+import { txListAtom } from 'states/tx'
 import STORAGE_KEYS from 'constants/storageKeys'
 import { MessageService } from 'services/message'
 import { TransactionSubscriptionService } from 'services/transactionSubscription'
+import { usePool } from './usePool'
 import { useProvider } from './useProvider'
-import { useRefetch } from './useRefetch'
 import { useToast } from './useToast'
 
 export function useTx() {
   const provider = useProvider()
-  const refetch = useRefetch()
+  const { refetchPool } = usePool()
   const { addToast } = useToast()
 
-  const setTxList = useSetRecoilState(txListState)
-  const resetTxList = useResetRecoilState(txListState)
+  const setTxList = useSetAtom(txListAtom)
+  const resetTxList = useResetAtom(txListAtom)
 
   const txService = useMemo(() => {
     if (!provider) return null
@@ -101,9 +102,9 @@ export function useTx() {
         rejectTx(transaction.hash, error)
       }
 
-      refetch()
+      refetchPool()
     },
-    [refetch, rejectTx, resolveTx, txService]
+    [refetchPool, rejectTx, resolveTx, txService]
   )
 
   const resetTx = useCallback(() => {

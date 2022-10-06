@@ -1,8 +1,7 @@
-import { useMount } from 'react-use'
 import styles from '../../style.module.scss'
 
-import { ModalCategory } from 'app/states/modal'
-import { useAllowances, useModal } from 'hooks'
+import { ModalCategory } from 'states/ui'
+import { useModal } from 'hooks'
 
 import { Icon } from 'components/Icon'
 import PreviewComposition from '../Composition'
@@ -24,14 +23,11 @@ function JoinPreviewModal({
   rektPriceImpact,
   totalFiatValue,
 }: JoinPreviewModalProps) {
-  const { fetchAllowances } = useAllowances()
   const { removeModal } = useModal()
 
   function close() {
     removeModal(ModalCategory.JoinPreview)
   }
-
-  useMount(fetchAllowances)
 
   return (
     <div className={styles.previewModal}>

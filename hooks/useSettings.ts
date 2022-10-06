@@ -1,34 +1,29 @@
 import { MouseEvent, useCallback } from 'react'
-import { useResetRecoilState, useSetRecoilState } from 'recoil'
-import store from 'store'
+import { useSetAtom } from 'jotai'
+import { RESET, useResetAtom } from 'jotai/utils'
 
 import {
-  EstimatedEarnPeriod,
-  estimatedEarnPeriodState,
-  legacyModeState,
-  mutedState,
-  slippageState,
-} from 'app/states/settings'
-import STORAGE_KEYS from 'constants/storageKeys'
+  EstimationPeriod,
+  estimationPeriodAtom,
+  legacyModeAtom,
+  mutedAtom,
+  slippageAtom,
+} from 'states/userSettings'
 import { gaEvent } from 'lib/gtag'
 import { useTx } from './useTx'
 
 export function useSettings() {
   const { resetTx } = useTx()
 
-  const setEstimatedEarnPeriod = useSetRecoilState(estimatedEarnPeriodState)
-  const setMuted = useSetRecoilState(mutedState)
-  const setSlippage = useSetRecoilState(slippageState)
-  const setLegacyMode = useSetRecoilState(legacyModeState)
+  const setEstimationPeriod = useSetAtom(estimationPeriodAtom)
+  const setMuted = useSetAtom(mutedAtom)
+  const setSlippage = useSetAtom(slippageAtom)
+  const setLegacyMode = useSetAtom(legacyModeAtom)
 
-  const resetEstimatedEarnPeriod = useResetRecoilState(estimatedEarnPeriodState)
-  const resetMuted = useResetRecoilState(mutedState)
-  const resetSlippage = useResetRecoilState(slippageState)
-  const resetLegacyMode = useResetRecoilState(legacyModeState)
+  const resetLegacyMode = useResetAtom(legacyModeAtom)
 
   const toggleMuted = useCallback(() => {
     setMuted((prev) => {
-      store.set(STORAGE_KEYS.UserSettings.Muted, !prev)
       gaEvent({
         name: 'mute_sound',
         params: {
@@ -52,14 +47,12 @@ export function useSettings() {
     resetTx()
   }, [resetTx, setLegacyMode])
 
-  const updateEstimatedEarnPeriod = useCallback(
+  const updateEstimationPeriod = useCallback(
     <T extends HTMLButtonElement>(e: MouseEvent<T>) => {
       const { value: newPeriod } = e.currentTarget as T & {
-        value: EstimatedEarnPeriod
+        value: EstimationPeriod
       }
-
-      setEstimatedEarnPeriod(newPeriod)
-      store.set(STORAGE_KEYS.UserSettings.EstimatedEarnPeriod, newPeriod)
+      setEstimationPeriod(newPeriod)
       gaEvent({
         name: 'estimated_earn_period',
         params: {
@@ -67,15 +60,13 @@ export function useSettings() {
         },
       })
     },
-    [setEstimatedEarnPeriod]
+    [setEstimationPeriod]
   )
 
   const updateSlippage = useCallback(
     (value: string | null) => {
       const newSlippage = value ? Number(value) : null
-
       setSlippage(newSlippage)
-      store.set(STORAGE_KEYS.UserSettings.Slippage, newSlippage)
       gaEvent({
         name: 'slippage',
         params: {
@@ -87,20 +78,17 @@ export function useSettings() {
   )
 
   const resetSettings = useCallback(() => {
-    resetEstimatedEarnPeriod()
-    resetMuted()
-    resetSlippage()
+    setEstimationPeriod(RESET)
+    setMuted(RESET)
+    setSlippage(RESET)
     resetLegacyMode()
-    store.remove(STORAGE_KEYS.UserSettings.EstimatedEarnPeriod)
-    store.remove(STORAGE_KEYS.UserSettings.Muted)
-    store.remove(STORAGE_KEYS.UserSettings.Slippage)
-  }, [resetEstimatedEarnPeriod, resetLegacyMode, resetMuted, resetSlippage])
+  }, [resetLegacyMode, setEstimationPeriod, setMuted, setSlippage])
 
   return {
     resetSettings,
     toggleLegacyMode,
     toggleMuted,
-    updateEstimatedEarnPeriod,
+    updateEstimationPeriod,
     updateSlippage,
   }
 }

@@ -1,12 +1,12 @@
 import { useState } from 'react'
-import { useRecoilValue } from 'recoil'
+import { useAtomValue } from 'jotai'
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import { NextSeo } from 'next-seo'
 import { AnimatePresence } from 'framer-motion'
 import styles from 'styles/Wncg.module.scss'
 
-import { legacyModeState } from 'app/states/settings'
+import { legacyModeAtom } from 'states/userSettings'
 import { STAKING_SEO } from 'lib/seo'
 
 import PageWrapper from 'components/StakingPageWrapper'
@@ -18,7 +18,7 @@ import { MigrationModal } from 'components/home/MigrationModal'
 
 const WncgStaking: NextPage = () => {
   const [showModal, setShowModal] = useState(false)
-  const legacyMode = useRecoilValue(legacyModeState)
+  const legacyMode = useAtomValue(legacyModeAtom)
 
   function open() {
     setShowModal(true)
