@@ -26,8 +26,6 @@ import GlobalFooter from 'new/GlobalFooter'
 import { CoingeckoAlert } from 'components/CoingeckoAlert'
 import { NetworkAlert } from 'components/NetworkAlert'
 import { ToastContainer } from 'components/ToastContainer'
-import MediaQueryEffects from 'components/Effects/MediaQueryEffects'
-import { ToastEffects } from 'components/Effects/ToastEffects'
 
 const Modal = dynamic(() => import('components/Modal'))
 
@@ -65,16 +63,18 @@ function MyApp({ Component, pageProps }: AppProps) {
           <Hydrate state={pageProps.dehydratedState}>
             <Provider>
               <WagmiConfig client={wagmiClient}>
-                <DefaultSeo {...DEFAULT_SEO} />
                 <CoingeckoAlert />
                 <NetworkAlert />
-                <Gnb />
-                <Component {...pageProps} />
-                <ToastEffects />
+                <DefaultSeo {...DEFAULT_SEO} />
+
+                <main>
+                  <Gnb />
+                  <Component {...pageProps} />
+                  <GlobalFooter />
+                </main>
+
                 <Modal />
                 <ToastContainer />
-                <GlobalFooter />
-                <MediaQueryEffects />
               </WagmiConfig>
             </Provider>
           </Hydrate>

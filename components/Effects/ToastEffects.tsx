@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react'
+import { memo, useEffect, useMemo } from 'react'
 import { toast } from 'react-toastify'
 import { useAtom, useAtomValue } from 'jotai'
 
@@ -8,7 +8,7 @@ import {
   MAX_TOAST_LENGTH_MOBILE,
 } from 'constants/toast'
 
-export function ToastEffects() {
+function ToastEffects() {
   const [toastIdList, setToastIdList] = useAtom(toastIdsAtom)
   const isDesktop = useAtomValue(isDesktopAtom)
 
@@ -29,3 +29,5 @@ export function ToastEffects() {
 
   return null
 }
+
+export default memo(ToastEffects)
