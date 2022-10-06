@@ -6,14 +6,9 @@ import {
 } from 'lib/abi'
 
 function findAbi(abiMap: any, ...args: string[]) {
-  const abiList = args.flatMap((fn) => {
-    const match = abiMap.find(
-      (abi: any) => abi.type === 'function' && abi.name === fn
-    )
-    if (match) return [match]
-    return []
-  })
-  return abiList
+  return args.flatMap((fn) =>
+    abiMap.filter((abi: any) => abi.type === 'function' && abi.name === fn)
+  )
 }
 
 export function findAbiFromBalancerVault(...args: string[]) {
