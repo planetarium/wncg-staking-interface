@@ -34,7 +34,6 @@ interface Env {
     twitter: string
   }
   stakingAddress: string
-  rewardTokensList: string[]
   version: string
   zeroAddress: string
 }
@@ -109,12 +108,6 @@ export class ConfigService {
       stakingAddress:
         process.env.NEXT_PUBLIC_STAKING_CONTRACT_ADDRESS ||
         '0xc53b567A70dB04E928FB96D6A417971aa88fdA38',
-      rewardTokensList: process.env.NEXT_PUBLIC_REWARD_TOKENS_LIST?.split(
-        ','
-      ) || [
-        '0xf203ca1769ca8e9e8fe1da9d147db68b6c919817',
-        '0xba100000625a3754423978a60c9317c58a424e3d',
-      ],
       version: process.env.NEXT_PUBLIC_VERSION || 'v2.0.0',
       zeroAddress: '0x0000000000000000000000000000000000000000',
     }
@@ -192,8 +185,8 @@ export class ConfigService {
     return this.env.stakingAddress.toLowerCase()
   }
 
-  get rewardTokensList() {
-    return this.env.rewardTokensList
+  get stakingContractAddresses() {
+    return [this.stakingAddress, this.legacyStakingAddress]
   }
 
   get zeroAddress() {

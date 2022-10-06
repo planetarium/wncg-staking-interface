@@ -13,7 +13,7 @@ export function convertAddress(address: string) {
   return addressMap[address.toLowerCase()] || address.toLowerCase()
 }
 
-export function uniqAddress(_addresses: string[]) {
+export function uniqAddress(_addresses: Array<string | undefined>) {
   const addresses = _addresses.map((address) => address?.toLowerCase() || '')
   return addresses.flatMap((address, i) => {
     if (!address) return []
