@@ -1,13 +1,11 @@
 import { memo, useMemo } from 'react'
 import NumberFormat from 'react-number-format'
-import { useAtomValue } from 'jotai'
 import styles from './Composition.module.scss'
 
-import { invalidPriceAtom } from 'states/error'
 import { configService } from 'services/config'
 import { bnum, isLessThanMinAmount } from 'utils/num'
 import { getTokenInfo } from 'utils/token'
-import { usePool, useFiatCurrency } from 'hooks'
+import { usePool, useFiatCurrency, usePrices } from 'hooks'
 
 import { TokenIcon } from 'components/TokenIcon'
 
@@ -24,8 +22,7 @@ function PreviewComposition({
 }: PreviewCompositionProps) {
   const { toFiat } = useFiatCurrency()
   const { poolTokenAddresses, nativeAssetIndex } = usePool()
-
-  const invalidPrice = useAtomValue(invalidPriceAtom)
+  const { invalidPriceError } = usePrices()
 
   const usdValues = amounts.map((amount, i) =>
     toFiat(poolTokenAddresses[i], amount)
@@ -66,7 +63,7 @@ function PreviewComposition({
             <dt>
               <TokenIcon className={styles.token} symbol={symbol} />
               <strong className={styles.symbol}>{symbol}</strong>
-              {!invalidPrice && percent && (
+              {!invalidPriceError && percent && (
                 <span className={styles.percent}>({percent}%)</span>
               )}
             </dt>
