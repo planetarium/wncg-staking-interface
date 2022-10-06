@@ -3,6 +3,10 @@ import { Network } from '@balancer-labs/sdk'
 import config from 'config'
 
 interface Env {
+  apiKeys: {
+    coinmarketcap: string
+    infura: string
+  }
   coingecko: {
     baseUrl: string
   }
@@ -45,9 +49,13 @@ export class ConfigService {
 
   get env(): Env {
     return {
+      apiKeys: {
+        coinmarketcap: process.env.NEXT_PUBLIC_COINGECKO_API_BASE_URL || '',
+        infura: process.env.NEXT_PUBLIC_INFURA_API_KEY || '',
+      },
       coingecko: {
         baseUrl:
-          process.env.NEXT_PUBLIC_COINGECKO_API_BASE_UR ||
+          process.env.NEXT_PUBLIC_COINGECKO_API_BASE_URL ||
           'https://api.coingecko.com/api/v3',
       },
       docs: {
@@ -138,6 +146,10 @@ export class ConfigService {
 
   get weth() {
     return this.network.addresses.weth.toLowerCase()
+  }
+
+  get apiKeys() {
+    return this.env.apiKeys
   }
 
   get coingecko() {

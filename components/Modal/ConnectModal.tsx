@@ -1,66 +1,65 @@
-import { useState } from 'react'
-import styles from './style.module.scss'
+import type { MouseEvent } from 'react'
+import { useAccount, useConnect } from 'wagmi'
 
 import { ModalCategory } from 'app/states/modal'
-import { useConnection, useModal } from 'hooks'
-
-import { Button } from 'components/Button'
-import { Checkbox } from 'components/Checkbox'
-import { Icon } from 'components/Icon'
+import { gaEvent } from 'lib/gtag'
+import { useModal } from 'hooks'
 
 function ConnectModal() {
-  const { connect } = useConnection()
+  const { isConnected, address } = useAccount()
   const { removeModal } = useModal()
 
-  const [checked, setChecked] = useState(false)
+  const { connect, connectors } = useConnect({
+    onSuccess() {
+      removeModal(ModalCategory.Connect)
+    },
+  })
 
-  function close() {
-    removeModal(ModalCategory.Connect)
-  }
+  function handleConnect(e: MouseEvent<HTMLButtonElement>) {
+    const index = Number(e.currentTarget.value)
+    const connector = connectors[index]
 
-  function handleCheck(value: boolean) {
-    setChecked(value)
+    connect({ connector })
+    gaEvent({
+      name: 'connect_metamask',
+      params: {
+        walletProvider: connector.name,
+      },
+    })
   }
 
   return (
-    <div className={styles.connectModal}>
-      <header className={styles.header}>
-        <h1 className={styles.title}>Connect Your Wallet</h1>
-        <button
-          className={styles.closeButton}
-          type="button"
-          onClick={close}
-          aria-label="Close"
-        >
-          <Icon id="close" />
-        </button>
+    <aside>
+      <header>
+        <h2>Connect a wallet</h2>
+        <p>
+          By connecting a wallet, you agree to Nine Chronicles Ltd&apos;s Terms
+          of Service and Privacy Policy.
+        </p>
       </header>
-
-      <div className={styles.agreement}>
-        <Checkbox
-          className={styles.checkbox}
-          id="agreement"
-          variant="light"
-          checked={checked}
-          onChange={handleCheck}
-        />
-        <label htmlFor="agreement">
-          I read and accept the
-          <a href="/" target="_blank" rel="noopener">
-            Terms of Service
-          </a>
-          and
-          <a href="/" target="_blank" rel="noopener">
-            Privacy Policy
-          </a>
-        </label>
+      <div>
+        {JSON.stringify(isConnected)}
+        <hr />
+        {JSON.stringify(address)}
       </div>
 
-      <Button size="large" disabled={!checked} onClick={connect}>
-        <Icon id="metamask" />
-        Connect to MetaMask
-      </Button>
-    </div>
+      <div className="buttonGroup">
+        {connectors.map((connector, i) => {
+          return (
+            <button
+              key={`connect_${connector.id}`}
+              type="button"
+              onClick={handleConnect}
+              value={i}
+              disabled={!connector.ready}
+              style={{ background: 'yellow', padding: 8, marginRight: 8 }}
+            >
+              {connector.name}
+            </button>
+          )
+        })}
+      </div>
+    </aside>
   )
 }
 

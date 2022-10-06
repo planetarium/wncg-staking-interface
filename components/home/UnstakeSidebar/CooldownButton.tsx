@@ -2,7 +2,7 @@ import { useState } from 'react'
 import styles from '../styles/UnstakeSidebar.module.scss'
 
 import { gaEvent } from 'lib/gtag'
-import { useConnection, useUnstake, useUnstakeTimestamps } from 'hooks'
+import { useConnectWallets, useUnstake, useUnstakeTimestamps } from 'hooks'
 import { UnstakeStatus } from 'hooks/useUnstakeTimestamps'
 
 import { Button } from 'components/Button'
@@ -10,7 +10,7 @@ import { Button } from 'components/Button'
 export function CooldownButton() {
   const [loading, setLoading] = useState(false)
 
-  const { connect } = useConnection()
+  const { connect } = useConnectWallets()
   const { startCooldown } = useUnstake()
   const { unstakeStatus } = useUnstakeTimestamps()
 

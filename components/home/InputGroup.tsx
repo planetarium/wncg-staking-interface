@@ -1,10 +1,9 @@
 import type { Control, RegisterOptions } from 'react-hook-form'
 import NumberFormat from 'react-number-format'
-import { useRecoilValue } from 'recoil'
+import { useAccount } from 'wagmi'
 import clsx from 'clsx'
 import styles from './styles/InputGroup.module.scss'
 
-import { connectedState } from 'app/states/connection'
 import { bnum } from 'utils/num'
 import { usePool } from 'hooks'
 
@@ -30,9 +29,9 @@ export function InputGroup({
   setMaxValue,
   disabled,
 }: InputGroupProps) {
+  const { isConnected } = useAccount()
   const { poolTokenSymbols } = usePool()
 
-  const isConnected = useRecoilValue(connectedState)
   const isMaxAmountZero = bnum(maxAmount).isZero()
 
   return (

@@ -1,20 +1,21 @@
 import { useMemo } from 'react'
 import { useRecoilValue } from 'recoil'
 import { Contract } from 'ethers'
+import { useAccount, useNetwork } from 'wagmi'
 
-import { accountState } from 'app/states/connection'
-import { networkMismatchState } from 'app/states/error'
 import { legacyModeState } from 'app/states/settings'
 import { configService } from 'services/config'
 import { StakingAbi } from 'lib/abi'
+import { networkChainId } from 'utils/network'
 import { useProvider } from './useProvider'
 
 export function useStakingContract(signer?: boolean) {
+  const { address: account } = useAccount()
+  const { chain } = useNetwork()
   const provider = useProvider()
 
-  const account = useRecoilValue(accountState)
   const legacyMode = useRecoilValue(legacyModeState)
-  const networkMismatch = useRecoilValue(networkMismatchState)
+  const networkMismatch = chain && chain.id !== networkChainId
 
   const newContract = useMemo(() => {
     if (!provider || networkMismatch) return null

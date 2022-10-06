@@ -3,10 +3,10 @@ import { useRecoilValue } from 'recoil'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { useAccount } from 'wagmi'
 import clsx from 'clsx'
 import styles from './style.module.scss'
 
-import { connectedState } from 'app/states/connection'
 import { isMobileState } from 'app/states/mediaQuery'
 import { useAlert } from 'hooks'
 
@@ -15,12 +15,12 @@ import { GnbConnect } from './Connect'
 
 export function Gnb() {
   const { showAlert } = useAlert()
+  const { isConnected } = useAccount()
   const { pathname } = useRouter()
   const isStakingPage =
     pathname === '/wncg' || pathname.startsWith('/wncg/pool')
 
   const isMobile = useRecoilValue(isMobileState)
-  const isConnected = useRecoilValue(connectedState)
 
   const logoSize = useMemo(
     () => (isMobile ? { width: 40, height: 24 } : { width: 66, height: 40 }),

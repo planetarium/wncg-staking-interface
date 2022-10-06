@@ -47,6 +47,7 @@
     "sass": "^1.50.1",
     "store": "^2.0.12",
     "styled-components": "^5.3.5",
+    "wagmi": "^0.6.7",
     "xstate": "^4.33.2"
   },
   "devDependencies": {

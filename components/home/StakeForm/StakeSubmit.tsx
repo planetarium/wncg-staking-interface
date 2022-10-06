@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useState } from 'react'
 import { usePrevious } from 'react-use'
 import { useRecoilValue } from 'recoil'
+import { useAccount } from 'wagmi'
 import clsx from 'clsx'
 import styles from '../styles/StakeSubmit.module.scss'
 
-import { connectedState } from 'app/states/connection'
 import { ModalCategory } from 'app/states/modal'
 import {
   legacyModeState,
@@ -15,7 +15,7 @@ import { parseTxError } from 'utils/tx'
 import {
   useAllowances,
   useApprove,
-  useConnection,
+  useConnectWallets,
   useModal,
   usePool,
   useProvider,
@@ -53,9 +53,10 @@ export function StakeSubmit({
   const [pendingTx, setPendingTx] = useState('')
   const prevAmount = usePrevious(amount)
 
+  const { isConnected } = useAccount()
   const { allowanceFor } = useAllowances()
   const { approve } = useApprove()
-  const { connect } = useConnection()
+  const { connect } = useConnectWallets()
   const { addModal } = useModal()
   const { bptAddress } = usePool()
   const provider = useProvider()
@@ -64,7 +65,6 @@ export function StakeSubmit({
   const { unstakeStatus } = useUnstakeTimestamps()
 
   const legacyMode = useRecoilValue(legacyModeState)
-  const isConnected = useRecoilValue(connectedState)
   const stakingAddress = useRecoilValue(stakingContractAddressState)
   const isUnstakeWindow = UNSTAKE_WINDOW.includes(unstakeStatus)
 

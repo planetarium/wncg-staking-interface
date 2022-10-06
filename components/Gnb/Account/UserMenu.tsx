@@ -3,18 +3,17 @@ import { useCallback, useRef, useState } from 'react'
 import { useMount, useUnmount } from 'react-use'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { useRecoilValue } from 'recoil'
+import { useAccount, useNetwork } from 'wagmi'
 import { motion } from 'framer-motion'
 import clsx from 'clsx'
 import styles from './style.module.scss'
 
-import { accountState } from 'app/states/connection'
-import { networkMismatchState } from 'app/states/error'
 import { mutedState } from 'app/states/settings'
 import { gaEvent } from 'lib/gtag'
-import { networkChainId, networkNameFor } from 'utils/network'
+import { networkChainId, networkShortNameFor } from 'utils/network'
 import { truncateAddress } from 'utils/string'
 import { getEtherscanUrl } from 'utils/url'
-import { useConnection, useSettings } from 'hooks'
+import { useConnectWallets, useSettings, useSwitchNetwork } from 'hooks'
 import { menuTransition, menuVariants } from './constants'
 
 import { Button } from 'components/Button'
@@ -29,22 +28,24 @@ export function AccountUserMenu({ close }: AccountUserMenuProps) {
   const [copied, setCopied] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
 
-  const { disconnect: _disconnect, switchNetwork: _switchNetwork } =
-    useConnection()
+  const { disconnect: _disconnect } = useConnectWallets()
   const { toggleMuted } = useSettings()
+  const { switchNetwork } = useSwitchNetwork()
 
-  const account = useRecoilValue(accountState)
+  const { address: account } = useAccount()
+  const { chain } = useNetwork()
+  const networkMismatch = chain && chain.id !== networkChainId
+
   const muted = useRecoilValue(mutedState)
-  const networkMismatch = useRecoilValue(networkMismatchState)
 
   function disconnect() {
     close()
     setTimeout(_disconnect, 300)
   }
 
-  function switchNetwork() {
+  function handleSwitchNetwork() {
     close()
-    _switchNetwork()
+    switchNetwork()
   }
 
   function handleCopy() {
@@ -129,7 +130,11 @@ export function AccountUserMenu({ close }: AccountUserMenuProps) {
           <dt>Network</dt>
           <dd>
             {networkMismatch ? (
-              <Button variant="tertiary" size="small" onClick={switchNetwork}>
+              <Button
+                variant="tertiary"
+                size="small"
+                onClick={handleSwitchNetwork}
+              >
                 Switch Network
               </Button>
             ) : (
@@ -137,7 +142,7 @@ export function AccountUserMenu({ close }: AccountUserMenuProps) {
                 <span className={styles.ethereum}>
                   <Icon id="ethereumSimple" />
                 </span>
-                {networkNameFor(networkChainId)}
+                {networkShortNameFor(networkChainId)}
               </>
             )}
           </dd>

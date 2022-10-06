@@ -1,8 +1,7 @@
 import { MouseEvent } from 'react'
-import { useRecoilValue } from 'recoil'
+import { useAccount } from 'wagmi'
 import styles from './RewardItem.module.scss'
 
-import { connectedState } from 'app/states/connection'
 import { countUpOption, usdCountUpOption } from 'constants/countUp'
 import { bnum } from 'utils/num'
 
@@ -25,7 +24,7 @@ export function RewardItem({
   loading,
   symbol,
 }: RewardItemProps) {
-  const isConnected = useRecoilValue(connectedState)
+  const { isConnected } = useAccount()
 
   const isLoading = loading === symbol.toLowerCase()
   const disabled =

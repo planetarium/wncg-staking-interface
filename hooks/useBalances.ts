@@ -1,24 +1,24 @@
 import { useCallback, useMemo } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { useRecoilValue } from 'recoil'
+import { useAccount, useNetwork } from 'wagmi'
 
-import { accountState } from 'app/states/connection'
-import { networkMismatchState } from 'app/states/error'
 import { fetchBalances } from 'contracts/erc20'
 import { REFETCH_INTERVAL } from 'constants/time'
 import { configService } from 'services/config'
+import { networkChainId } from 'utils/network'
 import { usePool } from './usePool'
 import { useProvider } from './useProvider'
 import { useStakingContract } from './useStakingContract'
 
 export function useBalances() {
   const provider = useProvider()
-  const account = useRecoilValue(accountState)
+  const { address: account } = useAccount()
+  const { chain } = useNetwork()
 
   const { bptAddress, poolTokenAddresses } = usePool()
   const { stakingAddress } = useStakingContract()
 
-  const networkMismatch = useRecoilValue(networkMismatchState)
+  const networkMismatch = chain && chain.id !== networkChainId
 
   const addresses = [
     ...poolTokenAddresses,
@@ -29,9 +29,9 @@ export function useBalances() {
 
   const { data: balances, refetch } = useQuery(
     ['userBalances', account, addresses, stakingAddress],
-    () => fetchBalances(provider, account, addresses),
+    () => fetchBalances(provider, account!, addresses),
     {
-      enabled: !networkMismatch,
+      enabled: !networkMismatch && !!account,
       refetchInterval: REFETCH_INTERVAL,
       keepPreviousData: true,
       placeholderData: {},

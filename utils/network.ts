@@ -7,8 +7,8 @@ export const networkChainId =
     ? (Number(process.env.NEXT_PUBLIC_NETWORK_ID) as Network)
     : Network.MAINNET
 
-export function networkFor(key: string | number): Network {
-  switch (key.toString()) {
+export function networkFor(network: Network): Network {
+  switch (network.toString()) {
     case '1':
       return Network.MAINNET
     case '5':
@@ -20,8 +20,12 @@ export function networkFor(key: string | number): Network {
   }
 }
 
-export function networkNameFor(network: Network): string {
+export function networkShortNameFor(network: Network): string {
   return config[network].shortName
+}
+
+export function networkNameFor(network: Network): string {
+  return config[network].name
 }
 
 export function explorerUrlFor(network: Network): string {
@@ -33,7 +37,7 @@ export function convertChainIdToHex(network: Network): string {
 }
 
 export function balancerUrlFor(network: Network) {
-  let networkName = networkNameFor(network).toLowerCase()
+  let networkName = networkShortNameFor(network).toLowerCase()
   if (network === Network.MAINNET) networkName = 'app'
   return `https://${networkName}.balancer.fi/#`
 }

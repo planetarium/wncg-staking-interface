@@ -12,12 +12,14 @@ import dynamic from 'next/dynamic'
 import Script from 'next/script'
 import { DefaultSeo } from 'next-seo'
 import { ThemeProvider } from 'styled-components'
+import { WagmiConfig } from 'wagmi'
 import 'react-toastify/dist/ReactToastify.css'
 import 'styles/globals.scss'
 import 'styles/toast.scss'
 
 import { configService } from 'services/config'
 import { DEFAULT_SEO } from 'lib/seo'
+import wagmiClient from 'lib/wagmi'
 
 import Gnb from 'new/Gnb'
 import GlobalFooter from 'new/GlobalFooter'
@@ -62,16 +64,18 @@ function MyApp({ Component, pageProps }: AppProps) {
         <QueryClientProvider client={queryClient.current}>
           <Hydrate state={pageProps.dehydratedState}>
             <RecoilRoot>
-              <DefaultSeo {...DEFAULT_SEO} />
-              <CoingeckoAlert />
-              <NetworkAlert />
-              <Gnb />
-              <Component {...pageProps} />
-              <ToastEffects />
-              <Modal />
-              <ToastContainer />
-              <GlobalFooter />
-              <MediaQueryEffects />
+              <WagmiConfig client={wagmiClient}>
+                <DefaultSeo {...DEFAULT_SEO} />
+                <CoingeckoAlert />
+                <NetworkAlert />
+                <Gnb />
+                <Component {...pageProps} />
+                <ToastEffects />
+                <Modal />
+                <ToastContainer />
+                <GlobalFooter />
+                <MediaQueryEffects />
+              </WagmiConfig>
             </RecoilRoot>
           </Hydrate>
         </QueryClientProvider>

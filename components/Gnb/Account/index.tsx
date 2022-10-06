@@ -1,20 +1,19 @@
 import { useState } from 'react'
 import { useRecoilValue } from 'recoil'
 import { AnimatePresence } from 'framer-motion'
+import { useAccount } from 'wagmi'
 import styles from './style.module.scss'
 
-import { accountState } from 'app/states/connection'
 import { isMobileState } from 'app/states/mediaQuery'
 
 import { Jazzicon } from 'components/Jazzicon'
 import { AccountPendingTx } from './PendingTx'
-import { AccountSidebar } from './Sidebar'
 import { AccountUserMenu } from './UserMenu'
 
 export function GnbAccount() {
   const [show, setShow] = useState(false)
+  const { address: account } = useAccount()
 
-  const account = useRecoilValue(accountState)
   const isMobile = useRecoilValue(isMobileState)
   const jazziconSize = isMobile ? 28 : 32
 
@@ -30,12 +29,6 @@ export function GnbAccount() {
     setShow(false)
   }
 
-  const accountMenu = isMobile ? (
-    <AccountSidebar close={close} />
-  ) : (
-    <AccountUserMenu close={close} />
-  )
-
   return (
     <div className={styles.gnbAccount}>
       {!isMobile && <AccountPendingTx />}
@@ -49,7 +42,9 @@ export function GnbAccount() {
         <Jazzicon address={account} diameter={jazziconSize} />
       </button>
 
-      <AnimatePresence>{show && accountMenu}</AnimatePresence>
+      <AnimatePresence>
+        {show && <AccountUserMenu close={close} />}
+      </AnimatePresence>
     </div>
   )
 }

@@ -1,15 +1,14 @@
 import { memo } from 'react'
-import { useRecoilValue } from 'recoil'
+import { useAccount } from 'wagmi'
 import { AnimatePresence, motion } from 'framer-motion'
 import styled from 'styled-components'
 
-import { accountState } from 'app/states/connection'
 import { motionVariants } from 'components/home/constants'
 
 const StyledClaim = styled(motion.div)``
 
 function Claim() {
-  const account = useRecoilValue(accountState)
+  const { address: account } = useAccount()
 
   return (
     <AnimatePresence>

@@ -1,17 +1,17 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useRecoilValue } from 'recoil'
 import { AnimatePresence, motion } from 'framer-motion'
+import { useAccount, useNetwork } from 'wagmi'
 import styles from '../styles/StakeSidebar.module.scss'
 
-import { connectedState } from 'app/states/connection'
-import { networkMismatchState } from 'app/states/error'
 import { isMobileState } from 'app/states/mediaQuery'
 import { legacyModeState } from 'app/states/settings'
 import { countUpOption, usdCountUpOption } from 'constants/countUp'
 import { gaEvent } from 'lib/gtag'
+import { networkChainId } from 'utils/network'
 import { parseTxError } from 'utils/tx'
 import {
-  useConnection,
+  useConnectWallets,
   useEarmark,
   useEarmarkIncentive,
   useEvents,
@@ -28,7 +28,8 @@ export function StakeSidebarAdvanced() {
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
 
-  const { connect } = useConnection()
+  const { isConnected } = useAccount()
+  const { connect } = useConnectWallets()
   const { earmarkRewards } = useEarmark()
   const {
     earmarkIncentive,
@@ -36,13 +37,13 @@ export function StakeSidebarAdvanced() {
     fetchEarmarkIncentive,
   } = useEarmarkIncentive()
   const { earmarkRewardsEvent } = useEvents()
+  const { chain } = useNetwork()
   const provider = useProvider()
   const { addToast } = useToast()
 
-  const networkMismatch = useRecoilValue(networkMismatchState)
-  const isConnected = useRecoilValue(connectedState)
   const isMobile = useRecoilValue(isMobileState)
   const legacyMode = useRecoilValue(legacyModeState)
+  const networkMismatch = chain && chain.id !== networkChainId
 
   const disabled = networkMismatch || loading
 

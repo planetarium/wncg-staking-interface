@@ -2,12 +2,14 @@ import styled from 'styled-components'
 import { motion } from 'framer-motion'
 
 import { truncateAddress } from 'utils/string'
+import { useConnectWallets } from 'hooks'
 
 import { Jazzicon } from 'components/Jazzicon'
 
 const StyledAccounMenu = styled(motion.aside)`
   position: absolute;
   right: 0;
+  z-index: 100;
   top: calc(100% + 8px);
   background-color: yellow;
   color: black;
@@ -33,6 +35,8 @@ type AccountMenuProps = {
 }
 
 export function AccountMenu({ account }: AccountMenuProps) {
+  const { disconnect } = useConnectWallets()
+
   return (
     <StyledAccounMenu
       initial="initial"
@@ -46,6 +50,9 @@ export function AccountMenu({ account }: AccountMenuProps) {
           {truncateAddress(account, 6, 6)}
         </h2>
       </header>
+      <button type="button" onClick={disconnect}>
+        Disconnect
+      </button>
     </StyledAccounMenu>
   )
 }

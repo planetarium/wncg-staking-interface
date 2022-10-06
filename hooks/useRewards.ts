@@ -1,8 +1,7 @@
 import { useQueries } from '@tanstack/react-query'
-import { useRecoilValue } from 'recoil'
 import { parseUnits } from 'ethers/lib/utils'
+import { useAccount } from 'wagmi'
 
-import { accountState } from 'app/states/connection'
 import { configService } from 'services/config'
 import { getEarnedBal, getEarnedWncg } from 'contracts/staking'
 import { REFETCH_INTERVAL } from 'constants/time'
@@ -16,7 +15,7 @@ export function useRewards() {
   const { toFiat } = useFiatCurrency()
   const { contract, stakingAddress } = useStakingContract(true)
 
-  const account = useRecoilValue(accountState)
+  const { address: account } = useAccount()
 
   const { rewardTokensList } = configService
   const rewardTokenDecimals = rewardTokensList.map(
@@ -30,8 +29,8 @@ export function useRewards() {
     queries: rewardTokensList.map((address, i) => ({
       queryKey: ['claimableRewards', address, stakingAddress],
       queryFn: () =>
-        queryFnList[i]?.(contract!, account, rewardTokenDecimals[i]),
-      enabled: !!contract,
+        queryFnList[i]?.(contract!, account!, rewardTokenDecimals[i]),
+      enabled: !!contract && !!account,
       placeholderData: '0',
       refetchInterval: REFETCH_INTERVAL,
     })),

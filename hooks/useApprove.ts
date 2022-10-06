@@ -1,8 +1,7 @@
 import { useCallback } from 'react'
-import { useRecoilValue } from 'recoil'
 import { Contract } from 'ethers'
+import { useAccount } from 'wagmi'
 
-import { accountState } from 'app/states/connection'
 import { approve as initApprove } from 'contracts/erc20'
 import { Erc20Abi } from 'lib/abi'
 import { useProvider } from './useProvider'
@@ -12,7 +11,7 @@ export function useApprove() {
   const provider = useProvider()
   const { subscribeTx } = useTx()
 
-  const account = useRecoilValue(accountState)
+  const { address: account } = useAccount()
 
   const approve = useCallback(
     async (address: string, spender: string) => {
