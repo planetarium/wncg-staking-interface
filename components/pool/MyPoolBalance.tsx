@@ -1,10 +1,11 @@
-import { memo, MouseEvent } from 'react'
-import { useAccount } from 'wagmi'
+import { memo } from 'react'
+import type { MouseEvent } from 'react'
 import styles from './styles/MyPoolBalance.module.scss'
 
 import { countUpOption, usdCountUpOption } from 'constants/countUp'
 import { gaEvent } from 'lib/gtag'
 import {
+  useAccount,
   useBalances,
   useCalculator,
   useConnectWallets,

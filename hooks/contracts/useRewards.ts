@@ -2,19 +2,20 @@ import { useMemo } from 'react'
 import { useAtomValue, useSetAtom } from 'jotai'
 import type { BigNumber } from 'ethers'
 import { formatUnits } from 'ethers/lib/utils'
-import { useAccount, useContractReads } from 'wagmi'
+import { useContractReads } from 'wagmi'
 
 import { stakingContractAddressAtom } from 'states/staking'
 import { rewardsAtom } from 'states/user'
 import { networkChainId } from 'utils/network'
 import { findAbiFromStaking } from 'utils/wagmi'
+import { useAccount } from '../useAccount'
 import { useStaking } from './useStaking'
 
 const FNS = ['earnedWNCG', 'earnedBAL']
 const ABIS = findAbiFromStaking(...FNS)
 
 export function useRewards() {
-  const { address: account } = useAccount()
+  const { account } = useAccount()
   const { rewardTokenDecimals } = useStaking()
 
   const stakingAddress = useAtomValue(stakingContractAddressAtom)

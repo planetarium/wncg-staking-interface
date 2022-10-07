@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { useAtomValue, useSetAtom } from 'jotai'
 import type { BigNumber } from 'ethers'
-import { useAccount, useContractReads } from 'wagmi'
+import { useContractReads } from 'wagmi'
 import { isPast } from 'date-fns'
 
 import { stakingContractAddressAtom } from 'states/staking'
@@ -9,6 +9,7 @@ import { timestampsAtom } from 'states/user'
 import { bnum } from 'utils/num'
 import { networkChainId } from 'utils/network'
 import { findAbiFromStaking } from 'utils/wagmi'
+import { useAccount } from './useAccount'
 import { useStakedBalance } from './useStakedBalance'
 
 const FNS = ['getCooldownEndTimestamp', 'getWithdrawEndTimestamp']
@@ -24,10 +25,8 @@ export const UnstakeStatus = {
 export type UnstakeStatus = typeof UnstakeStatus[keyof typeof UnstakeStatus]
 
 export function useUnstakeTimestamps() {
-  const { isConnected } = useAccount()
+  const { account, isConnected } = useAccount()
   const { stakedBalance } = useStakedBalance()
-
-  const { address: account } = useAccount()
 
   const stakingAddress = useAtomValue(stakingContractAddressAtom)
   const [cooldownEndsAt, withdrawEndsAt] = useAtomValue(timestampsAtom)

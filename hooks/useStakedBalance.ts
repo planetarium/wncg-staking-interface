@@ -5,6 +5,7 @@ import { stakedTokenBalancesAtom } from 'states/user'
 import { legacyModeAtom } from 'states/userSettings'
 import { configService } from 'services/config'
 import { bnum } from 'utils/num'
+import { useFiatCurrency } from './useFiatCurrency'
 
 const legacyContractIndex = configService.stakingContractAddresses.findIndex(
   (address) => address === configService.legacyStakingAddress
@@ -14,8 +15,9 @@ const stakingContractIndex = configService.stakingContractAddresses.indexOf(
 )
 
 export function useStakedBalance() {
-  const legacyMode = useAtomValue(legacyModeAtom)
+  const { getBptFiatValue } = useFiatCurrency()
 
+  const legacyMode = useAtomValue(legacyModeAtom)
   const stakedBalances = useAtomValue(stakedTokenBalancesAtom)
 
   const currentVersionIndex = useMemo(
@@ -23,9 +25,15 @@ export function useStakedBalance() {
     [legacyMode]
   )
 
-  const stakedBalance = useMemo(() => {
-    return stakedBalances[currentVersionIndex]
-  }, [currentVersionIndex, stakedBalances])
+  const stakedBalance = useMemo(
+    () => stakedBalances[currentVersionIndex],
+    [currentVersionIndex, stakedBalances]
+  )
+
+  const stakedBalanceInFiatValue = useMemo(
+    () => getBptFiatValue(stakedBalance),
+    [getBptFiatValue, stakedBalance]
+  )
 
   const hasBalanceInLegacyContract = useMemo(
     () => bnum(stakedBalances[legacyContractIndex]).gt(0),
@@ -35,5 +43,6 @@ export function useStakedBalance() {
   return {
     hasBalanceInLegacyContract,
     stakedBalance,
+    stakedBalanceInFiatValue,
   }
 }

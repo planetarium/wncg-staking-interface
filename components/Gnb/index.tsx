@@ -3,12 +3,11 @@ import { useAtomValue } from 'jotai'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { useAccount } from 'wagmi'
 import clsx from 'clsx'
 import styles from './style.module.scss'
 
 import { isMobileAtom } from 'states/ui'
-import { useAlert } from 'hooks'
+import { useAccount, useAlert } from 'hooks'
 
 import { GnbAccount } from './Account'
 import { GnbConnect } from './Connect'

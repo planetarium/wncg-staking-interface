@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { usePrevious } from 'react-use'
 import { useAtomValue } from 'jotai'
-import { useAccount } from 'wagmi'
 import clsx from 'clsx'
 import styles from '../styles/StakeSubmit.module.scss'
 
@@ -11,6 +10,7 @@ import { legacyModeAtom } from 'states/userSettings'
 import { gaEvent } from 'lib/gtag'
 import { parseTxError } from 'utils/tx'
 import {
+  useAccount,
   useAllowances,
   useApprove,
   useConnectWallets,

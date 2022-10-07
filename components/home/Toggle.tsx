@@ -1,10 +1,9 @@
 import { useAtomValue } from 'jotai'
-import { useAccount } from 'wagmi'
 import clsx from 'clsx'
 import styles from './styles/Header.module.scss'
 
 import { legacyModeAtom } from 'states/userSettings'
-import { useSettings, useStakedBalance } from 'hooks'
+import { useAccount, useSettings, useStakedBalance } from 'hooks'
 
 export function Toggle() {
   const { isConnected } = useAccount()

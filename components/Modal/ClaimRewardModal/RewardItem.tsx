@@ -1,9 +1,9 @@
-import { MouseEvent } from 'react'
-import { useAccount } from 'wagmi'
+import type { MouseEvent } from 'react'
 import styles from './RewardItem.module.scss'
 
 import { countUpOption, usdCountUpOption } from 'constants/countUp'
 import { bnum } from 'utils/num'
+import { useAccount } from 'hooks'
 
 import { Button } from 'components/Button'
 import { CountUp } from 'components/CountUp'

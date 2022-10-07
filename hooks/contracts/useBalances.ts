@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { useSetAtom } from 'jotai'
 import type { BigNumber } from 'ethers'
-import { useAccount, useContractReads } from 'wagmi'
+import { useContractReads } from 'wagmi'
 
 import { balancesAtom } from 'states/user'
 import { configService } from 'services/config'
@@ -9,6 +9,7 @@ import { uniqAddress } from 'utils/address'
 import { associateBalances } from 'utils/contract'
 import { networkChainId } from 'utils/network'
 import { findAbiFromErc20 } from 'utils/wagmi'
+import { useAccount } from '../useAccount'
 import { usePool } from '../usePool'
 import { useStaking } from './useStaking'
 
@@ -16,7 +17,7 @@ const FN = 'balanceOf'
 const ABI = findAbiFromErc20(FN)
 
 export function useBalances() {
-  const { address: account } = useAccount()
+  const { account } = useAccount()
   const { poolTokenAddresses } = usePool()
   const { rewardTokenAddress, stakedTokenAddress } = useStaking()
 

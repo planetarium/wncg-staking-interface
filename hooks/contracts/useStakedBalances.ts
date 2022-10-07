@@ -2,18 +2,19 @@ import { useMemo } from 'react'
 import { useSetAtom } from 'jotai'
 import type { BigNumber } from 'ethers'
 import { formatUnits } from 'ethers/lib/utils'
-import { useAccount, useContractReads } from 'wagmi'
+import { useContractReads } from 'wagmi'
 
 import { stakedTokenBalancesAtom } from 'states/user'
 import { configService } from 'services/config'
 import { networkChainId } from 'utils/network'
 import { findAbiFromStaking } from 'utils/wagmi'
+import { useAccount } from '../useAccount'
 
 const FN = 'stakedTokenBalance'
 const ABI = findAbiFromStaking(FN)
 
 export function useStakedBalances() {
-  const { address: account } = useAccount()
+  const { account } = useAccount()
   const setStakedBalances = useSetAtom(stakedTokenBalancesAtom)
 
   const contracts = useMemo(

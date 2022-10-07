@@ -1,23 +1,22 @@
 import { useCallback } from 'react'
 import { parseUnits } from 'ethers/lib/utils'
-import { useAccount } from 'wagmi'
 
 import { joinPool as initJoinPool } from 'contracts/vault'
 import { configService } from 'services/config'
 import { gaEvent } from 'lib/gtag'
+import { useAccount } from './useAccount'
 import { useJoinMath } from './useJoinMath'
 import { usePool } from './usePool'
 import { useTx } from './useTx'
 import { useVaultContract } from './useVaultContract'
 
 export function useJoinPool() {
+  const { account } = useAccount()
   const { calcMinBptOut } = useJoinMath()
   const { nativeAssetIndex, poolId, poolTokenAddresses, poolTokenDecimals } =
     usePool()
   const { subscribeTx } = useTx()
   const vault = useVaultContract()
-
-  const { address: account } = useAccount()
 
   const joinPool = useCallback(
     async (amountsIn: string[], isNativeAsset: boolean) => {

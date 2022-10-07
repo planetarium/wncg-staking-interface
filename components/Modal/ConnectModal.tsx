@@ -1,12 +1,12 @@
 import type { MouseEvent } from 'react'
-import { useAccount, useConnect } from 'wagmi'
+import { useConnect } from 'wagmi'
 
 import { ModalCategory } from 'states/ui'
 import { gaEvent } from 'lib/gtag'
-import { useModal } from 'hooks'
+import { useAccount, useModal } from 'hooks'
 
 function ConnectModal() {
-  const { isConnected, address } = useAccount()
+  const { isConnected, account } = useAccount()
   const { removeModal } = useModal()
 
   const { connect, connectors } = useConnect({
@@ -40,7 +40,7 @@ function ConnectModal() {
       <div>
         {JSON.stringify(isConnected)}
         <hr />
-        {JSON.stringify(address)}
+        {JSON.stringify(account)}
       </div>
 
       <div className="buttonGroup">
