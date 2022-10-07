@@ -5,9 +5,10 @@ import {
   QueryClient,
   QueryClientProvider,
 } from '@tanstack/react-query'
+import type { DehydratedState } from '@tanstack/react-query'
 import { useMount } from 'react-use'
 import { Provider } from 'jotai'
-import type { AppProps, NextWebVitalsMetric } from 'next/app'
+import type { AppProps as NextAppProps, NextWebVitalsMetric } from 'next/app'
 import dynamic from 'next/dynamic'
 import Script from 'next/script'
 import { DefaultSeo } from 'next-seo'
@@ -28,6 +29,12 @@ import { NetworkAlert } from 'components/NetworkAlert'
 import { ToastContainer } from 'components/ToastContainer'
 
 const Modal = dynamic(() => import('components/Modal'))
+
+type AppProps = NextAppProps & {
+  pageProps: {
+    dehydratedState: DehydratedState
+  }
+}
 
 function MyApp({ Component, pageProps }: AppProps) {
   const queryClient = useRef(new QueryClient())
