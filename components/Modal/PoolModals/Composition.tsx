@@ -1,5 +1,5 @@
 import { memo, useMemo } from 'react'
-import NumberFormat from 'react-number-format'
+import { NumericFormat } from 'react-number-format'
 import styles from './Composition.module.scss'
 
 import { configService } from 'services/config'
@@ -71,7 +71,7 @@ function PreviewComposition({
               {isLessThanMinAmount(amount) ? (
                 <span title={amount}>&lt; 0.0001</span>
               ) : (
-                <NumberFormat
+                <NumericFormat
                   value={amount}
                   displayType="text"
                   thousandSeparator
@@ -79,7 +79,7 @@ function PreviewComposition({
                   title={amount}
                 />
               )}
-              <NumberFormat
+              <NumericFormat
                 className={styles.usd}
                 value={usdValue}
                 displayType="text"

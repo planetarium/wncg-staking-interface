@@ -1,7 +1,6 @@
 import { memo, useState } from 'react'
-import NumberFormat from 'react-number-format'
+import { NumericFormat } from 'react-number-format'
 import { useInfiniteQuery } from '@tanstack/react-query'
-import { useAccount } from 'wagmi'
 import { formatDistanceToNow } from 'date-fns'
 import clsx from 'clsx'
 import styles from './styles/Investments.module.scss'
@@ -10,7 +9,7 @@ import { fetchPoolJoinExits, getNextPageParam, itemsPerPage } from 'lib/graphql'
 import { gaEvent } from 'lib/gtag'
 import { bnum } from 'utils/num'
 import { getTxUrl } from 'utils/url'
-import { usePool, useFiatCurrency } from 'hooks'
+import { useAccount, usePool, useFiatCurrency } from 'hooks'
 
 import { Checkbox } from 'components/Checkbox'
 import { Icon } from 'components/Icon'
@@ -32,10 +31,10 @@ function createOpenEtherscanHandler(address: string) {
 function PoolInvestments() {
   const [showMine, setShowMine] = useState(false)
 
+  const { account } = useAccount()
   const { toFiat } = useFiatCurrency()
   const { poolTokenAddresses, poolTokenSymbols } = usePool()
 
-  const { address: account } = useAccount()
   const showFilter = !!account
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
@@ -118,7 +117,7 @@ function PoolInvestments() {
                   <tr key={investment.timestamp}>
                     <td>{renderType(investment.type)}</td>
                     <td>
-                      <NumberFormat
+                      <NumericFormat
                         value={value}
                         decimalScale={2}
                         thousandSeparator
@@ -231,7 +230,7 @@ function renderAmounts(
         {lessThanMinAmount ? (
           <span title={amount}>&lt; 0.0001</span>
         ) : (
-          <NumberFormat
+          <NumericFormat
             value={amount}
             decimalScale={4}
             displayType="text"

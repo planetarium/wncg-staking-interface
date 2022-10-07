@@ -1,11 +1,10 @@
 import type { Control, RegisterOptions } from 'react-hook-form'
-import NumberFormat from 'react-number-format'
-import { useAccount } from 'wagmi'
+import { NumericFormat } from 'react-number-format'
 import clsx from 'clsx'
 import styles from './styles/InputGroup.module.scss'
 
 import { bnum } from 'utils/num'
-import { usePool } from 'hooks'
+import { useAccount, usePool } from 'hooks'
 
 import { Input } from 'components/Input'
 import { TokenIcon } from 'components/TokenIcon'
@@ -59,11 +58,11 @@ export function InputGroup({
         <strong>{label}</strong>
 
         {isConnected ? (
-          <NumberFormat
+          <NumericFormat
             className={styles.balance}
             decimalScale={8}
             displayType="text"
-            isNumericString
+            valueIsNumericString
             thousandSeparator={true}
             value={maxAmount}
           />

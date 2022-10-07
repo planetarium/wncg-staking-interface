@@ -1,10 +1,10 @@
 import { memo, useMemo } from 'react'
-import NumberFormat from 'react-number-format'
+import { NumericFormat } from 'react-number-format'
 import styles from './styles/PoolComposition.module.scss'
 
 import { gaEvent } from 'lib/gtag'
 import { getBalancerPoolUrl, getEtherscanUrl } from 'utils/url'
-import { usePool, useFiatCurrency } from 'hooks'
+import { useFiatCurrency, usePool } from 'hooks'
 
 import { Icon } from 'components/Icon'
 import { TokenIcon } from 'components/TokenIcon'
@@ -89,7 +89,7 @@ function PoolComposition() {
                   </td>
                   <td>{Number(token.weight) * 100}%</td>
                   <td>
-                    <NumberFormat
+                    <NumericFormat
                       value={token.balance}
                       displayType="text"
                       thousandSeparator
@@ -97,7 +97,7 @@ function PoolComposition() {
                     />
                   </td>
                   <td>
-                    <NumberFormat
+                    <NumericFormat
                       value={usdValue}
                       displayType="text"
                       thousandSeparator

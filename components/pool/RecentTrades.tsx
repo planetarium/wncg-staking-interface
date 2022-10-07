@@ -1,5 +1,5 @@
 import { memo } from 'react'
-import NumberFormat from 'react-number-format'
+import { NumericFormat } from 'react-number-format'
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { formatDistanceToNow } from 'date-fns'
 import styles from './styles/RecentTrades.module.scss'
@@ -82,7 +82,7 @@ function PoolRecentTrades() {
                       </div>
                     </td>
                     <td>
-                      <NumberFormat
+                      <NumericFormat
                         value={swap.valueUSD}
                         displayType="text"
                         thousandSeparator
@@ -96,7 +96,7 @@ function PoolRecentTrades() {
                           className={styles.token}
                           symbol={getTokenSymbol(swap.tokenIn)}
                         />
-                        <NumberFormat
+                        <NumericFormat
                           value={swap.tokenAmountIn}
                           displayType="text"
                           thousandSeparator
@@ -107,7 +107,7 @@ function PoolRecentTrades() {
                           className={styles.token}
                           symbol={getTokenSymbol(swap.tokenOut)}
                         />
-                        <NumberFormat
+                        <NumericFormat
                           value={swap.tokenAmountOut}
                           displayType="text"
                           thousandSeparator
