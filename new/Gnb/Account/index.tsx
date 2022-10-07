@@ -1,10 +1,9 @@
 import { memo, useState } from 'react'
 import styled from 'styled-components'
-import { useAccount } from 'wagmi'
 import { AnimatePresence, motion } from 'framer-motion'
 
 import { truncateAddress } from 'utils/string'
-import { useConnectWallets } from 'hooks'
+import { useAccount, useConnectWallets } from 'hooks'
 
 import { AccountMenu } from './Menu'
 
@@ -37,7 +36,7 @@ const StyledConnectButton = styled(motion.button)`
 function Account() {
   const [showMenu, setShowMenu] = useState(false)
 
-  const { address: account } = useAccount()
+  const { account } = useAccount()
   const { connect } = useConnectWallets()
 
   function toggle() {

@@ -1,7 +1,8 @@
 import { memo } from 'react'
-import { useAccount } from 'wagmi'
 import { AnimatePresence, motion } from 'framer-motion'
 import styled from 'styled-components'
+
+import { useAccount } from 'hooks'
 
 const StyledAction = styled(motion.div)`
   background-color: blue;
@@ -21,7 +22,7 @@ const motionVariants = {
 }
 
 function Action() {
-  const { address: account } = useAccount()
+  const { account } = useAccount()
 
   return (
     <AnimatePresence>

@@ -1,11 +1,11 @@
 import { useMemo } from 'react'
 import { Contract } from 'ethers'
-import { useNetwork } from 'wagmi'
 
 import { configService } from 'services/config'
 import { BalancerVaultAbi } from 'lib/abi'
 import { networkChainId } from 'utils/network'
 import { useAccount } from './useAccount'
+import { useNetwork } from './useNetwork'
 import { useProvider } from './useProvider'
 
 export function useVaultContract() {

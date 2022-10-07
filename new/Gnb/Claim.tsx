@@ -1,18 +1,18 @@
 import { memo } from 'react'
-import { useAccount } from 'wagmi'
 import { AnimatePresence, motion } from 'framer-motion'
 import styled from 'styled-components'
 
 import { motionVariants } from 'components/home/constants'
+import { useAccount } from 'hooks'
 
 const StyledClaim = styled(motion.div)``
 
 function Claim() {
-  const { address: account } = useAccount()
+  const { isConnected } = useAccount()
 
   return (
     <AnimatePresence>
-      {account && (
+      {isConnected && (
         <StyledClaim
           initial="initial"
           animate="animate"

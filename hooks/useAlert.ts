@@ -1,8 +1,7 @@
 import { useRouter } from 'next/router'
-import { useNetwork } from 'wagmi'
 
 import { networkChainId } from 'utils/network'
-import { usePrices } from 'hooks'
+import { useNetwork, usePrices } from 'hooks'
 
 export function useAlert() {
   const { chain } = useNetwork()
