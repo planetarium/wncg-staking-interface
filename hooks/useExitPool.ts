@@ -1,10 +1,10 @@
 import { useCallback } from 'react'
 import { parseUnits } from 'ethers/lib/utils'
-import { useAccount } from 'wagmi'
 
 import { exitPool as initExitPool } from 'contracts/vault'
 import { configService } from 'services/config'
 import { gaEvent } from 'lib/gtag'
+import { useAccount } from './useAccount'
 import { useExitMath } from './useExitMath'
 import { usePool } from './usePool'
 import { useTx } from './useTx'
@@ -20,13 +20,12 @@ type ExitPoolParams = {
 }
 
 export function useExitPool() {
+  const { account } = useAccount()
   const { calcAmountsOut, calcBptIn } = useExitMath()
   const { nativeAssetIndex, poolId, poolTokenAddresses, poolTokenDecimals } =
     usePool()
   const { subscribeTx } = useTx()
   const vault = useVaultContract()
-
-  const { address: account } = useAccount()
 
   const exitPool = useCallback(
     async (params: ExitPoolParams) => {

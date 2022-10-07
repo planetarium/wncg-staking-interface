@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import { useAtomValue } from 'jotai'
 import { AnimatePresence } from 'framer-motion'
-import { useAccount } from 'wagmi'
 import styles from './style.module.scss'
 
 import { isMobileAtom } from 'states/ui'
+import { useAccount } from 'hooks'
 
 import { Jazzicon } from 'components/Jazzicon'
 import { AccountPendingTx } from './PendingTx'
@@ -12,7 +12,7 @@ import { AccountUserMenu } from './UserMenu'
 
 export function GnbAccount() {
   const [show, setShow] = useState(false)
-  const { address: account } = useAccount()
+  const { account } = useAccount()
 
   const isMobile = useAtomValue(isMobileAtom)
   const jazziconSize = isMobile ? 28 : 32

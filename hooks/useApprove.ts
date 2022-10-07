@@ -1,17 +1,16 @@
 import { useCallback } from 'react'
 import { Contract } from 'ethers'
-import { useAccount } from 'wagmi'
 
 import { approve as initApprove } from 'contracts/erc20'
 import { Erc20Abi } from 'lib/abi'
+import { useAccount } from './useAccount'
 import { useProvider } from './useProvider'
 import { useTx } from './useTx'
 
 export function useApprove() {
+  const { account } = useAccount()
   const provider = useProvider()
   const { subscribeTx } = useTx()
-
-  const { address: account } = useAccount()
 
   const approve = useCallback(
     async (address: string, spender: string) => {

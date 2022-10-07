@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useAtomValue } from 'jotai'
+import { useNetwork } from 'wagmi'
 import { AnimatePresence, motion } from 'framer-motion'
-import { useAccount, useNetwork } from 'wagmi'
 import styles from '../styles/StakeSidebar.module.scss'
 
 import { earmarkIncentiveAtom } from 'states/staking'
@@ -12,7 +12,13 @@ import { configService } from 'services/config'
 import { gaEvent } from 'lib/gtag'
 import { networkChainId } from 'utils/network'
 import { parseTxError } from 'utils/tx'
-import { useConnectWallets, useEarmark, useFiatCurrency, useToast } from 'hooks'
+import {
+  useAccount,
+  useConnectWallets,
+  useEarmark,
+  useFiatCurrency,
+  useToast,
+} from 'hooks'
 import { motionVariants } from '../constants'
 
 import { Button } from 'components/Button'

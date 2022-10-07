@@ -2,7 +2,7 @@ import { useCallback, useRef, useState } from 'react'
 import { useMount, useUnmount } from 'react-use'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { useAtomValue } from 'jotai'
-import { useAccount, useNetwork } from 'wagmi'
+import { useNetwork } from 'wagmi'
 import { motion } from 'framer-motion'
 import clsx from 'clsx'
 import styles from './style.module.scss'
@@ -12,7 +12,12 @@ import { gaEvent } from 'lib/gtag'
 import { networkChainId, networkShortNameFor } from 'utils/network'
 import { truncateAddress } from 'utils/string'
 import { getEtherscanUrl } from 'utils/url'
-import { useConnectWallets, useSettings, useSwitchNetwork } from 'hooks'
+import {
+  useAccount,
+  useConnectWallets,
+  useSettings,
+  useSwitchNetwork,
+} from 'hooks'
 import { menuTransition, menuVariants } from './constants'
 
 import { Button } from 'components/Button'
@@ -31,7 +36,7 @@ export function AccountUserMenu({ close }: AccountUserMenuProps) {
   const { toggleMuted } = useSettings()
   const { switchNetwork } = useSwitchNetwork()
 
-  const { address: account } = useAccount()
+  const { account } = useAccount()
   const { chain } = useNetwork()
   const networkMismatch = chain && chain.id !== networkChainId
 

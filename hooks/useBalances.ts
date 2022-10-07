@@ -7,6 +7,7 @@ import { balancesAtom } from 'states/user'
 export function useBalances() {
   const balanceMap = useAtomValue(balancesAtom)
   const stakedTokenAddress = useAtomValue(stakedTokenAddressAtom)
+
   const balanceFor = useCallback(
     (address?: string) => {
       return balanceMap[address?.toLowerCase() || ''] || '0'

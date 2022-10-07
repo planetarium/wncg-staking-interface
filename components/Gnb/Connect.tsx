@@ -1,9 +1,8 @@
 import { useAtomValue } from 'jotai'
-import { useAccount } from 'wagmi'
 import styles from './style.module.scss'
 
 import { isMobileAtom } from 'states/ui'
-import { useConnectWallets } from 'hooks'
+import { useAccount, useConnectWallets } from 'hooks'
 
 import { Button } from 'components/Button'
 

@@ -5,8 +5,8 @@ import { useBalances } from './useBalances'
 import { usePool } from './usePool'
 
 export function useCalculator(action: PoolAction) {
-  const { bptAddress, pool } = usePool()
   const { balanceFor } = useBalances()
+  const { bptAddress, pool } = usePool()
 
   const bptBalance = balanceFor(bptAddress)
 

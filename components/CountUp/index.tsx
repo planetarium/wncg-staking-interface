@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react'
 import { usePrevious } from 'react-use'
 import ReactCountUp, { CountUpProps as ReactCountUpProps } from 'react-countup'
-import { useAccount } from 'wagmi'
 import clsx from 'clsx'
 import styles from './style.module.scss'
 
 import { bnum, isLessThanMinAmount, sanitizeNumber } from 'utils/num'
+import { useAccount } from 'hooks'
 
 import { Icon } from '../Icon'
 

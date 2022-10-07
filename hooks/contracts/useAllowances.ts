@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { useAtomValue, useSetAtom } from 'jotai'
 import type { BigNumber } from 'ethers'
-import { useAccount, useContractReads } from 'wagmi'
+import { useContractReads } from 'wagmi'
 
 import {
   stakedTokenAddressAtom,
@@ -13,13 +13,14 @@ import { uniqAddress } from 'utils/address'
 import { associateAllowances } from 'utils/contract'
 import { networkChainId } from 'utils/network'
 import { findAbiFromErc20 } from 'utils/wagmi'
+import { useAccount } from '../useAccount'
 import { usePool } from '../usePool'
 
 const FN = 'allowance'
 const ABI = findAbiFromErc20(FN)
 
 export function useAllowances() {
-  const { address: account } = useAccount()
+  const { account } = useAccount()
   const { poolTokenAddresses } = usePool()
 
   const setAllowances = useSetAtom(allowancesAtom)

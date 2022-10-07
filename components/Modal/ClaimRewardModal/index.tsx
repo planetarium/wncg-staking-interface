@@ -1,12 +1,11 @@
 import { MouseEvent, useState } from 'react'
-import { useAccount } from 'wagmi'
 import styles from '../style.module.scss'
 
 import { ModalCategory } from 'states/ui'
 import { gaEvent } from 'lib/gtag'
 import { bnum } from 'utils/num'
 import { parseTxError } from 'utils/tx'
-import { useClaim, useModal, useRewards, useToast } from 'hooks'
+import { useAccount, useClaim, useModal, useRewards, useToast } from 'hooks'
 
 import { Button } from 'components/Button'
 import { Icon } from 'components/Icon'
