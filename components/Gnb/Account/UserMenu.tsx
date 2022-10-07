@@ -2,7 +2,6 @@ import { useCallback, useRef, useState } from 'react'
 import { useMount, useUnmount } from 'react-use'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { useAtomValue } from 'jotai'
-import { useNetwork } from 'wagmi'
 import { motion } from 'framer-motion'
 import clsx from 'clsx'
 import styles from './style.module.scss'
@@ -15,6 +14,7 @@ import { getEtherscanUrl } from 'utils/url'
 import {
   useAccount,
   useConnectWallets,
+  useNetwork,
   useSettings,
   useSwitchNetwork,
 } from 'hooks'

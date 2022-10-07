@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { useAtomValue } from 'jotai'
-import { useNetwork } from 'wagmi'
 import { AnimatePresence, motion } from 'framer-motion'
 import styles from '../styles/StakeSidebar.module.scss'
 
@@ -17,6 +16,7 @@ import {
   useConnectWallets,
   useEarmark,
   useFiatCurrency,
+  useNetwork,
   useToast,
 } from 'hooks'
 import { useClaimableTokens, useStaking } from 'hooks/contracts'

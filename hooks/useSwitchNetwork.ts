@@ -1,8 +1,9 @@
-import { useNetwork, useSwitchNetwork as useWagmiSwitchNetwork } from 'wagmi'
+import { useSwitchNetwork as useWagmiSwitchNetwork } from 'wagmi'
 
 import { gaEvent } from 'lib/gtag'
 import { networkChainId } from 'utils/network'
 import { useConnectWallets } from './useConnectWallets'
+import { useNetwork } from './useNetwork'
 
 export function useSwitchNetwork() {
   const { connect } = useConnectWallets()

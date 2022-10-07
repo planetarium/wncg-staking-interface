@@ -1,7 +1,6 @@
 import { memo, useMemo } from 'react'
 import { Control, FieldValues, useForm } from 'react-hook-form'
 import { useAtomValue } from 'jotai'
-import { useNetwork } from 'wagmi'
 import { AnimatePresence, motion } from 'framer-motion'
 import styles from '../styles/Forms.module.scss'
 
@@ -9,7 +8,7 @@ import { legacyModeAtom } from 'states/userSettings'
 import { gaEvent } from 'lib/gtag'
 import { networkChainId } from 'utils/network'
 import { bnum } from 'utils/num'
-import { useBalances, usePool } from 'hooks'
+import { useBalances, useNetwork, usePool } from 'hooks'
 import { formTransition, motionVariants, TabId, TabPanelId } from '../constants'
 
 import { EstimatedEarn } from './EstimatedEarn'
