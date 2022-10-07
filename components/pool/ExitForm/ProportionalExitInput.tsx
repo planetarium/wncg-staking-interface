@@ -1,6 +1,6 @@
 import { memo } from 'react'
-import { Control, FieldValues } from 'react-hook-form'
-import NumberFormat from 'react-number-format'
+import type { Control, FieldValues } from 'react-hook-form'
+import { NumericFormat } from 'react-number-format'
 import clsx from 'clsx'
 import styles from '../styles/TokenInput.module.scss'
 
@@ -23,12 +23,12 @@ function ProportionalExitInput({
     <div className={styles.tokenInputField}>
       <div className={clsx(styles.tokenInputGroup, { [styles.error]: false })}>
         <div className={styles.control}>
-          <NumberFormat
+          <NumericFormat
             className={clsx(styles.input, styles.tokenInput)}
             allowNegative={false}
             decimalScale={2}
             value={totalFiatValue}
-            isNumericString
+            valueIsNumericString
             thousandSeparator={true}
             prefix="$"
             disabled

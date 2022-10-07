@@ -1,5 +1,5 @@
 import { memo } from 'react'
-import NumberFormat from 'react-number-format'
+import { NumericFormat } from 'react-number-format'
 import clsx from 'clsx'
 import styles from '../styles/Form.module.scss'
 
@@ -40,7 +40,7 @@ function JoinFormSummary({
         <dt>Total</dt>
         <dd>
           <strong>
-            <NumberFormat
+            <NumericFormat
               value={totalFiatValue}
               displayType="text"
               decimalScale={2}

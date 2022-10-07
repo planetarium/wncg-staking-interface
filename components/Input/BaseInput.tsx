@@ -3,7 +3,7 @@ import {
   ControllerRenderProps,
   FieldValues,
 } from 'react-hook-form'
-import NumberFormat from 'react-number-format'
+import { NumericFormat } from 'react-number-format'
 import { AnimatePresence, motion } from 'framer-motion'
 import clsx from 'clsx'
 import styles from './style.module.scss'
@@ -38,16 +38,18 @@ export function BaseInput({
     [styles.disabled]: !!disabled,
   })
 
+  const { ref, ...fieldProps } = field
+
   return (
     <>
       <div className={nestedClassName}>
-        <NumberFormat
-          {...field}
+        <NumericFormat
+          {...fieldProps}
           id={id}
           className={styles.input}
           allowNegative={false}
           decimalScale={precision}
-          isNumericString
+          valueIsNumericString
           thousandSeparator={true}
           disabled={disabled}
           placeholder={placeholder}

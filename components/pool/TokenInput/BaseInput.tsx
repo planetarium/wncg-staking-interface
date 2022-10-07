@@ -1,5 +1,6 @@
-import { Control, Controller, RegisterOptions } from 'react-hook-form'
-import NumberFormat from 'react-number-format'
+import { Controller } from 'react-hook-form'
+import type { Control, RegisterOptions } from 'react-hook-form'
+import { NumericFormat } from 'react-number-format'
 import clsx from 'clsx'
 import styles from '../styles/TokenInput.module.scss'
 
@@ -28,13 +29,13 @@ export function TokenBaseInput({
       control={control}
       render={({ field }) => {
         return (
-          <NumberFormat
+          <NumericFormat
             {...field}
             id={id}
             className={clsx(styles.input, className)}
             allowNegative={false}
             decimalScale={precision}
-            isNumericString
+            valueIsNumericString
             thousandSeparator={true}
             disabled={disabled}
             placeholder="0.0"

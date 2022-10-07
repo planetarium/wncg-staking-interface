@@ -1,6 +1,6 @@
 import type { MouseEvent } from 'react'
-import { Control, FieldValues, RegisterOptions } from 'react-hook-form'
-import NumberFormat from 'react-number-format'
+import type { Control, FieldValues, RegisterOptions } from 'react-hook-form'
+import { NumericFormat } from 'react-number-format'
 import { useAtomValue } from 'jotai'
 import { AnimatePresence, motion } from 'framer-motion'
 import clsx from 'clsx'
@@ -100,11 +100,11 @@ export function TokenInput({
             {isLessThanMinAmount(max) ? (
               <span className={styles.balance}>&lt; 0.0001</span>
             ) : (
-              <NumberFormat
+              <NumericFormat
                 className={styles.balance}
                 decimalScale={4}
                 displayType="text"
-                isNumericString
+                valueIsNumericString
                 thousandSeparator={true}
                 value={max}
               />
@@ -133,11 +133,11 @@ export function TokenInput({
               {isMobile ? 'suggestion' : 'proportional suggestion'}
             </button>
           ) : fiatValue ? (
-            <NumberFormat
+            <NumericFormat
               className={styles.usd}
               decimalScale={4}
               displayType="text"
-              isNumericString
+              valueIsNumericString
               prefix="$"
               thousandSeparator={true}
               value={fiatValue}

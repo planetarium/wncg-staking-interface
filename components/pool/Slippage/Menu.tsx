@@ -6,7 +6,7 @@ import {
   useRef,
 } from 'react'
 import { useMount, useUnmount } from 'react-use'
-import NumberFormat from 'react-number-format'
+import { NumericFormat } from 'react-number-format'
 import { useAtomValue } from 'jotai'
 import { motion } from 'framer-motion'
 import clsx from 'clsx'
@@ -106,7 +106,7 @@ function SlippageMenu({ close }: SlippageMenuProps) {
             [styles.selected]: customSlippage,
           })}
         >
-          <NumberFormat
+          <NumericFormat
             className={styles.input}
             placeholder="0.1"
             decimalScale={4}

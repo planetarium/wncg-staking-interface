@@ -1,5 +1,5 @@
 import { memo } from 'react'
-import NumberFormat from 'react-number-format'
+import { NumericFormat } from 'react-number-format'
 import clsx from 'clsx'
 import styles from '../styles/Form.module.scss'
 
@@ -55,7 +55,7 @@ function ExitFormSummary({
                 {isLessThanMinAmount(amount) ? (
                   <span title={amount}>&lt; 0.0001</span>
                 ) : (
-                  <NumberFormat
+                  <NumericFormat
                     value={amount}
                     displayType="text"
                     thousandSeparator
@@ -63,7 +63,7 @@ function ExitFormSummary({
                     title={amount}
                   />
                 )}
-                <NumberFormat
+                <NumericFormat
                   className={styles.usd}
                   value={fiatValue}
                   displayType="text"
