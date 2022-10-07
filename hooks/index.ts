@@ -1,3 +1,4 @@
+export { useAccount } from './useAccount'
 export { useAlert } from './useAlert'
 export { useAllowances } from './useAllowances'
 export { useApprove } from './useApprove'
