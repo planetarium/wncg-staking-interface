@@ -6,7 +6,6 @@ import clsx from 'clsx'
 import styles from './styles/StakingPageWrapper.module.scss'
 
 import { isDesktopAtom } from 'states/ui'
-import { useAlert } from 'hooks'
 
 import Effects from 'components/Effects'
 
@@ -16,8 +15,6 @@ type StakingPageWrapperProps = {
 }
 
 function StakingPageWrapper({ children, showBg }: StakingPageWrapperProps) {
-  const { showAlert } = useAlert()
-
   const isDesktop = useAtomValue(isDesktopAtom)
 
   useMount(() => {
@@ -26,7 +23,7 @@ function StakingPageWrapper({ children, showBg }: StakingPageWrapperProps) {
 
   return (
     <>
-      <main className={clsx(styles.main, { [styles.withAlert]: showAlert })}>
+      <main className={styles.main}>
         {children}
 
         {showBg && isDesktop && (

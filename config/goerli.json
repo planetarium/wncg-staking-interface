@@ -2,7 +2,7 @@
   "key": "5",
   "chainId": 5,
   "chainName": "Ethereum",
-  "name": "Ethereum Testnet Goerli",
+  "name": "Goerli Testnet",
   "shortName": "Goerli",
   "network": "goerli",
   "explorer": "https://goerli.etherscan.io",
