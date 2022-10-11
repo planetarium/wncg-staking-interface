@@ -1,6 +1,11 @@
 import { memo } from 'react'
 import styled from 'styled-components'
 
+import AccountDropdown from './AccountDropdown'
+import ActionDropdown from './ActionDropdown'
+import Claim from './Claim'
+import MenuList from './MenuList'
+
 const StyledGnb = styled.header`
   position: relative;
   display: flex;
@@ -25,7 +30,21 @@ const StyledGnb = styled.header`
 `
 
 function Gnb() {
-  return <StyledGnb className="gnb">Gnb</StyledGnb>
+  return (
+    <StyledGnb className="gnb">
+      <div className="left">
+        <h1>WNCG Staking</h1>
+        <ActionDropdown />
+      </div>
+
+      <div className="right">
+        <MenuList />
+        <AccountDropdown />
+      </div>
+
+      <Claim />
+    </StyledGnb>
+  )
 }
 
 export default memo(Gnb)
