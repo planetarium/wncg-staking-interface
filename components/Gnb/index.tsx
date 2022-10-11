@@ -3,17 +3,15 @@ import { useAtomValue } from 'jotai'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import clsx from 'clsx'
 import styles from './style.module.scss'
 
 import { isMobileAtom } from 'states/ui'
-import { useAccount, useAlert } from 'hooks'
+import { useAccount } from 'hooks'
 
 import { GnbAccount } from './Account'
 import { GnbConnect } from './Connect'
 
 export function Gnb() {
-  const { showAlert } = useAlert()
   const { isConnected } = useAccount()
   const { pathname } = useRouter()
   const isStakingPage =
@@ -29,7 +27,7 @@ export function Gnb() {
   const accountElement = isConnected ? <GnbAccount /> : <GnbConnect />
 
   return (
-    <nav className={clsx(styles.gnb, { [styles.withAlert]: showAlert })}>
+    <nav className={styles.gnb}>
       <h1 className={styles.logo}>
         <Link href="/wncg">
           <a>

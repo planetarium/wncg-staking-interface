@@ -2,7 +2,7 @@
   "key": "42",
   "chainId": 42,
   "chainName": "Ethereum",
-  "name": "Ethereum Testnet Kovan",
+  "name": "Kovan Testnet",
   "shortName": "Kovan",
   "network": "kovan",
   "explorer": "https://kovan.etherscan.io",
