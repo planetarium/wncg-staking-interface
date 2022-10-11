@@ -1,20 +1,31 @@
 import { memo } from 'react'
+import styled from 'styled-components'
 
-import Account from './Account'
-import Action from './Action'
-import Claim from './Claim'
-import Links from './Links'
+const StyledGnb = styled.header`
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px;
+  background-color: #212121;
+
+  .left,
+  .right {
+    display: flex;
+    align-items: center;
+  }
+
+  .actionDropdown {
+    margin-left: 20px;
+  }
+
+  .account {
+    margin-left: 20px;
+  }
+`
 
 function Gnb() {
-  return (
-    <header>
-      <h1>WNCG Staking</h1>
-      <Action />
-      <Links />
-      <Account />
-      <Claim />
-    </header>
-  )
+  return <StyledGnb className="gnb">Gnb</StyledGnb>
 }
 
 export default memo(Gnb)

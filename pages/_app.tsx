@@ -9,11 +9,10 @@ import type { DehydratedState } from '@tanstack/react-query'
 import { useMount } from 'react-use'
 import { Provider } from 'jotai'
 import type { AppProps as NextAppProps, NextWebVitalsMetric } from 'next/app'
-import dynamic from 'next/dynamic'
 import Script from 'next/script'
 import { DefaultSeo } from 'next-seo'
-import { ThemeProvider } from 'styled-components'
 import { WagmiConfig } from 'wagmi'
+import { ThemeProvider } from 'styled-components'
 import 'react-toastify/dist/ReactToastify.css'
 import 'styles/globals.scss'
 import 'styles/toast.scss'
@@ -22,13 +21,9 @@ import { configService } from 'services/config'
 import { DEFAULT_SEO } from 'lib/seo'
 import wagmiClient from 'lib/wagmi'
 
-import Gnb from 'new/Gnb'
-import GlobalFooter from 'new/GlobalFooter'
-import { CoingeckoAlert } from 'components/CoingeckoAlert'
-import { NetworkAlert } from 'components/NetworkAlert'
+import Layout from 'new/Layout'
+import Modals from 'new/Modals'
 import { ToastContainer } from 'components/ToastContainer'
-
-const Modal = dynamic(() => import('components/Modal'))
 
 type AppProps = NextAppProps & {
   pageProps: {
@@ -70,17 +65,11 @@ function MyApp({ Component, pageProps }: AppProps) {
           <Hydrate state={pageProps.dehydratedState}>
             <Provider>
               <WagmiConfig client={wagmiClient}>
-                <CoingeckoAlert />
-                <NetworkAlert />
                 <DefaultSeo {...DEFAULT_SEO} />
-
-                <main>
-                  <Gnb />
+                <Layout>
                   <Component {...pageProps} />
-                  <GlobalFooter />
-                </main>
-
-                <Modal />
+                </Layout>
+                <Modals />
                 <ToastContainer />
               </WagmiConfig>
             </Provider>
