@@ -18,6 +18,10 @@ const options = {
   qrcode: true,
 }
 
+export const metamaskConnector = new MetaMaskConnector({
+  chains,
+})
+
 export const coinbaseConnector = new CoinbaseWalletConnector({
   chains,
   options,
@@ -28,12 +32,8 @@ export const walletConnectConnector = new WalletConnectConnector({
   options,
 })
 
-export const metamaskConenctor = new MetaMaskConnector({
-  chains,
-})
-
 export const connectors = [
-  metamaskConenctor,
+  metamaskConnector,
   coinbaseConnector,
   walletConnectConnector,
 ]
