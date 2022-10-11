@@ -1,7 +1,7 @@
 import { FormEvent, memo, useCallback, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 
-import { useRewards } from 'hooks'
+import { useClaimRewards, useRewards } from 'hooks'
 
 import RewardCard from './RewardCard'
 
@@ -10,6 +10,7 @@ type SelectRewardsField = {
 }
 
 function SelectRewards() {
+  const { claim } = useClaimRewards()
   const { rewards, rewardsInFiatValue, rewardTokensList } = useRewards()
 
   const { register, watch } = useForm<SelectRewardsField>({
@@ -22,9 +23,21 @@ function SelectRewards() {
   const tokensToImport = watch('tokensToClaim')
   const disabled = useMemo(() => tokensToImport.length === 0, [tokensToImport])
 
-  const handleSubmit = useCallback(async (e: FormEvent) => {
-    e.preventDefault()
-  }, [])
+  const handleSubmit = useCallback(
+    async (e: FormEvent) => {
+      e.preventDefault()
+
+      try {
+        const claimRewards = claim(tokensToImport)
+        const response = await claimRewards?.()
+        if (!response) return
+        return response
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    [claim, tokensToImport]
+  )
 
   return (
     <form onSubmit={handleSubmit}>
