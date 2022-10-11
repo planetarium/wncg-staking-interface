@@ -7,7 +7,7 @@ import { bnum } from 'utils/num'
 import { useAccount, usePool } from 'hooks'
 
 import { Input } from 'components/Input'
-import { TokenIcon } from 'components/TokenIcon'
+import TokenIcon from 'new/TokenIcon'
 
 type InputGroupProps = {
   control: Control
@@ -29,7 +29,7 @@ export function InputGroup({
   disabled,
 }: InputGroupProps) {
   const { isConnected } = useAccount()
-  const { poolTokenSymbols } = usePool()
+  const { poolTokenAddresses } = usePool()
 
   const isMaxAmountZero = bnum(maxAmount).isZero()
 
@@ -48,12 +48,8 @@ export function InputGroup({
       <div
         className={clsx(styles.balanceGroup, { [styles.disabled]: disabled })}
       >
-        {poolTokenSymbols.map((symbol) => (
-          <TokenIcon
-            key={`inputGroup.${symbol}`}
-            className={styles.token}
-            symbol={symbol}
-          />
+        {poolTokenAddresses.map((address) => (
+          <TokenIcon key={`inputGroup.${address}`} address={address} />
         ))}
         <strong>{label}</strong>
 

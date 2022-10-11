@@ -12,7 +12,6 @@ import type { AppProps as NextAppProps, NextWebVitalsMetric } from 'next/app'
 import Script from 'next/script'
 import { DefaultSeo } from 'next-seo'
 import { WagmiConfig } from 'wagmi'
-import { ThemeProvider } from 'styled-components'
 import 'react-toastify/dist/ReactToastify.css'
 import 'styles/globals.scss'
 import 'styles/toast.scss'
@@ -24,6 +23,7 @@ import wagmiClient from 'lib/wagmi'
 import Layout from 'new/Layout'
 import Modals from 'new/Modals'
 import { ToastContainer } from 'components/ToastContainer'
+import GlobalStyle from 'newStyles/GlobalStyle'
 
 type AppProps = NextAppProps & {
   pageProps: {
@@ -60,22 +60,21 @@ function MyApp({ Component, pageProps }: AppProps) {
         />
       )}
 
-      <ThemeProvider theme={{}}>
-        <QueryClientProvider client={queryClient.current}>
-          <Hydrate state={pageProps.dehydratedState}>
-            <Provider>
-              <WagmiConfig client={wagmiClient}>
-                <DefaultSeo {...DEFAULT_SEO} />
-                <Layout>
-                  <Component {...pageProps} />
-                </Layout>
-                <Modals />
-                <ToastContainer />
-              </WagmiConfig>
-            </Provider>
-          </Hydrate>
-        </QueryClientProvider>
-      </ThemeProvider>
+      <GlobalStyle />
+      <QueryClientProvider client={queryClient.current}>
+        <Hydrate state={pageProps.dehydratedState}>
+          <Provider>
+            <WagmiConfig client={wagmiClient}>
+              <DefaultSeo {...DEFAULT_SEO} />
+              <Layout>
+                <Component {...pageProps} />
+              </Layout>
+              <Modals />
+              <ToastContainer />
+            </WagmiConfig>
+          </Provider>
+        </Hydrate>
+      </QueryClientProvider>
     </>
   )
 }

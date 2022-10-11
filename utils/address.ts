@@ -15,6 +15,8 @@ export function convertAddress(address: string) {
 
 export function uniqAddress(addresses: Array<string | undefined>) {
   return [
-    ...new Set(addresses.filter((v) => typeof v === 'string') as string[]),
+    ...new Set(
+      addresses.filter((v) => typeof v === 'string' && !!v) as string[]
+    ),
   ]
 }

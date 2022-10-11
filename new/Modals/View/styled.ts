@@ -12,8 +12,9 @@ export const StyledModalOverlay = styled(motion.div)`
   flex-direction: column;
   align-items: center;
   justify-content: flex-end;
-  background-color: rgba(15, 22, 36, 0.1);
-  backdrop-filter: blur(15px);
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(32px);
+  /* opacity: 0.6; */
 
   @media screen and (min-width: 1000px) {
     justify-content: center;
@@ -35,9 +36,9 @@ export const StyledModalContent = styled.div`
   width: 100%;
   margin: 0 auto;
   padding: 40px 24px;
-  color: black;
-  background-color: white;
+  background-color: rgba(255, 255, 255, 0.05);
   border-radius: 16px 16px 0 0;
+  box-shadow: 0px 4px 48px rgba(0, 0, 0, 0.24);
 
   header {
     margin-bottom: 20px;

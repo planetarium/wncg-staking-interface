@@ -57,7 +57,7 @@ export function ModalView({ modal }: ModalViewProps) {
 }
 
 function renderModal(modal: Modal) {
-  const { category, props } = modal
+  const { category } = modal
 
   switch (category) {
     case ModalCategory.ClaimReward:

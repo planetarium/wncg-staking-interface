@@ -3,11 +3,10 @@ import styled from 'styled-components'
 import type { UseFormRegister } from 'react-hook-form'
 
 import { usdCountUpOption } from 'constants/countUp'
-import { getTokenSymbol } from 'utils/token'
 
-import { CountUp } from 'components/CountUp'
-import { NumberFormat } from 'components/NumberFormat'
-import { TokenIcon } from 'components/TokenIcon'
+import CountUp from 'new/CountUp'
+import NumberFormat from 'new/NumberFormat'
+import TokenIcon from 'new/TokenIcon'
 
 const StyledRewardCardProps = styled.label`
   display: block;
@@ -17,6 +16,7 @@ const StyledRewardCardProps = styled.label`
   border-radius: 8px;
 
   &:has(input:checked) {
+    color: black;
     background-color: yellow;
   }
 `
@@ -30,7 +30,6 @@ type RewardCardProps = {
 
 function RewardCard({ address, fiatValue, reward, register }: RewardCardProps) {
   const id = `rewardCard:${address}`
-  const symbol = getTokenSymbol(address)
 
   return (
     <StyledRewardCardProps htmlFor={id}>
@@ -41,7 +40,7 @@ function RewardCard({ address, fiatValue, reward, register }: RewardCardProps) {
         value={address}
         {...register('tokensToClaim')}
       />
-      <TokenIcon symbol={symbol} />
+      <TokenIcon address={address} />
       <NumberFormat value={reward} decimalScale={18} />
       <CountUp {...usdCountUpOption} end={fiatValue} />
     </StyledRewardCardProps>

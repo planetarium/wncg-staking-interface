@@ -1,9 +1,0 @@
-# *
-User-agent: *
-Allow: /
-
-# Host
-Host: https://stake.nine-chronicles.com
-
-# Sitemaps
-Sitemap: https://stake.nine-chronicles.com/sitemap.xml

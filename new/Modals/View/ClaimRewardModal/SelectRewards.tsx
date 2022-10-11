@@ -2,6 +2,7 @@ import { FormEvent, memo, useCallback, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 
 import { useClaimRewards, useRewards } from 'hooks'
+import { useStaking } from 'hooks/contracts'
 
 import RewardCard from './RewardCard'
 
@@ -11,7 +12,8 @@ type SelectRewardsField = {
 
 function SelectRewards() {
   const { claim } = useClaimRewards()
-  const { rewards, rewardsInFiatValue, rewardTokensList } = useRewards()
+  const { rewards, rewardsInFiatValue } = useRewards()
+  const { rewardTokensList } = useStaking()
 
   const { register, watch } = useForm<SelectRewardsField>({
     mode: 'onChange',

@@ -153,6 +153,10 @@ export class ConfigService {
     return this.env.docs
   }
 
+  get etherAddresses() {
+    return [this.weth, this.nativeAssetAddress]
+  }
+
   get github() {
     return this.env.github
   }

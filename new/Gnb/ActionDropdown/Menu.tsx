@@ -4,6 +4,7 @@ import { motion } from 'framer-motion'
 import styled from 'styled-components'
 
 import { ModalCategory } from 'states/ui'
+import { getTokenSymbol } from 'utils/token'
 import {
   useBalances,
   useFiatCurrency,
@@ -13,8 +14,9 @@ import {
   useStakedBalance,
 } from 'hooks'
 
-import { NumberFormat } from 'components/NumberFormat'
-import { TokenIcon } from 'components/TokenIcon'
+import Button from 'new/Button'
+import NumberFormat from 'new/NumberFormat'
+import TokenIcon from 'new/TokenIcon'
 
 const StyledActionDropdownMenu = styled(motion.aside)`
   position: absolute;
@@ -24,16 +26,10 @@ const StyledActionDropdownMenu = styled(motion.aside)`
   width: max-content;
   padding: 20px;
   color: black;
-  background-color: #fff;
+  background-color: var(--primary-50);
 
   hr {
     margin: 30px 0;
-  }
-
-  button {
-    width: 100%;
-    height: 40px;
-    background-color: yellow;
   }
 `
 
@@ -62,7 +58,7 @@ function ActionDropdownMenu({ close }: ActionDropdownMenuProps) {
   const { bptBalance } = useBalances()
   const { getBptFiatValue } = useFiatCurrency()
   const { addModal } = useModal()
-  const { poolTokenSymbols } = usePool()
+  const { poolTokenAddresses } = usePool()
   const { propAmounts, propAmountsInFiatValue } = usePropAmounts()
   const { stakedBalance } = useStakedBalance()
 
@@ -107,20 +103,20 @@ function ActionDropdownMenu({ close }: ActionDropdownMenuProps) {
         <h2>My Staked LP</h2>
         <p>
           <strong>
-            <NumberFormat value={stakedBalance} decimalScale={4} />
+            <NumberFormat value={stakedBalance} />
           </strong>
 
-          <NumberFormat
-            value={stakedBalanceInFiatValue}
-            prefix="$"
-            decimalScale={2}
-          />
+          <NumberFormat value={stakedBalanceInFiatValue} prefix="$" />
         </p>
       </header>
 
-      <button type="button" onClick={withdraw}>
+      <Button onClick={withdraw} leftIcon="coin" rightIcon="ether" $size="sm">
         Withdraw
-      </button>
+      </Button>
+
+      <Button onClick={withdraw} $variant="tiny">
+        Withdraw
+      </Button>
 
       <hr />
 
@@ -141,12 +137,13 @@ function ActionDropdownMenu({ close }: ActionDropdownMenuProps) {
 
       <dl>
         {propAmounts.map((amount, i) => {
-          const symbol = poolTokenSymbols[i]
+          const address = poolTokenAddresses[i]
+          const symbol = getTokenSymbol(address)
 
           return (
             <div key={`${amount}-${symbol}`}>
               <dt>
-                <TokenIcon symbol={symbol} />
+                <TokenIcon address={address} />
                 {symbol}
               </dt>
               <dd>

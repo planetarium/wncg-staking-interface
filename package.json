@@ -26,6 +26,7 @@
     "framer-motion": "^7.5.2",
     "graphql": "^16.6.0",
     "graphql-request": "^5.0.0",
+    "hex-rgb": "^5.0.0",
     "jotai": "^1.8.4",
     "json-to-graphql-query": "^2.2.4",
     "lottie-react": "^2.3.1",

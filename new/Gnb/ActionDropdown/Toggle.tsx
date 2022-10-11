@@ -3,7 +3,7 @@ import styled from 'styled-components'
 
 import { useStakedBalance } from 'hooks'
 
-import { NumberFormat } from 'components/NumberFormat'
+import NumberFormat from 'new/NumberFormat'
 
 const StyledActionDropdownToggle = styled.button`
   position: relative;
