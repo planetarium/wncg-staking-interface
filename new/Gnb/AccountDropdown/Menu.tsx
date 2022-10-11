@@ -93,7 +93,7 @@ function AccountDropdownMenu({ close }: AccountDropdownMenuProps) {
   const menuRef = useRef<HTMLDivElement>(null)
 
   const { account, connector } = useAccount()
-  const { disconnect } = useConnectWallets()
+  const { disconnect: initDisconnect } = useConnectWallets()
   const { chain } = useNetwork()
 
   const etherscanUrl = getEtherscanUrl(account)
@@ -103,6 +103,11 @@ function AccountDropdownMenu({ close }: AccountDropdownMenuProps) {
     const id = setTimeout(() => setCopied(false), 500)
     if (timeoutId) clearTimeout(timeoutId)
     setTimeoutId(id)
+  }
+
+  function disconnect() {
+    initDisconnect()
+    close()
   }
 
   const closeOnBlur = useCallback(
@@ -144,7 +149,7 @@ function AccountDropdownMenu({ close }: AccountDropdownMenuProps) {
         <CopyToClipboard text={account!} onCopy={handleCopy}>
           <button>{copied ? 'Copied!' : 'Copy Address'}</button>
         </CopyToClipboard>
-        <a href={etherscanUrl} target="_blank" rel="noopener">
+        <a href={etherscanUrl} onClick={close} target="_blank" rel="noopener">
           View Details
         </a>
       </div>

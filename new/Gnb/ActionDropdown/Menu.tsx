@@ -73,6 +73,7 @@ function ActionDropdownMenu({ close }: ActionDropdownMenuProps) {
     addModal({
       category: ModalCategory.Withdraw,
     })
+    close()
   }
 
   const closeOnBlur = useCallback(
