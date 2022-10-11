@@ -22,7 +22,7 @@ const StyledGlobalFooter = styled.footer`
 
 function GlobalFooter() {
   return (
-    <StyledGlobalFooter>
+    <StyledGlobalFooter className="globalFooter">
       <ul>
         <li>
           <a
