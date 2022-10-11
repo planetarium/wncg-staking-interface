@@ -1,10 +1,27 @@
 import { memo } from 'react'
+import styled from 'styled-components'
 
 import { configService } from 'services/config'
 
-function Links() {
+const StyledMenuList = styled.nav`
+  ul {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  a,
+  button {
+    padding: 8px;
+    margin-left: 10px;
+    font-size: 14px;
+    background-color: green;
+  }
+`
+
+function MenuList() {
   return (
-    <nav>
+    <StyledMenuList className="menuList">
+      <h1 className="hidden">Menu</h1>
       <ul>
         <li>
           <a href={configService.docs.notion} target="_blank" rel="noopener">
@@ -35,8 +52,8 @@ function Links() {
           </a>
         </li>
       </ul>
-    </nav>
+    </StyledMenuList>
   )
 }
 
-export default memo(Links)
+export default memo(MenuList)
