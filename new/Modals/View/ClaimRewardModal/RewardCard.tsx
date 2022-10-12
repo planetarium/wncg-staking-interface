@@ -41,7 +41,7 @@ function RewardCard({ address, fiatValue, reward, register }: RewardCardProps) {
         {...register('tokensToClaim')}
       />
       <TokenIcon address={address} />
-      <NumberFormat value={reward} decimalScale={18} />
+      <NumberFormat value={reward} />
       <CountUp {...usdCountUpOption} end={fiatValue} />
     </StyledRewardCardProps>
   )

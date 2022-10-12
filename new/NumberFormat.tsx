@@ -4,6 +4,7 @@ import type { NumericFormatProps } from 'react-number-format'
 import { bnum } from 'utils/num'
 
 type NumberFormatProps = NumericFormatProps & {
+  decimals?: number
   showDashInInfinity?: boolean
   showDashInZero?: boolean
   showTitle?: boolean
@@ -12,13 +13,13 @@ type NumberFormatProps = NumericFormatProps & {
 function NumberFormat({
   value: defaultValue,
   allowNegative = false,
-  decimalScale = 8,
-  valueIsNumericString = true,
+  className,
+  decimals = 8,
   showDashInInfinity = true,
   showDashInZero = true,
   showTitle = true,
   thousandSeparator = true,
-  className,
+  valueIsNumericString = true,
   ...props
 }: NumberFormatProps) {
   const bValue = bnum(defaultValue || 0)
@@ -38,8 +39,8 @@ function NumberFormat({
       className={className}
       value={value}
       allowNegative={allowNegative}
+      decimalScale={decimals}
       displayType="text"
-      decimalScale={decimalScale}
       thousandSeparator={thousandSeparator}
       title={showTitle ? value : undefined}
       {...props}

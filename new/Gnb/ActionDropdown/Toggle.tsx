@@ -28,7 +28,7 @@ function ActionDropdownToggle({ toggle }: ActionDropdownToggleProps) {
       {/* Icon */}
       My Staked LP :
       <strong>
-        <NumberFormat value={stakedBalance} decimalScale={4} prefix="$" />
+        <NumberFormat value={stakedBalance} decimals={4} prefix="$" />
       </strong>
     </StyledActionDropdownToggle>
   )

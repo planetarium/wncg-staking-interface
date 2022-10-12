@@ -16,7 +16,7 @@ export type StyledButtonProps = {
 }
 
 // NOTE: Button variants
-export const primaryButtonStyle = css`
+const primaryButtonStyle = css`
   color: var(--white);
   background-color: var(--primary-500);
 
@@ -32,7 +32,7 @@ export const primaryButtonStyle = css`
   }
 `
 
-export const secondaryButtonStyle = css`
+const secondaryButtonStyle = css`
   color: var(--primary-700);
   background-color: var(--primary-50);
 
@@ -48,12 +48,12 @@ export const secondaryButtonStyle = css`
   }
 `
 
-export const tertiaryButtonStyle = css`
+const tertiaryButtonStyle = css`
   color: var(--white);
   background-color: rgba(var(--white-rgb), 0.1);
 `
 
-export const textButtonStyle = css`
+const textButtonStyle = css`
   ${inlineFlexbox('flex-start', 'center')};
   ${textStyle('button', 2)};
   width: auto;
@@ -64,7 +64,7 @@ export const textButtonStyle = css`
   }
 `
 
-export const tinyButtonStyle = css`
+const tinyButtonStyle = css`
   ${inlineFlexbox('flex-start', 'center')};
   ${textStyle('button', 3)};
   width: auto;
@@ -75,7 +75,7 @@ export const tinyButtonStyle = css`
 `
 
 // NOTE: Button sizes
-export const lgButtonStyle = css`
+const lgButtonStyle = css`
   ${textStyle('button', 1)}
   height: 72px;
   padding: 0 24px;
@@ -96,7 +96,7 @@ export const lgButtonStyle = css`
   }
 `
 
-export const mdButtonStyle = css`
+const mdButtonStyle = css`
   ${textStyle('button', 2)}
   height: 48px;
   padding: 0 16px;

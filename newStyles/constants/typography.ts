@@ -81,24 +81,28 @@ const subtitle2 = {
 
 const body1 = {
   fontFamily: fontFamily.text,
+  fontWeight: 500,
   fontSize: 18,
   lineHeight: '24px',
 }
 
 const body2 = {
   fontFamily: fontFamily.text,
+  fontWeight: 500,
   fontSize: 16,
   lineHeight: '24px',
 }
 
 const body3 = {
   fontFamily: fontFamily.text,
+  fontWeight: 500,
   fontSize: 14,
   lineHeight: '20px',
 }
 
 const body4 = {
   fontFamily: fontFamily.text,
+  fontWeight: 500,
   fontSize: 13,
   lineHeight: '18px',
 }

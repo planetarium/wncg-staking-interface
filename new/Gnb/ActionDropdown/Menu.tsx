@@ -124,14 +124,10 @@ function ActionDropdownMenu({ close }: ActionDropdownMenuProps) {
         <h2>Available Stakable LP</h2>
         <p>
           <strong>
-            <NumberFormat value={bptBalance} decimalScale={4} />
+            <NumberFormat value={bptBalance} decimals={4} />
           </strong>
 
-          <NumberFormat
-            value={bptBalanceInFiatValue}
-            prefix="$"
-            decimalScale={2}
-          />
+          <NumberFormat value={bptBalanceInFiatValue} prefix="$" decimals={2} />
         </p>
       </header>
 
@@ -148,13 +144,13 @@ function ActionDropdownMenu({ close }: ActionDropdownMenuProps) {
               </dt>
               <dd>
                 <strong>
-                  <NumberFormat value={amount} decimalScale={4} />
+                  <NumberFormat value={amount} decimals={4} />
                 </strong>
                 /
                 <NumberFormat
                   value={propAmountsInFiatValue[i]}
                   prefix="$"
-                  decimalScale={2}
+                  decimals={2}
                 />
               </dd>
             </div>

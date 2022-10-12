@@ -1,16 +1,18 @@
-import type { Control, RegisterOptions } from 'react-hook-form'
+import type {
+  Control as ReactHookFormControl,
+  RegisterOptions,
+} from 'react-hook-form'
 import { NumericFormat } from 'react-number-format'
 import clsx from 'clsx'
 import styles from './styles/InputGroup.module.scss'
 
-import { bnum } from 'utils/num'
 import { useAccount, usePool } from 'hooks'
 
-import { Input } from 'components/Input'
+import { AvailableTokenAmount, Control } from 'new/Input'
 import TokenIcon from 'new/TokenIcon'
 
 type InputGroupProps = {
-  control: Control
+  control: ReactHookFormControl
   label: string
   maxAmount: string
   name: string
@@ -21,7 +23,6 @@ type InputGroupProps = {
 
 export function InputGroup({
   control,
-  label,
   maxAmount,
   name,
   rules,
@@ -29,43 +30,22 @@ export function InputGroup({
   disabled,
 }: InputGroupProps) {
   const { isConnected } = useAccount()
-  const { poolTokenAddresses } = usePool()
-
-  const isMaxAmountZero = bnum(maxAmount).isZero()
 
   return (
-    <div className={styles.inputGroup}>
-      <Input
+    <div>
+      <Control
         name={name}
         control={control}
         rules={rules}
         setMaxValue={setMaxValue}
-        placeholder="0.0"
+        placeholder="Enter the number of LP Tokens to staking"
         disabled={disabled}
-        maxButtonDisabled={isMaxAmountZero}
       />
-
-      <div
-        className={clsx(styles.balanceGroup, { [styles.disabled]: disabled })}
-      >
-        {poolTokenAddresses.map((address) => (
-          <TokenIcon key={`inputGroup.${address}`} address={address} />
-        ))}
-        <strong>{label}</strong>
-
-        {isConnected ? (
-          <NumericFormat
-            className={styles.balance}
-            decimalScale={8}
-            displayType="text"
-            valueIsNumericString
-            thousandSeparator={true}
-            value={maxAmount}
-          />
-        ) : (
-          <span className={styles.balance}>-</span>
-        )}
-      </div>
+      <AvailableTokenAmount
+        label="Your LP Tokens (=Available staking)"
+        maxAmount={maxAmount}
+        disabled={disabled}
+      />
     </div>
   )
 }

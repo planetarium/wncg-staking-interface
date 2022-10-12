@@ -50,11 +50,8 @@ export function subtitle(level: 1 | 2) {
   return subtitles[level]
 }
 
-export function body(level: 1 | 2 | 3 | 4, isBold: boolean) {
-  return `
-    ${bodies[level]}
-    font-weight: ${isBold ? '700' : '500'}
-  `
+export function body(level: 1 | 2 | 3 | 4) {
+  return bodies[level]
 }
 
 export function button(level: 1 | 2 | 3) {
@@ -65,7 +62,7 @@ export function displayHeader(level: 1 | 2 | 3) {
   return displayHeaders[level]
 }
 
-export function textStyle(type: TextStyle, level?: any, isBold = false) {
+export function textStyle(type: TextStyle, level?: any) {
   switch (type) {
     case 'header':
       return header(level)
@@ -74,7 +71,7 @@ export function textStyle(type: TextStyle, level?: any, isBold = false) {
     case 'subtitle':
       return subtitle(level)
     case 'body':
-      return body(level, isBold)
+      return body(level)
     case 'caption':
       return caption
     case 'button':
