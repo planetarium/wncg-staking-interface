@@ -20,6 +20,7 @@ export function useTotalStaked() {
     functionName: FN,
     chainId: networkChainId,
     watch: true,
+    suspense: true,
     onSuccess(data) {
       const totalStaked = formatUnits(
         (data as unknown as BigNumber)?.toString() || 0

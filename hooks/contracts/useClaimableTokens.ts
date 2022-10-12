@@ -23,6 +23,7 @@ export function useClaimableTokens() {
     args: [stakingAddress],
     enabled: !!liquidityGaugeAddress,
     watch: true,
+    suspense: true,
   })
 
   const claimableTokens = formatUnits(
