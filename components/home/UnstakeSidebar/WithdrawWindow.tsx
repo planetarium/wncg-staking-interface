@@ -1,15 +1,13 @@
-import { useAtomValue } from 'jotai'
 import clsx from 'clsx'
 import styles from '../styles/UnstakeSidebar.module.scss'
 
-import { unstakeWindowAtom } from 'states/staking'
 import { formatTimer } from 'utils/string'
 import { useTimer, useUnstakeTimestamps } from 'hooks'
+import { useStaking } from 'hooks/contracts'
 
 export function UnstakeSidebarWithdrawWindow() {
+  const { unstakeWindow } = useStaking()
   const { refetchTimestamps, withdrawEndsAt } = useUnstakeTimestamps()
-
-  const unstakeWindow = useAtomValue(unstakeWindowAtom)
 
   function onExpiration() {
     if (!withdrawEndsAt) return

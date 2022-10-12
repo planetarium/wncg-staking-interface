@@ -4,22 +4,20 @@ import type { BigNumber } from 'ethers'
 import { formatUnits } from 'ethers/lib/utils'
 import { useAccount, useContractReads } from 'wagmi'
 
-import {
-  rewardTokenDecimalsAtom,
-  stakingContractAddressAtom,
-} from 'states/staking'
+import { stakingContractAddressAtom } from 'states/staking'
 import { rewardsAtom } from 'states/user'
 import { networkChainId } from 'utils/network'
 import { findAbiFromStaking } from 'utils/wagmi'
+import { useStaking } from './useStaking'
 
 const FNS = ['earnedWNCG', 'earnedBAL']
 const ABIS = findAbiFromStaking(...FNS)
 
 export function useRewards() {
   const { address: account } = useAccount()
+  const { rewardTokenDecimals } = useStaking()
 
   const stakingAddress = useAtomValue(stakingContractAddressAtom)
-  const rewardTokenDecimals = useAtomValue(rewardTokenDecimalsAtom)
   const setRewards = useSetAtom(rewardsAtom)
 
   const contracts = useMemo(

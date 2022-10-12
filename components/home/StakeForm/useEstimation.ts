@@ -7,7 +7,7 @@ import { bnum } from 'utils/num'
 import { useApr, useFiatCurrency, usePrices } from 'hooks'
 
 export function useEstimation() {
-  const { emissionPerSecList, rewardTokenPriceList } = useApr()
+  const { emissions, rewardTokenPrices } = useApr()
   const { getBptFiatValue } = useFiatCurrency()
   const { bptPrice } = usePrices()
 
@@ -18,21 +18,15 @@ export function useEstimation() {
       const totalStakedValue = getBptFiatValue(
         bnum(totalStaked).plus(bnum(amount)).toNumber()
       )
-      const aprs = emissionPerSecList.map((emission, i) =>
-        calcApr(emission, rewardTokenPriceList[i], totalStakedValue)
+      const aprs = emissions.map((emission, i) =>
+        calcApr(emission, rewardTokenPrices[i], totalStakedValue)
       )
 
       return aprs.map((apr, i) =>
-        calcRevenue(amount, apr, option, bptPrice, rewardTokenPriceList[i])
+        calcRevenue(amount, apr, option, bptPrice, rewardTokenPrices[i])
       )
     },
-    [
-      bptPrice,
-      emissionPerSecList,
-      getBptFiatValue,
-      rewardTokenPriceList,
-      totalStaked,
-    ]
+    [bptPrice, emissions, getBptFiatValue, rewardTokenPrices, totalStaked]
   )
 
   return {

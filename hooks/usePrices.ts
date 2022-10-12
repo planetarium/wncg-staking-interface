@@ -1,16 +1,14 @@
 import { useCallback, useMemo } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { useAtomValue } from 'jotai'
 
-import { rewardTokensListAtom } from 'states/staking'
 import { TOKEN_PRICES_PLACEHOLDERS } from 'constants/tokens'
-import { configService } from 'services/config'
 import { fetchTokenPrices } from 'lib/coingecko'
 import { fetchCoinmarketCapTokenPrice } from 'lib/coinmarketCap'
 import { uniqAddress } from 'utils/address'
 import { calcPoolTotalValue } from 'utils/calculator'
 import { bnum } from 'utils/num'
 import { usePool } from './usePool'
+import { useStaking } from './contracts'
 
 const options = {
   retry: false,
@@ -23,16 +21,10 @@ export function usePrices() {
 
   const { bptAddress, poolTokenAddresses, poolTokens, poolTotalShares } =
     usePool()
-
-  const rewardTokensList = useAtomValue(rewardTokensListAtom)
+  const { rewardTokensList } = useStaking()
 
   const addresses = useMemo(
-    () =>
-      uniqAddress([
-        ...poolTokenAddresses,
-        ...rewardTokensList,
-        configService.bal,
-      ]),
+    () => uniqAddress([...poolTokenAddresses, ...rewardTokensList]),
     [poolTokenAddresses, rewardTokensList]
   )
 

@@ -6,7 +6,6 @@ import {
   useClaimableTokens,
   useRewards,
   useStakedBalances,
-  useStaking,
   useTotalStaked,
 } from 'hooks/contracts'
 
@@ -15,7 +14,6 @@ function ContractEffects() {
   useBalances()
   useClaimableTokens()
   useStakedBalances()
-  useStaking()
   useRewards()
   useTotalStaked()
 

@@ -1,10 +1,8 @@
 import { useCallback, useMemo, useState } from 'react'
 import { Control, FieldValues, useForm } from 'react-hook-form'
-import { useAtomValue } from 'jotai'
 import { AnimatePresence, motion } from 'framer-motion'
 import styles from '../styles/Forms.module.scss'
 
-import { rewardTokenSymbolsAtom } from 'states/staking'
 import { ModalCategory } from 'states/ui'
 import { gaEvent } from 'lib/gtag'
 import { bnum } from 'utils/num'
@@ -16,6 +14,7 @@ import {
   useToast,
   useUnstake,
 } from 'hooks'
+import { useStaking } from 'hooks/contracts'
 import { formTransition, motionVariants, TabId, TabPanelId } from '../constants'
 
 import { Button } from 'components/Button'
@@ -36,10 +35,9 @@ function UnstakeForm({ disabled }: UnstakeFormProps) {
   const { addModal } = useModal()
   const { poolTokenName } = usePool()
   const { stakedBalance } = useStakedBalance()
+  const { rewardTokenSymbols } = useStaking()
   const { addToast } = useToast()
   const { withdraw } = useUnstake()
-
-  const rewardTokenSymbols = useAtomValue(rewardTokenSymbolsAtom)
 
   const { clearErrors, control, setValue, watch } = useForm({
     mode: 'onBlur',

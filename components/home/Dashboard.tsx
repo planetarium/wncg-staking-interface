@@ -12,6 +12,7 @@ import {
 } from 'constants/countUp'
 import { gaEvent } from 'lib/gtag'
 import { useApr, useModal, useRewards, useFiatCurrency } from 'hooks'
+import { useStaking } from 'hooks/contracts'
 
 import { Button } from 'components/Button'
 import { CountUp } from 'components/CountUp'
@@ -20,7 +21,8 @@ function Dashboard() {
   const { aprs } = useApr()
   const { getBptFiatValue } = useFiatCurrency()
   const { addModal } = useModal()
-  const { rewards, rewardsInFiatValue, rewardTokenSymbols } = useRewards()
+  const { rewards, rewardsInFiatValue } = useRewards()
+  const { rewardTokenSymbols } = useStaking()
 
   const totalStaked = useAtomValue(totalStakedAtom)
 

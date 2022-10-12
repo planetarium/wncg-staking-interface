@@ -1,20 +1,15 @@
 import { useMemo } from 'react'
-import { useAtomValue, useSetAtom } from 'jotai'
+import { useAtomValue } from 'jotai'
 import type { BigNumber } from 'ethers'
 import { formatUnits } from 'ethers/lib/utils'
 import { useContractReads } from 'wagmi'
 
-import {
-  earmarkIncentivePcntAtom,
-  emissionListAtom,
-  liquidityGaugeAddressAtom,
-  rewardTokenAddressAtom,
-  stakedTokenAddressAtom,
-  stakingContractAddressAtom,
-  unstakeWindowAtom,
-} from 'states/staking'
+import { stakingContractAddressAtom } from 'states/staking'
+import { configService } from 'services/config'
+import { uniqAddress } from 'utils/address'
 import { networkChainId } from 'utils/network'
 import { bnum } from 'utils/num'
+import { getTokenInfo } from 'utils/token'
 import { findAbiFromStaking } from 'utils/wagmi'
 
 const FNS = [
@@ -32,13 +27,6 @@ const ABIS = findAbiFromStaking(...FNS)
 export function useStaking() {
   const stakingAddress = useAtomValue(stakingContractAddressAtom)
 
-  const setEarmarkIncentivePcnt = useSetAtom(earmarkIncentivePcntAtom)
-  const setEmissionList = useSetAtom(emissionListAtom)
-  const setLiquidityGaugeAddress = useSetAtom(liquidityGaugeAddressAtom)
-  const setRewardTokenAddress = useSetAtom(rewardTokenAddressAtom)
-  const setStakedTokenAddress = useSetAtom(stakedTokenAddressAtom)
-  const setUnstakeWindow = useSetAtom(unstakeWindowAtom)
-
   const contracts = useMemo(
     () =>
       FNS.map((fn) => ({
@@ -50,47 +38,90 @@ export function useStaking() {
     [stakingAddress]
   )
 
-  useContractReads({
+  const { data } = useContractReads({
     contracts,
     cacheTime: Infinity,
-    onSuccess(data) {
-      const [
-        earmarkIncentiveFee,
-        feeDenominator,
-        balancerGauge,
-        rewardToken,
-        stakedToken,
-        balEmissionPerSec,
-        wncgEmissionPerSec,
-        unstakeWindow,
-      ] = (data || []) as unknown as [
-        BigNumber,
-        BigNumber,
-        string,
-        string,
-        string,
-        BigNumber,
-        BigNumber,
-        BigNumber
-      ]
+    enabled: !!stakingAddress,
+    suspense: true,
+  })
 
-      const earmarkIncentivePcnt = Math.min(
+  const [
+    earmarkIncentiveFee,
+    feeDenominator,
+    balancerGauge,
+    rewardToken,
+    stakedToken,
+    balEmissionPerSec,
+    wncgEmissionPerSec,
+    _unstakeWindow,
+  ] = (data || []) as unknown as [
+    BigNumber,
+    BigNumber,
+    string,
+    string,
+    string,
+    BigNumber,
+    BigNumber,
+    BigNumber
+  ]
+
+  const earmarkIncentivePcnt = useMemo(
+    () =>
+      Math.min(
         bnum(earmarkIncentiveFee?.toNumber() || 0)
           .div(feeDenominator?.toNumber() || 0)
           .toNumber() || 0.01,
         1
-      )
-      setEarmarkIncentivePcnt(earmarkIncentivePcnt)
+      ),
+    [earmarkIncentiveFee, feeDenominator]
+  )
 
-      const emissions = [wncgEmissionPerSec, balEmissionPerSec]
-      setEmissionList(
-        emissions.map((emission) => formatUnits(emission?.toString() || 0))
-      )
+  const emissions = useMemo(
+    () =>
+      [wncgEmissionPerSec, balEmissionPerSec].map((emission) =>
+        formatUnits(emission?.toString() || 0)
+      ),
+    [balEmissionPerSec, wncgEmissionPerSec]
+  )
 
-      setLiquidityGaugeAddress(balancerGauge || '')
-      setRewardTokenAddress(rewardToken || '')
-      setStakedTokenAddress(stakedToken || '')
-      setUnstakeWindow(unstakeWindow?.toNumber() || 0)
-    },
-  })
+  const liquidityGaugeAddress = useMemo(
+    () => balancerGauge || '',
+    [balancerGauge]
+  )
+
+  const rewardTokenAddress = useMemo(() => rewardToken || '', [rewardToken])
+
+  const rewardTokensList = useMemo(
+    () => uniqAddress([rewardTokenAddress, configService.bal]),
+    [rewardTokenAddress]
+  )
+
+  const rewardTokenDecimals = useMemo(
+    () => rewardTokensList.map((address) => getTokenInfo(address).decimals),
+    [rewardTokensList]
+  )
+
+  const rewardTokenSymbols = useMemo(
+    () => rewardTokensList.map((address) => getTokenInfo(address).symbol),
+    [rewardTokensList]
+  )
+
+  const stakedTokenAddress = useMemo(() => stakedToken || '', [stakedToken])
+
+  const unstakeWindow = useMemo(
+    () => _unstakeWindow?.toNumber() || 0,
+    [_unstakeWindow]
+  )
+
+  return {
+    earmarkIncentivePcnt,
+    emissions,
+    liquidityGaugeAddress,
+    rewardTokenAddress,
+    rewardTokensList,
+    rewardTokenDecimals,
+    rewardTokenSymbols,
+    stakedTokenAddress,
+    unstakeWindow,
+  }
 }

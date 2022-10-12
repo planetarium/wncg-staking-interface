@@ -4,15 +4,16 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { useAccount, useNetwork } from 'wagmi'
 import styles from '../styles/StakeSidebar.module.scss'
 
-import { earmarkIncentiveAtom } from 'states/staking'
 import { legacyModeAtom } from 'states/userSettings'
 import { isMobileAtom } from 'states/ui'
 import { countUpOption, usdCountUpOption } from 'constants/countUp'
 import { configService } from 'services/config'
 import { gaEvent } from 'lib/gtag'
 import { networkChainId } from 'utils/network'
+import { bnum } from 'utils/num'
 import { parseTxError } from 'utils/tx'
 import { useConnectWallets, useEarmark, useFiatCurrency, useToast } from 'hooks'
+import { useClaimableTokens, useStaking } from 'hooks/contracts'
 import { motionVariants } from '../constants'
 
 import { Button } from 'components/Button'
@@ -24,20 +25,24 @@ export function StakeSidebarAdvanced() {
   const [loading, setLoading] = useState(false)
 
   const { isConnected } = useAccount()
+  const { claimableTokens } = useClaimableTokens()
   const { connect } = useConnectWallets()
   const { earmarkRewards } = useEarmark()
   const { toFiat } = useFiatCurrency()
   const { chain } = useNetwork()
+  const { earmarkIncentivePcnt: pcnt } = useStaking()
   const { addToast } = useToast()
 
   const isMobile = useAtomValue(isMobileAtom)
-  const earmarkIncentive = useAtomValue(earmarkIncentiveAtom)
   const legacyMode = useAtomValue(legacyModeAtom)
+
+  const earmarkIncentive = bnum(claimableTokens).times(pcnt).toNumber() ?? 0
 
   const earmarkIncentiveInFiatValue = toFiat(
     configService.bal,
     earmarkIncentive
   )
+
   const networkMismatch = chain && chain.id !== networkChainId
   const disabled = networkMismatch || loading
 

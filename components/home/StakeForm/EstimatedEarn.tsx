@@ -3,11 +3,11 @@ import { useAtomValue } from 'jotai'
 import clsx from 'clsx'
 import styles from '../styles/EstimatedEarn.module.scss'
 
-import { rewardTokensListAtom } from 'states/staking'
 import { estimationPeriodAtom } from 'states/userSettings'
 import { countUpOption, usdCountUpOption } from 'constants/countUp'
 import { getTokenSymbol } from 'utils/token'
 import { useFiatCurrency, useSettings } from 'hooks'
+import { useStaking } from 'hooks/contracts'
 import { useEstimation } from './useEstimation'
 
 import { CountUp } from 'components/CountUp'
@@ -23,9 +23,9 @@ function EstimatedEarn({ amount = '' }: EstimatedEarnProps) {
   const { calcEstimatedRevenue } = useEstimation()
   const { toFiat } = useFiatCurrency()
   const { updateEstimationPeriod } = useSettings()
+  const { rewardTokensList } = useStaking()
 
   const period = useAtomValue(estimationPeriodAtom)
-  const rewardTokensList = useAtomValue(rewardTokensListAtom)
 
   const updateEstimation = useCallback(() => {
     const expectedRevenues = calcEstimatedRevenue(amount, period)

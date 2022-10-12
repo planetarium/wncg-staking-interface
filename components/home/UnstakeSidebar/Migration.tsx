@@ -1,10 +1,9 @@
-import { useAtomValue } from 'jotai'
 import clsx from 'clsx'
 import styles from '../styles/UnstakeSidebar.module.scss'
 
-import { unstakeWindowAtom } from 'states/staking'
 import { formatTimer } from 'utils/string'
 import { usePool, useTimer, useUnstakeTimestamps } from 'hooks'
+import { useStaking } from 'hooks/contracts'
 
 import { CooldownButton } from './CooldownButton'
 
@@ -16,9 +15,8 @@ export function UnstakeSidebarMigration({
   isWithdrawable,
 }: UnstakeSidebarMigrationProps) {
   const { poolTokenName } = usePool()
+  const { unstakeWindow } = useStaking()
   const { refetchTimestamps, withdrawEndsAt } = useUnstakeTimestamps()
-
-  const unstakeWindow = useAtomValue(unstakeWindowAtom)
 
   function onExpiration() {
     if (!withdrawEndsAt) return

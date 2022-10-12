@@ -7,6 +7,7 @@ import { gaEvent } from 'lib/gtag'
 import { bnum } from 'utils/num'
 import { parseTxError } from 'utils/tx'
 import { useClaim, useModal, useRewards, useToast } from 'hooks'
+import { useStaking } from 'hooks/contracts'
 
 import { Button } from 'components/Button'
 import { Icon } from 'components/Icon'
@@ -19,7 +20,8 @@ function ClaimRewardModal() {
   const { isConnected } = useAccount()
   const { claimAllRewards, claimBalRewards, claimWncgRewards } = useClaim()
   const { removeModal } = useModal()
-  const { rewards, rewardsInFiatValue, rewardTokenSymbols } = useRewards()
+  const { rewards, rewardsInFiatValue } = useRewards()
+  const { rewardTokenSymbols } = useStaking()
   const { addToast } = useToast()
 
   const claimTypes = ['all', ...rewardTokenSymbols].map((item) =>

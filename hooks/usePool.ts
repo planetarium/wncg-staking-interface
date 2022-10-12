@@ -1,21 +1,19 @@
 import { useMemo } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { useAtomValue } from 'jotai'
 
-import { stakedTokenAddressAtom } from 'states/staking'
 import { REFETCH_INTERVAL, STALE_TIME } from 'constants/time'
 import { configService } from 'services/config'
 import { fetchPool } from 'lib/graphql'
 import { getTokenInfo, getTokenSymbol } from 'utils/token'
+import { useStaking } from './contracts'
 
 export function usePool() {
+  const { stakedTokenAddress } = useStaking()
   const { data: pool, refetch } = useQuery(['pool'], fetchPool, {
     staleTime: STALE_TIME,
     refetchInterval: REFETCH_INTERVAL,
     keepPreviousData: true,
   })
-
-  const stakedTokenAddress = useAtomValue(stakedTokenAddressAtom)
 
   const poolId = configService.poolId
 
