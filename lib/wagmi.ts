@@ -22,7 +22,7 @@ export const metamaskConnector = new MetaMaskConnector({
   chains,
 })
 
-export const coinbaseConnector = new CoinbaseWalletConnector({
+export const coinbaseWalletConnector = new CoinbaseWalletConnector({
   chains,
   options,
 })
@@ -34,7 +34,7 @@ export const walletConnectConnector = new WalletConnectConnector({
 
 export const connectors = [
   metamaskConnector,
-  coinbaseConnector,
+  coinbaseWalletConnector,
   walletConnectConnector,
 ]
 

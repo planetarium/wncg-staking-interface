@@ -1,7 +1,7 @@
 import { ModalCategory } from 'states/ui'
 
-import { StyledModalContent } from './styled'
-import ModalClose from './ModalClose'
+import { StyledModalContent } from '../shared/styled'
+import ModalClose from '../shared/ModalClose'
 
 function WithdrawModal() {
   return (

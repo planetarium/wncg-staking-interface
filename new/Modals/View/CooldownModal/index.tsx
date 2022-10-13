@@ -1,4 +1,4 @@
-import { StyledModalContent } from '../styled'
+import { StyledModalContent } from '../../shared/styled'
 
 function CooldownModal() {
   return <StyledModalContent>Cooldown</StyledModalContent>

@@ -4,7 +4,7 @@ import styled from 'styled-components'
 
 import { flexbox } from 'newStyles/utils'
 
-import SvgIcon from 'new/SvgIcon'
+import SvgIcon from './SvgIcon'
 
 type CheckboxSize = 16 | 24 | 32
 
@@ -16,7 +16,7 @@ const StyledCheckbox = styled.div<{ $size: CheckboxSize }>`
 `
 
 const StyledFakeInput = styled.div`
-  ${flexbox()};
+  ${flexbox()}
   width: 100%;
   height: 100%;
   pointer-events: none;

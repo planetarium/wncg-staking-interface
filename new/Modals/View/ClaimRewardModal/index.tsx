@@ -2,9 +2,9 @@ import { memo } from 'react'
 
 import { ModalCategory } from 'states/ui'
 
-import { StyledModalContent } from '../styled'
+import { StyledModalContent } from '../../shared/styled'
 import SelectRewards from './SelectRewards'
-import ModalClose from '../ModalClose'
+import ModalClose from '../../shared/ModalClose'
 
 function ClaimRewardModal() {
   return (

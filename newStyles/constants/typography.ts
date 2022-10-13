@@ -6,10 +6,12 @@ export type TextStyle =
   | 'caption'
   | 'button'
   | 'display'
+  | 'number'
 
 export const fontFamily = {
   display: "'Outfit', sans-serif",
   text: "'Inter', sans-serif",
+  number: "'Oswald', sans-serif",
 }
 
 const h1 = {
@@ -68,7 +70,7 @@ export const title = {
 const subtitle1 = {
   fontFamily: fontFamily.text,
   fontWeight: 700,
-  fontSize: '20',
+  fontSize: 20,
   lineHeight: '24px',
 }
 
@@ -163,6 +165,13 @@ const displayH3 = {
   lineHeight: '76px',
   letterSpacing: '0.02em',
   textTransform: 'uppercase',
+}
+
+export const number = {
+  fontFamily: fontFamily.number,
+  fontWeight: 600,
+  fontSize: 40,
+  lineHeight: '59px',
 }
 
 export const headers = {

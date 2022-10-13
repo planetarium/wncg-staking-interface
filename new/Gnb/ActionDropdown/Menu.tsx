@@ -4,6 +4,7 @@ import { motion } from 'framer-motion'
 import styled from 'styled-components'
 
 import { ModalCategory } from 'states/ui'
+import { slideInDown } from 'constants/motionVariants'
 import { getTokenSymbol } from 'utils/token'
 import {
   useBalances,
@@ -32,21 +33,6 @@ const StyledActionDropdownMenu = styled(motion.aside)`
     margin: 30px 0;
   }
 `
-
-const motionVariants = {
-  initial: {
-    opacity: 0,
-    y: -20,
-  },
-  animate: {
-    opacity: 1,
-    y: 0,
-  },
-  exit: {
-    opacity: 0,
-    y: -20,
-  },
-}
 
 type ActionDropdownMenuProps = {
   close(): void
@@ -97,7 +83,7 @@ function ActionDropdownMenu({ close }: ActionDropdownMenuProps) {
       initial="initial"
       animate="animate"
       exit="exit"
-      variants={motionVariants}
+      variants={slideInDown}
     >
       <header>
         <h2>My Staked LP</h2>

@@ -4,15 +4,15 @@ import clsx from 'clsx'
 
 import { configService } from 'services/config'
 import { getTokenSymbol } from 'utils/token'
-import { flexbox, imageContainer } from 'newStyles/utils'
+import { flexbox } from 'newStyles/utils'
 
-import SvgIcon, { SvgIconType } from './SvgIcon'
+import SvgIcon from './SvgIcon'
+import type { SvgIconType } from './SvgIcon'
 
 type TokenIconSize = 16 | 24 | 32 | 48
 
 const StyledTokenIcon = styled.span<{ $size: TokenIconSize }>`
-  ${flexbox()};
-  ${({ $size }) => imageContainer($size)};
+  ${flexbox()}
   width: ${({ $size }) => `${$size}px`};
   height: ${({ $size }) => `${$size}px`};
   border-radius: 50%;
@@ -57,7 +57,7 @@ function TokenIcon({ address, className, $size = 24 }: TokenIconProps) {
 
   return (
     <StyledTokenIcon
-      className={clsx(className, iconClassName)}
+      className={clsx('tokenIcon', iconClassName, className)}
       title={title}
       $size={$size}
     >

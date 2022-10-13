@@ -2,14 +2,8 @@ import type {
   Control as ReactHookFormControl,
   RegisterOptions,
 } from 'react-hook-form'
-import { NumericFormat } from 'react-number-format'
-import clsx from 'clsx'
-import styles from './styles/InputGroup.module.scss'
-
-import { useAccount, usePool } from 'hooks'
 
 import { AvailableTokenAmount, Control } from 'new/Input'
-import TokenIcon from 'new/TokenIcon'
 
 type InputGroupProps = {
   control: ReactHookFormControl
@@ -29,8 +23,6 @@ export function InputGroup({
   setMaxValue,
   disabled,
 }: InputGroupProps) {
-  const { isConnected } = useAccount()
-
   return (
     <div>
       <Control
@@ -44,7 +36,6 @@ export function InputGroup({
       <AvailableTokenAmount
         label="Your LP Tokens (=Available staking)"
         maxAmount={maxAmount}
-        disabled={disabled}
       />
     </div>
   )

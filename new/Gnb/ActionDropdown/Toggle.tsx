@@ -1,16 +1,11 @@
 import type { MouseEvent } from 'react'
-import styled from 'styled-components'
 
+import { countUpOption } from 'constants/countUp'
 import { useStakedBalance } from 'hooks'
 
-import NumberFormat from 'new/NumberFormat'
-
-const StyledActionDropdownToggle = styled.button`
-  position: relative;
-  height: 40px;
-  padding: 8px;
-  background-color: #fff;
-`
+import { StyledActionDropdownToggle } from './styled'
+import CountUp from 'new/CountUp'
+import SvgIcon from 'new/SvgIcon'
 
 type ActionDropdownToggleProps = {
   toggle(e: MouseEvent<HTMLButtonElement>): void
@@ -25,10 +20,15 @@ function ActionDropdownToggle({ toggle }: ActionDropdownToggleProps) {
       type="button"
       onClick={toggle}
     >
-      {/* Icon */}
-      My Staked LP :
-      <strong>
-        <NumberFormat value={stakedBalance} decimals={4} prefix="$" />
+      <SvgIcon icon="coin" $size={24} />
+      <span className="label">My Staked LP</span>
+      <strong className="amount">
+        <CountUp
+          {...countUpOption}
+          end={stakedBalance}
+          decimals={4}
+          prefix="$"
+        />
       </strong>
     </StyledActionDropdownToggle>
   )

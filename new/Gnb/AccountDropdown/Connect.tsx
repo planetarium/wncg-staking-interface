@@ -1,32 +1,14 @@
-import { motion } from 'framer-motion'
-import styled from 'styled-components'
-
+import { fadeIn } from 'constants/motionVariants'
 import { useAccount, useConnectWallets } from 'hooks'
 
-const motionVariants = {
-  initial: {
-    opacity: 0,
-  },
-  animate: {
-    opacity: 1,
-  },
-  exit: {
-    opacity: 0,
-  },
-}
-
-const StyledAccountConnect = styled(motion.button)`
-  height: 40px;
-  font-size: 14px;
-  color: white;
-  background-color: purple;
-`
+import { StyledAccountConnect } from './styled'
+import Button from 'new/Button'
 
 function AccountConnect() {
-  const { isConnected, isConnecting } = useAccount()
+  const { isConnected } = useAccount()
   const { connect } = useConnectWallets()
 
-  const disabled = isConnected || isConnecting
+  const disabled = isConnected
 
   return (
     <StyledAccountConnect
@@ -34,11 +16,16 @@ function AccountConnect() {
       initial="initial"
       animate="animate"
       exit="exit"
-      variants={motionVariants}
-      onClick={connect}
-      disabled={disabled}
+      variants={fadeIn}
     >
-      Connect Wallet
+      <Button
+        onClick={connect}
+        disabled={disabled}
+        $size="md"
+        $variant="primary"
+      >
+        Connect Wallet
+      </Button>
     </StyledAccountConnect>
   )
 }

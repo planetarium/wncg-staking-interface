@@ -1,57 +1,69 @@
-import { motion } from 'framer-motion'
 import styled from 'styled-components'
 
-export const StyledModalOverlay = styled(motion.div)`
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-end;
-  background-color: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(32px);
-  /* opacity: 0.6; */
+import { flexbox, textStyle } from 'newStyles/utils'
+import { StyledModalContent } from '../shared/styled'
 
-  @media screen and (min-width: 1000px) {
-    justify-content: center;
+export const StyledConnectWalletModal = styled(StyledModalContent)`
+  max-width: 720px;
+
+  .header {
+    margin-bottom: 40px;
   }
-`
 
-export const StyledModalContainer = styled(motion.aside)`
-  width: 100%;
-
-  @media screen and (min-width: 1000px) {
-    max-width: 400px;
-    padding: 0;
+  .title {
+    ${textStyle('header', 5)}
+    color: var(--white);
   }
-`
 
-export const StyledModalContent = styled.div`
-  position: relative;
-  flex-grow: 1;
-  width: 100%;
-  margin: 0 auto;
-  padding: 40px 24px;
-  background-color: rgba(255, 255, 255, 0.05);
-  border-radius: 16px 16px 0 0;
-  box-shadow: 0px 4px 48px rgba(0, 0, 0, 0.24);
+  .buttonGroup {
+    ${flexbox()};
+    width: 100%;
+  }
 
-  header {
-    margin-bottom: 20px;
-    text-align: center;
+  .connectButton {
+    ${flexbox()}
+    ${textStyle('body', 1)}
+    flex-direction: column;
+    flex-grow: 1;
+    width: 33%;
+    padding: 32px 16px;
+    margin-right: 24px;
+    font-weight: 700;
+    border-radius: 12px;
+    color: var(--white);
 
-    svg {
-      width: 20px;
-      height: 20px;
+    &.metaMask {
+      background-image: linear-gradient(
+        131.45deg,
+        #ffac5f 1.52%,
+        #d96f26 98.73%
+      );
+    }
+
+    &.coinbaseWallet {
+      background-image: linear-gradient(
+        131.3deg,
+        #c1d3ff 1.47%,
+        #5379db 99.24%
+      );
+    }
+
+    &.walletConnect {
+      background-image: linear-gradient(
+        132.67deg,
+        #006dff 1.77%,
+        #0038ff 99.91%
+      );
+    }
+
+    &:last-child {
+      margin-right: 0;
+    }
+
+    .icon {
+      margin-bottom: 24px;
     }
   }
-
-  @media screen and (min-width: 1000px) {
-    padding: 36px 30px 40px;
-    border-radius: 8px;
-  }
 `
+
+export const StyledSwitchNetworkModal = styled(StyledModalContent)``

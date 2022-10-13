@@ -1,14 +1,15 @@
 import type { MouseEvent } from 'react'
 import { useConnect } from 'wagmi'
+import clsx from 'clsx'
 
 import { ModalCategory } from 'states/ui'
 import { gaEvent } from 'lib/gtag'
+import { assertUnreachable } from 'utils/assertion'
 import { useModal } from 'hooks'
-import { StyledModalContent } from './styled'
 
-import ModalClose from './ModalClose'
-
-const colors = ['orange', 'skyblue', 'blue']
+import { StyledConnectWalletModal } from './styled'
+import ModalClose from '../shared/ModalClose'
+import SvgIcon, { SvgIconType } from 'new/SvgIcon'
 
 function ConnectWalletModal() {
   const { removeModal } = useModal()
@@ -33,35 +34,50 @@ function ConnectWalletModal() {
   }
 
   return (
-    <StyledModalContent>
-      <ModalClose modal={ModalCategory.Connect} />
-
-      <header>
-        <h2>Connect a wallet</h2>
-        <p>
+    <StyledConnectWalletModal>
+      <header className="header">
+        <div className="titleGroup">
+          <h2 className="title">Connect a wallet</h2>
+        </div>
+        <p className="desc">
           By connecting a wallet, you agree to Nine Chronicles Ltd&apos;s Terms
           of Service and Privacy Policy.
         </p>
+        <ModalClose modal={ModalCategory.Connect} />
       </header>
 
       <div className="buttonGroup">
         {connectors.map((connector, i) => {
           return (
             <button
-              key={`connect_${connector.id}`}
+              className={clsx('connectButton', connector.id)}
+              key={`connect:${connector.id}`}
               type="button"
               onClick={connect}
               value={i}
               disabled={!connector.ready}
-              style={{ background: colors[i], padding: 8, marginRight: 8 }}
             >
-              {connector.name}
+              <SvgIcon icon={connector.id as SvgIconType} $size={64} />
+              {renderButtonLabel(connector.name)}
             </button>
           )
         })}
       </div>
-    </StyledModalContent>
+    </StyledConnectWalletModal>
   )
 }
 
 export default ConnectWalletModal
+
+function renderButtonLabel(name?: string) {
+  switch (name) {
+    case 'MetaMask':
+      return 'Metamask'
+    case 'Coinbase Wallet':
+      return 'Coinbase'
+    case 'WalletConnect':
+      return 'WalletConnect'
+    default:
+      assertUnreachable(name)
+  }
+}

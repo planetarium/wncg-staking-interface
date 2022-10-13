@@ -9,8 +9,11 @@ import {
   overlayVariants,
 } from '../constants'
 
-import { StyledModalContainer, StyledModalOverlay } from './styled'
+import { StyledModalContainer, StyledModalOverlay } from '../shared/styled'
 
+const StakeModal = dynamic(() => import('new/staking/StakeModal'), {
+  suspense: true,
+})
 const ClaimRewardModal = dynamic(() => import('./ClaimRewardModal'), {
   suspense: true,
 })
@@ -57,13 +60,15 @@ export function ModalView({ modal }: ModalViewProps) {
 }
 
 function renderModal(modal: Modal) {
-  const { category } = modal
+  const { category, props } = modal
 
   switch (category) {
     case ModalCategory.ClaimReward:
       return <ClaimRewardModal />
     case ModalCategory.Connect:
       return <ConnectWalletModal />
+    case ModalCategory.Stake:
+      return <StakeModal {...props} />
     case ModalCategory.SwitchNetwork:
       return <SwitchNetworkModal />
     case ModalCategory.Withdraw:

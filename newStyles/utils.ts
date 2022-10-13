@@ -9,6 +9,7 @@ import {
   caption,
   displayHeaders,
   headers,
+  number,
   subtitles,
   title,
 } from './constants/typography'
@@ -78,12 +79,25 @@ export function textStyle(type: TextStyle, level?: any) {
       return button(level)
     case 'display':
       return displayHeader(level)
+    case 'number':
+      return number
     default:
       assertUnreachable(type)
   }
 }
 
-export function flexbox(jc = 'center', ai = 'center') {
+type FlexboxValue =
+  | 'center'
+  | 'flex-end'
+  | 'flex-start'
+  | 'space-around'
+  | 'space-between'
+  | 'stretch'
+
+export function flexbox(
+  jc: FlexboxValue = 'center',
+  ai: FlexboxValue = 'center'
+) {
   return css`
     display: flex;
     align-items: ${ai};
@@ -91,7 +105,10 @@ export function flexbox(jc = 'center', ai = 'center') {
   `
 }
 
-export function inlineFlexbox(jc = 'center', ai = 'center') {
+export function inlineFlexbox(
+  jc: FlexboxValue = 'center',
+  ai: FlexboxValue = 'center'
+) {
   return css`
     display: inline-flex;
     justify-content: ${jc};
@@ -99,7 +116,9 @@ export function inlineFlexbox(jc = 'center', ai = 'center') {
   `
 }
 
-export function posCenterX(type = 'absolute') {
+type PositionType = 'absolute' | 'fixed'
+
+export function posCenterX(type: PositionType = 'absolute') {
   return css`
     position: ${type};
     left: 50%;
@@ -107,7 +126,7 @@ export function posCenterX(type = 'absolute') {
   `
 }
 
-export function posCenterY(type = 'absolute') {
+export function posCenterY(type: PositionType = 'absolute') {
   return css`
     position: ${type};
     top: 50%;
@@ -115,7 +134,7 @@ export function posCenterY(type = 'absolute') {
   `
 }
 
-export function posCenter(type = 'absolute') {
+export function posCenter(type: PositionType = 'absolute') {
   return css`
     position: ${type};
     top: 50%;

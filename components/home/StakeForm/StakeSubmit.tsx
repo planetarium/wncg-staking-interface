@@ -53,7 +53,6 @@ export function StakeSubmit({
 
   const { isConnected } = useAccount()
   const { allowanceFor } = useAllowances()
-  const { approve } = useApprove()
   const { connect } = useConnectWallets()
   const { addModal } = useModal()
   const { bptAddress } = usePool()
@@ -65,6 +64,8 @@ export function StakeSubmit({
   const legacyMode = useAtomValue(legacyModeAtom)
   const stakingAddress = useAtomValue(stakingContractAddressAtom)
   const isUnstakeWindow = UNSTAKE_WINDOW.includes(unstakeStatus)
+
+  const { approve } = useApprove(bptAddress, stakingAddress)
 
   const isApproved = allowanceFor(bptAddress, stakingAddress)
   const isLoading = currentState !== null
@@ -113,8 +114,8 @@ export function StakeSubmit({
     })
 
     try {
-      const hash = await approve(bptAddress, stakingAddress)
-      if (hash) setPendingTx(hash)
+      const hash = await approve()
+      // if (hash) setPendingTx(hash)
     } catch (error) {
       handleError(error)
     }

@@ -20,6 +20,7 @@ import { configService } from 'services/config'
 import { DEFAULT_SEO } from 'lib/seo'
 import wagmiClient from 'lib/wagmi'
 
+import Effects from 'new/Effects'
 import Layout from 'new/Layout'
 import Modals from 'new/Modals'
 import { ToastContainer } from 'components/ToastContainer'
@@ -71,6 +72,7 @@ function MyApp({ Component, pageProps }: AppProps) {
               </Layout>
               <Modals />
               <ToastContainer />
+              <Effects />
             </WagmiConfig>
           </Provider>
         </Hydrate>

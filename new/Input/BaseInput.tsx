@@ -28,7 +28,12 @@ function BaseInput({
   const { ref, ...fieldProps } = field
 
   return (
-    <StyledBaseInput $disabled={disabled} $error={$error} $size={$size}>
+    <StyledBaseInput
+      className="baseInput"
+      $disabled={disabled}
+      $error={$error}
+      $size={$size}
+    >
       <NumericFormat
         {...fieldProps}
         id={id}
@@ -42,6 +47,7 @@ function BaseInput({
       />
       <button
         className="maxButton"
+        type="button"
         onClick={setMaxValue}
         disabled={disabled}
         aria-label="Enter maximum value"

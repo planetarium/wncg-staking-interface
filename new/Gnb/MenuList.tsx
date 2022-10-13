@@ -1,31 +1,20 @@
 import { memo } from 'react'
-import styled from 'styled-components'
 
 import { configService } from 'services/config'
 
-const StyledMenuList = styled.nav`
-  ul {
-    display: flex;
-    justify-content: flex-end;
-  }
-
-  a,
-  button {
-    padding: 8px;
-    margin-left: 10px;
-    font-size: 14px;
-    background-color: green;
-  }
-`
+import { StyledMenuList } from './styled'
+import SvgIcon from 'new/SvgIcon'
 
 function MenuList() {
   return (
     <StyledMenuList className="menuList">
       <h1 className="hidden">Menu</h1>
+
       <ul>
         <li>
           <a href={configService.docs.notion} target="_blank" rel="noopener">
-            blog
+            Docs
+            <SvgIcon icon="export" $size={16} ariaHidden />
           </a>
         </li>
         <li>
@@ -35,6 +24,7 @@ function MenuList() {
             rel="noopener"
           >
             medium
+            <SvgIcon icon="export" $size={16} ariaHidden />
           </a>
         </li>
         <li>
@@ -44,11 +34,7 @@ function MenuList() {
             rel="noopener"
           >
             github
-          </a>
-        </li>
-        <li>
-          <a target="_blank" rel="noopener">
-            FAQ
+            <SvgIcon icon="export" $size={16} ariaHidden />
           </a>
         </li>
       </ul>

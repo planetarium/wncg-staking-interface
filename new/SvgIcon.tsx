@@ -1,7 +1,11 @@
 import { memo } from 'react'
-import styled from 'styled-components'
+import clsx from 'clsx'
+
+import { StyledSvgIcon } from './styled'
+import type { SvgIconSize } from './styled'
 
 import CoinIcon from 'public/ic-coin.svg'
+import WalletConnectIcon from 'public/ic-wallet-connect.svg'
 
 export type SvgIconType =
   | 'approximate'
@@ -14,64 +18,61 @@ export type SvgIconType =
   | 'chevronUp'
   | 'close'
   | 'coin'
+  | 'coinbaseWallet'
   | 'copy'
   | 'done'
+  | 'discord'
   | 'ether'
+  | 'export'
   | 'info'
   | 'link'
+  | 'loading'
   | 'lock'
+  | 'metaMask'
   | 'radioOff'
   | 'radioOn'
   | 'refreshOff'
   | 'refreshOn'
+  | 'telegram'
+  | 'twitter'
   | 'unlock'
+  | 'walletConnect'
   | 'warning'
   | 'wncgDark'
   | 'wncgLight'
 
-export type SvgIconSize = 16 | 24 | 32 | 48
-
-const StyledSvgIcon = styled.svg<{ $size: SvgIconSize }>`
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: ${({ $size }) => `${$size}px`};
-  height: ${({ $size }) => `${$size}px`};
-`
-
 type SvgIconProps = {
   ariaLabel?: string
   ariaHidden?: boolean
-  icon?: SvgIconType
+  icon: SvgIconType
   className?: string
   $size?: SvgIconSize
 }
 
 function SvgIcon({
   ariaLabel,
-  ariaHidden,
+  ariaHidden = true,
   icon,
   className,
   $size = 24,
 }: SvgIconProps) {
-  if (!icon) return null
-
-  if (icon === 'coin')
+  if (hasGradient(icon)) {
     return (
       <StyledSvgIcon
-        className={className}
+        className={clsx('icon', className)}
         as="span"
         aria-label={ariaLabel}
         aria-hidden={ariaHidden}
         $size={$size}
       >
-        <CoinIcon />
+        {renderGradientSvgIcon(icon)}
       </StyledSvgIcon>
     )
+  }
 
   return (
     <StyledSvgIcon
-      className={className}
+      className={clsx('icon', className)}
       aria-label={ariaLabel}
       aria-hidden={ariaHidden}
       $size={$size}
@@ -82,3 +83,20 @@ function SvgIcon({
 }
 
 export default memo(SvgIcon)
+
+const gradientIconList = ['coin', 'walletConnect'] as SvgIconType[]
+
+function hasGradient(icon: SvgIconType) {
+  return gradientIconList.includes(icon)
+}
+
+function renderGradientSvgIcon(icon: SvgIconType) {
+  switch (icon) {
+    case 'coin':
+      return <CoinIcon />
+    case 'walletConnect':
+      return <WalletConnectIcon />
+    default:
+      return null
+  }
+}

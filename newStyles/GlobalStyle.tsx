@@ -1,7 +1,7 @@
 import { createGlobalStyle } from 'styled-components'
 
 import { fontFamily } from './constants/typography'
-import { generateHexVariables, generateRgbVariables } from './utils'
+import { flexbox, generateHexVariables, generateRgbVariables } from './utils'
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -117,6 +117,10 @@ const GlobalStyle = createGlobalStyle`
     clip: rect(0, 0, 0, 0) !important;
     white-space: nowrap !important;
     border: 0 !important;
+  }
+
+  .usd {
+    ${flexbox('flex-start')}
   }
 `
 

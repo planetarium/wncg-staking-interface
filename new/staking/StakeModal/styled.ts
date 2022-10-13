@@ -1,0 +1,64 @@
+import styled from 'styled-components'
+
+import {
+  StyledModalCompletePage,
+  StyledModalContent,
+} from 'new/Modals/shared/styled'
+import { flexbox, gradient, textStyle } from 'newStyles/utils'
+
+export const StyledStakeModalPage3 = styled(StyledModalContent)`
+  max-width: 720px;
+
+  .subtitle {
+    .amount {
+      color: var(--primary-300);
+    }
+
+    .usdValue {
+      margin-left: 0.25em;
+    }
+  }
+`
+
+export const StyledStakeModalPage4 = styled(StyledModalCompletePage)`
+  .details {
+    width: 100%;
+    padding: 20px 24px;
+    margin-bottom: 48px;
+    overflow: hidden;
+    background-image: ${gradient(1)};
+    border-radius: 6px;
+  }
+
+  .detailItem {
+    ${flexbox('space-between', 'flex-start')}
+
+    &.total {
+      padding-top: 12px;
+      margin-top: 12px;
+      border-top: 1.5px solid rgba(var(--white-rgb), 0.2);
+
+      dd {
+        ${textStyle('subtitle', 1)}
+      }
+    }
+
+    .usd {
+      color: var(--white);
+      font-weight: 700;
+    }
+
+    dt {
+      ${textStyle('body', 3)}
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    dd {
+      ${flexbox('flex-end')}
+      ${textStyle('body', 3)}
+      font-weight: 500;
+      color: var(--primary-200);
+    }
+  }
+`

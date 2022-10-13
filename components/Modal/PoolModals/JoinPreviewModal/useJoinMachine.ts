@@ -4,19 +4,14 @@ import { useMachine } from '@xstate/react'
 import { configService } from 'services/config'
 import { bnum } from 'utils/num'
 import { parseTxError } from 'utils/tx'
-import {
-  useAllowances,
-  useApprove,
-  useJoinPool,
-  usePool,
-  useToast,
-} from 'hooks'
+import { useAllowances, useJoinPool, usePool, useToast } from 'hooks'
 import { createJoinMachine } from './joinMachine'
 import { getSymbolNameFromState, isApprovalState } from './utils'
 
+// FIXME: Approve
 export function useJoinMachine(amounts: string[], isNativeAsset: boolean) {
   const [error, setError] = useState<any>(null)
-  const { approve } = useApprove()
+  // const { approve } = useApprove(address, configService.vaultAddress)
   const { allowanceFor } = useAllowances()
   const { joinPool } = useJoinPool()
   const { nativeAssetIndex, poolTokenAddresses, poolTokenSymbols } = usePool()
@@ -51,7 +46,7 @@ export function useJoinMachine(amounts: string[], isNativeAsset: boolean) {
         if (!address) return
 
         send(`APPROVING_${symbol}`)
-        return await approve(address, configService.vaultAddress)
+        // return await approve()
       }
 
       if (currentState === 'join') {
@@ -72,7 +67,7 @@ export function useJoinMachine(amounts: string[], isNativeAsset: boolean) {
   }, [
     addToast,
     amounts,
-    approve,
+    // approve,
     isNativeAsset,
     joinPool,
     poolTokenAddresses,

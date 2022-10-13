@@ -1,18 +1,12 @@
 import { motion } from 'framer-motion'
 import styled, { css } from 'styled-components'
 
-import { posCenterY, textStyle } from 'newStyles/utils'
+import { flexbox, posCenterY, textStyle } from 'newStyles/utils'
 
 const MAX_BUTTON_WIDTH = 80
 const MAX_BUTTON_HEIGHT = 48
 
 export type InputSize = 'sm' | 'md'
-
-type StyledBaseInputProps = {
-  $disabled: boolean
-  $error: boolean
-  $size: InputSize
-}
 
 const smInputStyle = css`
   height: 64px;
@@ -39,6 +33,27 @@ const mdInputStyle = css`
     right: 16px;
   }
 `
+
+export const StyledAvailableTokenAmount = styled(motion.dl)`
+  ${flexbox('flex-start')}
+  ${textStyle('body', 2)}
+  margin-top: 8px;
+  color: var(--primary-300);
+
+  &:has(dd) {
+    dt::after {
+      margin-right: 4px;
+      margin-left: 4px;
+      content: ':';
+    }
+  }
+`
+
+type StyledBaseInputProps = {
+  $disabled: boolean
+  $error: boolean
+  $size: InputSize
+}
 
 export const StyledBaseInput = styled.div<StyledBaseInputProps>`
   position: relative;
@@ -105,26 +120,18 @@ export const StyledBaseInput = styled.div<StyledBaseInputProps>`
 `
 
 export const StyledErrorMessage = styled(motion.p)`
-  ${textStyle('body', 2)};
+  ${textStyle('body', 2)}
   margin-top: 8px;
   color: var(--error-600);
-`
-
-export const StyledAvailableTokenAmount = styled(motion.dl)`
-  ${textStyle('body', 2)};
-  margin-top: 8px;
-  color: var(--primary-300);
-
-  &:has(dd) {
-    dt::after {
-      margin-right: 4px;
-      margin-left: 4px;
-      content: ':';
-    }
-  }
 `
 
 export const StyledInputControl = styled.div`
   position: relative;
   width: 100%;
+
+  &:has(.errorMsg) {
+    & + .availableTokenAmount {
+      margin-top: 0;
+    }
+  }
 `

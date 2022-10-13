@@ -1,43 +1,25 @@
 import { memo } from 'react'
-import { motion } from 'framer-motion'
-import styled from 'styled-components'
 
 import { ModalCategory } from 'states/ui'
 import { networkChainId, networkNameFor } from 'utils/network'
 import { useModal } from 'hooks'
 
-import { Icon } from 'components/Icon'
+import { StyledAlert } from './styled'
+import SvgIcon from './SvgIcon'
+
+export const ALERT_HEIGHT = 56
 
 const motionVariants = {
   initial: {
-    y: -56,
+    y: ALERT_HEIGHT * -1,
   },
   animate: {
     y: 0,
   },
   exit: {
-    y: -56,
+    y: ALERT_HEIGHT * -1,
   },
 }
-
-const StyledAlert = styled(motion.aside)`
-  position: fixed;
-  top: 0;
-  left: 0;
-  flex-shrink: 0;
-  width: 100%;
-  height: 56px;
-  color: #fff;
-  line-height: 56px;
-  text-align: center;
-  background-color: red;
-  cursor: pointer;
-
-  svg {
-    width: 15px;
-    height: 15px;
-  }
-`
 
 type AlertProps = {
   error: 'networkMismatch' | 'invalidPrice'
@@ -45,17 +27,18 @@ type AlertProps = {
 
 function Alert({ error }: AlertProps) {
   const { addModal } = useModal()
+  const isNetworkError = error === 'networkMismatch'
 
   const message = parseAlertMsg(error)
 
-  function handleClick() {
-    if (error === 'networkMismatch') {
-      addModal({
-        category: ModalCategory.SwitchNetwork,
-      })
-      return
-    }
+  function switchNetwork() {
+    addModal({
+      category: ModalCategory.SwitchNetwork,
+    })
+  }
 
+  function handleClick() {
+    if (isNetworkError) return
     window?.location.reload()
   }
 
@@ -69,8 +52,14 @@ function Alert({ error }: AlertProps) {
       onClick={handleClick}
       role="alert"
     >
-      <Icon id="alert" />
+      <SvgIcon icon="warning" ariaHidden />
       <h2>{message}</h2>
+
+      {isNetworkError && (
+        <button className="switchButton" type="button" onClick={switchNetwork}>
+          Switch network
+        </button>
+      )}
     </StyledAlert>
   )
 }
@@ -79,8 +68,6 @@ export default memo(Alert)
 
 function parseAlertMsg(error: string) {
   if (error === 'networkMismatch')
-    return `You must switch to ${networkNameFor(
-      networkChainId
-    )} to use this protocol.`
+    return `Please switch to ${networkNameFor(networkChainId)}`
   return 'Token price estimation might be incorrect because of connection issue with Coingecko.'
 }

@@ -1,53 +1,39 @@
 import { memo } from 'react'
 import { AnimatePresence } from 'framer-motion'
 
+import { slideInDown } from 'constants/motionVariants'
 import { bnum } from 'utils/num'
+import { useAccount } from 'hooks'
 
 import { StyledAvailableTokenAmount } from './styled'
 import NumberFormat from 'new/NumberFormat'
-
-const motionVariants = {
-  initial: {
-    opacity: 0,
-    y: '-100%',
-  },
-  animate: {
-    opacity: 1,
-    y: 0,
-  },
-  exit: {
-    opacity: 0,
-    y: '-100%',
-  },
-}
 
 type AvailableTokenAmountProps = {
   label: string
   maxAmount: string | number
   decimals?: number
-  disabled?: boolean
 }
 
 function AvailableTokenAmount({
   label,
   maxAmount,
   decimals = 4,
-  disabled = false,
 }: AvailableTokenAmountProps) {
+  const { isConnected } = useAccount()
   const bMaxAmount = bnum(maxAmount)
 
-  const invalid =
-    bMaxAmount.isZero() || bMaxAmount.isNaN() || !bMaxAmount.isFinite()
+  const invalidMaxAmount = bMaxAmount.isNaN() || !bMaxAmount.isFinite()
+  const show = isConnected && !invalidMaxAmount
 
   return (
     <AnimatePresence>
-      {(!invalid || disabled) && (
+      {show && (
         <StyledAvailableTokenAmount
           className="availableTokenAmount"
           initial="initial"
           animate="animate"
           exit="exit"
-          variants={motionVariants}
+          variants={slideInDown}
         >
           <dt>{label}</dt>
           <dd>

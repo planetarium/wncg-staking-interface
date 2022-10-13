@@ -4,6 +4,7 @@ import dynamic from 'next/dynamic'
 import { AnimatePresence, motion } from 'framer-motion'
 import styled from 'styled-components'
 
+import { fadeIn } from 'constants/motionVariants'
 import { useAccount } from 'hooks'
 
 import Connect from './Connect'
@@ -13,30 +14,16 @@ const Menu = dynamic(() => import('./Menu'), {
   suspense: true,
 })
 
-const motionVariants = {
-  initial: {
-    opacity: 0,
-  },
-  animate: {
-    opacity: 1,
-  },
-  exit: {
-    opacity: 0,
-  },
-}
-
 const StyledAccountDropdown = styled(motion.div)`
   position: relative;
-
-  button {
-    color: white;
-  }
+  flex-shrink: 0;
+  margin-left: 16px;
 `
 
 function AccountDropdown() {
   const [showMenu, setShowMenu] = useState(false)
 
-  const { isConnected, isDisconnected } = useAccount()
+  const { isConnected } = useAccount()
 
   function close() {
     setShowMenu(false)
@@ -56,7 +43,7 @@ function AccountDropdown() {
             initial="initial"
             animate="animate"
             exit="exit"
-            variants={motionVariants}
+            variants={fadeIn}
           >
             <AnimatePresence>
               {showMenu && (
@@ -69,7 +56,7 @@ function AccountDropdown() {
           </StyledAccountDropdown>
         )}
 
-        {isDisconnected && <Connect />}
+        {!isConnected && <Connect />}
       </div>
     </AnimatePresence>
   )

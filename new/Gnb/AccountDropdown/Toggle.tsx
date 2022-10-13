@@ -1,18 +1,11 @@
 import type { MouseEvent } from 'react'
-import styled from 'styled-components'
 
 import { truncateAddress } from 'utils/string'
 import { useAccount } from 'hooks'
 
-import { Jazzicon } from 'components/Jazzicon'
-
-const StyledAccountDropdownToggle = styled.button`
-  position: relative;
-  display: flex;
-  align-items: center;
-  padding: 8px;
-  background-color: black;
-`
+import { StyledAccountDropdownToggle } from './styled'
+import Jazzicon from 'new/Jazzicon'
+import SvgIcon from 'new/SvgIcon'
 
 type AccountDropdownToggleProps = {
   toggle(e: MouseEvent<HTMLButtonElement>): void
@@ -27,8 +20,9 @@ function AccountDropdownToggle({ toggle }: AccountDropdownToggleProps) {
       type="button"
       onClick={toggle}
     >
-      <Jazzicon address={account} diameter={24} />
-      <strong>{truncateAddress(account)}</strong>
+      <Jazzicon className="avatar" address={account} diameter={24} />
+      <strong className="address">{truncateAddress(account, 5, 4)}</strong>
+      <SvgIcon icon="check" $size={24} />
     </StyledAccountDropdownToggle>
   )
 }

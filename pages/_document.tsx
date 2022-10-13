@@ -42,12 +42,9 @@ class MyDocument extends Document {
             crossOrigin="true"
           />
           <link
-            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap"
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700&family=Oswald:wght@600&family=Outfit:wght@900&display=swap"
             rel="stylesheet"
           />
-          <link rel="preload" href="/alert-default.opus" as="audio" />
-          <link rel="preload" href="/alert-money.opus" as="audio" />
-          <link rel="preload" href="/alert-success.opus" as="audio" />
           <Favicon />
         </Head>
         <body>

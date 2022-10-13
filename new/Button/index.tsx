@@ -10,11 +10,13 @@ import Link from 'next/link'
 
 import { StyledButton } from './styled'
 import type { ButtonSize, ButtonVariant } from './styled'
-import SvgIcon, { SvgIconType } from 'new/SvgIcon'
+import SvgIcon from '../SvgIcon'
+import type { SvgIconType } from '../SvgIcon'
+import ConnectorIcon from 'new/ConnectorIcon'
 
 const nonScalableButtonVariants: ButtonVariant[] = ['text', 'tiny']
 
-type ButtonProps = DetailedHTMLProps<
+export type ButtonProps = DetailedHTMLProps<
   ButtonHTMLAttributes<HTMLButtonElement>,
   HTMLButtonElement
 > & {
@@ -65,9 +67,13 @@ function Button(
 
   const label = (
     <>
-      <SvgIcon className="leftIcon" icon={leftIcon} />
+      {leftIcon && <SvgIcon className="leftIcon" icon={leftIcon} />}
       <span className="label">{children}</span>
-      <SvgIcon className="rightIcon" icon={rightIcon} />
+      {rightIcon === 'metaMask' ? (
+        <ConnectorIcon className="rightIcon" icon="metaMask" />
+      ) : rightIcon ? (
+        <SvgIcon className="rightIcon" icon={rightIcon} />
+      ) : null}
     </>
   )
 

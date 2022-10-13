@@ -1,29 +1,17 @@
 import { memo } from 'react'
 import { AnimatePresence } from 'framer-motion'
 
+import { slideInDown } from 'constants/motionVariants'
+
 import { StyledErrorMessage } from './styled'
 
-const motionVariants = {
-  initial: {
-    opacity: 0,
-    y: '-100%',
-  },
-  animate: {
-    opacity: 1,
-    y: 0,
-  },
-  exit: {
-    opacity: 0,
-    y: '-100%',
-  },
-}
-
 type ErrorMessageProps = {
+  disabled: boolean
   error?: string
 }
 
-function ErrorMessage({ error }: ErrorMessageProps) {
-  const hasError = !!error
+function ErrorMessage({ disabled, error }: ErrorMessageProps) {
+  const hasError = !disabled && !!error
 
   return (
     <AnimatePresence>
@@ -33,7 +21,7 @@ function ErrorMessage({ error }: ErrorMessageProps) {
           initial="initial"
           animate="animate"
           exit="exit"
-          variants={motionVariants}
+          variants={slideInDown}
         >
           {error}
         </StyledErrorMessage>

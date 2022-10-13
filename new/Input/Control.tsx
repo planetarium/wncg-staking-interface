@@ -1,12 +1,15 @@
-import { Control, Controller, RegisterOptions } from 'react-hook-form'
+import { Controller } from 'react-hook-form'
+import type { Control, RegisterOptions } from 'react-hook-form'
+import clsx from 'clsx'
+
+import { useAccount } from 'hooks'
 
 import { StyledInputControl } from './styled'
 import type { InputSize } from './styled'
 import BaseInput from './BaseInput'
 import ErrorMessage from './ErrorMessage'
-import { useAccount } from 'hooks'
 
-type InputProps = {
+type InputControlProps = {
   control: Control
   name: string
   rules: Partial<RegisterOptions>
@@ -19,7 +22,7 @@ type InputProps = {
   $size?: InputSize
 }
 
-function Input({
+function InputControl({
   control,
   name,
   rules,
@@ -28,13 +31,12 @@ function Input({
   decimals = 18,
   disabled: _disabled = false,
   id,
-  placeholder: _placeholder,
+  placeholder,
   $size = 'sm',
-}: InputProps) {
+}: InputControlProps) {
   const { isConnected } = useAccount()
 
   const disabled = !isConnected || _disabled
-  const placeholder = disabled ? undefined : _placeholder
 
   return (
     <Controller
@@ -42,22 +44,22 @@ function Input({
       control={control}
       rules={rules}
       render={({ field, fieldState }) => (
-        <StyledInputControl className={className}>
+        <StyledInputControl className={clsx('inputControl', className)}>
           <BaseInput
             id={id}
             decimals={decimals}
             field={field}
             setMaxValue={setMaxValue}
             disabled={disabled}
-            placeholder={disabled ? undefined : placeholder}
-            $error={!!fieldState.error?.message}
+            placeholder={placeholder}
+            $error={!disabled && !!fieldState.error?.message}
             $size={$size}
           />
-          <ErrorMessage error={fieldState.error?.message} />
+          <ErrorMessage disabled={disabled} error={fieldState.error?.message} />
         </StyledInputControl>
       )}
     />
   )
 }
 
-export default Input
+export default InputControl

@@ -1,35 +1,22 @@
 import { memo } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
-import styled from 'styled-components'
+import { AnimatePresence } from 'framer-motion'
 
 import { ModalCategory } from 'states/ui'
-import { useAccount, useModal } from 'hooks'
+import { countUpOption, usdCountUpOption } from 'constants/countUp'
+import { fadeIn } from 'constants/motionVariants'
+import { useAccount, useModal, useRewards } from 'hooks'
+import { useStaking } from 'hooks/contracts'
 
-const motionVariants = {
-  initial: {
-    opacity: 0,
-  },
-  animate: {
-    opacity: 1,
-  },
-  exit: {
-    opacity: 0,
-  },
-}
-
-const StyledClaim = styled(motion.button)`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  height: 40px;
-  padding: 0 8px;
-  background-color: #fff;
-  transform: translate(-50%, -50%);
-`
+import { StyledClaim } from './styled'
+import CountUp from 'new/CountUp'
+import SvgIcon from 'new/SvgIcon'
+import Button from 'new/Button'
 
 function Claim() {
   const { isConnected } = useAccount()
   const { addModal } = useModal()
+  const { rewards, rewardsInFiatValue } = useRewards()
+  const { rewardTokenSymbols } = useStaking()
 
   function claim() {
     addModal({
@@ -41,15 +28,31 @@ function Claim() {
     <AnimatePresence>
       {isConnected && (
         <StyledClaim
-          className="claimDropdown"
-          type="button"
-          onClick={claim}
+          className="claim"
           initial="initial"
           animate="animate"
           exit="exit"
-          variants={motionVariants}
+          variants={fadeIn}
         >
-          Claim
+          {rewardTokenSymbols.map((symbol, i) => {
+            return (
+              <div className="reward" key={`gnb:claim:${symbol}`}>
+                <strong className="amount">
+                  <CountUp {...countUpOption} end={rewards[i]} prefix="+" />
+                </strong>
+                <strong className="usd">
+                  <SvgIcon icon="approximate" $size={16} />
+                  (
+                  <CountUp {...usdCountUpOption} end={rewardsInFiatValue[i]} />)
+                </strong>
+                <span className="symbol">{symbol}</span>
+              </div>
+            )
+          })}
+
+          <Button className="claimButton" onClick={claim} $variant="tiny">
+            Claim rewards
+          </Button>
         </StyledClaim>
       )}
     </AnimatePresence>

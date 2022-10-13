@@ -4,14 +4,15 @@ import ReactCountUp from 'react-countup'
 import type { CountUpProps as ReactCountUpProps } from 'react-countup'
 import styled from 'styled-components'
 
-import { bnum, isLessThanMinAmount, sanitizeNumber } from 'utils/num'
+import { bnum, sanitizeNumber } from 'utils/num'
 import { useAccount } from 'hooks'
 import { inlineFlexbox } from 'newStyles/utils'
 
+import type { SvgIconSize } from './styled'
 import SvgIcon from './SvgIcon'
 
 const StyledCountUp = styled.div`
-  ${inlineFlexbox()};
+  ${inlineFlexbox()}
 `
 
 type CountUpProps = Omit<ReactCountUpProps, 'end'> & {
@@ -20,6 +21,7 @@ type CountUpProps = Omit<ReactCountUpProps, 'end'> & {
   showAlways?: boolean
   showTitle?: boolean
   minAmount?: number
+  $iconSize?: SvgIconSize
 }
 
 function CountUp({
@@ -29,6 +31,7 @@ function CountUp({
   showAlways = false,
   showTitle = true,
   minAmount = 0.0001,
+  $iconSize = 16,
   ...countUpProps
 }: CountUpProps) {
   const [start, setStart] = useState(0)
@@ -40,16 +43,16 @@ function CountUp({
   const invalidValue = !bEnd.isFinite() || bEnd.isNaN()
   const showDash = invalidValue || (!showAlways && !isConnected)
 
+  const approximate = isApproximate ? (
+    <SvgIcon icon="approximate" $size={$iconSize} ariaHidden />
+  ) : null
+
   useEffect(() => {
     if (prevEnd !== Number(sanitizeNumber(end))) setStart(prevEnd)
   }, [end, prevEnd, start])
 
   if (showDash) {
-    return (
-      <StyledCountUp className={className}>
-        {isApproximate && <SvgIcon icon="approximate" ariaHidden />}-
-      </StyledCountUp>
-    )
+    return <StyledCountUp className={className}>{approximate}-</StyledCountUp>
   }
 
   return (
@@ -57,14 +60,8 @@ function CountUp({
       className={className}
       title={showTitle ? sanitizeNumber(end) : undefined}
     >
-      {isApproximate && <SvgIcon icon="approximate" ariaHidden />}
-      {isLessThanMinAmount(bEnd.toNumber(), minAmount) ? (
-        `< ${countUpProps.prefix ? countUpProps.prefix : ''}${minAmount}${
-          countUpProps.suffix ? countUpProps.suffix : ''
-        }`
-      ) : (
-        <ReactCountUp {...countUpProps} start={start} end={bEnd.toNumber()} />
-      )}
+      {approximate}
+      <ReactCountUp {...countUpProps} start={start} end={bEnd.toNumber()} />
     </StyledCountUp>
   )
 }

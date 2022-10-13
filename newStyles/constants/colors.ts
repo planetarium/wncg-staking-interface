@@ -3,6 +3,9 @@ export type ColorHue =
   | 'error'
   | 'warning'
   | 'success'
+  | 'blue'
+  | 'green'
+  | 'orange'
   | 'gray'
   | 'white'
   | 'black'
@@ -32,7 +35,7 @@ export type BrandColor =
 
 export type ProductColor = 'primary' | 'green' | 'blue' | 'orange'
 
-export type GradientType = 1 | 2 | 3 | 4
+export type GradientType = 1 | 2 | 3 | 4 | 5
 
 const primary = {
   25: '#f9f4ff',
@@ -90,6 +93,48 @@ const success = {
   900: '#054f31',
 }
 
+const blue = {
+  25: '#f5fcff',
+  50: '#e3f4fb',
+  100: '#d8f3ff',
+  200: '#b5e8ff',
+  300: '#8bceff',
+  400: '#67bfff',
+  500: '#38acff',
+  600: '#157ca9',
+  700: '#00577c',
+  800: '#003c56',
+  900: '#072634',
+}
+
+const green = {
+  25: '#e4fffc',
+  50: '#d9fffd',
+  100: '#cbf8f3',
+  200: '#bcfff8',
+  300: '#94faef',
+  400: '#63ede5',
+  500: '#3ae7d4',
+  600: '#02c6b4',
+  700: '#01786d',
+  800: '#03413b',
+  900: '#012c27',
+}
+
+const orange = {
+  25: '#fffaf8',
+  50: '#fff4f1',
+  100: '#ffe4de',
+  200: '#ffd4cb',
+  300: '#ffb7a7',
+  400: '#ff9983',
+  500: '#f06f67',
+  600: '#b94d36',
+  700: '#973a26',
+  800: '#752918',
+  900: '#531a0e',
+}
+
 const gray = {
   25: '#fcfcfd',
   50: '#f9fafb',
@@ -109,30 +154,17 @@ export const colors = {
   error,
   warning,
   success,
+  blue,
+  green,
+  orange,
   gray,
 }
 
-export const brandColors = {
-  purple: '#352377',
-  black: '#212322',
-  green1: '#b2e2bb',
-  green2: '#4ea199',
-  green3: '#377588',
-  blue: '#53acd3',
-  yellow: '#ebb077',
-  orange: '#ea766f',
-}
-
-export const productColors = {
-  primary: '#8549ff',
-  green: '#3ae7d4',
-  blue: '#38acff',
-  orange: '#ea766f',
-}
-
 export const gradients = {
-  1: `linear-gradient(93.08deg, ${error[400]} 0%, ${productColors.primary} 100%)`,
+  1: `linear-gradient(93.08deg, ${error[400]} 0%, ${primary[500]} 100%)`,
   2: `linear-gradient(90deg, ${primary[400]} 0%, ${primary[600]} 100%)`,
   3: `linear-gradient(68.42deg, ${primary[50]} 14.17%, ${primary[200]} 85.83%)`,
-  4: `linear-gradient(90deg, #02c6b4 0%, ${productColors.blue} 100%)`,
+  4: `linear-gradient(90deg, #02c6b4 0%, ${blue[500]} 100%)`,
+  5: `linear-gradient(274.23deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.1) 100%);
+  `,
 }

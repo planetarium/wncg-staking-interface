@@ -1,87 +1,16 @@
 import { useCallback, useRef, useState } from 'react'
 import CopyToClipboard from 'react-copy-to-clipboard'
 import { useMount, useUnmount } from 'react-use'
-import styled from 'styled-components'
-import { motion } from 'framer-motion'
 
+import { slideInDown } from 'constants/motionVariants'
 import { truncateAddress } from 'utils/string'
 import { getEtherscanUrl } from 'utils/url'
 import { useAccount, useConnectWallets, useNetwork } from 'hooks'
 
-import { Jazzicon } from 'components/Jazzicon'
-
-const StyledAccountDropdownMenu = styled(motion.aside)`
-  position: absolute;
-  z-index: 100;
-  top: calc(100% + 8px);
-  right: 0;
-  width: max-content;
-  padding: 8px;
-  background-color: white;
-  color: black;
-
-  header {
-    margin-bottom: 8px;
-
-    h2 {
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-      font-size: 14px;
-    }
-  }
-
-  .utils {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    > * {
-      padding: 8px;
-      margin-right: 8px;
-      margin-left: 8px;
-      font-size: 14px;
-      color: white;
-      background-color: #666;
-    }
-  }
-
-  dl {
-    font-size: 14px;
-
-    div {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 8px;
-    }
-  }
-
-  footer {
-    button {
-      display: block;
-      width: 92%;
-      padding: 8px;
-      margin: 0 auto;
-      background-color: #000;
-    }
-  }
-`
-
-const motionVariants = {
-  initial: {
-    opacity: 0,
-    y: '-100%',
-  },
-  animate: {
-    opacity: 1,
-    y: 0,
-  },
-  exit: {
-    opacity: 0,
-    y: '-100%',
-  },
-}
+import { StyledAccountDropdownMenu } from './styled'
+import Button from 'new/Button'
+import Jazzicon from 'new/Jazzicon'
+import SvgIcon from 'new/SvgIcon'
 
 type AccountDropdownMenuProps = {
   close(): void
@@ -136,39 +65,46 @@ function AccountDropdownMenu({ close }: AccountDropdownMenuProps) {
       initial="initial"
       animate="animate"
       exit="exit"
-      variants={motionVariants}
+      variants={slideInDown}
     >
-      <header>
+      <header className="header">
         <h2>
-          <Jazzicon address={account} />
-          <span>{truncateAddress(account)}</span>
+          <Jazzicon className="avatar" address={account} diameter={24} />
+          <strong className="address">{truncateAddress(account)}</strong>
         </h2>
+
+        <div className="utils">
+          <CopyToClipboard text={account!} onCopy={handleCopy}>
+            <button type="button">
+              {copied ? 'Copied!' : 'Copy Address'}
+              <SvgIcon icon="copy" $size={16} ariaHidden />
+            </button>
+          </CopyToClipboard>
+          <a href={etherscanUrl} onClick={close} target="_blank" rel="noopener">
+            View Details
+            <SvgIcon icon="link" $size={16} ariaHidden />
+          </a>
+        </div>
       </header>
 
-      <div className="utils">
-        <CopyToClipboard text={account!} onCopy={handleCopy}>
-          <button>{copied ? 'Copied!' : 'Copy Address'}</button>
-        </CopyToClipboard>
-        <a href={etherscanUrl} onClick={close} target="_blank" rel="noopener">
-          View Details
-        </a>
-      </div>
-
-      <dl>
-        <div>
+      <dl className="detail">
+        <div className="detailItem">
           <dt>Network</dt>
-          <dd>{chain?.name}</dd>
+          <dd>
+            <span className="dot" aria-hidden />
+            {chain?.name}
+          </dd>
         </div>
-        <div>
+        <div className="detailItem">
           <dt>Wallet</dt>
           <dd>{connector?.name}</dd>
         </div>
       </dl>
 
       <footer>
-        <button type="button" onClick={disconnect}>
+        <Button onClick={disconnect} $variant="secondary" $size="md">
           Disconnect
-        </button>
+        </Button>
       </footer>
     </StyledAccountDropdownMenu>
   )
