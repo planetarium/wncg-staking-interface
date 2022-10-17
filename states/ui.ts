@@ -11,6 +11,7 @@ export const ModalCategory = {
   JoinPreview: 'MODAL_JOIN_POOL_PREVIEW',
   ExitPreview: 'MODAL_EXIT_POOL_PREVIEW',
   MetaMaskGuide: 'MODAL_CATEGORY_METAMASK_GUIDE',
+  Pool: 'MODAL_CATEGORY_POOL',
   Stake: 'MODAL_CATEGORY_STAKE',
   StakeWarning: 'MODAL_CATEGORY_STAKE_WARNING',
   SwitchNetwork: 'MODAL_CATEGORY_SWITCH_NETWORK',

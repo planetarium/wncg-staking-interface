@@ -22,6 +22,7 @@ export type ButtonProps = DetailedHTMLProps<
 > & {
   children: ReactNode
   ariaLabel?: string
+  as?: string
   dataset?: Record<string, string>
   href?: string
   leftIcon?: SvgIconType
@@ -38,6 +39,7 @@ function Button(
   {
     children,
     ariaLabel,
+    as,
     className,
     dataset = {},
     disabled,
@@ -126,7 +128,7 @@ function Button(
   }
 
   return (
-    <Link href={href} prefetch={prefetch}>
+    <Link href={href} as={as} prefetch={prefetch}>
       {anchorElement}
     </Link>
   )

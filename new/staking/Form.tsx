@@ -8,6 +8,7 @@ import { useAtomValue } from 'jotai'
 
 import { stakingContractAddressAtom } from 'states/staking'
 import { ModalCategory } from 'states/ui'
+import { configService } from 'services/config'
 import { bnum } from 'utils/num'
 import {
   useAccount,
@@ -69,6 +70,12 @@ function StakingForm() {
     })
   }
 
+  function openPoolPage() {
+    addModal({
+      category: ModalCategory.Pool,
+    })
+  }
+
   useEffect(() => {
     clearErrors()
   }, [chain, clearErrors, isConnected])
@@ -101,7 +108,13 @@ function StakingForm() {
       </Button>
 
       <footer>
-        <Button $variant="text">Join pool & Get LP Tokens</Button>
+        <Button
+          href={`/wncg?pool=${configService.poolId}`}
+          as="/wncg/pool"
+          $variant="text"
+        >
+          Join pool & Get LP Tokens
+        </Button>
       </footer>
     </StyledStakingForm>
   )
