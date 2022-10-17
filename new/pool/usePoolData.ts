@@ -11,6 +11,10 @@ export function usePoolData() {
     poolTokenDecimals: _poolTokenDecimals,
     poolTokenSymbols: _poolTokenSymbols,
     poolTokenWeights: _poolTokenWeights,
+    poolSwapFee,
+    poolTotalLiquidity,
+    poolTotalSwapFee,
+    poolTotalSwapVolume,
     ercTokenIndex,
     nativeAssetIndex,
   } = usePool()
@@ -67,6 +71,7 @@ export function usePoolData() {
 
   return {
     poolName,
+    poolSwapFee,
     poolTokenAddresses,
     poolTokenBalances,
     poolTokenColors,
@@ -74,5 +79,8 @@ export function usePoolData() {
     poolTokenSymbols,
     poolTokenWeights,
     poolTokenWeightsInPcnt,
+    poolTotalLiquidity,
+    poolTotalSwapFee,
+    poolTotalSwapVolume,
   }
 }

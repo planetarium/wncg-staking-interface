@@ -22,6 +22,8 @@ export function usePool() {
     [pool?.name]
   )
 
+  const poolSwapFee = useMemo(() => pool?.swapFee || '0', [pool?.swapFee])
+
   const poolTokens = useMemo(() => pool?.tokens || [], [pool?.tokens])
 
   const poolTokenAddresses = useMemo(
@@ -54,6 +56,21 @@ export function usePool() {
     [pool?.totalShares]
   )
 
+  const poolTotalLiquidity = useMemo(
+    () => pool?.totalLiquidity || '0',
+    [pool?.totalLiquidity]
+  )
+
+  const poolTotalSwapFee = useMemo(
+    () => pool?.totalSwapFee || '0',
+    [pool?.totalSwapFee]
+  )
+
+  const poolTotalSwapVolume = useMemo(
+    () => pool?.totalSwapVolume || '0',
+    [pool?.totalSwapVolume]
+  )
+
   const nativeAssetIndex = useMemo(() => {
     const match = poolTokenAddresses.findIndex(
       (address) => address.toLowerCase() === configService.weth
@@ -79,6 +96,7 @@ export function usePool() {
     pool,
     poolId,
     poolName,
+    poolSwapFee,
     poolTokens,
     poolTokenAddresses,
     poolTokenBalances,
@@ -87,6 +105,9 @@ export function usePool() {
     poolTokenSymbols,
     poolTotalShares,
     poolTokenWeights,
+    poolTotalLiquidity,
+    poolTotalSwapFee,
+    poolTotalSwapVolume,
     ercTokenIndex,
     nativeAssetIndex,
     bptAddress,

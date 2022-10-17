@@ -47,6 +47,10 @@ export const StyledWncgPool = styled.div<StyledWncgPoolProps>`
   .poolInformation {
     margin-top: 48px;
   }
+
+  .poolForm {
+    margin-top: 24px;
+  }
 `
 
 export const StyledPoolHeader = styled.header`
@@ -99,6 +103,52 @@ export const StyledPoolHeader = styled.header`
       ${inlineFlexbox()}
       width: 16px;
       height: 16px;
+    }
+  }
+`
+
+export const StyledPoolInformation = styled.section`
+  .header {
+    ${flexbox('flex-start')}
+    width: 100%;
+    margin-bottom: 8px;
+  }
+
+  .title {
+    ${textStyle('body', 3)}
+    font-weight: 700;
+  }
+
+  .link {
+    ${inlineFlexbox('flex-start')}
+    ${textStyle('body', 4)}
+    margin-left: 8px;
+    color: rgba(var(--white-rgb), 0.6);
+  }
+
+  .detail {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-column-gap: 24px;
+  }
+
+  .detailItem {
+    padding: 20px;
+    overflow: hidden;
+    background-color: rgba(var(--white-rgb), 0.05);
+    border-radius: 8px;
+
+    dt {
+      ${textStyle('body', 3)}
+      margin-bottom: 12px;
+      font-weight: 700;
+      color: rgba(var(--white-rgb), 0.6);
+    }
+
+    dd {
+      ${textStyle('title')}
+      color: var(--white);
+      text-align: right;
     }
   }
 `

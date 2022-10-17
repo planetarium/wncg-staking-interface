@@ -27,6 +27,8 @@ const fetchPoolQuery = {
       totalWeight: true,
       totalLiquidity: true,
       totalShares: true,
+      totalSwapFee: true,
+      totalSwapVolume: true,
       createTime: true,
       tokensList: true,
       tokens: {
