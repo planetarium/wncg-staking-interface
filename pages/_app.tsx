@@ -6,7 +6,7 @@ import {
   QueryClientProvider,
 } from '@tanstack/react-query'
 import { useMount } from 'react-use'
-import { RecoilRoot } from 'recoil'
+import { Provider } from 'jotai'
 import type { AppProps, NextWebVitalsMetric } from 'next/app'
 import dynamic from 'next/dynamic'
 import Script from 'next/script'
@@ -26,8 +26,6 @@ import GlobalFooter from 'new/GlobalFooter'
 import { CoingeckoAlert } from 'components/CoingeckoAlert'
 import { NetworkAlert } from 'components/NetworkAlert'
 import { ToastContainer } from 'components/ToastContainer'
-import MediaQueryEffects from 'components/Effects/MediaQueryEffects'
-import { ToastEffects } from 'components/Effects/ToastEffects'
 
 const Modal = dynamic(() => import('components/Modal'))
 
@@ -63,20 +61,22 @@ function MyApp({ Component, pageProps }: AppProps) {
       <ThemeProvider theme={{}}>
         <QueryClientProvider client={queryClient.current}>
           <Hydrate state={pageProps.dehydratedState}>
-            <RecoilRoot>
+            <Provider>
               <WagmiConfig client={wagmiClient}>
-                <DefaultSeo {...DEFAULT_SEO} />
                 <CoingeckoAlert />
                 <NetworkAlert />
-                <Gnb />
-                <Component {...pageProps} />
-                <ToastEffects />
+                <DefaultSeo {...DEFAULT_SEO} />
+
+                <main>
+                  <Gnb />
+                  <Component {...pageProps} />
+                  <GlobalFooter />
+                </main>
+
                 <Modal />
                 <ToastContainer />
-                <GlobalFooter />
-                <MediaQueryEffects />
               </WagmiConfig>
-            </RecoilRoot>
+            </Provider>
           </Hydrate>
         </QueryClientProvider>
       </ThemeProvider>

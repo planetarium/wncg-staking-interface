@@ -3,12 +3,14 @@ import styles from './RewardsSummary.module.scss'
 import { countUpOption, usdCountUpOption } from 'constants/countUp'
 import { getTokenSymbol } from 'utils/token'
 import { useRewards } from 'hooks'
+import { useStaking } from 'hooks/contracts'
 
 import { CountUp } from 'components/CountUp'
 import { TokenIcon } from 'components/TokenIcon'
 
 export function RewardsSummary() {
-  const { rewards, rewardsInFiatValue, rewardTokensList } = useRewards()
+  const { rewards, rewardsInFiatValue } = useRewards()
+  const { rewardTokensList } = useStaking()
 
   return (
     <dl className={styles.claimDetail}>

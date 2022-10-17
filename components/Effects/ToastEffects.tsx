@@ -1,17 +1,16 @@
-import { useEffect, useMemo } from 'react'
-import { useRecoilState, useRecoilValue } from 'recoil'
+import { memo, useEffect, useMemo } from 'react'
 import { toast } from 'react-toastify'
+import { useAtom, useAtomValue } from 'jotai'
 
-import { isDesktopState } from 'app/states/mediaQuery'
-import { toastIdListState } from 'app/states/toast'
+import { isDesktopAtom, toastIdsAtom } from 'states/ui'
 import {
   MAX_TOAST_LENGTH_DESKTOP,
   MAX_TOAST_LENGTH_MOBILE,
 } from 'constants/toast'
 
-export function ToastEffects() {
-  const [toastIdList, setToastIdList] = useRecoilState(toastIdListState)
-  const isDesktop = useRecoilValue(isDesktopState)
+function ToastEffects() {
+  const [toastIdList, setToastIdList] = useAtom(toastIdsAtom)
+  const isDesktop = useAtomValue(isDesktopAtom)
 
   const maxToasts = useMemo(
     () => (isDesktop ? MAX_TOAST_LENGTH_DESKTOP : MAX_TOAST_LENGTH_MOBILE),
@@ -30,3 +29,5 @@ export function ToastEffects() {
 
   return null
 }
+
+export default memo(ToastEffects)

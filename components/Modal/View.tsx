@@ -1,9 +1,8 @@
-import { useRecoilValue } from 'recoil'
+import { useAtomValue } from 'jotai'
 import { motion } from 'framer-motion'
 import styles from './style.module.scss'
 
-import { isMobileState } from 'app/states/mediaQuery'
-import { Modal, ModalCategory } from 'app/states/modal'
+import { isMobileAtom, Modal, ModalCategory } from 'states/ui'
 import { assertUnreachable } from 'utils/assertion'
 import {
   modalDesktopVariants,
@@ -25,7 +24,7 @@ type ModalViewProps = {
 }
 
 export function ModalView({ modal }: ModalViewProps) {
-  const isMobile = useRecoilValue(isMobileState)
+  const isMobile = useAtomValue(isMobileAtom)
 
   const variants = isMobile ? modalMobileVariants : modalDesktopVariants
 

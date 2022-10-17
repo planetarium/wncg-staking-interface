@@ -1,12 +1,14 @@
 import { useCallback, useMemo } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { useSetRecoilState } from 'recoil'
 
-import { invalidPriceState } from 'app/states/error'
 import { TOKEN_PRICES_PLACEHOLDERS } from 'constants/tokens'
-import { configService } from 'services/config'
-import { fetchNativeAssetPrice, fetchTokenPrices } from 'lib/coingecko'
+import { fetchTokenPrices } from 'lib/coingecko'
+import { fetchCoinmarketCapTokenPrice } from 'lib/coinmarketCap'
+import { uniqAddress } from 'utils/address'
+import { calcPoolTotalValue } from 'utils/calculator'
+import { bnum } from 'utils/num'
 import { usePool } from './usePool'
+import { useStaking } from './contracts'
 
 const options = {
   retry: false,
@@ -17,76 +19,69 @@ const options = {
 export function usePrices() {
   const queryClient = useQueryClient()
 
-  const setInvalidPrice = useSetRecoilState(invalidPriceState)
-
-  const { bptAddress, ercTokenIndex, poolService, poolTokenAddresses } =
+  const { bptAddress, poolTokenAddresses, poolTokens, poolTotalShares } =
     usePool()
+  const { rewardTokensList } = useStaking()
 
-  const addresses = [
-    ...poolTokenAddresses,
-    ...configService.rewardTokensList,
-    configService.bal,
-  ]
+  const addresses = useMemo(
+    () => uniqAddress([...poolTokenAddresses, ...rewardTokensList]),
+    [poolTokenAddresses, rewardTokensList]
+  )
 
-  const { data: prices } = useQuery<TokenPrices>(
+  const fallbackTokenPrices = useQuery(
+    ['fallbackTokenPrices'],
+    fetchCoinmarketCapTokenPrice,
+    {
+      retry: false,
+      staleTime: Infinity,
+      keepPreviousData: true,
+      placeholderData: TOKEN_PRICES_PLACEHOLDERS,
+    }
+  )
+
+  const tokenPrices = useQuery<TokenPrices>(
     ['tokenPrices', addresses],
     () => fetchTokenPrices(addresses),
     {
       ...options,
-      placeholderData: TOKEN_PRICES_PLACEHOLDERS,
       onError() {
-        const state = queryClient.getQueryData<TokenPrices>([
-          'fallbackTokenPrices',
-        ])
-        queryClient.setQueryData(
-          ['tokenPrices', addresses],
-          state || TOKEN_PRICES_PLACEHOLDERS
-        )
-      },
-      onSuccess() {
-        setInvalidPrice(false)
+        const state =
+          queryClient.getQueryData<TokenPrices>(['fallbackTokenPrices']) ||
+          TOKEN_PRICES_PLACEHOLDERS
+        queryClient.setQueryData(['tokenPrices', addresses], state)
       },
     }
   )
 
-  const { data: nativeAssetPrice } = useQuery(
-    ['nativeAssetPrice'],
-    () => fetchNativeAssetPrice(),
-    {
-      ...options,
-      placeholderData: {},
-    }
-  )
-
-  const bptPrice = useMemo(
-    () => poolService?.bptPrice(prices) || '0',
-    [poolService, prices]
-  )
+  const bptPrice = useMemo(() => {
+    if (!tokenPrices.data) return '0'
+    return bnum(calcPoolTotalValue(poolTokens, tokenPrices.data))
+      .div(poolTotalShares)
+      .toString()
+  }, [poolTokens, poolTotalShares, tokenPrices.data])
 
   const priceMap = useMemo(() => {
-    const map = { ...prices, ...nativeAssetPrice } || {}
+    const map = tokenPrices.data ?? {}
     if (!bptAddress) return map
     return {
       ...map,
       [bptAddress]: bptPrice,
     }
-  }, [bptAddress, bptPrice, nativeAssetPrice, prices])
+  }, [bptAddress, bptPrice, tokenPrices.data])
 
   const priceFor = useCallback(
     (address = '') => priceMap[address.toLowerCase()] || '0',
     [priceMap]
   )
 
-  const balPrice = useMemo(() => priceFor(configService.bal), [priceFor])
-  const wncgPrice = useMemo(
-    () => priceFor(poolTokenAddresses[ercTokenIndex]),
-    [ercTokenIndex, poolTokenAddresses, priceFor]
+  const invalidPriceError = useMemo(
+    () => fallbackTokenPrices.isError && tokenPrices.isError,
+    [fallbackTokenPrices.isError, tokenPrices.isError]
   )
 
   return {
-    balPrice,
     bptPrice,
-    wncgPrice,
     priceFor,
+    invalidPriceError,
   }
 }

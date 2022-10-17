@@ -1,8 +1,8 @@
 import { memo } from 'react'
-import { useRecoilValue } from 'recoil'
+import { useAtomValue } from 'jotai'
 import { motion } from 'framer-motion'
 
-import { legacyModeState } from 'app/states/settings'
+import { legacyModeAtom } from 'states/userSettings'
 import { motionVariants, sidebarTransition } from '../constants'
 
 import { UnstakeSidebarCooldown } from './Cooldown'
@@ -14,7 +14,8 @@ type UnstakeSidebarProps = {
 }
 
 function UnstakeSidebar({ isWithdrawable }: UnstakeSidebarProps) {
-  const legacyMode = useRecoilValue(legacyModeState)
+  const legacyMode = useAtomValue(legacyModeAtom)
+
   const content = isWithdrawable ? (
     <UnstakeSidebarWithdrawWindow />
   ) : (

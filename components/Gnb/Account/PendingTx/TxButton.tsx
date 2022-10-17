@@ -1,9 +1,9 @@
 import Lottie from 'lottie-react'
-import { useRecoilValue } from 'recoil'
+import { useAtomValue } from 'jotai'
 import clsx from 'clsx'
 import styles from './style.module.scss'
 
-import { pendingTxListState } from 'app/states/transaction'
+import { pendingTxListAtom } from 'states/tx'
 
 import loadingAnimation from 'animations/spinner.json'
 
@@ -14,7 +14,7 @@ type PendingTxButtonProps = {
 }
 
 export function PendingTxButton({ open }: PendingTxButtonProps) {
-  const pendingTxList = useRecoilValue(pendingTxListState)
+  const pendingTxList = useAtomValue(pendingTxListAtom)
   const hasList = !!pendingTxList.length
 
   return (

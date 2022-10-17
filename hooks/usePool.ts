@@ -1,50 +1,82 @@
 import { useMemo } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { isSameAddress } from '@balancer-labs/sdk'
 
 import { REFETCH_INTERVAL, STALE_TIME } from 'constants/time'
 import { configService } from 'services/config'
-import PoolService from 'services/pool'
 import { fetchPool } from 'lib/graphql'
 import { getTokenInfo, getTokenSymbol } from 'utils/token'
+import { useStaking } from './contracts'
 
 export function usePool() {
+  const { stakedTokenAddress } = useStaking()
   const { data: pool, refetch } = useQuery(['pool'], fetchPool, {
     staleTime: STALE_TIME,
     refetchInterval: REFETCH_INTERVAL,
     keepPreviousData: true,
   })
 
-  const poolService = useMemo(() => {
-    if (!pool) return null
-    return new PoolService(pool)
-  }, [pool])
+  const poolId = configService.poolId
 
-  const poolId = poolService?.poolId || ''
-  const poolName = poolService?.poolName || 'Balancer Weighted Pool'
-  const poolTokens = poolService?.poolTokens || []
-  const poolTokenAddresses = poolService?.poolTokenAddresses || []
-  const poolTokenBalances = poolService?.poolTokenBalances || []
-  const poolTokenDecimals = poolService?.poolTokenDecimals || []
-  const poolTokenWeights = poolService?.poolTokenWeights || []
-  const poolTokenSymbols = poolTokenAddresses.map(
-    (address) => getTokenInfo(address).symbol
-  )
-  const poolTotalShares = poolService?.poolTotalShares || '0'
-  const nativeAssetIndex =
-    typeof poolService?.nativeAssetIndex === 'number'
-      ? poolService?.nativeAssetIndex
-      : 0
-  const ercTokenIndex = poolTokenAddresses.findIndex(
-    (address) => !isSameAddress(address, configService.weth)
+  const poolName = useMemo(
+    () => pool?.name || 'Balancer Weighted Pool',
+    [pool?.name]
   )
 
-  const bptAddress = poolService?.bptAddress || ''
-  const poolTokenName = getTokenSymbol(bptAddress)
+  const poolTokens = useMemo(() => pool?.tokens || [], [pool?.tokens])
+
+  const poolTokenAddresses = useMemo(
+    () => pool?.tokensList.map((address) => address.toLowerCase()) || [],
+    [pool?.tokensList]
+  )
+
+  const poolTokenBalances = useMemo(
+    () => poolTokens.map((token) => token.balance),
+    [poolTokens]
+  )
+
+  const poolTokenDecimals = useMemo(
+    () => poolTokens.map((token) => token.decimals),
+    [poolTokens]
+  )
+
+  const poolTokenWeights = useMemo(
+    () => poolTokens.map((token) => token.weight),
+    [poolTokens]
+  )
+
+  const poolTokenSymbols = useMemo(
+    () => poolTokenAddresses.map((address) => getTokenInfo(address).symbol),
+    [poolTokenAddresses]
+  )
+
+  const poolTotalShares = useMemo(
+    () => pool?.totalShares || '0',
+    [pool?.totalShares]
+  )
+
+  const nativeAssetIndex = useMemo(() => {
+    const match = poolTokenAddresses.findIndex(
+      (address) => address.toLowerCase() === configService.weth
+    )
+    return Math.max(match, 0)
+  }, [poolTokenAddresses])
+
+  const ercTokenIndex = useMemo(() => {
+    const match = poolTokenAddresses.findIndex(
+      (address) => address.toLowerCase() !== configService.weth
+    )
+    return Math.max(match, 0)
+  }, [poolTokenAddresses])
+
+  const bptAddress = useMemo(
+    () => pool?.address || stakedTokenAddress,
+    [pool?.address, stakedTokenAddress]
+  )
+
+  const poolTokenName = useMemo(() => getTokenSymbol(bptAddress), [bptAddress])
 
   return {
     pool,
-    poolService,
     poolId,
     poolName,
     poolTokens,
@@ -58,6 +90,6 @@ export function usePool() {
     ercTokenIndex,
     nativeAssetIndex,
     bptAddress,
-    fetchPool: refetch,
+    refetchPool: refetch,
   }
 }

@@ -1,8 +1,9 @@
 import { useMemo } from 'react'
 import { useMount, useUnmount } from 'react-use'
-import { useSetRecoilState } from 'recoil'
+import { useSetAtom } from 'jotai'
 
-import { Breakpoint, breakpointState } from 'app/states/mediaQuery'
+import { breakpointAtom } from 'states/ui'
+import type { Breakpoint } from 'states/ui'
 
 // NOTE: styles/constancts/_breakpoints.scss
 const BP: Record<Breakpoint, number> = {
@@ -28,7 +29,7 @@ const MEDIA_QUERIES = BP_ENTRIES.map(([, value], i) => {
 })
 
 export function useMediaQuery() {
-  const setBreakpoint = useSetRecoilState(breakpointState)
+  const setBreakpoint = useSetAtom(breakpointAtom)
 
   const mqlList = useMemo(
     () =>

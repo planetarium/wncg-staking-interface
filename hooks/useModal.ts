@@ -1,39 +1,40 @@
-import { Modal, ModalCategory, modalListState } from 'app/states/modal'
-import { useSetRecoilState } from 'recoil'
+import { useSetAtom } from 'jotai'
+
+import { Modal, ModalCategory, modalsAtom } from 'states/ui'
 
 export function useModal() {
-  const setModalList = useSetRecoilState(modalListState)
+  const setModals = useSetAtom(modalsAtom)
 
   function addModal(modal: Modal) {
-    setModalList((prev) => {
-      const newModalList = [...prev]
-      const existingModalIndex = newModalList.findIndex(
+    setModals((prev) => {
+      const newModals = [...prev]
+      const existingModalIndex = newModals.findIndex(
         (item) => item.category === modal.category
       )
 
       if (existingModalIndex < 0) {
-        newModalList.push(modal)
+        newModals.push(modal)
       } else {
-        newModalList[existingModalIndex] = modal
+        newModals[existingModalIndex] = modal
       }
 
-      return newModalList
+      return newModals
     })
   }
 
   function removeModal(category?: ModalCategory) {
-    setModalList((prev) => {
-      const newModalList = [...prev]
+    setModals((prev) => {
+      const newModals = [...prev]
       if (category == null) {
-        newModalList.pop()
+        newModals.pop()
       } else {
-        const targetModalIndex = newModalList.findIndex(
+        const targetModalIndex = newModals.findIndex(
           (modal) => modal.category === category
         )
-        newModalList.splice(targetModalIndex, 1)
+        newModals.splice(targetModalIndex, 1)
       }
 
-      return newModalList
+      return newModals
     })
   }
 

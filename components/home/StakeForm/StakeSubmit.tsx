@@ -1,15 +1,13 @@
 import { useCallback, useEffect, useState } from 'react'
 import { usePrevious } from 'react-use'
-import { useRecoilValue } from 'recoil'
+import { useAtomValue } from 'jotai'
 import { useAccount } from 'wagmi'
 import clsx from 'clsx'
 import styles from '../styles/StakeSubmit.module.scss'
 
-import { ModalCategory } from 'app/states/modal'
-import {
-  legacyModeState,
-  stakingContractAddressState,
-} from 'app/states/settings'
+import { stakingContractAddressAtom } from 'states/staking'
+import { ModalCategory } from 'states/ui'
+import { legacyModeAtom } from 'states/userSettings'
 import { gaEvent } from 'lib/gtag'
 import { parseTxError } from 'utils/tx'
 import {
@@ -64,8 +62,8 @@ export function StakeSubmit({
   const { addToast } = useToast()
   const { unstakeStatus } = useUnstakeTimestamps()
 
-  const legacyMode = useRecoilValue(legacyModeState)
-  const stakingAddress = useRecoilValue(stakingContractAddressState)
+  const legacyMode = useAtomValue(legacyModeAtom)
+  const stakingAddress = useAtomValue(stakingContractAddressAtom)
   const isUnstakeWindow = UNSTAKE_WINDOW.includes(unstakeStatus)
 
   const isApproved = allowanceFor(bptAddress, stakingAddress)

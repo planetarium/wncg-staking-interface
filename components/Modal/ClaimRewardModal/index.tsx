@@ -1,13 +1,13 @@
 import { MouseEvent, useState } from 'react'
-import { useMount } from 'react-use'
 import { useAccount } from 'wagmi'
 import styles from '../style.module.scss'
 
-import { ModalCategory } from 'app/states/modal'
+import { ModalCategory } from 'states/ui'
 import { gaEvent } from 'lib/gtag'
 import { bnum } from 'utils/num'
 import { parseTxError } from 'utils/tx'
 import { useClaim, useModal, useRewards, useToast } from 'hooks'
+import { useStaking } from 'hooks/contracts'
 
 import { Button } from 'components/Button'
 import { Icon } from 'components/Icon'
@@ -20,8 +20,8 @@ function ClaimRewardModal() {
   const { isConnected } = useAccount()
   const { claimAllRewards, claimBalRewards, claimWncgRewards } = useClaim()
   const { removeModal } = useModal()
-  const { rewards, rewardsInFiatValue, rewardTokenSymbols, fetchRewards } =
-    useRewards()
+  const { rewards, rewardsInFiatValue } = useRewards()
+  const { rewardTokenSymbols } = useStaking()
   const { addToast } = useToast()
 
   const claimTypes = ['all', ...rewardTokenSymbols].map((item) =>
@@ -59,10 +59,6 @@ function ClaimRewardModal() {
       }
     }
   }
-
-  useMount(() => {
-    fetchRewards()
-  })
 
   return (
     <div className={styles.claimRewardModal}>

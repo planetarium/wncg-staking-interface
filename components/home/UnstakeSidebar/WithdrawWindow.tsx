@@ -1,17 +1,17 @@
-/* eslint-disable react/no-unescaped-entities */
 import clsx from 'clsx'
 import styles from '../styles/UnstakeSidebar.module.scss'
 
 import { formatTimer } from 'utils/string'
-import { useStaking, useTimer, useUnstakeTimestamps } from 'hooks'
+import { useTimer, useUnstakeTimestamps } from 'hooks'
+import { useStaking } from 'hooks/contracts'
 
 export function UnstakeSidebarWithdrawWindow() {
   const { unstakeWindow } = useStaking()
-  const { fetchTimestamps, withdrawEndsAt } = useUnstakeTimestamps()
+  const { refetchTimestamps, withdrawEndsAt } = useUnstakeTimestamps()
 
   function onExpiration() {
     if (!withdrawEndsAt) return
-    fetchTimestamps()
+    refetchTimestamps()
   }
 
   const { days, hours, minutes, seconds, isExpired, timeRemaining } = useTimer(
@@ -20,16 +20,16 @@ export function UnstakeSidebarWithdrawWindow() {
   )
 
   const percentRemaining = (
-    (Math.floor(timeRemaining / 1_000) / unstakeWindow) *
-    100
+    Math.min(Math.floor(timeRemaining / 1_000) / unstakeWindow, 1) * 100
   ).toFixed(2)
 
   return (
     <>
       <h1 className={styles.title}>Withdraw Window</h1>
       <p className={styles.desc}>
-        You can withdraw the staked tokens. If you don't withdraw the tokens
-        within the window, you need to cooldown the tokens again to withdraw.
+        You can withdraw the staked tokens. If you don&apos;t withdraw the
+        tokens within the window, you need to cooldown the tokens again to
+        withdraw.
       </p>
 
       <div className={styles.withdrawTimer}>

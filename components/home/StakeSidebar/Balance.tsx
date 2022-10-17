@@ -1,24 +1,20 @@
+import { useAtomValue } from 'jotai'
 import styles from '../styles/StakeSidebar.module.scss'
 
+import { totalStakedAtom } from 'states/staking'
 import { countUpOption, usdCountUpOption } from 'constants/countUp'
 import { bnum, sanitizeNumber } from 'utils/num'
-import {
-  useBalances,
-  usePool,
-  useStakedBalance,
-  useStaking,
-  useFiatCurrency,
-} from 'hooks'
+import { useBalances, usePool, useStakedBalance, useFiatCurrency } from 'hooks'
 
 import { CountUp } from 'components/CountUp'
 
 export function StakeSidebarBalance() {
   const { bptBalance } = useBalances()
+  const { toFiat } = useFiatCurrency()
   const { bptAddress } = usePool()
   const { stakedBalance } = useStakedBalance()
-  const { totalStaked } = useStaking()
-  const { toFiat } = useFiatCurrency()
 
+  const totalStaked = useAtomValue(totalStakedAtom)
   const share = bnum(stakedBalance).div(totalStaked).times(100).toNumber()
 
   const transferable = parseFloat(sanitizeNumber(bptBalance))

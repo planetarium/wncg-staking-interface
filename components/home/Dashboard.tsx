@@ -1,22 +1,18 @@
 import { memo, MouseEvent } from 'react'
+import { useAtomValue } from 'jotai'
 import clsx from 'clsx'
 import styles from './styles/Dashboard.module.scss'
 
-import { ModalCategory } from 'app/states/modal'
+import { totalStakedAtom } from 'states/staking'
+import { ModalCategory } from 'states/ui'
 import {
   countUpOption,
   percentCountUpOption,
   usdCountUpOption,
 } from 'constants/countUp'
 import { gaEvent } from 'lib/gtag'
-import { getTokenSymbol } from 'utils/token'
-import {
-  useApr,
-  useModal,
-  useRewards,
-  useStaking,
-  useFiatCurrency,
-} from 'hooks'
+import { useApr, useModal, useRewards, useFiatCurrency } from 'hooks'
+import { useStaking } from 'hooks/contracts'
 
 import { Button } from 'components/Button'
 import { CountUp } from 'components/CountUp'
@@ -25,8 +21,10 @@ function Dashboard() {
   const { aprs } = useApr()
   const { getBptFiatValue } = useFiatCurrency()
   const { addModal } = useModal()
-  const { rewards, rewardsInFiatValue, rewardTokensList } = useRewards()
-  const { totalStaked } = useStaking()
+  const { rewards, rewardsInFiatValue } = useRewards()
+  const { rewardTokenSymbols } = useStaking()
+
+  const totalStaked = useAtomValue(totalStakedAtom)
 
   function handleClaim(e: MouseEvent) {
     e.stopPropagation()
@@ -45,12 +43,11 @@ function Dashboard() {
       <div className={styles.reward}>
         <dl className={styles.detail}>
           {rewards.map((reward, i) => {
-            const address = rewardTokensList[i]
             const fiatValue = rewardsInFiatValue[i]
-            const symbol = getTokenSymbol(address)
+            const symbol = rewardTokenSymbols[i]
 
             return (
-              <div key={`reward.${address}`} className={styles.detailItem}>
+              <div key={`reward.${symbol}`} className={styles.detailItem}>
                 <dt>Earned {symbol}</dt>
                 <dd>
                   <CountUp {...countUpOption} end={reward} />
@@ -85,11 +82,9 @@ function Dashboard() {
               />
             </dd>
           </div>
-          {rewardTokensList.map((address, i) => {
-            const symbol = getTokenSymbol(address)
-
+          {rewardTokenSymbols.map((symbol, i) => {
             return (
-              <div key={`rewardApr.${address}`} className={styles.detailItem}>
+              <div key={`rewardApr.${symbol}`} className={styles.detailItem}>
                 <dt>{symbol} APR</dt>
                 <dd>
                   <CountUp {...percentCountUpOption} end={aprs[i]} showAlways />

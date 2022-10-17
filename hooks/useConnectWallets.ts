@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 import { useDisconnect } from 'wagmi'
 
-import { ModalCategory } from 'app/states/modal'
+import { ModalCategory } from 'states/ui'
 import { useModal } from './useModal'
 import { useSettings } from './useSettings'
 import { useTx } from './useTx'

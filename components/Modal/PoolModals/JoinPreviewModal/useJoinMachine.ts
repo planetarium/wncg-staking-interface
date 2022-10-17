@@ -17,10 +17,14 @@ import { getSymbolNameFromState, isApprovalState } from './utils'
 export function useJoinMachine(amounts: string[], isNativeAsset: boolean) {
   const [error, setError] = useState<any>(null)
   const { approve } = useApprove()
-  const { poolTokenAllowances } = useAllowances()
+  const { allowanceFor } = useAllowances()
   const { joinPool } = useJoinPool()
   const { nativeAssetIndex, poolTokenAddresses, poolTokenSymbols } = usePool()
   const { addToast } = useToast()
+
+  const poolTokenAllowances = poolTokenAddresses.map((address) =>
+    allowanceFor(address, configService.vaultAddress)
+  )
 
   const joinMachine = useRef(
     createJoinMachine(

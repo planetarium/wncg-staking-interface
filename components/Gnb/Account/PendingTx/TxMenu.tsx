@@ -1,10 +1,10 @@
 import { useCallback, useRef } from 'react'
 import { useMount, useUnmount } from 'react-use'
-import { useRecoilValue } from 'recoil'
+import { useAtomValue } from 'jotai'
 import { motion } from 'framer-motion'
 import styles from './style.module.scss'
 
-import { unresolvedTxListState } from 'app/states/transaction'
+import { unresolvedTxListAtom } from 'states/tx'
 import { useTx } from 'hooks'
 import { menuTransition, menuVariants } from '../constants'
 
@@ -18,7 +18,7 @@ export function PendingTxMenu({ close }: PendingTxMenuProps) {
   const menuRef = useRef<HTMLDivElement>(null)
   const { resetTx } = useTx()
 
-  const unresolvedTxList = useRecoilValue(unresolvedTxListState)
+  const unresolvedTxList = useAtomValue(unresolvedTxListAtom)
   const hasList = !!unresolvedTxList.length
 
   const closeOnBlur = useCallback(

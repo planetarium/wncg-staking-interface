@@ -1,29 +1,27 @@
-import { configService } from 'services/config'
+import { useAtomValue } from 'jotai'
+
+import { totalStakedAtom } from 'states/staking'
 import { calcApr } from 'utils/calculator'
-import { useStaking } from './useStaking'
-import { usePrices } from './usePrices'
+import { useStaking } from './contracts'
 import { useFiatCurrency } from './useFiatCurrency'
+import { useRewards } from './useRewards'
 
 export function useApr() {
-  const { priceFor } = usePrices()
   const { getBptFiatValue } = useFiatCurrency()
-  const { balEmissionPerSec, wncgEmissionPerSec, totalStaked } = useStaking()
+  const { rewardTokenPrices } = useRewards()
+  const { emissions } = useStaking()
 
-  const emissionPerSecList = [wncgEmissionPerSec, balEmissionPerSec]
-  const rewardTokenPriceList = configService.rewardTokensList.map((address) =>
-    priceFor(address)
-  )
+  const totalStaked = useAtomValue(totalStakedAtom)
 
   const totalStakedValue = getBptFiatValue(totalStaked)
 
-  const aprs = emissionPerSecList.map((emission, i) =>
-    calcApr(emission, rewardTokenPriceList[i], totalStakedValue)
+  const aprs = emissions.map((emission, i) =>
+    calcApr(emission, rewardTokenPrices[i], totalStakedValue)
   )
 
   return {
     aprs,
-    emissionPerSecList,
-    rewardTokenPriceList,
-    totalStakedValue,
+    emissions,
+    rewardTokenPrices,
   }
 }

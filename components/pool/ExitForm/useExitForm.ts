@@ -1,7 +1,7 @@
 import { MouseEvent, useCallback, useMemo } from 'react'
 import type { UseFormReturn } from 'react-hook-form'
 
-import { ModalCategory } from 'app/states/modal'
+import { ModalCategory } from 'states/ui'
 import { HIGH_PRICE_IMPACT, REKT_PRICE_IMPACT } from 'constants/poolLiquidity'
 import { configService } from 'services/config'
 import { gaEvent } from 'lib/gtag'

@@ -1,15 +1,15 @@
 import { useCallback, useMemo } from 'react'
-import { useRecoilValue } from 'recoil'
+import { useAtomValue } from 'jotai'
 import { utils } from 'ethers'
 import { hexZeroPad } from 'ethers/lib/utils'
 import { useAccount } from 'wagmi'
 
-import { stakingContractAddressState } from 'app/states/settings'
+import { stakingContractAddressAtom } from 'states/staking'
 import { configService } from 'services/config'
 
 export function useEvents() {
   const { address: account } = useAccount()
-  const stakingAddress = useRecoilValue(stakingContractAddressState)
+  const stakingAddress = useAtomValue(stakingContractAddressAtom)
 
   const createApprovalEvent = useCallback(
     (address?: string, spender?: string) => {

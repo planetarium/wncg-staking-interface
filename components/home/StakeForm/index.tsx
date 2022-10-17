@@ -1,11 +1,11 @@
 import { memo, useMemo } from 'react'
 import { Control, FieldValues, useForm } from 'react-hook-form'
-import { useRecoilValue } from 'recoil'
+import { useAtomValue } from 'jotai'
 import { useNetwork } from 'wagmi'
 import { AnimatePresence, motion } from 'framer-motion'
 import styles from '../styles/Forms.module.scss'
 
-import { legacyModeState } from 'app/states/settings'
+import { legacyModeAtom } from 'states/userSettings'
 import { gaEvent } from 'lib/gtag'
 import { networkChainId } from 'utils/network'
 import { bnum } from 'utils/num'
@@ -24,7 +24,7 @@ function StakeForm() {
   const { chain } = useNetwork()
   const { poolTokenName } = usePool()
 
-  const legacyMode = useRecoilValue(legacyModeState)
+  const legacyMode = useAtomValue(legacyModeAtom)
   const networkMismatch = chain && chain.id !== networkChainId
 
   const { clearErrors, control, formState, setValue, watch } = useForm<{

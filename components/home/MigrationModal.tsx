@@ -1,9 +1,8 @@
-/* eslint-disable react/jsx-no-target-blank */
-import { useRecoilValue } from 'recoil'
+import { useAtomValue } from 'jotai'
 import { AnimatePresence, motion } from 'framer-motion'
 import styles from './styles/MigrationModal.module.scss'
 
-import { isMobileState } from 'app/states/mediaQuery'
+import { isMobileAtom } from 'states/ui'
 import {
   modalDesktopVariants,
   modalMobileVariants,
@@ -19,7 +18,7 @@ type MigrationModalProps = {
 }
 
 export function MigrationModal({ close, showModal }: MigrationModalProps) {
-  const isMobile = useRecoilValue(isMobileState)
+  const isMobile = useAtomValue(isMobileAtom)
   const variants = isMobile ? modalMobileVariants : modalDesktopVariants
 
   return (

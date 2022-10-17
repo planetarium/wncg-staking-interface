@@ -1,12 +1,13 @@
 import { useEffect } from 'react'
-import { useRecoilValue } from 'recoil'
+import { useAtomValue } from 'jotai'
 
-import { pendingTxListState } from 'app/states/transaction'
+import { pendingTxListAtom } from 'states/tx'
 import { useTx } from 'hooks'
 
 function TxEffects() {
   const { pingPendingTx } = useTx()
-  const pendingTxList = useRecoilValue(pendingTxListState)
+
+  const pendingTxList = useAtomValue(pendingTxListAtom)
 
   useEffect(() => {
     if (!pingPendingTx) return

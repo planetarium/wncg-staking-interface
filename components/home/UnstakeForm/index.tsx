@@ -3,18 +3,18 @@ import { Control, FieldValues, useForm } from 'react-hook-form'
 import { AnimatePresence, motion } from 'framer-motion'
 import styles from '../styles/Forms.module.scss'
 
-import { ModalCategory } from 'app/states/modal'
+import { ModalCategory } from 'states/ui'
 import { gaEvent } from 'lib/gtag'
 import { bnum } from 'utils/num'
 import { parseTxError } from 'utils/tx'
 import {
   useModal,
   usePool,
-  useRewards,
   useStakedBalance,
   useToast,
   useUnstake,
 } from 'hooks'
+import { useStaking } from 'hooks/contracts'
 import { formTransition, motionVariants, TabId, TabPanelId } from '../constants'
 
 import { Button } from 'components/Button'
@@ -34,8 +34,8 @@ function UnstakeForm({ disabled }: UnstakeFormProps) {
 
   const { addModal } = useModal()
   const { poolTokenName } = usePool()
-  const { rewardTokenSymbols } = useRewards()
   const { stakedBalance } = useStakedBalance()
+  const { rewardTokenSymbols } = useStaking()
   const { addToast } = useToast()
   const { withdraw } = useUnstake()
 

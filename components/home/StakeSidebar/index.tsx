@@ -2,7 +2,8 @@ import { memo } from 'react'
 import { motion } from 'framer-motion'
 import styles from '../styles/StakeSidebar.module.scss'
 
-import { usePool, useRewards } from 'hooks'
+import { usePool } from 'hooks'
+import { useStaking } from 'hooks/contracts'
 import { motionVariants, sidebarTransition } from '../constants'
 
 import { Button } from 'components/Button'
@@ -11,7 +12,7 @@ import { StakeSidebarBalance } from './Balance'
 
 function StakeSidebar() {
   const { poolName, poolTokenName } = usePool()
-  const { rewardTokenSymbols } = useRewards()
+  const { rewardTokenSymbols } = useStaking()
 
   return (
     <motion.aside

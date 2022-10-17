@@ -1,13 +1,13 @@
 import { MouseEvent, useCallback, useMemo } from 'react'
 import type { UseFormReturn } from 'react-hook-form'
 
-import { ModalCategory } from 'app/states/modal'
+import { ModalCategory } from 'states/ui'
 import { HIGH_PRICE_IMPACT, REKT_PRICE_IMPACT } from 'constants/poolLiquidity'
 import { configService } from 'services/config'
 import { gaEvent } from 'lib/gtag'
 import { bnum, hasAmounts, sanitizeNumber } from 'utils/num'
 import { getTokenSymbol } from 'utils/token'
-import { useJoinMath, useModal, usePool, useFiatCurrency } from 'hooks'
+import { useFiatCurrency, useJoinMath, useModal, usePool } from 'hooks'
 import type { JoinFormFields } from './type'
 
 export function useJoinForm(
@@ -187,8 +187,6 @@ export function useJoinForm(
   const tokenFiatValues = useMemo(() => {
     return assets.map((address, i) => toFiat(address, amounts[i]) || 0)
   }, [amounts, assets, toFiat])
-
-  console.log(tokenFiatValues)
 
   const totalFiatValue = useMemo(
     () =>

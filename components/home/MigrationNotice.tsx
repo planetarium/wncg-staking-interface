@@ -1,10 +1,10 @@
 import { useMemo } from 'react'
-import { useRecoilValue } from 'recoil'
+import { useAtomValue } from 'jotai'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
 import styles from './styles/MigrationNotice.module.scss'
 
-import { isMobileState } from 'app/states/mediaQuery'
+import { isMobileAtom } from 'states/ui'
 import {
   migrationGuideTransitionDesktop,
   migrationGuideTransitionMobile,
@@ -18,7 +18,7 @@ type MigrationNoticeProps = {
 }
 
 export function MigrationNotice({ open }: MigrationNoticeProps) {
-  const isMobile = useRecoilValue(isMobileState)
+  const isMobile = useAtomValue(isMobileAtom)
 
   const transition = useMemo(
     () =>

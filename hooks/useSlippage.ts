@@ -1,14 +1,16 @@
 import { useCallback } from 'react'
-import { useRecoilValue } from 'recoil'
+import { useAtomValue } from 'jotai'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import BigNumber from 'bignumber.js'
 
-import { slippageSelector } from 'app/states/settings'
+import { slippageAtom } from 'states/userSettings'
 import { bnum } from 'utils/num'
 
 export function useSlippage() {
-  const slippage = useRecoilValue(slippageSelector)
-  const slippageBasisPoints = bnum(slippage).div(100).toNumber()
+  const slippage = useAtomValue(slippageAtom)
+  const slippageBasisPoints = bnum(slippage || 0)
+    .div(100)
+    .toNumber()
 
   const addSlippageScaled = useCallback(
     (amount: string) => {

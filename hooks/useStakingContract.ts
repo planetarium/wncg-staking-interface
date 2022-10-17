@@ -1,9 +1,9 @@
 import { useMemo } from 'react'
-import { useRecoilValue } from 'recoil'
+import { useAtomValue } from 'jotai'
 import { Contract } from 'ethers'
 import { useAccount, useNetwork } from 'wagmi'
 
-import { legacyModeState } from 'app/states/settings'
+import { legacyModeAtom } from 'states/userSettings'
 import { configService } from 'services/config'
 import { StakingAbi } from 'lib/abi'
 import { networkChainId } from 'utils/network'
@@ -14,7 +14,7 @@ export function useStakingContract(signer?: boolean) {
   const { chain } = useNetwork()
   const provider = useProvider()
 
-  const legacyMode = useRecoilValue(legacyModeState)
+  const legacyMode = useAtomValue(legacyModeAtom)
   const networkMismatch = chain && chain.id !== networkChainId
 
   const newContract = useMemo(() => {
@@ -48,18 +48,9 @@ export function useStakingContract(signer?: boolean) {
     [legacyContract, legacyMode, newContract]
   )
 
-  const stakingAddress = useMemo(
-    () =>
-      legacyMode
-        ? configService.legacyStakingAddress
-        : configService.stakingAddress,
-    [legacyMode]
-  )
-
   return {
     contract,
     legacyContract,
     newContract,
-    stakingAddress,
   }
 }
