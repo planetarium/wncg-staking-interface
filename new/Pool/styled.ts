@@ -1,5 +1,6 @@
-import { flexbox, gradient, inlineFlexbox, textStyle } from 'newStyles/utils'
 import styled, { css } from 'styled-components'
+
+import { flexbox, gradient, inlineFlexbox, textStyle } from 'newStyles/utils'
 
 const modalStyle = css`
   position: fixed;
