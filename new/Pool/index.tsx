@@ -5,9 +5,9 @@ import { motion } from 'framer-motion'
 import { usePool } from 'hooks'
 
 import { StyledWncgPool } from './styled'
-import Form from './Form'
 import Header from './Header'
 import Information from './Information'
+import JoinForm from './JoinForm'
 
 const motionVariants = {
   initial: {
@@ -59,7 +59,7 @@ function Pool({ isModal = false }: PoolProps) {
           <div className="content">
             <Header />
             <Information />
-            <Form />
+            <JoinForm />
           </div>
 
           <div className="sidebar">SIDEBAR</div>

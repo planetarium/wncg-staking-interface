@@ -49,7 +49,7 @@ export const StyledWncgPool = styled.div<StyledWncgPoolProps>`
     margin-top: 48px;
   }
 
-  .poolForm {
+  .poolJoinForm {
     margin-top: 24px;
   }
 `
