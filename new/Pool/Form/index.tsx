@@ -4,6 +4,7 @@ import { AnimatePresence } from 'framer-motion'
 import { useAccount } from 'hooks'
 
 import { StyledPoolForm } from './styled'
+import Header from './Header'
 
 function PoolForm() {
   const { isConnected } = useAccount()
@@ -11,7 +12,9 @@ function PoolForm() {
   return (
     <AnimatePresence>
       {isConnected && (
-        <StyledPoolForm className="poolForm">Pool form</StyledPoolForm>
+        <StyledPoolForm className="poolForm">
+          <Header />
+        </StyledPoolForm>
       )}
     </AnimatePresence>
   )
