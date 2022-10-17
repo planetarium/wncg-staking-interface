@@ -70,12 +70,6 @@ function StakingForm() {
     })
   }
 
-  function openPoolPage() {
-    addModal({
-      category: ModalCategory.Pool,
-    })
-  }
-
   useEffect(() => {
     clearErrors()
   }, [chain, clearErrors, isConnected])
@@ -84,7 +78,7 @@ function StakingForm() {
     <StyledStakingForm onSubmit={handleSubmit}>
       <Control
         id="stakeAmount"
-        control={control as any as ReactHookFormControl<FieldValues, 'any'>}
+        control={control as unknown as ReactHookFormControl<FieldValues, 'any'>}
         name="stakeAmount"
         rules={rules}
         decimals={8}

@@ -31,6 +31,7 @@ export type ButtonProps = DetailedHTMLProps<
   prefetch?: boolean
   rightIcon?: SvgIconType
   target?: string
+  $contain?: boolean
   $size?: ButtonSize
   $variant?: ButtonVariant
 }
@@ -52,6 +53,7 @@ function Button(
     rightIcon: _rightIcon,
     target,
     type = 'button',
+    $contain = false,
     $size: _$size,
     $variant = 'primary',
     ...buttonProps
@@ -89,6 +91,7 @@ function Button(
         disabled={disabled}
         onClick={onClick}
         aria-label={ariaLabel}
+        $contain={$contain}
         $size={$size}
         $variant={$variant}
         {...datasetMap}
@@ -115,6 +118,7 @@ function Button(
       target={target}
       rel={target === '_blank' ? 'noopener' : undefined}
       aria-label={ariaLabel}
+      $contain={$contain}
       $size={$size}
       $variant={$variant}
       {...datasetMap}

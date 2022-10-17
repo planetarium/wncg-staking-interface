@@ -2,7 +2,7 @@ import { motion } from 'framer-motion'
 import { flexbox, textStyle } from 'newStyles/utils'
 import styled from 'styled-components'
 
-export const StyledJoinFormConnect = styled(motion.section)`
+export const StyledPoolForm = styled(motion.section)`
   ${flexbox()}
   flex-direction: column;
   min-height: 480px;

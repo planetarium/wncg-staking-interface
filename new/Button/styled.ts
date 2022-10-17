@@ -12,6 +12,7 @@ export type ButtonVariant =
 
 export type StyledButtonProps = {
   $variant: ButtonVariant
+  $contain: boolean
   $size?: ButtonSize
 }
 
@@ -19,7 +20,6 @@ export type StyledButtonProps = {
 export const buttonStyle = css`
   ${flexbox()}
   position: relative;
-  width: 100%;
   overflow: hidden;
   cursor: pointer;
   transition: 500ms;
@@ -183,6 +183,7 @@ export const smButtonStyle = css`
 
 export const StyledButton = styled.div<StyledButtonProps>`
   ${buttonStyle}
+  width: ${({ $contain }) => ($contain ? 'auto' : '100%')};
 
   .leftIcon,
   .rightIcon,

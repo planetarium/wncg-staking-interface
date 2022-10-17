@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion'
 import styled, { css } from 'styled-components'
 
 import { flexbox, gradient, inlineFlexbox, textStyle } from 'newStyles/utils'
@@ -26,7 +27,7 @@ export const StyledWncgPool = styled.div<StyledWncgPoolProps>`
   .container {
     display: grid;
     grid-gap: 20px;
-    grid-template-areas: 'content' 'sidebar';
+    grid-template-areas: 'left' 'right';
     grid-template-columns: 880px 400px;
     grid-column-gap: 48px;
     width: 100%;
@@ -34,22 +35,22 @@ export const StyledWncgPool = styled.div<StyledWncgPoolProps>`
     padding-bottom: 158px;
     max-width: ${880 + 400 + 48}px;
     margin: 0 auto;
-  }
 
-  .content {
-    grid-area: 'content';
-  }
+    .left {
+      grid-area: 'content';
+    }
 
-  .sidebar {
-    grid-area: 'sidebar';
-    background-color: var(--green-500);
+    .right {
+      grid-area: 'sidebar';
+      background-color: var(--green-500);
+    }
   }
 
   .poolInformation {
     margin-top: 48px;
   }
 
-  .poolJoinForm {
+  .poolJoin {
     margin-top: 24px;
   }
 `
@@ -151,5 +152,24 @@ export const StyledPoolInformation = styled.section`
       color: var(--white);
       text-align: right;
     }
+  }
+`
+
+export const StyledJoinFormConnect = styled(motion.section)`
+  ${flexbox()}
+  flex-direction: column;
+  min-height: 480px;
+  padding: 170px 32px;
+  background-color: rgba(var(--white-rgb), 0.05);
+  border-radius: 12px;
+
+  .title {
+    ${textStyle('header', 6)}
+    margin-bottom: 32px;
+    text-align: center;
+  }
+
+  .connectButton {
+    max-width: 320px;
   }
 `

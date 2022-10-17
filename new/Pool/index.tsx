@@ -7,7 +7,7 @@ import { usePool } from 'hooks'
 import { StyledWncgPool } from './styled'
 import Header from './Header'
 import Information from './Information'
-import JoinForm from './JoinForm'
+import Join from './Join'
 
 const motionVariants = {
   initial: {
@@ -56,13 +56,13 @@ function Pool({ isModal = false }: PoolProps) {
 
       <StyledWncgPool {...poolProps} $isModal={isModal}>
         <div className="container">
-          <div className="content">
+          <div className="left">
             <Header />
             <Information />
-            <JoinForm />
+            <Join />
           </div>
 
-          <div className="sidebar">SIDEBAR</div>
+          <div className="right">SIDEBAR</div>
         </div>
       </StyledWncgPool>
     </>

@@ -21,17 +21,17 @@ const StyledAccountDropdown = styled(motion.div)`
 `
 
 function AccountDropdown() {
-  const [showMenu, setShowMenu] = useState(false)
+  const [show, setShow] = useState(false)
 
   const { isConnected } = useAccount()
 
   function close() {
-    setShowMenu(false)
+    setShow(false)
   }
 
   function toggle(e: MouseEvent<HTMLButtonElement>) {
     e.stopPropagation()
-    setShowMenu((prev) => !prev)
+    setShow((prev) => !prev)
   }
 
   return (
@@ -46,7 +46,7 @@ function AccountDropdown() {
             variants={fadeIn}
           >
             <AnimatePresence>
-              {showMenu && (
+              {show && (
                 <Suspense>
                   <Menu close={close} />
                 </Suspense>

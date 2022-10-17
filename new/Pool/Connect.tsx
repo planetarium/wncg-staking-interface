@@ -1,9 +1,10 @@
-import { fadeIn } from 'constants/motionVariants'
 import { AnimatePresence } from 'framer-motion'
+
+import { fadeIn } from 'constants/motionVariants'
 import { useAccount, useConnectWallets } from 'hooks'
-import Button from 'new/Button'
 
 import { StyledJoinFormConnect } from './styled'
+import Button from 'new/Button'
 
 function JoinFormConnect() {
   const { isConnected } = useAccount()
@@ -13,7 +14,7 @@ function JoinFormConnect() {
     <AnimatePresence>
       {!isConnected && (
         <StyledJoinFormConnect
-          className="joinFormConnect"
+          className="poolJoinConnect"
           initial="initial"
           animate="animate"
           exit="exit"
