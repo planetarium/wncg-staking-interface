@@ -1,8 +1,5 @@
+import { flexbox, gradient, inlineFlexbox, textStyle } from 'newStyles/utils'
 import styled, { css } from 'styled-components'
-
-type StyledWncgPoolProps = {
-  $isModal: boolean
-}
 
 const modalStyle = css`
   position: fixed;
@@ -16,9 +13,11 @@ const modalStyle = css`
   border-radius: 32px 32px 0 0;
 `
 
-const pageStyle = css`
-  background-color: var(--error-500);
-`
+const pageStyle = css``
+
+type StyledWncgPoolProps = {
+  $isModal: boolean
+}
 
 export const StyledWncgPool = styled.div<StyledWncgPoolProps>`
   ${({ $isModal }) => ($isModal ? modalStyle : pageStyle)}
@@ -38,11 +37,68 @@ export const StyledWncgPool = styled.div<StyledWncgPoolProps>`
 
   .content {
     grid-area: 'content';
-    background-color: var(--orange-500);
   }
 
   .sidebar {
     grid-area: 'sidebar';
     background-color: var(--green-500);
+  }
+
+  .poolInformation {
+    margin-top: 48px;
+  }
+`
+
+export const StyledPoolHeader = styled.header`
+  .poolName {
+    ${textStyle('body', 3)}
+    display: inline-block;
+    margin-bottom: 12px;
+    font-weight: 700;
+    background-image: ${gradient(4)};
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    opacity: 0.9;
+  }
+
+  .titleGroup {
+    ${flexbox('space-between', 'flex-end')}
+  }
+
+  .title {
+    ${textStyle('header', 4)}
+  }
+
+  .tokenList {
+    ${flexbox('flex-start')}
+    padding-bottom: 8px;
+  }
+
+  .tokenItem {
+    ${flexbox('flex-start')}
+    ${textStyle('body', 3)}
+    margin-left: 12px;
+    color: var(--gray-400);
+    white-space: nowrap;
+
+    &:first-child {
+      margin-left: 0;
+    }
+
+    .tokenIcon {
+      margin-right: 4px;
+    }
+
+    .symbol {
+      margin-right: 4px;
+      font-weight: 700;
+    }
+
+    .extLink {
+      ${inlineFlexbox()}
+      width: 16px;
+      height: 16px;
+    }
   }
 `

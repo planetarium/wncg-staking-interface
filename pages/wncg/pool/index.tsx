@@ -1,13 +1,14 @@
 import type { NextPage } from 'next'
+import dynamic from 'next/dynamic'
 import Head from 'next/head'
 
-import Pool from 'new/pool'
+const Pool = dynamic(() => import('new/Pool'))
 
 const WncgPool: NextPage = () => {
   return (
     <>
       <Head>
-        <title>B-50WNCG-50WETH / WNCG Staking</title>
+        <title>WNCG Staking</title>
       </Head>
 
       <Pool />

@@ -10,7 +10,7 @@ import { StyledLayout, StyledMain } from './styled'
 import Alert from 'new/Alert'
 import Gnb from 'new/Gnb'
 import GlobalFooter from 'new/GlobalFooter'
-import Pool from 'new/pool'
+import Pool from 'new/Pool'
 
 type LayoutProps = {
   children: ReactNode

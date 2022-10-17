@@ -149,6 +149,8 @@ const gray = {
   900: '#212322',
 }
 
+export const ethereum = '#6f97f8'
+
 export const colors = {
   primary,
   error,

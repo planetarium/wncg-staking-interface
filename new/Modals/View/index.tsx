@@ -20,7 +20,7 @@ const ClaimRewardModal = dynamic(() => import('./ClaimRewardModal'), {
 const ConnectWalletModal = dynamic(() => import('./ConnectWalletModal'), {
   suspense: true,
 })
-const PoolPageModal = dynamic(() => import('new/pool'), {
+const PoolPageModal = dynamic(() => import('new/Pool'), {
   suspense: true,
 })
 const SwitchNetworkModal = dynamic(() => import('./SwitchNetworkModal'), {

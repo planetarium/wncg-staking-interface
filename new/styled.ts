@@ -148,3 +148,21 @@ export const StyledSvgIcon = styled.svg<{ $size: SvgIconSize }>`
   width: ${({ $size }) => `${$size}px`};
   height: ${({ $size }) => `${$size}px`};
 `
+
+export const StyledTokenIcon = styled.span<{ $size: number }>`
+  ${flexbox()}
+  flex-shrink: 0;
+  width: ${({ $size }) => `${$size}px`};
+  height: ${({ $size }) => `${$size}px`};
+  border-radius: 50%;
+
+  &.placeholder {
+    background-color: var(--primary-500);
+  }
+
+  img,
+  svg {
+    width: ${({ $size }) => `${$size}px`};
+    height: ${({ $size }) => `${$size}px`};
+  }
+`

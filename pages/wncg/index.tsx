@@ -10,7 +10,7 @@ import Dashboard from 'new/staking/Dashboard'
 import Form from 'new/staking/Form'
 import Header from 'new/staking/Header'
 import { AnimatePresence } from 'framer-motion'
-import Pool from 'new/pool'
+import Pool from 'new/Pool'
 
 const WncgStaking: NextPage = () => {
   const { query } = useRouter()

@@ -1,8 +1,13 @@
 import { memo, useMemo } from 'react'
-import { useRouter } from 'next/router'
+import Head from 'next/head'
 import { motion } from 'framer-motion'
 
+import { usePool } from 'hooks'
+
 import { StyledWncgPool } from './styled'
+import Form from './Form'
+import Header from './Header'
+import Information from './Information'
 
 const motionVariants = {
   initial: {
@@ -26,7 +31,7 @@ type PoolProps = {
 }
 
 function Pool({ isModal = false }: PoolProps) {
-  const { pathname } = useRouter()
+  const { poolName } = usePool()
 
   const poolProps = useMemo(
     () =>
@@ -44,12 +49,23 @@ function Pool({ isModal = false }: PoolProps) {
   )
 
   return (
-    <StyledWncgPool {...poolProps} $isModal={isModal}>
-      <div className="container">
-        <div className="content">POOL PAGE</div>
-        <div className="sidebar">SIDEBAR</div>
-      </div>
-    </StyledWncgPool>
+    <>
+      <Head>
+        <title>{poolName} / WNCG Staking</title>
+      </Head>
+
+      <StyledWncgPool {...poolProps} $isModal={isModal}>
+        <div className="container">
+          <div className="content">
+            <Header />
+            <Information />
+            <Form />
+          </div>
+
+          <div className="sidebar">SIDEBAR</div>
+        </div>
+      </StyledWncgPool>
+    </>
   )
 }
 
