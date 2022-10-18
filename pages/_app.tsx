@@ -9,7 +9,6 @@ import type { DehydratedState } from '@tanstack/react-query'
 import { useMount } from 'react-use'
 import { Provider } from 'jotai'
 import type { AppProps as NextAppProps, NextWebVitalsMetric } from 'next/app'
-import { useRouter } from 'next/router'
 import Script from 'next/script'
 import { DefaultSeo } from 'next-seo'
 import { WagmiConfig } from 'wagmi'
@@ -34,7 +33,6 @@ type AppProps = NextAppProps & {
 }
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const router = useRouter()
   const queryClient = useRef(new QueryClient())
   const config = configService.env.env
   const isProd = config === 'production'

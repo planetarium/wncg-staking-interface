@@ -15,22 +15,22 @@ export function useClaimRewards() {
   const stakingAddress = useAtomValue(stakingContractAddressAtom)
 
   const { config: claimAllConfig } = usePrepareContractWrite({
-    addressOrName: stakingAddress,
-    contractInterface: StakingAbi,
+    address: stakingAddress,
+    abi: StakingAbi,
     functionName: 'claimAllRewards',
   })
   const { writeAsync: claimAll } = useContractWrite(claimAllConfig)
 
   const { config: claimBalConfig } = usePrepareContractWrite({
-    addressOrName: stakingAddress,
-    contractInterface: StakingAbi,
+    address: stakingAddress,
+    abi: StakingAbi,
     functionName: 'claimBALRewards',
   })
   const { writeAsync: claimBal } = useContractWrite(claimBalConfig)
 
   const { config: claimRewardTokenConfig } = usePrepareContractWrite({
-    addressOrName: stakingAddress,
-    contractInterface: StakingAbi,
+    address: stakingAddress,
+    abi: StakingAbi,
     functionName: 'claimWNCGRewards',
     args: [scaledRewards[0]],
   })

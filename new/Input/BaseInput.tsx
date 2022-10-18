@@ -1,3 +1,4 @@
+import type { MouseEvent } from 'react'
 import type { ControllerRenderProps, FieldValues } from 'react-hook-form'
 import { NumericFormat } from 'react-number-format'
 
@@ -5,10 +6,11 @@ import { StyledBaseInput } from './styled'
 import type { InputSize } from './styled'
 
 type BaseInputProps = {
+  address: string
   decimals: number
   disabled: boolean
   field: ControllerRenderProps<FieldValues>
-  setMaxValue(): void
+  setMaxValue(e: MouseEvent<HTMLButtonElement>): void
   id?: string
   placeholder?: string
   $error: boolean
@@ -16,6 +18,7 @@ type BaseInputProps = {
 }
 
 function BaseInput({
+  address,
   decimals,
   disabled,
   field,

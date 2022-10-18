@@ -3,17 +3,17 @@ import { AnimatePresence } from 'framer-motion'
 import { fadeIn } from 'constants/motionVariants'
 import { useAccount, useConnectWallets } from 'hooks'
 
-import { StyledJoinFormConnect } from './styled'
+import { StyledJoinConnect } from './styled'
 import Button from 'new/Button'
 
-function JoinFormConnect() {
+function JoinConnect() {
   const { isConnected } = useAccount()
   const { connect } = useConnectWallets()
 
   return (
     <AnimatePresence>
       {!isConnected && (
-        <StyledJoinFormConnect
+        <StyledJoinConnect
           className="poolJoinConnect"
           initial="initial"
           animate="animate"
@@ -24,10 +24,10 @@ function JoinFormConnect() {
           <Button className="connectButton" onClick={connect} $size="lg">
             Connect wallet
           </Button>
-        </StyledJoinFormConnect>
+        </StyledJoinConnect>
       )}
     </AnimatePresence>
   )
 }
 
-export default JoinFormConnect
+export default JoinConnect

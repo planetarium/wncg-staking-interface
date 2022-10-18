@@ -1,9 +1,9 @@
 import { useMemo } from 'react'
 import { useSetAtom } from 'jotai'
 import type { BigNumber } from 'ethers'
-import { useContractReads } from 'wagmi'
+import { useBalance, useContractReads } from 'wagmi'
 
-import { balancesAtom } from 'states/user'
+import { etherBalanceAtom, tokenBalancesAtom } from 'states/user'
 import { configService } from 'services/config'
 import { uniqAddress } from 'utils/address'
 import { associateBalances } from 'utils/contract'
@@ -21,7 +21,8 @@ export function useBalances() {
   const { poolTokenAddresses } = usePool()
   const { rewardTokenAddress, stakedTokenAddress } = useStaking()
 
-  const setBalances = useSetAtom(balancesAtom)
+  const setEtherBalance = useSetAtom(etherBalanceAtom)
+  const setTokenBalances = useSetAtom(tokenBalancesAtom)
 
   const addresses = useMemo(
     () =>
@@ -37,8 +38,8 @@ export function useBalances() {
   const contracts = useMemo(
     () =>
       addresses.map((address) => ({
-        addressOrName: address,
-        contractInterface: ABI,
+        address: address,
+        abi: ABI,
         functionName: FN,
         chainId: networkChainId,
         args: [account],
@@ -46,13 +47,22 @@ export function useBalances() {
     [account, addresses]
   )
 
+  useBalance({
+    addressOrName: account,
+    enabled: !!account,
+    watch: true,
+    onSuccess(data: unknown) {
+      setEtherBalance((data as FetchBalanceResult)?.formatted || '0')
+    },
+  })
+
   useContractReads({
     contracts,
     enabled: !!account,
     watch: true,
     onSuccess(data: unknown = []) {
       const balanceMap = associateBalances(data as BigNumber[], addresses)
-      setBalances(balanceMap)
+      setTokenBalances(balanceMap)
     },
   })
 }

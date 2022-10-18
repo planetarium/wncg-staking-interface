@@ -16,11 +16,12 @@ export function useStakeForm() {
   const legacyMode = useAtomValue(legacyModeAtom)
   const networkMismatch = chain && chain.id !== networkChainId
 
-  const { clearErrors, control, formState, setValue, watch } = useForm<{
-    stakeAmount: string
-  }>({
-    mode: 'onBlur',
-  })
+  const { clearErrors, control, formState, resetField, setValue, watch } =
+    useForm<{
+      stakeAmount: string
+    }>({
+      mode: 'onBlur',
+    })
 
   const rules = useMemo(
     () => ({
@@ -60,7 +61,9 @@ export function useStakeForm() {
   }
 
   function resetForm() {
-    setValue('stakeAmount', '')
+    resetField('stakeAmount', {
+      keepError: false,
+    })
   }
 
   return {

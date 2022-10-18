@@ -8,6 +8,13 @@ declare type SendTransactionResult = {
   wait: Wagmi.TransactionResponse['wait']
 }
 
+declare type FetchBalanceResult = {
+  decimals: number
+  formatted: string
+  symbol: string
+  value: BigNumber
+}
+
 declare type TransactionResponse = Wagmi.TransactionResponse
 
 declare type WriteContractResult = SendTransactionResult

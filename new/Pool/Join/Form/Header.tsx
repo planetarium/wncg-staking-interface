@@ -1,34 +1,55 @@
+import { memo } from 'react'
 import type { MouseEvent } from 'react'
-import { useAtomValue } from 'jotai'
+import { useAtomValue, useSetAtom } from 'jotai'
 
 import { slippageAtom } from 'states/userSettings'
 import { bnum } from 'utils/num'
 import { useSettings } from 'hooks'
-import { usePoolData } from '../usePoolData'
+import { usePoolData } from '../../usePoolData'
 
-import { StyledPoolFormHeader } from './styled'
+import { StyledJoinFormHeader } from './styled'
 import Button from 'new/Button'
 import Dropdown from 'new/Dropdown'
 import SvgIcon from 'new/SvgIcon'
 import TokenIcon from 'new/TokenIcon'
+import { optimizeErrorAtom } from 'states/form'
 
 const slippageList = ['0.5', '1', '2']
 
-function PoolFormHeader() {
+type JoinFormHeaderProps = {
+  optimize(): void
+  optimized: boolean
+  reset(): void
+  resetDisabled: boolean
+}
+
+function JoinFormHeader({
+  optimize,
+  optimized,
+  reset,
+  resetDisabled,
+}: JoinFormHeaderProps) {
   const { poolTokenAddresses } = usePoolData()
   const { updateSlippage } = useSettings()
+
   const slippage = useAtomValue(slippageAtom) || 0
+  const setShowError = useSetAtom(optimizeErrorAtom)
 
   function handleSlippage(e: MouseEvent<HTMLButtonElement>) {
     updateSlippage(e.currentTarget.value)
   }
 
+  function handleOptimize() {
+    optimize()
+    setShowError(true)
+  }
+
   return (
-    <StyledPoolFormHeader>
+    <StyledJoinFormHeader className="joinFormHeader">
       <h3 className="title">
         <div className="tokens">
           {poolTokenAddresses.map((address) => (
-            <TokenIcon key={`poolFormHeader:${address}`} address={address} />
+            <TokenIcon key={`joinFormHeader:${address}`} address={address} />
           ))}
         </div>
         Join pool
@@ -37,16 +58,19 @@ function PoolFormHeader() {
       <div className="buttonGroup">
         <Button
           className="optimizeButton"
-          $variant="tertiary"
-          $size="sm"
+          onClick={handleOptimize}
+          disabled={optimized}
           $contain
+          $size="sm"
         >
-          Optimize
+          Optimize{optimized ? 'd' : ''}
         </Button>
         <button
-          className="refreshButton"
+          className="resetButton"
           type="reset"
-          aria-label="Reset the form"
+          onClick={reset}
+          disabled={resetDisabled}
+          aria-label="Reset"
         >
           <SvgIcon icon="refresh" $size={32} />
         </button>
@@ -63,14 +87,13 @@ function PoolFormHeader() {
           formatter={formatSlippage}
         />
       </div>
-    </StyledPoolFormHeader>
+    </StyledJoinFormHeader>
   )
 }
 
-export default PoolFormHeader
+export default memo(JoinFormHeader)
 
 function formatSlippage(value: string) {
-  console.log(`${bnum(value).toFixed(1)}%`)
   if (slippageList.some((item) => bnum(item).eq(value))) {
     return `${bnum(value).toFixed(1)}%`
   }

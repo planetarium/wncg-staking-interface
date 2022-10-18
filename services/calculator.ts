@@ -126,10 +126,11 @@ export default class CalculatorService {
         if (i !== index || type !== types[ratioType]) {
           const tokenAddress = this.tokenOf(types[ratioType], i)
           const token = getTokenInfo(tokenAddress)
+
           amounts[types[ratioType] as 'send' | 'receive'][i] = formatUnits(
             fixedDenormAmount.mul(ratio).div(fixedRatio),
-            token?.decimals || 18
-          )
+            token?.decimals ?? 18
+          ).replace(/0+$/, '')
         }
       })
     })

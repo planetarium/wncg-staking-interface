@@ -1,4 +1,3 @@
-import { motion } from 'framer-motion'
 import styled, { css } from 'styled-components'
 
 import { flexbox, gradient, inlineFlexbox, textStyle } from 'newStyles/utils'
@@ -9,7 +8,8 @@ const modalStyle = css`
   left: 0;
   width: 100%;
   height: calc(100vh - 32px);
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   background-color: rgba(18, 18, 18, 0.6);
   backdrop-filter: blur(40px);
   border-radius: 32px 32px 0 0;
@@ -152,24 +152,5 @@ export const StyledPoolInformation = styled.section`
       color: var(--white);
       text-align: right;
     }
-  }
-`
-
-export const StyledJoinFormConnect = styled(motion.section)`
-  ${flexbox()}
-  flex-direction: column;
-  min-height: 480px;
-  padding: 170px 32px;
-  background-color: rgba(var(--white-rgb), 0.05);
-  border-radius: 12px;
-
-  .title {
-    ${textStyle('header', 6)}
-    margin-bottom: 32px;
-    text-align: center;
-  }
-
-  .connectButton {
-    max-width: 320px;
   }
 `

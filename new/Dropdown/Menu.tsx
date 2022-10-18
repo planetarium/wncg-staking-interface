@@ -30,6 +30,11 @@ function DropdownMenu({
 }: DropdownMenuProps) {
   const menuRef = useRef<HTMLDivElement>(null)
 
+  function handleSelect(e: ReactMouseEvent<HTMLButtonElement>) {
+    onChange(e)
+    close()
+  }
+
   const closeOnBlur = useCallback(
     (e: MouseEvent) => {
       if (!menuRef?.current?.contains(e.target as Node)) {
@@ -72,7 +77,7 @@ function DropdownMenu({
                 >
                   <button
                     type="button"
-                    onClick={onChange}
+                    onClick={handleSelect}
                     value={item}
                     role="menuitem"
                   >

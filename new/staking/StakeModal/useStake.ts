@@ -12,7 +12,7 @@ import { useAllowances } from 'hooks'
 import { useStaking } from 'hooks/contracts'
 
 const stakeConfig = Object.freeze({
-  contractInterface: StakingAbi,
+  abi: StakingAbi,
   chainId: networkChainId,
   functionName: 'stake',
 })
@@ -30,7 +30,7 @@ export function useStake(
 
   const { config } = usePrepareContractWrite({
     ...stakeConfig,
-    addressOrName: stakingAddress,
+    address: stakingAddress,
     args: [parseUnits(amount, POOL_DECIMALS).toString()],
     enabled: isApproved && !!amount,
   })

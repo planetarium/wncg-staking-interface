@@ -1,3 +1,4 @@
+import type { MouseEvent } from 'react'
 import { Controller } from 'react-hook-form'
 import type { Control, RegisterOptions } from 'react-hook-form'
 import clsx from 'clsx'
@@ -10,10 +11,11 @@ import BaseInput from './BaseInput'
 import ErrorMessage from './ErrorMessage'
 
 type InputControlProps = {
+  address: string
   control: Control
   name: string
   rules: Partial<RegisterOptions>
-  setMaxValue(): void
+  setMaxValue(e: MouseEvent<HTMLButtonElement>): void
   className?: string
   decimals?: number
   disabled?: boolean
@@ -23,6 +25,7 @@ type InputControlProps = {
 }
 
 function InputControl({
+  address,
   control,
   name,
   rules,
@@ -47,6 +50,7 @@ function InputControl({
         <StyledInputControl className={clsx('inputControl', className)}>
           <BaseInput
             id={id}
+            address={address}
             decimals={decimals}
             field={field}
             setMaxValue={setMaxValue}

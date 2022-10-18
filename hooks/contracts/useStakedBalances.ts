@@ -20,8 +20,8 @@ export function useStakedBalances() {
   const contracts = useMemo(
     () =>
       configService.stakingContractAddresses.map((address) => ({
-        addressOrName: address,
-        contractInterface: ABI,
+        address: address,
+        abi: ABI,
         functionName: FN,
         chainId: networkChainId,
         args: [account],

@@ -30,8 +30,8 @@ export function useStaking() {
   const contracts = useMemo(
     () =>
       FNS.map((fn) => ({
-        addressOrName: stakingAddress,
-        contractInterface: ABIS,
+        address: stakingAddress,
+        abi: ABIS,
         functionName: fn,
         chainId: networkChainId,
       })),

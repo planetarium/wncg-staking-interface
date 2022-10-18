@@ -11,8 +11,8 @@ import { useSlippage } from './useSlippage'
 export function useJoinMath() {
   const { balanceFor } = useBalances()
   const calculator = useCalculator('join')
-  const { nativeAssetIndex, poolTokenAddresses } = usePool()
   const { toFiat } = useFiatCurrency()
+  const { nativeAssetIndex, poolTokenAddresses } = usePool()
   const { minusSlippageScaled } = useSlippage()
 
   const calcUserPoolTokenBalances = useCallback(
@@ -66,9 +66,16 @@ export function useJoinMath() {
 
   const calcPropAmounts = useCallback(
     (amounts: string[], fixedTokenIndex: number) => {
-      const index = fixedTokenIndex === 1 ? 0 : 1
+      amounts = amounts.map((amount) => bnum(amount).toString())
+
       const { send } =
-        calculator?.propAmountsGiven(amounts[index], index, 'send') || {}
+        calculator?.propAmountsGiven(
+          amounts[fixedTokenIndex],
+          fixedTokenIndex,
+          'send'
+        ) || {}
+      console.log(amounts, send)
+
       return send || ['0', '0']
     },
     [calculator]

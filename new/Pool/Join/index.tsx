@@ -1,14 +1,15 @@
 import { memo } from 'react'
 
+import { StyledPoolJoin } from './styled'
 import Connect from './Connect'
 import Form from './Form'
 
 function PoolJoin() {
   return (
-    <div className="poolJoin">
+    <StyledPoolJoin className="poolJoin">
       <Connect />
       <Form />
-    </div>
+    </StyledPoolJoin>
   )
 }
 

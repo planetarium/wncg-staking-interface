@@ -78,6 +78,7 @@ function StakingForm() {
     <StyledStakingForm onSubmit={handleSubmit}>
       <Control
         id="stakeAmount"
+        address={stakedTokenAddress}
         control={control as unknown as ReactHookFormControl<FieldValues, 'any'>}
         name="stakeAmount"
         rules={rules}

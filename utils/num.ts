@@ -52,3 +52,8 @@ export function isLessThanMinAmount(
 export function hasAmounts(amounts: string[]) {
   return amounts.some((amount) => bnum(amount).gt(0))
 }
+
+export function removeTrailingZero(value?: string) {
+  if (!value) return '0'
+  return value.replace(/(\.0+|0+)$/g, '')
+}

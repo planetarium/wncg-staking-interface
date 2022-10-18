@@ -154,7 +154,7 @@ export class ConfigService {
   }
 
   get etherAddresses() {
-    return [this.weth, this.nativeAssetAddress]
+    return [this.nativeAssetAddress, this.weth]
   }
 
   get github() {

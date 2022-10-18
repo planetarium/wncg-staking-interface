@@ -16,8 +16,8 @@ export function useClaimableTokens() {
   const stakingAddress = useAtomValue(stakingContractAddressAtom)
 
   const { data } = useContractRead({
-    addressOrName: liquidityGaugeAddress,
-    contractInterface: ABI,
+    address: liquidityGaugeAddress,
+    abi: ABI,
     functionName: FN,
     chainId: networkChainId,
     args: [stakingAddress],

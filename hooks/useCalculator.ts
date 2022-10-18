@@ -5,10 +5,8 @@ import { useBalances } from './useBalances'
 import { usePool } from './usePool'
 
 export function useCalculator(action: PoolAction) {
-  const { balanceFor } = useBalances()
-  const { bptAddress, pool } = usePool()
-
-  const bptBalance = balanceFor(bptAddress)
+  const { bptBalance } = useBalances()
+  const { pool } = usePool()
 
   const calculator = useMemo(() => {
     if (!pool) return null

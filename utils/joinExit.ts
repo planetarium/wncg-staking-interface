@@ -74,3 +74,7 @@ export function buildPropExit({ assets, bptIn }: BuildPropExitParms) {
 
   return request
 }
+
+export function counterTokenIndex(currentIndex: number) {
+  return currentIndex === 0 ? 1 : 0
+}

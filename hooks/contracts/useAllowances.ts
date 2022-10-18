@@ -39,8 +39,8 @@ export function useAllowances() {
     () => [
       ...tokenAddresses.flatMap((address) => {
         return spenders.map((spender) => ({
-          addressOrName: address,
-          contractInterface: ABI,
+          address: address,
+          abi: ABI,
           functionName: FN,
           chainId: networkChainId,
           args: [account, spender],

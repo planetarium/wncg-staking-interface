@@ -6,7 +6,7 @@ import { Erc20Abi } from 'lib/abi'
 import { networkChainId } from 'utils/network'
 
 const approveConfig = Object.freeze({
-  contractInterface: Erc20Abi,
+  abi: Erc20Abi,
   chainId: networkChainId,
   functionName: 'approve',
 })
@@ -18,7 +18,7 @@ export function useApprove(
 ) {
   const { config } = usePrepareContractWrite({
     ...approveConfig,
-    addressOrName: tokenAddress,
+    address: tokenAddress,
     args: [spender, constants.MaxUint256],
     enabled: !!tokenAddress && !!spender,
   })

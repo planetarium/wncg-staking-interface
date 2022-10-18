@@ -51,6 +51,7 @@ export const StyledDropdownMenu = styled(motion.div)`
       ${textStyle('body', 2)}
       flex-grow: 1;
       color: var(--gray-400);
+      text-align: left;
       transition: 150ms;
     }
 

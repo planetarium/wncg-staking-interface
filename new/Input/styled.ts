@@ -47,6 +47,14 @@ export const StyledAvailableTokenAmount = styled(motion.dl)`
       content: ':';
     }
   }
+
+  dd {
+    ${flexbox('flex-start')}
+  }
+
+  .usd {
+    margin-left: 4px;
+  }
 `
 
 type StyledBaseInputProps = {

@@ -11,12 +11,14 @@ import NumberFormat from 'new/NumberFormat'
 type AvailableTokenAmountProps = {
   label: string
   maxAmount: string | number
+  fiatValue?: number
   decimals?: number
 }
 
 function AvailableTokenAmount({
   label,
   maxAmount,
+  fiatValue,
   decimals = 4,
 }: AvailableTokenAmountProps) {
   const { isConnected } = useAccount()
@@ -24,6 +26,7 @@ function AvailableTokenAmount({
 
   const invalidMaxAmount = bMaxAmount.isNaN() || !bMaxAmount.isFinite()
   const show = isConnected && !invalidMaxAmount
+  const showFiatValue = typeof fiatValue === 'number'
 
   return (
     <AnimatePresence>
@@ -38,6 +41,15 @@ function AvailableTokenAmount({
           <dt>{label}</dt>
           <dd>
             <NumberFormat value={maxAmount} decimals={decimals} />
+            {showFiatValue && (
+              <NumberFormat
+                className="usd"
+                value={fiatValue}
+                decimals={2}
+                prefix="($"
+                suffix=")"
+              />
+            )}
           </dd>
         </StyledAvailableTokenAmount>
       )}

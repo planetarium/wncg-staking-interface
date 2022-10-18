@@ -15,8 +15,8 @@ export function useTotalStaked() {
   const setTotalStaked = useSetAtom(totalStakedAtom)
 
   useContractRead({
-    addressOrName: stakingAddress,
-    contractInterface: ABI,
+    address: stakingAddress,
+    abi: ABI,
     functionName: FN,
     chainId: networkChainId,
     watch: true,
