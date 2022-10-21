@@ -7,13 +7,14 @@ import { ModalCategory } from 'states/ui'
 import { HIGH_PRICE_IMPACT, REKT_PRICE_IMPACT } from 'constants/poolLiquidity'
 import { bnum } from 'utils/num'
 import { renderStrong } from 'utils/numberFormat'
-import { useModal } from 'hooks'
+import { useAllowances, useModal } from 'hooks'
 import type { JoinFormFields } from './useJoinForm'
 
 import { StyledJoinFormFooter } from './styled'
 import Button from 'new/Button'
 import NumberFormat from 'new/NumberFormat'
 import SvgIcon from 'new/SvgIcon'
+import { configService } from 'services/config'
 
 type JoinFormFooterProps = {
   amounts: string[]
@@ -34,7 +35,17 @@ function JoinFormFooter({
   errors,
   resetForm,
 }: JoinFormFooterProps) {
+  const { allowanceFor } = useAllowances()
   const { addModal } = useModal()
+
+  const tokensToApprove = useMemo(() => {
+    return assets.flatMap((address, i) => {
+      if (address === configService.nativeAssetAddress) return []
+      if (bnum(amounts[i]).isZero()) return []
+      if (allowanceFor(address, configService.vaultAddress)) return []
+      return [address]
+    })
+  }, [allowanceFor, amounts, assets])
 
   const submitDisabled = useMemo(
     () =>
@@ -54,6 +65,7 @@ function JoinFormFooter({
         amounts,
         assets,
         resetForm,
+        tokensToApprove,
       },
     })
   }

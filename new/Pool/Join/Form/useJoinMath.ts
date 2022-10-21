@@ -21,7 +21,6 @@ export function useJoinMath() {
 
   const calcPriceImpact = useCallback(
     (amounts: string[]) => {
-      amounts = amounts.map((amount) => bnum(amount).toString())
       if (!hasAmounts(amounts)) return 0
 
       try {

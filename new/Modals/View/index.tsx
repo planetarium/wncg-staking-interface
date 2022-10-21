@@ -20,7 +20,7 @@ const ClaimRewardModal = dynamic(() => import('./ClaimRewardModal'), {
 const ConnectWalletModal = dynamic(() => import('./ConnectWalletModal'), {
   suspense: true,
 })
-const PoolPageModal = dynamic(() => import('new/Pool'), {
+const JoinModal = dynamic(() => import('new/Pool/Join/Modal'), {
   suspense: true,
 })
 const SwitchNetworkModal = dynamic(() => import('./SwitchNetworkModal'), {
@@ -70,8 +70,8 @@ function renderModal(modal: Modal) {
       return <ClaimRewardModal />
     case ModalCategory.Connect:
       return <ConnectWalletModal />
-    case ModalCategory.Pool:
-      return <PoolPageModal />
+    case ModalCategory.Join:
+      return <JoinModal {...props} />
     case ModalCategory.Stake:
       return <StakeModal {...props} />
     case ModalCategory.SwitchNetwork:

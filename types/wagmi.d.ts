@@ -1,11 +1,9 @@
-declare namespace Wagmi {
-  type TransactionResponse =
-    import('@ethersproject/providers').TransactionResponse
-}
+type TransactionResponse =
+  import('@ethersproject/providers').TransactionResponse
 
 declare type SendTransactionResult = {
-  hash: Wagmi.TransactionResponse['hash']
-  wait: Wagmi.TransactionResponse['wait']
+  hash: TransactionResponse['hash']
+  wait: TransactionResponse['wait']
 }
 
 declare type FetchBalanceResult = {
@@ -15,7 +13,7 @@ declare type FetchBalanceResult = {
   value: BigNumber
 }
 
-declare type TransactionResponse = Wagmi.TransactionResponse
+declare type TransactionResponse = TransactionResponse
 
 declare type WriteContractResult = SendTransactionResult
 

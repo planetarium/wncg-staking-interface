@@ -11,6 +11,7 @@ import PendingNotice from './PendingNotice'
 
 type ApprovePageProps = {
   action: string
+  buttonLabel: string
   category: ModalCategory
   onClick(): Promise<void>
   symbol: string
@@ -20,6 +21,7 @@ type ApprovePageProps = {
 
 function ApprovePage({
   action,
+  buttonLabel,
   category,
   onClick,
   symbol,
@@ -50,7 +52,7 @@ function ApprovePage({
       </header>
 
       <TxButton onClick={onClick} isPending={isPending} $size="lg">
-        Approve & Go {capitalize(action)}
+        {buttonLabel}
       </TxButton>
 
       <PendingNotice hash={hash} />

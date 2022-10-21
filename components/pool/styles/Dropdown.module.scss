@@ -5,7 +5,7 @@ $toggle-min-width: 108px;
 .tokenDropdown {
   @include flexbox;
   position: relative;
-  z-index: 2;
+  z-index: 3;
   flex-shrink: 0;
 
   &.show {

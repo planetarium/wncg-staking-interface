@@ -5,14 +5,14 @@ import { useContractWrite, usePrepareContractWrite } from 'wagmi'
 
 import { stakingContractAddressAtom } from 'states/staking'
 import { POOL_DECIMALS } from 'constants/tokens'
-import { StakingAbi } from 'lib/abi'
 import { networkChainId } from 'utils/network'
 import { bnum } from 'utils/num'
 import { useAllowances } from 'hooks'
 import { useStaking } from 'hooks/contracts'
+import { findAbiFromStaking } from 'utils/wagmi'
 
-const stakeConfig = Object.freeze({
-  abi: StakingAbi,
+const writeConfig = Object.freeze({
+  abi: findAbiFromStaking('stake'),
   chainId: networkChainId,
   functionName: 'stake',
 })
@@ -29,7 +29,7 @@ export function useStake(
   const isApproved = allowanceFor(stakedTokenAddress, stakingAddress)
 
   const { config } = usePrepareContractWrite({
-    ...stakeConfig,
+    ...writeConfig,
     address: stakingAddress,
     args: [parseUnits(amount, POOL_DECIMALS).toString()],
     enabled: isApproved && !!amount,

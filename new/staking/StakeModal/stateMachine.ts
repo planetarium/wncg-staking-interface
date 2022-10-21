@@ -106,22 +106,20 @@ export function currentPage(value: StateValue) {
     case 'idle':
       return 0
     case 'approve':
-    case 'approveCalled':
-    case 'approveRejected':
     case 'approvePending':
       return 1
     case 'approveSuccess':
     case 'approveFail':
       return 2
     case 'stake':
-    case 'stakeCalled':
-    case 'stakeRejected':
     case 'stakePending':
       return 3
     case 'stakeSuccess':
     case 'stakeFail':
       return 4
     default:
+      console.log(value)
+
       assertUnreachable(value)
   }
 }

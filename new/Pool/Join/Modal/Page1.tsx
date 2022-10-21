@@ -1,38 +1,40 @@
 import { memo } from 'react'
-import { useAtom, useAtomValue } from 'jotai'
+import { useAtom } from 'jotai'
 import { AnimatePresence } from 'framer-motion'
 
-import { pendingStakeHashAtom } from 'states/form'
-import { stakingContractAddressAtom } from 'states/staking'
+import { pendingJoinHashAtom } from 'states/form'
 import { ModalCategory } from 'states/ui'
 import { useApprove } from 'hooks'
-import { useStaking } from 'hooks/contracts'
 
 import ApprovePage from 'new/Modals/shared/ApprovePage'
+import { configService } from 'services/config'
+import { getTokenSymbol } from 'utils/token'
 
-type StakeModalPage1Props = {
+type JoinModalPage1Props = {
+  address: string
   currentPage: number
   send(value: string): void
   isPending?: boolean
 }
 
-function StakeModalPage1({
+function JoinModalPage1({
+  address,
   currentPage,
   send,
   isPending,
-}: StakeModalPage1Props) {
-  const [hash, setHash] = useAtom(pendingStakeHashAtom)
+}: JoinModalPage1Props) {
+  const [hash, setHash] = useAtom(pendingJoinHashAtom)
+  const symbol = getTokenSymbol(address)
 
-  const { stakedTokenAddress } = useStaking()
-  const stakingAddress = useAtomValue(stakingContractAddressAtom)
-
-  const approve = useApprove(stakedTokenAddress, stakingAddress, {
+  const approve = useApprove(address, configService.vaultAddress, {
     onConfirm(txHash?: Hash) {
       setHash(txHash)
+      console.log('✨ CALL from:', 1)
       send('CALL')
     },
     onError(error: any) {
       if (error?.code === 'ACTION_REJECTED') return
+      console.log('🔥 FAIL from:', 1)
       send('FAIL')
     },
   })
@@ -41,11 +43,11 @@ function StakeModalPage1({
     <AnimatePresence>
       {currentPage === 1 && (
         <ApprovePage
-          action="staking"
-          buttonLabel="Approve and Go staking"
-          category={ModalCategory.Stake}
+          action="joining pool"
+          buttonLabel={`Approve ${symbol}`}
+          category={ModalCategory.Join}
           onClick={approve}
-          symbol="LP Token"
+          symbol={getTokenSymbol(address)}
           hash={hash}
           isPending={isPending}
         />
@@ -54,4 +56,4 @@ function StakeModalPage1({
   )
 }
 
-export default memo(StakeModalPage1)
+export default memo(JoinModalPage1)

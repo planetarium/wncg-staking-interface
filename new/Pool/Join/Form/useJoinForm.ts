@@ -49,9 +49,9 @@ export function useJoinForm() {
     [nativeAssetIndex, poolTokenAddresses]
   )
 
-  const joinAmounts = poolTokenAddresses.map((_, i) => {
-    return watch(fieldList[i])
-  })
+  const joinAmounts = poolTokenAddresses.map((_, i) =>
+    bnum(watch(fieldList[i])).toString()
+  )
 
   const currentEtherType = watch('etherType')
   const isNativeAsset = currentEtherType === configService.nativeAssetAddress

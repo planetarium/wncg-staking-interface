@@ -5,6 +5,7 @@ import { flexbox, textStyle } from 'newStyles/utils'
 
 export const StyledDropdown = styled.div`
   position: relative;
+  z-index: 1;
 `
 
 export const StyledDropdownMenu = styled(motion.div)`

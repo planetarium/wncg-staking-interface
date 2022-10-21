@@ -21,3 +21,15 @@ export const isNativeAssetAtom = atom((get) => {
   return currentEtherType === configService.nativeAssetAddress
 })
 export const optimizeErrorAtom = atomWithReset(false)
+
+export const pendingJoinAmountsAtom = atomWithStorage(
+  `wncgStaking.joinAmounts`,
+  ['']
+)
+export const pendingJoinAssetsAtom = atomWithStorage(`wncgStaking.joinAssets`, [
+  '',
+])
+export const pendingJoinHashAtom = atomWithStorage<Hash | undefined>(
+  `wncgStaking.joinHash`,
+  undefined
+)

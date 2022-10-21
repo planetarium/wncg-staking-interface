@@ -65,6 +65,10 @@ export const StyledModalContent = styled.div`
     ${textStyle('body', 2)}
     margin-top: 8px;
     color: rgba(var(--white-rgb), 0.6);
+
+    &.accent {
+      color: var(--primary-300);
+    }
   }
 
   @media screen and (min-width: 1000px) {
