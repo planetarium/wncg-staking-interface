@@ -2,7 +2,7 @@ import { memo } from 'react'
 import { useAtom } from 'jotai'
 import { AnimatePresence } from 'framer-motion'
 
-import { pendingJoinHashAtom } from 'states/form'
+import { pendingJoinTxAtom } from 'states/form'
 import { ModalCategory } from 'states/ui'
 import { useApprove } from 'hooks'
 
@@ -14,6 +14,7 @@ type JoinModalPage1Props = {
   address: string
   currentPage: number
   send(value: string): void
+  tokensToApprove: string[]
   isPending?: boolean
 }
 
@@ -21,14 +22,22 @@ function JoinModalPage1({
   address,
   currentPage,
   send,
+  tokensToApprove,
   isPending,
 }: JoinModalPage1Props) {
-  const [hash, setHash] = useAtom(pendingJoinHashAtom)
+  const [pendingJoinTx, setPendingJoinTx] = useAtom(pendingJoinTxAtom)
   const symbol = getTokenSymbol(address)
 
   const approve = useApprove(address, configService.vaultAddress, {
     onConfirm(txHash?: Hash) {
-      setHash(txHash)
+      setPendingJoinTx({
+        amounts: undefined,
+        assets: undefined,
+        approving: address,
+        tokensToApprove,
+        hash: txHash,
+      })
+
       console.log('✨ CALL from:', 1)
       send('CALL')
     },
@@ -48,7 +57,7 @@ function JoinModalPage1({
           category={ModalCategory.Join}
           onClick={approve}
           symbol={getTokenSymbol(address)}
-          hash={hash}
+          hash={pendingJoinTx.hash}
           isPending={isPending}
         />
       )}

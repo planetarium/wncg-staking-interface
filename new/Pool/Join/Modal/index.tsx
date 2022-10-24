@@ -5,22 +5,18 @@ import { useAtom } from 'jotai'
 import { RESET } from 'jotai/utils'
 import { useTransaction } from 'wagmi'
 
-import {
-  pendingJoinAmountsAtom,
-  pendingJoinAssetsAtom,
-  pendingJoinHashAtom,
-} from 'states/form'
+import { pendingJoinTxAtom } from 'states/form'
 import { createLogger } from 'utils/log'
 import { networkChainId } from 'utils/network'
 import { bnum } from 'utils/num'
 import { useFiatCurrency } from 'hooks'
 import { currentPage, joinMachine } from './stateMachine'
-import { extractTokenAddress } from './utils'
 
 import Page1 from './Page1'
 import Page2 from './Page2'
 import Page3 from './Page3'
 import Page4 from './Page4'
+import { getTokenSymbol } from 'utils/token'
 
 const log = createLogger('black')
 
@@ -38,18 +34,29 @@ function JoinModal({
   tokensToApprove,
 }: JoinModalProps) {
   const { toFiat } = useFiatCurrency()
-  const [hash, setHash] = useAtom(pendingJoinHashAtom)
-  const [pendingJoinAmounts, setPendingJoinAmounts] = useAtom(
-    pendingJoinAmountsAtom
-  )
-  const [pendingJoinAssets, setPendingJoinAssets] = useAtom(
-    pendingJoinAssetsAtom
-  )
+  const [pendingTx, setPendingTx] = useAtom(pendingJoinTxAtom)
+  const {
+    amounts: pendingAmounts,
+    assets: pendingAssets,
+    approving,
+    tokensToApprove: pendingTokensToApprove,
+    hash,
+  } = pendingTx
 
-  const stateMachine = useRef(joinMachine(tokensToApprove))
+  amounts = pendingAmounts ?? amounts
+  assets = pendingAssets ?? assets
+  tokensToApprove = pendingTokensToApprove ?? tokensToApprove
+
+  const stateMachine = useRef(joinMachine)
   const [state, send] = useMachine(stateMachine.current, {
-    context: { hash },
+    context: {
+      amounts,
+      assets,
+      hash,
+      tokensToApprove,
+    },
   })
+  const currentState = state.value as string
 
   useTransaction({
     hash: hash!,
@@ -60,82 +67,148 @@ function JoinModal({
     },
     async onSuccess(response: TransactionResponse) {
       console.log('RESPONSE:', response)
+      if (!response) return
       try {
-        await response?.wait()
+        const data = await response.wait()
         console.log('✅ SUCCESS from:', 0)
         send('SUCCESS')
+        if (assets.includes(data.to.toLowerCase())) {
+          setPendingTx((prev) => {
+            const newTokensToApprove = [...(prev.tokensToApprove ?? [])]
+            newTokensToApprove.shift()
+
+            return {
+              ...prev,
+              tokensToApprove: newTokensToApprove,
+            }
+          })
+        }
       } catch (error) {
+        console.log(777777777, 'on success catch error')
         console.log('🔥 FAIL from:', 0)
         console.log('Failed reason:', 0, error)
         send('FAIL')
       }
     },
+    onError() {
+      console.log(555555555, 'on error')
+      setPendingTx({
+        hash: undefined,
+      })
+      stateMachine.current.transition(state.value, { type: 'ROLLBACK' })
+    },
   })
 
-  const hasPendingTx =
-    !!hash && !pendingJoinAmounts.every((amount) => bnum(amount).isZero())
-
-  const joinAmounts = hasPendingTx ? pendingJoinAmounts : amounts
-  const joinAssets = hasPendingTx ? pendingJoinAssets : assets
-
-  const joinAmountsInFiatValue = joinAmounts
+  const joinAmountsInFiatValue = amounts
     .reduce((total, amount, i) => {
-      return total.plus(toFiat(joinAssets[i], amount))
+      return total.plus(toFiat(assets[i], amount))
     }, bnum(0))
     .toNumber()
 
   const page = useMemo(() => currentPage(state.value), [state.value])
-  const currentState = state.value as string
-  const { approvals } = state.context
+
+  const tokenToApprove = state.context.tokensToApprove[0]
 
   // NOTE: Reset hash when join tx is fulfilled
   useEffect(() => {
-    const _currentState = currentState.toLowerCase()
-    if (_currentState.includes('success')) {
-      setHash(RESET)
+    if (currentState === `approveSuccess`) {
+      setPendingTx((prev) => ({
+        ...prev,
+        hash: undefined,
+      }))
     }
-  }, [currentState, setHash])
+  }, [currentState, setPendingTx])
 
+  // NOTE: Reset everything when 1) tx failed 2) joined
   useUnmount(() => {
-    const _currentState = currentState.toLowerCase()
-
     if (!!state.done) {
-      setHash(RESET)
-      setPendingJoinAmounts(RESET)
-      setPendingJoinAssets(RESET)
+      setPendingTx(RESET)
       resetForm()
-
-      // if (_currentState.startsWith('join')) {
-      //   setPendingJoinAmounts(RESET)
-      //   setPendingJoinAssets(RESET)
-      //   resetForm()
-      // }
     }
   })
 
   return (
     <>
-      {currentState.slice(0, 20)} /{' '}
-      <span style={{ color: 'red' }}>{hash?.slice(0, 6) ?? typeof hash}</span>
+      <span style={{ background: 'purple' }}>
+        {' '}
+        ➡ {currentState.slice(0, 20)}
+      </span>
+      <hr />
+      <hr />
+      <hr />
+      <hr />
+      <hr />
+      <hr />
+      <span style={{ color: 'red' }}>
+        Hash (Local storage) : {hash?.slice(0, 6) ?? typeof hash}
+      </span>
+      <hr />
+      <span style={{ background: 'green' }}>
+        Hash (StateMachine):{' '}
+        {state.context.hash?.slice(0, 6) ?? typeof state.context.hash}
+      </span>
+      <hr />
+      <hr />
+      <hr />
+      <hr />
+      <hr />
+      <hr />
+      <span style={{ color: 'yellow' }}>
+        tokensToApproves (StateMachine) :{' '}
+        {JSON.stringify(
+          state.context.tokensToApprove.map((addr) => addr.slice(0, 6))
+        )}
+      </span>
+      <hr />
+      <span>
+        tokensToApproves (Modal):{' '}
+        {JSON.stringify(tokensToApprove.map((addr) => addr.slice(0, 6)))}
+      </span>
+      <hr />
+      <hr />
+      <hr />
+      <hr />
+      <hr />
+      <hr />
+      <span style={{ color: 'yellow' }}>
+        Join amounts (StateMachine) : {JSON.stringify(state.context.amounts)}
+      </span>
+      <hr />
+      <span>Join amounts (Modal) : {JSON.stringify(amounts)}</span>
+      <hr />
+      <hr />
+      <hr />
+      <hr />
+      <hr />
+      <hr />
+      <span>
+        TokensToApprove : {JSON.stringify(getTokenSymbol(tokenToApprove))}
+      </span>
+      <hr />
+      <span>Approving Saved: {JSON.stringify(getTokenSymbol(approving))}</span>
+      <hr />
       <br />
-      {/* <span>{JSON.stringify(state.context.approvals)}</span> */}
-      <span>{JSON.stringify(joinAmounts)}</span>
-      {/* <br /> PAGE {page} / {joinAmounts} */}
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
       <Page1
-        address={extractTokenAddress(currentState)}
+        address={tokenToApprove}
         currentPage={page}
         send={send}
+        tokensToApprove={tokensToApprove}
         isPending={currentState.startsWith('approvePending')}
       />
       <Page2
-        address={extractTokenAddress(currentState)}
-        approvals={approvals}
+        address={tokenToApprove}
+        approvals={state.context.tokensToApprove}
         currentPage={page}
         send={send}
       />
       <Page3
-        amounts={joinAmounts}
-        assets={joinAssets}
+        amounts={amounts}
+        assets={assets}
         currentPage={page}
         fiatValue={joinAmountsInFiatValue}
         send={send}

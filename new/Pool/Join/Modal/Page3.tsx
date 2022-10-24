@@ -1,12 +1,8 @@
 import { memo } from 'react'
-import { useAtom, useSetAtom } from 'jotai'
+import { useAtom } from 'jotai'
 import { AnimatePresence, motion } from 'framer-motion'
 
-import {
-  pendingJoinAmountsAtom,
-  pendingJoinAssetsAtom,
-  pendingJoinHashAtom,
-} from 'states/form'
+import { pendingJoinTxAtom } from 'states/form'
 import { ModalCategory } from 'states/ui'
 import { fadeIn } from 'constants/motionVariants'
 import { renderStrong } from 'utils/numberFormat'
@@ -36,15 +32,15 @@ function JoinModalPage1({
   send,
   isPending,
 }: JoinModalPage1Props) {
-  const [hash, setHash] = useAtom(pendingJoinHashAtom)
-  const setJoinAmounts = useSetAtom(pendingJoinAmountsAtom)
-  const setJoinAssets = useSetAtom(pendingJoinAssetsAtom)
+  const [pendingTx, setPendingTx] = useAtom(pendingJoinTxAtom)
 
   const joinPool = useJoin(amounts, assets, {
     onConfirm(txHash?: Hash) {
-      setHash(txHash)
-      setJoinAmounts(amounts)
-      setJoinAssets(assets)
+      setPendingTx({
+        amounts,
+        assets,
+        hash: txHash,
+      })
       console.log('✨ CALL from:', 3, amounts)
       send('CALL')
     },
@@ -98,7 +94,7 @@ function JoinModalPage1({
             Join pool
           </TxButton>
 
-          <PendingNotice hash={hash} />
+          <PendingNotice hash={pendingTx.hash} />
         </StyledJoinModalPage3>
       )}
     </AnimatePresence>

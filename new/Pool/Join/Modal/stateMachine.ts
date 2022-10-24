@@ -1,80 +1,161 @@
-import { createMachine } from 'xstate'
+import { assign, createMachine } from 'xstate'
 import type { StateValue } from 'xstate'
 import { nanoid } from 'nanoid'
 
 import { assertUnreachable } from 'utils/assertion'
-import {
-  approveGuards,
-  approveStates,
-  approveTransitions,
-  joinStates,
-} from './utils'
-import type { JoinMachineContext } from './utils'
 
-export function joinMachine(tokensToApprove: string[]) {
-  const approvals = tokensToApprove.map((_) => false)
-
-  return createMachine<JoinMachineContext>(
-    {
-      predictableActionArguments: true,
-      id: `joinMachine:${nanoid()}`,
-      initial: 'idle',
-      context: {
-        approvals,
-        tokensToApprove,
-        hash: undefined,
-      },
-      states: {
-        idle: {
-          always: [
-            {
-              target: `join`,
-              cond: `hasApprovedAll`,
-            },
-            {
-              target: `joinPending`,
-              cond: `waitForJoin`,
-            },
-            ...approveTransitions(tokensToApprove),
-          ],
-        },
-        ...approveStates(tokensToApprove),
-        ...joinStates,
-      },
-    },
-    {
-      guards: {
-        hasApprovedAll(ctx) {
-          return !ctx.hash && !tokensToApprove.length
-        },
-        waitForJoin(ctx) {
-          return !!ctx.hash && !tokensToApprove.length
-        },
-        ...approveGuards(tokensToApprove),
-      },
-    }
-  )
+export type JoinMachineContext = {
+  amounts: string[]
+  assets: string[]
+  tokensToApprove: string[]
+  hash?: string
 }
 
-export function currentPage(value: StateValue) {
-  const state = value as string
+export const joinMachine = createMachine<JoinMachineContext>(
+  {
+    predictableActionArguments: true,
+    id: `joinMachine:${nanoid()}`,
+    initial: `idle`,
+    context: {
+      amounts: [],
+      assets: [],
+      tokensToApprove: [],
+      hash: undefined,
+    },
+    states: {
+      idle: {
+        always: [
+          { target: `approvePending`, cond: `waitForApproval` },
+          { target: `approve`, cond: `shouldApprove` },
+          { target: 'joinPending', cond: `waitForJoin` },
+          { target: 'join', cond: `readyToJoin` },
+        ],
+      },
+      approve: {
+        on: {
+          CALL: {
+            target: `approvePending`,
+          },
+          FAIL: {
+            target: 'approveFail',
+            actions: [`rollback`],
+          },
+        },
+      },
+      approvePending: {
+        on: {
+          ROLLBACK: {
+            target: 'approve',
+            actions: [`rollback`],
+          },
+          SUCCESS: {
+            target: 'approveSuccess',
+            actions: [`approve`],
+          },
+          FAIL: {
+            target: 'approveFail',
+            actions: [`rollback`],
+          },
+        },
+      },
+      approveSuccess: {
+        on: {
+          NEXT: [
+            { target: 'join', cond: `readyToJoin` },
+            { target: `approve`, cond: `shouldApprove` },
+          ],
+        },
+      },
+      approveFail: {
+        type: 'final',
+      },
+      join: {
+        on: {
+          ROLLBACK: {
+            target: 'join',
+            actions: [`rollback`],
+          },
+          CALL: {
+            target: 'joinPending',
+          },
+          FAIL: {
+            target: 'joinFail',
+            actions: [`rollback`],
+          },
+        },
+      },
+      joinPending: {
+        on: {
+          ROLLBACK: {
+            target: 'join',
+            actions: [`rollback`],
+          },
+          SUCCESS: {
+            target: 'joinSuccess',
+          },
+          FAIL: {
+            target: 'joinFail',
+            actions: [`rollback`],
+          },
+        },
+      },
+      joinSuccess: {
+        type: 'final',
+      },
+      joinFail: {
+        type: 'final',
+      },
+    },
+  },
+  {
+    actions: {
+      approve: assign<JoinMachineContext>({
+        tokensToApprove(ctx) {
+          const newTokensToApprove = [...ctx.tokensToApprove]
+          newTokensToApprove.shift()
+          return newTokensToApprove
+        },
+        hash: undefined,
+      }),
+      rollback: assign<JoinMachineContext>({
+        hash: undefined,
+      }),
+    },
+    guards: {
+      readyToJoin(ctx) {
+        return !ctx.tokensToApprove.length
+      },
+      waitForJoin(ctx) {
+        return !!ctx.hash && !ctx.tokensToApprove.length
+      },
+      shouldApprove(ctx) {
+        return !ctx.hash && ctx.tokensToApprove[0] != null
+      },
+      waitForApproval(ctx) {
+        return !!ctx.hash && ctx.tokensToApprove[0] != null
+      },
+    },
+  }
+)
 
-  switch (true) {
-    case state === 'idle':
+export function currentPage(value: StateValue) {
+  switch (value) {
+    case 'idle':
       return 0
-    case state.startsWith('approve0x'):
-    case state.startsWith('approvePending:'):
+    case 'approve':
+    case 'approvePending':
       return 1
-    case state.startsWith('approveSuccess:'):
-    case state.startsWith('approveFail:'):
+    case 'approveSuccess':
+    case 'approveFail':
       return 2
-    case state === 'join':
-    case state === 'joinPending':
+    case 'join':
+    case 'joinPending':
       return 3
-    case state === 'joinSuccess':
-    case state === 'joinFail':
+    case 'joinSuccess':
+    case 'joinFail':
       return 4
     default:
-      assertUnreachable(state)
+      console.log(value)
+      assertUnreachable(value)
   }
 }
