@@ -35,10 +35,11 @@ function ConnectWalletModal() {
 
   return (
     <StyledConnectWalletModal>
-      <header className="header">
+      <header className="modalHeader">
         <div className="titleGroup">
-          <h2 className="title">Connect a wallet</h2>
+          <h2 className="subtitle">Connect a wallet</h2>
         </div>
+
         <p className="desc">
           By connecting a wallet, you agree to Nine Chronicles Ltd&apos;s Terms
           of Service and Privacy Policy.

@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion'
 import styled from 'styled-components'
 
-import { flexbox, gradient, textStyle } from 'newStyles/utils'
+import { flexbox, gradient, scrollbar, textStyle } from 'newStyles/utils'
 import { buttonStyle } from 'new/Button/styled'
 
 export const StyledModalOverlay = styled(motion.div)`
@@ -29,13 +29,14 @@ export const StyledModalContent = styled.div`
   position: relative;
   flex-grow: 1;
   width: 100%;
-  margin: 0 auto;
   padding: 48px;
+  margin: 0 auto;
+  overflow: hidden;
   background-color: rgba(255, 255, 255, 0.05);
   border-radius: 16px 16px 0 0;
   box-shadow: 0px 4px 48px rgba(0, 0, 0, 0.24);
 
-  .header {
+  .modalHeader {
     position: relative;
     margin-bottom: 64px;
 
@@ -44,35 +45,36 @@ export const StyledModalContent = styled.div`
       top: 0;
       right: 0;
     }
-  }
 
-  .titleGroup {
-    padding-right: ${32 + 24}px;
-  }
+    .titleGroup {
+      padding-right: ${32 + 24}px;
+    }
 
-  .title {
-    ${textStyle('body', 2)}
-    margin-bottom: 8px;
-    font-weight: 700;
-    color: var(--primary-300);
-  }
-
-  .subtitle {
-    ${textStyle('header', 5)}
-  }
-
-  .desc {
-    ${textStyle('body', 2)}
-    margin-top: 8px;
-    color: rgba(var(--white-rgb), 0.6);
-
-    &.accent {
+    .title {
+      ${textStyle('body', 2)}
+      margin-bottom: 8px;
+      font-weight: 700;
       color: var(--primary-300);
+    }
+
+    .subtitle {
+      ${textStyle('header', 5)}
+    }
+
+    .desc {
+      ${textStyle('body', 2)}
+      margin-top: 8px;
+      color: rgba(var(--white-rgb), 0.6);
+
+      &.accent {
+        color: var(--primary-300);
+      }
     }
   }
 
   @media screen and (min-width: 1000px) {
     padding: 48px;
+    max-height: calc(100vh - 160px);
     border-radius: 16px;
   }
 `

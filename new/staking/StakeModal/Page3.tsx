@@ -53,7 +53,7 @@ function StakeModalPage3({
           exit="exit"
           variants={fadeIn}
         >
-          <header className="header">
+          <header className="modalHeader">
             <div className="titleGroup">
               <h2 className="title">Staking</h2>
               <h3 className="subtitle">

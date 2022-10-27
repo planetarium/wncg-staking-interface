@@ -4,7 +4,8 @@ import { useQuery } from '@tanstack/react-query'
 import { REFETCH_INTERVAL, STALE_TIME } from 'constants/time'
 import { configService } from 'services/config'
 import { fetchPool } from 'lib/graphql'
-import { getTokenInfo, getTokenSymbol } from 'utils/token'
+import { bnum } from 'utils/num'
+import { getTokenColor, getTokenInfo, getTokenSymbol } from 'utils/token'
 import { useStaking } from './contracts'
 
 export function usePool() {
@@ -36,6 +37,11 @@ export function usePool() {
     [poolTokens]
   )
 
+  const poolTokenColors = useMemo(
+    () => poolTokenAddresses.map((address) => getTokenColor(address)),
+    [poolTokenAddresses]
+  )
+
   const poolTokenDecimals = useMemo(
     () => poolTokens.map((token) => token.decimals),
     [poolTokens]
@@ -44,6 +50,11 @@ export function usePool() {
   const poolTokenWeights = useMemo(
     () => poolTokens.map((token) => token.weight),
     [poolTokens]
+  )
+
+  const poolTokenWeightsInPcnt = useMemo(
+    () => poolTokenWeights.map((weight) => bnum(weight).times(100).toNumber()),
+    [poolTokenWeights]
   )
 
   const poolTokenSymbols = useMemo(
@@ -100,11 +111,13 @@ export function usePool() {
     poolTokens,
     poolTokenAddresses,
     poolTokenBalances,
+    poolTokenColors,
     poolTokenDecimals,
     poolTokenName,
     poolTokenSymbols,
     poolTotalShares,
     poolTokenWeights,
+    poolTokenWeightsInPcnt,
     poolTotalLiquidity,
     poolTotalSwapFee,
     poolTotalSwapVolume,

@@ -1,7 +1,7 @@
 import { memo } from 'react'
 
 import { getEtherscanUrl } from 'utils/url'
-import { usePoolData } from './usePoolData'
+import { usePool } from 'hooks'
 
 import { StyledPoolHeader } from './styled'
 import SvgIcon from 'new/SvgIcon'
@@ -14,7 +14,7 @@ function PoolHeader() {
     poolTokenColors,
     poolTokenSymbols,
     poolTokenWeightsInPcnt,
-  } = usePoolData()
+  } = usePool()
 
   return (
     <StyledPoolHeader className="poolHeader">

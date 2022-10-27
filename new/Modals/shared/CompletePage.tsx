@@ -23,7 +23,7 @@ function CompletePage({
     <StyledModalCompletePage>
       {icon && <SvgIcon icon={icon} />}
 
-      <header className="header">
+      <header className="modalHeader">
         <h2 className="title">{title}</h2>
       </header>
 

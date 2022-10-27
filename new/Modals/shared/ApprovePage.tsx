@@ -36,7 +36,7 @@ function ApprovePage({
       exit="exit"
       variants={fadeIn}
     >
-      <header className="header">
+      <header className="modalHeader">
         <div className="titleGroup">
           <h2 className="title">
             {symbol} Approval for {capitalize(action)}

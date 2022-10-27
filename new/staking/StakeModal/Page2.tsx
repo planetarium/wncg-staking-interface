@@ -26,7 +26,7 @@ function StakeModalPage2({ currentPage, send }: StakeModalPage2Props) {
           exit="exit"
           variants={fadeIn}
         >
-          <header className="header">
+          <header className="modalHeader">
             <h2 className="title">Approval completed!</h2>
           </header>
           <Button onClick={goNext} $size="lg">

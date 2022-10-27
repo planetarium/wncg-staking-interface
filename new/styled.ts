@@ -143,6 +143,22 @@ export const StyledMain = styled(motion.main)<StyledMainProps>`
   }
 `
 
+export const StyledSlippageDropdown = styled.div`
+  ${flexbox('flex-start')}
+  ${textStyle('body', 3)}
+
+  strong {
+    font-weight: 500;
+    color: rgba(var(--white-rgb), 0.6);
+
+    &::after {
+      content: ':';
+      margin-right: 4px;
+      margin-left: 2px;
+    }
+  }
+`
+
 export const StyledSvgIcon = styled.svg<{ $size: SvgIconSize }>`
   ${inlineFlexbox()}
   width: ${({ $size }) => `${$size}px`};

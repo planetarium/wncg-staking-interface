@@ -20,7 +20,7 @@ function SwitchNetworkModal() {
 
   return (
     <StyledSwitchNetworkModal>
-      <header className="header">
+      <header className="modalHeader">
         <h1 className="title">
           You must switch to
           <br />

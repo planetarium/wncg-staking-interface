@@ -46,7 +46,7 @@ function StakeModalPage4({
           exit="exit"
           variants={fadeIn}
         >
-          <header className="header">
+          <header className="modalHeader">
             <h2 className="title">
               Staking {success && 'Completed'}
               {fail && 'Failed'}
