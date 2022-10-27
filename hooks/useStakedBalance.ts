@@ -35,6 +35,11 @@ export function useStakedBalance() {
     [getBptFiatValue, stakedBalance]
   )
 
+  const hasStakedBalance = useMemo(
+    () => bnum(stakedBalance).gt(0),
+    [stakedBalance]
+  )
+
   const hasBalanceInLegacyContract = useMemo(
     () => bnum(stakedBalances[legacyContractIndex]).gt(0),
     [stakedBalances]
@@ -42,6 +47,7 @@ export function useStakedBalance() {
 
   return {
     hasBalanceInLegacyContract,
+    hasStakedBalance,
     stakedBalance,
     stakedBalanceInFiatValue,
   }

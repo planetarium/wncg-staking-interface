@@ -10,18 +10,9 @@ const GlobalStyle = createGlobalStyle`
     -moz-osx-font-smoothing: grayscale;
     -webkit-font-smoothing: antialiased;
     box-sizing: border-box;
-
-    &::selection {
-    }
   }
 
   :root {
-    --white: #ffffff;
-    --black: #000000;
-    --white-rgb: 255, 255, 255;
-    --black-rgb: 0, 0, 0;
-    --ethereum: #6f97f8;
-    --ethereum-rgb: 111, 151, 248;
     ${generateHexVariables()};
     ${generateRgbVariables()};
   }

@@ -150,6 +150,8 @@ const gray = {
 }
 
 export const ethereum = '#6f97f8'
+export const white = '#fff'
+export const black = '#121212'
 
 export const colors = {
   primary,
@@ -160,6 +162,9 @@ export const colors = {
   green,
   orange,
   gray,
+  white,
+  black,
+  ethereum,
 }
 
 export const gradients = {

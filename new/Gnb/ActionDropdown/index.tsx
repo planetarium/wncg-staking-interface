@@ -1,21 +1,17 @@
 import { memo, Suspense, useState } from 'react'
 import type { MouseEvent } from 'react'
 import dynamic from 'next/dynamic'
-import { AnimatePresence, motion } from 'framer-motion'
-import styled from 'styled-components'
+import { AnimatePresence } from 'framer-motion'
 
 import { appearInDown } from 'constants/motionVariants'
 import { useAccount } from 'hooks'
 
+import { StyledActionDropdown } from './styled'
 import Toggle from './Toggle'
 
 const Menu = dynamic(() => import('./Menu'), {
   suspense: true,
 })
-
-const StyledActionDropdown = styled(motion.div)`
-  position: relative;
-`
 
 function ActionDropdown() {
   const [show, setShow] = useState(false)

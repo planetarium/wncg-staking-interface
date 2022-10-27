@@ -16,9 +16,17 @@ import {
 import type { TextStyle } from './constants/typography'
 import { assertUnreachable } from 'utils/assertion'
 
+function hexToRgba(value: string) {
+  return hexRgb(value, { format: 'css' })
+    .replace(/rgb|\(|\)/g, '')
+    .split(' ')
+    .join(',')
+}
+
 // NOTE: Global variables
 export function generateHexVariables() {
   return Object.entries(colors).map(([key, scales]) => {
+    if (typeof scales === 'string') return `--${key}: ${scales};`
     return Object.entries(scales).map(
       ([scale, value]) => `--${key}-${scale}: ${value};`
     )
@@ -27,12 +35,9 @@ export function generateHexVariables() {
 
 export function generateRgbVariables() {
   return Object.entries(colors).map(([key, scales]) => {
+    if (typeof scales === 'string') return `--${key}-rgb: ${hexToRgba(scales)};`
     return Object.entries(scales).map(
-      ([scale, value]) =>
-        `--${key}-${scale}-rgb: ${hexRgb(value, { format: 'css' })
-          .replace(/rgb|\(|\)/g, '')
-          .split(' ')
-          .join(',')};`
+      ([scale, value]) => `--${key}-${scale}-rgb: ${hexToRgba(value)};`
     )
   })
 }

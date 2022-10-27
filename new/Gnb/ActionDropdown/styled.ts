@@ -5,19 +5,9 @@ import { textStyle } from 'newStyles/utils'
 
 import { buttonStyle } from 'new/Button/styled'
 
-export const StyledActionDropdownMenu = styled(motion.aside)`
-  position: absolute;
-  top: 100%;
-  left: 0;
+export const StyledActionDropdown = styled(motion.div)`
+  position: relative;
   z-index: 1;
-  width: max-content;
-  padding: 20px;
-  color: black;
-  background-color: var(--primary-50);
-
-  hr {
-    margin: 30px 0;
-  }
 `
 
 export const StyledActionDropdownToggle = styled.button`
