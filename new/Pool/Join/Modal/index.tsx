@@ -6,8 +6,10 @@ import { RESET } from 'jotai/utils'
 import { useTransaction } from 'wagmi'
 
 import { pendingJoinTxAtom } from 'states/form'
+import { configService } from 'services/config'
 import { createLogger } from 'utils/log'
 import { networkChainId } from 'utils/network'
+import { getTokenSymbol } from 'utils/token'
 import { bnum } from 'utils/num'
 import { useFiatCurrency } from 'hooks'
 import { currentPage, joinMachine } from './stateMachine'
@@ -16,7 +18,6 @@ import Page1 from './Page1'
 import Page2 from './Page2'
 import Page3 from './Page3'
 import Page4 from './Page4'
-import { getTokenSymbol } from 'utils/token'
 
 const log = createLogger('black')
 
@@ -82,6 +83,10 @@ function JoinModal({
               tokensToApprove: newTokensToApprove,
             }
           })
+        }
+
+        if (data.to.toLowerCase() === configService.vaultAddress) {
+          setPendingTx(RESET)
         }
       } catch (error) {
         console.log(777777777, 'on success catch error')

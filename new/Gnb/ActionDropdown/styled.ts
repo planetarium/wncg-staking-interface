@@ -1,6 +1,24 @@
-import { buttonStyle } from 'new/Button/styled'
-import { textStyle } from 'newStyles/utils'
+import { motion } from 'framer-motion'
 import styled from 'styled-components'
+
+import { textStyle } from 'newStyles/utils'
+
+import { buttonStyle } from 'new/Button/styled'
+
+export const StyledActionDropdownMenu = styled(motion.aside)`
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1;
+  width: max-content;
+  padding: 20px;
+  color: black;
+  background-color: var(--primary-50);
+
+  hr {
+    margin: 30px 0;
+  }
+`
 
 export const StyledActionDropdownToggle = styled.button`
   ${buttonStyle}

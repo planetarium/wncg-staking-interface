@@ -66,4 +66,30 @@ export const StyledConnectWalletModal = styled(StyledModalContent)`
   }
 `
 
-export const StyledSwitchNetworkModal = styled(StyledModalContent)``
+export const StyledSwitchNetworkModal = styled(StyledModalContent)`
+  max-width: 480px;
+  padding: 48px;
+
+  .header {
+    ${flexbox()}
+    flex-direction: column;
+    margin-bottom: 48px;
+  }
+
+  .title {
+    ${textStyle('header', 6)}
+    margin-bottom: 0;
+    color: var(--white);
+    text-align: center;
+  }
+
+  .buttonGroup {
+    &:first-child {
+      margin-top: 0;
+    }
+
+    button {
+      margin-top: 16px;
+    }
+  }
+`

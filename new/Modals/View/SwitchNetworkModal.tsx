@@ -3,7 +3,7 @@ import { networkChainId, networkNameFor } from 'utils/network'
 import { useModal, useSwitchNetwork } from 'hooks'
 
 import { StyledSwitchNetworkModal } from './styled'
-import { Icon } from 'components/Icon'
+import Button from 'new/Button'
 
 function SwitchNetworkModal() {
   const { removeModal } = useModal()
@@ -20,21 +20,22 @@ function SwitchNetworkModal() {
 
   return (
     <StyledSwitchNetworkModal>
-      <header>
-        <Icon id="alert" />
-        <h1>
-          You must switch to {networkNameFor(networkChainId)} to use this
-          protocol.
+      <header className="header">
+        <h1 className="title">
+          You must switch to
+          <br />
+          {networkNameFor(networkChainId)} to use <br />
+          this protocol.
         </h1>
       </header>
 
-      <div>
-        <button type="button" onClick={switchNetwork}>
+      <div className="buttonGroup">
+        <Button onClick={switchNetwork} $size="lg">
           Switch network
-        </button>
-        <button type="button" onClick={close}>
+        </Button>
+        <Button onClick={close} $variant="tertiary" $size="lg">
           Cancel
-        </button>
+        </Button>
       </div>
     </StyledSwitchNetworkModal>
   )

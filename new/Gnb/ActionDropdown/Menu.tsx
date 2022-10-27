@@ -1,7 +1,5 @@
 import { memo, useCallback, useRef } from 'react'
 import { useMount, useUnmount } from 'react-use'
-import { motion } from 'framer-motion'
-import styled from 'styled-components'
 
 import { ModalCategory } from 'states/ui'
 import { slideInDown } from 'constants/motionVariants'
@@ -15,24 +13,10 @@ import {
   useStakedBalance,
 } from 'hooks'
 
+import { StyledActionDropdownMenu } from './styled'
 import Button from 'new/Button'
 import NumberFormat from 'new/NumberFormat'
 import TokenIcon from 'new/TokenIcon'
-
-const StyledActionDropdownMenu = styled(motion.aside)`
-  position: absolute;
-  top: 100%;
-  left: 0;
-  z-index: 1;
-  width: max-content;
-  padding: 20px;
-  color: black;
-  background-color: var(--primary-50);
-
-  hr {
-    margin: 30px 0;
-  }
-`
 
 type ActionDropdownMenuProps = {
   close(): void
