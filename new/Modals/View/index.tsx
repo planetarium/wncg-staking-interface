@@ -23,6 +23,9 @@ const ConnectWalletModal = dynamic(() => import('./ConnectWalletModal'), {
 const JoinModal = dynamic(() => import('new/Pool/Join/Modal'), {
   suspense: true,
 })
+const ExitModal = dynamic(() => import('./ExitModal'), {
+  suspense: true,
+})
 const SwitchNetworkModal = dynamic(() => import('./SwitchNetworkModal'), {
   suspense: true,
 })
@@ -72,6 +75,8 @@ function renderModal(modal: Modal) {
       return <ConnectWalletModal />
     case ModalCategory.Join:
       return <JoinModal {...props} />
+    case ModalCategory.Exit:
+      return <ExitModal {...props} />
     case ModalCategory.Stake:
       return <StakeModal {...props} />
     case ModalCategory.SwitchNetwork:

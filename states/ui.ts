@@ -4,19 +4,20 @@ import { atomWithReset } from 'jotai/utils'
 export type Breakpoint = 'xs' | 'sm' | 'md' | 'lg' | 'xl'
 
 export const ModalCategory = {
-  ClaimReward: 'MODAL_CATEGORY_CLAIM_REWARD',
-  Connect: 'MODAL_CATEGORY_CONNECT',
-  Cooldown: 'MODAL_CATEGORY_COOLDOWN',
-  Error: 'MODAL_CATEGORY_ERROR',
+  ClaimReward: 'MODAL_CLAIM_REWARD',
+  Connect: 'MODAL_CONNECT',
+  Cooldown: 'MODAL_COOLDOWN',
+  Error: 'MODAL_ERROR',
+  Exit: 'MODAL_EXIT',
   Join: 'MODAL_JOIN',
   JoinPreview: 'MODAL_JOIN_POOL_PREVIEW',
   ExitPreview: 'MODAL_EXIT_POOL_PREVIEW',
-  MetaMaskGuide: 'MODAL_CATEGORY_METAMASK_GUIDE',
-  Stake: 'MODAL_CATEGORY_STAKE',
-  StakeWarning: 'MODAL_CATEGORY_STAKE_WARNING',
-  SwitchNetwork: 'MODAL_CATEGORY_SWITCH_NETWORK',
-  Withdraw: 'MODAL_CATEGORY_WITHDRAW',
-  WithdrawPreview: 'MODAL_CATEGORY_WITHDRAW_PREVIEW',
+  MetaMaskGuide: 'MODAL_METAMASK_GUIDE',
+  Stake: 'MODAL_STAKE',
+  StakeWarning: 'MODAL_STAKE_WARNING',
+  SwitchNetwork: 'MODAL_SWITCH_NETWORK',
+  Withdraw: 'MODAL_WITHDRAW',
+  WithdrawPreview: 'MODAL_WITHDRAW_PREVIEW',
 } as const
 export type ModalCategory = typeof ModalCategory[keyof typeof ModalCategory]
 
