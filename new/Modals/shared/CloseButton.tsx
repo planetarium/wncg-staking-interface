@@ -1,4 +1,4 @@
-import { memo } from 'react'
+import { memo, MouseEvent } from 'react'
 
 import type { ModalCategory } from 'states/ui'
 import { useModal } from 'hooks'
@@ -6,22 +6,23 @@ import { useModal } from 'hooks'
 import { StyledCloseButton } from './styled'
 import SvgIcon from 'new/SvgIcon'
 
-type ModalCloseProps = {
+type CloseButtonProps = {
   modal: ModalCategory
   onClose?(): void
 }
 
-function ModalClose({ modal, onClose }: ModalCloseProps) {
+function CloseButton({ modal, onClose }: CloseButtonProps) {
   const { removeModal } = useModal()
 
-  function close() {
+  function close(e: MouseEvent<HTMLButtonElement>) {
+    e.stopPropagation()
     removeModal(modal)
     onClose?.()
   }
 
   return (
     <StyledCloseButton
-      className="modalClose"
+      className="closeButton"
       type="button"
       onClick={close}
       aria-label="Close this modal"
@@ -31,4 +32,4 @@ function ModalClose({ modal, onClose }: ModalCloseProps) {
   )
 }
 
-export default memo(ModalClose)
+export default memo(CloseButton)

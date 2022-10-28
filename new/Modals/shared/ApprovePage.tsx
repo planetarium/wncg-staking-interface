@@ -6,7 +6,7 @@ import { capitalize } from 'utils/string'
 
 import { StyledModalApprovePage } from './styled'
 import TxButton from 'new/TxButton'
-import ModalClose from './ModalClose'
+import CloseButton from './CloseButton'
 import PendingNotice from './PendingNotice'
 
 type ApprovePageProps = {
@@ -48,7 +48,7 @@ function ApprovePage({
         </div>
         <p className="desc">You only have to do it once this time.</p>
 
-        <ModalClose modal={category} />
+        <CloseButton modal={category} />
       </header>
 
       <TxButton onClick={onClick} isPending={isPending} $size="lg">

@@ -44,7 +44,7 @@ function JoinModalPage2({
           exit="exit"
           variants={fadeIn}
         >
-          <header className="header">
+          <header className="modalHeader">
             <h2 className="title">
               {getTokenSymbol(approving || '')} Approval completed! Completed!
             </h2>

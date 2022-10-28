@@ -10,7 +10,7 @@ import { getTokenSymbol } from 'utils/token'
 import { useJoin } from './useJoin'
 
 import { StyledJoinModalPage3 } from './styled'
-import ModalClose from 'new/Modals/shared/ModalClose'
+import CloseButton from 'new/Modals/shared/CloseButton'
 import PendingNotice from 'new/Modals/shared/PendingNotice'
 import NumberFormat from 'new/NumberFormat'
 import TxButton from 'new/TxButton'
@@ -61,7 +61,7 @@ function JoinModalPage1({
           exit="exit"
           variants={fadeIn}
         >
-          <header className="header">
+          <header className="modalHeader">
             <div className="titleGroup">
               <h2 className="title">Join pool</h2>
               <h3 className="subtitle">
@@ -87,7 +87,7 @@ function JoinModalPage1({
               ))}
             </p>
 
-            <ModalClose modal={ModalCategory.Join} />
+            <CloseButton modal={ModalCategory.Join} />
           </header>
 
           <TxButton onClick={joinPool} isPending={isPending} $size="lg">

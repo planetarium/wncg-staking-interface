@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion'
 import styled, { css } from 'styled-components'
 
-import { flexbox, inlineFlexbox, textStyle } from 'newStyles/utils'
+import { flexbox, gradient, inlineFlexbox, textStyle } from 'newStyles/utils'
 import { ALERT_HEIGHT, GLOBAL_FOOTER_HEIGHT } from './constants'
 
 import { buttonStyle } from './Button/styled'
@@ -103,6 +103,39 @@ export const StyledGlobalFooter = styled.footer`
   }
 `
 
+export const StyledHighPriceImpact = styled(motion.div)`
+  padding: 24px 32px;
+  background-image: ${gradient(2)};
+  border-radius: 8px;
+
+  .title {
+    ${textStyle('body', 1)}
+    font-weight: 700;
+  }
+
+  .desc {
+    ${textStyle('body', 2)}
+    margin-top: 8px;
+  }
+
+  .checkboxGroup {
+    ${flexbox('flex-end')}
+    width: 100%;
+    margin-top: 24px;
+
+    .label {
+      ${textStyle('body', 2)}
+      margin-right:12px;
+      font-weight: 700;
+      text-transform: capitalize;
+    }
+
+    .check {
+      color: var(--white) !important;
+    }
+  }
+`
+
 export const StyledLayout = styled.div`
   width: 100%;
   max-width: 100vw;
@@ -140,6 +173,24 @@ export const StyledMain = styled(motion.main)<StyledMainProps>`
   .content {
     flex-grow: 1;
     overflow: auto;
+  }
+`
+
+export const StyledRektPriceImpact = styled(motion.aside)`
+  ${flexbox()}
+  padding: 16px;
+  color: var(--white);
+  background-color: var(--error-400);
+  border-radius: 8px;
+
+  .title {
+    ${textStyle('body', 2)}
+    font-weight: 700;
+  }
+
+  .icon {
+    flex-shrink: 0;
+    margin-right: 12px;
   }
 `
 

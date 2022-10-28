@@ -83,7 +83,6 @@ function JoinFormInputField({
 
       <Control
         id={`joinFormInputField:${address}`}
-        address={address}
         control={control as unknown as ReactHookFormControl<FieldValues, 'any'>}
         name={name}
         rules={rules}

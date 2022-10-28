@@ -1,4 +1,4 @@
-import { memo } from 'react'
+import { memo, Suspense } from 'react'
 
 import { ModalCategory } from 'states/ui'
 import { bnum } from 'utils/num'
@@ -80,6 +80,8 @@ function AvailableBalance({ close }: AvailableBalanceProps) {
             const weight = bnum(poolTokenWeights[i]).times(100).toNumber()
             const symbol = getTokenSymbol(address)
             const color = getTokenColor(address)
+
+            if (!address || !weight) return null
 
             return (
               <div className="balanceItem" key={`availableBalance:${symbol}`}>

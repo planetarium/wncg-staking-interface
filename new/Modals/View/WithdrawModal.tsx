@@ -1,12 +1,12 @@
 import { ModalCategory } from 'states/ui'
 
 import { StyledModalContent } from '../shared/styled'
-import ModalClose from '../shared/ModalClose'
+import CloseButton from '../shared/CloseButton'
 
 function WithdrawModal() {
   return (
     <StyledModalContent>
-      <ModalClose modal={ModalCategory.Withdraw} />
+      <CloseButton modal={ModalCategory.Withdraw} />
       <header>
         <h2>Withdraw</h2>
         <h3>How much do you want to withdraw?</h3>

@@ -3,27 +3,27 @@ import { AnimatePresence } from 'framer-motion'
 import { slideInDown } from 'constants/motionVariants'
 import { HIGH_PRICE_IMPACT, REKT_PRICE_IMPACT } from 'constants/poolLiquidity'
 
-import { StyledJoinFormHighPriceImpact } from './styled'
+import { StyledHighPriceImpact } from './styled'
 import Checkbox from 'new/Checkbox'
 
-type JoinFormHighPriceImpactProps = {
+type HighPriceImpactProps = {
   checked: boolean
   priceImpact: number
   toggle(value: boolean): void
 }
 
-function JoinFormHighPriceImpact({
+function HighPriceImpact({
   checked,
   priceImpact,
   toggle,
-}: JoinFormHighPriceImpactProps) {
+}: HighPriceImpactProps) {
   const show =
     priceImpact >= HIGH_PRICE_IMPACT && priceImpact < REKT_PRICE_IMPACT
 
   return (
     <AnimatePresence>
       {show && (
-        <StyledJoinFormHighPriceImpact
+        <StyledHighPriceImpact
           className="highPriceImpact"
           initial="initial"
           animate="animate"
@@ -52,10 +52,10 @@ function JoinFormHighPriceImpact({
               onChange={toggle}
             />
           </div>
-        </StyledJoinFormHighPriceImpact>
+        </StyledHighPriceImpact>
       )}
     </AnimatePresence>
   )
 }
 
-export default JoinFormHighPriceImpact
+export default HighPriceImpact

@@ -6,19 +6,17 @@ import { StyledBaseInput } from './styled'
 import type { InputSize } from './styled'
 
 type BaseInputProps = {
-  address: string
   decimals: number
   disabled: boolean
   field: ControllerRenderProps<FieldValues>
-  setMaxValue(e: MouseEvent<HTMLButtonElement>): void
   id?: string
   placeholder?: string
+  setMaxValue?(e: MouseEvent<HTMLButtonElement>): void
   $error: boolean
   $size: InputSize
 }
 
 function BaseInput({
-  address,
   decimals,
   disabled,
   field,
@@ -29,6 +27,8 @@ function BaseInput({
   $size,
 }: BaseInputProps) {
   const { ref, ...fieldProps } = field
+
+  const showMax = !!setMaxValue
 
   return (
     <StyledBaseInput
@@ -48,15 +48,18 @@ function BaseInput({
         disabled={disabled}
         placeholder={placeholder}
       />
-      <button
-        className="maxButton"
-        type="button"
-        onClick={setMaxValue}
-        disabled={disabled}
-        aria-label="Enter maximum value"
-      >
-        max
-      </button>
+
+      {showMax && (
+        <button
+          className="maxButton"
+          type="button"
+          onClick={setMaxValue}
+          disabled={disabled}
+          aria-label="Enter maximum value"
+        >
+          max
+        </button>
+      )}
     </StyledBaseInput>
   )
 }

@@ -20,6 +20,7 @@ export type StyledButtonProps = {
 export const buttonStyle = css`
   ${flexbox()}
   position: relative;
+  isolation: isolate;
   overflow: hidden;
   cursor: pointer;
   transition: 500ms;
@@ -82,6 +83,7 @@ export const secondaryButtonStyle = css`
 
   &::before {
     background-image: ${gradient(3)};
+    border-radius: 8px;
     content: '';
   }
 `

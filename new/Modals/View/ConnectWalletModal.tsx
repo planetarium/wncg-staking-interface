@@ -8,7 +8,7 @@ import { assertUnreachable } from 'utils/assertion'
 import { useModal } from 'hooks'
 
 import { StyledConnectWalletModal } from './styled'
-import ModalClose from '../shared/ModalClose'
+import CloseButton from '../shared/CloseButton'
 import SvgIcon, { SvgIconType } from 'new/SvgIcon'
 
 function ConnectWalletModal() {
@@ -44,7 +44,7 @@ function ConnectWalletModal() {
           By connecting a wallet, you agree to Nine Chronicles Ltd&apos;s Terms
           of Service and Privacy Policy.
         </p>
-        <ModalClose modal={ModalCategory.Connect} />
+        <CloseButton modal={ModalCategory.Connect} />
       </header>
 
       <div className="buttonGroup">

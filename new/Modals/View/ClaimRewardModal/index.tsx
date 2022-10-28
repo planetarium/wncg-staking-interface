@@ -3,13 +3,13 @@ import { memo } from 'react'
 import { ModalCategory } from 'states/ui'
 
 import { StyledModalContent } from '../../shared/styled'
+import CloseButton from '../../shared/CloseButton'
 import SelectRewards from './SelectRewards'
-import ModalClose from '../../shared/ModalClose'
 
 function ClaimRewardModal() {
   return (
     <StyledModalContent>
-      <ModalClose modal={ModalCategory.ClaimReward} />
+      <CloseButton modal={ModalCategory.ClaimReward} />
       <header>
         <h2>Claim rewards</h2>
         <h3>Select the all coins to get Rewards</h3>

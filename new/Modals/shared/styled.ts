@@ -36,11 +36,35 @@ export const StyledModalContent = styled.div`
   border-radius: 16px 16px 0 0;
   box-shadow: 0px 4px 48px rgba(0, 0, 0, 0.24);
 
+  &:has(.container) {
+    ${flexbox('flex-start', 'stretch')}
+    flex-direction: column;
+    width: 100%;
+
+    .modalHeader {
+      flex-shrink: 0;
+    }
+
+    .container {
+      ${scrollbar()}
+      flex-grow: 1;
+      padding-right: 10px;
+      margin-right: -10px;
+      max-height: 100%;
+      overflow-x: hidden;
+      overflow-y: auto;
+
+      &:has(::-webkit-scrollbar) {
+        background: purple;
+      }
+    }
+  }
+
   .modalHeader {
     position: relative;
     margin-bottom: 64px;
 
-    .modalClose {
+    .closeButton {
       position: absolute;
       top: 0;
       right: 0;

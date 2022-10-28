@@ -9,23 +9,23 @@ import { StyledInputControl } from './styled'
 import type { InputSize } from './styled'
 import BaseInput from './BaseInput'
 import ErrorMessage from './ErrorMessage'
+import RangeInput from './RangeInput'
 
 type InputControlProps = {
-  address: string
   control: Control
   name: string
   rules: Partial<RegisterOptions>
-  setMaxValue(e: MouseEvent<HTMLButtonElement>): void
   className?: string
   decimals?: number
   disabled?: boolean
   id?: string
+  setMaxValue?(e: MouseEvent<HTMLButtonElement>): void
+  type?: 'text' | 'range'
   placeholder?: string
   $size?: InputSize
 }
 
 function InputControl({
-  address,
   control,
   name,
   rules,
@@ -35,6 +35,7 @@ function InputControl({
   disabled: _disabled = false,
   id,
   placeholder,
+  type = 'text',
   $size = 'sm',
 }: InputControlProps) {
   const { isConnected } = useAccount()
@@ -48,17 +49,20 @@ function InputControl({
       rules={rules}
       render={({ field, fieldState }) => (
         <StyledInputControl className={clsx('inputControl', className)}>
-          <BaseInput
-            id={id}
-            address={address}
-            decimals={decimals}
-            field={field}
-            setMaxValue={setMaxValue}
-            disabled={disabled}
-            placeholder={placeholder}
-            $error={!disabled && !!fieldState.error?.message}
-            $size={$size}
-          />
+          {type === 'text' ? (
+            <BaseInput
+              id={id}
+              decimals={decimals}
+              field={field}
+              setMaxValue={setMaxValue}
+              disabled={disabled}
+              placeholder={placeholder}
+              $error={!disabled && !!fieldState.error?.message}
+              $size={$size}
+            />
+          ) : (
+            <RangeInput id={id} field={field} disabled={disabled} />
+          )}
           <ErrorMessage disabled={disabled} error={fieldState.error?.message} />
         </StyledInputControl>
       )}

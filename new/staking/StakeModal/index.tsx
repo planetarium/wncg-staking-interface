@@ -48,6 +48,8 @@ function StakeModal({ amount, isApproved, resetForm }: StakeModalProps) {
       log(`Stake tx: ${hash?.slice(0, 6)}`)
     },
     async onSuccess(response: TransactionResponse) {
+      if (!response) return
+
       try {
         await response.wait()
         send('SUCCESS')

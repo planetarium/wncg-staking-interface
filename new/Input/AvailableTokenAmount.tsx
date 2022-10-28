@@ -10,7 +10,7 @@ import NumberFormat from 'new/NumberFormat'
 
 type AvailableTokenAmountProps = {
   label: string
-  maxAmount: string | number
+  maxAmount?: string | number
   fiatValue?: number
   decimals?: number
 }
@@ -22,9 +22,12 @@ function AvailableTokenAmount({
   decimals = 4,
 }: AvailableTokenAmountProps) {
   const { isConnected } = useAccount()
-  const bMaxAmount = bnum(maxAmount)
+  const bMaxAmount = bnum(maxAmount || 0)
 
-  const invalidMaxAmount = bMaxAmount.isNaN() || !bMaxAmount.isFinite()
+  const invalidMaxAmount =
+    typeof maxAmount === 'undefined' ||
+    bMaxAmount.isNaN() ||
+    !bMaxAmount.isFinite()
   const show = isConnected && !invalidMaxAmount
   const showFiatValue = typeof fiatValue === 'number'
 

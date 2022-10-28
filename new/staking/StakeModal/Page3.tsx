@@ -8,7 +8,7 @@ import { fadeIn } from 'constants/motionVariants'
 import { useStake } from './useStake'
 
 import { StyledStakeModalPage3 } from './styled'
-import ModalClose from 'new/Modals/shared/ModalClose'
+import CloseButton from 'new/Modals/shared/CloseButton'
 import PendingNotice from 'new/Modals/shared/PendingNotice'
 import NumberFormat from 'new/NumberFormat'
 import TxButton from 'new/TxButton'
@@ -76,7 +76,7 @@ function StakeModalPage3({
               later.
             </p>
 
-            <ModalClose modal={ModalCategory.Stake} />
+            <CloseButton modal={ModalCategory.Stake} />
           </header>
 
           <TxButton onClick={stake} isPending={isPending} $size="lg">

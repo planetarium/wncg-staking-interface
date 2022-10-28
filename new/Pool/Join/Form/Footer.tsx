@@ -5,6 +5,7 @@ import clsx from 'clsx'
 
 import { ModalCategory } from 'states/ui'
 import { HIGH_PRICE_IMPACT, REKT_PRICE_IMPACT } from 'constants/poolLiquidity'
+import { configService } from 'services/config'
 import { bnum } from 'utils/num'
 import { renderStrong } from 'utils/numberFormat'
 import { useAllowances, useModal } from 'hooks'
@@ -14,7 +15,6 @@ import { StyledJoinFormFooter } from './styled'
 import Button from 'new/Button'
 import NumberFormat from 'new/NumberFormat'
 import SvgIcon from 'new/SvgIcon'
-import { configService } from 'services/config'
 
 type JoinFormFooterProps = {
   amounts: string[]
@@ -51,8 +51,8 @@ function JoinFormFooter({
     () =>
       amounts.every((amount) => bnum(amount).isZero()) ||
       Object.keys(errors).length > 0 ||
-      priceImpact > REKT_PRICE_IMPACT ||
-      (priceImpact > HIGH_PRICE_IMPACT && !priceImpactAgreement),
+      priceImpact >= REKT_PRICE_IMPACT ||
+      (priceImpact >= HIGH_PRICE_IMPACT && !priceImpactAgreement),
     [amounts, errors, priceImpact, priceImpactAgreement]
   )
 

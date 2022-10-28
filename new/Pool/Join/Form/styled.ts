@@ -134,55 +134,6 @@ export const StyledJoinFormHeader = styled.header`
       transition: 250ms;
     }
   }
-
-  .slippageDropdown {
-    ${flexbox('flex-start')}
-    ${textStyle('body', 3)}
-
-    strong {
-      font-weight: 500;
-      color: rgba(var(--white-rgb), 0.6);
-
-      &::after {
-        content: ':';
-        margin-right: 4px;
-        margin-left: 2px;
-      }
-    }
-  }
-`
-
-export const StyledJoinFormHighPriceImpact = styled(motion.div)`
-  padding: 24px 32px;
-  background-image: ${gradient(2)};
-  border-radius: 8px;
-
-  .title {
-    ${textStyle('body', 1)}
-    font-weight: 700;
-  }
-
-  .desc {
-    ${textStyle('body', 2)}
-    margin-top: 8px;
-  }
-
-  .checkboxGroup {
-    ${flexbox('flex-end')}
-    width: 100%;
-    margin-top: 24px;
-
-    .label {
-      ${textStyle('body', 2)}
-      margin-right:12px;
-      font-weight: 700;
-      text-transform: capitalize;
-    }
-
-    .check {
-      color: var(--white) !important;
-    }
-  }
 `
 
 export const StyledJoinFormField = styled.fieldset`

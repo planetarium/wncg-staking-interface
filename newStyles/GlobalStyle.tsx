@@ -98,6 +98,11 @@ const GlobalStyle = createGlobalStyle`
     border: 0;
   }
 
+  fieldset {
+    padding: 0;
+    border: 0;
+  }
+
 
   // NOTE: Globally used classNames
   .a11y {

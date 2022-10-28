@@ -9,12 +9,12 @@ import { useAccount } from 'hooks'
 import { useJoinForm } from './useJoinForm'
 
 import { StyledJoinForm } from './styled'
+import RektPriceImpact from 'new/RektPriceImpact'
+import HighPriceImpact from 'new/HighPriceImpact'
 import Footer from './Footer'
 import Header from './Header'
 import InputField from './InputField'
 import NotOptimizable from './NotOptimizable'
-import RektPriceImpact from './RektPriceImpact'
-import HighPriceImpact from './HighPriceImpact'
 import ProportionalGuide from './ProportionalGuide'
 import Summary from './Summary'
 
@@ -116,7 +116,7 @@ function JoinForm() {
             priceImpact={priceImpact}
             toggle={togglePriceImpactAgreement}
           />
-          <RektPriceImpact priceImpact={priceImpact} />
+          <RektPriceImpact action="join" priceImpact={priceImpact} />
 
           <Footer
             amounts={joinAmounts}

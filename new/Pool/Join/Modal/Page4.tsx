@@ -39,7 +39,7 @@ function JoinModalPage2({
           exit="exit"
           variants={fadeIn}
         >
-          <header className="header">
+          <header className="modalHeader">
             <h2 className="title">Join pool completed!</h2>
           </header>
           <Button onClick={close} $size="lg">
