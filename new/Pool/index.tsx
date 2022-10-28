@@ -1,5 +1,7 @@
-import { memo, useMemo } from 'react'
+import { memo, useCallback, useMemo, useRef } from 'react'
+import { useMount, useUnmount } from 'react-use'
 import Head from 'next/head'
+import { useRouter } from 'next/router'
 import { motion } from 'framer-motion'
 
 import { usePool } from 'hooks'
@@ -31,7 +33,10 @@ type PoolProps = {
 }
 
 function Pool({ isModal = false }: PoolProps) {
+  const modalRef = useRef<HTMLDivElement>(null)
+
   const { poolName } = usePool()
+  const router = useRouter()
 
   const poolProps = useMemo(
     () =>
@@ -43,10 +48,34 @@ function Pool({ isModal = false }: PoolProps) {
             animate: 'animate',
             exit: 'exit',
             transition: motionTransition,
+            ref: modalRef,
           }
         : {},
     [isModal]
   )
+
+  const closeOnBlur = useCallback(
+    (e: MouseEvent) => {
+      e.stopImmediatePropagation()
+      if (!isModal || !modalRef.current) return
+      if (!modalRef.current.contains(e.target as Node)) {
+        router.replace('/wncg', undefined, { shallow: true })
+      }
+    },
+    [isModal, router]
+  )
+
+  useMount(() => {
+    if (isModal) {
+      window.addEventListener('click', closeOnBlur)
+    }
+  })
+
+  useUnmount(() => {
+    if (isModal) {
+      window.removeEventListener('click', closeOnBlur)
+    }
+  })
 
   return (
     <>

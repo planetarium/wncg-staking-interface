@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { MouseEvent, useEffect } from 'react'
 import type { FormEvent } from 'react'
 import type {
   Control as ReactHookFormControl,
@@ -70,6 +70,10 @@ function StakingForm() {
     })
   }
 
+  function openPool(e: MouseEvent) {
+    e.stopPropagation()
+  }
+
   useEffect(() => {
     clearErrors()
   }, [chain, clearErrors, isConnected])
@@ -78,7 +82,6 @@ function StakingForm() {
     <StyledStakingForm onSubmit={handleSubmit}>
       <Control
         id="stakeAmount"
-        address={stakedTokenAddress}
         control={control as unknown as ReactHookFormControl<FieldValues, 'any'>}
         name="stakeAmount"
         rules={rules}
@@ -105,6 +108,7 @@ function StakingForm() {
       <footer>
         <Button
           href={`/wncg?pool=${configService.poolId}`}
+          onClick={openPool}
           as="/wncg/pool"
           $variant="text"
         >
