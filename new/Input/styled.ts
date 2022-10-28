@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion'
 import styled, { css } from 'styled-components'
 
-import { flexbox, posCenterY, textStyle } from 'newStyles/utils'
+import { flexbox, gradient, posCenterY, textStyle } from 'newStyles/utils'
 
 const MAX_BUTTON_WIDTH = 80
 const MAX_BUTTON_HEIGHT = 48
@@ -142,4 +142,51 @@ export const StyledInputControl = styled.div`
       margin-top: 0;
     }
   }
+`
+
+export const StyledRangeInput = styled.div<{ $disabled: boolean }>`
+  .input {
+    appearance: none;
+    margin-right: 15px;
+    width: 100%;
+    height: 8px;
+    cursor: pointer;
+    background-color: rgba(var(--white-rgb), 0.05);
+    background-image: linear-gradient(
+      to right,
+      var(--primary-500),
+      var(--primary-500)
+    );
+    background-repeat: no-repeat;
+    border-radius: 10px;
+    box-shadow: 0 0 0 1px inset rgba(var(--white-rgb), 0.05);
+
+    &::-webkit-slider-thumb {
+      appearance: none;
+      height: 28px;
+      width: 28px;
+      background-color: var(--primary-500);
+      background-image: ${gradient(2)};
+      border-radius: 50%;
+      box-shadow: 0 0 0 2px rgba(var(--black-rgb), 0.2),
+        0 8px 20px 0 rgba(var(--black-rgb), 0.17);
+      transition: 100ms;
+    }
+
+    &::-webkit-slider-runnable-track {
+      appearance: none;
+      border: none;
+      box-shadow: none;
+    }
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  ${({ $disabled }) =>
+    $disabled &&
+    css`
+      background-color: rgba(0, 0, 0, 1);
+    `}
 `
