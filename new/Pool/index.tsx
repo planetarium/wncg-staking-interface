@@ -1,12 +1,12 @@
-import { memo, useCallback, useMemo, useRef } from 'react'
-import { useMount, useUnmount } from 'react-use'
+import { memo, useMemo, useRef } from 'react'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { motion } from 'framer-motion'
 
+import { fadeIn } from 'constants/motionVariants'
 import { usePool } from 'hooks'
 
-import { StyledWncgPool } from './styled'
+import { StyledWncgPool, StyledPoolModalOverlay } from './styled'
 import Header from './Header'
 import Information from './Information'
 import Join from './Join'
@@ -54,28 +54,9 @@ function Pool({ isModal = false }: PoolProps) {
     [isModal]
   )
 
-  const closeOnBlur = useCallback(
-    (e: MouseEvent) => {
-      e.stopImmediatePropagation()
-      if (!isModal || !modalRef.current) return
-      if (!modalRef.current.contains(e.target as Node)) {
-        router.replace('/wncg', undefined, { shallow: true })
-      }
-    },
-    [isModal, router]
-  )
-
-  useMount(() => {
-    if (isModal) {
-      window.addEventListener('click', closeOnBlur)
-    }
-  })
-
-  useUnmount(() => {
-    if (isModal) {
-      window.removeEventListener('click', closeOnBlur)
-    }
-  })
+  function close() {
+    router.replace('/wncg', undefined, { shallow: true })
+  }
 
   return (
     <>
@@ -94,6 +75,17 @@ function Pool({ isModal = false }: PoolProps) {
           <div className="right">SIDEBAR</div>
         </div>
       </StyledWncgPool>
+
+      {isModal && (
+        <StyledPoolModalOverlay
+          initial="initial"
+          animate="animate"
+          exit="exit"
+          variants={fadeIn}
+          onClick={close}
+          role="button"
+        />
+      )}
     </>
   )
 }

@@ -7,7 +7,7 @@ import { optimizeErrorAtom } from 'states/form'
 import { configService } from 'services/config'
 import { bnum } from 'utils/num'
 import { useBalances, useFiatCurrency, usePool } from 'hooks'
-import { useJoinMath } from './useJoinMath'
+import { useJoinMath } from '../useJoinMath'
 
 export type JoinFormFields = {
   tokenAmount: string

@@ -1,8 +1,8 @@
 import { useCallback } from 'react'
 
+import { counterTokenIndex } from 'utils/joinExit'
 import { bnum, hasAmounts, removeTrailingZero } from 'utils/num'
 import { useCalculator, useFiatCurrency, usePool, useSlippage } from 'hooks'
-import { counterTokenIndex } from 'utils/joinExit'
 
 export function useJoinMath() {
   const calculator = useCalculator('join')

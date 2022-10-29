@@ -38,7 +38,7 @@ function ApprovePage({
     >
       <header className="modalHeader">
         <div className="titleGroup">
-          <h2 className="title">
+          <h2 className="title accent">
             {symbol} Approval for {capitalize(action)}
           </h2>
           <h3 className="subtitle">

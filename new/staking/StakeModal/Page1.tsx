@@ -31,8 +31,9 @@ function StakeModalPage1({
       setHash(txHash)
       send('CALL')
     },
-    onError(error: any) {
+    onError(error) {
       if (error?.code === 'ACTION_REJECTED') return
+      if (error?.code === 4001) return
       send('FAIL')
     },
   })

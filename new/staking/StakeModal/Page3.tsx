@@ -37,8 +37,9 @@ function StakeModalPage3({
       setStakeAmount(amount)
       send('CALL')
     },
-    onError(error: any) {
+    onError(error) {
       if (error?.code === 'ACTION_REJECTED') return
+      if (error?.code === 4001) return
       send('FAIL')
     },
   })

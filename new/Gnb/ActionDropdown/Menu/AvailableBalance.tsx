@@ -1,4 +1,4 @@
-import { memo, Suspense } from 'react'
+import { memo } from 'react'
 
 import { ModalCategory } from 'states/ui'
 import { bnum } from 'utils/num'

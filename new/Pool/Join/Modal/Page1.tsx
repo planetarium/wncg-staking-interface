@@ -4,11 +4,11 @@ import { AnimatePresence } from 'framer-motion'
 
 import { pendingJoinTxAtom } from 'states/form'
 import { ModalCategory } from 'states/ui'
+import { configService } from 'services/config'
+import { getTokenSymbol } from 'utils/token'
 import { useApprove } from 'hooks'
 
 import ApprovePage from 'new/Modals/shared/ApprovePage'
-import { configService } from 'services/config'
-import { getTokenSymbol } from 'utils/token'
 
 type JoinModalPage1Props = {
   address: string
@@ -38,12 +38,11 @@ function JoinModalPage1({
         hash: txHash,
       })
 
-      console.log('✨ CALL from:', 1)
       send('CALL')
     },
-    onError(error: any) {
+    onError(error) {
       if (error?.code === 'ACTION_REJECTED') return
-      console.log('🔥 FAIL from:', 1)
+      if (error?.code === 4001) return
       send('FAIL')
     },
   })

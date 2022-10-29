@@ -3,13 +3,12 @@ import { parseEther, parseUnits } from 'ethers/lib/utils'
 import { useContractWrite, usePrepareContractWrite } from 'wagmi'
 
 import { configService } from 'services/config'
+import { buildJoin } from 'utils/joinExit'
 import { networkChainId } from 'utils/network'
 import { getTokenInfo } from 'utils/token'
-import { useAccount, useAllowances } from 'hooks'
-import { useJoinMath } from '../Form/useJoinMath'
-import { buildJoin } from 'utils/joinExit'
 import { findAbiFromBalancerVault } from 'utils/wagmi'
-import { bnum } from 'utils/num'
+import { useAccount, useAllowances } from 'hooks'
+import { useJoinMath } from '../useJoinMath'
 
 const writeConfig = Object.freeze({
   address: configService.vaultAddress,
@@ -75,7 +74,7 @@ export function useJoin(
     try {
       const response = await writeAsync?.()
       onConfirm?.(response?.hash as Hash)
-    } catch (error) {
+    } catch (error: any) {
       onError?.(error)
       throw error
     }

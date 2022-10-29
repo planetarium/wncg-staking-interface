@@ -4,8 +4,8 @@ import { useMount, useUnmount } from 'react-use'
 import { slideInDown } from 'constants/motionVariants'
 
 import { StyledActionDropdownMenu } from './styled'
-import StakedBalance from './StakedBalance'
 import AvailableBalance from './AvailableBalance'
+import StakedBalance from './StakedBalance'
 
 type ActionDropdownMenuProps = {
   close(): void
@@ -18,7 +18,6 @@ function ActionDropdownMenu({ close }: ActionDropdownMenuProps) {
     (e: MouseEvent) => {
       if (!menuRef?.current?.contains(e.target as Node)) {
         close()
-        window.removeEventListener('click', closeOnBlur)
       }
     },
     [close]

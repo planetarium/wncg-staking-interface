@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion'
 import styled, { css } from 'styled-components'
 
 import { flexbox, gradient, inlineFlexbox, textStyle } from 'newStyles/utils'
@@ -6,6 +7,7 @@ const modalStyle = css`
   position: fixed;
   bottom: 0;
   left: 0;
+  z-index: 10;
   width: 100%;
   height: calc(100vh - 32px);
   overflow-x: hidden;
@@ -153,4 +155,22 @@ export const StyledPoolInformation = styled.section`
       text-align: right;
     }
   }
+`
+
+export const StyledPoolModalOverlay = styled(motion.div)<{
+  $isSafari?: boolean
+}>`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(32px);
+
+  ${({ $isSafari }) =>
+    $isSafari &&
+    css`
+      background-color: rgba(0, 0, 0, 0.8);
+    `}
 `

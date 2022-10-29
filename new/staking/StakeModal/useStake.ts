@@ -7,9 +7,9 @@ import { stakingContractAddressAtom } from 'states/staking'
 import { POOL_DECIMALS } from 'constants/tokens'
 import { networkChainId } from 'utils/network'
 import { bnum } from 'utils/num'
+import { findAbiFromStaking } from 'utils/wagmi'
 import { useAllowances } from 'hooks'
 import { useStaking } from 'hooks/contracts'
-import { findAbiFromStaking } from 'utils/wagmi'
 
 const writeConfig = Object.freeze({
   abi: findAbiFromStaking('stake'),

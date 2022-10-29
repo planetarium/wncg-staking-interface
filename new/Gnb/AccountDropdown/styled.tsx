@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import { flexbox, gradient, inlineFlexbox, textStyle } from 'newStyles/utils'
 import { buttonStyle } from 'new/Button/styled'
 
-export const StyledAccountConnect = styled(motion.div)`
+export const StyledAccountConnect = styled.div`
   ${flexbox()}
 
   button {

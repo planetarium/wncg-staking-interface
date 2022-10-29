@@ -41,12 +41,11 @@ function JoinModalPage1({
         assets,
         hash: txHash,
       })
-      console.log('✨ CALL from:', 3, amounts)
       send('CALL')
     },
-    onError(error: any) {
+    onError(error) {
       if (error?.code === 'ACTION_REJECTED') return
-      console.log('🔥 FAIL from:', 3)
+      if (error?.code === 4001) return
       send('FAIL')
     },
   })
@@ -63,7 +62,7 @@ function JoinModalPage1({
         >
           <header className="modalHeader">
             <div className="titleGroup">
-              <h2 className="title">Join pool</h2>
+              <h2 className="title accent">Join pool</h2>
               <h3 className="subtitle">
                 Do you want to Join pool?
                 <strong className="amounts">

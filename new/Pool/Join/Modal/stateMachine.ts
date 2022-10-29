@@ -1,6 +1,5 @@
 import { assign, createMachine } from 'xstate'
 import type { StateValue } from 'xstate'
-import { nanoid } from 'nanoid'
 
 import { assertUnreachable } from 'utils/assertion'
 
@@ -14,7 +13,7 @@ export type JoinMachineContext = {
 export const joinMachine = createMachine<JoinMachineContext>(
   {
     predictableActionArguments: true,
-    id: `joinMachine:${nanoid()}`,
+    id: `joinMachine`,
     initial: `idle`,
     context: {
       amounts: [],
@@ -155,7 +154,6 @@ export function currentPage(value: StateValue) {
     case 'joinFail':
       return 4
     default:
-      console.log(value)
       assertUnreachable(value)
   }
 }
