@@ -1,46 +1,32 @@
 import { memo } from 'react'
+import type { PropsWithChildren } from 'react'
+import clsx from 'clsx'
 
-import { ModalCategory } from 'states/ui'
 import { bnum } from 'utils/num'
 import { renderStrong } from 'utils/numberFormat'
 import { getTokenColor, getTokenSymbol } from 'utils/token'
-import {
-  useBalances,
-  useFiatCurrency,
-  useModal,
-  usePool,
-  usePropAmounts,
-} from 'hooks'
+import { useBalances, useFiatCurrency, usePool, usePropAmounts } from 'hooks'
 
 import { StyledAvailableBalance } from './styled'
-import Button from 'new/Button'
 import NumberFormat from 'new/NumberFormat'
 import SvgIcon from 'new/SvgIcon'
 import TokenIcon from 'new/TokenIcon'
 
 type AvailableBalanceProps = {
-  close(): void
-}
+  className?: string
+} & PropsWithChildren
 
-function AvailableBalance({ close }: AvailableBalanceProps) {
+function AvailableBalance({ children, className }: AvailableBalanceProps) {
   const { bptBalance } = useBalances()
   const { getBptFiatValue } = useFiatCurrency()
-  const { addModal } = useModal()
   const { poolTokenAddresses, poolTokenWeights } = usePool()
   const { propAmounts, propAmountsInFiatValue } = usePropAmounts()
 
+  const hasAvailableBpt = bnum(bptBalance).gt(0)
   const fiatValue = getBptFiatValue(bptBalance)
 
-  function exit() {
-    addModal({
-      category: ModalCategory.Exit,
-    })
-
-    close()
-  }
-
   return (
-    <StyledAvailableBalance>
+    <StyledAvailableBalance className={clsx('availableBalance', className)}>
       <header className="header">
         <h2 className="title">Available Stakable LP Tokens</h2>
 
@@ -116,9 +102,7 @@ function AvailableBalance({ close }: AvailableBalanceProps) {
         </dl>
       </div>
 
-      <Button onClick={exit} $variant="secondary" $size="md">
-        Exit pool
-      </Button>
+      {hasAvailableBpt && children}
     </StyledAvailableBalance>
   )
 }

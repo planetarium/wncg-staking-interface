@@ -1,29 +1,21 @@
 import { memo, useMemo } from 'react'
+import type { PropsWithChildren } from 'react'
+import clsx from 'clsx'
 
-import { ModalCategory } from 'states/ui'
 import { renderStrong } from 'utils/numberFormat'
-import { useFiatCurrency, useModal, useStakedBalance } from 'hooks'
+import { useFiatCurrency, useStakedBalance } from 'hooks'
 
 import { StyledStakedBalance } from './styled'
-import Button from 'new/Button'
 import NumberFormat from 'new/NumberFormat'
 import SvgIcon from 'new/SvgIcon'
 
 type StakedBalanceProps = {
-  close(): void
-}
+  className?: string
+} & PropsWithChildren
 
-function StakedBalance({ close }: StakedBalanceProps) {
+function StakedBalance({ className, children }: StakedBalanceProps) {
   const { getBptFiatValue } = useFiatCurrency()
-  const { addModal } = useModal()
   const { hasStakedBalance, stakedBalance } = useStakedBalance()
-
-  function withdraw() {
-    addModal({
-      category: ModalCategory.Withdraw,
-    })
-    close()
-  }
 
   const fiatValue = useMemo(
     () => getBptFiatValue(stakedBalance),
@@ -31,7 +23,7 @@ function StakedBalance({ close }: StakedBalanceProps) {
   )
 
   return (
-    <StyledStakedBalance>
+    <StyledStakedBalance className={clsx('stakedBalance', className)}>
       <header className="header">
         <h2 className="title">My Staked LP</h2>
 
@@ -62,17 +54,7 @@ function StakedBalance({ close }: StakedBalanceProps) {
         </dl>
       </header>
 
-      {hasStakedBalance && (
-        <div className="buttonGroup">
-          <button className="earnButton">
-            Earned <SvgIcon icon="chevronRight" $size={16} />
-          </button>
-
-          <Button onClick={withdraw} $variant="secondary" $size="md">
-            Withdraw
-          </Button>
-        </div>
-      )}
+      {hasStakedBalance && children}
     </StyledStakedBalance>
   )
 }
