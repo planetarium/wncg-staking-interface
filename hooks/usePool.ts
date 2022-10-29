@@ -18,11 +18,6 @@ export function usePool() {
 
   const poolId = configService.poolId
 
-  const poolName = useMemo(
-    () => pool?.name || 'Balancer Weighted Pool',
-    [pool?.name]
-  )
-
   const poolSwapFee = useMemo(() => pool?.swapFee || '0', [pool?.swapFee])
 
   const poolTokens = useMemo(() => pool?.tokens || [], [pool?.tokens])
@@ -81,6 +76,8 @@ export function usePool() {
     () => pool?.totalSwapVolume || '0',
     [pool?.totalSwapVolume]
   )
+
+  const poolName = useMemo(() => poolTokenSymbols.join('-'), [poolTokenSymbols])
 
   const nativeAssetIndex = useMemo(() => {
     const match = poolTokenAddresses.findIndex(

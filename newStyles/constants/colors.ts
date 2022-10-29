@@ -35,7 +35,7 @@ export type BrandColor =
 
 export type ProductColor = 'primary' | 'green' | 'blue' | 'orange'
 
-export type GradientType = 1 | 2 | 3 | 4 | 5
+export type GradientType = 1 | 2 | 3 | 4 | 5 | 6
 
 const primary = {
   25: '#f9f4ff',
@@ -170,8 +170,9 @@ export const colors = {
 export const gradients = {
   1: `linear-gradient(93.08deg, ${error[400]} 0%, ${primary[500]} 100%)`,
   2: `linear-gradient(90deg, ${primary[400]} 0%, ${primary[600]} 100%)`,
-  3: `linear-gradient(68.42deg, ${primary[50]} 14.17%, ${primary[200]} 85.83%)`,
+  3: `linear-gradient(70deg, ${primary[50]} 14%, ${primary[200]} 86%)`,
   4: `linear-gradient(90deg, #02c6b4 0%, ${blue[500]} 100%)`,
-  5: `linear-gradient(274.23deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.1) 100%);
+  5: `linear-gradient(275deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.1) 100%);
   `,
+  6: `linear-gradient(115deg, #1e1c28 26%, #20282b 40%, #22262e 70%)`,
 }

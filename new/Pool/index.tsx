@@ -7,6 +7,7 @@ import { fadeIn } from 'constants/motionVariants'
 import { usePool } from 'hooks'
 
 import { StyledWncgPool, StyledPoolModalOverlay } from './styled'
+import Balances from './Balances'
 import Header from './Header'
 import Information from './Information'
 import Join from './Join'
@@ -72,7 +73,9 @@ function Pool({ isModal = false }: PoolProps) {
             <Join />
           </div>
 
-          <div className="right">SIDEBAR</div>
+          <div className="right">
+            <Balances />
+          </div>
         </div>
       </StyledWncgPool>
 

@@ -57,6 +57,8 @@ export const StyledAvailableBalance = styled(StyledBalanceSection)`
 
   .subHeader {
     ${flexbox('space-between')}
+    position: relative;
+    z-index: 1;
   }
 
   .tooltip {
@@ -118,6 +120,7 @@ export const StyledAvailableBalance = styled(StyledBalanceSection)`
     padding: 16px;
     padding-left: 60px;
     margin-top: 8px;
+    background-color: var(--white);
     border: 1.5px solid var(--gray-200);
     border-radius: 6px;
 
