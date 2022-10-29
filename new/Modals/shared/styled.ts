@@ -75,10 +75,15 @@ export const StyledModalContent = styled.div`
     }
 
     .title {
-      ${textStyle('body', 2)}
-      margin-bottom: 8px;
-      font-weight: 700;
-      color: var(--primary-300);
+      ${textStyle('header', 5)}
+      color: var(--white);
+
+      &.accent {
+        ${textStyle('body', 2)}
+        margin-bottom: 8px;
+        font-weight: 700;
+        color: var(--primary-300);
+      }
     }
 
     .subtitle {
@@ -171,8 +176,17 @@ export const StyledModalCompletePage = styled(StyledModalContent)`
   max-width: 480px;
 
   .title {
-    ${textStyle('header', 5)}
     color: var(--white);
     text-align: center;
+  }
+
+  .buttonGroup {
+    button {
+      margin-top: 16px;
+
+      &:first-child {
+        margin-top: 0;
+      }
+    }
   }
 `

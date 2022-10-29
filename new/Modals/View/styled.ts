@@ -10,11 +10,6 @@ export const StyledConnectWalletModal = styled(StyledModalContent)`
     margin-bottom: 40px;
   }
 
-  .title {
-    ${textStyle('header', 5)}
-    color: var(--white);
-  }
-
   .buttonGroup {
     ${flexbox()};
     width: 100%;
