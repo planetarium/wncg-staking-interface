@@ -166,3 +166,28 @@ export function imageContainer(_width: string | number) {
     }
   `
 }
+
+export function scrollbar(width = 6) {
+  return css`
+    scrollbar-width: thin;
+
+    &::-webkit-scrollbar {
+      display: block;
+      width: ${width}px;
+      background-color: rgba(0, 0, 0, 0);
+    }
+
+    &::-webkit-scrollbar-button {
+      display: none;
+    }
+
+    &::-webkit-scrollbar-track {
+      background-color: rgba(0, 0, 0, 0);
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: rgba(var(--white-rgb), 0.8);
+      border-radius: 8px;
+    }
+  `
+}

@@ -1,6 +1,8 @@
 import type { BigNumberish } from 'ethers'
 import { WeightedPoolEncoder } from '@balancer-labs/sdk'
 
+import { bnum } from './num'
+
 type BuildJoinParams = {
   assets: string[]
   maxAmountsIn: BigNumberish[]
@@ -23,6 +25,53 @@ export function buildJoin({
     maxAmountsIn,
     userData,
     fromInternalBalance: false,
+  }
+
+  return request
+}
+
+type BuildExitParams = {
+  assets: string[]
+  bptIn: string
+  exactOut: boolean
+  isProportional: boolean
+  minAmountsOut: string[]
+}
+
+export function buildExit({
+  assets,
+  bptIn,
+  exactOut,
+  isProportional,
+  minAmountsOut,
+}: BuildExitParams) {
+  let userData: string
+
+  switch (true) {
+    case isProportional:
+      userData = WeightedPoolEncoder.exitExactBPTInForTokensOut(bptIn)
+      break
+    case exactOut:
+      userData = WeightedPoolEncoder.exitBPTInForExactTokensOut(
+        minAmountsOut,
+        bptIn
+      )
+      break
+    default:
+      const tokenOutIndex = minAmountsOut.findIndex((amount) =>
+        bnum(amount).gt(0)
+      )
+      userData = WeightedPoolEncoder.exitExactBPTInForOneTokenOut(
+        bptIn,
+        tokenOutIndex
+      )
+  }
+
+  const request = {
+    assets,
+    minAmountsOut,
+    userData,
+    toInternalBalance: false,
   }
 
   return request
