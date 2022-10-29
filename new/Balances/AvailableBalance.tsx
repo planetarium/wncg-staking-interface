@@ -58,7 +58,26 @@ function AvailableBalance({ children, className }: AvailableBalanceProps) {
       </header>
 
       <div className="content">
-        <h3 className="subtitle">Coins you&apos;ve funded in pool</h3>
+        <div className="subHeader">
+          <h3 className="subtitle" aria-describedby="availableBalance:tooltip">
+            Coins you&apos;ve funded in pool
+          </h3>
+          <div id="availableBalance:tooltip" className="tooltip" role="tooltip">
+            <button
+              className="tooltipToggle"
+              type="button"
+              aria-label="Show tooltip"
+            >
+              <SvgIcon icon="info" $size={16} />
+            </button>
+
+            <div className="tooltipMessage">
+              <p>
+                dummy text dummy text dummy textdummy text dummy text dummy text
+              </p>
+            </div>
+          </div>
+        </div>
 
         <dl className="balanceList">
           {propAmounts.map((amount, i) => {

@@ -72,7 +72,7 @@ export const primaryButtonStyle = css`
 `
 
 export const secondaryButtonStyle = css`
-  color: var(--primary-700);
+  color: var(--primary-600);
   background-color: var(--primary-50);
 
   &:disabled,

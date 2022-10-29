@@ -1,6 +1,13 @@
 import styled from 'styled-components'
 
-import { flexbox, gradient, posCenterY, textStyle } from 'newStyles/utils'
+import {
+  flexbox,
+  gradient,
+  inlineFlexbox,
+  posCenterX,
+  posCenterY,
+  textStyle,
+} from 'newStyles/utils'
 
 const StyledBalanceSection = styled.section`
   .title {
@@ -45,6 +52,52 @@ const StyledBalanceSection = styled.section`
 export const StyledAvailableBalance = styled(StyledBalanceSection)`
   .content {
     margin: 16px 0;
+    overflow: initial;
+  }
+
+  .subHeader {
+    ${flexbox('space-between')}
+  }
+
+  .tooltip {
+    ${inlineFlexbox()}
+    position: relative;
+
+    .tooltipToggle {
+      ${inlineFlexbox()}
+      position: relative;
+      flex-shrink: 0;
+      width: 16px;
+      height: 16px;
+      margin-left: 4px;
+      color: var(--gray-400);
+      opacity: 0.8;
+
+      &:hover {
+        & + .tooltipMessage {
+          opacity: 1;
+          visibility: visible;
+          transform: translate3d(-50%, 0, 0);
+        }
+      }
+    }
+
+    .tooltipMessage {
+      ${posCenterX()}
+      ${textStyle('caption')}
+      bottom: calc(100% + 8px);
+      padding: 12px 16px;
+      font-weight: 700;
+      color: var(--gray-700);
+      background-color: var(--white);
+      border-radius: 6px;
+      box-shadow: 0px 16px 64px rgba(25, 25, 27, 0.64);
+      opacity: 0;
+      visibility: hidden;
+      transform: translate3d(-50%, 2px, 0);
+      transition: 300ms;
+      pointer-events: none;
+    }
   }
 
   .subtitle {

@@ -26,6 +26,10 @@ export const StyledActionDropdownMenu = styled(motion.aside)`
     box-shadow: 0 -1px 0 0 var(--gray-200);
   }
 
+  .tooltipMessage {
+    min-width: 280px;
+  }
+
   .buttonGroup {
     margin-top: 16px;
 
