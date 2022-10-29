@@ -73,7 +73,7 @@ export default class CalculatorService {
     const balance = bnum(this.poolTokenBalances[tokenIndex].toString())
     const weight = bnum(this.poolTokenWeights[tokenIndex].toString())
     const amountOut = bnum(
-      parseUnits(amount, this.poolTokenDecimals[tokenIndex]).toString()
+      parseUnits(amount || '0', this.poolTokenDecimals[tokenIndex]).toString()
     )
 
     return WeightedMath._calcBptInGivenExactTokenOut(
@@ -161,7 +161,7 @@ export default class CalculatorService {
     } else {
       bptAmount =
         option.queryBpt ||
-        bnum(parseUnits(this.bptBalance, POOL_DECIMALS).toString())
+        bnum(parseUnits(this.bptBalance || '0', POOL_DECIMALS).toString())
 
       tokenAmounts = this.poolTokens.map((_, i) => {
         if (i !== tokenIndex) return '0'
@@ -198,7 +198,7 @@ export default class CalculatorService {
 
   denormAmounts(amounts: string[]): BigNumber[] {
     return amounts.map((amount, i) =>
-      parseUnits(amount, this.poolTokenDecimals[i])
+      parseUnits(amount || '0', this.poolTokenDecimals[i])
     )
   }
 
@@ -236,13 +236,13 @@ export default class CalculatorService {
   get poolTokenBalances(): BigNumber[] {
     const normalizedBalances = this.poolTokens.map((t) => t.balance)
     return normalizedBalances.map((b, i) =>
-      parseUnits(b, this.poolTokenDecimals[i])
+      parseUnits(b || '0', this.poolTokenDecimals[i])
     )
   }
 
   get poolTokenWeights(): BigNumber[] {
     const normalizedWeights = this.poolTokens.map((t) => t.weight)
-    return normalizedWeights.map((w) => parseUnits(w, 18))
+    return normalizedWeights.map((w) => parseUnits(w || '0', 18))
   }
 
   get poolTotalShares(): BigNumber {
