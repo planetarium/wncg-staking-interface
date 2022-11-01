@@ -46,6 +46,10 @@ export const StyledConnectorIcon = styled.span<{ $size: SvgIconSize }>`
   background-color: var(--white);
 `
 
+export const StyledCountUp = styled.div`
+  ${inlineFlexbox()}
+`
+
 export const StyledGlobalFooter = styled.footer`
   ${flexbox()}
   width: 100%;
