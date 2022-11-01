@@ -1,3 +1,9 @@
+import { defaultAbiCoder, formatUnits } from 'ethers/lib/utils'
+import type { Log } from '@ethersproject/abstract-provider'
+
+import { parseLog } from './iface'
+import { getTokenInfo } from './token'
+
 export function parseTxError(error: any): TxError | void {
   if (error?.code === 4001) {
     return
@@ -45,4 +51,28 @@ export function parseTxError(error: any): TxError | void {
         message: 'Sorry for the inconvenience. Please try again later.',
       }
   }
+}
+
+export function decodeLogData(log: Log) {
+  try {
+    return defaultAbiCoder.decode(['uint256'], log.data)
+  } catch {
+    return null
+  }
+}
+
+export function parseTransferLogs(logs: Log[]) {
+  const transferLogs = logs.filter((log) => parseLog(log)?.name === 'Transfer')
+
+  const tokenAddresses = transferLogs.map((log) => log.address.toLowerCase())
+  const transferedAmounts = transferLogs.map((log, i) =>
+    formatUnits(
+      decodeLogData(log)?.[0] ?? '0',
+      getTokenInfo(tokenAddresses[i])?.decimals ?? 18
+    )
+  )
+
+  return Object.fromEntries(
+    tokenAddresses.map((address, i) => [address, transferedAmounts[i]])
+  )
 }
