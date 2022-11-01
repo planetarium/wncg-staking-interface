@@ -67,9 +67,7 @@ function TxButton(
       rightIcon={rightIcon}
       $size={$size}
     >
-      <>
-        {state.value}/{label}
-      </>
+      <>{label}</>
     </Button>
   )
 }
