@@ -46,12 +46,15 @@ function JoinModalPage2({
         >
           <header className="modalHeader">
             <h2 className="title">
-              {getTokenSymbol(approving || '')} Approval completed! Completed!
+              {getTokenSymbol(approving || '')} Approval Completed!
             </h2>
           </header>
-          <Button onClick={goNext} $size="lg">
-            {label}
-          </Button>
+
+          <div className="buttonGroup">
+            <Button onClick={goNext} $size="lg">
+              {label}
+            </Button>
+          </div>
         </StyledModalCompletePage>
       )}
     </AnimatePresence>

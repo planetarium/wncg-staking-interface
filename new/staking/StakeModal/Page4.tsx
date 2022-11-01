@@ -5,29 +5,31 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { ModalCategory } from 'states/ui'
 import { usdCountUpOption } from 'constants/countUp'
 import { fadeIn } from 'constants/motionVariants'
-import { useModal, useStakedBalance } from 'hooks'
+import { useFiatCurrency, useModal, useStakedBalance } from 'hooks'
 
-import { StyledStakeModalPage4 } from './styled'
+import { StyledModalCompletePage } from 'new/Modals/shared/styled'
 import Button from 'new/Button'
 import CountUp from 'new/CountUp'
 import NumberFormat from 'new/NumberFormat'
 import SvgIcon from 'new/SvgIcon'
 
 type StakeModalPage4Props = {
-  amount: string
   currentPage: number
   currentState: StateValue
-  fiatValue: number
+  result: string
 }
 
 function StakeModalPage4({
-  amount,
   currentPage,
   currentState,
-  fiatValue,
+  result,
 }: StakeModalPage4Props) {
+  const { getBptFiatValue } = useFiatCurrency()
   const { removeModal } = useModal()
   const { stakedBalanceInFiatValue } = useStakedBalance()
+
+  const stakedAmount = result
+  const stakedAmountInFiatValue = getBptFiatValue(stakedAmount)
 
   const success = currentState === 'stakeSuccess'
   const fail = currentState === 'stakeFail'
@@ -39,7 +41,7 @@ function StakeModalPage4({
   return (
     <AnimatePresence>
       {currentPage === 4 && (
-        <StyledStakeModalPage4
+        <StyledModalCompletePage
           as={motion.div}
           initial="initial"
           animate="animate"
@@ -61,12 +63,12 @@ function StakeModalPage4({
                 LP Tokens
               </dt>
               <dd>
-                <NumberFormat value={amount} prefix="+ " />
+                <NumberFormat value={result} prefix="+ " />
 
                 <span className="usd">
                   <SvgIcon icon="approximate" $size={16} />
                   <NumberFormat
-                    value={fiatValue}
+                    value={stakedAmountInFiatValue}
                     decimals={2}
                     prefix="($"
                     suffix=")"
@@ -90,10 +92,12 @@ function StakeModalPage4({
             </div>
           </dl>
 
-          <Button onClick={close} $size="lg">
-            Go to main
-          </Button>
-        </StyledStakeModalPage4>
+          <div className="buttonGroup">
+            <Button onClick={close} $size="lg">
+              Go to main
+            </Button>
+          </div>
+        </StyledModalCompletePage>
       )}
     </AnimatePresence>
   )

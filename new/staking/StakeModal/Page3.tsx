@@ -1,15 +1,14 @@
 import { memo } from 'react'
-import { useAtom, useSetAtom } from 'jotai'
+import { useAtom } from 'jotai'
 import { AnimatePresence, motion } from 'framer-motion'
 
-import { pendingStakeAmountAtom, pendingStakeHashAtom } from 'states/form'
+import { pendingStakeTxAtom } from 'states/form'
 import { ModalCategory } from 'states/ui'
 import { fadeIn } from 'constants/motionVariants'
 import { useStake } from './useStake'
 
 import { StyledStakeModalPage3 } from './styled'
-import CloseButton from 'new/Modals/shared/CloseButton'
-import PendingNotice from 'new/Modals/shared/PendingNotice'
+import { CloseButton, PendingNotice } from 'new/Modals/shared'
 import NumberFormat from 'new/NumberFormat'
 import TxButton from 'new/TxButton'
 
@@ -28,13 +27,14 @@ function StakeModalPage3({
   send,
   isPending,
 }: StakeModalPage3Props) {
-  const [hash, setHash] = useAtom(pendingStakeHashAtom)
-  const setStakeAmount = useSetAtom(pendingStakeAmountAtom)
+  const [pendingTx, setPendingTx] = useAtom(pendingStakeTxAtom)
 
   const stake = useStake(amount, {
     onConfirm(txHash?: Hash) {
-      setHash(txHash)
-      setStakeAmount(amount)
+      setPendingTx({
+        amount,
+        hash: txHash,
+      })
       send('CALL')
     },
     onError(error) {
@@ -56,7 +56,7 @@ function StakeModalPage3({
         >
           <header className="modalHeader">
             <div className="titleGroup">
-              <h2 className="title">Staking</h2>
+              <h2 className="title accent">Staking</h2>
               <h3 className="subtitle">
                 Do you want to stake?
                 <strong className="amount">
@@ -84,7 +84,7 @@ function StakeModalPage3({
             Stake
           </TxButton>
 
-          <PendingNotice hash={hash} />
+          <PendingNotice hash={pendingTx.hash} />
         </StyledStakeModalPage3>
       )}
     </AnimatePresence>

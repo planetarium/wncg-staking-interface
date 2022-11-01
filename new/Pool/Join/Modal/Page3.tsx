@@ -10,8 +10,7 @@ import { getTokenSymbol } from 'utils/token'
 import { useJoin } from './useJoin'
 
 import { StyledJoinModalPage3 } from './styled'
-import CloseButton from 'new/Modals/shared/CloseButton'
-import PendingNotice from 'new/Modals/shared/PendingNotice'
+import { CloseButton, PendingNotice } from 'new/Modals/shared'
 import NumberFormat from 'new/NumberFormat'
 import TxButton from 'new/TxButton'
 
