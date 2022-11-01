@@ -89,7 +89,10 @@ export function useStaking() {
     [balancerGauge]
   )
 
-  const rewardTokenAddress = useMemo(() => rewardToken || '', [rewardToken])
+  const rewardTokenAddress = useMemo(
+    () => rewardToken?.toLowerCase() ?? '',
+    [rewardToken]
+  )
 
   const rewardTokensList = useMemo(
     () => uniqAddress([rewardTokenAddress, configService.bal]),
@@ -106,7 +109,10 @@ export function useStaking() {
     [rewardTokensList]
   )
 
-  const stakedTokenAddress = useMemo(() => stakedToken || '', [stakedToken])
+  const stakedTokenAddress = useMemo(
+    () => stakedToken?.toLowerCase() || '',
+    [stakedToken]
+  )
 
   const unstakeWindow = useMemo(
     () => _unstakeWindow?.toNumber() || 0,

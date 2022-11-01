@@ -5,9 +5,8 @@ import { fadeIn } from 'constants/motionVariants'
 import { capitalize } from 'utils/string'
 
 import { StyledModalApprovePage } from './styled'
+import { CloseButton, PendingNotice } from 'new/Modals/shared'
 import TxButton from 'new/TxButton'
-import CloseButton from './CloseButton'
-import PendingNotice from './PendingNotice'
 
 type ApprovePageProps = {
   action: string

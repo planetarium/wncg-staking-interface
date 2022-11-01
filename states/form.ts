@@ -36,17 +36,23 @@ export const pendingJoinTxAtom = atomWithStorage<PendingJoinTx>(
 )
 
 type PendingExitTx = {
-  amounts?: string[]
-  assets?: string[]
-  bptIn?: string
-  exactOut?: boolean
-  exitType?: string
-  isProportional?: boolean
   hash?: Hash
 }
 
 // NOTE: Exit Modal
 export const pendingExitTxAtom = atomWithStorage<PendingExitTx>(
   `wncgStaking.pendingExit`,
+  {}
+)
+
+type PendingClaimTx = {
+  tokensToClaim?: string[]
+  rewardsToClaim?: string[]
+  hash?: Hash
+}
+
+// NOTE: Claim Modal
+export const pendingClaimTxAtom = atomWithStorage<PendingClaimTx>(
+  `wncgStaking.pendingClaim`,
   {}
 )

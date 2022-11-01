@@ -83,6 +83,7 @@ export const StyledModalContent = styled.div`
         margin-bottom: 8px;
         font-weight: 700;
         color: var(--primary-300);
+        text-transform: capitalize;
       }
     }
 
@@ -175,12 +176,68 @@ export const StyledModalApprovePage = styled(StyledModalContent)`
 export const StyledModalCompletePage = styled(StyledModalContent)`
   max-width: 480px;
 
+  .modalHeader {
+    margin-bottom: 0 !important;
+
+    & + .buttonGroup {
+      margin-top: 64px;
+    }
+  }
+
   .title {
     color: var(--white);
     text-align: center;
   }
 
+  .details {
+    width: 100%;
+    padding: 20px 24px;
+    margin-top: 48px;
+    overflow: hidden;
+    background-image: ${gradient(1)};
+    border-radius: 6px;
+  }
+
+  .detailItem {
+    ${flexbox('space-between', 'flex-start')}
+    margin-top: 8px;
+
+    &:first-child {
+      margin-top: 0;
+    }
+
+    &.total {
+      padding-top: 12px;
+      margin-top: 12px;
+      border-top: 1.5px solid rgba(var(--white-rgb), 0.2);
+
+      dd {
+        ${textStyle('subtitle', 1)}
+      }
+    }
+
+    .usd {
+      color: var(--white);
+      font-weight: 700;
+    }
+
+    dt {
+      ${textStyle('body', 3)}
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    dd {
+      ${flexbox('flex-end')}
+      ${textStyle('body', 3)}
+      font-weight: 500;
+      color: var(--primary-200);
+    }
+  }
+
   .buttonGroup {
+    margin-top: 48px;
+
     button {
       margin-top: 16px;
 

@@ -1,7 +1,9 @@
+import { useMemo } from 'react'
 import { useAtomValue } from 'jotai'
 import { parseUnits } from 'ethers/lib/utils'
 
 import { rewardsAtom } from 'states/user'
+import { configService } from 'services/config'
 import { useFiatCurrency } from './useFiatCurrency'
 import { usePrices } from './usePrices'
 import { useStaking } from './contracts'
@@ -9,23 +11,43 @@ import { useStaking } from './contracts'
 export function useRewards() {
   const { toFiat } = useFiatCurrency()
   const { priceFor } = usePrices()
-  const { rewardTokensList, rewardTokenDecimals } = useStaking()
+  const { rewardTokenAddress, rewardTokensList, rewardTokenDecimals } =
+    useStaking()
 
   const rewards = useAtomValue(rewardsAtom)
 
-  const scaledRewards = rewards.map((reward, i) =>
-    parseUnits(reward, rewardTokenDecimals[i])
+  const scaledRewards = useMemo(
+    () =>
+      rewards.map((reward, i) => parseUnits(reward, rewardTokenDecimals[i])),
+    [rewardTokenDecimals, rewards]
   )
 
-  const rewardsInFiatValue = rewards.map((reward, i) =>
-    toFiat(rewardTokensList[i], reward)
+  const rewardsInFiatValue = useMemo(
+    () => rewards.map((reward, i) => toFiat(rewardTokensList[i], reward)),
+    [rewardTokensList, rewards, toFiat]
   )
 
-  const rewardTokenPrices = rewardTokensList.map((address) => priceFor(address))
+  const rewardTokenPrices = useMemo(
+    () => rewardTokensList.map((address) => priceFor(address)),
+    [priceFor, rewardTokensList]
+  )
+
+  const rewardTokenIndex = useMemo(
+    () => rewardTokensList.indexOf(rewardTokenAddress),
+    [rewardTokenAddress, rewardTokensList]
+  )
+
+  const balTokenIndex = useMemo(
+    () => rewardTokensList.indexOf(configService.bal),
+    [rewardTokensList]
+  )
 
   return {
+    balTokenIndex,
     rewards,
     rewardsInFiatValue,
+    rewardTokenAddress,
+    rewardTokenIndex,
     rewardTokenPrices,
     scaledRewards,
   }

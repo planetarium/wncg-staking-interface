@@ -11,6 +11,7 @@ export type SvgIconType =
   | 'approximate'
   | 'balancer'
   | 'check'
+  | 'checkLarge'
   | 'checkboxOff'
   | 'checkboxOn'
   | 'chevronDown'
