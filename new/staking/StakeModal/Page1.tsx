@@ -2,7 +2,7 @@ import { memo } from 'react'
 import { useAtom, useAtomValue } from 'jotai'
 import { AnimatePresence } from 'framer-motion'
 
-import { pendingStakeHashAtom } from 'states/form'
+import { pendingStakeTxAtom } from 'states/form'
 import { stakingContractAddressAtom } from 'states/staking'
 import { ModalCategory } from 'states/ui'
 import { useApprove } from 'hooks'
@@ -21,14 +21,16 @@ function StakeModalPage1({
   send,
   isPending,
 }: StakeModalPage1Props) {
-  const [hash, setHash] = useAtom(pendingStakeHashAtom)
+  const [pendingTx, setPendingTx] = useAtom(pendingStakeTxAtom)
 
   const { stakedTokenAddress } = useStaking()
   const stakingAddress = useAtomValue(stakingContractAddressAtom)
 
   const approve = useApprove(stakedTokenAddress, stakingAddress, {
     onConfirm(txHash?: Hash) {
-      setHash(txHash)
+      setPendingTx({
+        hash: txHash,
+      })
       send('CALL')
     },
     onError(error) {
@@ -47,7 +49,7 @@ function StakeModalPage1({
           category={ModalCategory.Stake}
           onClick={approve}
           symbol="LP Token"
-          hash={hash}
+          hash={pendingTx.hash}
           isPending={isPending}
         />
       )}

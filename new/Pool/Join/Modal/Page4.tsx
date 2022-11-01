@@ -4,24 +4,38 @@ import { AnimatePresence, motion } from 'framer-motion'
 
 import { ModalCategory } from 'states/ui'
 import { fadeIn } from 'constants/motionVariants'
-import { useModal } from 'hooks'
+import { getTokenSymbol } from 'utils/token'
+import { useFiatCurrency, useModal } from 'hooks'
+import { useStaking } from 'hooks/contracts'
 
 import { StyledJoinModalPage4 } from './styled'
 import Button from 'new/Button'
+import CountUp from 'new/CountUp'
+import NumberFormat from 'new/NumberFormat'
+import SvgIcon from 'new/SvgIcon'
 
-type JoinModalPage2Props = {
+type JoinModalPage4Props = {
   currentPage: number
   currentState: StateValue
-  send(value: string): void
+  result: Record<string, string>
 }
 
-function JoinModalPage2({
+function JoinModalPage4({
   currentPage,
   currentState,
-  send,
-}: JoinModalPage2Props) {
+  result,
+}: JoinModalPage4Props) {
+  const { toFiat } = useFiatCurrency()
   const { removeModal } = useModal()
+  const { stakedTokenAddress } = useStaking()
 
+  const joinedAmounts = Object.entries(result).filter(
+    ([address]) => address !== stakedTokenAddress
+  )
+
+  const bptEarned = result[stakedTokenAddress] ?? '0'
+
+  // FIXME: Handle failed tx
   const success = currentState === 'stakeSuccess'
   const fail = currentState === 'stakeFail'
 
@@ -42,16 +56,64 @@ function JoinModalPage2({
           <header className="modalHeader">
             <h2 className="title">Join pool completed!</h2>
           </header>
-          <Button onClick={close} $size="lg">
-            Go to staking
-          </Button>
-          <Button onClick={close} $variant="tertiary" $size="lg">
-            Close
-          </Button>
+
+          <dl className="details">
+            {joinedAmounts.map(([address, amount]) => {
+              if (address === stakedTokenAddress) return null
+              const symbol = getTokenSymbol(address)
+              const fiatValue = toFiat(address, amount)
+
+              return (
+                <div className="detailItem" key={`joinedAmounts:${address}`}>
+                  <dt>{symbol}</dt>
+                  <dd>
+                    <NumberFormat
+                      value={amount}
+                      prefix="+ "
+                      decimalScale={18}
+                    />
+
+                    <span className="usd">
+                      <SvgIcon icon="approximate" $size={16} />
+                      <NumberFormat
+                        value={fiatValue}
+                        decimals={2}
+                        prefix="($"
+                        suffix=")"
+                      />
+                    </span>
+                  </dd>
+                </div>
+              )
+            })}
+
+            <div className="detailItem total">
+              <dt>You received</dt>
+              <dd>
+                <strong className="usd">
+                  <CountUp
+                    end={bptEarned}
+                    decimals={8}
+                    prefix="✨ "
+                    suffix=" LP"
+                  />
+                </strong>
+              </dd>
+            </div>
+          </dl>
+
+          <div className="buttonGroup">
+            <Button onClick={close} $size="lg">
+              Go to staking
+            </Button>
+            <Button onClick={close} $variant="tertiary" $size="lg">
+              Close
+            </Button>
+          </div>
         </StyledJoinModalPage4>
       )}
     </AnimatePresence>
   )
 }
 
-export default memo(JoinModalPage2)
+export default memo(JoinModalPage4)

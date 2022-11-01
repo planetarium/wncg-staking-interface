@@ -118,8 +118,6 @@ export function currentPage(value: StateValue) {
     case 'stakeFail':
       return 4
     default:
-      console.log(value)
-
       assertUnreachable(value)
   }
 }

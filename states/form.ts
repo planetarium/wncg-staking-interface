@@ -4,13 +4,14 @@ import { atomWithReset, atomWithStorage } from 'jotai/utils'
 import { configService } from 'services/config'
 
 // NOTE: Stake Modal
-export const pendingStakeAmountAtom = atomWithStorage(
-  `wncgStaking.stakeAmount`,
-  ''
-)
-export const pendingStakeHashAtom = atomWithStorage<Hash | undefined>(
-  `wncgStaking.stakeHash`,
-  undefined
+type PendingStakeTx = {
+  amount?: string
+  hash?: Hash
+}
+
+export const pendingStakeTxAtom = atomWithStorage<PendingStakeTx>(
+  `wncgStaking.pendingStake`,
+  {}
 )
 
 // NOTE: Join Form

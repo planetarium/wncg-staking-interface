@@ -1,8 +1,12 @@
+import { useAtomValue } from 'jotai'
+import type { StateValue } from 'xstate'
 import { AnimatePresence } from 'framer-motion'
 
+import { pendingExitTxAtom } from 'states/form'
 import type { UseExitFormReturns } from '../useExitForm'
 
 import { StyledExitModalPage1 } from './styled'
+import { PendingNotice } from 'new/Modals/shared'
 import Footer from './Footer'
 import Header from './Header'
 import Step1 from './Step1'
@@ -11,18 +15,24 @@ import Step3 from './Step3'
 
 type ExitModalPage1Props = {
   currentPage: number
+  currentState: StateValue
   send(value: string): void
 } & UseExitFormReturns
 
 function ExitModalPage1(props: ExitModalPage1Props) {
   const {
+    assets,
     bptIn,
     bptOutPcnt,
     clearErrors,
     control,
     currentPage,
-    exitType,
+    currentState,
     errors,
+    exactOut,
+    exitAmounts,
+    exitType,
+    isProportional,
     priceImpact,
     priceImpactAgreement,
     resetInputs,
@@ -34,6 +44,8 @@ function ExitModalPage1(props: ExitModalPage1Props) {
     tokenOutAmount,
     totalExitAmountsInFiatValue,
   } = props
+
+  const { hash } = useAtomValue(pendingExitTxAtom)
 
   return (
     <AnimatePresence>
@@ -61,15 +73,22 @@ function ExitModalPage1(props: ExitModalPage1Props) {
               togglePriceImpactAgreement={togglePriceImpactAgreement}
             />
             <Footer
+              assets={assets}
               bptIn={bptIn}
+              currentState={currentState}
               errors={errors}
+              exactOut={exactOut}
+              exitAmounts={exitAmounts}
               exitType={exitType}
+              isProportional={isProportional}
               priceImpact={priceImpact}
               priceImpactAgreement={priceImpactAgreement}
               send={send}
               tokenOutAmount={tokenOutAmount}
               totalValue={totalExitAmountsInFiatValue}
             />
+
+            <PendingNotice hash={hash} />
           </div>
         </StyledExitModalPage1>
       )}

@@ -1,15 +1,17 @@
-import { useEffect, useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useUnmount } from 'react-use'
 import { useMachine } from '@xstate/react'
 import { useAtom } from 'jotai'
 import { RESET } from 'jotai/utils'
-import { useTransaction } from 'wagmi'
+import type { TransactionReceipt } from '@ethersproject/abstract-provider'
+import { useWaitForTransaction } from 'wagmi'
 
-import { pendingStakeAmountAtom, pendingStakeHashAtom } from 'states/form'
+import { pendingStakeTxAtom } from 'states/form'
 import { createLogger } from 'utils/log'
 import { networkChainId } from 'utils/network'
-import { bnum } from 'utils/num'
+import { parseTransferLogs } from 'utils/tx'
 import { useFiatCurrency } from 'hooks'
+import { useStaking } from 'hooks/contracts'
 import { currentPage, stakeMachine } from './stateMachine'
 
 import Page1 from './Page1'
@@ -26,11 +28,18 @@ type StakeModalProps = {
 }
 
 function StakeModal({ amount, isApproved, resetForm }: StakeModalProps) {
+  const [result, setResult] = useState('0')
+
   const { getBptFiatValue } = useFiatCurrency()
-  const [hash, setHash] = useAtom(pendingStakeHashAtom)
-  const [pendingStakeAmount, setPendingStakeAmount] = useAtom(
-    pendingStakeAmountAtom
-  )
+  const { stakedTokenAddress } = useStaking()
+
+  const [pendingTx, setPendingTx] = useAtom(pendingStakeTxAtom)
+
+  const { amount: pendingAmount, hash: pendingHash } = pendingTx
+
+  const stakeAmount = pendingAmount ?? amount
+  const stakeAmountInFiatValue = getBptFiatValue(stakeAmount)
+  const hash = pendingHash ?? undefined
 
   const stateMachine = useRef(stakeMachine)
   const [state, send] = useMachine(stateMachine.current, {
@@ -39,46 +48,41 @@ function StakeModal({ amount, isApproved, resetForm }: StakeModalProps) {
       isApproved,
     },
   })
+  const currentState = state.value as string
 
-  useTransaction({
+  useWaitForTransaction({
     hash: hash!,
     enabled: !!hash,
     chainId: networkChainId,
     onSettled() {
       log(`Stake tx: ${hash?.slice(0, 6)}`)
     },
-    async onSuccess(response: TransactionResponse) {
-      if (!response) return
-
-      try {
-        await response.wait()
-        send('SUCCESS')
-      } catch (error) {
-        send('FAIL')
-      }
+    onSuccess(data: TransactionReceipt) {
+      const result = parseTransferLogs(data.logs)
+      setResult(result[stakedTokenAddress])
+      send('SUCCESS')
+    },
+    onError() {
+      send('FAIL')
+      stateMachine.current.transition(state.value, { type: 'ROLLBACK' })
     },
   })
 
-  const stakeAmount =
-    !!hash && !bnum(pendingStakeAmount).isZero() ? pendingStakeAmount : amount
-  const stakeAmountInFiatValue = getBptFiatValue(stakeAmount)
-
   const page = useMemo(() => currentPage(state.value), [state.value])
 
-  // NOTE: Reset hash when approve tx is fulfilled
   useEffect(() => {
-    if (['approveSuccess', 'approveFail'].includes(state.value as string))
-      setHash(RESET)
-  }, [setHash, state.value])
+    if (currentState === `approveSuccess`) {
+      setPendingTx((prev) => ({
+        ...prev,
+        hash: undefined,
+      }))
+    }
+  }, [currentState, setPendingTx])
 
   useUnmount(() => {
     if (!!state.done) {
-      setHash(RESET)
-
-      if ((state.value as string).startsWith('stake')) {
-        setPendingStakeAmount(RESET)
-        resetForm()
-      }
+      setPendingTx(RESET)
+      resetForm()
     }
   })
 
@@ -98,12 +102,7 @@ function StakeModal({ amount, isApproved, resetForm }: StakeModalProps) {
         send={send}
         isPending={state.value === 'stakePending'}
       />
-      <Page4
-        amount={stakeAmount}
-        currentPage={page}
-        currentState={state.value}
-        fiatValue={stakeAmountInFiatValue}
-      />
+      <Page4 currentPage={page} currentState={state.value} result={result} />
     </>
   )
 }

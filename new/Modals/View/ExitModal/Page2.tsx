@@ -1,82 +1,63 @@
-import { useAtom } from 'jotai'
+import { memo, useMemo } from 'react'
+import type { StateValue } from 'xstate'
 import { AnimatePresence, motion } from 'framer-motion'
 
-import { pendingExitTxAtom } from 'states/form'
 import { ModalCategory } from 'states/ui'
+import { usdCountUpOption } from 'constants/countUp'
 import { fadeIn } from 'constants/motionVariants'
-import { configService } from 'services/config'
 import { bnum } from 'utils/num'
-import { renderStrong } from 'utils/numberFormat'
 import { getTokenSymbol } from 'utils/token'
-import { usePool } from 'hooks'
-import { useExit } from './useExit'
+import { useFiatCurrency, useModal } from 'hooks'
+import { useStaking } from 'hooks/contracts'
 
-import { StyledExitModalPage2 } from './styled'
-import CloseButton from 'new/Modals/shared/CloseButton'
-import PendingNotice from 'new/Modals/shared/PendingNotice'
+import { StyledModalCompletePage } from 'new/Modals/shared/styled'
+import Button from 'new/Button'
+import CountUp from 'new/CountUp'
 import NumberFormat from 'new/NumberFormat'
-import TxButton from 'new/TxButton'
+import SvgIcon from 'new/SvgIcon'
 
 type ExitModalPage2Props = {
-  assets: string[]
-  bptIn: string
   currentPage: number
-  exitAmounts: string[]
-  exitType: string
-  exactOut: boolean
-  fiatValue: string
-  isProportional: boolean
-  send(value: string): void
-  isPending?: boolean
+  currentState: StateValue
+  result: Record<string, string>
 }
 
 function ExitModalPage2({
-  assets,
-  bptIn,
   currentPage,
-  exitAmounts,
-  exitType,
-  exactOut,
-  fiatValue,
-  isProportional,
-  send,
-  isPending,
+  currentState,
+  result,
 }: ExitModalPage2Props) {
-  const { nativeAssetIndex, poolTokenAddresses } = usePool()
+  const { toFiat } = useFiatCurrency()
+  const { removeModal } = useModal()
+  const { stakedTokenAddress } = useStaking()
 
-  const [pendingTx, setPendingTx] = useAtom(pendingExitTxAtom)
-
-  const exitPool = useExit(
-    exitAmounts,
-    assets,
-    bptIn,
-    exactOut,
-    isProportional,
-    {
-      onConfirm(txHash?: Hash) {
-        setPendingTx({
-          amounts: exitAmounts,
-          assets,
-          bptIn,
-          exactOut,
-          exitType,
-          isProportional,
-          hash: txHash,
-        })
-        send('CALL')
-      },
-      onError(error) {
-        if (error?.code === 'ACTION_REJECTED') return
-        if (error?.code === 4001) return
-        send('FAIL')
-      },
-    }
+  const exitedAmounts = Object.entries(result).filter(
+    ([address]) => address !== stakedTokenAddress
   )
+
+  const totalExitedAmountsInFiatValue = useMemo(
+    () =>
+      exitedAmounts
+        .reduce(
+          (total, [address, amount]) => total.plus(toFiat(address, amount)),
+          bnum(0)
+        )
+        .toString(),
+    [exitedAmounts, toFiat]
+  )
+
+  // FIXME: Handle failed tx
+  const success = currentState === 'stakeSuccess'
+  const fail = currentState === 'stakeFail'
+
+  function close() {
+    removeModal(ModalCategory.Exit)
+  }
 
   return (
     <AnimatePresence>
       {currentPage === 2 && (
-        <StyledExitModalPage2
+        <StyledModalCompletePage
           as={motion.div}
           initial="initial"
           animate="animate"
@@ -84,52 +65,62 @@ function ExitModalPage2({
           variants={fadeIn}
         >
           <header className="modalHeader">
-            <div className="titleGroup">
-              <h2 className="title accent">Exit pool</h2>
-              <h3 className="subtitle">
-                Do you want to Exit pool?
-                <strong className="amounts">
-                  <NumberFormat
-                    value={fiatValue}
-                    decimals={2}
-                    prefix="$"
-                    renderText={renderStrong}
-                  />
-                </strong>
-              </h3>
-            </div>
-
-            <p className="desc accent">
-              {exitAmounts.map((amount, i) => {
-                if (bnum(amount).isZero()) return null
-                const address =
-                  exitType === configService.nativeAssetAddress &&
-                  i === nativeAssetIndex
-                    ? configService.nativeAssetAddress
-                    : poolTokenAddresses[i]
-
-                return (
-                  <NumberFormat
-                    key={`exitAmounts:${exitType}:${amount}`}
-                    value={amount}
-                    suffix={` ${getTokenSymbol(address)}`}
-                  />
-                )
-              })}
-            </p>
-
-            <CloseButton modal={ModalCategory.Exit} />
+            <h2 className="title">Exit pool completed!</h2>
           </header>
 
-          <TxButton onClick={exitPool} isPending={isPending} $size="lg">
-            Exit pool
-          </TxButton>
+          <dl className="details">
+            {exitedAmounts.map(([address, amount]) => {
+              const symbol = getTokenSymbol(address)
+              const fiatValue = toFiat(address, amount)
 
-          <PendingNotice hash={pendingTx.hash} />
-        </StyledExitModalPage2>
+              return (
+                <div className="detailItem" key={`exitedAmounts:${address}`}>
+                  <dt>{symbol}</dt>
+                  <dd>
+                    <NumberFormat
+                      value={amount}
+                      prefix="+ "
+                      decimalScale={18}
+                    />
+
+                    <span className="usd">
+                      <SvgIcon icon="approximate" $size={16} />
+                      <NumberFormat
+                        value={fiatValue}
+                        decimals={2}
+                        prefix="($"
+                        suffix=")"
+                      />
+                    </span>
+                  </dd>
+                </div>
+              )
+            })}
+
+            <div className="detailItem total">
+              <dt>You received</dt>
+              <dd>
+                <strong className="usd">
+                  <SvgIcon icon="approximate" />
+                  <CountUp
+                    {...usdCountUpOption}
+                    end={totalExitedAmountsInFiatValue}
+                    prefix="✨ $"
+                  />
+                </strong>
+              </dd>
+            </div>
+          </dl>
+
+          <div className="buttonGroup">
+            <Button onClick={close} $size="lg">
+              Go to main
+            </Button>
+          </div>
+        </StyledModalCompletePage>
       )}
     </AnimatePresence>
   )
 }
 
-export default ExitModalPage2
+export default memo(ExitModalPage2)

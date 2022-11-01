@@ -1,48 +1,31 @@
-import { memo, useRef } from 'react'
+import { memo, useRef, useState } from 'react'
 import { useUnmount } from 'react-use'
 import { useMachine } from '@xstate/react'
 import { useAtom } from 'jotai'
 import { RESET } from 'jotai/utils'
-import { useTransaction } from 'wagmi'
+import { useWaitForTransaction } from 'wagmi'
+import type { TransactionReceipt } from '@ethersproject/abstract-provider'
 
 import { pendingExitTxAtom } from 'states/form'
-import { configService } from 'services/config'
 import { createLogger } from 'utils/log'
 import { networkChainId } from 'utils/network'
-import { bnum } from 'utils/num'
-import { useFiatCurrency, usePool } from 'hooks'
+import { parseTransferLogs } from 'utils/tx'
 import { currentPage, exitMachine } from './stateMachine'
 import { useExitForm } from './useExitForm'
 
 import Page1 from './Page1'
 import Page2 from './Page2'
-import Page3 from './Page3'
 
 const log = createLogger('black')
 
 function ExitModal() {
-  const { toFiat } = useFiatCurrency()
-  const { poolTokenAddresses } = usePool()
+  const [result, setResult] = useState<Record<string, string>>({})
 
   const formReturns = useExitForm()
 
   const [pendingTx, setPendingTx] = useAtom(pendingExitTxAtom)
-  const {
-    amounts: pendingAmounts,
-    assets: pendingAssets,
-    bptIn: pendingBptIn,
-    exactOut: pendingExactOut,
-    exitType: pendingExitType,
-    isProportional: pendingIsProportional,
-    hash: pendingHash,
-  } = pendingTx
+  const { hash: pendingHash } = pendingTx
 
-  const assets = pendingAssets ?? formReturns.assets
-  const bptIn = pendingBptIn ?? formReturns.bptIn
-  const exactOut = pendingExactOut ?? formReturns.exactOut
-  const exitAmounts = pendingAmounts ?? formReturns.exitAmounts
-  const exitType = pendingExitType ?? formReturns.exitType
-  const isProportional = pendingIsProportional ?? formReturns.isProportional
   const hash = pendingHash ?? undefined
 
   const stateMachine = useRef(exitMachine)
@@ -52,36 +35,20 @@ function ExitModal() {
     },
   })
 
-  const exitAmountsInFiatValue =
-    poolTokenAddresses
-      .reduce((total, address, i) => {
-        address =
-          exitType === configService.nativeAssetAddress
-            ? configService.nativeAssetAddress
-            : address
-        const delta = toFiat(address, bnum(exitAmounts[i]).toString())
-        return total.plus(delta)
-      }, bnum(0))
-      .toFixed(2) || '0'
-
-  useTransaction({
+  useWaitForTransaction({
     hash: hash!,
     enabled: !!hash,
     chainId: networkChainId,
     onSettled() {
       log(`Exit tx: ${hash?.slice(0, 6)}`)
     },
-    async onSuccess(response: TransactionResponse) {
-      console.log('RESPONSE:', response)
-      if (!response) return
-      try {
-        await response.wait()
-        console.log('✅ SUCCESS from:', 0)
-        send('SUCCESS')
-      } catch (error) {
-        console.log('🔥 FAIL from:', 0)
-        send('FAIL')
-      }
+    onSuccess(data: TransactionReceipt) {
+      setResult(parseTransferLogs(data.logs))
+      send('SUCCESS')
+    },
+    onError() {
+      send('FAIL')
+      stateMachine.current.transition(state.value, { type: 'ROLLBACK' })
     },
   })
 
@@ -95,20 +62,13 @@ function ExitModal() {
 
   return (
     <>
-      <Page1 {...formReturns} currentPage={page} send={send} />
-      <Page2
-        assets={assets}
-        bptIn={bptIn}
+      <Page1
+        {...formReturns}
         currentPage={page}
-        exactOut={exactOut}
-        exitAmounts={exitAmounts}
-        exitType={exitType}
-        isProportional={isProportional}
-        fiatValue={exitAmountsInFiatValue}
+        currentState={state.value}
         send={send}
-        isPending={state.value === 'exitPending'}
       />
-      <Page3 currentPage={page} />
+      <Page2 currentPage={page} currentState={state.value} result={result} />
     </>
   )
 }

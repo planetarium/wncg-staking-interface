@@ -1,16 +1,18 @@
-import { useEffect, useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useUnmount } from 'react-use'
 import { useMachine } from '@xstate/react'
 import { useAtom } from 'jotai'
 import { RESET } from 'jotai/utils'
-import { useTransaction } from 'wagmi'
+import type { TransactionReceipt } from '@ethersproject/abstract-provider'
+import { useWaitForTransaction } from 'wagmi'
 
 import { pendingJoinTxAtom } from 'states/form'
-import { configService } from 'services/config'
+
+import { parseLog } from 'utils/iface'
 import { createLogger } from 'utils/log'
 import { networkChainId } from 'utils/network'
-import { getTokenSymbol } from 'utils/token'
 import { bnum } from 'utils/num'
+import { parseTransferLogs } from 'utils/tx'
 import { useFiatCurrency } from 'hooks'
 import { currentPage, joinMachine } from './stateMachine'
 
@@ -34,19 +36,22 @@ function JoinModal({
   resetForm,
   tokensToApprove,
 }: JoinModalProps) {
+  const [result, setResult] = useState<Record<string, string>>({})
+
   const { toFiat } = useFiatCurrency()
   const [pendingTx, setPendingTx] = useAtom(pendingJoinTxAtom)
   const {
     amounts: pendingAmounts,
     assets: pendingAssets,
-    approving,
     tokensToApprove: pendingTokensToApprove,
-    hash,
+    hash: pendingHash,
   } = pendingTx
 
   amounts = pendingAmounts ?? amounts
   assets = pendingAssets ?? assets
   tokensToApprove = pendingTokensToApprove ?? tokensToApprove
+
+  const hash = pendingHash ?? undefined
 
   const stateMachine = useRef(joinMachine)
   const [state, send] = useMachine(stateMachine.current, {
@@ -59,44 +64,42 @@ function JoinModal({
   })
   const currentState = state.value as string
 
-  useTransaction({
+  useWaitForTransaction({
     hash: hash!,
     enabled: !!hash,
     chainId: networkChainId,
     onSettled() {
       log(`Join tx: ${hash?.slice(0, 6)}`)
     },
-    async onSuccess(response: TransactionResponse) {
-      console.log('RESPONSE:', response)
-      if (!response) return
-      try {
-        const data = await response.wait()
-        console.log('✅ SUCCESS from:', 0)
-        send('SUCCESS')
-        if (assets.includes(data.to.toLowerCase())) {
-          setPendingTx((prev) => {
-            const newTokensToApprove = [...(prev.tokensToApprove ?? [])]
-            newTokensToApprove.shift()
+    onSuccess(data: TransactionReceipt) {
+      const parsedLogs = data.logs.map((log) => parseLog(log))
 
-            return {
-              ...prev,
-              tokensToApprove: newTokensToApprove,
-            }
-          })
-        }
+      const isApprovalTx = parsedLogs.some((log) => log?.name === 'Approval')
+      const isJoinPoolTx = parsedLogs.some(
+        (log) => log?.name === 'PoolBalanceChanged'
+      )
 
-        if (data.to.toLowerCase() === configService.vaultAddress) {
-          setPendingTx(RESET)
-        }
-      } catch (error) {
-        console.log(777777777, 'on success catch error')
-        console.log('🔥 FAIL from:', 0)
-        console.log('Failed reason:', 0, error)
-        send('FAIL')
+      if (isApprovalTx) {
+        setPendingTx((prev) => {
+          const newTokensToApprove = [...(prev.tokensToApprove ?? [])]
+          newTokensToApprove.shift()
+
+          return {
+            ...prev,
+            tokensToApprove: newTokensToApprove,
+          }
+        })
       }
+
+      if (isJoinPoolTx) {
+        setPendingTx(RESET)
+        setResult(parseTransferLogs(data.logs))
+      }
+
+      send('SUCCESS')
     },
     onError() {
-      console.log(555555555, 'on error')
+      send('FAIL')
       setPendingTx({
         hash: undefined,
       })
@@ -134,70 +137,6 @@ function JoinModal({
 
   return (
     <>
-      <span style={{ background: 'purple' }}>
-        {' '}
-        ➡ {currentState.slice(0, 20)}
-      </span>
-      <hr />
-      <hr />
-      <hr />
-      <hr />
-      <hr />
-      <hr />
-      <span style={{ color: 'red' }}>
-        Hash (Local storage) : {hash?.slice(0, 6) ?? typeof hash}
-      </span>
-      <hr />
-      <span style={{ background: 'green' }}>
-        Hash (StateMachine):{' '}
-        {state.context.hash?.slice(0, 6) ?? typeof state.context.hash}
-      </span>
-      <hr />
-      <hr />
-      <hr />
-      <hr />
-      <hr />
-      <hr />
-      <span style={{ color: 'yellow' }}>
-        tokensToApproves (StateMachine) :{' '}
-        {JSON.stringify(
-          state.context.tokensToApprove.map((addr) => addr.slice(0, 6))
-        )}
-      </span>
-      <hr />
-      <span>
-        tokensToApproves (Modal):{' '}
-        {JSON.stringify(tokensToApprove.map((addr) => addr.slice(0, 6)))}
-      </span>
-      <hr />
-      <hr />
-      <hr />
-      <hr />
-      <hr />
-      <hr />
-      <span style={{ color: 'yellow' }}>
-        Join amounts (StateMachine) : {JSON.stringify(state.context.amounts)}
-      </span>
-      <hr />
-      <span>Join amounts (Modal) : {JSON.stringify(amounts)}</span>
-      <hr />
-      <hr />
-      <hr />
-      <hr />
-      <hr />
-      <hr />
-      <span>
-        TokensToApprove : {JSON.stringify(getTokenSymbol(tokenToApprove))}
-      </span>
-      <hr />
-      <span>Approving Saved: {JSON.stringify(getTokenSymbol(approving))}</span>
-      <hr />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
       <Page1
         address={tokenToApprove}
         currentPage={page}
@@ -219,7 +158,7 @@ function JoinModal({
         send={send}
         isPending={currentState === 'joinPending'}
       />
-      <Page4 currentPage={page} currentState={state.value} send={send} />
+      <Page4 currentPage={page} currentState={state.value} result={result} />
     </>
   )
 }

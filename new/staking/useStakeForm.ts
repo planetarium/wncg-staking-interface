@@ -25,13 +25,9 @@ export function useStakeForm() {
 
   const rules = useMemo(
     () => ({
-      required: 'Please enter valid amount',
       validate: {
         maxAmount: (v: string) =>
           bnum(v).lte(bptBalance) || 'You don’t have enough balance',
-        minAmount: (v: string) =>
-          bnum(v).gte(1e-18) ||
-          'Please enter the amount bigger than or equal to 1e-18',
       },
       onChange() {
         clearErrors('stakeAmount')

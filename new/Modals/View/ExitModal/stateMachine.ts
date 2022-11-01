@@ -10,26 +10,15 @@ export type ExitMachineContext = {
 
 export const exitMachine = createMachine<ExitMachineContext>(
   {
+    predictableActionArguments: true,
     id: `exitMachine`,
-    initial: `idle`,
+    initial: `exit`,
     context: {
       hash: undefined,
     },
     states: {
-      idle: {
-        always: [
-          { target: `exitPending`, cond: `waitForExit` },
-          { target: `form`, cond: `shouldFillForm` },
-        ],
-      },
-      form: {
-        on: {
-          NEXT: {
-            target: `exit`,
-          },
-        },
-      },
       exit: {
+        always: [{ target: `exitPending`, cond: `waitForExit` }],
         on: {
           CALL: {
             target: `exitPending`,
@@ -83,16 +72,12 @@ export const exitMachine = createMachine<ExitMachineContext>(
 
 export function currentPage(value: StateValue) {
   switch (value) {
-    case 'idle':
-      return 0
-    case 'form':
-      return 1
     case 'exit':
     case 'exitPending':
-      return 2
+      return 1
     case 'exitSuccess':
     case 'exitFail':
-      return 3
+      return 2
     default:
       assertUnreachable(value)
   }
