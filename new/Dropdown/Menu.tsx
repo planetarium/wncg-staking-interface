@@ -16,6 +16,7 @@ type DropdownMenuProps = {
   onChange(e: ReactMouseEvent<HTMLButtonElement>): void
   show: boolean
   value: string
+  disabled?: boolean
   formatter?(value: string): string
 }
 
@@ -26,11 +27,13 @@ function DropdownMenu({
   onChange,
   show,
   value,
+  disabled,
   formatter,
 }: DropdownMenuProps) {
   const menuRef = useRef<HTMLDivElement>(null)
 
   function handleSelect(e: ReactMouseEvent<HTMLButtonElement>) {
+    if (disabled) return
     onChange(e)
     close()
   }

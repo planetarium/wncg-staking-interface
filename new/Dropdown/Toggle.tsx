@@ -22,7 +22,7 @@ function DropdownToggle({
   return (
     <StyledDropdownToggle
       id={id}
-      className="toggle"
+      className="dropdownToggle"
       type="button"
       onClick={toggle}
       aria-controls="menu"

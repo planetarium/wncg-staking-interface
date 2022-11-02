@@ -11,6 +11,7 @@ type DropdownProps = {
   onChange(e: MouseEvent<HTMLButtonElement>): void
   value: string
   className?: string
+  disabled?: boolean
   formatter?(value: string): string
   list?: string[]
 }
@@ -20,12 +21,14 @@ function Dropdown({
   onChange,
   value,
   className,
+  disabled,
   formatter,
   list = [],
 }: DropdownProps) {
   const [show, setShow] = useState(false)
 
   function toggle(e: MouseEvent<HTMLButtonElement>) {
+    if (disabled) return
     e.stopPropagation()
     setShow((prev) => !prev)
   }
@@ -39,7 +42,10 @@ function Dropdown({
   const dropdownId = `dropdown:${id}`
 
   return (
-    <StyledDropdown className={clsx('dropdown', className)}>
+    <StyledDropdown
+      className={clsx('dropdown', className)}
+      $disabled={disabled}
+    >
       <Toggle
         id={dropdownId}
         show={show}
@@ -53,6 +59,7 @@ function Dropdown({
         onChange={onChange}
         show={show}
         value={value}
+        disabled={disabled}
         formatter={formatter}
       />
     </StyledDropdown>

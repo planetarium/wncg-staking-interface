@@ -1,11 +1,23 @@
 import { motion } from 'framer-motion'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
 import { flexbox, textStyle } from 'newStyles/utils'
 
-export const StyledDropdown = styled.div`
+export const StyledDropdown = styled.div<{ $disabled?: boolean }>`
   position: relative;
   z-index: 1;
+  transition: 200ms;
+
+  ${({ $disabled }) =>
+    $disabled &&
+    css`
+      opacity: 0.4;
+
+      button {
+        cursor: not-allowed;
+        user-select: none;
+      }
+    `}
 `
 
 export const StyledDropdownMenu = styled(motion.div)`
