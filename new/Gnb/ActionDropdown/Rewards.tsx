@@ -39,7 +39,7 @@ function ActionDropdownRewards() {
         onClick={toggleRewards}
         aria-controls="actionDropdown:rewards"
       >
-        Earned <SvgIcon icon="chevronRight" $size={16} />
+        Earned <SvgIcon icon="chevronRight" />
       </button>
 
       <div
@@ -72,7 +72,7 @@ function ActionDropdownRewards() {
 
                   {hasAmount && (
                     <span className="usd">
-                      <SvgIcon icon="approximate" $size={16} />
+                      <SvgIcon icon="approximate" />
                       <NumberFormat
                         value={fiatValue}
                         decimals={2}

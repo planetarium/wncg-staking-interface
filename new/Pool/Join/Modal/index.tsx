@@ -39,6 +39,7 @@ function JoinModal({
   const [result, setResult] = useState<Record<string, string>>({})
 
   const { toFiat } = useFiatCurrency()
+
   const [pendingTx, setPendingTx] = useAtom(pendingJoinTxAtom)
   const {
     amounts: pendingAmounts,

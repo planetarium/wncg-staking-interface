@@ -39,7 +39,7 @@ function Claim() {
                   <CountUp {...countUpOption} end={rewards[i]} prefix="+" />
                 </strong>
                 <strong className="usd">
-                  <SvgIcon icon="approximate" $size={16} />
+                  <SvgIcon icon="approximate" />
                   (
                   <CountUp {...usdCountUpOption} end={rewardsInFiatValue[i]} />)
                 </strong>

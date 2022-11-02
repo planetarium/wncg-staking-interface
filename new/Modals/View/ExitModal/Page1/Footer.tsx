@@ -89,7 +89,7 @@ function ExitModalPage1Footer({
       <output className="checkout">
         <span className="text">you can get</span>
         <div className={clsx('value', { enabled })}>
-          <SvgIcon icon="approximate" />
+          <SvgIcon icon="approximate" $size={24} />
           <NumberFormat
             value={totalValue}
             prefix="$"
@@ -102,7 +102,6 @@ function ExitModalPage1Footer({
         onClick={exitPool}
         isPending={currentState === 'exitPending'}
         disabled={submitDisabled}
-        $size="lg"
       >
         Exit pool
       </TxButton>

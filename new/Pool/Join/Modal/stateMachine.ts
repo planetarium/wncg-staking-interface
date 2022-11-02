@@ -109,17 +109,17 @@ export const joinMachine = createMachine<JoinMachineContext>(
       }),
     },
     guards: {
-      readyToJoin(ctx) {
-        return !ctx.tokensToApprove.length
-      },
-      waitForJoin(ctx) {
-        return !!ctx.hash && !ctx.tokensToApprove.length
-      },
       shouldApprove(ctx) {
         return !ctx.hash && ctx.tokensToApprove[0] != null
       },
       waitForApproval(ctx) {
         return !!ctx.hash && ctx.tokensToApprove[0] != null
+      },
+      readyToJoin(ctx) {
+        return !ctx.tokensToApprove.length
+      },
+      waitForJoin(ctx) {
+        return !!ctx.hash && !ctx.tokensToApprove.length
       },
     },
   }

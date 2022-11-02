@@ -78,11 +78,11 @@ type CheckboxProps = {
 }
 
 function Checkbox({
-  checked = false,
-  onChange,
   className,
+  checked = false,
   disabled,
   id,
+  onChange,
   $size = 24,
 }: CheckboxProps) {
   const inputRef = useRef<HTMLInputElement>(null)
@@ -112,8 +112,8 @@ function Checkbox({
       />
 
       <StyledFakeInput className="fakeInput" aria-hidden>
-        <SvgIcon className="box" icon="checkboxOff" />
-        <SvgIcon className="check" icon="check" />
+        <SvgIcon className="box" icon="checkboxOff" $size={24} />
+        <SvgIcon className="check" icon="check" $size={24} />
       </StyledFakeInput>
     </StyledCheckbox>
   )

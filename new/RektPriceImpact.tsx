@@ -33,7 +33,7 @@ function RektPriceImpact({
           variants={slideInDown}
           role="alert"
         >
-          <SvgIcon icon="warning" />
+          <SvgIcon icon="warning" $size={24} />
           <h4 className="title">
             If the price impact exceeds 20%, {action} pool cannot be performed
           </h4>

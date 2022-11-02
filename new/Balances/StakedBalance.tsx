@@ -18,7 +18,7 @@ type StakedBalanceProps = {
   className?: string
 } & PropsWithChildren
 
-function StakedBalance({ className, children }: StakedBalanceProps) {
+function StakedBalance({ children, className }: StakedBalanceProps) {
   const { isConnected } = useAccount()
   const { connect } = useConnectWallets()
   const { bptToFiat } = useFiatCurrency()
@@ -60,7 +60,7 @@ function StakedBalance({ className, children }: StakedBalanceProps) {
             <div className="detailItem">
               <dt className="hidden">Your balance in USD</dt>
               <dd className="fiatValue">
-                <SvgIcon icon="approximate" $size={16} />
+                <SvgIcon icon="approximate" />
                 <NumberFormat
                   value={fiatValue}
                   decimals={2}

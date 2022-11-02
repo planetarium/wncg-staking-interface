@@ -43,7 +43,7 @@ function ApprovePage({
         <CloseButton modal={category} />
       </header>
 
-      <TxButton onClick={onClick} isPending={isPending} $size="lg">
+      <TxButton onClick={onClick} isPending={isPending}>
         {buttonLabel}
       </TxButton>
 

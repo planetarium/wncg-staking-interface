@@ -52,7 +52,7 @@ function Alert({ error }: AlertProps) {
       onClick={handleClick}
       role="alert"
     >
-      <SvgIcon icon="warning" ariaHidden />
+      <SvgIcon icon="warning" $size={24} />
       <h2>{message}</h2>
 
       {isNetworkError && (

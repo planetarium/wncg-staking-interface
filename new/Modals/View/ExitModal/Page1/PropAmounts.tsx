@@ -66,7 +66,7 @@ function ExitModalPage1Step2PropAmounts({
                   duration={0.5}
                 />
                 <div className="fiatValue">
-                  <SvgIcon icon="approximate" $size={16} />
+                  <SvgIcon icon="approximate" />
                   <CountUp
                     className="usdAmount"
                     end={exitAmountsInFiatValue[i]}

@@ -64,7 +64,7 @@ function AvailableBalance({ children, className }: AvailableBalanceProps) {
             <div className="detailItem">
               <dt className="hidden">Your balance in USD</dt>
               <dd className="fiatValue">
-                <SvgIcon icon="approximate" $size={16} />
+                <SvgIcon icon="approximate" />
                 <NumberFormat
                   value={fiatValue}
                   decimals={2}
@@ -96,7 +96,7 @@ function AvailableBalance({ children, className }: AvailableBalanceProps) {
                 type="button"
                 aria-label="Show tooltip"
               >
-                <SvgIcon icon="info" $size={16} />
+                <SvgIcon icon="info" />
               </button>
 
               <div className="tooltipMessage">
@@ -135,7 +135,7 @@ function AvailableBalance({ children, className }: AvailableBalanceProps) {
                       renderText={renderStrong}
                     />
                     <div className="fiatValue">
-                      <SvgIcon icon="approximate" $size={16} />
+                      <SvgIcon icon="approximate" />
                       <NumberFormat
                         value={propAmountsInFiatValue[i]}
                         prefix="$"

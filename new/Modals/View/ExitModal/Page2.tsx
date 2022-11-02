@@ -77,7 +77,7 @@ function ExitModalPage2({
                     />
 
                     <span className="usd">
-                      <SvgIcon icon="approximate" $size={16} />
+                      <SvgIcon icon="approximate" />
                       <NumberFormat
                         value={fiatValue}
                         decimals={2}
@@ -94,7 +94,7 @@ function ExitModalPage2({
               <dt>You received</dt>
               <dd>
                 <strong className="usd">
-                  <SvgIcon icon="approximate" />
+                  <SvgIcon icon="approximate" $size={24} />
                   <CountUp
                     {...usdCountUpOption}
                     end={totalExitedAmountsInFiatValue}

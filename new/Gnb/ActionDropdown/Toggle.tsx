@@ -23,7 +23,7 @@ function ActionDropdownToggle({ toggle }: ActionDropdownToggleProps) {
       aria-controls="menu"
       aria-haspopup
     >
-      <SvgIcon icon="coin" $size={24} />
+      <SvgIcon icon="coin" />
       <span className="label">My Staked LP</span>
       <strong className="amount">
         <CountUp

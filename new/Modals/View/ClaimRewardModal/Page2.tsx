@@ -66,7 +66,7 @@ function ClaimRewardModalPage2({
                     />
 
                     <span className="usd">
-                      <SvgIcon icon="approximate" $size={16} />
+                      <SvgIcon icon="approximate" />
                       <NumberFormat
                         value={fiatValue}
                         decimals={2}
@@ -83,7 +83,7 @@ function ClaimRewardModalPage2({
               <dt>You earned</dt>
               <dd>
                 <strong className="usd">
-                  <SvgIcon icon="approximate" />
+                  <SvgIcon icon="approximate" $size={24} />
                   <CountUp
                     {...usdCountUpOption}
                     end={totalRewardedAmountsInFiatValue}

@@ -42,19 +42,19 @@ export type SvgIconType =
   | 'wncgLight'
 
 type SvgIconProps = {
+  icon: SvgIconType
   ariaLabel?: string
   ariaHidden?: boolean
-  icon: SvgIconType
   className?: string
   $size?: SvgIconSize
 }
 
 function SvgIcon({
+  icon,
   ariaLabel,
   ariaHidden = true,
-  icon,
   className,
-  $size = 24,
+  $size = 16,
 }: SvgIconProps) {
   if (hasGradient(icon)) {
     return (

@@ -81,7 +81,7 @@ function JoinModalPage1({
             <CloseButton modal={ModalCategory.Join} />
           </header>
 
-          <TxButton onClick={joinPool} isPending={isPending} $size="lg">
+          <TxButton onClick={joinPool} isPending={isPending}>
             Join pool
           </TxButton>
 

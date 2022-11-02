@@ -67,7 +67,7 @@ function JoinModalPage4({
                     />
 
                     <span className="usd">
-                      <SvgIcon icon="approximate" $size={16} />
+                      <SvgIcon icon="approximate" />
                       <NumberFormat
                         value={fiatValue}
                         decimals={2}

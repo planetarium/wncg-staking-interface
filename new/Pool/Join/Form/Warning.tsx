@@ -22,7 +22,7 @@ function JoinFormWarning({ show }: JoinFormWarningProps) {
           variants={slideInDown}
           role="alert"
         >
-          <SvgIcon icon="warning" $size={16} />
+          <SvgIcon icon="warning" />
           <h4 className="title">
             To ensure a smooth transaction, <strong>at least 0.05 ETH</strong>{' '}
             must be left in your wallet to pay for gas fees.

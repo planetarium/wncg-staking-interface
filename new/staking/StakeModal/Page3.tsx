@@ -73,7 +73,7 @@ function StakeModalPage3({
             <CloseButton modal={ModalCategory.Stake} />
           </header>
 
-          <TxButton onClick={stake} isPending={isPending} $size="lg">
+          <TxButton onClick={stake} isPending={isPending}>
             Stake
           </TxButton>
 

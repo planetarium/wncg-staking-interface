@@ -21,7 +21,7 @@ function PoolInformation() {
           rel="noopener"
         >
           detail
-          <SvgIcon icon="export" $size={16} />
+          <SvgIcon icon="export" />
         </a>
       </header>
 

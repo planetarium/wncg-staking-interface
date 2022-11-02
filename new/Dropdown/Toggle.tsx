@@ -29,7 +29,7 @@ function DropdownToggle({
       aria-haspopup
     >
       {formatter?.(value) ?? value}
-      <SvgIcon icon={show ? 'chevronUp' : 'chevronDown'} $size={16} />
+      <SvgIcon icon={show ? 'chevronUp' : 'chevronDown'} />
     </StyledDropdownToggle>
   )
 }

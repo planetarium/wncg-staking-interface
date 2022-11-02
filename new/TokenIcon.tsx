@@ -41,7 +41,7 @@ function TokenIcon({ address, className, $size = 24 }: TokenIconProps) {
       title={title}
       $size={$size}
     >
-      <SvgIcon icon={icon} />
+      <SvgIcon icon={icon} $size={24} />
     </StyledTokenIcon>
   )
 }

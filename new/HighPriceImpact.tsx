@@ -1,4 +1,5 @@
 import { AnimatePresence } from 'framer-motion'
+import clsx from 'clsx'
 
 import { slideInDown } from 'constants/motionVariants'
 import { HIGH_PRICE_IMPACT, REKT_PRICE_IMPACT } from 'constants/poolLiquidity'
@@ -10,6 +11,7 @@ type HighPriceImpactProps = {
   checked: boolean
   priceImpact: number
   toggle(value: boolean): void
+  className?: string
   disabled?: boolean
 }
 
@@ -17,6 +19,7 @@ function HighPriceImpact({
   checked,
   priceImpact,
   toggle,
+  className,
   disabled = false,
 }: HighPriceImpactProps) {
   const show =
@@ -28,7 +31,7 @@ function HighPriceImpact({
     <AnimatePresence>
       {show && (
         <StyledHighPriceImpact
-          className="highPriceImpact"
+          className={clsx('highPriceImpact', className)}
           initial="initial"
           animate="animate"
           exit="exit"

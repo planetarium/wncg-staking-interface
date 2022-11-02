@@ -1,22 +1,21 @@
 import { memo } from 'react'
+import type { StateValue } from 'xstate'
 import { AnimatePresence } from 'framer-motion'
 
 import { ModalCategory } from 'states/ui'
+import { useModal } from 'hooks'
 
 import { ModalCompletePage } from 'new/Modals/shared'
 import Button from 'new/Button'
-import { useModal } from 'hooks'
 
 type CooldownModalPage3Props = {
   currentPage: number
-  currentState: string
-  send(value: string): void
+  currentState: StateValue
 }
 
 function CooldownModalPage3({
   currentPage,
   currentState,
-  send,
 }: CooldownModalPage3Props) {
   const { removeModal } = useModal()
 

@@ -39,7 +39,7 @@ function PoolHeader() {
               </strong>
 
               <span className="weight">{poolTokenWeightsInPcnt[i]}%</span>
-              <SvgIcon icon="export" $size={16} />
+              <SvgIcon icon="export" />
             </a>
           ))}
         </div>

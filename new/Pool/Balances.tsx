@@ -77,7 +77,7 @@ function PoolBalances() {
                   renderText={renderStrong}
                 />
                 <div className="fiatValue">
-                  <SvgIcon icon="approximate" />
+                  <SvgIcon icon="approximate" $size={24} />
                   <NumberFormat
                     value={totalBalanceInFiatValue}
                     prefix="$"
@@ -108,7 +108,7 @@ function PoolBalances() {
         aria-expanded={show}
       >
         {show ? 'Close' : 'Open'}
-        <SvgIcon icon={show ? 'chevronUp' : 'chevronDown'} $size={16} />
+        <SvgIcon icon={show ? 'chevronUp' : 'chevronDown'} />
       </button>
     </StyledPoolBalances>
   )

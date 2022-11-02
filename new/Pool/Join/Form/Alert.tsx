@@ -25,7 +25,7 @@ function JoinFormAlert({ message, show, className }: JoinFormAlertProps) {
           variants={slideInDown}
           role="alert"
         >
-          <SvgIcon icon="warning" />
+          <SvgIcon icon="warning" $size={24} />
           <h4 className="title">{message}</h4>
         </StyledJoinFormAlert>
       )}

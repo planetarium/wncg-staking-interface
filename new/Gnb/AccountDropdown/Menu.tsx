@@ -80,12 +80,12 @@ function AccountDropdownMenu({ close }: AccountDropdownMenuProps) {
           <CopyToClipboard text={account!} onCopy={handleCopy}>
             <button type="button">
               {copied ? 'Copied!' : 'Copy Address'}
-              <SvgIcon icon="copy" $size={16} ariaHidden />
+              <SvgIcon icon="copy" />
             </button>
           </CopyToClipboard>
           <a href={etherscanUrl} onClick={close} target="_blank" rel="noopener">
             View Details
-            <SvgIcon icon="link" $size={16} ariaHidden />
+            <SvgIcon icon="link" />
           </a>
         </div>
       </header>

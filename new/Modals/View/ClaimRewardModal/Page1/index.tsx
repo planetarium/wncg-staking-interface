@@ -93,17 +93,12 @@ function ClaimRewardModalPage1({
           <output className="checkout">
             <span className="text">You can get</span>
             <div className={clsx('value', { enabled })}>
-              <SvgIcon icon="approximate" />
+              <SvgIcon icon="approximate" $size={24} />
               <CountUp {...usdCountUpOption} end={totalValue} />
             </div>
           </output>
 
-          <TxButton
-            onClick={claim}
-            isPending={isPending}
-            disabled={disabled}
-            $size="lg"
-          >
+          <TxButton onClick={claim} isPending={isPending} disabled={disabled}>
             Claim reward{tokensToClaim.length === 1 ? '' : 's'}
           </TxButton>
 

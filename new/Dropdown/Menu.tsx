@@ -88,7 +88,7 @@ function DropdownMenu({
                   >
                     <span className="label">{formatter?.(item) ?? item}</span>
 
-                    {selected && <SvgIcon icon="check" $size={16} />}
+                    {selected && <SvgIcon icon="check" />}
                   </button>
                 </li>
               )

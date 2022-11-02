@@ -3,11 +3,14 @@ import { atomWithReset, atomWithStorage } from 'jotai/utils'
 
 import { configService } from 'services/config'
 
+type PendingTx = {
+  hash?: Hash
+}
+
 // NOTE: Stake Modal
 type PendingStakeTx = {
   amount?: string
-  hash?: Hash
-}
+} & PendingTx
 
 export const pendingStakeTxAtom = atomWithStorage<PendingStakeTx>(
   `wncgStaking.pendingStake`,
@@ -26,9 +29,8 @@ type PendingJoinTx = {
   amounts?: string[]
   approving?: string
   assets?: string[]
-  hash?: Hash
   tokensToApprove?: string[]
-}
+} & PendingTx
 
 // NOTE: Join Modal
 export const pendingJoinTxAtom = atomWithStorage<PendingJoinTx>(
@@ -39,9 +41,8 @@ export const pendingJoinTxAtom = atomWithStorage<PendingJoinTx>(
 type PendingExitTx = {
   bptOutPcnt?: number
   exitType?: string
-  hash?: Hash
   tokenOutAmount?: string
-}
+} & PendingTx
 
 // NOTE: Exit Modal
 export const pendingExitTxAtom = atomWithStorage<PendingExitTx>(
@@ -52,11 +53,16 @@ export const pendingExitTxAtom = atomWithStorage<PendingExitTx>(
 type PendingClaimTx = {
   tokensToClaim?: string[]
   rewardsToClaim?: string[]
-  hash?: Hash
-}
+} & PendingTx
 
 // NOTE: Claim Modal
 export const pendingClaimTxAtom = atomWithStorage<PendingClaimTx>(
   `wncgStaking.pendingClaim`,
+  {}
+)
+
+// NOTE: Cooldown Modal
+export const pendingCooldownTxAtom = atomWithStorage<PendingTx>(
+  `wncgStaking.pendingCooldown`,
   {}
 )

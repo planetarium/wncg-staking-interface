@@ -23,7 +23,7 @@ function TxButton(
     onClick,
     disabled: _disabled,
     isPending = false,
-    $size,
+    $size = 'lg',
   }: TxButtonProps,
   ref: ForwardedRef<HTMLButtonElement>
 ) {

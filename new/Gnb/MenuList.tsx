@@ -14,7 +14,7 @@ function MenuList() {
         <li>
           <a href={configService.docs.notion} target="_blank" rel="noopener">
             Docs
-            <SvgIcon icon="export" $size={16} ariaHidden />
+            <SvgIcon icon="export" />
           </a>
         </li>
         <li>
@@ -24,7 +24,7 @@ function MenuList() {
             rel="noopener"
           >
             medium
-            <SvgIcon icon="export" $size={16} ariaHidden />
+            <SvgIcon icon="export" />
           </a>
         </li>
         <li>
@@ -34,7 +34,7 @@ function MenuList() {
             rel="noopener"
           >
             github
-            <SvgIcon icon="export" $size={16} ariaHidden />
+            <SvgIcon icon="export" />
           </a>
         </li>
       </ul>

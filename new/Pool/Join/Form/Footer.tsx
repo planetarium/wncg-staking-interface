@@ -77,7 +77,7 @@ function JoinFormFooter({
       <output className="checkout">
         <span className="text">join pool</span>
         <div className={clsx('value', { enabled })}>
-          <SvgIcon icon="approximate" />
+          <SvgIcon icon="approximate" $size={24} />
           <NumberFormat
             value={totalValue}
             prefix="$"

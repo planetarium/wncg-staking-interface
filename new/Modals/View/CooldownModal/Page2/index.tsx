@@ -1,14 +1,20 @@
 import { memo } from 'react'
+import type { StateValue } from 'xstate'
 import { AnimatePresence } from 'framer-motion'
 
 import TxButton from 'new/TxButton'
 
 type CooldownModalPage2Props = {
   currentPage: number
+  currentState: StateValue
   send(value: string): void
 }
 
-function CooldownModalPage2({ currentPage, send }: CooldownModalPage2Props) {
+function CooldownModalPage2({
+  currentPage,
+  currentState,
+  send,
+}: CooldownModalPage2Props) {
   async function goNext() {
     send('NEXT')
   }

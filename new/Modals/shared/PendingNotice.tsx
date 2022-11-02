@@ -38,7 +38,7 @@ function PendingNotice({ hash }: PendingNoticeProps) {
             rel="noopener"
           >
             Etherscan
-            <SvgIcon icon="link" $size={16} />
+            <SvgIcon icon="link" />
           </a>
         </StyledPendingNotice>
       )}
