@@ -47,6 +47,11 @@ const StyledBalanceSection = styled.section`
       color: var(--gray-500);
     }
   }
+
+  .connectButton {
+    ${textStyle('body', 1)}
+    color: rgba(var(--gray-400-rgb), 0.9);
+  }
 `
 
 export const StyledAvailableBalance = styled(StyledBalanceSection)`

@@ -164,6 +164,12 @@ export const StyledPoolBalances = styled(
     min-width: 280px;
   }
 
+  .connectButton {
+    ${textStyle('subtitle', 1)}
+    font-weight: 700;
+    color: rgba(var(--white-rgb), 0.9);
+  }
+
   ${({ $show }) =>
     $show &&
     css`

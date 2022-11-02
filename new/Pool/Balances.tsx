@@ -2,7 +2,14 @@ import { memo, useMemo, useState } from 'react'
 
 import { bnum } from 'utils/num'
 import { renderStrong } from 'utils/numberFormat'
-import { useBalances, useFiatCurrency, usePool, useStakedBalance } from 'hooks'
+import {
+  useAccount,
+  useBalances,
+  useConnectWallets,
+  useFiatCurrency,
+  usePool,
+  useStakedBalance,
+} from 'hooks'
 
 import { StyledPoolBalances } from './styled'
 import AvailableBalance from 'new/Balances/AvailableBalance'
@@ -15,7 +22,9 @@ function PoolBalances() {
   const [show, setShow] = useState(false)
   const [overflow, setOverflow] = useState<'hidden' | 'visible'>('hidden')
 
+  const { isConnected } = useAccount()
   const { bptBalance } = useBalances()
+  const { connect } = useConnectWallets()
   const { getBptFiatValue } = useFiatCurrency()
   const { poolName, poolTokenAddresses } = usePool()
   const { stakedBalance } = useStakedBalance()
@@ -59,21 +68,29 @@ function PoolBalances() {
           <dt>Your total LP tokens</dt>
 
           <dd>
-            <NumberFormat
-              className="amount"
-              value={totalBalance}
-              decimals={4}
-              renderText={renderStrong}
-            />
-            <div className="fiatValue">
-              <SvgIcon icon="approximate" />
-              <NumberFormat
-                value={totalBalanceInFiatValue}
-                prefix="$"
-                decimals={2}
-                renderText={renderStrong}
-              />
-            </div>
+            {isConnected ? (
+              <>
+                <NumberFormat
+                  className="amount"
+                  value={totalBalance}
+                  decimals={4}
+                  renderText={renderStrong}
+                />
+                <div className="fiatValue">
+                  <SvgIcon icon="approximate" />
+                  <NumberFormat
+                    value={totalBalanceInFiatValue}
+                    prefix="$"
+                    decimals={2}
+                    renderText={renderStrong}
+                  />
+                </div>
+              </>
+            ) : (
+              <button className="connectButton" type="button" onClick={connect}>
+                Connect wallet
+              </button>
+            )}
           </dd>
         </dl>
       </header>

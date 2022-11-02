@@ -5,7 +5,14 @@ import clsx from 'clsx'
 import { bnum } from 'utils/num'
 import { renderStrong } from 'utils/numberFormat'
 import { getTokenColor, getTokenSymbol } from 'utils/token'
-import { useBalances, useFiatCurrency, usePool, usePropAmounts } from 'hooks'
+import {
+  useAccount,
+  useBalances,
+  useConnectWallets,
+  useFiatCurrency,
+  usePool,
+  usePropAmounts,
+} from 'hooks'
 
 import { StyledAvailableBalance } from './styled'
 import NumberFormat from 'new/NumberFormat'
@@ -17,7 +24,9 @@ type AvailableBalanceProps = {
 } & PropsWithChildren
 
 function AvailableBalance({ children, className }: AvailableBalanceProps) {
+  const { isConnected } = useAccount()
   const { bptBalance, hasBptBalance } = useBalances()
+  const { connect } = useConnectWallets()
   const { getBptFiatValue } = useFiatCurrency()
   const { poolTokenAddresses, poolTokenWeights } = usePool()
   const { propAmounts, propAmountsInFiatValue } = usePropAmounts()
@@ -33,11 +42,21 @@ function AvailableBalance({ children, className }: AvailableBalanceProps) {
           <div className="detailItem">
             <dt className="hidden">Your balance</dt>
             <dd>
-              <NumberFormat
-                className="value"
-                value={bptBalance}
-                renderText={renderStrong}
-              />
+              {isConnected ? (
+                <NumberFormat
+                  className="value"
+                  value={bptBalance}
+                  renderText={renderStrong}
+                />
+              ) : (
+                <button
+                  className="connectButton"
+                  type="button"
+                  onClick={connect}
+                >
+                  Connect wallet
+                </button>
+              )}
             </dd>
           </div>
 

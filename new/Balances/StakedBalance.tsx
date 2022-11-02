@@ -3,7 +3,12 @@ import type { PropsWithChildren } from 'react'
 import clsx from 'clsx'
 
 import { renderStrong } from 'utils/numberFormat'
-import { useFiatCurrency, useStakedBalance } from 'hooks'
+import {
+  useAccount,
+  useConnectWallets,
+  useFiatCurrency,
+  useStakedBalance,
+} from 'hooks'
 
 import { StyledStakedBalance } from './styled'
 import NumberFormat from 'new/NumberFormat'
@@ -14,6 +19,8 @@ type StakedBalanceProps = {
 } & PropsWithChildren
 
 function StakedBalance({ className, children }: StakedBalanceProps) {
+  const { isConnected } = useAccount()
+  const { connect } = useConnectWallets()
   const { getBptFiatValue } = useFiatCurrency()
   const { hasStakedBalance, stakedBalance } = useStakedBalance()
 
@@ -31,11 +38,21 @@ function StakedBalance({ className, children }: StakedBalanceProps) {
           <div className="detailItem">
             <dt className="hidden">Your balance</dt>
             <dd>
-              <NumberFormat
-                className="value"
-                value={stakedBalance}
-                renderText={renderStrong}
-              />
+              {isConnected ? (
+                <NumberFormat
+                  className="value"
+                  value={stakedBalance}
+                  renderText={renderStrong}
+                />
+              ) : (
+                <button
+                  className="connectButton"
+                  type="button"
+                  onClick={connect}
+                >
+                  Connect wallet
+                </button>
+              )}
             </dd>
           </div>
 
