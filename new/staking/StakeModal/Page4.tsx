@@ -1,13 +1,12 @@
 import { memo } from 'react'
 import type { StateValue } from 'xstate'
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence } from 'framer-motion'
 
 import { ModalCategory } from 'states/ui'
 import { usdCountUpOption } from 'constants/countUp'
-import { fadeIn } from 'constants/motionVariants'
 import { useFiatCurrency, useModal, useStakedBalance } from 'hooks'
 
-import { StyledModalCompletePage } from 'new/Modals/shared/styled'
+import { ModalCompletePage } from 'new/Modals/shared'
 import Button from 'new/Button'
 import CountUp from 'new/CountUp'
 import NumberFormat from 'new/NumberFormat'
@@ -41,13 +40,7 @@ function StakeModalPage4({
   return (
     <AnimatePresence>
       {currentPage === 4 && (
-        <StyledModalCompletePage
-          as={motion.div}
-          initial="initial"
-          animate="animate"
-          exit="exit"
-          variants={fadeIn}
-        >
+        <ModalCompletePage>
           <header className="modalHeader">
             <h2 className="title">
               Staking {success && 'Completed'}
@@ -97,7 +90,7 @@ function StakeModalPage4({
               Go to main
             </Button>
           </div>
-        </StyledModalCompletePage>
+        </ModalCompletePage>
       )}
     </AnimatePresence>
   )

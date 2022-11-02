@@ -1,12 +1,11 @@
 import { memo } from 'react'
 import { useAtomValue } from 'jotai'
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence } from 'framer-motion'
 
 import { pendingJoinTxAtom } from 'states/form'
-import { fadeIn } from 'constants/motionVariants'
 import { getTokenSymbol } from 'utils/token'
 
-import { StyledModalCompletePage } from 'new/Modals/shared/styled'
+import { ModalCompletePage } from 'new/Modals/shared'
 import Button from 'new/Button'
 
 type JoinModalPage2Props = {
@@ -36,13 +35,7 @@ function JoinModalPage2({
   return (
     <AnimatePresence>
       {currentPage === 2 && (
-        <StyledModalCompletePage
-          as={motion.div}
-          initial="initial"
-          animate="animate"
-          exit="exit"
-          variants={fadeIn}
-        >
+        <ModalCompletePage>
           <header className="modalHeader">
             <h2 className="title">
               {getTokenSymbol(approving || '')} Approval Completed!
@@ -54,7 +47,7 @@ function JoinModalPage2({
               {label}
             </Button>
           </div>
-        </StyledModalCompletePage>
+        </ModalCompletePage>
       )}
     </AnimatePresence>
   )

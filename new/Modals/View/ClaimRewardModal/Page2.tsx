@@ -1,14 +1,13 @@
 import { memo, useMemo } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence } from 'framer-motion'
 
 import { ModalCategory } from 'states/ui'
 import { usdCountUpOption } from 'constants/countUp'
-import { fadeIn } from 'constants/motionVariants'
 import { bnum } from 'utils/num'
 import { getTokenSymbol } from 'utils/token'
 import { useFiatCurrency, useModal } from 'hooks'
 
-import { StyledModalCompletePage } from 'new/Modals/shared/styled'
+import { ModalCompletePage } from 'new/Modals/shared'
 import Button from 'new/Button'
 import CountUp from 'new/CountUp'
 import NumberFormat from 'new/NumberFormat'
@@ -46,13 +45,7 @@ function ClaimRewardModalPage2({
   return (
     <AnimatePresence>
       {currentPage === 2 && (
-        <StyledModalCompletePage
-          as={motion.div}
-          initial="initial"
-          animate="animate"
-          exit="exit"
-          variants={fadeIn}
-        >
+        <ModalCompletePage>
           <header className="modalHeader">
             <h2 className="title">Claim completed!</h2>
           </header>
@@ -106,7 +99,7 @@ function ClaimRewardModalPage2({
               Go to main
             </Button>
           </div>
-        </StyledModalCompletePage>
+        </ModalCompletePage>
       )}
     </AnimatePresence>
   )

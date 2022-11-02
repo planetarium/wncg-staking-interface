@@ -8,7 +8,7 @@ import { assertUnreachable } from 'utils/assertion'
 import { useModal } from 'hooks'
 
 import { StyledConnectWalletModal } from './styled'
-import CloseButton from '../shared/CloseButton'
+import { CloseButton } from 'new/Modals/shared'
 import SvgIcon, { SvgIconType } from 'new/SvgIcon'
 
 function ConnectWalletModal() {

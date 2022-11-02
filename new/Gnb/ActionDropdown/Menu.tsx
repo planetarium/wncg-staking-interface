@@ -23,8 +23,9 @@ function ActionDropdownMenu({ close }: ActionDropdownMenuProps) {
   const { hasStakedBalance } = useStakedBalance()
 
   function withdraw() {
+    // FIXME: cooldown <-> withdraw
     addModal({
-      category: ModalCategory.Withdraw,
+      category: ModalCategory.Cooldown,
     })
     close()
   }

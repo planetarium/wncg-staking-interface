@@ -3,12 +3,6 @@ import styled, { css } from 'styled-components'
 import { buttonStyle } from 'new/Button/styled'
 import { flexbox, textStyle } from 'newStyles/utils'
 
-import { StyledModalContent } from 'new/Modals/shared/styled'
-
-export const StyledExitModalPage1 = styled(StyledModalContent)`
-  max-width: 720px;
-`
-
 export const StyledExitModalPage1Footer = styled.footer`
   margin-top: 64px;
 

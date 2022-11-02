@@ -1,11 +1,8 @@
-import { motion } from 'framer-motion'
-
 import type { ModalCategory } from 'states/ui'
-import { fadeIn } from 'constants/motionVariants'
+
 import { capitalize } from 'utils/string'
 
-import { StyledModalApprovePage } from './styled'
-import { CloseButton, PendingNotice } from 'new/Modals/shared'
+import { CloseButton, ModalPage, PendingNotice } from 'new/Modals/shared'
 import TxButton from 'new/TxButton'
 
 type ApprovePageProps = {
@@ -14,6 +11,7 @@ type ApprovePageProps = {
   category: ModalCategory
   onClick(): Promise<void>
   symbol: string
+  className?: string
   hash?: string
   isPending?: boolean
 }
@@ -24,17 +22,12 @@ function ApprovePage({
   category,
   onClick,
   symbol,
+  className,
   hash,
   isPending,
 }: ApprovePageProps) {
   return (
-    <StyledModalApprovePage
-      as={motion.div}
-      initial="initial"
-      animate="animate"
-      exit="exit"
-      variants={fadeIn}
-    >
+    <ModalPage className={className}>
       <header className="modalHeader">
         <div className="titleGroup">
           <h2 className="title accent">
@@ -55,7 +48,7 @@ function ApprovePage({
       </TxButton>
 
       <PendingNotice hash={hash} />
-    </StyledModalApprovePage>
+    </ModalPage>
   )
 }
 

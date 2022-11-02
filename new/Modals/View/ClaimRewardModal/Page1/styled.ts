@@ -1,11 +1,9 @@
 import styled, { css } from 'styled-components'
 
-import { StyledModalContent } from 'new/Modals/shared/styled'
+import { ModalPage } from 'new/Modals/shared'
 import { flexbox, textStyle } from 'newStyles/utils'
 
-export const StyledClaimRewardModalPage1 = styled(StyledModalContent)`
-  max-width: 720px;
-
+export const StyledClaimRewardModalPage1 = styled(ModalPage)`
   .checkout {
     ${flexbox('space-between')}
     width: 100%;

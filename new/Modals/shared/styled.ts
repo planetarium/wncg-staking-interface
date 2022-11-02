@@ -25,10 +25,11 @@ export const StyledModalContainer = styled(motion.aside)`
   width: 100%;
 `
 
-export const StyledModalContent = styled.div`
+export const StyledModalPage = styled(motion.div)`
   position: relative;
   flex-grow: 1;
   width: 100%;
+  max-width: 720px;
   padding: 48px;
   margin: 0 auto;
   overflow: hidden;
@@ -173,12 +174,8 @@ export const StyledPendingNotice = styled(motion.footer)`
   }
 `
 
-export const StyledModalApprovePage = styled(StyledModalContent)`
-  max-width: 720px;
-`
-
-export const StyledModalCompletePage = styled(StyledModalContent)`
-  max-width: 480px;
+export const StyledModalCompletePage = styled(StyledModalPage)`
+  max-width: 480px !important;
 
   .modalHeader {
     margin-bottom: 0 !important;

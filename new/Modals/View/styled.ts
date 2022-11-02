@@ -1,11 +1,10 @@
 import styled from 'styled-components'
 
 import { flexbox, textStyle } from 'newStyles/utils'
-import { StyledModalContent } from '../shared/styled'
 
-export const StyledConnectWalletModal = styled(StyledModalContent)`
-  max-width: 720px;
+import { ModalPage } from 'new/Modals/shared'
 
+export const StyledConnectWalletModal = styled(ModalPage)`
   .header {
     margin-bottom: 40px;
   }
@@ -61,7 +60,7 @@ export const StyledConnectWalletModal = styled(StyledModalContent)`
   }
 `
 
-export const StyledSwitchNetworkModal = styled(StyledModalContent)`
+export const StyledSwitchNetworkModal = styled(ModalPage)`
   max-width: 480px;
   padding: 48px;
 

@@ -1,14 +1,10 @@
 import styled from 'styled-components'
 
-import {
-  StyledModalCompletePage,
-  StyledModalContent,
-} from 'new/Modals/shared/styled'
+import { ModalPage } from 'new/Modals/shared'
+import { ModalCompletePage } from 'new/Modals/shared'
 import { flexbox, gradient, textStyle } from 'newStyles/utils'
 
-export const StyledJoinModalPage3 = styled(StyledModalContent)`
-  max-width: 720px;
-
+export const StyledJoinModalPage3 = styled(ModalPage)`
   .subtitle {
     .amount,
     .amounts {
@@ -35,7 +31,7 @@ export const StyledJoinModalPage3 = styled(StyledModalContent)`
   }
 `
 
-export const StyledJoinModalPage4 = styled(StyledModalCompletePage)`
+export const StyledJoinModalPage4 = styled(ModalCompletePage)`
   .details {
     width: 100%;
     padding: 20px 24px;

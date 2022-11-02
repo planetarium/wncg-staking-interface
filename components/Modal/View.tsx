@@ -1,15 +1,10 @@
-import { useAtomValue } from 'jotai'
+import dynamic from 'next/dynamic'
 import { motion } from 'framer-motion'
 import styles from './style.module.scss'
 
-import { isMobileAtom, Modal, ModalCategory } from 'states/ui'
+import { Modal, ModalCategory } from 'states/ui'
 import { assertUnreachable } from 'utils/assertion'
-import {
-  modalDesktopVariants,
-  modalMobileVariants,
-  overlayVariants,
-} from './constants'
-import dynamic from 'next/dynamic'
+import { overlayVariants } from './constants'
 
 const ExitPreviewModal = dynamic(() => import('./PoolModals/ExitPreviewModal'))
 const JoinPreviewModal = dynamic(() => import('./PoolModals/JoinPreviewModal'))
@@ -24,10 +19,6 @@ type ModalViewProps = {
 }
 
 export function ModalView({ modal }: ModalViewProps) {
-  const isMobile = useAtomValue(isMobileAtom)
-
-  const variants = isMobile ? modalMobileVariants : modalDesktopVariants
-
   return (
     <motion.div
       className={styles.overlay}
@@ -38,17 +29,7 @@ export function ModalView({ modal }: ModalViewProps) {
       exit="exit"
       transition={{ duration: 0.4 }}
     >
-      <motion.aside
-        className={styles.modalWrapper}
-        key={`${modal.category}.modal`}
-        variants={variants}
-        initial="initial"
-        animate="animate"
-        exit="exit"
-        transition={{ duration: 0.4 }}
-      >
-        {renderModal(modal)}
-      </motion.aside>
+      <aside className={styles.modalWrapper}>{renderModal(modal)}</aside>
     </motion.div>
   )
 }

@@ -9,7 +9,10 @@ import {
   overlayVariants,
 } from '../constants'
 
-import { StyledModalContainer, StyledModalOverlay } from '../shared/styled'
+import {
+  StyledModalContainer,
+  StyledModalOverlay,
+} from 'new/Modals/shared/styled'
 
 const StakeModal = dynamic(() => import('new/staking/StakeModal'), {
   suspense: true,
@@ -18,6 +21,9 @@ const ClaimRewardModal = dynamic(() => import('./ClaimRewardModal'), {
   suspense: true,
 })
 const ConnectWalletModal = dynamic(() => import('./ConnectWalletModal'), {
+  suspense: true,
+})
+const CooldownModal = dynamic(() => import('./CooldownModal'), {
   suspense: true,
 })
 const JoinModal = dynamic(() => import('new/Pool/Join/Modal'), {
@@ -73,6 +79,8 @@ function renderModal(modal: Modal) {
       return <ClaimRewardModal />
     case ModalCategory.Connect:
       return <ConnectWalletModal />
+    case ModalCategory.Cooldown:
+      return <CooldownModal />
     case ModalCategory.Join:
       return <JoinModal {...props} />
     case ModalCategory.Exit:

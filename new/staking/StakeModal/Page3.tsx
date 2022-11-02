@@ -1,10 +1,9 @@
 import { memo } from 'react'
 import { useAtom } from 'jotai'
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence } from 'framer-motion'
 
 import { pendingStakeTxAtom } from 'states/form'
 import { ModalCategory } from 'states/ui'
-import { fadeIn } from 'constants/motionVariants'
 import { useStake } from './useStake'
 
 import { StyledStakeModalPage3 } from './styled'
@@ -47,13 +46,7 @@ function StakeModalPage3({
   return (
     <AnimatePresence>
       {currentPage === 3 && (
-        <StyledStakeModalPage3
-          as={motion.div}
-          initial="initial"
-          animate="animate"
-          exit="exit"
-          variants={fadeIn}
-        >
+        <StyledStakeModalPage3>
           <header className="modalHeader">
             <div className="titleGroup">
               <h2 className="title accent">Staking</h2>

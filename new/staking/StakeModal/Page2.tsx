@@ -1,9 +1,7 @@
 import { memo } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence } from 'framer-motion'
 
-import { fadeIn } from 'constants/motionVariants'
-
-import { StyledModalCompletePage } from 'new/Modals/shared/styled'
+import { ModalCompletePage } from 'new/Modals/shared'
 import Button from 'new/Button'
 
 type StakeModalPage2Props = {
@@ -19,20 +17,14 @@ function StakeModalPage2({ currentPage, send }: StakeModalPage2Props) {
   return (
     <AnimatePresence>
       {currentPage === 2 && (
-        <StyledModalCompletePage
-          as={motion.div}
-          initial="initial"
-          animate="animate"
-          exit="exit"
-          variants={fadeIn}
-        >
+        <ModalCompletePage>
           <header className="modalHeader">
             <h2 className="title">Approval completed!</h2>
           </header>
           <Button onClick={goNext} $size="lg">
             Go to staking
           </Button>
-        </StyledModalCompletePage>
+        </ModalCompletePage>
       )}
     </AnimatePresence>
   )

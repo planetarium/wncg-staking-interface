@@ -1,7 +1,7 @@
-import { StyledModalContent } from '../../shared/styled'
+import { ModalPage } from 'new/Modals/shared'
 
 function CooldownModal() {
-  return <StyledModalContent>Cooldown</StyledModalContent>
+  return <ModalPage>Cooldown</ModalPage>
 }
 
 export default CooldownModal

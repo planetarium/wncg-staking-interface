@@ -1,9 +1,8 @@
 import { memo } from 'react'
 import type { StateValue } from 'xstate'
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence } from 'framer-motion'
 
 import { ModalCategory } from 'states/ui'
-import { fadeIn } from 'constants/motionVariants'
 import { getTokenSymbol } from 'utils/token'
 import { useFiatCurrency, useModal } from 'hooks'
 import { useStaking } from 'hooks/contracts'
@@ -40,19 +39,13 @@ function JoinModalPage4({
   const fail = currentState === 'stakeFail'
 
   function close() {
-    removeModal(ModalCategory.Stake)
+    removeModal(ModalCategory.Join)
   }
 
   return (
     <AnimatePresence>
       {currentPage === 4 && (
-        <StyledJoinModalPage4
-          as={motion.div}
-          initial="initial"
-          animate="animate"
-          exit="exit"
-          variants={fadeIn}
-        >
+        <StyledJoinModalPage4>
           <header className="modalHeader">
             <h2 className="title">Join pool completed!</h2>
           </header>

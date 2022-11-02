@@ -1,13 +1,8 @@
 import styled from 'styled-components'
 
-import {
-  StyledModalCompletePage,
-  StyledModalContent,
-} from 'new/Modals/shared/styled'
+import { ModalPage } from 'new/Modals/shared'
 
-export const StyledStakeModalPage3 = styled(StyledModalContent)`
-  max-width: 720px;
-
+export const StyledStakeModalPage3 = styled(ModalPage)`
   .subtitle {
     .amount {
       color: var(--primary-300);

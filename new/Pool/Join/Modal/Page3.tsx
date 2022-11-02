@@ -1,10 +1,9 @@
 import { memo } from 'react'
 import { useAtom } from 'jotai'
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence } from 'framer-motion'
 
 import { pendingJoinTxAtom } from 'states/form'
 import { ModalCategory } from 'states/ui'
-import { fadeIn } from 'constants/motionVariants'
 import { renderStrong } from 'utils/numberFormat'
 import { getTokenSymbol } from 'utils/token'
 import { useJoin } from './useJoin'
@@ -52,13 +51,7 @@ function JoinModalPage1({
   return (
     <AnimatePresence>
       {currentPage === 3 && (
-        <StyledJoinModalPage3
-          as={motion.div}
-          initial="initial"
-          animate="animate"
-          exit="exit"
-          variants={fadeIn}
-        >
+        <StyledJoinModalPage3>
           <header className="modalHeader">
             <div className="titleGroup">
               <h2 className="title accent">Join pool</h2>
