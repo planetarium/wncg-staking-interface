@@ -67,8 +67,10 @@ function DropdownMenu({
           exit="exit"
           variants={slideInDown}
           aria-labelledby={id}
+          aria-orientation="vertical"
+          role="menu"
         >
-          <ul className="menuList" role="menu">
+          <ul className="menuList">
             {list.map((item) => {
               const selected = value === item
 

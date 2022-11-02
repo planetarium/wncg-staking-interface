@@ -8,7 +8,7 @@ import SvgIcon from './SvgIcon'
 
 function GlobalFooter() {
   return (
-    <StyledGlobalFooter className="globalFooter">
+    <StyledGlobalFooter className="globalFooter" role="contentinfo">
       <div className="container">
         <div className="content">
           <h5>

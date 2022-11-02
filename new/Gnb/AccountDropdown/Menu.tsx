@@ -66,6 +66,9 @@ function AccountDropdownMenu({ close }: AccountDropdownMenuProps) {
       animate="animate"
       exit="exit"
       variants={slideInDown}
+      aria-labelledby="accountDropdown"
+      aria-orientation="vertical"
+      role="menu"
     >
       <header className="header">
         <h2>

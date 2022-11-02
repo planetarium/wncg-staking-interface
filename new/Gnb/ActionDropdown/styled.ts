@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
-import { gradient, textStyle } from 'newStyles/utils'
+import { flexbox, gradient, textStyle } from 'newStyles/utils'
 
 import { buttonStyle } from 'new/Button/styled'
 
@@ -41,19 +41,6 @@ export const StyledActionDropdownMenu = styled(motion.aside)`
       }
     }
   }
-
-  .earnButton {
-    ${buttonStyle}
-    ${textStyle('body', 3)}
-    justify-content: space-between;
-    width: 100%;
-    height: 48px;
-    padding: 0 16px;
-    font-weight: 700;
-    color: var(--white);
-    background-image: ${gradient(1)};
-    border-radius: 6px;
-  }
 `
 
 export const StyledActionDropdownToggle = styled.button`
@@ -78,4 +65,88 @@ export const StyledActionDropdownToggle = styled.button`
       content: ':';
     }
   }
+`
+
+const REWARD_TOGGLE_BUTTON_HEIGHT = 48
+
+export const StyledActionDropdownRewards = styled.section<{ $open: boolean }>`
+  width: 100%;
+  overflow: hidden;
+  max-height: ${REWARD_TOGGLE_BUTTON_HEIGHT}px;
+  color: var(--white);
+  background-image: ${gradient(1)};
+  border-radius: 6px;
+  transition: 400ms;
+
+  .toggleButton {
+    ${buttonStyle}
+    ${textStyle('body', 3)}
+    justify-content: space-between;
+    width: 100%;
+    height: ${REWARD_TOGGLE_BUTTON_HEIGHT}px;
+    padding: 0 16px;
+    font-weight: 700;
+    color: var(--white);
+
+    .icon {
+      position: relative;
+      transition: 200ms;
+    }
+  }
+
+  .content {
+    padding: 0 16px 16px;
+  }
+
+  .rewardList {
+    pointer-events: none;
+  }
+
+  .rewardItem {
+    ${flexbox('space-between')}
+    ${textStyle('body', 3)}
+    flex-direction: row-reverse;
+    margin-top: 8px;
+
+    &:first-child {
+      margin-top: 0;
+    }
+
+    dt,
+    strong {
+      font-weight: 700;
+    }
+
+    dt {
+      flex-shrink: 0;
+      padding-left: 4px;
+      color: rgba(var(--white-rgb), 0.6);
+    }
+
+    dd {
+      flex-grow: 1;
+    }
+  }
+
+  .amount {
+    ${flexbox('flex-start')}
+    white-space: nowrap;
+  }
+
+  .usd {
+    flex-shrink: 0;
+    margin-left: 4px;
+  }
+
+  ${({ $open }) =>
+    $open &&
+    css`
+      max-height: 300px;
+
+      .toggleButton {
+        .icon {
+          transform: rotate(90deg);
+        }
+      }
+    `}
 `

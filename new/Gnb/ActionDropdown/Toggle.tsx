@@ -16,9 +16,12 @@ function ActionDropdownToggle({ toggle }: ActionDropdownToggleProps) {
 
   return (
     <StyledActionDropdownToggle
+      id="actionDropdown"
       className="actionDropdownToggle"
       type="button"
       onClick={toggle}
+      aria-controls="menu"
+      aria-haspopup
     >
       <SvgIcon icon="coin" $size={24} />
       <span className="label">My Staked LP</span>
