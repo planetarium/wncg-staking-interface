@@ -39,22 +39,24 @@ function StakedBalance({ className, children }: StakedBalanceProps) {
             </dd>
           </div>
 
-          <div className="detailItem">
-            <dt className="hidden">Your balance in USD</dt>
-            <dd className="fiatValue">
-              <SvgIcon icon="approximate" $size={16} />
-              <NumberFormat
-                value={fiatValue}
-                decimals={2}
-                prefix="$"
-                renderText={renderStrong}
-              />
-            </dd>
-          </div>
+          {hasStakedBalance && (
+            <div className="detailItem">
+              <dt className="hidden">Your balance in USD</dt>
+              <dd className="fiatValue">
+                <SvgIcon icon="approximate" $size={16} />
+                <NumberFormat
+                  value={fiatValue}
+                  decimals={2}
+                  prefix="$"
+                  renderText={renderStrong}
+                />
+              </dd>
+            </div>
+          )}
         </dl>
       </header>
 
-      {hasStakedBalance && children}
+      {children}
     </StyledStakedBalance>
   )
 }
