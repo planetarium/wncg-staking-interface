@@ -16,11 +16,11 @@ function PendingNotice({ hash }: PendingNoticeProps) {
     <AnimatePresence>
       {hash && (
         <StyledPendingNotice
+          className="pendingNotice"
           initial="initial"
           animate="animate"
           exit="exit"
           variants={slideInDown}
-          // transition={{ duration: 0.5, stiffness: 50 }}
         >
           <SvgIcon className="loading" icon="loading" $size={48} />
 

@@ -102,6 +102,10 @@ export const StyledModalContent = styled.div`
     }
   }
 
+  .pendingNotice {
+    flex-shrink: 0;
+  }
+
   @media screen and (min-width: 1000px) {
     padding: 48px;
     max-height: calc(100vh - 160px);
