@@ -37,23 +37,19 @@ export const joinMachine = createMachine<JoinMachineContext>(
           },
           FAIL: {
             target: 'approveFail',
-            actions: [`rollback`],
+            actions: [`resetHash`],
           },
         },
       },
       approvePending: {
         on: {
-          ROLLBACK: {
-            target: 'approve',
-            actions: [`rollback`],
-          },
           SUCCESS: {
             target: 'approveSuccess',
             actions: [`approve`],
           },
           FAIL: {
             target: 'approveFail',
-            actions: [`rollback`],
+            actions: [`resetHash`],
           },
         },
       },
@@ -70,31 +66,23 @@ export const joinMachine = createMachine<JoinMachineContext>(
       },
       join: {
         on: {
-          ROLLBACK: {
-            target: 'join',
-            actions: [`rollback`],
-          },
           CALL: {
             target: 'joinPending',
           },
           FAIL: {
             target: 'joinFail',
-            actions: [`rollback`],
+            actions: [`resetHash`],
           },
         },
       },
       joinPending: {
         on: {
-          ROLLBACK: {
-            target: 'join',
-            actions: [`rollback`],
-          },
           SUCCESS: {
             target: 'joinSuccess',
           },
           FAIL: {
             target: 'joinFail',
-            actions: [`rollback`],
+            actions: [`resetHash`],
           },
         },
       },
@@ -116,7 +104,7 @@ export const joinMachine = createMachine<JoinMachineContext>(
         },
         hash: undefined,
       }),
-      rollback: assign<JoinMachineContext>({
+      resetHash: assign<JoinMachineContext>({
         hash: undefined,
       }),
     },

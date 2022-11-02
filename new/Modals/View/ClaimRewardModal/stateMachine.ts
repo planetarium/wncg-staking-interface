@@ -30,10 +30,6 @@ export const claimMachine = createMachine<ClaimMachineContext>(
       },
       claimPending: {
         on: {
-          ROLLBACK: {
-            target: 'claim',
-            actions: [`resetHash`],
-          },
           SUCCESS: {
             target: 'claimSuccess',
             actions: [`resetHash`],

@@ -103,7 +103,6 @@ function JoinModal({
       setPendingTx({
         hash: undefined,
       })
-      stateMachine.current.transition(state.value, { type: 'ROLLBACK' })
     },
   })
 

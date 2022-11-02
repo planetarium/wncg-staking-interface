@@ -64,7 +64,6 @@ function StakeModal({ amount, isApproved, resetForm }: StakeModalProps) {
     },
     onError() {
       send('FAIL')
-      stateMachine.current.transition(state.value, { type: 'ROLLBACK' })
     },
   })
 
@@ -88,7 +87,6 @@ function StakeModal({ amount, isApproved, resetForm }: StakeModalProps) {
 
   return (
     <>
-      {state.value}/{hash}/{stakeAmount}
       <Page1
         currentPage={page}
         send={send}

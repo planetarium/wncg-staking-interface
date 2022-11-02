@@ -31,10 +31,6 @@ export const exitMachine = createMachine<ExitMachineContext>(
       },
       exitPending: {
         on: {
-          ROLLBACK: {
-            target: 'exit',
-            actions: [`resetHash`],
-          },
           SUCCESS: {
             target: 'exitSuccess',
             actions: [`resetHash`],
