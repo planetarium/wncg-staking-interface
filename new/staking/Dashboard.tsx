@@ -2,15 +2,14 @@ import { useAtomValue } from 'jotai'
 
 import { totalStakedAtom } from 'states/staking'
 import { countUpOption, percentCountUpOption } from 'constants/countUp'
-import { useApr } from 'hooks'
-import { useStaking } from 'hooks/contracts'
+import { useApr, useRewards } from 'hooks'
 
 import { StyledStakingDashboard } from './styled'
 import CountUp from 'new/CountUp'
 
 function StakingDashboard() {
   const { aprs } = useApr()
-  const { rewardTokenSymbols } = useStaking()
+  const { rewardTokenSymbols } = useRewards()
 
   const totalStaked = useAtomValue(totalStakedAtom)
 

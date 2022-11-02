@@ -11,8 +11,12 @@ import { useStaking } from './contracts'
 export function useRewards() {
   const { toFiat } = useFiatCurrency()
   const { priceFor } = usePrices()
-  const { rewardTokenAddress, rewardTokensList, rewardTokenDecimals } =
-    useStaking()
+  const {
+    rewardTokenAddress,
+    rewardTokensList,
+    rewardTokenDecimals,
+    rewardTokenSymbols,
+  } = useStaking()
 
   const rewards = useAtomValue(rewardsAtom)
 
@@ -48,7 +52,9 @@ export function useRewards() {
     rewardsInFiatValue,
     rewardTokenAddress,
     rewardTokenIndex,
+    rewardTokensList,
     rewardTokenPrices,
+    rewardTokenSymbols,
     scaledRewards,
   }
 }

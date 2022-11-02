@@ -1,18 +1,14 @@
 import { useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 
-import { useFiatCurrency, useRewards } from 'hooks'
-import { useStaking } from 'hooks/contracts'
-import { bnum } from 'utils/num'
+import { useRewards } from 'hooks'
 
 export type ClaimFormFields = {
   tokensToClaim: string[]
 }
 
 export function useClaimForm() {
-  const { toFiat } = useFiatCurrency()
-  const { rewardTokensList } = useStaking()
-  const { rewards } = useRewards()
+  const { rewards, rewardTokensList } = useRewards()
 
   const { register, watch } = useForm<ClaimFormFields>({
     mode: 'onChange',

@@ -25,7 +25,6 @@ function JoinModalPage2({
   const { approving } = useAtomValue(pendingJoinTxAtom)
 
   function goNext() {
-    console.log('👍 NEXT from:', 2)
     send('NEXT')
   }
 

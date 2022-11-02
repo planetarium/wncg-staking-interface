@@ -31,8 +31,9 @@ export function useClaim(
   tokensToClaim: string[],
   { onConfirm, onError }: ContractWriteOption = {}
 ) {
-  const stakingAddress = useAtomValue(stakingContractAddressAtom)
   const { rewardTokenAddress, rewardTokenIndex, scaledRewards } = useRewards()
+
+  const stakingAddress = useAtomValue(stakingContractAddressAtom)
 
   const { config: claimAllConfig } = usePrepareContractWrite({
     ...claimAllWriteConfig,

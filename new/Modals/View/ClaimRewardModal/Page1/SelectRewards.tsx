@@ -4,7 +4,6 @@ import { UseFormRegister } from 'react-hook-form'
 import { usdCountUpOption } from 'constants/countUp'
 import { getTokenSymbol } from 'utils/token'
 import { useRewards } from 'hooks'
-import { useStaking } from 'hooks/contracts'
 
 import { ClaimRewardModalPage1SelectRewards } from './styled'
 import CountUp from 'new/CountUp'
@@ -18,8 +17,7 @@ type SelectRewardsProps = {
 }
 
 function SelectRewards({ register, isPending = false }: SelectRewardsProps) {
-  const { rewards, rewardsInFiatValue } = useRewards()
-  const { rewardTokensList } = useStaking()
+  const { rewards, rewardTokensList, rewardsInFiatValue } = useRewards()
 
   return (
     <ClaimRewardModalPage1SelectRewards

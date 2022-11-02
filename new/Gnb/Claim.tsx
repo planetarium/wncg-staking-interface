@@ -5,7 +5,6 @@ import { ModalCategory } from 'states/ui'
 import { countUpOption, usdCountUpOption } from 'constants/countUp'
 import { fadeIn } from 'constants/motionVariants'
 import { useAccount, useModal, useRewards } from 'hooks'
-import { useStaking } from 'hooks/contracts'
 
 import { StyledClaim } from './styled'
 import CountUp from 'new/CountUp'
@@ -15,8 +14,7 @@ import Button from 'new/Button'
 function Claim() {
   const { isConnected } = useAccount()
   const { addModal } = useModal()
-  const { rewards, rewardsInFiatValue } = useRewards()
-  const { rewardTokenSymbols } = useStaking()
+  const { rewards, rewardTokenSymbols, rewardsInFiatValue } = useRewards()
 
   function claim() {
     addModal({
