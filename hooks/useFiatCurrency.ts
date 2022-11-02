@@ -1,5 +1,5 @@
-import { isAddress } from 'ethers/lib/utils'
 import { useCallback } from 'react'
+import { isAddress } from 'ethers/lib/utils'
 
 import { bnum } from 'utils/num'
 import { findTokenAddressBySymbol } from 'utils/token'
@@ -20,7 +20,7 @@ export function useFiatCurrency() {
     return bnum(value).times(price).toNumber()
   }
 
-  const getBptFiatValue = useCallback(
+  const bptToFiat = useCallback(
     (value?: string | number) => {
       if (!value) return 0
       return bnum(value).times(bptPrice).toNumber()
@@ -29,7 +29,7 @@ export function useFiatCurrency() {
   )
 
   return {
-    getBptFiatValue,
+    bptToFiat,
     toFiat,
   }
 }

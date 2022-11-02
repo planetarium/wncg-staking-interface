@@ -8,14 +8,14 @@ import { useApr, useFiatCurrency, usePrices } from 'hooks'
 
 export function useEstimation() {
   const { emissions, rewardTokenPrices } = useApr()
-  const { getBptFiatValue } = useFiatCurrency()
+  const { bptToFiat } = useFiatCurrency()
   const { bptPrice } = usePrices()
 
   const totalStaked = useAtomValue(totalStakedAtom)
 
   const calcEstimatedRevenue = useCallback(
     (amount: string, option: string) => {
-      const totalStakedValue = getBptFiatValue(
+      const totalStakedValue = bptToFiat(
         bnum(totalStaked).plus(bnum(amount)).toNumber()
       )
       const aprs = emissions.map((emission, i) =>
@@ -26,7 +26,7 @@ export function useEstimation() {
         calcRevenue(amount, apr, option, bptPrice, rewardTokenPrices[i])
       )
     },
-    [bptPrice, emissions, getBptFiatValue, rewardTokenPrices, totalStaked]
+    [bptPrice, emissions, bptToFiat, rewardTokenPrices, totalStaked]
   )
 
   return {

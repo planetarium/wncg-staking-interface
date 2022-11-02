@@ -25,7 +25,7 @@ function PoolBalances() {
   const { isConnected } = useAccount()
   const { bptBalance } = useBalances()
   const { connect } = useConnectWallets()
-  const { getBptFiatValue } = useFiatCurrency()
+  const { bptToFiat } = useFiatCurrency()
   const { poolName, poolTokenAddresses } = usePool()
   const { stakedBalance } = useStakedBalance()
 
@@ -34,7 +34,7 @@ function PoolBalances() {
     [bptBalance, stakedBalance]
   )
 
-  const totalBalanceInFiatValue = getBptFiatValue(totalBalance)
+  const totalBalanceInFiatValue = bptToFiat(totalBalance)
 
   function toggle() {
     setShow((prev) => !prev)

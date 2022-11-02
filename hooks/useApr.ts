@@ -7,13 +7,13 @@ import { useFiatCurrency } from './useFiatCurrency'
 import { useRewards } from './useRewards'
 
 export function useApr() {
-  const { getBptFiatValue } = useFiatCurrency()
+  const { bptToFiat } = useFiatCurrency()
   const { rewardTokenPrices } = useRewards()
   const { emissions } = useStaking()
 
   const totalStaked = useAtomValue(totalStakedAtom)
 
-  const totalStakedValue = getBptFiatValue(totalStaked)
+  const totalStakedValue = bptToFiat(totalStaked)
 
   const aprs = emissions.map((emission, i) =>
     calcApr(emission, rewardTokenPrices[i], totalStakedValue)

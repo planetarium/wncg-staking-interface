@@ -11,7 +11,7 @@ type WithdrawSummaryProps = {
 }
 
 export function WithdrawSummary({ amount }: WithdrawSummaryProps) {
-  const { getBptFiatValue } = useFiatCurrency()
+  const { bptToFiat } = useFiatCurrency()
   const { poolTokenName, poolTokenSymbols } = usePool()
 
   return (
@@ -33,7 +33,7 @@ export function WithdrawSummary({ amount }: WithdrawSummaryProps) {
         <CountUp
           {...usdCountUpOption}
           className={styles.usd}
-          end={getBptFiatValue(amount)}
+          end={bptToFiat(amount)}
           isApproximate
         />
       </dd>

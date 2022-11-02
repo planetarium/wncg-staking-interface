@@ -21,12 +21,12 @@ type StakedBalanceProps = {
 function StakedBalance({ className, children }: StakedBalanceProps) {
   const { isConnected } = useAccount()
   const { connect } = useConnectWallets()
-  const { getBptFiatValue } = useFiatCurrency()
+  const { bptToFiat } = useFiatCurrency()
   const { hasStakedBalance, stakedBalance } = useStakedBalance()
 
   const fiatValue = useMemo(
-    () => getBptFiatValue(stakedBalance),
-    [getBptFiatValue, stakedBalance]
+    () => bptToFiat(stakedBalance),
+    [bptToFiat, stakedBalance]
   )
 
   return (

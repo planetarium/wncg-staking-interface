@@ -27,11 +27,11 @@ function AvailableBalance({ children, className }: AvailableBalanceProps) {
   const { isConnected } = useAccount()
   const { bptBalance, hasBptBalance } = useBalances()
   const { connect } = useConnectWallets()
-  const { getBptFiatValue } = useFiatCurrency()
+  const { bptToFiat } = useFiatCurrency()
   const { poolTokenAddresses, poolTokenWeights } = usePool()
   const { propAmounts, propAmountsInFiatValue } = usePropAmounts()
 
-  const fiatValue = getBptFiatValue(bptBalance)
+  const fiatValue = bptToFiat(bptBalance)
 
   return (
     <StyledAvailableBalance className={clsx('availableBalance', className)}>

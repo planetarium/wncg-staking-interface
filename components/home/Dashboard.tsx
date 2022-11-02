@@ -19,7 +19,7 @@ import { CountUp } from 'components/CountUp'
 
 function Dashboard() {
   const { aprs } = useApr()
-  const { getBptFiatValue } = useFiatCurrency()
+  const { bptToFiat } = useFiatCurrency()
   const { addModal } = useModal()
   const { rewards, rewardsInFiatValue } = useRewards()
   const { rewardTokenSymbols } = useStaking()
@@ -76,7 +76,7 @@ function Dashboard() {
               <CountUp
                 {...usdCountUpOption}
                 className={styles.usd}
-                end={getBptFiatValue(totalStaked)}
+                end={bptToFiat(totalStaked)}
                 isApproximate
                 showAlways
               />

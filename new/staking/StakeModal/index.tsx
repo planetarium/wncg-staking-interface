@@ -30,7 +30,7 @@ type StakeModalProps = {
 function StakeModal({ amount, isApproved, resetForm }: StakeModalProps) {
   const [result, setResult] = useState('0')
 
-  const { getBptFiatValue } = useFiatCurrency()
+  const { bptToFiat } = useFiatCurrency()
   const { stakedTokenAddress } = useStaking()
 
   const [pendingTx, setPendingTx] = useAtom(pendingStakeTxAtom)
@@ -38,7 +38,7 @@ function StakeModal({ amount, isApproved, resetForm }: StakeModalProps) {
   const { amount: pendingAmount, hash: pendingHash } = pendingTx
 
   const stakeAmount = pendingAmount ?? amount
-  const stakeAmountInFiatValue = getBptFiatValue(stakeAmount)
+  const stakeAmountInFiatValue = bptToFiat(stakeAmount)
   const hash = pendingHash ?? undefined
 
   const stateMachine = useRef(stakeMachine)

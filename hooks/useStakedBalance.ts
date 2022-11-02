@@ -15,7 +15,7 @@ const stakingContractIndex = configService.stakingContractAddresses.indexOf(
 )
 
 export function useStakedBalance() {
-  const { getBptFiatValue } = useFiatCurrency()
+  const { bptToFiat } = useFiatCurrency()
 
   const legacyMode = useAtomValue(legacyModeAtom)
   const stakedBalances = useAtomValue(stakedTokenBalancesAtom)
@@ -31,8 +31,8 @@ export function useStakedBalance() {
   )
 
   const stakedBalanceInFiatValue = useMemo(
-    () => getBptFiatValue(stakedBalance),
-    [getBptFiatValue, stakedBalance]
+    () => bptToFiat(stakedBalance),
+    [bptToFiat, stakedBalance]
   )
 
   const hasStakedBalance = useMemo(

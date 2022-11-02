@@ -24,12 +24,12 @@ function StakeModalPage4({
   currentState,
   result,
 }: StakeModalPage4Props) {
-  const { getBptFiatValue } = useFiatCurrency()
+  const { bptToFiat } = useFiatCurrency()
   const { removeModal } = useModal()
   const { stakedBalanceInFiatValue } = useStakedBalance()
 
   const stakedAmount = result
-  const stakedAmountInFiatValue = getBptFiatValue(stakedAmount)
+  const stakedAmountInFiatValue = bptToFiat(stakedAmount)
 
   const success = currentState === 'stakeSuccess'
   const fail = currentState === 'stakeFail'
