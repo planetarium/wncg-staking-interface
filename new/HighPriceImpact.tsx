@@ -10,15 +10,19 @@ type HighPriceImpactProps = {
   checked: boolean
   priceImpact: number
   toggle(value: boolean): void
+  disabled?: boolean
 }
 
 function HighPriceImpact({
   checked,
   priceImpact,
   toggle,
+  disabled = false,
 }: HighPriceImpactProps) {
   const show =
-    priceImpact >= HIGH_PRICE_IMPACT && priceImpact < REKT_PRICE_IMPACT
+    !disabled &&
+    priceImpact >= HIGH_PRICE_IMPACT &&
+    priceImpact < REKT_PRICE_IMPACT
 
   return (
     <AnimatePresence>

@@ -1,8 +1,6 @@
-import { useAtomValue } from 'jotai'
 import type { StateValue } from 'xstate'
 import { AnimatePresence } from 'framer-motion'
 
-import { pendingExitTxAtom } from 'states/form'
 import type { UseExitFormReturns } from '../useExitForm'
 
 import { StyledExitModalPage1 } from './styled'
@@ -17,6 +15,7 @@ type ExitModalPage1Props = {
   currentPage: number
   currentState: StateValue
   send(value: string): void
+  hash?: Hash
 } & UseExitFormReturns
 
 function ExitModalPage1(props: ExitModalPage1Props) {
@@ -32,6 +31,7 @@ function ExitModalPage1(props: ExitModalPage1Props) {
     exactOut,
     exitAmounts,
     exitType,
+    hash,
     isProportional,
     priceImpact,
     priceImpactAgreement,
@@ -45,18 +45,19 @@ function ExitModalPage1(props: ExitModalPage1Props) {
     totalExitAmountsInFiatValue,
   } = props
 
-  const { hash } = useAtomValue(pendingExitTxAtom)
+  const isPending = currentState === 'exitPending'
 
   return (
     <AnimatePresence>
       {currentPage === 1 && (
         <StyledExitModalPage1>
-          <Header />
+          <Header disabled={isPending} />
           <div className="container">
             <Step1
               control={control}
               exitType={exitType}
               resetInputs={resetInputs}
+              disabled={isPending}
             />
             <Step2
               bptOutPcnt={bptOutPcnt}
@@ -66,15 +67,18 @@ function ExitModalPage1(props: ExitModalPage1Props) {
               setMaxValue={setMaxValue}
               singleExitMaxAmounts={singleExitMaxAmounts}
               singleExitTokenOutIndex={singleExitTokenOutIndex}
+              disabled={isPending}
             />
             <Step3
               priceImpact={priceImpact}
               priceImpactAgreement={priceImpactAgreement}
               togglePriceImpactAgreement={togglePriceImpactAgreement}
+              disabled={isPending}
             />
             <Footer
               assets={assets}
               bptIn={bptIn}
+              bptOutPcnt={bptOutPcnt}
               currentState={currentState}
               errors={errors}
               exactOut={exactOut}
@@ -87,9 +91,8 @@ function ExitModalPage1(props: ExitModalPage1Props) {
               tokenOutAmount={tokenOutAmount}
               totalValue={totalExitAmountsInFiatValue}
             />
-
-            <PendingNotice hash={hash} />
           </div>
+          <PendingNotice hash={hash} />
         </StyledExitModalPage1>
       )}
     </AnimatePresence>

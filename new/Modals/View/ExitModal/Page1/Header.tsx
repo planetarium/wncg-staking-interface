@@ -1,10 +1,14 @@
 import { ModalCategory } from 'states/ui'
 
 import { StyledExitModalPage1Header } from './styled'
-import SlippageDropdown from 'new/SlippageDropdown'
 import CloseButton from 'new/Modals/shared/CloseButton'
+import SlippageDropdown from 'new/SlippageDropdown'
 
-function ExitModalPage1Header() {
+type ExitModalPage1HeaderProps = {
+  disabled: boolean
+}
+
+function ExitModalPage1Header({ disabled }: ExitModalPage1HeaderProps) {
   return (
     <StyledExitModalPage1Header className="modalHeader">
       <div className="titleGroup">
@@ -12,7 +16,7 @@ function ExitModalPage1Header() {
         <h3 className="subtitle">Do you want to Exit pool?</h3>
       </div>
 
-      <SlippageDropdown />
+      <SlippageDropdown disabled={disabled} />
       <CloseButton modal={ModalCategory.Exit} />
     </StyledExitModalPage1Header>
   )

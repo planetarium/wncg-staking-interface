@@ -11,12 +11,14 @@ import TokenIcon from 'new/TokenIcon'
 
 type ExitModalPage1Step1Props = {
   control: Control<ExitFormFields, 'any'>
+  disabled: boolean
   exitType: string
   resetInputs(): void
 }
 
 function ExitModalPage1Step1({
   control,
+  disabled,
   exitType,
   resetInputs,
 }: ExitModalPage1Step1Props) {
@@ -35,7 +37,7 @@ function ExitModalPage1Step1({
   }
 
   return (
-    <StyledExitModalPage1Step1>
+    <StyledExitModalPage1Step1 $disabled={disabled}>
       <header className="header">
         <span className="count">1</span>
         <h4 className="title">Choose a coin to exit pool</h4>

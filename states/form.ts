@@ -37,7 +37,10 @@ export const pendingJoinTxAtom = atomWithStorage<PendingJoinTx>(
 )
 
 type PendingExitTx = {
+  bptOutPcnt?: number
+  exitType?: string
   hash?: Hash
+  tokenOutAmount?: string
 }
 
 // NOTE: Exit Modal

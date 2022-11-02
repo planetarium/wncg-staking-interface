@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
 import { buttonStyle } from 'new/Button/styled'
 import { flexbox, textStyle } from 'newStyles/utils'
@@ -47,8 +47,9 @@ export const StyledExitModalPage1Header = styled.header`
   }
 `
 
-const StyledExitModalPage1Step = styled.div`
+const StyledExitModalPage1Step = styled.div<{ $disabled?: boolean }>`
   margin-top: 64px;
+  transition: 200ms;
 
   &:first-child {
     margin-top: 0;
@@ -75,6 +76,12 @@ const StyledExitModalPage1Step = styled.div`
       color: rgba(var(--white-rgb), 0.9);
     }
   }
+
+  ${({ $disabled }) =>
+    $disabled &&
+    css`
+      opacity: 0.5;
+    `}
 `
 
 export const StyledExitModalPage1Step1 = styled(StyledExitModalPage1Step)`

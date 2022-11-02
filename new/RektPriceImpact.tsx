@@ -11,14 +11,16 @@ type RektPriceImpactProps = {
   action: 'join' | 'exit'
   priceImpact: number
   className?: string
+  disabled?: boolean
 }
 
 function RektPriceImpact({
   action,
   priceImpact,
   className,
+  disabled = false,
 }: RektPriceImpactProps) {
-  const show = priceImpact >= REKT_PRICE_IMPACT
+  const show = !disabled && priceImpact >= REKT_PRICE_IMPACT
 
   return (
     <AnimatePresence>

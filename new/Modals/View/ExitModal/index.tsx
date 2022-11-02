@@ -9,8 +9,8 @@ import type { TransactionReceipt } from '@ethersproject/abstract-provider'
 import { pendingExitTxAtom } from 'states/form'
 import { createLogger } from 'utils/log'
 import { networkChainId } from 'utils/network'
-import { parseTransferLogs } from 'utils/tx'
 import { currentPage, exitMachine } from './stateMachine'
+import { parseExitLogs } from './utils'
 import { useExitForm } from './useExitForm'
 
 import Page1 from './Page1'
@@ -42,13 +42,13 @@ function ExitModal() {
     onSettled() {
       log(`Exit tx: ${hash?.slice(0, 6)}`)
     },
-    onSuccess(data: TransactionReceipt) {
-      setResult(parseTransferLogs(data.logs))
+    async onSuccess(data: TransactionReceipt) {
+      const result = parseExitLogs(data.logs)
+      setResult(result)
       send('SUCCESS')
     },
     onError() {
       send('FAIL')
-      stateMachine.current.transition(state.value, { type: 'ROLLBACK' })
     },
   })
 
@@ -66,6 +66,7 @@ function ExitModal() {
         {...formReturns}
         currentPage={page}
         currentState={state.value}
+        hash={hash}
         send={send}
       />
       <Page2 currentPage={page} currentState={state.value} result={result} />

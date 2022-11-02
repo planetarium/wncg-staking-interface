@@ -13,9 +13,10 @@ const SLIPPAGE_LIST = ['0.5', '1', '2']
 
 type SlippageDropdownProps = {
   className?: string
+  disabled?: boolean
 }
 
-function SlippageDropdown({ className }: SlippageDropdownProps) {
+function SlippageDropdown({ className, disabled }: SlippageDropdownProps) {
   const { updateSlippage } = useSettings()
   const slippage = useAtomValue(slippageAtom) || 0
 
@@ -33,6 +34,7 @@ function SlippageDropdown({ className }: SlippageDropdownProps) {
         onChange={handleSlippage}
         value={slippage.toString()}
         formatter={formatSlippage}
+        disabled={disabled}
       />
     </StyledSlippageDropdown>
   )

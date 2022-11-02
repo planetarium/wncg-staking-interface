@@ -25,6 +25,7 @@ type ExitModalPage1Step2Props = {
   bptOutPcnt: number
   clearErrors: UseFormClearErrors<ExitFormFields>
   control: ReactHookFormControl<ExitFormFields, 'any'>
+  disabled: boolean
   exitType: string
   setMaxValue(e: MouseEvent<HTMLButtonElement>): void
   singleExitMaxAmounts: string[]
@@ -35,6 +36,7 @@ function ExitModalPage1Step2({
   bptOutPcnt,
   clearErrors,
   control,
+  disabled,
   exitType,
   setMaxValue,
   singleExitMaxAmounts,
@@ -81,7 +83,7 @@ function ExitModalPage1Step2({
   )
 
   return (
-    <StyledExitModalPage1Step2>
+    <StyledExitModalPage1Step2 $disabled={disabled}>
       <header className="header">
         <span className="count">2</span>
         <h4 className="title">{title}</h4>

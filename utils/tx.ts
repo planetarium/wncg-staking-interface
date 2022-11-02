@@ -53,21 +53,14 @@ export function parseTxError(error: any): TxError | void {
   }
 }
 
-export function decodeLogData(log: Log) {
-  try {
-    return defaultAbiCoder.decode(['uint256'], log.data)
-  } catch {
-    return null
-  }
-}
-
 export function parseTransferLogs(logs: Log[]) {
   const transferLogs = logs.filter((log) => parseLog(log)?.name === 'Transfer')
 
   const tokenAddresses = transferLogs.map((log) => log.address.toLowerCase())
+
   const transferedAmounts = transferLogs.map((log, i) =>
     formatUnits(
-      decodeLogData(log)?.[0] ?? '0',
+      decodeLogData(log.data)?.[0] ?? '0',
       getTokenInfo(tokenAddresses[i])?.decimals ?? 18
     )
   )
@@ -75,4 +68,12 @@ export function parseTransferLogs(logs: Log[]) {
   return Object.fromEntries(
     tokenAddresses.map((address, i) => [address, transferedAmounts[i]])
   )
+}
+
+export function decodeLogData(data: string, types = ['uint256']) {
+  try {
+    return defaultAbiCoder.decode(types, data)
+  } catch {
+    return null
+  }
 }

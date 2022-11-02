@@ -5,7 +5,9 @@ import type {
   FieldErrorsImpl,
   UseFormClearErrors,
 } from 'react-hook-form'
+import { useAtomValue } from 'jotai'
 
+import { pendingExitTxAtom } from 'states/form'
 import { configService } from 'services/config'
 import { bnum } from 'utils/num'
 import { useFiatCurrency, usePool } from 'hooks'
@@ -46,14 +48,20 @@ export function useExitForm(): UseExitFormReturns {
   const { toFiat } = useFiatCurrency()
   const { nativeAssetIndex, poolTokenAddresses } = usePool()
 
+  const {
+    bptOutPcnt: initBptOutPcnt,
+    exitType: initExitType,
+    tokenOutAmount: initTokenOutAmount,
+  } = useAtomValue(pendingExitTxAtom)
+
   const { clearErrors, control, formState, resetField, setValue, watch } =
     useForm<ExitFormFields>({
       mode: 'onChange',
       defaultValues: {
-        bptOutPcnt: 100,
-        exitType: 'all',
+        bptOutPcnt: initBptOutPcnt ?? 100,
+        exitType: initExitType ?? 'all',
         priceImpactAgreement: false,
-        tokenOutAmount: '',
+        tokenOutAmount: initTokenOutAmount ?? '',
       },
     })
 

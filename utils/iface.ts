@@ -5,6 +5,7 @@ import {
   liquidityGaugeIface,
   stakingIface,
   vaultIface,
+  wethIface,
 } from 'lib/interface'
 
 export function parseLog(log: Log) {
@@ -20,7 +21,11 @@ export function parseLog(log: Log) {
         try {
           return vaultIface.parseLog(log)
         } catch {
-          return null
+          try {
+            return wethIface.parseLog(log)
+          } catch {
+            return null
+          }
         }
       }
     }

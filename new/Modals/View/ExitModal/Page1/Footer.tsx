@@ -17,6 +17,7 @@ import TxButton from 'new/TxButton'
 type ExitModalPage1FooterProps = {
   assets: string[]
   bptIn: string
+  bptOutPcnt: number
   currentState: StateValue
   errors: any
   exactOut: boolean
@@ -33,6 +34,7 @@ type ExitModalPage1FooterProps = {
 function ExitModalPage1Footer({
   assets,
   bptIn,
+  bptOutPcnt,
   currentState,
   errors,
   exactOut,
@@ -56,7 +58,10 @@ function ExitModalPage1Footer({
     {
       onConfirm(txHash?: Hash) {
         setPendingTx({
+          bptOutPcnt,
+          exitType,
           hash: txHash,
+          tokenOutAmount,
         })
         send('CALL')
       },
