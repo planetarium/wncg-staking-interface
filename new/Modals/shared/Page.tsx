@@ -1,11 +1,11 @@
 import { memo, PropsWithChildren } from 'react'
+import { useAtomValue } from 'jotai'
 import type { Transition } from 'framer-motion'
 
+import { isMobileAtom } from 'states/ui'
 import { fadeIn, appearInUp } from 'constants/motionVariants'
 
 import { StyledModalPage } from './styled'
-import { useAtomValue } from 'jotai'
-import { isMobileAtom } from 'states/ui'
 
 type ModalPageProps = {
   className?: string

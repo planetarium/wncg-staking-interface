@@ -9,8 +9,8 @@ import type { TransactionReceipt } from '@ethersproject/abstract-provider'
 import { pendingExitTxAtom } from 'states/form'
 import { createLogger } from 'utils/log'
 import { networkChainId } from 'utils/network'
+import { parsePoolBalanceChangedLogs } from 'utils/tx'
 import { currentPage, exitMachine } from './stateMachine'
-import { parseExitLogs } from './utils'
 import { useExitForm } from './useExitForm'
 
 import Page1 from './Page1'
@@ -43,7 +43,7 @@ function ExitModal() {
       log(`Exit tx: ${hash?.slice(0, 6)}`)
     },
     async onSuccess(data: TransactionReceipt) {
-      const result = parseExitLogs(data.logs)
+      const result = parsePoolBalanceChangedLogs(data.logs)
       setResult(result)
       send('SUCCESS')
     },

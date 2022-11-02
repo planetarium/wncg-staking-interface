@@ -12,7 +12,7 @@ import { parseLog } from 'utils/iface'
 import { createLogger } from 'utils/log'
 import { networkChainId } from 'utils/network'
 import { bnum } from 'utils/num'
-import { parseTransferLogs } from 'utils/tx'
+import { parsePoolBalanceChangedLogs } from 'utils/tx'
 import { useFiatCurrency } from 'hooks'
 import { currentPage, joinMachine } from './stateMachine'
 
@@ -93,7 +93,7 @@ function JoinModal({
 
       if (isJoinPoolTx) {
         setPendingTx(RESET)
-        setResult(parseTransferLogs(data.logs))
+        setResult(parsePoolBalanceChangedLogs(data.logs))
       }
 
       send('SUCCESS')

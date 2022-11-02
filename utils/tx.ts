@@ -1,6 +1,7 @@
 import { defaultAbiCoder, formatUnits } from 'ethers/lib/utils'
 import type { Log } from '@ethersproject/abstract-provider'
 
+import { configService } from 'services/config'
 import { parseLog } from './iface'
 import { getTokenInfo } from './token'
 
@@ -68,6 +69,26 @@ export function parseTransferLogs(logs: Log[]) {
   return Object.fromEntries(
     tokenAddresses.map((address, i) => [address, transferedAmounts[i]])
   )
+}
+
+export function parsePoolBalanceChangedLogs(logs: Log[]) {
+  const parsedLogs = logs.map((log) => parseLog(log))
+
+  const poolBalanceChangedLogIndex = parsedLogs.findIndex((log) =>
+    ['Deposit', 'Withdrawal'].includes(log?.name ?? '')
+  )
+
+  if (poolBalanceChangedLogIndex < 0) {
+    return parseTransferLogs(logs)
+  }
+
+  const poolBalanceChangedLog = logs[poolBalanceChangedLogIndex]
+  const decodedData = decodeLogData(poolBalanceChangedLog.data)
+  const amount = formatUnits(decodedData?.[0] ?? '0')
+
+  return {
+    [configService.nativeAssetAddress]: amount,
+  }
 }
 
 export function decodeLogData(data: string, types = ['uint256']) {
