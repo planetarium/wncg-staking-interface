@@ -30,16 +30,9 @@ export const StyledActionDropdownMenu = styled(motion.aside)`
     min-width: 280px;
   }
 
-  .buttonGroup {
+  .actionDropdownRewards,
+  .actionButton {
     margin-top: 16px;
-
-    button {
-      margin-top: 16px;
-
-      &:first-child {
-        margin-top: 0;
-      }
-    }
   }
 `
 
@@ -136,6 +129,10 @@ export const StyledActionDropdownRewards = styled.section<{ $open: boolean }>`
   .usd {
     flex-shrink: 0;
     margin-left: 4px;
+  }
+
+  .claimButton {
+    margin-top: 16px;
   }
 
   ${({ $open }) =>

@@ -44,6 +44,7 @@ function ActionDropdown() {
               </Suspense>
             )}
           </AnimatePresence>
+
           <Toggle toggle={toggle} />
         </StyledActionDropdown>
       )}
