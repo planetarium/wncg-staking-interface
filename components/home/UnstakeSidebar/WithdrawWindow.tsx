@@ -6,7 +6,7 @@ import { useTimer, useUnstakeTimestamps } from 'hooks'
 import { useStaking } from 'hooks/contracts'
 
 export function UnstakeSidebarWithdrawWindow() {
-  const { unstakeWindow } = useStaking()
+  const { withdrawWindowPeriod } = useStaking()
   const { refetchTimestamps, withdrawEndsAt } = useUnstakeTimestamps()
 
   function onExpiration() {
@@ -20,7 +20,7 @@ export function UnstakeSidebarWithdrawWindow() {
   )
 
   const percentRemaining = (
-    Math.min(Math.floor(timeRemaining / 1_000) / unstakeWindow, 1) * 100
+    Math.min(Math.floor(timeRemaining / 1_000) / withdrawWindowPeriod, 1) * 100
   ).toFixed(2)
 
   return (

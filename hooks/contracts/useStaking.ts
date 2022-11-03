@@ -20,6 +20,7 @@ const FNS = [
   'STAKED_TOKEN',
   'getBALRewardRate',
   'getWNCGEmissionPerSec',
+  'COOLDOWN_SECONDS',
   'UNSTAKE_WINDOW',
 ]
 const ABIS = findAbiFromStaking(...FNS)
@@ -53,13 +54,15 @@ export function useStaking() {
     stakedToken,
     balEmissionPerSec,
     wncgEmissionPerSec,
-    _unstakeWindow,
+    cooldownSeconds,
+    unstakeWindow,
   ] = (data || []) as unknown as [
     BigNumber,
     BigNumber,
     string,
     string,
     string,
+    BigNumber,
     BigNumber,
     BigNumber,
     BigNumber
@@ -114,9 +117,14 @@ export function useStaking() {
     [stakedToken]
   )
 
-  const unstakeWindow = useMemo(
-    () => _unstakeWindow?.toNumber() || 0,
-    [_unstakeWindow]
+  const cooldownWindowPeriod = useMemo(
+    () => cooldownSeconds?.toNumber() || 0,
+    [cooldownSeconds]
+  )
+
+  const withdrawWindowPeriod = useMemo(
+    () => unstakeWindow?.toNumber() || 0,
+    [unstakeWindow]
   )
 
   return {
@@ -128,6 +136,7 @@ export function useStaking() {
     rewardTokenDecimals,
     rewardTokenSymbols,
     stakedTokenAddress,
-    unstakeWindow,
+    cooldownWindowPeriod,
+    withdrawWindowPeriod,
   }
 }

@@ -65,7 +65,7 @@ export function StakeSubmit({
   const stakingAddress = useAtomValue(stakingContractAddressAtom)
   const isUnstakeWindow = UNSTAKE_WINDOW.includes(unstakeStatus)
 
-  const { approve } = useApprove(bptAddress, stakingAddress)
+  const approve = useApprove(bptAddress, stakingAddress)
 
   const isApproved = allowanceFor(bptAddress, stakingAddress)
   const isLoading = currentState !== null
