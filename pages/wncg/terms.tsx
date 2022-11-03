@@ -30,13 +30,11 @@ const Terms: NextPage = () => {
           <h2 className="hidden">Abstract</h2>
           <p>
             Welcome to 
-            <Link href="/wncg">
-              <a>https://stake.nine-chronicles.com/wncg</a>
-            </Link>
-            , a website-hosted user interface (together with all related
-            subdomains and/or mobile applications, the “Interface”) provided by
-            Nine Chronicles Ltd (“we”, “our”, or “us”). The Interface provides
-            access to a decentralized protocol on the Ethereum blockchain (the
+            <Link href="/wncg">https://stake.nine-chronicles.com/wncg</Link>, a
+            website-hosted user interface (together with all related subdomains
+            and/or mobile applications, the “Interface”) provided by Nine
+            Chronicles Ltd (“we”, “our”, or “us”). The Interface provides access
+            to a decentralized protocol on the Ethereum blockchain (the
             “Protocol”).
           </p>
           <p>
@@ -70,11 +68,9 @@ const Terms: NextPage = () => {
             This Agreement applies to you (“You”) as a user of the Interface,
             including all the products, services, tools, and information made
             available on{' '}
-            <Link href="/wncg">
-              <a>stake.nine-chronicles.com/wncg</a>
-            </Link>
-            . This Agreement contains a mandatory individual arbitration and
-            class action/jury trial waiver provision that requires the use of
+            <Link href="/wncg">stake.nine-chronicles.com/wncg</Link>. This
+            Agreement contains a mandatory individual arbitration and class
+            action/jury trial waiver provision that requires the use of
             arbitration on an individual basis to resolve disputes, rather than
             jury trials or class actions.
           </p>
@@ -231,7 +227,7 @@ const Terms: NextPage = () => {
             notify you by updating the date at the top of the Agreement and by
             maintaining a current version of the Agreement at 
             <Link href="/wncg/terms">
-              <a>https://stake.nine-chronicles.com/wncg/terms</a>
+              https://stake.nine-chronicles.com/wncg/terms
             </Link>
             . All modifications will be effective when they are posted, and your
             continued use of the Interface will serve as confirmation of your

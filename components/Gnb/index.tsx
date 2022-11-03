@@ -30,16 +30,14 @@ export function Gnb() {
     <nav className={styles.gnb}>
       <h1 className={styles.logo}>
         <Link href="/wncg">
-          <a>
-            <Image
-              {...logoSize}
-              src="/img-logo.png"
-              layout="fill"
-              objectFit="cover"
-              priority
-              alt="Nine Chronicles WNCG Staking"
-            />
-          </a>
+          <Image
+            {...logoSize}
+            src="/img-logo.png"
+            layout="fill"
+            objectFit="cover"
+            priority
+            alt="Nine Chronicles WNCG Staking"
+          />
         </Link>
       </h1>
 

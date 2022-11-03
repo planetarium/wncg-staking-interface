@@ -12,9 +12,7 @@ function Gnb() {
     <StyledGnb className="gnb">
       <div className="left">
         <h1 className="logo">
-          <Link href="/wncg">
-            <a>WNCG Staking</a>
-          </Link>
+          <Link href="/wncg">WNCG Staking</Link>
         </h1>
         <ActionDropdown />
       </div>

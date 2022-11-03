@@ -1,7 +1,6 @@
 import { memo } from 'react'
 
-import { StyledConnectorIcon } from './styled'
-import type { SvgIconSize } from './styled'
+import { StyledConnectorIcon, SvgIconSize } from './styled'
 import SvgIcon from './SvgIcon'
 
 export type ConnectorIconType = 'coinbaseWallet' | 'metaMask' | 'walletConnect'

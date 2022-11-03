@@ -103,10 +103,8 @@ function GlobalFooter() {
           <div className={styles.title}>
             <h1>
               <Link href="/wncg">
-                <a>
-                  WNCG Staking
-                  <span>{process.env.NEXT_PUBLIC_VERSION}</span>
-                </a>
+                WNCG Staking
+                <span>{process.env.NEXT_PUBLIC_VERSION}</span>
               </Link>
             </h1>
             <span className={styles.copyright}>© 2022 WNCG Staking</span>

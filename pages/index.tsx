@@ -64,19 +64,17 @@ const Home: NextPage = () => {
 
           <div className={clsx(styles.cardGroup, styles.wncg)}>
             <h3 className={styles.subtitle}>For WNCG in Ethereum</h3>
-            <Link href="/wncg">
-              <a className={clsx(styles.card, styles.staking)}>
-                <div className={styles.bg} aria-hidden>
-                  <Image
-                    src="/img-bg-human.png"
-                    layout="fill"
-                    objectFit="contain"
-                    priority
-                    alt=""
-                  />
-                </div>
-                <strong>WNCG Staking</strong>
-              </a>
+            <Link className={clsx(styles.card, styles.staking)} href="/wncg">
+              <div className={styles.bg} aria-hidden>
+                <Image
+                  src="/img-bg-human.png"
+                  layout="fill"
+                  objectFit="contain"
+                  priority
+                  alt=""
+                />
+              </div>
+              <strong>WNCG Staking</strong>
             </Link>
           </div>
         </div>

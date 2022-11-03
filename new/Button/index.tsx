@@ -1,25 +1,19 @@
-import { forwardRef } from 'react'
-import type {
+import {
   ButtonHTMLAttributes,
   DetailedHTMLProps,
+  forwardRef,
   ForwardedRef,
   MouseEvent,
   ReactNode,
 } from 'react'
-import Link from 'next/link'
 
-import { StyledButton } from './styled'
-import type { ButtonSize, ButtonVariant } from './styled'
-import SvgIcon from '../SvgIcon'
-import type { SvgIconType } from '../SvgIcon'
+import { ButtonSize, ButtonVariant, StyledButton, StyledLink } from './styled'
+import SvgIcon, { SvgIconType } from '../SvgIcon'
 import ConnectorIcon from 'new/ConnectorIcon'
 
 const nonScalableButtonVariants: ButtonVariant[] = ['text', 'tiny']
 
-export type ButtonProps = DetailedHTMLProps<
-  ButtonHTMLAttributes<HTMLButtonElement>,
-  HTMLButtonElement
-> & {
+export type ButtonProps = {
   children: ReactNode
   ariaLabel?: string
   as?: string
@@ -54,10 +48,14 @@ function Button(
     target,
     type = 'button',
     $contain = false,
-    $size: _$size,
+    $size: _$size = 'lg',
     $variant = 'primary',
     ...buttonProps
-  }: ButtonProps,
+  }: ButtonProps &
+    DetailedHTMLProps<
+      ButtonHTMLAttributes<HTMLButtonElement>,
+      HTMLButtonElement
+    >,
   ref: ForwardedRef<HTMLButtonElement | HTMLAnchorElement>
 ) {
   const datasetMap = Object.fromEntries(
@@ -85,7 +83,6 @@ function Button(
     return (
       <StyledButton
         className={className}
-        as="button"
         type={type}
         ref={ref as any}
         disabled={disabled}
@@ -107,13 +104,13 @@ function Button(
     )
   }
 
-  const anchorElement = (
-    <StyledButton
-      className={className}
-      as="a"
+  return (
+    <StyledLink
       id={id}
-      ref={ref as ForwardedRef<HTMLAnchorElement>}
+      className={className}
+      prefetch={prefetch}
       href={href}
+      ref={ref as ForwardedRef<HTMLAnchorElement>}
       onClick={onClick}
       target={target}
       rel={target === '_blank' ? 'noopener' : undefined}
@@ -124,17 +121,7 @@ function Button(
       {...datasetMap}
     >
       {label}
-    </StyledButton>
-  )
-
-  if (target === '_blank') {
-    return anchorElement
-  }
-
-  return (
-    <Link href={href} as={as} prefetch={prefetch}>
-      {anchorElement}
-    </Link>
+    </StyledLink>
   )
 }
 

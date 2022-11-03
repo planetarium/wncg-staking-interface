@@ -46,11 +46,13 @@ const WncgJoinPool: NextPage = () => {
 
       <PageWrapper>
         <div className={styles.container}>
-          <Link href="/wncg">
-            <a className={styles.backButton} onClick={handleClick}>
-              <Icon id="arrowRight" />
-              Go Main
-            </a>
+          <Link
+            className={styles.backButton}
+            onClick={handleClick}
+            href="/wncg"
+          >
+            <Icon id="arrowRight" />
+            Go Main
           </Link>
 
           <h1 className="hidden">Join Pool</h1>

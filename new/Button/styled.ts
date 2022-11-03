@@ -1,5 +1,7 @@
+import Link from 'next/link'
 import styled, { css } from 'styled-components'
 
+import { assertUnreachable } from 'utils/assertion'
 import { flexbox, gradient, inlineFlexbox, textStyle } from 'newStyles/utils'
 
 export type ButtonSize = 'sm' | 'md' | 'lg'
@@ -51,6 +53,25 @@ export const buttonStyle = css`
     transition: 250ms;
     background-position: center center;
     background-size: 100% 100%;
+  }
+
+  .leftIcon,
+  .rightIcon,
+  .label {
+    position: relative;
+  }
+
+  .leftIcon,
+  .rightIcon {
+    flex-shrink: 0;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .label {
+    flex-grow: 1;
+    text-align: center;
+    white-space: nowrap;
   }
 `
 
@@ -183,36 +204,50 @@ export const smButtonStyle = css`
   }
 `
 
-export const StyledButton = styled.div<StyledButtonProps>`
+function buttonVariantStyle($variant: ButtonVariant) {
+  switch ($variant) {
+    case 'primary':
+      return primaryButtonStyle
+    case 'secondary':
+      return secondaryButtonStyle
+    case 'tertiary':
+      return tertiaryButtonStyle
+    case 'text':
+      return textButtonStyle
+    case 'tiny':
+      return tinyButtonStyle
+    default:
+      assertUnreachable($variant)
+  }
+}
+
+function buttonSizeStyle($size?: ButtonSize) {
+  if (!$size) return
+
+  switch ($size) {
+    case 'lg':
+      return lgButtonStyle
+    case 'md':
+      return mdButtonStyle
+    case 'sm':
+      return smButtonStyle
+    default:
+      assertUnreachable($size)
+  }
+}
+
+export const StyledButton = styled.button<StyledButtonProps>`
   ${buttonStyle}
   width: ${({ $contain }) => ($contain ? 'auto' : '100%')};
 
-  .leftIcon,
-  .rightIcon,
-  .label {
-    position: relative;
-  }
+  ${({ $variant }) => buttonVariantStyle($variant)}
+  ${({ $size }) => buttonSizeStyle($size)}
+`
 
-  .leftIcon,
-  .rightIcon {
-    flex-shrink: 0;
-    pointer-events: none;
-    user-select: none;
-  }
+export const StyledLink = styled(Link)<StyledButtonProps>`
+  ${buttonStyle}
+  width: ${({ $contain }) => ($contain ? 'auto' : '100%')};
 
-  .label {
-    flex-grow: 1;
-    text-align: center;
-    white-space: nowrap;
-  }
-
-  ${({ $variant }) => $variant === 'primary' && primaryButtonStyle}
-  ${({ $variant }) => $variant === 'secondary' && secondaryButtonStyle}
-  ${({ $variant }) => $variant === 'tertiary' && tertiaryButtonStyle}
-  ${({ $variant }) => $variant === 'text' && textButtonStyle}
-  ${({ $variant }) => $variant === 'tiny' && tinyButtonStyle}
-
-  ${({ $size }) => $size === 'lg' && lgButtonStyle}
-  ${({ $size }) => $size === 'md' && mdButtonStyle}
-  ${({ $size }) => $size === 'sm' && smButtonStyle}
+  ${({ $variant }) => buttonVariantStyle($variant)}
+  ${({ $size }) => buttonSizeStyle($size)}
 `

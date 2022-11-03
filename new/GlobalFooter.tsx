@@ -16,12 +16,8 @@ function GlobalFooter() {
             <span>© 2022 WNCG Staking</span>
           </h5>
 
-          <Link href="/wncg/terms">
-            <a>Terms of Use</a>
-          </Link>
-          <Link href="/wncg/privacy">
-            <a>Privacy Policy</a>
-          </Link>
+          <Link href="/wncg/terms">Terms of Use</Link>
+          <Link href="/wncg/privacy">Privacy Policy</Link>
         </div>
 
         <ul className="buttonGroup">

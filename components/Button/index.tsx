@@ -101,12 +101,13 @@ function Button(
     )
   }
 
-  const anchorElement = (
-    <a
+  return (
+    <Link
+      prefetch={prefetch}
       className={nestedClassName}
       id={id}
-      ref={ref as ForwardedRef<HTMLAnchorElement>}
       href={href}
+      ref={ref as ForwardedRef<HTMLAnchorElement>}
       onClick={onClick}
       target={target}
       rel={target === '_blank' ? 'noopener' : undefined}
@@ -121,16 +122,6 @@ function Button(
         />
       )}
       {children}
-    </a>
-  )
-
-  if (target === '_blank') {
-    return anchorElement
-  }
-
-  return (
-    <Link href={href} prefetch={prefetch}>
-      {anchorElement}
     </Link>
   )
 }
