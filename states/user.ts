@@ -1,5 +1,7 @@
 import { atom } from 'jotai'
+import { roundToNearestMinutes } from 'date-fns'
 
+import { UnstakePhase } from 'constants/types'
 import { configService } from 'services/config'
 
 export type AllowanceMap = {
@@ -28,5 +30,41 @@ export const balancesAtom = atom((get) => {
   return {
     ...tokenBalanceMap,
     [configService.nativeAssetAddress]: etherBalance,
+  }
+})
+
+export const isCooldownWindowAtom = atom((get) => {
+  const unstakePhase = get(unstakePhaseAtom)
+  return unstakePhase === UnstakePhase.CooldownWindow
+})
+
+export const isWithdrawWindowAtom = atom((get) => {
+  const unstakePhase = get(unstakePhaseAtom)
+  return unstakePhase === UnstakePhase.WithdrawWindow
+})
+
+export const isUnstakeWindowAtom = atom((get) => {
+  const unstakePhase = get(unstakePhaseAtom)
+  return unstakePhase !== UnstakePhase.Idle
+})
+
+export const roundedTimestampsAtom = atom((get) => {
+  const [cooldownEndsAt, withdrawEndsAt] = get(timestampsAtom)
+  return [
+    roundToNearestMinutes(cooldownEndsAt, { roundingMethod: 'ceil' }),
+    roundToNearestMinutes(withdrawEndsAt, { roundingMethod: 'floor' }),
+  ]
+})
+
+export const unstakePhaseAtom = atom((get) => {
+  const [cooldownEndsAt, withdrawEndsAt] = get(timestampsAtom)
+
+  switch (true) {
+    case cooldownEndsAt > 0:
+      return UnstakePhase.CooldownWindow
+    case withdrawEndsAt > 0:
+      return UnstakePhase.WithdrawWindow
+    default:
+      return UnstakePhase.Idle
   }
 })
