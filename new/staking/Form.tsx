@@ -1,5 +1,4 @@
-import { MouseEvent, useEffect } from 'react'
-import type { FormEvent } from 'react'
+import { FormEvent, MouseEvent, useEffect } from 'react'
 import type {
   Control as ReactHookFormControl,
   FieldValues,

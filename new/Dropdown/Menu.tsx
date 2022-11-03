@@ -1,5 +1,4 @@
-import { useCallback, useRef } from 'react'
-import type { MouseEvent as ReactMouseEvent } from 'react'
+import { MouseEvent as ReactMouseEvent, useCallback, useRef } from 'react'
 import { useMount, useUnmount } from 'react-use'
 import { AnimatePresence } from 'framer-motion'
 import clsx from 'clsx'

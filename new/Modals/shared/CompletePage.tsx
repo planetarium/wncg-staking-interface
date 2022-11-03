@@ -1,4 +1,4 @@
-import { memo, PropsWithChildren } from 'react'
+import { memo, ReactNode } from 'react'
 import type { Transition } from 'framer-motion'
 
 import { fadeIn } from 'constants/motionVariants'
@@ -6,10 +6,11 @@ import { fadeIn } from 'constants/motionVariants'
 import { StyledModalCompletePage } from './styled'
 
 type ModalCompletePageProps = {
+  children: ReactNode
   className?: string
   id?: string
   transition?: Transition
-} & PropsWithChildren
+}
 
 function ModalCompletePage({
   children,

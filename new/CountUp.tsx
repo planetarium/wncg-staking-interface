@@ -1,15 +1,14 @@
 import { useEffect, useState } from 'react'
 import { usePrevious } from 'react-use'
-import ReactCountUp from 'react-countup'
-import type { CountUpProps as ReactCountUpProps } from 'react-countup'
+import ReactCountUp, { CountUpProps as ReactCountUpProps } from 'react-countup'
+import clsx from 'clsx'
 
 import { bnum, sanitizeNumber } from 'utils/num'
 import { useAccount } from 'hooks'
 
-import { StyledCountUp } from './styled'
-import type { SvgIconSize } from './styled'
+import { StyledCountUp, SvgIconSize } from './styled'
 
-type CountUpProps = Omit<ReactCountUpProps, 'end'> & {
+type CountUpProps = {
   end: string | number
   showAlways?: boolean
   showTitle?: boolean
@@ -25,7 +24,7 @@ function CountUp({
   minAmount = 0.0001,
   $iconSize = 16,
   ...countUpProps
-}: CountUpProps) {
+}: CountUpProps & Omit<ReactCountUpProps, 'end'>) {
   const [start, setStart] = useState(0)
   const prevEnd = usePrevious(Number(sanitizeNumber(end))) || 0
 
@@ -40,12 +39,14 @@ function CountUp({
   }, [end, prevEnd, start])
 
   if (showDash) {
-    return <StyledCountUp className={className}>-</StyledCountUp>
+    return (
+      <StyledCountUp className={clsx('countUp', className)}>-</StyledCountUp>
+    )
   }
 
   return (
     <StyledCountUp
-      className={className}
+      className={clsx('countUp', className)}
       title={showTitle ? sanitizeNumber(end) : undefined}
     >
       <ReactCountUp {...countUpProps} start={start} end={bEnd.toNumber()} />

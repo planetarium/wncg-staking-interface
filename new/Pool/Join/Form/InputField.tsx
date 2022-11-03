@@ -1,5 +1,4 @@
-import { memo, useMemo } from 'react'
-import type { MouseEvent } from 'react'
+import { memo, MouseEvent, useMemo } from 'react'
 import type {
   Control as ReactHookFormControl,
   FieldValues,

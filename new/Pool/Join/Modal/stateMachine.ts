@@ -1,5 +1,4 @@
-import { assign, createMachine } from 'xstate'
-import type { StateValue } from 'xstate'
+import { assign, createMachine, StateValue } from 'xstate'
 
 import { assertUnreachable } from 'utils/assertion'
 

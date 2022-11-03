@@ -1,5 +1,4 @@
-import { forwardRef } from 'react'
-import type { ForwardedRef, MouseEvent, ReactNode } from 'react'
+import { forwardRef, ForwardedRef, MouseEvent, ReactNode } from 'react'
 import { useMachine } from '@xstate/react'
 
 import { txButtonMachine } from './stateMachine'

@@ -1,8 +1,7 @@
 import { memo } from 'react'
 import clsx from 'clsx'
 
-import { StyledSvgIcon } from './styled'
-import type { SvgIconSize } from './styled'
+import { StyledSvgIcon, SvgIconSize } from './styled'
 
 import CoinIcon from 'public/ic-coin.svg'
 import WalletConnectIcon from 'public/ic-wallet-connect.svg'

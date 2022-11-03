@@ -1,5 +1,4 @@
-import { memo, useMemo } from 'react'
-import type { PropsWithChildren } from 'react'
+import { memo, ReactNode, useMemo } from 'react'
 import clsx from 'clsx'
 
 import { renderStrong } from 'utils/numberFormat'
@@ -15,8 +14,9 @@ import NumberFormat from 'new/NumberFormat'
 import SvgIcon from 'new/SvgIcon'
 
 type StakedBalanceProps = {
+  children?: ReactNode
   className?: string
-} & PropsWithChildren
+}
 
 function StakedBalance({ children, className }: StakedBalanceProps) {
   const { isConnected } = useAccount()

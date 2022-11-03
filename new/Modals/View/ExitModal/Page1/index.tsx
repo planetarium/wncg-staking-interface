@@ -3,8 +3,7 @@ import { AnimatePresence } from 'framer-motion'
 
 import type { UseExitFormReturns } from '../useExitForm'
 
-import { StyledExitModalPage1 } from './styled'
-import { PendingNotice } from 'new/Modals/shared'
+import { ModalPage, PendingNotice } from 'new/Modals/shared'
 import Footer from './Footer'
 import Header from './Header'
 import Step1 from './Step1'
@@ -16,9 +15,9 @@ type ExitModalPage1Props = {
   currentState: StateValue
   send(value: string): void
   hash?: Hash
-} & UseExitFormReturns
+}
 
-function ExitModalPage1(props: ExitModalPage1Props) {
+function ExitModalPage1(props: ExitModalPage1Props & UseExitFormReturns) {
   const {
     assets,
     bptIn,
@@ -50,7 +49,7 @@ function ExitModalPage1(props: ExitModalPage1Props) {
   return (
     <AnimatePresence>
       {currentPage === 1 && (
-        <StyledExitModalPage1>
+        <ModalPage>
           <Header disabled={isPending} />
           <div className="container">
             <Step1
@@ -93,7 +92,7 @@ function ExitModalPage1(props: ExitModalPage1Props) {
             />
           </div>
           <PendingNotice hash={hash} />
-        </StyledExitModalPage1>
+        </ModalPage>
       )}
     </AnimatePresence>
   )

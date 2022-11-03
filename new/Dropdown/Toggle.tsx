@@ -1,6 +1,4 @@
-import { memo } from 'react'
-import type { MouseEvent } from 'react'
-
+import { memo, MouseEvent } from 'react'
 import { StyledDropdownToggle } from './styled'
 import SvgIcon from 'new/SvgIcon'
 

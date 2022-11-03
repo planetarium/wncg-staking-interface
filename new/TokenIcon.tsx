@@ -5,8 +5,7 @@ import { configService } from 'services/config'
 import { getTokenSymbol } from 'utils/token'
 
 import { StyledTokenIcon } from './styled'
-import SvgIcon from './SvgIcon'
-import type { SvgIconType } from './SvgIcon'
+import SvgIcon, { SvgIconType } from './SvgIcon'
 
 type TokenIconProps = {
   address?: string

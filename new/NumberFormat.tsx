@@ -1,12 +1,11 @@
-import { NumericFormat } from 'react-number-format'
-import type { NumericFormatProps } from 'react-number-format'
+import { NumericFormat, NumericFormatProps } from 'react-number-format'
+import BigNumber from 'bignumber.js'
 
 import { bnum } from 'utils/num'
-import { OldBigNumber } from '@balancer-labs/sor'
 
-type NumberFormatProps = NumericFormatProps & {
+type NumberFormatProps = {
   decimals?: number
-  roundingMode?: OldBigNumber.RoundingMode
+  roundingMode?: BigNumber.RoundingMode
   showDashInInfinity?: boolean
   showDashInZero?: boolean
   showTitle?: boolean
@@ -24,7 +23,7 @@ function NumberFormat({
   thousandSeparator = true,
   valueIsNumericString = true,
   ...props
-}: NumberFormatProps) {
+}: NumberFormatProps & NumericFormatProps) {
   const bValue = bnum(bnum(defaultValue || 0).toFixed(decimals, roundingMode))
 
   const showDash =

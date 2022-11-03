@@ -1,5 +1,4 @@
-import { assign } from '@xstate/fsm'
-import { createMachine, StateValue } from 'xstate'
+import { assign, createMachine, StateValue } from 'xstate'
 
 import { assertUnreachable } from 'utils/assertion'
 

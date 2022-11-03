@@ -1,5 +1,4 @@
-import { memo } from 'react'
-import type { PropsWithChildren } from 'react'
+import { memo, ReactNode } from 'react'
 import clsx from 'clsx'
 
 import { bnum } from 'utils/num'
@@ -20,8 +19,9 @@ import SvgIcon from 'new/SvgIcon'
 import TokenIcon from 'new/TokenIcon'
 
 type AvailableBalanceProps = {
+  children: ReactNode
   className?: string
-} & PropsWithChildren
+}
 
 function AvailableBalance({ children, className }: AvailableBalanceProps) {
   const { isConnected } = useAccount()

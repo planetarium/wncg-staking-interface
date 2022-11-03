@@ -1,5 +1,4 @@
-import { useState } from 'react'
-import type { MouseEvent } from 'react'
+import { MouseEvent, useState } from 'react'
 import clsx from 'clsx'
 
 import { StyledDropdown } from './styled'

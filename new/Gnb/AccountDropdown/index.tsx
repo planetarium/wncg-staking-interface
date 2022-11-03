@@ -1,5 +1,4 @@
-import { memo, Suspense, useState } from 'react'
-import type { MouseEvent } from 'react'
+import { memo, MouseEvent, Suspense, useState } from 'react'
 import dynamic from 'next/dynamic'
 import { AnimatePresence, motion } from 'framer-motion'
 import styled from 'styled-components'

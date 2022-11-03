@@ -1,8 +1,8 @@
 import { MouseEvent, useCallback, useMemo } from 'react'
-import { useForm } from 'react-hook-form'
-import type {
+import {
   Control,
   FieldErrorsImpl,
+  useForm,
   UseFormClearErrors,
 } from 'react-hook-form'
 import { useAtomValue } from 'jotai'

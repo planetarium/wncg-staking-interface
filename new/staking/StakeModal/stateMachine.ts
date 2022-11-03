@@ -1,5 +1,5 @@
-import { createMachine } from 'xstate'
-import type { StateValue } from 'xstate'
+import { createMachine, StateValue } from 'xstate'
+
 import { assertUnreachable } from 'utils/assertion'
 
 type StakeMachineContext = {

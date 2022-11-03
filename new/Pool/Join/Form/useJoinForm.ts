@@ -1,5 +1,4 @@
-import { useCallback, useMemo } from 'react'
-import type { MouseEvent } from 'react'
+import { MouseEvent, useCallback, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { useSetAtom } from 'jotai'
 

@@ -6,12 +6,16 @@ import { renderStrong } from 'utils/numberFormat'
 import { getTokenSymbol } from 'utils/token'
 import { useModal, useRewards } from 'hooks'
 
-import { StyledActionDropdownRewards } from './styled'
+import { StyledActionDropdownMenuRewards } from './styled'
 import Button from 'new/Button'
 import NumberFormat from 'new/NumberFormat'
 import SvgIcon from 'new/SvgIcon'
 
-function ActionDropdownRewards() {
+type ActionDropdownMenuRewardsProps = {
+  close(): void
+}
+
+function ActionDropdownMenuRewards({ close }: ActionDropdownMenuRewardsProps) {
   const [open, setOpen] = useState(false)
 
   const { addModal } = useModal()
@@ -32,7 +36,10 @@ function ActionDropdownRewards() {
   }
 
   return (
-    <StyledActionDropdownRewards className="actionDropdownRewards" $open={open}>
+    <StyledActionDropdownMenuRewards
+      className="actionDropdownRewards"
+      $open={open}
+    >
       <button
         id="actionDropdown:rewards:toggle"
         className="toggleButton"
@@ -98,8 +105,8 @@ function ActionDropdownRewards() {
           </Button>
         )}
       </div>
-    </StyledActionDropdownRewards>
+    </StyledActionDropdownMenuRewards>
   )
 }
 
-export default memo(ActionDropdownRewards)
+export default memo(ActionDropdownMenuRewards)

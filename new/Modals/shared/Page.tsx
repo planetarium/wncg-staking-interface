@@ -1,4 +1,4 @@
-import { memo, PropsWithChildren } from 'react'
+import { memo, ReactNode } from 'react'
 import { useAtomValue } from 'jotai'
 import type { Transition } from 'framer-motion'
 
@@ -8,10 +8,11 @@ import { fadeIn, appearInUp } from 'constants/motionVariants'
 import { StyledModalPage } from './styled'
 
 type ModalPageProps = {
+  children: ReactNode
   className?: string
   id?: string
   transition?: Transition
-} & PropsWithChildren
+}
 
 function ModalPage({ children, className, id, transition }: ModalPageProps) {
   const isMobile = useAtomValue(isMobileAtom)

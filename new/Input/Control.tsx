@@ -1,6 +1,5 @@
 import type { MouseEvent } from 'react'
-import { Controller } from 'react-hook-form'
-import type { Control, RegisterOptions } from 'react-hook-form'
+import { Control, Controller, RegisterOptions } from 'react-hook-form'
 import clsx from 'clsx'
 
 import { useAccount } from 'hooks'
