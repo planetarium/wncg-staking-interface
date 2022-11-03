@@ -1,39 +1,13 @@
 import { motion } from 'framer-motion'
 import styled, { css } from 'styled-components'
 
-import { flexbox, gradient, textStyle } from 'newStyles/utils'
+import { inlineFlexbox, posCenter, textStyle } from 'newStyles/utils'
 
 import { buttonStyle } from 'new/Button/styled'
 
 export const StyledActionDropdown = styled(motion.div)`
   position: relative;
   z-index: 1;
-`
-
-export const StyledActionDropdownMenu = styled(motion.aside)`
-  position: absolute;
-  top: calc(100% + 12px);
-  left: 0;
-  z-index: 1;
-  width: 360px;
-  padding: 24px;
-  background-color: var(--white);
-  border-radius: 8px;
-
-  .availableBalance {
-    padding-top: 32px;
-    margin-top: 32px;
-    box-shadow: 0 -1px 0 0 var(--gray-200);
-  }
-
-  .tooltipMessage {
-    min-width: 280px;
-  }
-
-  .actionDropdownRewards,
-  .actionButton {
-    margin-top: 16px;
-  }
 `
 
 export const StyledActionDropdownToggle = styled.button`
@@ -60,89 +34,50 @@ export const StyledActionDropdownToggle = styled.button`
   }
 `
 
-const REWARD_TOGGLE_BUTTON_HEIGHT = 48
-
-export const StyledActionDropdownRewards = styled.section<{ $open: boolean }>`
-  width: 100%;
-  overflow: hidden;
-  max-height: ${REWARD_TOGGLE_BUTTON_HEIGHT}px;
+export const StyledActionDropdownUnstakeBadge = styled(motion.span)<{
+  $active: boolean
+}>`
+  ${inlineFlexbox()}
+  position: relative;
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  margin-left: 10px;
   color: var(--white);
-  background-image: ${gradient(1)};
-  border-radius: 6px;
-  transition: 400ms;
+  border-radius: 50%;
+  background-color: var(--gray-700);
+  transition: 200ms;
 
-  .toggleButton {
-    ${buttonStyle}
-    ${textStyle('body', 3)}
-    justify-content: space-between;
-    width: 100%;
-    height: ${REWARD_TOGGLE_BUTTON_HEIGHT}px;
-    padding: 0 16px;
-    font-weight: 700;
-    color: var(--white);
+  .icon {
+    ${posCenter()}
+    width: 18px;
+    height: 18px;
+    transition: 200ms;
 
-    .icon {
-      position: relative;
-      transition: 200ms;
+    &.lock {
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    &.unlock {
+      opacity: 0;
+      transform: translate(-50%, -52%) scale(0.8);
     }
   }
 
-  .content {
-    padding: 0 16px 16px;
-  }
-
-  .rewardList {
-    pointer-events: none;
-  }
-
-  .rewardItem {
-    ${flexbox('space-between')}
-    ${textStyle('body', 3)}
-    flex-direction: row-reverse;
-    margin-top: 8px;
-
-    &:first-child {
-      margin-top: 0;
-    }
-
-    dt,
-    strong {
-      font-weight: 700;
-    }
-
-    dt {
-      flex-shrink: 0;
-      padding-left: 4px;
-      color: rgba(var(--white-rgb), 0.6);
-    }
-
-    dd {
-      flex-grow: 1;
-    }
-  }
-
-  .amount {
-    ${flexbox('flex-start')}
-    white-space: nowrap;
-  }
-
-  .usd {
-    flex-shrink: 0;
-    margin-left: 4px;
-  }
-
-  .claimButton {
-    margin-top: 16px;
-  }
-
-  ${({ $open }) =>
-    $open &&
+  ${({ $active }) =>
+    $active &&
     css`
-      max-height: 300px;
+      background-color: var(--primary-500);
 
-      .toggleButton {
-        .icon {
-          transform: rotate(90deg);
+      .icon {
+        &.lock {
+          opacity: 0;
+          transform: translate(-50%, -50%) scale(0.8);
+        }
+
+        &.unlock {
+          opacity: 1;
+          transform: translate(-50%, -52%) scale(1);
         }
       }
     `}

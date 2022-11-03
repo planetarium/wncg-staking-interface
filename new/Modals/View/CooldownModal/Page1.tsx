@@ -4,18 +4,22 @@ import { AnimatePresence } from 'framer-motion'
 
 import { ModalCategory } from 'states/ui'
 
-import { CloseButton, ModalPage } from 'new/Modals/shared'
+import { StyledCooldownModalPage1 } from './styled'
+import { CloseButton } from 'new/Modals/shared'
 import Button from 'new/Button'
+import EarningsEstimate from 'new/EarningsEstimate'
 
 type CooldownModalPage1Props = {
   currentPage: number
   currentState: StateValue
+  disabled: boolean
   send(value: string): void
 }
 
 function CooldownModalPage1({
   currentPage,
   currentState,
+  disabled,
   send,
 }: CooldownModalPage1Props) {
   function goNext() {
@@ -25,7 +29,7 @@ function CooldownModalPage1({
   return (
     <AnimatePresence>
       {currentPage === 1 && (
-        <ModalPage>
+        <StyledCooldownModalPage1>
           <header className="modalHeader">
             <div className="titleGroup">
               <h2 className="title accent">Estimated Earn</h2>
@@ -35,13 +39,17 @@ function CooldownModalPage1({
                 Do you really start cooldown?
               </h3>
             </div>
-
             <CloseButton modal={ModalCategory.Cooldown} />
           </header>
-          <Button onClick={goNext} $size="lg">
+
+          <div className="container">
+            <EarningsEstimate />
+          </div>
+
+          <Button className="nextButton" onClick={goNext} $size="lg">
             Yes, I don&apos;t care
           </Button>
-        </ModalPage>
+        </StyledCooldownModalPage1>
       )}
     </AnimatePresence>
   )

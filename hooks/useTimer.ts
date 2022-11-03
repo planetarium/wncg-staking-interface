@@ -33,10 +33,10 @@ export function useTimer(expiresAt = 0, onExpiration?: () => void) {
 }
 
 function parseTimeRemaining(timestamp: number) {
-  const days = Math.floor(timestamp / DAY)
-  const hours = Math.floor((timestamp % DAY) / HOUR)
-  const minutes = Math.floor((timestamp % HOUR) / MINUTE)
-  const seconds = Math.floor((timestamp % MINUTE) / SECOND)
+  const days = Math.max(0, Math.floor(timestamp / DAY))
+  const hours = Math.max(0, Math.floor((timestamp % DAY) / HOUR))
+  const minutes = Math.max(0, Math.floor((timestamp % HOUR) / MINUTE))
+  const seconds = Math.max(0, Math.floor((timestamp % MINUTE) / SECOND))
 
   return {
     days,

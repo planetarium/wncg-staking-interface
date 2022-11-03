@@ -1,9 +1,9 @@
-import { assign, createMachine } from 'xstate'
-import type { StateValue } from 'xstate'
+import { assign, createMachine, StateValue } from 'xstate'
 
 import { assertUnreachable } from 'utils/assertion'
 
 export type CooldownMachineContext = {
+  cooldownEndsAt?: number
   hash?: string
 }
 
@@ -13,13 +13,17 @@ export const cooldownMachine = createMachine<CooldownMachineContext>(
     id: `cooldownMachine`,
     initial: `idle`,
     context: {
+      cooldownEndsAt: 0,
       hash: undefined,
     },
     states: {
       idle: {
-        always: [{ target: `cooldownPending`, cond: `waitForCooldown` }],
+        always: [
+          { target: `cooldownPending`, cond: `waitForCooldown` },
+          { target: `cooldownSuccess`, cond: `unstakeWindow` },
+        ],
         on: {
-          CALL: {
+          NEXT: {
             target: `cooldown`,
           },
         },
@@ -62,7 +66,10 @@ export const cooldownMachine = createMachine<CooldownMachineContext>(
     },
     guards: {
       waitForCooldown(ctx) {
-        return !!ctx.hash
+        return !!ctx.hash && !ctx.cooldownEndsAt
+      },
+      unstakeWindow(ctx) {
+        return !!ctx.cooldownEndsAt
       },
     },
   }

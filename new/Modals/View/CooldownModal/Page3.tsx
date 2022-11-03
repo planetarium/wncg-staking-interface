@@ -1,8 +1,11 @@
 import { memo } from 'react'
 import type { StateValue } from 'xstate'
+import { useAtomValue } from 'jotai'
 import { AnimatePresence } from 'framer-motion'
+import { format } from 'date-fns'
 
 import { ModalCategory } from 'states/ui'
+import { timestampsAtom } from 'states/user'
 import { useModal } from 'hooks'
 
 import { ModalCompletePage } from 'new/Modals/shared'
@@ -11,13 +14,16 @@ import Button from 'new/Button'
 type CooldownModalPage3Props = {
   currentPage: number
   currentState: StateValue
+  disabled: boolean
 }
 
 function CooldownModalPage3({
   currentPage,
   currentState,
+  disabled,
 }: CooldownModalPage3Props) {
   const { removeModal } = useModal()
+  const [cooldownEndsAt, withdrawEndsAt] = useAtomValue(timestampsAtom)
 
   // FIXME: Handle failed tx
   const success = currentState === 'cooldownSuccess'
@@ -39,7 +45,11 @@ function CooldownModalPage3({
             <dt>Withdrawal period</dt>
             <dd>
               <strong>
-                <time>1234</time>
+                <time>{format(cooldownEndsAt!, 'MMM d, yyyy HH:mm')}</time>
+              </strong>
+              ~
+              <strong>
+                <time>{format(withdrawEndsAt!, 'MMM d, yyyy HH:mm')}</time>
               </strong>
             </dd>
           </dl>

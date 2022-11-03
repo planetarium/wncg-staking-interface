@@ -6,6 +6,7 @@ import { useStakedBalance } from 'hooks'
 import { StyledActionDropdownToggle } from './styled'
 import CountUp from 'new/CountUp'
 import SvgIcon from 'new/SvgIcon'
+import UnstakeBadge from './UnstakeBadge'
 
 type ActionDropdownToggleProps = {
   toggle(e: MouseEvent<HTMLButtonElement>): void
@@ -33,6 +34,8 @@ function ActionDropdownToggle({ toggle }: ActionDropdownToggleProps) {
           prefix="$"
         />
       </strong>
+
+      <UnstakeBadge />
     </StyledActionDropdownToggle>
   )
 }
