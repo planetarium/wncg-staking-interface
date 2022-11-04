@@ -1,9 +1,7 @@
-import { useAtomValue } from 'jotai'
 import { motion } from 'framer-motion'
 
 import { ModalCategory } from 'states/ui'
-import { isCooldownWindowAtom, isWithdrawWindowAtom } from 'states/user'
-import { slideInDown } from 'constants/motionVariants'
+import { fadeIn } from 'constants/motionVariants'
 import { useModal, useStakedBalance } from 'hooks'
 
 import Button from 'new/Button'
@@ -18,42 +16,20 @@ function ActionDropdownMenuUnstakeButton({
   const { addModal } = useModal()
   const { hasStakedBalance } = useStakedBalance()
 
-  const isCooldownWindow = useAtomValue(isCooldownWindowAtom)
-  const isWithdrawWindow = useAtomValue(isWithdrawWindowAtom)
-
   function unstake() {
-    let category: ModalCategory | null = null
-
-    switch (true) {
-      case isWithdrawWindow:
-        category = ModalCategory.Withdraw
-        break
-      case !isCooldownWindow:
-        category = ModalCategory.Cooldown
-        break
-      default:
-        break
-    }
-
-    // addModal({
-    //   category: ModalCategory.Cooldown,
-    // })
-
-    if (category) {
-      addModal({
-        category,
-      })
-    }
+    addModal({
+      category: ModalCategory.Cooldown,
+    })
     close()
   }
 
   return (
     <motion.div
       className="unstakePeriod"
-      //   initial="initial"
+      initial="initial"
       animate="animate"
       exit="exit"
-      variants={slideInDown}
+      variants={fadeIn}
     >
       <Button
         className="actionButton"

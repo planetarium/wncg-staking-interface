@@ -5,10 +5,11 @@ import { AnimatePresence } from 'framer-motion'
 import { format } from 'date-fns'
 
 import { ModalCategory } from 'states/ui'
-import { timestampsAtom } from 'states/user'
+import { roundedTimestampsAtom } from 'states/user'
+import { datePattern } from 'constants/time'
 import { useModal } from 'hooks'
 
-import { ModalCompletePage } from 'new/Modals/shared'
+import { StyledCooldownModalPage3 } from './styled'
 import Button from 'new/Button'
 
 type CooldownModalPage3Props = {
@@ -23,7 +24,7 @@ function CooldownModalPage3({
   disabled,
 }: CooldownModalPage3Props) {
   const { removeModal } = useModal()
-  const [cooldownEndsAt, withdrawEndsAt] = useAtomValue(timestampsAtom)
+  const [cooldownEndsAt, withdrawEndsAt] = useAtomValue(roundedTimestampsAtom)
 
   // FIXME: Handle failed tx
   const success = currentState === 'cooldownSuccess'
@@ -36,20 +37,23 @@ function CooldownModalPage3({
   return (
     <AnimatePresence>
       {currentPage === 3 && (
-        <ModalCompletePage>
+        <StyledCooldownModalPage3>
           <header className="modalHeader">
             <h2 className="title">Cooldown Started</h2>
           </header>
 
-          <dl>
+          <dl className="detail">
             <dt>Withdrawal period</dt>
             <dd>
               <strong>
-                <time>{format(cooldownEndsAt!, 'MMM d, yyyy HH:mm')}</time>
+                <time dateTime={cooldownEndsAt.toString()}>
+                  {format(cooldownEndsAt, datePattern)}
+                </time>
               </strong>
-              ~
-              <strong>
-                <time>{format(withdrawEndsAt!, 'MMM d, yyyy HH:mm')}</time>
+              <strong className="tilde">
+                <time dateTime={withdrawEndsAt.toString()}>
+                  {format(withdrawEndsAt, datePattern)}
+                </time>
               </strong>
             </dd>
           </dl>
@@ -59,7 +63,7 @@ function CooldownModalPage3({
               Go to main
             </Button>
           </div>
-        </ModalCompletePage>
+        </StyledCooldownModalPage3>
       )}
     </AnimatePresence>
   )
