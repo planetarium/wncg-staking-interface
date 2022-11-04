@@ -8,6 +8,7 @@ import { allowancesAtom } from 'states/user'
 import { configService } from 'services/config'
 import { uniqAddress } from 'utils/address'
 import { associateAllowances } from 'utils/contract'
+import { createLogger } from 'utils/log'
 import { networkChainId } from 'utils/network'
 import { findAbiFromErc20 } from 'utils/wagmi'
 import { useAccount } from '../useAccount'
@@ -16,6 +17,8 @@ import { useStaking } from '../useStaking'
 
 const FN = 'allowance'
 const ABI = findAbiFromErc20(FN)
+
+const log = createLogger(`black`)
 
 export function useAllowances() {
   const { account } = useAccount()
@@ -54,6 +57,9 @@ export function useAllowances() {
     contracts,
     enabled: !!account && !!stakedTokenAddress,
     watch: true,
+    onSettled() {
+      log(`allowances`)
+    },
     onSuccess(data: unknown = []) {
       const allowanceMap = associateAllowances(
         tokenAddresses,

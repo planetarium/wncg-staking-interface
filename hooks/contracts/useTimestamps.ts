@@ -1,7 +1,7 @@
 import { useEffect, useMemo } from 'react'
 import { usePrevious } from 'react-use'
-import { useAtom, useAtomValue, useSetAtom } from 'jotai'
-import { RESET } from 'jotai/utils'
+import { useAtom, useAtomValue } from 'jotai'
+import { RESET, useUpdateAtom } from 'jotai/utils'
 import type { BigNumber } from 'ethers'
 import { useContractReads } from 'wagmi'
 import { isPast } from 'date-fns'
@@ -25,7 +25,7 @@ export function useTimestamps() {
   const { hasStakedBalance } = useStakedBalance()
 
   const stakingAddress = useAtomValue(stakingContractAddressAtom)
-  const setPendingTx = useSetAtom(pendingCooldownTxAtom)
+  const setPendingTx = useUpdateAtom(pendingCooldownTxAtom)
   const [timestamps, setTimestamps] = useAtom(timestampsAtom)
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const prevTimestamps = usePrevious(timestamps) || [0, 0]
@@ -50,11 +50,15 @@ export function useTimestamps() {
       log(`timestamps`)
     },
     onSuccess(data: unknown = []) {
-      const timestamps = (data as BigNumber[]).map((timestamp) => {
-        let timestampInMs = timestamp?.toNumber() * 1_000 || 0
-        if (isPast(timestampInMs)) timestampInMs = 0
-        return timestampInMs
-      })
+      let timestamps = (data as BigNumber[]).map(
+        (timestamp) => timestamp?.toNumber() * 1_000 || 0
+      )
+      const [, withdrawEndsAt] = timestamps
+
+      if (isPast(withdrawEndsAt)) {
+        timestamps = [0, 0]
+      }
+
       setPendingTx(RESET)
       setTimestamps(timestamps)
     },

@@ -74,7 +74,6 @@ export function useJoinMath() {
           fixedTokenIndex,
           'send'
         ) || {}
-      console.log(amounts, send)
 
       return send || ['0', '0']
     },

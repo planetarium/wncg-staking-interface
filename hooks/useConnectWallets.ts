@@ -19,13 +19,6 @@ export function useConnectWallets() {
   })
 
   const connect = useCallback(() => {
-    if (typeof window === 'undefined' || !window.ethereum) {
-      addModal({
-        category: ModalCategory.MetaMaskGuide,
-      })
-      return
-    }
-
     addModal({
       category: ModalCategory.Connect,
     })
