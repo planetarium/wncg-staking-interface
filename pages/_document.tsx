@@ -7,7 +7,7 @@ import Document, {
 } from 'next/document'
 import { ServerStyleSheet } from 'styled-components'
 
-import { Favicon } from 'components/Favicon'
+import Favicon from 'components/Favicon'
 
 class MyDocument extends Document {
   static async getInitialProps(ctx: DocumentContext) {

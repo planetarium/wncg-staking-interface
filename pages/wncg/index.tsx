@@ -6,11 +6,11 @@ import { NextSeo } from 'next-seo'
 import { STAKING_SEO } from 'lib/seo'
 
 import { StyledWncgStakingPage } from 'newStyles/styled'
-import Dashboard from 'new/staking/Dashboard'
-import Form from 'new/staking/Form'
-import Header from 'new/staking/Header'
+import Dashboard from 'components/staking/Dashboard'
+import Form from 'components/staking/Form'
+import Header from 'components/staking/Header'
 import { AnimatePresence } from 'framer-motion'
-import Pool from 'new/Pool'
+import Pool from 'components/Pool'
 
 const WncgStaking: NextPage = () => {
   const { query } = useRouter()

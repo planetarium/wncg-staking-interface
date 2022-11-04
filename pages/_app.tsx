@@ -20,9 +20,9 @@ import { configService } from 'services/config'
 import { DEFAULT_SEO } from 'lib/seo'
 import wagmiClient from 'lib/wagmi'
 
-import Effects from 'new/Effects'
-import Layout from 'new/Layout'
-import Modals from 'new/Modals'
+import Effects from 'components/Effects'
+import Layout from 'components/Layout'
+import Modals from 'components/Modals'
 import { ToastContainer } from 'components/ToastContainer'
 import GlobalStyle from 'newStyles/GlobalStyle'
 

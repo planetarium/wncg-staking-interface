@@ -10,12 +10,12 @@ import { MessageService } from 'services/message'
 import { TransactionSubscriptionService } from 'services/transactionSubscription'
 import { usePool } from './usePool'
 import { useProvider } from './useProvider'
-import { useToast } from './useToast'
+// import { useToast } from './useToast'
 
 export function useTx() {
   const provider = useProvider()
   const { refetchPool } = usePool()
-  const { addToast } = useToast()
+  // const { addToast } = useToast()
 
   const setTxList = useSetAtom(txListAtom)
   const resetTxList = useResetAtom(txListAtom)
@@ -43,14 +43,14 @@ export function useTx() {
       if (!tx) return
 
       setTxList((prev) => [...prev, { ...tx, toast }])
-      addToast({
-        title,
-        message: messages.info,
-        hash: tx.hash,
-        type: 'info',
-      })
+      // addToast({
+      //   title,
+      //   message: messages.info,
+      //   hash: tx.hash,
+      //   type: 'info',
+      // })
     },
-    [addToast, messageService, setTxList, txService]
+    [messageService, setTxList, txService]
   )
 
   const resolveTx = useCallback(
@@ -66,14 +66,14 @@ export function useTx() {
         }
         return newTxList
       })
-      addToast({
-        title: tx.toast.title,
-        message: tx.toast.messages.success,
-        hash: tx.hash,
-        type: 'success',
-      })
+      // addToast({
+      //   title: tx.toast.title,
+      //   message: tx.toast.messages.success,
+      //   hash: tx.hash,
+      //   type: 'success',
+      // })
     },
-    [addToast, setTxList, txService]
+    [setTxList, txService]
   )
 
   const rejectTx = useCallback(
@@ -81,14 +81,14 @@ export function useTx() {
       const tx = txService!.reject(hash, error)
       if (!tx) return
 
-      addToast({
-        title: tx.toast.title,
-        message: tx.toast.messages.error,
-        hash: tx.hash,
-        type: 'error',
-      })
+      // addToast({
+      //   title: tx.toast.title,
+      //   message: tx.toast.messages.error,
+      //   hash: tx.hash,
+      //   type: 'error',
+      // })
     },
-    [addToast, txService]
+    [txService]
   )
 
   const pingPendingTx = useCallback(

@@ -1,178 +1,63 @@
-import { memo, MouseEvent, ReactNode } from 'react'
-import { useAtomValue } from 'jotai'
+import { memo } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
-import clsx from 'clsx'
-import styles from './styles/GlobalFooter.module.scss'
 
-import { stakingContractAddressAtom } from 'states/staking'
 import { configService } from 'services/config'
-import { gaEvent } from 'lib/gtag'
-import { getEtherscanUrl } from 'utils/url'
 
-import { Icon } from './Icon'
-
-function handleClick(e: MouseEvent<HTMLAnchorElement>) {
-  gaEvent({
-    name: `open_${e.currentTarget.dataset.name}`,
-  })
-}
+import { StyledGlobalFooter } from './styled'
+import SvgIcon from './SvgIcon'
 
 function GlobalFooter() {
-  const { pathname } = useRouter()
-  const isStakingPage = pathname.startsWith('/wncg')
-  const isDocumentPage = ['/wncg/terms', '/wncg/privacy'].includes(pathname)
-
-  const stakingAddress = useAtomValue(stakingContractAddressAtom)
-  const stakingContractUrl = getEtherscanUrl(stakingAddress)
-
-  const snsLinks = (
-    <div className={styles.buttonGroup}>
-      <a
-        className={styles.snsButton}
-        href={configService.socialMedia.twitter}
-        onClick={handleClick}
-        data-name="twitter"
-        target="_blank"
-        rel="noopener"
-        aria-label="Go to Twitter"
-      >
-        <Icon id="twitter" />
-      </a>
-      <a
-        className={styles.snsButton}
-        href={configService.socialMedia.medium}
-        onClick={handleClick}
-        data-name="medium"
-        target="_blank"
-        rel="noopener"
-        aria-label="Go to Medium"
-      >
-        <Icon id="medium" />
-      </a>
-      <a
-        className={styles.snsButton}
-        href={configService.socialMedia.discord}
-        onClick={handleClick}
-        data-name="discord"
-        target="_blank"
-        rel="noopener"
-        aria-label="Open Discord"
-      >
-        <Icon id="discord" />
-      </a>
-      {isStakingPage && (
-        <>
-          <a
-            className={clsx(styles.snsButton, styles.etherscan)}
-            href={stakingContractUrl}
-            target="_blank"
-            rel="noreferrer"
-            aria-label="Open Etherscan"
-          >
-            <Icon id="ethereumSimple" />
-          </a>
-          <a
-            className={styles.snsButton}
-            href={configService.github.repositoryUrl}
-            target="_blank"
-            rel="noreferrer"
-            aria-label="Open Github"
-          >
-            <Icon id="github" />
-          </a>
-        </>
-      )}
-    </div>
-  )
-
-  if (!isStakingPage) {
-    return (
-      <footer className={styles.globalFooter}>
-        <div className={styles.container}>
-          <div className={styles.center}>{snsLinks}</div>
-        </div>
-      </footer>
-    )
-  }
-
   return (
-    <footer className={styles.globalFooter}>
-      <div className={styles.container}>
-        <div className={styles.left}>
-          <div className={styles.title}>
-            <h1>
-              <Link href="/wncg">
-                WNCG Staking
-                <span>{process.env.NEXT_PUBLIC_VERSION}</span>
-              </Link>
-            </h1>
-            <span className={styles.copyright}>© 2022 WNCG Staking</span>
-          </div>
+    <StyledGlobalFooter className="globalFooter" role="contentinfo">
+      <div className="container">
+        <div className="content">
+          <h5>
+            <strong>WNCG Staking</strong>
+            <span>© 2022 WNCG Staking</span>
+          </h5>
 
-          <FooterLink
-            href="/wncg/terms"
-            dataName="terms_of_service"
-            target={!isDocumentPage}
-          >
-            Terms of Service
-          </FooterLink>
-          <FooterLink
-            href="/wncg/privacy"
-            dataName="privacy_policy"
-            target={!isDocumentPage}
-          >
-            Privacy Policy
-          </FooterLink>
-          <a
-            className={styles.link}
-            href={configService.docs.notion}
-            data-name="docs"
-            target="_blank"
-            rel="noreferrer"
-            onClick={handleClick}
-          >
-            Docs
-          </a>
+          <Link href="/wncg/terms">Terms of Use</Link>
+          <Link href="/wncg/privacy">Privacy Policy</Link>
         </div>
 
-        <div className={styles.right}>{snsLinks}</div>
+        <ul className="buttonGroup">
+          <li>
+            <a
+              className="snsButton"
+              href={configService.socialMedia.twitter}
+              target="_blank"
+              rel="noopener"
+              aria-label="Open twitter"
+            >
+              <SvgIcon icon="twitter" $size={24} />
+            </a>
+          </li>
+          <li>
+            <a
+              className="snsButton"
+              href={configService.socialMedia.discord}
+              target="_blank"
+              rel="noopener"
+              aria-label="Open discord"
+            >
+              <SvgIcon icon="discord" $size={24} />
+            </a>
+          </li>
+          <li>
+            <a
+              className="snsButton"
+              href={configService.socialMedia.telegram}
+              target="_blank"
+              rel="noopener"
+              aria-label="Open telegram"
+            >
+              <SvgIcon icon="telegram" $size={24} />
+            </a>
+          </li>
+        </ul>
       </div>
-    </footer>
+    </StyledGlobalFooter>
   )
 }
 
-const MemoizedGlobalFooter = memo(GlobalFooter)
-export { MemoizedGlobalFooter as GlobalFooter }
-
-type FooterLinkProps = {
-  children: ReactNode
-  dataName: string
-  href: string
-  target: boolean
-}
-
-function FooterLink({ children, dataName, href, target }: FooterLinkProps) {
-  if (target) {
-    return (
-      <a
-        className={styles.link}
-        href={href}
-        onClick={handleClick}
-        data-name={dataName}
-        target="_blank"
-        rel="noopener"
-      >
-        {children}
-      </a>
-    )
-  }
-
-  return (
-    <Link href={href} data-name={dataName}>
-      <a className={styles.link} onClick={handleClick}>
-        {children}
-      </a>
-    </Link>
-  )
-}
+export default memo(GlobalFooter)

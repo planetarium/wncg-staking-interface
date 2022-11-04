@@ -1,21 +1,21 @@
 import { memo } from 'react'
 
-import BaseEffects from './BaseEffects'
-import ConfigEffects from './ConfigEffects'
-import ContractEffects from './ContractEffects'
-import MediaQueryEffects from './MediaQueryEffects'
-import ToastEffects from './ToastEffects'
-import TxEffects from './TxEffects'
+import BaseEffect from './BaseEffect'
+import ConfigEffect from './ConfigEffect'
+import ContractEffect from './ContractEffect'
+import MediaQueryEffect from './MediaQueryEffect'
+import ToastEffect from './ToastEffect'
+import TxEffect from './TxEffect'
 
 function Effects() {
   return (
     <>
-      <BaseEffects />
-      <ConfigEffects />
-      <ContractEffects />
-      <MediaQueryEffects />
-      <ToastEffects />
-      <TxEffects />
+      <BaseEffect />
+      <ConfigEffect />
+      <ContractEffect />
+      <MediaQueryEffect />
+      <ToastEffect />
+      <TxEffect />
     </>
   )
 }

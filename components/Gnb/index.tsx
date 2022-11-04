@@ -1,47 +1,30 @@
-import { useMemo } from 'react'
-import { useAtomValue } from 'jotai'
-import Image from 'next/image'
+import { memo } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
-import styles from './style.module.scss'
 
-import { isMobileAtom } from 'states/ui'
-import { useAccount } from 'hooks'
+import { StyledGnb } from './styled'
+import AccountDropdown from './AccountDropdown'
+import ActionDropdown from './ActionDropdown'
+import Claim from './Claim'
+import MenuList from './MenuList'
 
-import { GnbAccount } from './Account'
-import { GnbConnect } from './Connect'
-
-export function Gnb() {
-  const { isConnected } = useAccount()
-  const { pathname } = useRouter()
-  const isStakingPage =
-    pathname === '/wncg' || pathname.startsWith('/wncg/pool')
-
-  const isMobile = useAtomValue(isMobileAtom)
-
-  const logoSize = useMemo(
-    () => (isMobile ? { width: 40, height: 24 } : { width: 66, height: 40 }),
-    [isMobile]
-  )
-
-  const accountElement = isConnected ? <GnbAccount /> : <GnbConnect />
-
+function Gnb() {
   return (
-    <nav className={styles.gnb}>
-      <h1 className={styles.logo}>
-        <Link href="/wncg">
-          <Image
-            {...logoSize}
-            src="/img-logo.png"
-            layout="fill"
-            objectFit="cover"
-            priority
-            alt="Nine Chronicles WNCG Staking"
-          />
-        </Link>
-      </h1>
+    <StyledGnb className="gnb">
+      <div className="left">
+        <h1 className="logo">
+          <Link href="/wncg">WNCG Staking</Link>
+        </h1>
+        <ActionDropdown />
+      </div>
 
-      {isStakingPage && accountElement}
-    </nav>
+      <div className="right">
+        <MenuList />
+        <AccountDropdown />
+      </div>
+
+      <Claim />
+    </StyledGnb>
   )
 }
+
+export default memo(Gnb)

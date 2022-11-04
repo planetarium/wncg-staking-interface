@@ -1,27 +1,30 @@
-import { NumericFormat } from 'react-number-format'
-import type { NumericFormatProps } from 'react-number-format'
+import { NumericFormat, NumericFormatProps } from 'react-number-format'
+import BigNumber from 'bignumber.js'
 
 import { bnum } from 'utils/num'
 
-type NumberFormatProps = NumericFormatProps & {
+type NumberFormatProps = {
+  decimals?: number
+  roundingMode?: BigNumber.RoundingMode
   showDashInInfinity?: boolean
   showDashInZero?: boolean
   showTitle?: boolean
 }
 
-export function NumberFormat({
+function NumberFormat({
   value: defaultValue,
   allowNegative = false,
-  decimalScale = 8,
-  valueIsNumericString = true,
+  className,
+  decimals = 8,
+  roundingMode = 1,
   showDashInInfinity = true,
-  showDashInZero = true,
+  showDashInZero = false,
   showTitle = true,
   thousandSeparator = true,
-  className,
+  valueIsNumericString = true,
   ...props
-}: NumberFormatProps) {
-  const bValue = bnum(defaultValue || 0)
+}: NumberFormatProps & NumericFormatProps) {
+  const bValue = bnum(bnum(defaultValue || 0).toFixed(decimals, roundingMode))
 
   const showDash =
     (showDashInZero && bValue.isZero()) ||
@@ -38,11 +41,15 @@ export function NumberFormat({
       className={className}
       value={value}
       allowNegative={allowNegative}
+      allowLeadingZeros={false}
+      fixedDecimalScale={false}
+      decimalScale={decimals}
       displayType="text"
-      decimalScale={decimalScale}
       thousandSeparator={thousandSeparator}
       title={showTitle ? value : undefined}
       {...props}
     />
   )
 }
+
+export default NumberFormat

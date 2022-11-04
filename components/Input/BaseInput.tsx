@@ -1,82 +1,67 @@
-import {
-  ControllerFieldState,
-  ControllerRenderProps,
-  FieldValues,
-} from 'react-hook-form'
+import type { MouseEvent } from 'react'
+import type { ControllerRenderProps, FieldValues } from 'react-hook-form'
 import { NumericFormat } from 'react-number-format'
-import { AnimatePresence, motion } from 'framer-motion'
-import clsx from 'clsx'
-import styles from './style.module.scss'
 
-import { errorMessageVariants } from './constants'
-
-import { Button } from 'components/Button'
+import { StyledBaseInput } from './styled'
+import type { InputSize } from './styled'
 
 type BaseInputProps = {
+  decimals: number
+  disabled: boolean
   field: ControllerRenderProps<FieldValues>
-  fieldState: ControllerFieldState
-  precision: number
-  setMaxValue(): void
-  disabled?: boolean
   id?: string
-  maxButtonDisabled?: boolean
   placeholder?: string
+  setMaxValue?(e: MouseEvent<HTMLButtonElement>): void
+  $error: boolean
+  $size: InputSize
 }
 
-export function BaseInput({
-  field,
-  fieldState,
-  precision,
-  setMaxValue,
+function BaseInput({
+  decimals,
   disabled,
+  field,
+  setMaxValue,
   id,
-  maxButtonDisabled,
   placeholder,
+  $error,
+  $size,
 }: BaseInputProps) {
-  const nestedClassName = clsx(styles.inputGroup, {
-    [styles.error]: !!fieldState.error,
-    [styles.disabled]: !!disabled,
-  })
-
   const { ref, ...fieldProps } = field
 
-  return (
-    <>
-      <div className={nestedClassName}>
-        <NumericFormat
-          {...fieldProps}
-          id={id}
-          className={styles.input}
-          allowNegative={false}
-          decimalScale={precision}
-          valueIsNumericString
-          thousandSeparator={true}
-          disabled={disabled}
-          placeholder={placeholder}
-        />
-        <Button
-          className={styles.maxButton}
-          variant="secondary"
-          onClick={setMaxValue}
-          disabled={maxButtonDisabled}
-        >
-          Max
-        </Button>
-      </div>
+  const showMax = !!setMaxValue
 
-      <AnimatePresence>
-        {fieldState.error && (
-          <motion.p
-            className={styles.errorMessage}
-            initial="initial"
-            animate="animate"
-            exit="exit"
-            variants={errorMessageVariants}
-          >
-            {fieldState.error.message}
-          </motion.p>
-        )}
-      </AnimatePresence>
-    </>
+  return (
+    <StyledBaseInput
+      className="baseInput"
+      $disabled={disabled}
+      $error={$error}
+      $size={$size}
+    >
+      <NumericFormat
+        {...fieldProps}
+        id={id}
+        className="input"
+        allowNegative={false}
+        decimalScale={decimals}
+        valueIsNumericString
+        thousandSeparator={true}
+        disabled={disabled}
+        placeholder={placeholder}
+      />
+
+      {showMax && (
+        <button
+          className="maxButton"
+          type="button"
+          onClick={setMaxValue}
+          disabled={disabled}
+          aria-label="Enter maximum value"
+        >
+          max
+        </button>
+      )}
+    </StyledBaseInput>
   )
 }
+
+export default BaseInput

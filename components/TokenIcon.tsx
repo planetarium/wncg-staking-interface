@@ -1,59 +1,48 @@
 import { memo } from 'react'
-import Image from 'next/image'
 import clsx from 'clsx'
-import styles from './styles/TokenIcon.module.scss'
 
-import { Icon } from './Icon'
+import { configService } from 'services/config'
+import { getTokenSymbol } from 'utils/token'
+
+import { StyledTokenIcon } from './styled'
+import SvgIcon, { SvgIconType } from './SvgIcon'
 
 type TokenIconProps = {
-  symbol: string
+  address?: string
   className?: string
+  $size?: number
 }
 
-function TokenIcon({ symbol, className }: TokenIconProps) {
-  if (!symbol) return null
+function TokenIcon({ address, className, $size = 24 }: TokenIconProps) {
+  if (!address) return null
 
-  const srcImage = getTokenIconImage(symbol)
-  const nestedClassName = clsx(className, styles.token, {
-    [styles.placeholder]: !srcImage,
-  })
+  let icon: SvgIconType
+  let iconClassName: string | undefined
 
-  if (!srcImage) {
-    return (
-      <span className={nestedClassName} title={symbol}>
-        <Icon id="coin" />
-      </span>
-    )
+  switch (true) {
+    case configService.etherAddresses.includes(address.toLowerCase()):
+      icon = 'ether'
+      break
+    case address === configService.bal:
+      icon = 'balancer'
+      break
+    default:
+      iconClassName = 'placeholder'
+      icon = 'coin'
+      break
   }
 
+  const title = getTokenSymbol(address)?.toLowerCase() ?? undefined
+
   return (
-    <span className={nestedClassName} title={symbol}>
-      <Image
-        src={srcImage}
-        layout="fill"
-        objectFit="contain"
-        priority
-        alt={symbol}
-      />
-    </span>
+    <StyledTokenIcon
+      className={clsx('tokenIcon', iconClassName, className)}
+      title={title}
+      $size={$size}
+    >
+      <SvgIcon icon={icon} $size={24} />
+    </StyledTokenIcon>
   )
 }
 
-const MemoizedTokenIcon = memo(TokenIcon)
-export { MemoizedTokenIcon as TokenIcon }
-
-function getTokenIconImage(symbol: string) {
-  switch (symbol.toLowerCase()) {
-    case 'bal':
-      return 'img-balancer.webp'
-    case 'eth':
-    case 'weth':
-      return 'img-ether.webp'
-    case 'wbtc':
-      return 'img-wbtc.webp'
-    case 'wncg':
-      return 'img-wncg.webp'
-    default:
-      return null
-  }
-}
+export default memo(TokenIcon)

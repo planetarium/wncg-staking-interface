@@ -2,7 +2,7 @@ import { MouseEvent } from 'react'
 
 import { configService } from 'services/config'
 import { useAccount, useAllowances, usePool, useStaking } from 'hooks'
-import Button from 'new/Button'
+import Button from 'components/Button'
 import { atom, useAtom } from 'jotai'
 import { useContractWrite, usePrepareContractWrite } from 'wagmi'
 import { networkChainId } from 'utils/network'
