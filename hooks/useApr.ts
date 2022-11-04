@@ -2,9 +2,9 @@ import { useAtomValue } from 'jotai'
 
 import { totalStakedAtom } from 'states/staking'
 import { calcApr } from 'utils/calculator'
-import { useStaking } from './contracts'
 import { useFiatCurrency } from './useFiatCurrency'
 import { useRewards } from './useRewards'
+import { useStaking } from './useStaking'
 
 export function useApr() {
   const { bptToFiat } = useFiatCurrency()

@@ -2,8 +2,7 @@ import { memo } from 'react'
 import { motion } from 'framer-motion'
 import styles from '../styles/StakeSidebar.module.scss'
 
-import { usePool } from 'hooks'
-import { useStaking } from 'hooks/contracts'
+import { usePool, useStaking } from 'hooks'
 import { motionVariants, sidebarTransition } from '../constants'
 
 import { Button } from 'components/Button'

@@ -17,9 +17,10 @@ import {
   useEarmark,
   useFiatCurrency,
   useNetwork,
+  useStaking,
   useToast,
 } from 'hooks'
-import { useClaimableTokens, useStaking } from 'hooks/contracts'
+import { useClaimableTokens } from 'hooks/contracts'
 import { motionVariants } from '../constants'
 
 import { Button } from 'components/Button'

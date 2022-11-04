@@ -7,14 +7,17 @@ import { etherBalanceAtom, tokenBalancesAtom } from 'states/user'
 import { configService } from 'services/config'
 import { uniqAddress } from 'utils/address'
 import { associateBalances } from 'utils/contract'
+import { createLogger } from 'utils/log'
 import { networkChainId } from 'utils/network'
 import { findAbiFromErc20 } from 'utils/wagmi'
 import { useAccount } from '../useAccount'
 import { usePool } from '../usePool'
-import { useStaking } from './useStaking'
+import { useStaking } from '../useStaking'
 
 const FN = 'balanceOf'
 const ABI = findAbiFromErc20(FN)
+
+const log = createLogger(`black`)
 
 export function useBalances() {
   const { account } = useAccount()
@@ -51,6 +54,9 @@ export function useBalances() {
     addressOrName: account,
     enabled: !!account,
     watch: true,
+    onSettled() {
+      log(`balances`)
+    },
     onSuccess(data: unknown) {
       setEtherBalance((data as FetchBalanceResult)?.formatted || '0')
     },

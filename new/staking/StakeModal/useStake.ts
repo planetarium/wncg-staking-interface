@@ -8,8 +8,7 @@ import { POOL_DECIMALS } from 'constants/tokens'
 import { networkChainId } from 'utils/network'
 import { bnum } from 'utils/num'
 import { findAbiFromStaking } from 'utils/wagmi'
-import { useAllowances } from 'hooks'
-import { useStaking } from 'hooks/contracts'
+import { useAllowances, useStaking } from 'hooks'
 
 const writeConfig = Object.freeze({
   abi: findAbiFromStaking('stake'),

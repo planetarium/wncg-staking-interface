@@ -1,8 +1,7 @@
 import { MouseEvent } from 'react'
 
 import { configService } from 'services/config'
-import { useAccount, useAllowances, usePool } from 'hooks'
-import { useStaking } from 'hooks/contracts'
+import { useAccount, useAllowances, usePool, useStaking } from 'hooks'
 import Button from 'new/Button'
 import { atom, useAtom } from 'jotai'
 import { useContractWrite, usePrepareContractWrite } from 'wagmi'
@@ -50,8 +49,6 @@ function WncgRevoke() {
     setToken(tokens[index])
     setSpender(spenders[index])
 
-    console.log(token, spender)
-
     setTimeout(() => {
       try {
         revoke()
@@ -60,8 +57,6 @@ function WncgRevoke() {
       }
     }, 0)
   }
-
-  console.log(tokens, spenders)
 
   return (
     <div

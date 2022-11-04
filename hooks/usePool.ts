@@ -6,7 +6,7 @@ import { configService } from 'services/config'
 import { fetchPool } from 'lib/graphql'
 import { bnum } from 'utils/num'
 import { getTokenColor, getTokenInfo, getTokenSymbol } from 'utils/token'
-import { useStaking } from './contracts'
+import { useStaking } from './useStaking'
 
 export function usePool() {
   const { stakedTokenAddress } = useStaking()

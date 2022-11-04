@@ -6,8 +6,7 @@ import { ModalCategory } from 'states/ui'
 import { usdCountUpOption } from 'constants/countUp'
 import { bnum } from 'utils/num'
 import { getTokenSymbol } from 'utils/token'
-import { useFiatCurrency, useModal } from 'hooks'
-import { useStaking } from 'hooks/contracts'
+import { useFiatCurrency, useModal, useStaking } from 'hooks'
 
 import { ModalCompletePage } from 'new/Modals/shared'
 import Button from 'new/Button'
@@ -61,7 +60,7 @@ function ExitModalPage2({
             <h2 className="title">Exit pool completed!</h2>
           </header>
 
-          <dl className="details">
+          <dl className="detailList">
             {exitedAmounts.map(([address, amount]) => {
               const symbol = getTokenSymbol(address)
               const fiatValue = toFiat(address, amount)

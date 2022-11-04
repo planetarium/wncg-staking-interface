@@ -5,8 +5,7 @@ import { AnimatePresence } from 'framer-motion'
 import { pendingStakeTxAtom } from 'states/form'
 import { stakingContractAddressAtom } from 'states/staking'
 import { ModalCategory } from 'states/ui'
-import { useApprove } from 'hooks'
-import { useStaking } from 'hooks/contracts'
+import { useApprove, useStaking } from 'hooks'
 
 import ApprovePage from 'new/Modals/shared/ApprovePage'
 

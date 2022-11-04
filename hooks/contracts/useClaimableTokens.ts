@@ -4,12 +4,15 @@ import { formatUnits } from 'ethers/lib/utils'
 import { useContractRead } from 'wagmi'
 
 import { stakingContractAddressAtom } from 'states/staking'
+import { createLogger } from 'utils/log'
 import { networkChainId } from 'utils/network'
 import { findAbiFromLiquidityGauge } from 'utils/wagmi'
-import { useStaking } from './useStaking'
+import { useStaking } from '../useStaking'
 
 const FN = 'claimable_tokens'
 const ABI = findAbiFromLiquidityGauge(FN)
+
+const log = createLogger(`black`)
 
 export function useClaimableTokens() {
   const { liquidityGaugeAddress } = useStaking()
@@ -24,6 +27,9 @@ export function useClaimableTokens() {
     enabled: !!liquidityGaugeAddress,
     watch: true,
     suspense: true,
+    onSettled() {
+      log(`claimable tokens`)
+    },
   })
 
   const claimableTokens = formatUnits(

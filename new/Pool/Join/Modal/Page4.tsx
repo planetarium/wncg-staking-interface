@@ -4,8 +4,7 @@ import { AnimatePresence } from 'framer-motion'
 
 import { ModalCategory } from 'states/ui'
 import { getTokenSymbol } from 'utils/token'
-import { useFiatCurrency, useModal } from 'hooks'
-import { useStaking } from 'hooks/contracts'
+import { useFiatCurrency, useModal, useStaking } from 'hooks'
 
 import { StyledJoinModalPage4 } from './styled'
 import Button from 'new/Button'
@@ -50,7 +49,7 @@ function JoinModalPage4({
             <h2 className="title">Join pool completed!</h2>
           </header>
 
-          <dl className="details">
+          <dl className="detailList">
             {joinedAmounts.map(([address, amount]) => {
               if (address === stakedTokenAddress) return null
               const symbol = getTokenSymbol(address)

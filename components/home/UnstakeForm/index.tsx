@@ -11,10 +11,10 @@ import {
   useModal,
   usePool,
   useStakedBalance,
+  useStaking,
   useToast,
   useUnstake,
 } from 'hooks'
-import { useStaking } from 'hooks/contracts'
 import { formTransition, motionVariants, TabId, TabPanelId } from '../constants'
 
 import { Button } from 'components/Button'

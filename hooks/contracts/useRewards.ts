@@ -6,13 +6,16 @@ import { useContractReads } from 'wagmi'
 
 import { stakingContractAddressAtom } from 'states/staking'
 import { rewardsAtom } from 'states/user'
+import { createLogger } from 'utils/log'
 import { networkChainId } from 'utils/network'
 import { findAbiFromStaking } from 'utils/wagmi'
 import { useAccount } from '../useAccount'
-import { useStaking } from './useStaking'
+import { useStaking } from '../useStaking'
 
 const FNS = ['earnedWNCG', 'earnedBAL']
 const ABIS = findAbiFromStaking(...FNS)
+
+const log = createLogger(`black`)
 
 export function useRewards() {
   const { account } = useAccount()
@@ -37,6 +40,9 @@ export function useRewards() {
     contracts,
     enabled: !!account,
     watch: true,
+    onSettled() {
+      log(`rewards`)
+    },
     onSuccess(data: unknown = []) {
       const rewards = (data as BigNumber[]).map((amount, i) =>
         formatUnits(amount?.toString() || '0', rewardTokenDecimals[i] || 18)

@@ -2,8 +2,7 @@ import clsx from 'clsx'
 import styles from '../styles/UnstakeSidebar.module.scss'
 
 import { formatTimer } from 'utils/string'
-import { useTimer, useUnstakeTimestamps } from 'hooks'
-import { useStaking } from 'hooks/contracts'
+import { useStaking, useTimer, useUnstakeTimestamps } from 'hooks'
 
 export function UnstakeSidebarWithdrawWindow() {
   const { withdrawWindowPeriod } = useStaking()

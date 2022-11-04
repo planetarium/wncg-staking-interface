@@ -6,6 +6,7 @@ import {
   useClaimableTokens,
   useRewards,
   useStakedBalances,
+  useStakingContractData,
   useTimestamps,
   useTotalStaked,
 } from 'hooks/contracts'
@@ -14,8 +15,9 @@ function ContractEffects() {
   useAllowances()
   useBalances()
   useClaimableTokens()
-  useStakedBalances()
   useRewards()
+  useStakedBalances()
+  useStakingContractData()
   useTimestamps()
   useTotalStaked()
 

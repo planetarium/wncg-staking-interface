@@ -3,7 +3,6 @@ import { roundToNearestMinutes } from 'date-fns'
 
 import { UnstakePhase } from 'constants/types'
 import { configService } from 'services/config'
-
 export type AllowanceMap = {
   [address: string]: boolean
 }
@@ -56,13 +55,17 @@ export const roundedTimestampsAtom = atom((get) => {
   ]
 })
 
+// const nowAtom = atom(Date.now())
+const nowAtom = atom(0)
+
 export const unstakePhaseAtom = atom((get) => {
   const [cooldownEndsAt, withdrawEndsAt] = get(timestampsAtom)
+  const now = get(nowAtom)
 
   switch (true) {
-    case cooldownEndsAt > 0:
+    case cooldownEndsAt > now:
       return UnstakePhase.CooldownWindow
-    case withdrawEndsAt > 0:
+    case withdrawEndsAt > now:
       return UnstakePhase.WithdrawWindow
     default:
       return UnstakePhase.Idle

@@ -16,8 +16,8 @@ import {
   useConnectWallets,
   useModal,
   useNetwork,
+  useStaking,
 } from 'hooks'
-import { useStaking } from 'hooks/contracts'
 import { useStakeForm } from './useStakeForm'
 
 import { StyledStakingForm } from './styled'

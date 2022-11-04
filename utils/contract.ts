@@ -2,6 +2,9 @@ import type { BigNumber } from 'ethers'
 import { formatUnits } from 'ethers/lib/utils'
 
 import type { AllowanceMap, AllowancesMap, BalanceMap } from 'states/user'
+import { configService } from 'services/config'
+import { uniqAddress } from 'utils/address'
+import { bnum } from 'utils/num'
 import { getTokenInfo } from './token'
 
 export function associateAllowances(
@@ -40,4 +43,76 @@ export function associateBalances(
   })
 
   return Object.fromEntries(entries)
+}
+
+export function associateStakingContractData(data?: unknown[]) {
+  if (!data) return null
+
+  const [
+    earmarkIncentiveFee,
+    feeDenominator,
+    balancerGauge,
+    rewardToken,
+    stakedToken,
+    balEmissionPerSec,
+    wncgEmissionPerSec,
+    cooldownSeconds,
+    unstakeWindow,
+  ] = data as [
+    BigNumber,
+    BigNumber,
+    string,
+    string,
+    string,
+    BigNumber,
+    BigNumber,
+    BigNumber,
+    BigNumber
+  ]
+
+  const earmarkIncentivePcnt = Math.min(
+    bnum(earmarkIncentiveFee?.toNumber() ?? 0)
+      .div(feeDenominator?.toNumber() ?? 0)
+      .toNumber() ?? 0.01,
+    1
+  )
+
+  const emissions = [wncgEmissionPerSec, balEmissionPerSec].map((emission) =>
+    formatUnits(emission?.toString() ?? 0)
+  )
+
+  const liquidityGaugeAddress = balancerGauge ?? ''
+
+  const rewardTokenAddress = rewardToken?.toLowerCase() ?? ''
+
+  const rewardTokensList = uniqAddress([rewardTokenAddress, configService.bal])
+
+  const rewardTokenDecimals = rewardTokensList.map(
+    (address) => getTokenInfo(address).decimals
+  )
+
+  const rewardTokenSymbols = rewardTokensList.map(
+    (address) => getTokenInfo(address).symbol
+  )
+
+  const stakedTokenAddress = stakedToken?.toLowerCase() ?? ''
+
+  const cooldownWindowPeriod = cooldownSeconds?.toNumber() ?? 0
+
+  const withdrawWindowPeriod = unstakeWindow?.toNumber() ?? 0
+
+  const result = {
+    earmarkIncentivePcnt,
+    emissions,
+    liquidityGaugeAddress,
+    rewardTokenAddress,
+    rewardTokensList,
+    rewardTokenDecimals,
+    rewardTokenSymbols,
+    stakedTokenAddress,
+    cooldownWindowPeriod,
+    withdrawWindowPeriod,
+  }
+
+  return result
 }

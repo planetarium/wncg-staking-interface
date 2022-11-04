@@ -11,8 +11,13 @@ import {
   usdCountUpOption,
 } from 'constants/countUp'
 import { gaEvent } from 'lib/gtag'
-import { useApr, useModal, useRewards, useFiatCurrency } from 'hooks'
-import { useStaking } from 'hooks/contracts'
+import {
+  useApr,
+  useFiatCurrency,
+  useModal,
+  useRewards,
+  useStaking,
+} from 'hooks'
 
 import { Button } from 'components/Button'
 import { CountUp } from 'components/CountUp'

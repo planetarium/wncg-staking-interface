@@ -6,7 +6,7 @@ import { configService } from 'services/config'
 import { StakingAbi } from 'lib/abi'
 import { assertUnreachable } from 'utils/assertion'
 import { useRewards } from './useRewards'
-import { useStaking } from './contracts'
+import { useStaking } from './useStaking'
 
 export function useClaimRewards() {
   const { scaledRewards } = useRewards()

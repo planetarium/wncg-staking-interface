@@ -2,8 +2,7 @@ import styles from './RewardsSummary.module.scss'
 
 import { countUpOption, usdCountUpOption } from 'constants/countUp'
 import { getTokenSymbol } from 'utils/token'
-import { useRewards } from 'hooks'
-import { useStaking } from 'hooks/contracts'
+import { useRewards, useStaking } from 'hooks'
 
 import { CountUp } from 'components/CountUp'
 import { TokenIcon } from 'components/TokenIcon'

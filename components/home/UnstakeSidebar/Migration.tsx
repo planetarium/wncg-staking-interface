@@ -2,8 +2,7 @@ import clsx from 'clsx'
 import styles from '../styles/UnstakeSidebar.module.scss'
 
 import { formatTimer } from 'utils/string'
-import { usePool, useTimer, useUnstakeTimestamps } from 'hooks'
-import { useStaking } from 'hooks/contracts'
+import { usePool, useStaking, useTimer, useUnstakeTimestamps } from 'hooks'
 
 import { CooldownButton } from './CooldownButton'
 

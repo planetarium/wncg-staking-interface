@@ -12,7 +12,7 @@ import { networkChainId } from 'utils/network'
 import { findAbiFromErc20 } from 'utils/wagmi'
 import { useAccount } from '../useAccount'
 import { usePool } from '../usePool'
-import { useStaking } from './useStaking'
+import { useStaking } from '../useStaking'
 
 const FN = 'allowance'
 const ABI = findAbiFromErc20(FN)

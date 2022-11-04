@@ -6,7 +6,7 @@ import { rewardsAtom } from 'states/user'
 import { configService } from 'services/config'
 import { useFiatCurrency } from './useFiatCurrency'
 import { usePrices } from './usePrices'
-import { useStaking } from './contracts'
+import { useStaking } from './useStaking'
 
 export function useRewards() {
   const { toFiat } = useFiatCurrency()

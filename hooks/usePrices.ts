@@ -8,7 +8,7 @@ import { uniqAddress } from 'utils/address'
 import { calcPoolTotalValue } from 'utils/calculator'
 import { bnum } from 'utils/num'
 import { usePool } from './usePool'
-import { useStaking } from './contracts'
+import { useStaking } from './useStaking'
 
 const options = {
   retry: false,
