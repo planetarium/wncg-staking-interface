@@ -1,6 +1,13 @@
 import type { ReactNode } from 'react'
-import clsx from 'clsx'
-import styles from './style.module.scss'
+import styled from 'styled-components'
+
+export const StyledPaper = styled.div`
+  display: inline-block;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+  border-radius: 50%;
+`
 
 type PaperProps = {
   children: ReactNode
@@ -9,7 +16,7 @@ type PaperProps = {
   className?: string
 }
 
-export function Paper({ children, color, diameter, className }: PaperProps) {
+function Paper({ children, color, diameter, className }: PaperProps) {
   const style = {
     width: diameter,
     height: diameter,
@@ -17,8 +24,10 @@ export function Paper({ children, color, diameter, className }: PaperProps) {
   }
 
   return (
-    <div className={clsx(styles.paper, className)} style={style}>
+    <StyledPaper className={className} style={style}>
       {children}
-    </div>
+    </StyledPaper>
   )
 }
+
+export default Paper

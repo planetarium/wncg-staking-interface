@@ -1,40 +1,66 @@
-import { toast } from 'react-toastify'
+// import { cssTransition, toast } from 'react-toastify'
+// import { useSetAtom } from 'jotai'
+// import { nanoid } from 'nanoid'
 
-import { addToast as addToastId } from 'app/states/toast'
-import type { TransactionAction } from 'app/states/transaction'
-import { toastAnimation } from 'utils/toast'
-import { useConfirmations } from './useConfirmations'
-import { useAppDispatch } from './useRedux'
+// import { toastIdsAtom } from 'states/ui'
+// import { configService } from 'services/config'
 
-import { Toast } from 'components/Toast'
+// import { Toast } from 'components/Toast'
 
-type AddToastParams = {
-  action: TransactionAction
-  hash: string
-  summary: string
-  showPartyEmoji?: boolean
-}
+// const toastAnimation = cssTransition({
+//   enter: 'fadeIn',
+//   exit: 'fadeOut',
+// })
+
+// type AddToast = {
+//   title: string
+//   message: string
+//   hash?: string
+//   type?: ToastType
+// }
+
+// export function useToast() {
+//   const setToastIdList = useSetAtom(toastIdsAtom)
+
+//   function addToast(params: AddToast) {
+//     const toastId = `toast.${nanoid()}`
+//     const tokensToImport = getTokensToImport(params.title, params.type)
+
+//     toast(<Toast id={toastId} {...params} tokensToImport={tokensToImport} />, {
+//       transition: toastAnimation,
+//       toastId,
+//     })
+
+//     setToastIdList((prev) => [...prev, toastId])
+//   }
+
+//   return {
+//     addToast,
+//   }
+// }
+
+// // FIXME: Refactor
+// function getTokensToImport(
+//   title: string,
+//   type?: ToastType
+// ): string[] | undefined {
+//   if (type !== 'success') return
+
+//   title = title.toLowerCase()
+
+//   if (title.includes('wncg')) {
+//     return ['']
+//   }
+
+//   if (title.includes('bal')) {
+//     return [configService.bal]
+//   }
+
+//   if (title.includes('claim all')) {
+//     return ['', configService.bal]
+//   }
+// }
 
 export function useToast() {
-  const dispatch = useAppDispatch()
-  const { registerConfirmations } = useConfirmations()
-
-  function addToast(params: AddToastParams, confirmationHash?: string) {
-    const { hash, summary } = params
-    const toastId = `${hash}.${summary}`
-
-    toast(<Toast {...params} />, {
-      transition: toastAnimation,
-      toastId,
-    })
-    dispatch(addToastId(toastId))
-
-    if (confirmationHash) {
-      registerConfirmations(confirmationHash)
-    }
-  }
-
-  return {
-    addToast,
-  }
+  return null
 }

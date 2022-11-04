@@ -1,4 +1,4 @@
-export function Favicon() {
+function Favicon() {
   return (
     <>
       <link
@@ -24,3 +24,5 @@ export function Favicon() {
     </>
   )
 }
+
+export default Favicon

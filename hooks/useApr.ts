@@ -1,47 +1,27 @@
-import { useMemo } from 'react'
+import { useAtomValue } from 'jotai'
 
-import { getTotalStakedValue } from 'app/states/bpt'
-import { getBalEmissionPerSec, getWncgEmissionPerSec } from 'app/states/reward'
-import { getBalPrice, getWncgPrice } from 'app/states/token'
-import Decimal from 'utils/num'
-import { useAppSelector } from './useRedux'
-
-const YEAR_IN_SECONDS = 60 * 60 * 24 * 365
+import { totalStakedAtom } from 'states/staking'
+import { calcApr } from 'utils/calculator'
+import { useFiatCurrency } from './useFiatCurrency'
+import { useRewards } from './useRewards'
+import { useStaking } from './useStaking'
 
 export function useApr() {
-  const totalStakedValue = useAppSelector(getTotalStakedValue)
-  const balEmissionPerSec = useAppSelector(getBalEmissionPerSec)
-  const balPrice = useAppSelector(getBalPrice)
-  const wncgEmissionPerSec = useAppSelector(getWncgEmissionPerSec)
-  const wncgPrice = useAppSelector(getWncgPrice)
+  const { bptToFiat } = useFiatCurrency()
+  const { rewardTokenPrices } = useRewards()
+  const { emissions } = useStaking()
 
-  const balApr = useMemo(
-    () => calculateApr(balEmissionPerSec, balPrice, totalStakedValue),
-    [totalStakedValue, balEmissionPerSec, balPrice]
-  )
+  const totalStaked = useAtomValue(totalStakedAtom)
 
-  const wncgApr = useMemo(
-    () => calculateApr(wncgEmissionPerSec, wncgPrice, totalStakedValue),
-    [totalStakedValue, wncgEmissionPerSec, wncgPrice]
+  const totalStakedValue = bptToFiat(totalStaked)
+
+  const aprs = emissions.map((emission, i) =>
+    calcApr(emission, rewardTokenPrices[i], totalStakedValue)
   )
 
   return {
-    balApr,
-    wncgApr,
+    aprs,
+    emissions,
+    rewardTokenPrices,
   }
-}
-
-export function calculateApr(
-  emissionRate: string,
-  price: string | number,
-  totalStakedValue: string | number
-) {
-  const apr = new Decimal(emissionRate)
-    .mul(price)
-    .mul(YEAR_IN_SECONDS)
-    .div(totalStakedValue)
-    .mul(100)
-
-  const validApr = !apr.isNaN() && apr.isFinite()
-  return validApr ? apr.toNumber() : 0
 }

@@ -5,17 +5,21 @@ import MersenneTwister from 'mersenne-twister'
 import { colors, shapeCount, svgns, wobble } from './constants'
 import { colorRotate, convertAddressToNumber } from './utils'
 
-import { Paper } from './Paper'
+import Paper from './Paper'
 
 type JazziconProps = {
-  address: string
+  address?: string
   diameter?: number
   className?: string
 }
 
 type Colors = string[]
 
-export function Jazzicon({ address, diameter = 32, className }: JazziconProps) {
+function Jazzicon({ address, diameter = 32, className }: JazziconProps) {
+  if (!address) {
+    return null
+  }
+
   const seed = convertAddressToNumber(address)
   const generator = new MersenneTwister(seed)
 
@@ -88,3 +92,5 @@ export function Jazzicon({ address, diameter = 32, className }: JazziconProps) {
     </Paper>
   )
 }
+
+export default Jazzicon

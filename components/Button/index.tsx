@@ -1,132 +1,128 @@
 import {
   ButtonHTMLAttributes,
   DetailedHTMLProps,
-  ForwardedRef,
   forwardRef,
+  ForwardedRef,
   MouseEvent,
   ReactNode,
-  useMemo,
 } from 'react'
-import Link from 'next/link'
-import Lottie from 'lottie-react'
-import clsx from 'clsx'
-import styles from './style.module.scss'
 
-import loadingAnimation from 'animations/loading.json'
+import { ButtonSize, ButtonVariant, StyledButton, StyledLink } from './styled'
+import SvgIcon, { SvgIconType } from '../SvgIcon'
+import ConnectorIcon from 'components/ConnectorIcon'
 
-type ButtonSize = 'small' | 'medium' | 'large'
-type ButtonVariant = 'primary' | 'secondary' | 'tertiary' | 'danger'
+const nonScalableButtonVariants: ButtonVariant[] = ['text', 'tiny']
 
-type ButtonProps = DetailedHTMLProps<
-  ButtonHTMLAttributes<HTMLButtonElement>,
-  HTMLButtonElement
-> & {
+export type ButtonProps = {
   children: ReactNode
   ariaLabel?: string
-  fullWidth?: boolean
+  as?: string
+  dataset?: Record<string, string>
   href?: string
+  leftIcon?: SvgIconType
   loading?: boolean
   onClick?: (e: MouseEvent) => void
   prefetch?: boolean
-  size?: ButtonSize
+  rightIcon?: SvgIconType
   target?: string
-  variant?: ButtonVariant
+  $contain?: boolean
+  $size?: ButtonSize
+  $variant?: ButtonVariant
 }
 
 function Button(
   {
     children,
     ariaLabel,
+    as,
     className,
+    dataset = {},
     disabled,
-    fullWidth,
     href,
     id,
+    leftIcon,
     loading,
     onClick,
     prefetch,
-    size = 'medium',
+    rightIcon: _rightIcon,
     target,
     type = 'button',
-    variant = 'primary',
-    ...props
-  }: ButtonProps,
+    $contain = false,
+    $size: _$size = 'lg',
+    $variant = 'primary',
+    ...buttonProps
+  }: ButtonProps &
+    DetailedHTMLProps<
+      ButtonHTMLAttributes<HTMLButtonElement>,
+      HTMLButtonElement
+    >,
   ref: ForwardedRef<HTMLButtonElement | HTMLAnchorElement>
 ) {
-  const nestedClassName = useMemo(
-    () =>
-      clsx(
-        {
-          [styles.btnPrimary]: variant === 'primary',
-          [styles.btnSecondary]: variant === 'secondary',
-          [styles.btnTertiary]: variant === 'tertiary',
-          [styles.btnDanger]: variant === 'danger',
-          [styles.btnSmall]: size === 'small',
-          [styles.btnMedium]: size === 'medium',
-          [styles.btnLarge]: size === 'large',
-          [styles.full]: fullWidth,
-          [styles.disabled]: disabled,
-        },
-        className
-      ),
-    [className, disabled, fullWidth, size, variant]
+  const datasetMap = Object.fromEntries(
+    Object.entries(dataset).map(([key, value]) => [`data-${key}`, value])
+  )
+
+  const rightIcon = $variant === 'text' ? 'chevronRight' : _rightIcon
+  const $size = nonScalableButtonVariants.includes($variant)
+    ? undefined
+    : _$size
+
+  const label = (
+    <>
+      {leftIcon && <SvgIcon className="leftIcon" icon={leftIcon} />}
+      <span className="label">{children}</span>
+      {rightIcon === 'metaMask' ? (
+        <ConnectorIcon className="rightIcon" icon="metaMask" />
+      ) : rightIcon ? (
+        <SvgIcon className="rightIcon" icon={rightIcon} />
+      ) : null}
+    </>
   )
 
   if (!href) {
     return (
-      <button
-        className={nestedClassName}
-        ref={ref as ForwardedRef<HTMLButtonElement>}
+      <StyledButton
+        className={className}
         type={type}
+        ref={ref as any}
         disabled={disabled}
         onClick={onClick}
         aria-label={ariaLabel}
-        {...props}
+        $contain={$contain}
+        $size={$size}
+        $variant={$variant}
+        {...datasetMap}
+        {...(buttonProps as Partial<
+          DetailedHTMLProps<
+            ButtonHTMLAttributes<HTMLButtonElement>,
+            HTMLButtonElement
+          >
+        >)}
       >
-        {loading && (
-          <Lottie
-            className={styles.lottie}
-            animationData={loadingAnimation}
-            loop
-          />
-        )}
-        {children}
-      </button>
+        {label}
+      </StyledButton>
     )
   }
 
-  const anchorElement = (
-    <a
-      className={nestedClassName}
+  return (
+    <StyledLink
       id={id}
-      ref={ref as ForwardedRef<HTMLAnchorElement>}
+      className={className}
+      prefetch={prefetch}
       href={href}
+      ref={ref as ForwardedRef<HTMLAnchorElement>}
       onClick={onClick}
       target={target}
       rel={target === '_blank' ? 'noopener' : undefined}
       aria-label={ariaLabel}
+      $contain={$contain}
+      $size={$size}
+      $variant={$variant}
+      {...datasetMap}
     >
-      {loading && (
-        <Lottie
-          className={styles.lottie}
-          animationData={loadingAnimation}
-          loop
-        />
-      )}
-      {children}
-    </a>
-  )
-
-  if (target === '_blank') {
-    return anchorElement
-  }
-
-  return (
-    <Link href={href} prefetch={prefetch}>
-      {anchorElement}
-    </Link>
+      {label}
+    </StyledLink>
   )
 }
 
-const FowardedButton = forwardRef(Button)
-export { FowardedButton as Button }
+export default forwardRef(Button)

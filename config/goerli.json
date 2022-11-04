@@ -1,0 +1,25 @@
+{
+  "key": "5",
+  "chainId": 5,
+  "chainName": "Ethereum",
+  "name": "Goerli Testnet",
+  "shortName": "Goerli",
+  "network": "goerli",
+  "explorer": "https://goerli.etherscan.io",
+  "explorerName": "Etherscan",
+  "subgraph": "https://api.thegraph.com/subgraphs/name/balancer-labs/balancer-goerli-v2",
+  "nativeAsset": {
+    "name": "Ether",
+    "address": "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+    "symbol": "ETH",
+    "decimals": 18,
+    "deeplinkId": "ether",
+    "logoURI": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png",
+    "minTransactionBuffer": "0.05"
+  },
+  "addresses": {
+    "bal": "0xfA8449189744799aD2AcE7e0EBAC8BB7575eff47",
+    "vault": "0xBA12222222228d8Ba445958a75a0704d566BF2C8",
+    "weth": "0xdFCeA9088c8A88A76FF74892C1457C17dfeef9C1"
+  }
+}

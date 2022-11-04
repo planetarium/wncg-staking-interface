@@ -2,7 +2,7 @@
   width: 100%;
   max-width: 100%;
   height: 100vh;
-  padding: #{$gnb-height-sm + 20px} 0 60px;
+  padding: #{$gnb-height-sm + 16px} 0 60px;
   overflow-y: auto;
   transition: $transition-network-alert;
 
@@ -12,7 +12,7 @@
 
   @include responsive(MD) {
     height: auto;
-    padding: #{$gnb-height-md + 20px} 0 80px;
+    padding: #{$gnb-height-md + 24px} 0 80px;
   }
 
   @include responsive(LG) {
