@@ -90,7 +90,7 @@ function AccountDropdownMenu({ close }: AccountDropdownMenuProps) {
         </div>
       </header>
 
-      <dl className="detail">
+      <dl className="detailList">
         <div className="detailItem">
           <dt>Network</dt>
           <dd>

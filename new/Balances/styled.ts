@@ -17,7 +17,7 @@ const StyledBalanceSection = styled.section`
     color: var(--gray-500);
   }
 
-  .detail {
+  .detailList {
     ${flexbox('flex-start')}
   }
 

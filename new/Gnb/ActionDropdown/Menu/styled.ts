@@ -154,9 +154,10 @@ export const StyledActionDropdownMenuUnstakePeriod = styled(motion.section)<{
     }
   }
 
-  .details {
+  .detailList {
     ${flexbox('space-between')}
     position: relative;
+    width: 100%;
     height: 48px;
     padding: 0 12px;
     background-color: var(--gray-500);
@@ -178,6 +179,8 @@ export const StyledActionDropdownMenuUnstakePeriod = styled(motion.section)<{
   }
 
   .detailItem {
+    color: var(--white);
+
     &.timeDistance {
       dd {
         font-weight: 700;
@@ -215,7 +218,7 @@ export const StyledActionDropdownMenuUnstakePeriod = styled(motion.section)<{
         color: var(--primary-600);
       }
 
-      .details {
+      .detailList {
         background-color: var(--primary-500);
 
         &::before {

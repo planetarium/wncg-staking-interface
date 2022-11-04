@@ -48,7 +48,7 @@ function StakeModalPage4({
             </h2>
           </header>
 
-          <dl className="details">
+          <dl className="detailList">
             <div className="detailItem">
               <dt>
                 Staked

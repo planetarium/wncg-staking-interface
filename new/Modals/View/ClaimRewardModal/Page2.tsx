@@ -50,7 +50,7 @@ function ClaimRewardModalPage2({
             <h2 className="title">Claim completed!</h2>
           </header>
 
-          <dl className="details">
+          <dl className="detailList">
             {rewardedAmounts.map(([address, reward], i) => {
               const symbol = getTokenSymbol(address)
               const fiatValue = toFiat(address, reward)

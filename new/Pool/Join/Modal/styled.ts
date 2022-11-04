@@ -32,7 +32,7 @@ export const StyledJoinModalPage3 = styled(ModalPage)`
 `
 
 export const StyledJoinModalPage4 = styled(ModalCompletePage)`
-  .details {
+  .detailList {
     width: 100%;
     padding: 20px 24px;
     margin-bottom: 48px;

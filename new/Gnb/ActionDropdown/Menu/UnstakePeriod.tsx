@@ -2,19 +2,23 @@ import { memo, useMemo } from 'react'
 import { useAtomValue } from 'jotai'
 import { format, formatDistanceToNow } from 'date-fns'
 
+import { ModalCategory } from 'states/ui'
 import {
   isCooldownWindowAtom,
   isWithdrawWindowAtom,
   roundedTimestampsAtom,
   timestampsAtom,
 } from 'states/user'
-import { slideInDown } from 'constants/motionVariants'
+import { fadeIn } from 'constants/motionVariants'
+import { datetimePattern } from 'constants/time'
+import { useModal } from 'hooks'
 
 import { StyledActionDropdownMenuUnstakePeriod } from './styled'
 import SvgIcon from 'new/SvgIcon'
 import Timer from './Timer'
 
 function ActionDropdownMenuUnstakePeriod() {
+  const { addModal } = useModal()
   const [cooldownEndsAt, withdrawEndsAt] = useAtomValue(timestampsAtom)
   const [roundedCooldownEndsAt, roundedWithdrawEndsAt] = useAtomValue(
     roundedTimestampsAtom
@@ -36,13 +40,22 @@ function ActionDropdownMenuUnstakePeriod() {
     isCooldownWindow ? `starts` : `ends`
   } ${formatDistanceToNow(endsAt, { addSuffix: true })}`
 
+  function withdraw() {
+    if (!isWithdrawWindow) return
+    addModal({
+      category: ModalCategory.Cooldown,
+    })
+  }
+
   return (
     <StyledActionDropdownMenuUnstakePeriod
       className="unstakePeriod"
-      // initial="initial"
+      initial="initial"
       animate="animate"
       exit="exit"
-      variants={slideInDown}
+      variants={fadeIn}
+      onClick={isWithdrawWindow ? withdraw : undefined}
+      role={isWithdrawWindow ? 'button' : undefined}
       $active={isWithdrawWindow}
     >
       <header className="header">
@@ -50,7 +63,7 @@ function ActionDropdownMenuUnstakePeriod() {
         <h3 className="title">{currentPhase} period</h3>
       </header>
 
-      <dl className="details" style={{ position: 'relative' }}>
+      <dl className="detailList" style={{ position: 'relative' }}>
         <div className="detailItem timeDistance">
           <dt className="hidden">Time left</dt>
           <dd aria-label={timeDistanceDesc}>
@@ -72,10 +85,16 @@ function ActionDropdownMenuUnstakePeriod() {
 
         <div className="detailItem timePeriod">
           <dt className="hidden">Withdraw window starts at</dt>
-          <dd>{format(roundedCooldownEndsAt, 'yyyy. MM. dd hh:mm:ss bb')}</dd>
+          <dd>
+            <time dateTime={roundedCooldownEndsAt.toString()}>
+              {format(roundedCooldownEndsAt, datetimePattern)}
+            </time>
+          </dd>
           <dt className="hidden">Withdraw window ends at</dt>
           <dd className="tilde">
-            {format(roundedWithdrawEndsAt, 'yyyy. MM. dd hh:mm:ss bb')}
+            <time dateTime={roundedWithdrawEndsAt.toString()}>
+              {format(roundedWithdrawEndsAt, datetimePattern)}
+            </time>
           </dd>
         </div>
       </dl>

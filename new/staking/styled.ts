@@ -6,7 +6,7 @@ export const StyledStakingDashboard = styled.section`
   width: 660px;
   text-align: center;
 
-  .detail {
+  .detailList {
     ${flexbox()}
   }
 

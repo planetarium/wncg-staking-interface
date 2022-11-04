@@ -19,7 +19,7 @@ import SvgIcon from 'new/SvgIcon'
 import TokenIcon from 'new/TokenIcon'
 
 type AvailableBalanceProps = {
-  children: ReactNode
+  children?: ReactNode
   className?: string
 }
 
@@ -38,7 +38,7 @@ function AvailableBalance({ children, className }: AvailableBalanceProps) {
       <header className="header">
         <h2 className="title">Available Stakable LP Tokens</h2>
 
-        <dl className="detail">
+        <dl className="detailList">
           <div className="detailItem">
             <dt className="hidden">Your balance</dt>
             <dd>

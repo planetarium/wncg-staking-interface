@@ -25,7 +25,7 @@ function PoolInformation() {
         </a>
       </header>
 
-      <dl className="detail">
+      <dl className="detailList">
         <div className="detailItem">
           <dt>Pool value</dt>
           <dd>

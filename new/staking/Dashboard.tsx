@@ -15,7 +15,7 @@ function StakingDashboard() {
 
   return (
     <StyledStakingDashboard>
-      <dl className="detail">
+      <dl className="detailList">
         <div className="detailItem">
           <dt>Total Staked</dt>
           <dd>

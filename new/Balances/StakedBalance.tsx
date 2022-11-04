@@ -34,7 +34,7 @@ function StakedBalance({ children, className }: StakedBalanceProps) {
       <header className="header">
         <h2 className="title">My Staked LP</h2>
 
-        <dl className="detail">
+        <dl className="detailList">
           <div className="detailItem">
             <dt className="hidden">Your balance</dt>
             <dd>

@@ -68,7 +68,7 @@ export const StyledAccountDropdownMenu = styled(motion.aside)`
     }
   }
 
-  .detail {
+  .detailList {
     ${textStyle('body', 3)}
     margin-bottom: 24px;
   }

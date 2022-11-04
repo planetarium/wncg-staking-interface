@@ -250,7 +250,7 @@ export const StyledPoolInformation = styled.section`
     color: rgba(var(--white-rgb), 0.6);
   }
 
-  .detail {
+  .detailList {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     grid-column-gap: 24px;

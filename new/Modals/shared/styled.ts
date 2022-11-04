@@ -190,7 +190,7 @@ export const StyledModalCompletePage = styled(StyledModalPage)`
     text-align: center;
   }
 
-  .details {
+  .detailList {
     width: 100%;
     padding: 20px 24px;
     margin-top: 48px;
