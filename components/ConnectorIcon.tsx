@@ -1,33 +1,38 @@
 import { memo } from 'react'
+import clsx from 'clsx'
 
-import { StyledConnectorIcon, SvgIconSize } from './styled'
-import SvgIcon from './SvgIcon'
+import { StyledConnectorIcon } from './styled'
+import CryptoIcon from './CryptoIcon'
 
-export type ConnectorIconType = 'coinbaseWallet' | 'metaMask' | 'walletConnect'
+export type ConnectorIconType =
+  | 'coinbaseWallet'
+  | 'metaMask'
+  | 'trustWallet'
+  | 'walletConnect'
 
 type ConnectorIconProps = {
+  icon: ConnectorIconType
   ariaLabel?: string
   ariaHidden?: boolean
-  icon: ConnectorIconType
   className?: string
-  $size?: SvgIconSize
+  $size?: number
 }
 
 function ConnectorIcon({
+  icon,
   ariaLabel,
   ariaHidden = true,
-  icon,
   className,
   $size = 24,
 }: ConnectorIconProps) {
   return (
     <StyledConnectorIcon
-      className={className}
+      className={clsx('connectorIcon', className)}
       aria-label={ariaLabel}
       aria-hidden={ariaHidden}
       $size={$size}
     >
-      <SvgIcon icon={icon} />
+      <CryptoIcon icon={icon} />
     </StyledConnectorIcon>
   )
 }

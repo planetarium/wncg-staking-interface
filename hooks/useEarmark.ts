@@ -8,7 +8,6 @@ export function useEarmark() {
     // const response = await initEarmarkRewards(contract)
     // subscribeTx?.(response)
     // FIXME: Harvest
-    console.log('hi')
   }, [])
 
   return {

@@ -1,6 +1,6 @@
 // NOTE: https://github.com/MetaMask/jazzicon/blob/master/index.js
-
 import MersenneTwister from 'mersenne-twister'
+import clsx from 'clsx'
 
 import { colors, shapeCount, svgns, wobble } from './constants'
 import { colorRotate, convertAddressToNumber } from './utils'
@@ -16,9 +16,7 @@ type JazziconProps = {
 type Colors = string[]
 
 function Jazzicon({ address, diameter = 32, className }: JazziconProps) {
-  if (!address) {
-    return null
-  }
+  if (!address) return null
 
   const seed = convertAddressToNumber(address)
   const generator = new MersenneTwister(seed)
@@ -80,7 +78,7 @@ function Jazzicon({ address, diameter = 32, className }: JazziconProps) {
 
   return (
     <Paper
-      className={className}
+      className={clsx('jazzicon', className)}
       color={genColor(remainingColors)}
       diameter={diameter}
     >

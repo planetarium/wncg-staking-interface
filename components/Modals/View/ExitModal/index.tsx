@@ -1,75 +1,82 @@
-import { memo, useRef, useState } from 'react'
+import { memo, useRef } from 'react'
 import { useUnmount } from 'react-use'
 import { useMachine } from '@xstate/react'
-import { useAtom } from 'jotai'
-import { RESET } from 'jotai/utils'
-import { useWaitForTransaction } from 'wagmi'
-import type { TransactionReceipt } from '@ethersproject/abstract-provider'
+import { useAtomValue } from 'jotai'
 
-import { pendingExitTxAtom } from 'states/form'
-import { createLogger } from 'utils/log'
-import { networkChainId } from 'utils/network'
-import { parsePoolBalanceChangedLogs } from 'utils/tx'
-import { currentPage, exitMachine } from './stateMachine'
-import { useExitForm } from './useExitForm'
+import { exitTxAtom } from 'states/tx'
+import { ToastType } from 'config/constants'
+import { useExitForm, useToast } from 'hooks'
+import { exitMachine, pageFor } from './stateMachine'
+import { useWatch } from './useWatch'
 
 import Page1 from './Page1'
 import Page2 from './Page2'
-
-const log = createLogger('black')
+import Page3 from './Page3'
 
 function ExitModal() {
-  const [result, setResult] = useState<Record<string, string>>({})
+  const toast = useToast()
+  const exitFormReturns = useExitForm()
+  const {
+    assets: _assets,
+    bptIn: _bptIn,
+    exitAmounts: _exitAmounts,
+    exitAmountInFiatValue: _exitAmountInFiatValue,
+    totalExitFiatValue: _totalExitFiatValue,
+    isProportional: _isProportional,
+    singleExitTokenOutIndex,
+  } = exitFormReturns
 
-  const formReturns = useExitForm()
+  const tx = useAtomValue(exitTxAtom)
 
-  const [pendingTx, setPendingTx] = useAtom(pendingExitTxAtom)
-  const { hash: pendingHash } = pendingTx
-
-  const hash = pendingHash ?? undefined
+  const assets = tx.assets ?? _assets
+  const bptIn = tx.bptIn ?? _bptIn
+  const exitAmounts = tx.exitAmounts ?? _exitAmounts
+  const isProportional = tx.isProportional ?? _isProportional
+  const totalExitFiatValue = tx.totalExitFiatValue ?? _totalExitFiatValue
+  const tokenOutIndex = tx.tokenOutIndex ?? singleExitTokenOutIndex
 
   const stateMachine = useRef(exitMachine)
   const [state, send] = useMachine(stateMachine.current, {
     context: {
-      hash,
+      hash: tx.hash,
     },
   })
 
-  useWaitForTransaction({
-    hash: hash!,
-    enabled: !!hash,
-    chainId: networkChainId,
-    onSettled() {
-      log(`Exit tx: ${hash?.slice(0, 6)}`)
-    },
-    async onSuccess(data: TransactionReceipt) {
-      const result = parsePoolBalanceChangedLogs(data.logs)
-      setResult(result)
-      send('SUCCESS')
-    },
-    onError() {
-      send('FAIL')
-    },
-  })
+  const currentPage = pageFor(state.value)
 
-  const page = currentPage(state.value)
+  useWatch(send)
 
   useUnmount(() => {
-    if (!!state.done) {
-      setPendingTx(RESET)
+    if (tx.hash) {
+      toast<ExitTx>({
+        type: ToastType.Exit,
+        props: {
+          hash: tx.hash,
+          assets,
+          exitAmounts,
+          totalExitFiatValue,
+          tokenOutIndex,
+          bptIn,
+          isProportional,
+        },
+      })
     }
   })
 
   return (
     <>
-      <Page1
-        {...formReturns}
-        currentPage={page}
-        currentState={state.value}
-        hash={hash}
-        send={send}
-      />
-      <Page2 currentPage={page} currentState={state.value} result={result} />
+      {currentPage === 1 && (
+        <Page1 {...exitFormReturns} send={send} hash={tx.hash} />
+      )}
+      {currentPage === 2 && (
+        <Page2
+          isProportional={isProportional}
+          assets={assets}
+          tokenOutIndex={tokenOutIndex}
+          hash={tx.hash}
+        />
+      )}
+      {currentPage === 3 && <Page3 />}
     </>
   )
 }

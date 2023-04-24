@@ -3,7 +3,7 @@ import {
   Erc20Abi,
   LiquidityGaugeAbi,
   StakingAbi,
-} from 'lib/abi'
+} from 'config/abi'
 
 function findAbi(abiMap: any, ...args: string[]) {
   return args.flatMap((fn) =>

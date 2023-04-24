@@ -1,73 +1,103 @@
-import { forwardRef, ForwardedRef, MouseEvent, ReactNode } from 'react'
+import {
+  forwardRef,
+  ForwardedRef,
+  MouseEvent,
+  useRef,
+  PropsWithChildren,
+} from 'react'
 import { useMachine } from '@xstate/react'
+import { motion } from 'framer-motion'
+import clsx from 'clsx'
 
+import { EXIT_MOTION } from 'config/motions'
+import { fadeIn } from 'config/motionVariants'
+import { useAuth, useResponsive } from 'hooks'
 import { txButtonMachine } from './stateMachine'
-import { useAccount } from 'hooks'
 
-import Button from 'components/Button'
-import type { ConnectorIconType } from 'components/ConnectorIcon'
-import type { ButtonSize } from 'components/Button/styled'
+import { StyledTxButton } from './styled'
+import ConnectorIcon from 'components/ConnectorIcon'
+import Lottie from 'components/Lottie'
 
 type TxButtonProps = {
-  children: ReactNode
-  onClick(): Promise<string | void>
+  onClick?(): Promise<Hash | void>
+  className?: string
   disabled?: boolean
-  isPending?: boolean
+  hash?: Hash
   $size?: ButtonSize
-}
+} & PropsWithChildren
 
 function TxButton(
   {
     children,
     onClick,
+    className,
     disabled: _disabled,
-    isPending = false,
-    $size = 'lg',
+    hash,
+    $size = 'md',
   }: TxButtonProps,
   ref: ForwardedRef<HTMLButtonElement>
 ) {
-  const [state, send] = useMachine(txButtonMachine, {
+  const stateMachine = useRef(txButtonMachine)
+
+  const { connector } = useAuth()
+  const { isMobile } = useResponsive()
+
+  const [state, send] = useMachine(stateMachine.current, {
     context: {
-      isPending,
+      hash,
     },
   })
 
-  const { connector } = useAccount()
+  const isLoading = state.value === 'pending' || state.value === 'called'
+  const disabled = !!hash || _disabled || state.value === 'pending'
 
   async function handleClick(e: MouseEvent) {
     e.stopPropagation()
-    if (disabled) return
+    if (disabled || isLoading) return
 
-    send('CALL')
+    send('NEXT')
 
     try {
-      await onClick()
-      send('CONFIRM')
+      const hash = await onClick?.()
+      if (hash) send('NEXT')
+      else send('ROLLBACK')
     } catch (error: any) {
-      if (error?.code === 4001 || error?.code === 'ACTION_REJECTED') {
-        send('REJECT')
-        return
-      }
+      send('ROLLBACK')
     }
   }
 
-  const isLoading = ['called', 'pending'].includes(state.value as string)
-  const disabled = _disabled || state.value === 'pending'
   const label = isLoading ? `Ready to confirm in your wallet` : children
-  const leftIcon = isLoading ? 'loading' : undefined
-  const rightIcon = isLoading ? (connector?.id as ConnectorIconType) : undefined
+  const iconSize = $size === 'sm' ? 16 : 32
 
   return (
-    <Button
+    <StyledTxButton
+      className={clsx('txButton', className)}
       ref={ref}
       onClick={handleClick}
       disabled={disabled}
-      leftIcon={leftIcon}
-      rightIcon={rightIcon}
+      $variant="primary"
+      $contain={false}
       $size={$size}
     >
-      <>{label}</>
-    </Button>
+      <>
+        {isLoading && (
+          <motion.div className="leftIcon" {...EXIT_MOTION} variants={fadeIn}>
+            <Lottie animationData="loading" />
+          </motion.div>
+        )}
+
+        <span className="label">{label}</span>
+
+        {!isMobile && isLoading && (
+          <motion.div className="rightIcon" {...EXIT_MOTION} variants={fadeIn}>
+            <ConnectorIcon
+              icon={connector?.id as ConnectorIconType}
+              $size={iconSize}
+            />
+          </motion.div>
+        )}
+      </>
+    </StyledTxButton>
   )
 }
 

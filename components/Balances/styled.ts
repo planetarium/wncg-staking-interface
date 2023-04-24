@@ -6,8 +6,9 @@ import {
   inlineFlexbox,
   posCenterX,
   posCenterY,
+  textGradient,
   textStyle,
-} from 'newStyles/utils'
+} from 'styles/utils'
 
 const StyledBalanceSection = styled.section`
   .title {
@@ -18,7 +19,7 @@ const StyledBalanceSection = styled.section`
   }
 
   .detailList {
-    ${flexbox('flex-start')}
+    ${flexbox('start')}
   }
 
   .detailItem {
@@ -30,13 +31,13 @@ const StyledBalanceSection = styled.section`
     }
 
     dd {
-      ${flexbox('flex-start')}
+      ${flexbox('start')}
       color: var(--black);
     }
   }
 
   .fiatValue {
-    ${flexbox('flex-start')}
+    ${flexbox('start')}
 
     .icon {
       color: var(--gray-500);
@@ -61,7 +62,7 @@ export const StyledAvailableBalance = styled(StyledBalanceSection)`
   }
 
   .subHeader {
-    ${flexbox('space-between')}
+    ${flexbox('between')}
     position: relative;
     z-index: 1;
   }
@@ -108,12 +109,8 @@ export const StyledAvailableBalance = styled(StyledBalanceSection)`
   }
 
   .subtitle {
-    ${textStyle('body', 4)}
-    font-weight: 700;
-    background-image: ${gradient(4)};
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
+    ${textStyle('body', 4, 700)}
+    ${textGradient(3)}
   }
 
   .balanceList {
@@ -146,7 +143,7 @@ export const StyledAvailableBalance = styled(StyledBalanceSection)`
     }
 
     dd {
-      ${flexbox('flex-start')}
+      ${flexbox('start')}
       color: var(--gray-600);
 
       .amount {

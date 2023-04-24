@@ -1,17 +1,16 @@
 import clsx from 'clsx'
-import styles from 'components/Toast/style.module.scss'
 
 export function renderToastBadge(type: ToastType) {
   switch (type) {
-    case 'success':
+    case 'success' as ToastType:
       return (
-        <span className={clsx(styles.badge, styles.success)} aria-hidden>
+        <span className={clsx('badge', 'success')} aria-hidden>
           Success
         </span>
       )
-    case 'error':
+    case 'error' as ToastType:
       return (
-        <span className={clsx(styles.badge, styles.fail)} aria-hidden>
+        <span className={clsx('badge', 'fail')} aria-hidden>
           Fail
         </span>
       )

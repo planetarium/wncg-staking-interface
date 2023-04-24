@@ -1,7 +1,7 @@
 import type { BigNumberish } from 'ethers'
 import { WeightedPoolEncoder } from '@balancer-labs/sdk'
 
-import { bnum } from './num'
+import { bnum } from './bnum'
 
 type BuildJoinParams = {
   assets: string[]

@@ -1,111 +1,90 @@
-import { memo, useMemo } from 'react'
-import type { StateValue } from 'xstate'
-import { useSetAtom } from 'jotai'
-import clsx from 'clsx'
+import { memo } from 'react'
+import { UseFormWatch } from 'react-hook-form'
+import { useAtom, useSetAtom } from 'jotai'
 
-import { pendingExitTxAtom } from 'states/form'
-import { HIGH_PRICE_IMPACT, REKT_PRICE_IMPACT } from 'constants/poolLiquidity'
-import { bnum } from 'utils/num'
-import { renderStrong } from 'utils/numberFormat'
-import { useExit } from '../useExit'
+import { exitTxAtom } from 'states/tx'
+import { LiquidityFieldType } from 'config/constants'
+import { useExitPool } from 'hooks'
+import { ExitFormFields } from 'hooks/useExitForm'
 
-import { StyledExitModalPage1Footer } from './styled'
-import NumberFormat from 'components/NumberFormat'
-import SvgIcon from 'components/SvgIcon'
+import { Checkout } from 'components/Modals/shared'
 import TxButton from 'components/TxButton'
 
 type ExitModalPage1FooterProps = {
-  assets: string[]
+  assets: Hash[]
   bptIn: string
-  bptOutPcnt: number
-  currentState: StateValue
-  errors: any
   exactOut: boolean
   exitAmounts: string[]
-  exitType: string
-  isProportional: boolean
-  priceImpact: number
-  priceImpactAgreement: boolean
   send(value: string): void
-  tokenOutAmount: string
-  totalValue: string
+  submitDisabled: boolean
+  totalExitFiatValue: string
+  watch: UseFormWatch<ExitFormFields>
 }
 
 function ExitModalPage1Footer({
   assets,
   bptIn,
-  bptOutPcnt,
-  currentState,
-  errors,
   exactOut,
   exitAmounts,
-  exitType,
-  isProportional,
-  priceImpact,
-  priceImpactAgreement,
+  submitDisabled,
   send,
-  tokenOutAmount,
-  totalValue,
+  totalExitFiatValue,
+  watch,
 }: ExitModalPage1FooterProps) {
-  const setPendingTx = useSetAtom(pendingExitTxAtom)
+  const [tx, setTx] = useAtom(exitTxAtom)
 
-  const exitPool = useExit(
-    exitAmounts,
+  const exitType = watch('exitType')
+  const bptOutPcnt = watch(LiquidityFieldType.LiquidityPercent)
+
+  const _exitPool = useExitPool({
     assets,
-    bptIn,
+    exitType,
+    exitAmounts,
+    bptOutPcnt,
     exactOut,
-    isProportional,
-    {
-      onConfirm(txHash?: Hash) {
-        setPendingTx({
-          bptOutPcnt,
-          exitType,
-          hash: txHash,
-          tokenOutAmount,
-        })
-        send('CALL')
-      },
-      onError(error) {
-        if (error?.code === 'ACTION_REJECTED') return
-        if (error?.code === 4001) return
-        send('FAIL')
-      },
+  })
+
+  async function exitPool() {
+    if (!_exitPool) {
+      send('FAIL')
+      return
     }
-  )
 
-  const submitDisabled = useMemo(
-    () =>
-      (exitType !== 'all' && bnum(tokenOutAmount).isZero()) ||
-      Object.keys(errors).length > 0 ||
-      priceImpact >= REKT_PRICE_IMPACT ||
-      (priceImpact >= HIGH_PRICE_IMPACT && !priceImpactAgreement),
-    [errors, exitType, priceImpact, priceImpactAgreement, tokenOutAmount]
-  )
+    try {
+      const txHash = await _exitPool()
+      if (!txHash) return
 
-  const enabled = bnum(totalValue).gt(0)
+      setTx({
+        assets,
+        bptOutPcnt,
+        exitType,
+        hash: txHash,
+        exitAmounts,
+        bptIn,
+      })
+      send('NEXT')
+    } catch (error: any) {
+      if (
+        error.code === 'ACTION_REJECTED' ||
+        error.code === 4001 ||
+        error.error === 'Rejected by user'
+      ) {
+        send('ROLLBACK')
+        return
+      }
+
+      send('FAIL')
+    }
+  }
 
   return (
-    <StyledExitModalPage1Footer className="exitModalFooter">
-      <output className="checkout">
-        <span className="text">you can get</span>
-        <div className={clsx('value', { enabled })}>
-          <SvgIcon icon="approximate" $size={24} />
-          <NumberFormat
-            value={totalValue}
-            prefix="$"
-            renderText={renderStrong}
-          />
-        </div>
-      </output>
+    <footer className="modalFooter">
+      <Checkout amount={totalExitFiatValue} message="You can get" type="fiat" />
 
-      <TxButton
-        onClick={exitPool}
-        isPending={currentState === 'exitPending'}
-        disabled={submitDisabled}
-      >
+      <TxButton onClick={exitPool} disabled={submitDisabled} hash={tx.hash}>
         Exit pool
       </TxButton>
-    </StyledExitModalPage1Footer>
+    </footer>
   )
 }
 

@@ -1,59 +1,64 @@
 import { useMemo } from 'react'
-import { useAtomValue } from 'jotai'
-import { parseUnits } from 'ethers/lib/utils'
 
-import { rewardsAtom } from 'states/user'
-import { configService } from 'services/config'
-import { useFiatCurrency } from './useFiatCurrency'
-import { usePrices } from './usePrices'
+import config from 'config'
+import { parseUnits } from 'utils/parseUnits'
+import { useFiat } from './useFiat'
 import { useStaking } from './useStaking'
+import { useFetchUserData } from './queries'
 
 export function useRewards() {
-  const { toFiat } = useFiatCurrency()
-  const { priceFor } = usePrices()
-  const {
-    rewardTokenAddress,
-    rewardTokensList,
-    rewardTokenDecimals,
-    rewardTokenSymbols,
-  } = useStaking()
-
-  const rewards = useAtomValue(rewardsAtom)
-
-  const scaledRewards = useMemo(
-    () =>
-      rewards.map((reward, i) => parseUnits(reward, rewardTokenDecimals[i])),
-    [rewardTokenDecimals, rewards]
-  )
+  const toFiat = useFiat()
+  const { rewardTokenAddress, rewardTokenAddresses, tokenMap } = useStaking()
+  const { earnedRewards = [] } = useFetchUserData().data ?? {}
 
   const rewardsInFiatValue = useMemo(
-    () => rewards.map((reward, i) => toFiat(rewardTokensList[i], reward)),
-    [rewardTokensList, rewards, toFiat]
+    () =>
+      earnedRewards.map((reward, i) => toFiat(reward, rewardTokenAddresses[i])),
+    [rewardTokenAddresses, earnedRewards, toFiat]
   )
 
   const rewardTokenPrices = useMemo(
-    () => rewardTokensList.map((address) => priceFor(address)),
-    [priceFor, rewardTokensList]
+    () => rewardTokenAddresses.map((a) => toFiat(1, a)),
+    [toFiat, rewardTokenAddresses]
+  )
+
+  const rewardTokenSymbols = useMemo(
+    () => rewardTokenAddresses.map((a) => tokenMap[a].symbol),
+    [rewardTokenAddresses, tokenMap]
+  )
+
+  const rewardTokenDecimals = useMemo(
+    () => rewardTokenAddresses.map((a) => tokenMap[a].decimals),
+    [rewardTokenAddresses, tokenMap]
   )
 
   const rewardTokenIndex = useMemo(
-    () => rewardTokensList.indexOf(rewardTokenAddress),
-    [rewardTokenAddress, rewardTokensList]
+    () => rewardTokenAddresses.indexOf(rewardTokenAddress),
+    [rewardTokenAddress, rewardTokenAddresses]
   )
 
   const balTokenIndex = useMemo(
-    () => rewardTokensList.indexOf(configService.bal),
-    [rewardTokensList]
+    () => rewardTokenAddresses.indexOf(config.bal),
+    [rewardTokenAddresses]
+  )
+
+  const scaledRewards = useMemo(
+    () =>
+      earnedRewards.map((reward, i) =>
+        parseUnits(reward, rewardTokenDecimals[i])
+      ),
+    [rewardTokenDecimals, earnedRewards]
   )
 
   return {
     balTokenIndex,
-    rewards,
+    rewards: earnedRewards,
     rewardsInFiatValue,
     rewardTokenAddress,
     rewardTokenIndex,
-    rewardTokensList,
+    rewardTokenAddresses,
     rewardTokenPrices,
+    rewardTokenDecimals,
     rewardTokenSymbols,
     scaledRewards,
   }

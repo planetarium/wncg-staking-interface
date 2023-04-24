@@ -1,37 +1,35 @@
-import { useSwitchNetwork as useWagmiSwitchNetwork } from 'wagmi'
+import { useSwitchNetwork as _useSwitchNetwork } from 'wagmi'
 
-import { gaEvent } from 'lib/gtag'
-import { networkChainId } from 'utils/network'
-import { useConnectWallets } from './useConnectWallets'
-import { useNetwork } from './useNetwork'
+import { useConnect } from './useConnect'
+import config from 'config'
 
 export function useSwitchNetwork() {
-  const { connect } = useConnectWallets()
-  const { chain } = useNetwork()
+  const { openConnectModal } = useConnect()
 
-  const { switchNetwork: initSwitchNetwork } = useWagmiSwitchNetwork({
-    chainId: networkChainId,
-    throwForSwitchChainNotSupported: true,
+  const { switchNetwork: _switchNetwork } = _useSwitchNetwork({
+    chainId: config.chainId,
+    throwForSwitchChainNotSupported: false,
   })
 
   function switchNetwork() {
     try {
-      initSwitchNetwork?.(networkChainId)
-    } catch {
-      // TODO: Discuss how to handle users w/o window.ethereum
+      _switchNetwork?.()
+    } catch (error: any) {
       if (!window.ethereum) return
-      connect()
+      openConnectModal()
     }
+  }
 
-    gaEvent({
-      name: 'switch_network',
-      params: {
-        oldNetwork: chain?.id,
-      },
-    })
+  function switchBeforeSend(error: any) {
+    if (error.name === 'ChainMismatchError') {
+      try {
+        switchNetwork()
+      } catch (error: any) {}
+    }
   }
 
   return {
     switchNetwork,
+    switchBeforeSend,
   }
 }

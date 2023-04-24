@@ -1,33 +1,34 @@
 import { memo, MouseEvent } from 'react'
 
-import type { ModalCategory } from 'states/ui'
-import { useModal } from 'hooks'
+import { useModal, useResponsive } from 'hooks'
 
 import { StyledCloseButton } from './styled'
-import SvgIcon from 'components/SvgIcon'
+import Icon from 'components/Icon'
 
 type CloseButtonProps = {
-  modal: ModalCategory
   onClose?(): void
 }
 
-function CloseButton({ modal, onClose }: CloseButtonProps) {
+function CloseButton({ onClose }: CloseButtonProps) {
   const { removeModal } = useModal()
+  const { isHandheld, isSmallLaptop } = useResponsive()
 
-  function close(e: MouseEvent<HTMLButtonElement>) {
+  function closeModal(e: MouseEvent<HTMLButtonElement>) {
     e.stopPropagation()
-    removeModal(modal)
+    removeModal()
     onClose?.()
   }
+
+  const $size = isHandheld && !isSmallLaptop ? 24 : 32
 
   return (
     <StyledCloseButton
       className="closeButton"
       type="button"
-      onClick={close}
-      aria-label="Close this modal"
+      onClick={closeModal}
+      aria-label="Close the modal"
     >
-      <SvgIcon icon="close" $size={32} />
+      <Icon icon="close" $size={$size} />
     </StyledCloseButton>
   )
 }

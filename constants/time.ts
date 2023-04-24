@@ -14,7 +14,7 @@ export const REFETCH_INTERVAL = 15 * 1_000
 export const STALE_TIME = 10 * 1_000
 
 export const ESTIMATION_PERIODS = ['day', 'week', 'month', 'year'] as const
-export type EstimatePeriod = typeof ESTIMATION_PERIODS[number]
+export type EstimatePeriod = (typeof ESTIMATION_PERIODS)[number]
 
 export const datePattern = 'yyyy. MM. dd'
 export const datetimePattern = `${datePattern} hh:mm bb`

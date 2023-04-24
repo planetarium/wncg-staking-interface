@@ -1,0 +1,24 @@
+export const GNB_DROPDOWN_MENU_WIDTH = 360
+
+export const GNB_HEIGHT_MOBILE = 60
+export const GNB_HEIGHT_TABLET = 80
+export const GNB_HEIGHT_DESKTOP = 88
+
+export const ALERT_HEIGHT = 56
+
+export const GLOBAL_FOOTER_HEIGHT_MOBILE = 210
+export const GLOBAL_FOOTER_HEIGHT_LAPTOP = 72
+
+export const GUTTER_MOBILE = 20
+export const GUTTER_TABLET = 48
+
+export const MAX_CONTAINER_WIDTH = 1366
+
+export const MAIN_SECTION_MARGIN_MOBILE = 80
+export const MAIN_SECTION_MARGIN_TABLET = 280
+
+export const MAX_CHART_WIDTH = 1056
+export const MAX_ECHART_WIDTH = 960
+
+export const SIDEBAR_PADDING_MOBILE = 20
+export const SIDEBAR_PADDING_TABLET = 40

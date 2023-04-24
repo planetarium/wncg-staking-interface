@@ -1,72 +1,67 @@
-import { memo } from 'react'
-import type { StateValue } from 'xstate'
 import { useAtomValue } from 'jotai'
-import { AnimatePresence } from 'framer-motion'
-import { format } from 'date-fns'
 
-import { ModalCategory } from 'states/ui'
-import { roundedTimestampsAtom } from 'states/user'
-import { datePattern } from 'constants/time'
-import { useModal } from 'hooks'
+import { unstakeTimestampsAtom } from 'states/account'
+import { format } from 'utils/format'
+import { useModal, useStaking } from 'hooks'
 
 import { StyledCooldownModalPage3 } from './styled'
 import Button from 'components/Button'
+import Lottie from 'components/Lottie'
 
-type CooldownModalPage3Props = {
-  currentPage: number
-  currentState: StateValue
-  disabled: boolean
-}
-
-function CooldownModalPage3({
-  currentPage,
-  currentState,
-  disabled,
-}: CooldownModalPage3Props) {
+export default function CooldownModalPage3() {
   const { removeModal } = useModal()
-  const [cooldownEndsAt, withdrawEndsAt] = useAtomValue(roundedTimestampsAtom)
+  const { cooldownPeriod } = useStaking()
 
-  // FIXME: Handle failed tx
-  // const success = currentState === 'cooldownSuccess'
-  // const fail = currentState === 'cooldownFail'
+  const { cooldownEndsAt = 0, withdrawEndsAt = 0 } =
+    useAtomValue(unstakeTimestampsAtom) ?? {}
 
-  function close() {
-    removeModal(ModalCategory.Cooldown)
-  }
+  const cooldownStartsAt = Math.max(0, cooldownEndsAt - cooldownPeriod)
 
   return (
-    <AnimatePresence>
-      {currentPage === 3 && (
-        <StyledCooldownModalPage3>
-          <header className="modalHeader">
-            <h2 className="title">Cooldown Started</h2>
-          </header>
+    <StyledCooldownModalPage3>
+      <div className="lottieContainer">
+        <Lottie animationData="timer" />
+      </div>
 
-          <dl className="detail">
-            <dt>Withdrawal period</dt>
-            <dd>
-              <strong>
-                <time dateTime={cooldownEndsAt.toString()}>
-                  {format(cooldownEndsAt, datePattern)}
+      <header className="modalHeader">
+        <h2 className="title">Cooldown Started!</h2>
+      </header>
+
+      <div className="container">
+        <div className="modalContent">
+          <dl className="scheduleList">
+            <div className="scheduleItem">
+              <dt>Cooldown</dt>
+              <dd>
+                <time>{format(cooldownStartsAt, { dateOnly: true })}</time>
+                <time className="tilde">
+                  {format(cooldownEndsAt, { dateOnly: true })}
                 </time>
-              </strong>
-              <strong className="tilde">
-                <time dateTime={withdrawEndsAt.toString()}>
-                  {format(withdrawEndsAt, datePattern)}
+              </dd>
+            </div>
+            <div className="scheduleItem">
+              <dt>Withdraw</dt>
+              <dd>
+                <time>{format(cooldownEndsAt, { dateOnly: true })}</time>
+                <time className="tilde">
+                  {format(withdrawEndsAt, { dateOnly: true })}
                 </time>
-              </strong>
-            </dd>
+              </dd>
+              <dd className="misc">
+                If you don&apos;t withdraw during this period, you&apos;ll have
+                to go through the cooldown again. So keep this withdrawal window
+                in mind.
+              </dd>
+            </div>
           </dl>
+        </div>
+      </div>
 
-          <div className="buttonGroup">
-            <Button onClick={close} $size="lg">
-              Go to main
-            </Button>
-          </div>
-        </StyledCooldownModalPage3>
-      )}
-    </AnimatePresence>
+      <footer className="modalFooter">
+        <Button type="button" onClick={removeModal} $size="md">
+          Go to main
+        </Button>
+      </footer>
+    </StyledCooldownModalPage3>
   )
 }
-
-export default memo(CooldownModalPage3)

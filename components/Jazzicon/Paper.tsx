@@ -2,6 +2,7 @@ import type { ReactNode } from 'react'
 import styled from 'styled-components'
 
 export const StyledPaper = styled.div`
+  flex-shrink: 0;
   display: inline-block;
   padding: 0;
   margin: 0;

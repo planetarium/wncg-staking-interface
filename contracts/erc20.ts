@@ -1,4 +1,4 @@
-import { constants, Contract } from 'ethers'
+import { Contract, constants } from 'ethers'
 import type { TransactionResponse } from '@ethersproject/providers'
 
 export async function approve(

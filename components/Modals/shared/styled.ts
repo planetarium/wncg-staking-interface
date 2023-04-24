@@ -1,244 +1,395 @@
 import { motion } from 'framer-motion'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
-import { flexbox, gradient, scrollbar, textStyle } from 'newStyles/utils'
+import {
+  flexbox,
+  gradient,
+  media,
+  posCenterX,
+  scrollbar,
+  textStyle,
+} from 'styles/utils'
 import { buttonStyle } from 'components/Button/styled'
+import { GUTTER_TABLET } from 'styles/constants/dimensions'
 
-export const StyledModalOverlay = styled(motion.div)`
-  ${flexbox('flex-end')}
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  z-index: 1;
+const COMPLETE_LOTTIE_SIZE = 80
+const CLOSE_BUTTON_SIZE_MOBILE = 24
+const CLOSE_BUTTON_SIZE_LAPTOP = 32
+
+export const StyledModalPage = styled(motion.div)<{ $disabled?: boolean }>`
+  ${flexbox('start', 'stretch')}
   flex-direction: column;
-  background-color: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(32px);
-
-  @media screen and (min-width: 1000px) {
-    justify-content: center;
-  }
-`
-
-export const StyledModalContainer = styled(motion.aside)`
-  width: 100%;
-`
-
-export const StyledModalPage = styled(motion.div)`
-  position: relative;
   flex-grow: 1;
   width: 100%;
-  max-width: 720px;
-  padding: 48px;
+  padding: 32px 24px 64px !important;
+  max-height: calc(100vh - 32px);
   margin: 0 auto;
   overflow: hidden;
-  background-color: rgba(255, 255, 255, 0.05);
-  border-radius: 16px 16px 0 0;
+  background-color: rgba(255, 255, 255, 0.08);
+  border-radius: 24px 24px 0 0;
+  backdrop-filter: blur(32px);
   box-shadow: 0px 4px 48px rgba(0, 0, 0, 0.24);
 
-  &:has(.container) {
-    ${flexbox('flex-start', 'stretch')}
-    flex-direction: column;
+  &::before {
+    position: absolute;
+    bottom: 0;
+    left: 0;
     width: 100%;
-
-    .modalHeader {
-      flex-shrink: 0;
-    }
-
-    .container {
-      ${scrollbar()}
-      flex-grow: 1;
-      padding-right: 10px;
-      margin-right: -10px;
-      max-height: 100%;
-      overflow-x: hidden;
-      overflow-y: auto;
-
-      &:has(::-webkit-scrollbar) {
-        background: purple;
-      }
-    }
+    height: 180px;
+    content: '';
+    background-image: linear-gradient(
+      180deg,
+      transparent,
+      rgba(7, 3, 22, 0) 1.14%,
+      #080316 25.3%
+    );
+    pointer-events: none;
+    user-select: none;
   }
 
-  .modalHeader {
+  .modalHeader,
+  .modalFooter,
+  .container {
     position: relative;
-    margin-bottom: 64px;
 
-    .closeButton {
-      position: absolute;
-      top: 0;
-      right: 0;
-    }
-
-    .titleGroup {
-      padding-right: ${32 + 24}px;
-    }
-
-    .title {
-      ${textStyle('header', 5)}
-      color: var(--white);
-
-      &.accent {
-        ${textStyle('body', 2)}
-        margin-bottom: 8px;
-        font-weight: 700;
-        color: var(--primary-300);
-        text-transform: capitalize;
-      }
-    }
-
-    .subtitle {
-      ${textStyle('header', 5)}
-    }
-
-    .desc {
-      ${textStyle('body', 2)}
-      margin-top: 8px;
-      color: rgba(var(--white-rgb), 0.6);
-
-      &.accent {
-        color: var(--primary-300);
-      }
+    &:last-child {
+      padding-bottom: 0;
+      margin-bottom: 0;
     }
   }
 
+  .modalHeader,
+  .modalFooter,
   .pendingNotice {
     flex-shrink: 0;
   }
 
-  @media screen and (min-width: 1000px) {
-    padding: 48px;
-    max-height: calc(100vh - 160px);
-    border-radius: 16px;
-  }
-`
-
-export const StyledCloseButton = styled.button`
-  ${flexbox()}
-  width: 32px;
-  height: 32px;
-  color: var(--white);
-`
-
-export const StyledPendingNotice = styled(motion.footer)`
-  ${flexbox('flex-start')}
-  height: 72px;
-  padding-right: 16px;
-  padding-left: 12px;
-  margin: 48px -48px -48px;
-  overflow: hidden;
-  border-radius: 0 0 16px 16px;
-  background-image: ${gradient(2)};
-
-  .loading {
-    flex-shrink: 0;
-    margin-right: 4px;
-    transform: scale(0.7);
-    color: var(--gray-400);
+  .modalHeader,
+  .modalFooter {
+    width: 100%;
   }
 
-  .content {
-    flex-grow: 1;
-  }
+  .modalHeader {
+    position: relative;
 
-  .title {
-    ${textStyle('body', 2)}
-    margin: 0;
-    color: var(--white);
+    & + .modalFooter {
+      margin-top: 40px;
+    }
+
+    .closeButton {
+      position: absolute;
+      top: 2px;
+      right: 0;
+    }
+
+    .titleGroup {
+      padding-right: ${16 + CLOSE_BUTTON_SIZE_MOBILE}px;
+
+      .title,
+      .subtitle {
+        &:first-child {
+          margin-top: 0;
+        }
+      }
+    }
+
+    .title {
+      ${textStyle('title', 1)}
+      color: var(--white);
+
+      &.accent {
+        ${textStyle('body', 3, 700)}
+      }
+    }
+
+    .subtitle {
+      ${textStyle('title', 1)}
+      margin-top: 12px;
+    }
+
+    .accent {
+      color: var(--primary-300);
+    }
   }
 
   .desc {
-    ${textStyle('body', 3)}
-    margin: 0;
+    ${textStyle('body', 4)}
+    margin-top: 8px;
     color: rgba(var(--white-rgb), 0.6);
   }
 
-  .extLink {
-    ${buttonStyle}
-    ${textStyle('caption')}
-    flex-grow: 0;
-    flex-shrink: 0;
-    width: auto;
-    padding: 8px 16px;
-    font-weight: 700;
-    color: var(--primary-500);
-    background-color: var(--white);
-    border-radius: 100px;
+  .container {
+    ${scrollbar()}
+    flex-grow: 1;
+    max-height: 100%;
+    padding-top: ${40 / 2}px;
+    padding-bottom: ${48 / 2}px;
+    margin-top: ${40 / 2}px;
+    margin-bottom: ${48 / 2}px;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
 
-    .icon {
-      flex-shrink: 0;
-      margin-right: -4px;
-      margin-left: 4px;
+  .modalFooter {
+    .checkout {
+      & + a,
+      & + button {
+        margin-top: 0;
+      }
+    }
+
+    a,
+    button {
+      margin-top: 12px;
+
+      &:first-child {
+        margin-top: 0;
+      }
     }
   }
+
+  ${({ $disabled }) =>
+    $disabled &&
+    css`
+      .modalContent,
+      .modalFooter {
+        opacity: 0.5;
+      }
+    `}
+
+  ${media(
+    'minTablet',
+    css`
+      padding-right: ${GUTTER_TABLET}px !important;
+      padding-left: ${GUTTER_TABLET}px !important;
+    `
+  )}
+
+  ${media(
+    'minSmLaptop',
+    css`
+      width: 640px;
+      max-height: calc(100vh - ${48 * 2}px);
+      padding: 48px !important;
+      border-radius: 16px;
+
+      &::before {
+        display: none;
+      }
+
+      .modalHeader {
+        position: relative;
+        padding-top: 0;
+        padding-right: 0;
+
+        .closeButton {
+          top: 0;
+        }
+
+        .titleGroup {
+          padding-right: ${32 + 24}px;
+        }
+
+        .title {
+          ${textStyle('header', 6)}
+          color: var(--white);
+
+          &.accent {
+            ${textStyle('body', 3)}
+            margin-bottom: 8px;
+            font-weight: 700;
+            color: var(--primary-300);
+            text-transform: capitalize;
+          }
+        }
+
+        .subtitle {
+          ${textStyle('header', 6)}
+        }
+      }
+
+      .desc {
+        ${textStyle('body', 2)}
+        margin-top: 8px;
+        color: rgba(var(--white-rgb), 0.6);
+      }
+
+      .container {
+        padding-top: ${40 / 2}px;
+        padding-bottom: ${40 / 2}px;
+        margin-top: ${40 / 2}px;
+        margin-bottom: ${40 / 2}px;
+      }
+
+      .modalContent,
+      .modalFooter {
+        transition: opacity 250ms;
+      }
+
+      .modalFooter {
+        padding-bottom: 0;
+
+        .buttonGroup {
+          ${flexbox()}
+
+          button {
+            margin-top: 0;
+            margin-left: 16px;
+
+            &:first-child {
+              margin-left: 0;
+            }
+          }
+        }
+      }
+
+      .pendingNotice {
+        flex-shrink: 0;
+      }
+    `
+  )}
 `
 
 export const StyledModalCompletePage = styled(StyledModalPage)`
-  max-width: 480px !important;
+  ${flexbox()}
+  flex-direction: column;
 
-  .modalHeader {
-    margin-bottom: 0 !important;
+  &:has(.confetti) {
+    overflow: visible;
+  }
 
-    & + .buttonGroup {
-      margin-top: 64px;
+  .confetti {
+    ${posCenterX()}
+    width: 640px !important;
+    height: 480px !important;
+    transform: translate3d(-50%, -${COMPLETE_LOTTIE_SIZE}px, 0);
+    pointer-events: none;
+
+    > div {
+      width: 640px !important;
+      height: 480px !important;
+
+      svg {
+        width: 640px !important;
+        height: 480px !important;
+      }
     }
   }
 
-  .title {
-    color: var(--white);
+  .modalHeader,
+  .modalFooter,
+  .modalContent {
+    width: 100%;
+    padding: 0 !important;
+    padding-top: 0;
+  }
+
+  .modalHeader {
+    ${flexbox()}
+    flex-direction: column;
     text-align: center;
+
+    .title {
+      color: var(--white);
+      text-align: center;
+    }
+
+    + .modalFooter {
+      margin-top: 40px !important;
+    }
+  }
+
+  .lottie {
+    ${flexbox()}
+    width: 80px;
+    height: 80px;
+    margin-bottom: 24px;
+
+    svg {
+      width: 100px !important;
+      height: 100px !important;
+    }
   }
 
   .detailList {
     width: 100%;
     padding: 20px 24px;
-    margin-top: 48px;
     overflow: hidden;
-    background-image: ${gradient(1)};
+    background-color: var(--gray-200);
     border-radius: 6px;
   }
 
   .detailItem {
-    ${flexbox('space-between', 'flex-start')}
-    margin-top: 8px;
+    ${flexbox('between', 'start')}
+    ${textStyle('body', 3)}
+    margin-top: 12px;
 
     &:first-child {
       margin-top: 0;
     }
 
     &.total {
-      padding-top: 12px;
-      margin-top: 12px;
-      border-top: 1.5px solid rgba(var(--white-rgb), 0.2);
+      padding-top: 16px;
+      margin-top: 16px;
+      border-top: 1.5px solid var(--gray-300);
+
+      .usd {
+        ${textStyle('body', 3)}
+        margin-top: 2px;
+        color: var(--gray-500);
+      }
 
       dd {
-        ${textStyle('subtitle', 1)}
+        ${textStyle('body', 3)}
+        width: 180px;
+        font-weight: 700;
+        color: var(--gray-700);
       }
     }
 
-    .usd {
-      color: var(--white);
-      font-weight: 700;
+    .active,
+    .active + .symbol {
+      color: var(--primary-500);
     }
 
     dt {
       ${textStyle('body', 3)}
-      font-weight: 700;
       white-space: nowrap;
+      color: var(--gray-500);
     }
 
     dd {
-      ${flexbox('flex-end')}
       ${textStyle('body', 3)}
-      font-weight: 500;
-      color: var(--primary-200);
+      width: 180px;
+      color: var(--gray-700);
+      font-weight: 700;
+      word-break: break-all;
+      text-align: right;
+
+      .active,
+      .active + .symbol {
+        color: var(--primary-500);
+      }
+
+      .symbol {
+        ${textStyle('caption')}
+        margin-left: 0.25em;
+        font-weight: 700;
+      }
+
+      .number {
+        ${textStyle('body', 3, 700)}
+
+        &.usd {
+          ${textStyle('body', 3)}
+          display: block;
+          color: var(--gray-500);
+        }
+      }
     }
   }
 
-  .buttonGroup {
-    margin-top: 48px;
-
+  .modalFooter {
     button {
       margin-top: 16px;
 
@@ -247,4 +398,208 @@ export const StyledModalCompletePage = styled(StyledModalPage)`
       }
     }
   }
+
+  ${media(
+    'minSmLaptop',
+    css`
+      max-width: 480px !important;
+    `
+  )}
+`
+
+export const StyledModalFailPage = styled(StyledModalCompletePage)`
+  .modalContent {
+    ${textStyle('body', 2)}
+    margin-top: 8px;
+    text-align: center;
+    color: var(--gray-400);
+  }
+`
+
+export const StyledModalApprovePage = styled(StyledModalPage)``
+
+export const StyledCheckout = styled.output<{ $active: boolean }>`
+  ${flexbox()}
+  width: 100%;
+  padding-top: 0;
+  padding-bottom: 20px;
+
+  .text {
+    ${textStyle('body', 3)}
+    text-align: right;
+  }
+
+  .value {
+    ${flexbox('start')}
+    color: var(--white);
+    transition: 150ms;
+    margin-left: 8px;
+
+    .symbol {
+      ${textStyle('title')}
+    }
+  }
+
+  .countUp {
+    ${textStyle('subtitle', 1)}
+  }
+
+  ${media(
+    'minSmLaptop',
+    css`
+      .countUp {
+        ${textStyle('title')}
+      }
+    `
+  )}
+
+  ${({ $active }) =>
+    $active &&
+    css`
+      .value {
+        color: var(--primary-300);
+      }
+    `}
+`
+
+export const StyledCloseButton = styled.button`
+  ${flexbox()}
+  width: ${CLOSE_BUTTON_SIZE_MOBILE}px;
+  height: ${CLOSE_BUTTON_SIZE_MOBILE}px;
+  color: var(--white);
+
+  ${media(
+    'minSmLaptop',
+    css`
+      width: ${CLOSE_BUTTON_SIZE_LAPTOP}px;
+      height: ${CLOSE_BUTTON_SIZE_LAPTOP}px;
+    `
+  )}
+`
+
+export const StyledPendingNotice = styled(motion.footer)`
+  ${flexbox('start')}
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
+  width: 100%;
+  padding: 12px 24px;
+  overflow: hidden;
+  background-image: ${gradient(2)};
+
+  .lottie {
+    display: none;
+  }
+
+  .content {
+    flex-grow: 1;
+  }
+
+  .title {
+    ${textStyle('body', 4, 700)}
+    margin: 0;
+    color: var(--white);
+
+    &:after {
+      content: '...';
+    }
+  }
+
+  .desc {
+    display: none;
+  }
+
+  .extLink {
+    ${flexbox()}
+
+    .explorer {
+      display: none;
+    }
+
+    .icon {
+      width: 16px;
+      height: 16px;
+      color: var(--primary-25);
+    }
+  }
+
+  ${media(
+    'minSmLaptop',
+    css`
+      ${flexbox('start')}
+      position: relative;
+      bottom: auto;
+      left: auto;
+      width: auto;
+      height: 72px;
+      padding-right: 16px;
+      padding-left: 12px;
+      margin: 48px -48px -48px;
+      overflow: hidden;
+      border-radius: 0 0 16px 16px;
+      background-image: ${gradient(2)};
+
+      .lottie {
+        display: block;
+        width: 48px;
+        height: 48px;
+        margin-right: 4px;
+
+        > div {
+          ${flexbox()}
+          width: 48px;
+          height: 48px;
+        }
+
+        svg {
+          width: 40px !important;
+          height: 40px !important;
+        }
+      }
+
+      .content {
+        flex-grow: 1;
+      }
+
+      .title {
+        ${textStyle('body', 2)}
+
+        &::after {
+          display: none;
+        }
+      }
+
+      .desc {
+        ${textStyle('body', 4)}
+        display: block;
+        margin: 0;
+        color: rgba(var(--white-rgb), 0.6);
+      }
+
+      .extLink {
+        ${buttonStyle}
+        ${textStyle('caption')}
+        flex-grow: 0;
+        flex-shrink: 0;
+        width: auto;
+        padding: 8px 16px;
+        font-weight: 700;
+        color: var(--primary-500);
+        background-color: var(--white);
+        border-radius: 100px;
+
+        .explorer {
+          display: block;
+        }
+
+        .icon {
+          flex-shrink: 0;
+          margin-right: -4px;
+          margin-left: 4px;
+          color: var(--primary-500);
+        }
+      }
+    `
+  )}
 `

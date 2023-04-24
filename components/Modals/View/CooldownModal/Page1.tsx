@@ -1,57 +1,61 @@
 import { memo } from 'react'
-import type { StateValue } from 'xstate'
-import { AnimatePresence } from 'framer-motion'
+import dynamic from 'next/dynamic'
 
-import { ModalCategory } from 'states/ui'
+import { useModal } from 'hooks'
+import { useFetchUserData } from 'hooks/queries'
 
 import { StyledCooldownModalPage1 } from './styled'
-import { CloseButton } from 'components/Modals/shared'
 import Button from 'components/Button'
-import EarningsEstimate from 'components/EarningsEstimate'
+import { CloseButton } from 'components/Modals/shared'
+
+const ExpectedRevenue = dynamic(() => import('components/ExpectedRevenue'), {
+  ssr: false,
+})
 
 type CooldownModalPage1Props = {
-  currentPage: number
-  currentState: StateValue
-  disabled: boolean
-  send(value: string): void
+  send(event: string): void
 }
 
-function CooldownModalPage1({
-  currentPage,
-  currentState,
-  disabled,
-  send,
-}: CooldownModalPage1Props) {
+function CooldownModalPage1({ send }: CooldownModalPage1Props) {
+  const { removeModal } = useModal()
+  const { stakedTokenBalance = '0' } = useFetchUserData().data ?? {}
+
   function goNext() {
     send('NEXT')
   }
 
   return (
-    <AnimatePresence>
-      {currentPage === 1 && (
-        <StyledCooldownModalPage1>
-          <header className="modalHeader">
-            <div className="titleGroup">
-              <h2 className="title accent">Estimated Earn</h2>
-              <h3 className="subtitle">
-                In a few days, you&apos;ll get more profit.
-                <br />
-                Do you really start cooldown?
-              </h3>
-            </div>
-            <CloseButton modal={ModalCategory.Cooldown} />
-          </header>
+    <StyledCooldownModalPage1>
+      <header className="modalHeader">
+        <div className="titleGroup">
+          <h2 className="title accent">Estimated Earnings</h2>
+          <h3 className="subtitle">
+            You&apos;ll get more rewards if you stay.
+            <br />
+            Do you really want to start cooldown?
+          </h3>
+        </div>
 
-          <div className="container">
-            <EarningsEstimate />
-          </div>
+        <CloseButton />
+      </header>
 
-          <Button className="nextButton" onClick={goNext} $size="lg">
-            Yes, I don&apos;t care
+      <div className="container">
+        <div className="modalContent">
+          <ExpectedRevenue amount={stakedTokenBalance} />
+        </div>
+      </div>
+
+      <footer className="modalFooter">
+        <div className="buttonGroup">
+          <Button onClick={goNext} $variant="secondary" $size="md">
+            Start cooldown
           </Button>
-        </StyledCooldownModalPage1>
-      )}
-    </AnimatePresence>
+          <Button onClick={removeModal} $size="md">
+            Stay as is
+          </Button>
+        </div>
+      </footer>
+    </StyledCooldownModalPage1>
   )
 }
 

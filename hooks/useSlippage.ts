@@ -1,10 +1,12 @@
 import { useCallback } from 'react'
 import { useAtomValue } from 'jotai'
-import { formatUnits, parseUnits } from 'ethers/lib/utils'
+
 import BigNumber from 'bignumber.js'
 
 import { slippageAtom } from 'states/userSettings'
-import { bnum } from 'utils/num'
+import { bnum } from 'utils/bnum'
+import { parseUnits } from 'utils/parseUnits'
+import { formatUnits } from 'utils/formatUnits'
 
 export function useSlippage() {
   const slippage = useAtomValue(slippageAtom)

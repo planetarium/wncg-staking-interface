@@ -1,118 +1,139 @@
-import { memo, useMemo } from 'react'
-import type { StateValue } from 'xstate'
-import { AnimatePresence } from 'framer-motion'
+import { useState } from 'react'
+import { useTransaction } from 'wagmi'
+import { motion } from 'framer-motion'
 
-import { ModalCategory } from 'states/ui'
-import { usdCountUpOption } from 'constants/countUp'
-import { bnum } from 'utils/num'
-import { getTokenSymbol } from 'utils/token'
-import { useFiatCurrency, useModal, useStaking } from 'hooks'
+import config from 'config'
+import { MOTION } from 'config/motions'
+import { fadeIn } from 'config/motionVariants'
+import { bnum } from 'utils/bnum'
+import { formatUnits } from 'utils/formatUnits'
+import { parseLog } from 'utils/parseLog'
+import { parseTransferLogs } from 'utils/parseTransferLogs'
+import { useFiat, useModal, useStaking } from 'hooks'
 
-import { ModalCompletePage } from 'components/Modals/shared'
+import { StyledExitModalPage2 } from './styled'
 import Button from 'components/Button'
-import CountUp from 'components/CountUp'
 import NumberFormat from 'components/NumberFormat'
-import SvgIcon from 'components/SvgIcon'
+import TokenIcon from 'components/TokenIcon'
 
 type ExitModalPage2Props = {
-  currentPage: number
-  currentState: StateValue
-  result: Record<string, string>
+  assets: Hash[]
+  isProportional: boolean
+  tokenOutIndex: number
+  hash?: Hash
 }
 
-function ExitModalPage2({
-  currentPage,
-  currentState,
-  result,
+export default function ExitModalPage2({
+  assets,
+  isProportional,
+  hash,
+  tokenOutIndex,
 }: ExitModalPage2Props) {
-  const { toFiat } = useFiatCurrency()
+  const [exitAmounts, setExitAmounts] = useState<string[]>([])
+
+  const toFiat = useFiat()
   const { removeModal } = useModal()
-  const { stakedTokenAddress } = useStaking()
+  const { poolTokenAddresses, poolTokenDecimals, tokenMap } = useStaking()
 
-  const exitedAmounts = Object.entries(result).filter(
-    ([address]) => address !== stakedTokenAddress
-  )
+  useTransaction({
+    chainId: config.chainId,
+    enabled: !!hash,
+    hash,
+    async onSuccess(tx) {
+      const { logs } = await tx.wait()
 
-  const totalExitedAmountsInFiatValue = useMemo(
-    () =>
-      exitedAmounts
-        .reduce(
-          (total, [address, amount]) => total.plus(toFiat(address, amount)),
-          bnum(0)
+      const tokenOut = isProportional ? null : assets[tokenOutIndex]
+
+      if (isProportional || tokenOut !== config.nativeCurrency.address) {
+        const parsedLogs = parseTransferLogs(logs)
+        const receivedTokens = assets.map((addr) => parsedLogs?.[addr])
+
+        if (receivedTokens.length === poolTokenAddresses.length) {
+          setExitAmounts(
+            receivedTokens.map((amount, i) =>
+              formatUnits(amount, poolTokenDecimals[i])
+            )
+          )
+        }
+
+        return
+      }
+
+      const parsedLogs = logs.map((l) => parseLog(l))
+      const withdrawalLog = parsedLogs.find((l) => {
+        return l?.name === 'Withdrawal'
+      })
+
+      if (withdrawalLog) {
+        setExitAmounts(
+          assets.map((addr) => {
+            if (addr !== config.nativeCurrency.address) return '0'
+            return formatUnits(withdrawalLog.args[1])
+          })
         )
-        .toString(),
-    [exitedAmounts, toFiat]
+      }
+    },
+  })
+
+  const showExitResult = exitAmounts.length > 0
+  const exitAmountsInFiatValue = exitAmounts.map((amt, i) =>
+    toFiat(amt, assets[i])
   )
-
-  // FIXME: Handle failed tx
-  // const success = currentState === 'stakeSuccess'
-  // const fail = currentState === 'stakeFail'
-
-  function close() {
-    removeModal(ModalCategory.Exit)
-  }
 
   return (
-    <AnimatePresence>
-      {currentPage === 2 && (
-        <ModalCompletePage>
-          <header className="modalHeader">
-            <h2 className="title">Exit pool completed!</h2>
-          </header>
+    <StyledExitModalPage2>
+      <header className="modalHeader">
+        <h2 className="title">Exit completed!</h2>
+      </header>
 
-          <dl className="detailList">
-            {exitedAmounts.map(([address, amount]) => {
-              const symbol = getTokenSymbol(address)
-              const fiatValue = toFiat(address, amount)
+      <div className="container">
+        <div className="modalContent">
+          {showExitResult && (
+            <motion.dl {...MOTION} className="detailList" variants={fadeIn}>
+              {assets.map((addr, i) => {
+                const amt = exitAmounts[i]
 
-              return (
-                <div className="detailItem" key={`exitedAmounts:${address}`}>
-                  <dt>{symbol}</dt>
-                  <dd>
-                    <NumberFormat
-                      value={amount}
-                      prefix="+ "
-                      decimalScale={18}
-                    />
+                if (bnum(amt).isZero()) return null
 
-                    <span className="usd">
-                      <SvgIcon icon="approximate" />
+                const { symbol } = tokenMap[addr]
+                const fiatValue = exitAmountsInFiatValue[i]
+
+                return (
+                  <div className="detailItem" key={`exitResult:${amt}:${addr}`}>
+                    <dt>
+                      <TokenIcon address={addr} $size={20} />
+                      {symbol}
+                    </dt>
+
+                    <dd>
                       <NumberFormat
-                        value={fiatValue}
-                        decimals={2}
-                        prefix="($"
-                        suffix=")"
+                        className="active"
+                        value={amt}
+                        decimals={8}
                       />
-                    </span>
-                  </dd>
-                </div>
-              )
-            })}
 
-            <div className="detailItem total">
-              <dt>You received</dt>
-              <dd>
-                <strong className="usd">
-                  <SvgIcon icon="approximate" $size={24} />
-                  <CountUp
-                    {...usdCountUpOption}
-                    end={totalExitedAmountsInFiatValue}
-                    prefix="✨ $"
-                  />
-                </strong>
-              </dd>
-            </div>
-          </dl>
+                      <span className="fiatValue">
+                        <NumberFormat
+                          className="active"
+                          value={fiatValue}
+                          type="fiat"
+                          prefix="$"
+                        />
+                      </span>
+                    </dd>
+                  </div>
+                )
+              })}
+            </motion.dl>
+          )}
+        </div>
+      </div>
 
-          <div className="buttonGroup">
-            <Button onClick={close} $size="lg">
-              Go to main
-            </Button>
-          </div>
-        </ModalCompletePage>
-      )}
-    </AnimatePresence>
+      <footer className="modalFooter">
+        <Button type="button" onClick={removeModal} $size="md">
+          Go to main
+        </Button>
+      </footer>
+    </StyledExitModalPage2>
   )
 }
-
-export default memo(ExitModalPage2)

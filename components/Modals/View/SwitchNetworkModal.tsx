@@ -1,5 +1,4 @@
-import { ModalCategory } from 'states/ui'
-import { networkChainId, networkNameFor } from 'utils/network'
+import config from 'config'
 import { useModal, useSwitchNetwork } from 'hooks'
 
 import { StyledSwitchNetworkModal } from './styled'
@@ -9,13 +8,9 @@ function SwitchNetworkModal() {
   const { removeModal } = useModal()
   const { switchNetwork: initSwitchNetwork } = useSwitchNetwork()
 
-  function close() {
-    removeModal(ModalCategory.SwitchNetwork)
-  }
-
   function switchNetwork() {
     initSwitchNetwork()
-    close()
+    removeModal()
   }
 
   return (
@@ -24,7 +19,7 @@ function SwitchNetworkModal() {
         <h1 className="title">
           You must switch to
           <br />
-          {networkNameFor(networkChainId)} to use <br />
+          {config.network.name} to use <br />
           this protocol.
         </h1>
       </header>
@@ -33,7 +28,7 @@ function SwitchNetworkModal() {
         <Button onClick={switchNetwork} $size="lg">
           Switch network
         </Button>
-        <Button onClick={close} $variant="tertiary" $size="lg">
+        <Button onClick={removeModal} $variant="tertiary" $size="lg">
           Cancel
         </Button>
       </div>

@@ -1,9 +1,7 @@
-import type { StateValue } from 'xstate'
-import { AnimatePresence } from 'framer-motion'
+import type { UseExitFormReturns } from 'hooks/useExitForm'
 
-import type { UseExitFormReturns } from '../useExitForm'
-
-import { ModalPage, PendingNotice } from 'components/Modals/shared'
+import { StyledExitModalPage1 } from './styled'
+import { PendingNotice } from 'components/Modals/shared'
 import Footer from './Footer'
 import Header from './Header'
 import Step1 from './Step1'
@@ -11,90 +9,87 @@ import Step2 from './Step2'
 import Step3 from './Step3'
 
 type ExitModalPage1Props = {
-  currentPage: number
-  currentState: StateValue
-  send(value: string): void
+  send(event: string): void
   hash?: Hash
-}
+} & UseExitFormReturns
 
 function ExitModalPage1(props: ExitModalPage1Props & UseExitFormReturns) {
   const {
     assets,
     bptIn,
-    bptOutPcnt,
     clearErrors,
     control,
-    currentPage,
-    currentState,
-    errors,
     exactOut,
     exitAmounts,
-    exitType,
+    priceImpact,
+    singleExitTokenOutIndex,
+    singleExitMaxAmounts,
+    totalExitFiatValue,
+    submitDisabled,
+    formState,
+    watch,
+    resetField,
+    send,
+    setValue,
+    setMaxValue,
     hash,
     isProportional,
-    priceImpact,
-    priceImpactAgreement,
-    resetInputs,
-    send,
-    setMaxValue,
-    singleExitMaxAmounts,
-    singleExitTokenOutIndex,
-    togglePriceImpactAgreement,
-    tokenOutAmount,
-    totalExitAmountsInFiatValue,
+    isNativeCurrency,
   } = props
 
-  const isPending = currentState === 'exitPending'
-
   return (
-    <AnimatePresence>
-      {currentPage === 1 && (
-        <ModalPage>
-          <Header disabled={isPending} />
-          <div className="container">
-            <Step1
-              control={control}
-              exitType={exitType}
-              resetInputs={resetInputs}
-              disabled={isPending}
-            />
-            <Step2
-              bptOutPcnt={bptOutPcnt}
-              clearErrors={clearErrors}
-              control={control}
-              exitType={exitType}
-              setMaxValue={setMaxValue}
-              singleExitMaxAmounts={singleExitMaxAmounts}
-              singleExitTokenOutIndex={singleExitTokenOutIndex}
-              disabled={isPending}
-            />
+    <StyledExitModalPage1 $disabled={!!hash}>
+      <Header />
+
+      <div className="container">
+        <div className="modalContent">
+          <Step1
+            control={control}
+            watch={watch}
+            setValue={setValue}
+            resetField={resetField}
+            hash={hash}
+          />
+
+          <Step2
+            assets={assets}
+            clearErrors={clearErrors}
+            control={control}
+            watch={watch}
+            exitAmounts={exitAmounts}
+            setValue={setValue}
+            setMaxValue={setMaxValue}
+            singleExitMaxAmounts={singleExitMaxAmounts}
+            singleExitTokenOutIndex={singleExitTokenOutIndex}
+            hash={hash}
+            isNativeCurrency={isNativeCurrency}
+          />
+
+          {!isProportional && (
             <Step3
               priceImpact={priceImpact}
-              priceImpactAgreement={priceImpactAgreement}
-              togglePriceImpactAgreement={togglePriceImpactAgreement}
-              disabled={isPending}
+              setValue={setValue}
+              watch={watch}
+              hash={hash}
+              formState={formState}
             />
-            <Footer
-              assets={assets}
-              bptIn={bptIn}
-              bptOutPcnt={bptOutPcnt}
-              currentState={currentState}
-              errors={errors}
-              exactOut={exactOut}
-              exitAmounts={exitAmounts}
-              exitType={exitType}
-              isProportional={isProportional}
-              priceImpact={priceImpact}
-              priceImpactAgreement={priceImpactAgreement}
-              send={send}
-              tokenOutAmount={tokenOutAmount}
-              totalValue={totalExitAmountsInFiatValue}
-            />
-          </div>
-          <PendingNotice hash={hash} />
-        </ModalPage>
-      )}
-    </AnimatePresence>
+          )}
+        </div>
+      </div>
+
+      <Footer
+        assets={assets}
+        exactOut={exactOut}
+        exitAmounts={exitAmounts}
+        send={send}
+        watch={watch}
+        totalExitFiatValue={totalExitFiatValue}
+        submitDisabled={submitDisabled}
+        bptIn={bptIn}
+      />
+
+      <PendingNotice hash={hash} />
+    </StyledExitModalPage1>
   )
 }
 

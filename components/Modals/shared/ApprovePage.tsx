@@ -1,5 +1,3 @@
-import type { ModalCategory } from 'states/ui'
-
 import { capitalize } from 'utils/string'
 
 import { CloseButton, ModalPage, PendingNotice } from 'components/Modals/shared'
@@ -8,23 +6,20 @@ import TxButton from 'components/TxButton'
 type ApprovePageProps = {
   action: string
   buttonLabel: string
-  category: ModalCategory
   onClick(): Promise<void>
   symbol: string
   className?: string
-  hash?: string
+  hash?: Hash
   isPending?: boolean
 }
 
 function ApprovePage({
   action,
   buttonLabel,
-  category,
   onClick,
   symbol,
   className,
   hash,
-  isPending,
 }: ApprovePageProps) {
   return (
     <ModalPage className={className}>
@@ -40,10 +35,10 @@ function ApprovePage({
         </div>
         <p className="desc">You only have to do it once this time.</p>
 
-        <CloseButton modal={category} />
+        <CloseButton />
       </header>
 
-      <TxButton onClick={onClick} isPending={isPending}>
+      <TxButton onClick={onClick} hash={hash}>
         {buttonLabel}
       </TxButton>
 

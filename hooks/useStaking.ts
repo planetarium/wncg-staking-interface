@@ -1,22 +1,58 @@
-import { useAtomValue } from 'jotai'
+import { useQueryClient } from '@tanstack/react-query'
+import config from 'config'
 
-import { StakingContractData, stakingDataAtom } from 'states/staking'
-
-const STAKING_DATA_PLACEHOLDER: StakingContractData = Object.freeze({
-  earmarkIncentivePcnt: 0,
-  emissions: [],
-  liquidityGaugeAddress: '',
-  rewardTokenAddress: '',
-  rewardTokensList: [],
-  rewardTokenDecimals: [],
-  rewardTokenSymbols: [],
-  stakedTokenAddress: '',
-  cooldownWindowPeriod: 0,
-  withdrawWindowPeriod: 0,
-})
+import { queryKeys } from 'config/queryKeys'
 
 export function useStaking() {
-  const stakingData = useAtomValue(stakingDataAtom)
+  const queryClient = useQueryClient()
 
-  return stakingData ?? STAKING_DATA_PLACEHOLDER
+  const data = queryClient.getQueryData<BuildResponse>([queryKeys.Build], {
+    exact: false,
+  }) ?? {
+    tokenMap: {},
+    pool: {
+      id: config.poolId,
+      address: '' as Hash,
+      createTime: 0,
+      factory: '',
+      symbol: '',
+      name: '',
+      swapFee: '',
+      owner: '',
+      totalLiquidity: '',
+      totalShares: '',
+      totalSwapFee: '',
+      totalSwapVolume: '',
+      tokens: [],
+      tokensList: [],
+    },
+    bptAddress: '' as Hash,
+    bptTotalSupply: '',
+    bptSymbol: '',
+    bptName: '',
+    bptDecimals: 18,
+    poolId: config.poolId,
+    poolSwapFee: '',
+    poolTotalLiquidity: '',
+    poolTotalSwapVolume: '',
+    poolTotalSwapFee: '',
+    poolTokens: [],
+    poolTokenAddresses: [],
+    poolTokenBalances: [],
+    poolTokenDecimals: [],
+    poolTokenWeights: [],
+    poolTokenWeightsInPcnt: [],
+    poolTokenSymbols: [],
+    cooldownPeriod: 0,
+    earmarkIncentivePcnt: 0.01,
+    liquidityGaugeAddress: '' as Hash,
+    rewardEmissions: [],
+    rewardTokenAddress: '' as Hash,
+    rewardTokenAddresses: [],
+    stakedTokenAddress: '' as Hash,
+    unstakePeriod: 0,
+    totalStaked: '',
+  }
+
+  return data as BuildResponse
 }

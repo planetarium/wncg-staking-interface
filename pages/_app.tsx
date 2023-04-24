@@ -1,41 +1,65 @@
-import { useRef } from 'react'
+import { PropsWithChildren, useRef } from 'react'
 import ReactGA from 'react-ga4'
 import {
   Hydrate,
   QueryClient,
   QueryClientProvider,
 } from '@tanstack/react-query'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import type { DehydratedState } from '@tanstack/react-query'
 import { useMount } from 'react-use'
 import { Provider } from 'jotai'
-import type { AppProps as NextAppProps, NextWebVitalsMetric } from 'next/app'
+import type { AppProps, NextWebVitalsMetric } from 'next/app'
 import Script from 'next/script'
 import { DefaultSeo } from 'next-seo'
 import { WagmiConfig } from 'wagmi'
+import { queryClientAtom } from 'jotai-tanstack-query'
+import { useHydrateAtoms } from 'jotai/utils'
 import 'react-toastify/dist/ReactToastify.css'
-import 'styles/globals.scss'
-import 'styles/toast.scss'
 
-import { configService } from 'services/config'
+import config from 'config'
 import { DEFAULT_SEO } from 'lib/seo'
-import wagmiClient from 'lib/wagmi'
+import wagmiClient from 'lib/wagmi/client'
 
-import Effects from 'components/Effects'
+import Effects from 'components/GlobalHooks'
 import Layout from 'components/Layout'
-import Modals from 'components/Modals'
-import { ToastContainer } from 'components/ToastContainer'
-import GlobalStyle from 'newStyles/GlobalStyle'
+import ToastContainer from 'components/ToastContainer'
 
-type AppProps = NextAppProps & {
+import GlobalStyle from 'styles/GlobalStyle'
+import ToastStyle from 'styles/ToastStyle'
+
+type MyAppProps = AppProps & {
   pageProps: {
     dehydratedState: DehydratedState
   }
 }
 
-function MyApp({ Component, pageProps }: AppProps) {
-  const queryClient = useRef(new QueryClient())
-  const config = configService.env.env
-  const isProd = config === 'production'
+type HydrateAtomsProps = {
+  queryClient: QueryClient
+} & PropsWithChildren
+
+function HydrateAtoms({ queryClient, children }: HydrateAtomsProps) {
+  useHydrateAtoms([[queryClientAtom, queryClient]])
+  return <>{children}</>
+}
+
+function MyApp({ Component, pageProps }: MyAppProps) {
+  const queryClient = useRef(
+    new QueryClient({
+      defaultOptions: {
+        queries: {
+          cacheTime: Infinity,
+          suspense: true,
+          keepPreviousData: true,
+          refetchOnReconnect: true,
+          useErrorBoundary(error: any) {
+            return error.reason !== 'INVALID_ARGUMENT'
+          },
+        },
+      },
+    })
+  )
+  const isProd = config.env === 'production'
 
   useMount(() => {
     if (!isProd) return
@@ -61,19 +85,25 @@ function MyApp({ Component, pageProps }: AppProps) {
         />
       )}
 
-      <GlobalStyle />
       <QueryClientProvider client={queryClient.current}>
         <Hydrate state={pageProps.dehydratedState}>
           <Provider>
-            <WagmiConfig client={wagmiClient}>
-              <DefaultSeo {...DEFAULT_SEO} />
-              <Layout>
-                <Component {...pageProps} />
-              </Layout>
-              <Modals />
-              <ToastContainer />
-              <Effects />
-            </WagmiConfig>
+            <HydrateAtoms queryClient={queryClient.current}>
+              <WagmiConfig client={wagmiClient}>
+                <GlobalStyle />
+                <ToastStyle />
+
+                <DefaultSeo {...DEFAULT_SEO} />
+
+                <Layout>
+                  <Component {...pageProps} />
+                </Layout>
+
+                <ToastContainer />
+                <Effects />
+                <ReactQueryDevtools />
+              </WagmiConfig>
+            </HydrateAtoms>
           </Provider>
         </Hydrate>
       </QueryClientProvider>

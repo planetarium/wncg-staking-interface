@@ -1,4 +1,4 @@
-import { configService } from 'services/config'
+import config from 'config'
 
 type LoggerHeart =
   | 'white'
@@ -12,7 +12,7 @@ type LoggerHeart =
 
 export function createLogger(color?: LoggerHeart) {
   return function (value: string, error?: any, ...args: any) {
-    if (configService.env.env !== 'development') return
+    if (config.env !== 'development') return
 
     if (!!error) {
       console.error(`Unable to fetch ${value}`, error, args)

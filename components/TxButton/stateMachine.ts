@@ -1,54 +1,55 @@
 import { createMachine } from 'xstate'
 
-export const txButtonMachine = createMachine(
+type TxButtonMachineContext = {
+  hash?: Hash
+}
+
+export const txButtonMachine = createMachine<TxButtonMachineContext>(
   {
     id: 'txButtonMachine',
     initial: 'idle',
+    predictableActionArguments: true,
     context: {
-      isPending: false,
+      hash: undefined,
     },
     states: {
       idle: {
-        always: [{ target: 'pending', cond: 'hasPendingRequest' }],
+        always: [{ target: 'pending', cond: 'txPending' }],
         on: {
-          CALL: {
+          NEXT: {
             target: 'called',
           },
         },
       },
       called: {
         on: {
-          REJECT: {
-            target: 'rejected',
-          },
-          CONFIRM: {
+          NEXT: {
             target: 'pending',
+          },
+          ROLLBACK: {
+            target: 'idle',
           },
         },
       },
       pending: {
         on: {
-          COMPLETE: {
-            target: 'completed',
+          NEXT: {
+            target: 'done',
           },
-        },
-      },
-      rejected: {
-        on: {
-          CALL: {
+          ROLLBACK: {
             target: 'called',
           },
         },
       },
-      completed: {
+      done: {
         type: 'final',
       },
     },
   },
   {
     guards: {
-      hasPendingRequest(ctx) {
-        return !!ctx.isPending
+      txPending(ctx) {
+        return !!ctx.hash
       },
     },
   }

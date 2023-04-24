@@ -1,8 +1,8 @@
 import { assign, createMachine, StateValue } from 'xstate'
 
-import { assertUnreachable } from 'utils/assertion'
+import { assertUnreachable } from 'utils/assertUnreachable'
 
-export type ExitMachineContext = {
+type ExitMachineContext = {
   hash?: string
 }
 
@@ -10,39 +10,49 @@ export const exitMachine = createMachine<ExitMachineContext>(
   {
     predictableActionArguments: true,
     id: `exitMachine`,
-    initial: `exit`,
+    initial: 'idle',
     context: {
       hash: undefined,
     },
     states: {
-      exit: {
-        always: [{ target: `exitPending`, cond: `waitForExit` }],
+      idle: {
+        always: [
+          {
+            target: 'pending',
+            cond: 'txPending',
+          },
+        ],
         on: {
-          CALL: {
-            target: `exitPending`,
+          NEXT: {
+            target: 'pending',
+          },
+          ROLLBACK: {
+            target: 'idle',
           },
           FAIL: {
-            target: 'exitFail',
+            target: 'fail',
             actions: [`resetHash`],
           },
-        },
-      },
-      exitPending: {
-        on: {
           SUCCESS: {
-            target: 'exitSuccess',
-            actions: [`resetHash`],
-          },
-          FAIL: {
-            target: 'exitFail',
-            actions: [`resetHash`],
+            target: 'success',
           },
         },
       },
-      exitSuccess: {
+      pending: {
+        on: {
+          FAIL: {
+            target: 'fail',
+            actions: [`resetHash`],
+          },
+          SUCCESS: {
+            target: 'success',
+          },
+        },
+      },
+      success: {
         type: 'final',
       },
-      exitFail: {
+      fail: {
         type: 'final',
       },
     },
@@ -54,24 +64,22 @@ export const exitMachine = createMachine<ExitMachineContext>(
       }),
     },
     guards: {
-      shouldFillForm(ctx) {
-        return !ctx.hash
-      },
-      waitForExit(ctx) {
+      txPending(ctx) {
         return !!ctx.hash
       },
     },
   }
 )
 
-export function currentPage(value: StateValue) {
+export function pageFor(value: StateValue) {
   switch (value) {
-    case 'exit':
-    case 'exitPending':
+    case 'idle':
+    case 'pending':
       return 1
-    case 'exitSuccess':
-    case 'exitFail':
+    case 'success':
       return 2
+    case 'fail':
+      return 3
     default:
       assertUnreachable(value)
   }

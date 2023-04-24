@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion'
 import styled, { css } from 'styled-components'
 
-import { flexbox, textStyle } from 'newStyles/utils'
+import { flexbox, textStyle } from 'styles/utils'
 
 export const StyledDropdown = styled.div<{ $disabled?: boolean }>`
   position: relative;
@@ -46,12 +46,13 @@ export const StyledDropdownMenu = styled(motion.div)`
     }
 
     button {
-      ${flexbox('flex-start')}
+      ${flexbox('start')}
       width: 100%;
       height: 40px;
       padding: 8px 8px 8px 12px;
       white-space: nowrap;
       text-align: left;
+      color: var(--gray-400);
       border-radius: 4px;
       transition: 150ms;
 
@@ -63,9 +64,9 @@ export const StyledDropdownMenu = styled(motion.div)`
     .label {
       ${textStyle('body', 2)}
       flex-grow: 1;
-      color: var(--gray-400);
       text-align: left;
       transition: 150ms;
+      color: var(--gray-400);
     }
 
     .icon {
@@ -76,7 +77,7 @@ export const StyledDropdownMenu = styled(motion.div)`
 `
 
 export const StyledDropdownToggle = styled.button`
-  ${flexbox('flex-start')}
+  ${flexbox('start')}
   ${textStyle('body', 3)}
   font-weight: 700;
   color: rgba(var(--white), 0.9);

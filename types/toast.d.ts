@@ -1,6 +1,10 @@
 type ToastType = 'success' | 'error' | 'info'
 
-type ToastMessages = Record<ToastType, string>
+type ToastMessages = {
+  success?: string
+  error?: string
+  info?: string
+}
 type ToastContent = {
   title: string
   messages: ToastMessages

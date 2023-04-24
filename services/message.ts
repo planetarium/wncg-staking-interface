@@ -1,7 +1,6 @@
-import type { Transaction } from 'ethers'
-import { formatUnits, Interface } from 'ethers/lib/utils'
-import type { Result } from 'ethers/lib/utils'
+import { Transaction } from 'ethers'
 import type { Web3Provider } from '@ethersproject/providers'
+import { Interface, Result } from '@ethersproject/abi'
 
 import { POOL_DECIMALS } from 'constants/tokens'
 import {
@@ -9,9 +8,10 @@ import {
   Erc20Abi,
   LiquidityGaugeAbi,
   StakingAbi,
-} from 'lib/abi'
-import { assertUnreachable } from 'utils/assertion'
+} from 'config/abi'
+import { assertUnreachable } from 'utils/assertUnreachable'
 import { getTokenSymbol } from 'utils/token'
+import { formatUnits } from 'utils/formatUnits'
 
 const vaultIface = new Interface(BalancerVaultAbi)
 const ercTokenIface = new Interface(Erc20Abi)
@@ -128,18 +128,18 @@ export class MessageService {
 
   toastMessages = ({ data, to }: Transaction) => {
     const parsed = this.parsedTx(data)
-    const { name, args } = parsed
+    const { name = '', args = [] } = parsed ?? {}
 
     switch (name) {
       case 'approve':
-        const symbol = getTokenSymbol(to)
+        const symbol = getTokenSymbol(to ?? '')
         return this.approveMessages(symbol)
       case 'stake':
-        return this.stakeMessages(args)
+        return this.stakeMessages(args as any)
       case 'cooldown':
         return this.cooldownMessages()
       case 'withdraw':
-        return this.withdrawMessages(args)
+        return this.withdrawMessages(args as any)
       case 'claimBALRewards':
         return this.claimMessages('BAL')
       case 'claimWNCGRewards':
@@ -159,11 +159,11 @@ export class MessageService {
 
   toastTitles = ({ data, to }: Transaction) => {
     const parsed = this.parsedTx(data)
-    const { name, args } = parsed
+    const { name, args = [] } = parsed ?? {}
 
     switch (name) {
       case 'approve':
-        const symbol = getTokenSymbol(to)
+        const symbol = getTokenSymbol(to ?? '')
         return `Approve ${symbol}`
       case 'stake':
         return 'Stake'

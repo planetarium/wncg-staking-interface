@@ -1,9 +1,8 @@
 import { assign, createMachine, StateValue } from 'xstate'
 
-import { assertUnreachable } from 'utils/assertion'
+import { assertUnreachable } from 'utils/assertUnreachable'
 
-export type CooldownMachineContext = {
-  cooldownEndsAt?: number
+type CooldownMachineContext = {
   hash?: string
 }
 
@@ -11,49 +10,66 @@ export const cooldownMachine = createMachine<CooldownMachineContext>(
   {
     predictableActionArguments: true,
     id: `cooldownMachine`,
-    initial: `idle`,
+    initial: 'idle',
     context: {
-      cooldownEndsAt: 0,
       hash: undefined,
     },
     states: {
       idle: {
         always: [
-          { target: `cooldownPending`, cond: `waitForCooldown` },
-          { target: `cooldownSuccess`, cond: `unstakeWindow` },
+          {
+            target: 'pending',
+            cond: 'txPending',
+          },
         ],
         on: {
           NEXT: {
-            target: `cooldown`,
-          },
-        },
-      },
-      cooldown: {
-        on: {
-          CALL: {
-            target: `cooldownPending`,
+            target: 'preview',
           },
           FAIL: {
-            target: 'cooldownFail',
+            target: 'fail',
             actions: [`resetHash`],
           },
         },
       },
-      cooldownPending: {
+      preview: {
         on: {
+          NEXT: {
+            target: 'pending',
+          },
+          ROLLBACK: {
+            target: 'idle',
+          },
+          FAIL: {
+            target: 'fail',
+            actions: [`resetHash`],
+          },
           SUCCESS: {
-            target: 'cooldownSuccess',
-          },
-          FAIL: {
-            target: 'cooldownFail',
+            target: 'success',
             actions: [`resetHash`],
           },
         },
       },
-      cooldownSuccess: {
+      pending: {
+        on: {
+          FAIL: {
+            target: 'fail',
+            actions: [`resetHash`],
+          },
+          ROLLBACK: {
+            target: 'preview',
+            actions: [`resetHash`],
+          },
+          SUCCESS: {
+            target: 'success',
+            actions: [`resetHash`],
+          },
+        },
+      },
+      success: {
         type: 'final',
       },
-      cooldownFail: {
+      fail: {
         type: 'final',
       },
     },
@@ -65,26 +81,24 @@ export const cooldownMachine = createMachine<CooldownMachineContext>(
       }),
     },
     guards: {
-      waitForCooldown(ctx) {
-        return !!ctx.hash && !ctx.cooldownEndsAt
-      },
-      unstakeWindow(ctx) {
-        return !!ctx.cooldownEndsAt
+      txPending(ctx) {
+        return !!ctx.hash
       },
     },
   }
 )
 
-export function currentPage(value: StateValue) {
+export function pageFor(value: StateValue) {
   switch (value) {
     case 'idle':
       return 1
-    case 'cooldown':
-    case 'cooldownPending':
+    case 'preview':
+    case 'pending':
       return 2
-    case 'cooldownSuccess':
-    case 'cooldownFail':
+    case 'success':
       return 3
+    case 'fail':
+      return 4
     default:
       assertUnreachable(value)
   }

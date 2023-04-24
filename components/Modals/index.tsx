@@ -1,32 +1,64 @@
-import { Suspense } from 'react'
+import { MouseEvent, useMemo } from 'react'
 import { useAtomValue } from 'jotai'
 import { AnimatePresence } from 'framer-motion'
 
-import { modalsAtom } from 'states/ui'
+import { modalAtom } from 'states/ui'
+import { EXIT_MOTION } from 'config/motions'
+import { useModal, useResponsive } from 'hooks'
+import {
+  modalDesktopVariants,
+  modalMobileVariants,
+  modalOverlayVariants,
+  modalTransition,
+} from './constants'
 
-import { ModalPortal } from './Portal'
-import { ModalView } from './View'
+import { StyledModalContainer, StyledModalOverlay } from './styled'
+import Portal from './Portal'
+import View from './View'
 
 function Modals() {
-  const modalList = useAtomValue(modalsAtom)
+  const { removeModal } = useModal()
+  const { bp } = useResponsive()
+
+  const modal = useAtomValue(modalAtom)
+
+  const isPortable = useMemo(() => bp === 'mobile' || bp === 'tablet', [bp])
+
+  const motionVariants = useMemo(
+    () => (isPortable ? modalMobileVariants : modalDesktopVariants),
+    [isPortable]
+  )
+
+  function closeModal(e: MouseEvent<HTMLDivElement>) {
+    e.stopPropagation()
+    removeModal()
+  }
 
   return (
-    <ModalPortal>
+    <Portal>
       <AnimatePresence>
-        {modalList.map((modal) => (
-          <Suspense
-            key={`modal:suspense:${modal.category}`}
-            fallback={
-              <div style={{ background: '#fff', color: '#000' }}>
-                loading...
-              </div>
-            }
-          >
-            <ModalView key={`modal:${modal.category}`} modal={modal} />
-          </Suspense>
-        ))}
+        {modal && (
+          <StyledModalOverlay
+            {...EXIT_MOTION}
+            variants={modalOverlayVariants}
+            transition={modalTransition}
+            onClick={closeModal}
+          />
+        )}
       </AnimatePresence>
-    </ModalPortal>
+
+      <AnimatePresence>
+        {modal && (
+          <StyledModalContainer
+            {...EXIT_MOTION}
+            variants={motionVariants}
+            transition={modalTransition}
+          >
+            <View modal={modal} />
+          </StyledModalContainer>
+        )}
+      </AnimatePresence>
+    </Portal>
   )
 }
 

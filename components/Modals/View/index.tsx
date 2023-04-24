@@ -1,41 +1,36 @@
 import dynamic from 'next/dynamic'
-import { useAtomValue } from 'jotai'
 
-import { isMobileAtom, Modal, ModalCategory } from 'states/ui'
-import { assertUnreachable } from 'utils/assertion'
-import {
-  modalDesktopVariants,
-  modalMobileVariants,
-  overlayVariants,
-} from '../constants'
+import { ModalType } from 'config/constants'
+import { assertUnreachable } from 'utils/assertUnreachable'
 
-import {
-  StyledModalContainer,
-  StyledModalOverlay,
-} from 'components/Modals/shared/styled'
-
-const StakeModal = dynamic(() => import('components/staking/StakeModal'), {
+const ApproveModal = dynamic(() => import('./ApproveModal'), {
   suspense: true,
 })
-const ClaimRewardModal = dynamic(() => import('./ClaimRewardModal'), {
+const ClaimModal = dynamic(() => import('./ClaimModal'), {
   suspense: true,
 })
-const ConnectWalletModal = dynamic(() => import('./ConnectWalletModal'), {
+const ConnectModal = dynamic(() => import('./ConnectModal'), {
   suspense: true,
 })
 const CooldownModal = dynamic(() => import('./CooldownModal'), {
   suspense: true,
 })
-const JoinModal = dynamic(() => import('components/Pool/Join/Modal'), {
+const JoinModal = dynamic(() => import('./JoinModal'), {
   suspense: true,
 })
 const ExitModal = dynamic(() => import('./ExitModal'), {
   suspense: true,
 })
+const RevenueModal = dynamic(() => import('./RevenueModal'), {
+  suspense: true,
+})
+const StakeModal = dynamic(() => import('./StakeModal'), {
+  suspense: true,
+})
 const SwitchNetworkModal = dynamic(() => import('./SwitchNetworkModal'), {
   suspense: true,
 })
-const WithdrawModal = dynamic(() => import('./WithdrawModal'), {
+const UnstakeModal = dynamic(() => import('./UnstakeModal'), {
   suspense: true,
 })
 
@@ -43,55 +38,35 @@ type ModalViewProps = {
   modal: Modal
 }
 
-export function ModalView({ modal }: ModalViewProps) {
-  const isMobile = useAtomValue(isMobileAtom)
-
-  const variants = isMobile ? modalMobileVariants : modalDesktopVariants
-
-  return (
-    <StyledModalOverlay
-      variants={overlayVariants}
-      key={`${modal.category}.overlay`}
-      initial="initial"
-      animate="animate"
-      exit="exit"
-      transition={{ duration: 0.4 }}
-    >
-      <StyledModalContainer
-        key={`${modal.category}.modal`}
-        variants={variants}
-        initial="initial"
-        animate="animate"
-        exit="exit"
-        transition={{ duration: 0.4 }}
-      >
-        {renderModal(modal)}
-      </StyledModalContainer>
-    </StyledModalOverlay>
-  )
+export default function ModalView({ modal }: ModalViewProps) {
+  return renderModal(modal)
 }
 
 function renderModal(modal: Modal) {
-  const { category, props } = modal
+  const { type, props } = modal
 
-  switch (category) {
-    case ModalCategory.ClaimReward:
-      return <ClaimRewardModal />
-    case ModalCategory.Connect:
-      return <ConnectWalletModal />
-    case ModalCategory.Cooldown:
+  switch (type) {
+    case ModalType.Approve:
+      return <ApproveModal {...props} />
+    case ModalType.Claim:
+      return <ClaimModal />
+    case ModalType.Connect:
+      return <ConnectModal />
+    case ModalType.Cooldown:
       return <CooldownModal />
-    case ModalCategory.Join:
+    case ModalType.Join:
       return <JoinModal {...props} />
-    case ModalCategory.Exit:
+    case ModalType.Exit:
       return <ExitModal {...props} />
-    case ModalCategory.Stake:
+    case ModalType.Revenue:
+      return <RevenueModal />
+    case ModalType.Stake:
       return <StakeModal {...props} />
-    case ModalCategory.SwitchNetwork:
+    case ModalType.SwitchNetwork:
       return <SwitchNetworkModal />
-    case ModalCategory.Withdraw:
-      return <WithdrawModal />
+    case ModalType.Unstake:
+      return <UnstakeModal />
     default:
-      assertUnreachable(modal.category)
+      assertUnreachable(modal.type)
   }
 }

@@ -1,33 +1,25 @@
 import { memo, ReactNode } from 'react'
-import type { Transition } from 'framer-motion'
 
-import { fadeIn } from 'constants/motionVariants'
+import { MOTION } from 'config/motions'
+import { fadeIn } from 'config/motionVariants'
 
 import { StyledModalCompletePage } from './styled'
+import Lottie from 'components/Lottie'
 
 type ModalCompletePageProps = {
   children: ReactNode
   className?: string
-  id?: string
-  transition?: Transition
 }
 
-function ModalCompletePage({
-  children,
-  className,
-  id,
-  transition,
-}: ModalCompletePageProps) {
+function ModalCompletePage({ children, className }: ModalCompletePageProps) {
   return (
     <StyledModalCompletePage
-      id={id}
+      {...MOTION}
       className={className}
-      initial="initial"
-      animate="animate"
-      exit="exit"
       variants={fadeIn}
-      transition={transition}
     >
+      <Lottie className="lottie" animationData="completed" />
+
       {children}
     </StyledModalCompletePage>
   )

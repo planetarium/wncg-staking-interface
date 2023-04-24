@@ -1,0 +1,30 @@
+{
+  "key": "1",
+  "chainId": 1,
+  "chainName": "Ethereum",
+  "name": "Ethereum Mainnet",
+  "shortName": "Mainnet",
+  "network": "homestead",
+  "explorer": "https://etherscan.io",
+  "explorerName": "Etherscan",
+  "rpcUrl": "https://mainnet.infura.io/v3",
+  "subgraph": "https://api.thegraph.com/subgraphs/name/balancer-labs/balancer-v2",
+  "nativeCurrency": {
+    "name": "Ether",
+    "address": "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+    "symbol": "ETH",
+    "decimals": 18,
+    "deeplinkId": "ether",
+    "logoURI": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png",
+    "minTransactionBuffer": "0.05",
+    "coingecko": {
+      "platformId": "ethereum",
+      "id": "ethereum"
+    }
+  },
+  "addresses": {
+    "bal": "0xba100000625a3754423978a60c9317c58a424e3d",
+    "usdt": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+    "weth": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2"
+  }
+}

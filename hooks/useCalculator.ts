@@ -2,11 +2,13 @@ import { useMemo } from 'react'
 
 import CalculatorService from 'services/calculator'
 import { useBalances } from './useBalances'
-import { usePool } from './usePool'
+import { useStaking } from './useStaking'
 
 export function useCalculator(action: PoolAction) {
-  const { bptBalance } = useBalances()
-  const { pool } = usePool()
+  const balanceOf = useBalances()
+  const { bptAddress, pool } = useStaking()
+
+  const bptBalance = balanceOf(bptAddress)
 
   const calculator = useMemo(() => {
     if (!pool) return null

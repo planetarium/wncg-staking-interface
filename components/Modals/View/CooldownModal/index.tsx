@@ -1,87 +1,53 @@
-import { useEffect, useMemo, useRef } from 'react'
+import { memo, useRef } from 'react'
 import { useUnmount } from 'react-use'
 import { useMachine } from '@xstate/react'
-import { useAtom, useAtomValue } from 'jotai'
-import { RESET } from 'jotai/utils'
-import { useWaitForTransaction } from 'wagmi'
+import { useAtomValue } from 'jotai'
 
-import { pendingCooldownTxAtom } from 'states/form'
-import { isUnstakeWindowAtom, timestampsAtom } from 'states/user'
-import { createLogger } from 'utils/log'
-import { networkChainId } from 'utils/network'
-import { cooldownMachine, currentPage } from './stateMachine'
+import { cooldownTxAtom } from 'states/tx'
+import { ToastType } from 'config/constants'
+import { useToast } from 'hooks'
+import { cooldownMachine, pageFor } from './stateMachine'
+import { useWatch } from './useWatch'
 
 import Page1 from './Page1'
 import Page2 from './Page2'
 import Page3 from './Page3'
-
-const log = createLogger('black')
+import Page4 from './Page4'
 
 function CooldownModal() {
-  const [cooldownEndsAt] = useAtomValue(timestampsAtom)
-  const isUnstakeWindow = useAtomValue(isUnstakeWindowAtom)
-
-  const [pendingTx, setPendingTx] = useAtom(pendingCooldownTxAtom)
-  const { hash: pendingHash } = pendingTx
-
-  const hash = pendingHash ?? undefined
+  const toast = useToast()
+  const tx = useAtomValue(cooldownTxAtom)
 
   const stateMachine = useRef(cooldownMachine)
   const [state, send] = useMachine(stateMachine.current, {
     context: {
-      cooldownEndsAt,
-      hash,
+      hash: tx.hash,
     },
   })
 
-  useWaitForTransaction({
-    hash: hash!,
-    enabled: !!hash,
-    chainId: networkChainId,
-    onSettled() {
-      log(`Cooldown tx: ${hash?.slice(0, 6)}`)
-    },
-    onError() {
-      send('FAIL')
-    },
-  })
+  const currentPage = pageFor(state.value)
 
-  const page = useMemo(() => currentPage(state.value), [state.value])
-
-  useEffect(() => {
-    console.log(111, isUnstakeWindow)
-
-    if (isUnstakeWindow) send('SUCCESS')
-  }, [isUnstakeWindow, send])
+  useWatch(send)
 
   useUnmount(() => {
-    if (!!state.done) {
-      console.log('>>>>>>> resett')
-      setPendingTx(RESET)
+    if (tx.hash) {
+      toast<Required<CooldownTx>>({
+        type: ToastType.Cooldown,
+        props: {
+          hash: tx.hash,
+        },
+      })
     }
   })
 
   return (
     <>
-      <Page1
-        currentPage={page}
-        currentState={state.value}
-        disabled={isUnstakeWindow}
-        send={send}
-      />
-      <Page2
-        currentPage={page}
-        currentState={state.value}
-        disabled={isUnstakeWindow}
-        send={send}
-      />
-      <Page3
-        currentPage={page}
-        currentState={state.value}
-        disabled={!isUnstakeWindow}
-      />
+      {currentPage === 1 && <Page1 send={send} />}
+      {currentPage === 2 && <Page2 send={send} />}
+      {currentPage === 3 && <Page3 />}
+      {currentPage === 4 && <Page4 />}
     </>
   )
 }
 
-export default CooldownModal
+export default memo(CooldownModal)

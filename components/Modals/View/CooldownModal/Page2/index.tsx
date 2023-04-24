@@ -1,71 +1,81 @@
 import { memo } from 'react'
-import type { StateValue } from 'xstate'
 import { useAtom } from 'jotai'
-import { AnimatePresence } from 'framer-motion'
 
-import { pendingCooldownTxAtom } from 'states/form'
-import { ModalCategory } from 'states/ui'
-import { useCooldown } from '../useCooldown'
+import { cooldownTxAtom } from 'states/tx'
+import { useCooldown } from './useCooldown'
 
 import { StyledCooldownModalPage2 } from './styled'
 import { CloseButton, PendingNotice } from 'components/Modals/shared'
 import TxButton from 'components/TxButton'
+import BarGraph from './BarGraph'
+import Guide from './Guide'
+import Summary from './Summary'
 
 type CooldownModalPage2Props = {
-  currentPage: number
-  currentState: StateValue
-  disabled: boolean
-  send(value: string): void
+  send(event: string): void
 }
 
-function CooldownModalPage2({
-  currentPage,
-  currentState,
-  disabled,
-  send,
-}: CooldownModalPage2Props) {
-  const [pendingTx, setPendingTx] = useAtom(pendingCooldownTxAtom)
+function CooldownModalPage2({ send }: CooldownModalPage2Props) {
+  const _cooldown = useCooldown()
 
-  const cooldown = useCooldown({
-    onConfirm(txHash?: Hash) {
-      setPendingTx({
-        hash: txHash,
-      })
-      send('CALL')
-    },
-    onError(error) {
-      if (error?.code === 'ACTION_REJECTED') return
-      if (error?.code === 4001) return
+  const [tx, setTx] = useAtom(cooldownTxAtom)
+
+  async function cooldown() {
+    if (!_cooldown) {
       send('FAIL')
-    },
-  })
+      return
+    }
+
+    try {
+      const txHash = await _cooldown()
+      if (!txHash) return
+      setTx({ hash: txHash })
+      send('NEXT')
+    } catch (error: any) {
+      if (
+        error.code === 'ACTION_REJECTED' ||
+        error.code === 4001 ||
+        error.error === 'Rejected by user'
+      ) {
+        return
+      }
+
+      send('FAIL')
+    }
+  }
 
   return (
-    <AnimatePresence>
-      {currentPage === 2 && (
-        <StyledCooldownModalPage2>
-          <header className="modalHeader">
-            <div className="titleGroup">
-              <h2 className="title accent">Cooldown</h2>
-              <h3 className="subtitle">
-                You can only withdraw for 3 days after the Cooldown Period (14
-                days) has passed.
-              </h3>
-            </div>
-            <CloseButton modal={ModalCategory.Cooldown} />
-          </header>
+    <StyledCooldownModalPage2 $disabled={!!tx.hash}>
+      <header className="modalHeader">
+        <div className="titleGroup">
+          <h2 className="title accent">Cooldown</h2>
+          <h3 className="subtitle">
+            You&apos;ll get more rewards if you stay.
+            <br />
+            Do you really want to start cooldown?
+          </h3>
+        </div>
 
-          <TxButton
-            onClick={cooldown}
-            isPending={currentState === 'cooldownPending'}
-          >
-            Start Cooldown
-          </TxButton>
+        <CloseButton />
+      </header>
 
-          <PendingNotice hash={pendingTx.hash} />
-        </StyledCooldownModalPage2>
-      )}
-    </AnimatePresence>
+      <div className="container">
+        <div className="modalContent">
+          <BarGraph />
+          <Guide />
+        </div>
+      </div>
+
+      <footer className="modalFooter">
+        <Summary />
+
+        <TxButton onClick={cooldown} hash={tx.hash}>
+          Start cooldown
+        </TxButton>
+      </footer>
+
+      <PendingNotice hash={tx.hash} />
+    </StyledCooldownModalPage2>
   )
 }
 

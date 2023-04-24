@@ -1,8 +1,8 @@
 import { AnimatePresence } from 'framer-motion'
 import clsx from 'clsx'
 
-import { slideInDown } from 'constants/motionVariants'
-import { HIGH_PRICE_IMPACT, REKT_PRICE_IMPACT } from 'constants/poolLiquidity'
+import { HIGH_PRICE_IMPACT, REKT_PRICE_IMPACT } from 'config/misc'
+import { slideInDown } from 'config/motionVariants'
 
 import { StyledHighPriceImpact } from './styled'
 import Checkbox from 'components/Checkbox'
@@ -52,11 +52,13 @@ function HighPriceImpact({
             <label className="label" htmlFor="highPriceImpactAgreement">
               I agree
             </label>
+
             <Checkbox
               id="highPriceImpactAgreement"
               className="checkbox"
               checked={checked}
               onChange={toggle}
+              disabled={disabled}
             />
           </div>
         </StyledHighPriceImpact>

@@ -1,5 +1,6 @@
-export { default as ApprovePage } from './ApprovePage'
 export { default as CloseButton } from './CloseButton'
-export { default as ModalCompletePage } from './CompletePage'
+export { default as CompletePage } from './CompletePage'
+export { default as FailPage } from './FailPage'
 export { default as ModalPage } from './Page'
+export { default as Checkout } from './Checkout'
 export { default as PendingNotice } from './PendingNotice'

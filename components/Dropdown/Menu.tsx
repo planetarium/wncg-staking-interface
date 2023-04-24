@@ -1,30 +1,28 @@
-import { MouseEvent as ReactMouseEvent, useCallback, useRef } from 'react'
-import { useMount, useUnmount } from 'react-use'
-import { AnimatePresence } from 'framer-motion'
+import { MouseEvent as ReactMouseEvent, useRef } from 'react'
 import clsx from 'clsx'
 
 import { slideInDown } from 'constants/motionVariants'
 
 import { StyledDropdownMenu } from './styled'
-import SvgIcon from 'components/SvgIcon'
+import Icon from 'components/Icon'
+import { useCloseOnBlur } from 'hooks'
+import { EXIT_MOTION } from 'config/motions'
 
 type DropdownMenuProps = {
-  close(): void
+  closeMenu(): void
   id: string
   list: string[]
   onChange(e: ReactMouseEvent<HTMLButtonElement>): void
-  show: boolean
   value: string
   disabled?: boolean
   formatter?(value: string): string
 }
 
 function DropdownMenu({
-  close,
+  closeMenu,
   id,
   list,
   onChange,
-  show,
   value,
   disabled,
   formatter,
@@ -34,68 +32,46 @@ function DropdownMenu({
   function handleSelect(e: ReactMouseEvent<HTMLButtonElement>) {
     if (disabled) return
     onChange(e)
-    close()
+    closeMenu()
   }
 
-  const closeOnBlur = useCallback(
-    (e: MouseEvent) => {
-      if (!menuRef?.current?.contains(e.target as Node)) {
-        close()
-        window.removeEventListener('click', closeOnBlur)
-      }
-    },
-    [close]
-  )
-
-  useMount(() => {
-    window.addEventListener('click', closeOnBlur, { passive: false })
-  })
-
-  useUnmount(() => {
-    window.removeEventListener('click', closeOnBlur)
-  })
+  useCloseOnBlur(menuRef, closeMenu)
 
   return (
-    <AnimatePresence>
-      {show && (
-        <StyledDropdownMenu
-          className="dropdownMenu"
-          ref={menuRef}
-          initial="initial"
-          animate="animate"
-          exit="exit"
-          variants={slideInDown}
-          aria-labelledby={id}
-          aria-orientation="vertical"
-          role="menu"
-        >
-          <ul className="menuList">
-            {list.map((item) => {
-              const selected = value === item
+    <StyledDropdownMenu
+      className="dropdownMenu"
+      ref={menuRef}
+      {...EXIT_MOTION}
+      variants={slideInDown}
+      aria-labelledby={id}
+      aria-orientation="vertical"
+      role="menu"
+    >
+      <ul className="menuList">
+        {list.map((item) => {
+          const selected = value === item
 
-              return (
-                <li
-                  className={clsx('menuItem', { selected })}
-                  key={`dropdownMenu:${item}`}
-                  role="presentation"
-                >
-                  <button
-                    type="button"
-                    onClick={handleSelect}
-                    value={item}
-                    role="menuitem"
-                  >
-                    <span className="label">{formatter?.(item) ?? item}</span>
+          return (
+            <li
+              className={clsx('menuItem', { selected })}
+              key={`dropdownMenu:${item}`}
+              role="presentation"
+            >
+              <button
+                type="button"
+                onClick={handleSelect}
+                value={item}
+                role="menuitem"
+              >
+                <span className="label">{formatter?.(item) ?? item}</span>
 
-                    {selected && <SvgIcon icon="check" />}
-                  </button>
-                </li>
-              )
-            })}
-          </ul>
-        </StyledDropdownMenu>
-      )}
-    </AnimatePresence>
+                {selected && <Icon icon="check" />}
+              </button>
+            </li>
+          )
+        })}
+      </ul>
+    </StyledDropdownMenu>
   )
 }
 

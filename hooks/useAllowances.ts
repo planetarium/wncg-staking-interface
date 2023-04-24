@@ -1,27 +1,13 @@
-import { useCallback } from 'react'
-import { useAtomValue } from 'jotai'
-
-import { allowancesAtom } from 'states/user'
+import config from 'config'
+import { useFetchUserAllowances } from './queries'
 
 export function useAllowances() {
-  const allowancesMap = useAtomValue(allowancesAtom)
+  const allowanceMap = useFetchUserAllowances().data ?? {}
 
-  const allowanceMapFor = useCallback(
-    (tokenAddress?: string) => {
-      return allowancesMap[tokenAddress?.toLowerCase() || ''] || {}
-    },
-    [allowancesMap]
-  )
-
-  const allowanceFor = useCallback(
-    (tokenAddress?: string, spender?: string) => {
-      const allowanceMap = allowanceMapFor(tokenAddress)
-      return allowanceMap[spender?.toLowerCase() || ''] || false
-    },
-    [allowanceMapFor]
-  )
-
-  return {
-    allowanceFor,
+  function allowanceFor(tokenAddress: Hash, spender: Hash) {
+    if (tokenAddress === config.nativeCurrency.address) return Infinity
+    return allowanceMap?.[tokenAddress]?.[spender] ?? '0'
   }
+
+  return allowanceFor
 }

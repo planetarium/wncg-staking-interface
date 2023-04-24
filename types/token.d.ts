@@ -6,7 +6,7 @@ type TokenConstants = {
   }
   PriceChainMap: Record<string, string>
   TokenInfo: {
-    [address: string]: TokenInfo
+    [address: Hash]: TokenInfo
   }
 }
 
@@ -14,11 +14,15 @@ type TokenFiatPrice = {
   usd: number
 }
 
-type TokenPrices = { [address: string]: string }
+type TokenPrices = { [address: Hash]: string }
 
 type TokenInfo = {
-  readonly address: string
+  readonly address: Hash
   readonly name: string
   readonly decimals: number
   readonly symbol: string
+}
+
+type TokenMap = {
+  [address: Hash]: TokenInfo
 }

@@ -1,6 +1,6 @@
 import { memo, MouseEvent } from 'react'
 import { StyledDropdownToggle } from './styled'
-import SvgIcon from 'components/SvgIcon'
+import Icon from 'components/Icon'
 
 type DropdownToggleProps = {
   id: string
@@ -27,7 +27,7 @@ function DropdownToggle({
       aria-haspopup
     >
       {formatter?.(value) ?? value}
-      <SvgIcon icon={show ? 'chevronUp' : 'chevronDown'} />
+      <Icon icon={show ? 'chevronUp' : 'chevronDown'} />
     </StyledDropdownToggle>
   )
 }

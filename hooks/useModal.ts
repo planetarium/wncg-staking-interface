@@ -1,45 +1,26 @@
 import { useSetAtom } from 'jotai'
+import { RESET } from 'jotai/utils'
 
-import { Modal, ModalCategory, modalsAtom } from 'states/ui'
+import { modalAtom } from 'states/ui'
 
 export function useModal() {
-  const setModals = useSetAtom(modalsAtom)
+  const setModal = useSetAtom(modalAtom)
 
   function addModal(modal: Modal) {
-    setModals((prev) => {
-      const newModals = [...prev]
-      const existingModalIndex = newModals.findIndex(
-        (item) => item.category === modal.category
-      )
-
-      if (existingModalIndex < 0) {
-        newModals.push(modal)
-      } else {
-        newModals[existingModalIndex] = modal
-      }
-
-      return newModals
-    })
+    setModal(modal)
   }
 
-  function removeModal(category?: ModalCategory) {
-    setModals((prev) => {
-      const newModals = [...prev]
-      if (category == null) {
-        newModals.pop()
-      } else {
-        const targetModalIndex = newModals.findIndex(
-          (modal) => modal.category === category
-        )
-        newModals.splice(targetModalIndex, 1)
-      }
+  function removeModal() {
+    setModal(RESET)
+  }
 
-      return newModals
-    })
+  function updateModal(modal: Modal) {
+    setModal(modal)
   }
 
   return {
     addModal,
     removeModal,
+    updateModal,
   }
 }

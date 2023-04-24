@@ -1,55 +1,111 @@
+import { memo, useMemo } from 'react'
 import { NumericFormat, NumericFormatProps } from 'react-number-format'
-import BigNumber from 'bignumber.js'
+import clsx from 'clsx'
 
-import { bnum } from 'utils/num'
+import { bnum } from 'utils/bnum'
+import { prepareNumber } from 'utils/prepareNumber'
 
-type NumberFormatProps = {
+import { StyledNumberFormat } from './styled'
+
+type NumberFormatProps = Pick<NumericFormatProps, 'renderText'> & {
+  value: string | number
+  allowTrailingZeros?: boolean
+  approx?: boolean | null
+  className?: string
+  colon?: boolean
   decimals?: number
-  roundingMode?: BigNumber.RoundingMode
-  showDashInInfinity?: boolean
-  showDashInZero?: boolean
-  showTitle?: boolean
+  equals?: boolean
+  maxDecimals?: number
+  parenthesis?: boolean
+  plus?: boolean
+  prefix?: string
+  roundingMode?: RoundingMode
+  suffix?: string
+  symbol?: string
+  tilde?: boolean
+  type?: NumericValueType
+  abbr?: boolean
+  minus?: boolean
 }
 
 function NumberFormat({
-  value: defaultValue,
-  allowNegative = false,
+  value: _value,
+  allowTrailingZeros = false,
+  approx: _approx = null,
   className,
-  decimals = 8,
-  roundingMode = 1,
-  showDashInInfinity = true,
-  showDashInZero = false,
-  showTitle = true,
-  thousandSeparator = true,
-  valueIsNumericString = true,
-  ...props
-}: NumberFormatProps & NumericFormatProps) {
-  const bValue = bnum(bnum(defaultValue || 0).toFixed(decimals, roundingMode))
+  colon,
+  decimals: _decimals,
+  equals,
+  maxDecimals,
+  parenthesis,
+  plus,
+  prefix: _prefix,
+  roundingMode = 3,
+  suffix: _suffix,
+  symbol,
+  tilde,
+  type = 'token',
+  abbr = false,
+  minus = false,
+}: NumberFormatProps) {
+  const result = useMemo(
+    () =>
+      prepareNumber(
+        type,
+        _value,
+        _decimals,
+        maxDecimals,
+        _prefix,
+        _suffix,
+        _approx,
+        roundingMode,
+        abbr
+      ),
+    [
+      _approx,
+      _decimals,
+      _prefix,
+      _suffix,
+      _value,
+      abbr,
 
-  const showDash =
-    (showDashInZero && bValue.isZero()) ||
-    (showDashInInfinity && !bValue.isFinite())
+      maxDecimals,
+      roundingMode,
+      type,
+    ]
+  )
 
-  if (showDash) {
-    return <span className={className}>-</span>
-  }
+  if (result == null) return null
 
-  const value = bValue.toString()
+  const { decimals, value, prefix, suffix, approx } = result
 
   return (
-    <NumericFormat
-      className={className}
-      value={value}
-      allowNegative={allowNegative}
-      allowLeadingZeros={false}
-      fixedDecimalScale={false}
-      decimalScale={decimals}
-      displayType="text"
-      thousandSeparator={thousandSeparator}
-      title={showTitle ? value : undefined}
-      {...props}
-    />
+    <StyledNumberFormat
+      className={clsx('number', className, {
+        approx,
+        colon,
+        equals,
+        parenthesis,
+        plus,
+        minus,
+        tilde,
+      })}
+    >
+      <NumericFormat
+        value={bnum(value).toNumber()}
+        prefix={prefix}
+        suffix={suffix}
+        allowNegative={false}
+        allowLeadingZeros={false}
+        fixedDecimalScale={allowTrailingZeros}
+        decimalScale={decimals}
+        displayType="text"
+        thousandSeparator=","
+        title={value}
+      />
+      {symbol && <span className="symbol">{symbol}</span>}
+    </StyledNumberFormat>
   )
 }
 
-export default NumberFormat
+export default memo(NumberFormat)

@@ -1,4 +1,5 @@
 import { MouseEvent, useState } from 'react'
+import { AnimatePresence } from 'framer-motion'
 import clsx from 'clsx'
 
 import { StyledDropdown } from './styled'
@@ -12,7 +13,7 @@ type DropdownProps = {
   className?: string
   disabled?: boolean
   formatter?(value: string): string
-  list?: string[]
+  list?: Hash[] | string[]
 }
 
 function Dropdown({
@@ -27,12 +28,12 @@ function Dropdown({
   const [show, setShow] = useState(false)
 
   function toggle(e: MouseEvent<HTMLButtonElement>) {
-    if (disabled) return
     e.stopPropagation()
+    if (disabled) return
     setShow((prev) => !prev)
   }
 
-  function close() {
+  function closeMenu() {
     setShow(false)
   }
 
@@ -51,16 +52,20 @@ function Dropdown({
         toggle={toggle}
         value={formatter?.(value) ?? value}
       />
-      <Menu
-        close={close}
-        id={dropdownId}
-        list={list}
-        onChange={onChange}
-        show={show}
-        value={value}
-        disabled={disabled}
-        formatter={formatter}
-      />
+
+      <AnimatePresence>
+        {show && (
+          <Menu
+            closeMenu={closeMenu}
+            id={dropdownId}
+            list={list}
+            onChange={onChange}
+            value={value}
+            disabled={disabled}
+            formatter={formatter}
+          />
+        )}
+      </AnimatePresence>
     </StyledDropdown>
   )
 }

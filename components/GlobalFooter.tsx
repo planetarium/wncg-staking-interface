@@ -1,60 +1,61 @@
 import { memo } from 'react'
 import Link from 'next/link'
 
-import { configService } from 'services/config'
+import config from 'config'
 
 import { StyledGlobalFooter } from './styled'
-import SvgIcon from './SvgIcon'
+import Icon from 'components/Icon'
 
 function GlobalFooter() {
   return (
-    <StyledGlobalFooter className="globalFooter" role="contentinfo">
-      <div className="container">
-        <div className="content">
-          <h5>
-            <strong>WNCG Staking</strong>
-            <span>© 2022 WNCG Staking</span>
-          </h5>
+    <StyledGlobalFooter role="contentinfo" layout>
+      <div className="left">
+        <h5 className="title">
+          <strong>{config.appName}</strong>
+          <span>&copy; 2022 {config.appName}</span>
+        </h5>
 
-          <Link href="/wncg/terms">Terms of Use</Link>
-          <Link href="/wncg/privacy">Privacy Policy</Link>
+        <div className="buttonGroup">
+          <Link
+            className="linkButton"
+            href="/wncg/terms"
+            target="_blank"
+            rel="noopener"
+          >
+            Terms of Use
+          </Link>
+
+          <Link
+            className="linkButton"
+            href="/wncg/privacy"
+            target="_blank"
+            rel="noopener"
+          >
+            Privacy Policy
+          </Link>
         </div>
+      </div>
 
-        <ul className="buttonGroup">
-          <li>
-            <a
-              className="snsButton"
-              href={configService.socialMedia.twitter}
-              target="_blank"
-              rel="noopener"
-              aria-label="Open twitter"
-            >
-              <SvgIcon icon="twitter" $size={24} />
-            </a>
-          </li>
-          <li>
-            <a
-              className="snsButton"
-              href={configService.socialMedia.discord}
-              target="_blank"
-              rel="noopener"
-              aria-label="Open discord"
-            >
-              <SvgIcon icon="discord" $size={24} />
-            </a>
-          </li>
-          <li>
-            <a
-              className="snsButton"
-              href={configService.socialMedia.telegram}
-              target="_blank"
-              rel="noopener"
-              aria-label="Open telegram"
-            >
-              <SvgIcon icon="telegram" $size={24} />
-            </a>
-          </li>
-        </ul>
+      <div className="right">
+        <a
+          className="iconButton"
+          href={config.links.twitter}
+          target="_blank"
+          rel="noopener"
+          aria-label="Open twitter"
+        >
+          <Icon icon="twitter" $size={24} />
+        </a>
+
+        <a
+          className="iconButton"
+          href={config.links.discord}
+          target="_blank"
+          rel="noopener"
+          aria-label="Open discord"
+        >
+          <Icon icon="discord" $size={24} />
+        </a>
       </div>
     </StyledGlobalFooter>
   )

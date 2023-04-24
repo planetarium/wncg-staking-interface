@@ -1,21 +1,20 @@
 import { memo, ReactNode } from 'react'
 import clsx from 'clsx'
 
-import { bnum } from 'utils/num'
-import { renderStrong } from 'utils/numberFormat'
-import { getTokenColor, getTokenSymbol } from 'utils/token'
+import { bnum } from 'utils/bnum'
+import { getTokenSymbol } from 'utils/token'
 import {
-  useAccount,
+  useAuth,
   useBalances,
-  useConnectWallets,
-  useFiatCurrency,
-  usePool,
+  useConnect,
+  useFiat,
   usePropAmounts,
+  useStaking,
 } from 'hooks'
 
 import { StyledAvailableBalance } from './styled'
 import NumberFormat from 'components/NumberFormat'
-import SvgIcon from 'components/SvgIcon'
+import Icon from 'components/Icon'
 import TokenIcon from 'components/TokenIcon'
 
 type AvailableBalanceProps = {
@@ -24,14 +23,18 @@ type AvailableBalanceProps = {
 }
 
 function AvailableBalance({ children, className }: AvailableBalanceProps) {
-  const { isConnected } = useAccount()
-  const { bptBalance, hasBptBalance } = useBalances()
-  const { connect } = useConnectWallets()
-  const { bptToFiat } = useFiatCurrency()
-  const { poolTokenAddresses, poolTokenWeights } = usePool()
-  const { propAmounts, propAmountsInFiatValue } = usePropAmounts()
+  const { isConnected } = useAuth()
+  const balancesFor = useBalances()
+  const { openConnectModal } = useConnect()
+  const toFiat = useFiat()
+  const { bptAddress, poolTokenAddresses, poolTokenWeights } = useStaking()
 
-  const fiatValue = bptToFiat(bptBalance)
+  const bptBalance = balancesFor(bptAddress)
+  const hasBptBalance = bnum(bptBalance).gt(0)
+
+  const { propAmounts, propAmountsInFiatValue } = usePropAmounts(bptBalance)
+
+  const fiatValue = toFiat(bptBalance, bptAddress)
 
   return (
     <StyledAvailableBalance className={clsx('availableBalance', className)}>
@@ -43,16 +46,12 @@ function AvailableBalance({ children, className }: AvailableBalanceProps) {
             <dt className="hidden">Your balance</dt>
             <dd>
               {isConnected ? (
-                <NumberFormat
-                  className="value"
-                  value={bptBalance}
-                  renderText={renderStrong}
-                />
+                <NumberFormat className="value" value={bptBalance} />
               ) : (
                 <button
                   className="connectButton"
                   type="button"
-                  onClick={connect}
+                  onClick={openConnectModal}
                 >
                   Connect wallet
                 </button>
@@ -64,13 +63,7 @@ function AvailableBalance({ children, className }: AvailableBalanceProps) {
             <div className="detailItem">
               <dt className="hidden">Your balance in USD</dt>
               <dd className="fiatValue">
-                <SvgIcon icon="approximate" />
-                <NumberFormat
-                  value={fiatValue}
-                  decimals={2}
-                  prefix="$"
-                  renderText={renderStrong}
-                />
+                <NumberFormat value={fiatValue} decimals={2} prefix="$" />
               </dd>
             </div>
           )}
@@ -96,7 +89,7 @@ function AvailableBalance({ children, className }: AvailableBalanceProps) {
                 type="button"
                 aria-label="Show tooltip"
               >
-                <SvgIcon icon="info" />
+                <Icon icon="info" />
               </button>
 
               <div className="tooltipMessage">
@@ -113,17 +106,14 @@ function AvailableBalance({ children, className }: AvailableBalanceProps) {
               const address = poolTokenAddresses[i]
               const weight = bnum(poolTokenWeights[i]).times(100).toNumber()
               const symbol = getTokenSymbol(address)
-              const color = getTokenColor(address)
 
               if (!address || !weight) return null
 
               return (
                 <div className="balanceItem" key={`availableBalance:${symbol}`}>
                   <dt>
-                    <TokenIcon address={address} $size={32} />
-                    <strong className="symbol" style={{ color }}>
-                      {symbol}
-                    </strong>
+                    <TokenIcon address={address as Hash} $size={32} />
+                    <strong className="symbol">{symbol}</strong>
                     <span className="pcnt">{weight}%</span>
                   </dt>
 
@@ -132,15 +122,12 @@ function AvailableBalance({ children, className }: AvailableBalanceProps) {
                       className="amount"
                       value={amount}
                       decimals={4}
-                      renderText={renderStrong}
                     />
                     <div className="fiatValue">
-                      <SvgIcon icon="approximate" />
                       <NumberFormat
                         value={propAmountsInFiatValue[i]}
                         prefix="$"
                         decimals={2}
-                        renderText={renderStrong}
                       />
                     </div>
                   </dd>

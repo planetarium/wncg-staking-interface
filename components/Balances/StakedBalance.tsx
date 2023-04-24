@@ -1,17 +1,12 @@
 import { memo, ReactNode, useMemo } from 'react'
 import clsx from 'clsx'
 
-import { renderStrong } from 'utils/numberFormat'
-import {
-  useAccount,
-  useConnectWallets,
-  useFiatCurrency,
-  useStakedBalance,
-} from 'hooks'
+import { useAuth, useConnect, useFiat, useStaking } from 'hooks'
 
 import { StyledStakedBalance } from './styled'
 import NumberFormat from 'components/NumberFormat'
-import SvgIcon from 'components/SvgIcon'
+import { useFetchUserData } from 'hooks/queries'
+import { bnum } from 'utils/bnum'
 
 type StakedBalanceProps = {
   children?: ReactNode
@@ -19,15 +14,18 @@ type StakedBalanceProps = {
 }
 
 function StakedBalance({ children, className }: StakedBalanceProps) {
-  const { isConnected } = useAccount()
-  const { connect } = useConnectWallets()
-  const { bptToFiat } = useFiatCurrency()
-  const { hasStakedBalance, stakedBalance } = useStakedBalance()
+  const { isConnected } = useAuth()
+  const { openConnectModal } = useConnect()
+  const toFiat = useFiat()
+  const { bptAddress } = useStaking()
+  const { stakedTokenBalance = '0' } = useFetchUserData().data ?? {}
 
   const fiatValue = useMemo(
-    () => bptToFiat(stakedBalance),
-    [bptToFiat, stakedBalance]
+    () => toFiat(stakedTokenBalance, bptAddress),
+    [bptAddress, stakedTokenBalance, toFiat]
   )
+
+  const hasStakedTokenBalance = bnum(stakedTokenBalance).gt(0)
 
   return (
     <StyledStakedBalance className={clsx('stakedBalance', className)}>
@@ -39,16 +37,12 @@ function StakedBalance({ children, className }: StakedBalanceProps) {
             <dt className="hidden">Your balance</dt>
             <dd>
               {isConnected ? (
-                <NumberFormat
-                  className="value"
-                  value={stakedBalance}
-                  renderText={renderStrong}
-                />
+                <NumberFormat className="value" value={stakedTokenBalance} />
               ) : (
                 <button
                   className="connectButton"
                   type="button"
-                  onClick={connect}
+                  onClick={openConnectModal}
                 >
                   Connect wallet
                 </button>
@@ -56,17 +50,11 @@ function StakedBalance({ children, className }: StakedBalanceProps) {
             </dd>
           </div>
 
-          {hasStakedBalance && (
+          {hasStakedTokenBalance && (
             <div className="detailItem">
               <dt className="hidden">Your balance in USD</dt>
               <dd className="fiatValue">
-                <SvgIcon icon="approximate" />
-                <NumberFormat
-                  value={fiatValue}
-                  decimals={2}
-                  prefix="$"
-                  renderText={renderStrong}
-                />
+                <NumberFormat value={fiatValue} decimals={2} prefix="$" />
               </dd>
             </div>
           )}

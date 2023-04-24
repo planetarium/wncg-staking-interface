@@ -1,16 +1,11 @@
 import Link from 'next/link'
 import styled, { css } from 'styled-components'
 
-import { assertUnreachable } from 'utils/assertion'
-import { flexbox, gradient, inlineFlexbox, textStyle } from 'newStyles/utils'
+import { assertUnreachable } from 'utils/assertUnreachable'
+import { flexbox, gradient, inlineFlexbox, textStyle } from 'styles/utils'
 
 export type ButtonSize = 'sm' | 'md' | 'lg'
-export type ButtonVariant =
-  | 'primary'
-  | 'secondary'
-  | 'tertiary'
-  | 'text'
-  | 'tiny'
+export type ButtonVariant = 'primary' | 'secondary' | 'tertiary'
 
 export type StyledButtonProps = {
   $variant: ButtonVariant
@@ -27,7 +22,7 @@ export const buttonStyle = css`
   cursor: pointer;
   transition: 500ms;
 
-  &:hover {
+  &:not(:disabled):hover {
     &::before {
       opacity: 1;
     }
@@ -63,15 +58,21 @@ export const buttonStyle = css`
 
   .leftIcon,
   .rightIcon {
+    ${inlineFlexbox()}
     flex-shrink: 0;
     pointer-events: none;
     user-select: none;
   }
 
   .label {
+    ${flexbox()}
     flex-grow: 1;
     text-align: center;
     white-space: nowrap;
+
+    .icon {
+      margin-left: 8px;
+    }
   }
 `
 
@@ -109,35 +110,40 @@ export const secondaryButtonStyle = css`
   }
 `
 
+export const outlinedButtonStyle = css`
+  color: var(--primary-200);
+  background-color: var(--realBlack);
+  border: 1.5px solid var(--primary-400);
+
+  &:not(:disabled):hover {
+    background-color: rgba(var(--white-rgb), 0.1);
+  }
+
+  &:disabled,
+  &.disabled {
+    color: rgba(var(--white-rgb), 0.5);
+    background-color: transparent !important;
+    border-color: rgba(var(--white-rgb), 0.5);
+  }
+`
+
 export const tertiaryButtonStyle = css`
   color: var(--white);
   background-color: rgba(var(--white-rgb), 0.1);
 
+  &:not(:disabled):hover {
+    background-color: transparent;
+  }
+
   &:disabled,
   &.disabled {
-    color: rgba(var(--white), 0.5);
+    color: rgba(var(--white-rgb), 0.5);
   }
-`
 
-export const textButtonStyle = css`
-  ${inlineFlexbox('flex-start', 'center')}
-  ${textStyle('button', 2)}
-  width: auto;
-  color: var(--white);
-
-  .label {
-    text-align: left;
+  &::before {
+    background-image: ${gradient(6)};
+    content: '';
   }
-`
-
-export const tinyButtonStyle = css`
-  ${inlineFlexbox('flex-start', 'center')}
-  ${textStyle('button', 3)}
-  width: auto;
-  padding: 8px 16px;
-  color: var(--white);
-  background-color: rgba(var(--white-rgb), 0.1);
-  border-radius: 100px;
 `
 
 // NOTE: Button sizes
@@ -191,8 +197,8 @@ export const smButtonStyle = css`
 
   .leftIcon,
   .rightIcon {
-    width: 24px;
-    height: 24px;
+    width: 16px;
+    height: 16px;
   }
 
   .leftIcon {
@@ -212,10 +218,6 @@ function buttonVariantStyle($variant: ButtonVariant) {
       return secondaryButtonStyle
     case 'tertiary':
       return tertiaryButtonStyle
-    case 'text':
-      return textButtonStyle
-    case 'tiny':
-      return tinyButtonStyle
     default:
       assertUnreachable($variant)
   }

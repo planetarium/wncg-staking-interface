@@ -1,5 +1,5 @@
 export const ALERT_HEIGHT = 56
-export const GLOBAL_FOOTER_HEIGHT = 88
+export const GLOBAL_FOOTER_HEIGHT = 72
 
 export const alertVariants = {
   initial: {

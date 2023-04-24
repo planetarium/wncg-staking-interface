@@ -1,10 +1,6 @@
 import axios from 'axios'
 
-import { configService } from './config'
-
 export class CoinmarketCapClientService {
-  constructor(public readonly config = configService) {}
-
   async get<T>(endpoint: string): Promise<T> {
     const { data } = await this.axios.get<T>(endpoint)
     return data

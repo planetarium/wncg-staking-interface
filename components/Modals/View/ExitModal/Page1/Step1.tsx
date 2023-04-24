@@ -1,40 +1,55 @@
-import { Control, Controller } from 'react-hook-form'
+import {
+  Control,
+  Controller,
+  UseFormResetField,
+  UseFormSetValue,
+  UseFormWatch,
+} from 'react-hook-form'
 import clsx from 'clsx'
 
-import { configService } from 'services/config'
-import { getTokenSymbol } from 'utils/token'
-import { usePool } from 'hooks'
-import { ExitFormFields } from '../useExitForm'
+import config from 'config'
+import { LiquidityFieldType } from 'config/constants'
+import { useStaking } from 'hooks'
+import { ExitFormFields } from 'hooks/useExitForm'
 
 import { StyledExitModalPage1Step1 } from './styled'
 import TokenIcon from 'components/TokenIcon'
 
 type ExitModalPage1Step1Props = {
-  control: Control<ExitFormFields, 'any'>
-  disabled: boolean
-  exitType: string
-  resetInputs(): void
+  control: Control<ExitFormFields>
+  watch: UseFormWatch<ExitFormFields>
+  setValue: UseFormSetValue<ExitFormFields>
+  resetField: UseFormResetField<ExitFormFields>
+  hash?: Hash
 }
 
 function ExitModalPage1Step1({
   control,
-  disabled,
-  exitType,
-  resetInputs,
+  watch,
+  setValue,
+  resetField,
+  hash,
 }: ExitModalPage1Step1Props) {
-  const { poolTokenAddresses } = usePool()
-  const tokensList = [
-    'all',
+  const { poolTokenAddresses, stakedTokenAddress, tokenMap } = useStaking()
+
+  const exitType = watch('exitType')
+
+  const exitTypeList = [
+    null,
     ...poolTokenAddresses,
-    configService.nativeAssetAddress,
+    config.nativeCurrency.address,
   ]
 
   const rules = {
     required: true,
-    onChange() {
-      resetInputs()
+    onChange(e: any) {
+      if (!e.target.value) setValue('exitType', null)
+      resetField(LiquidityFieldType.ExitAmount)
+      resetField(LiquidityFieldType.LiquidityPercent)
     },
   }
+
+  const disabled = !!hash
 
   return (
     <StyledExitModalPage1Step1 $disabled={disabled}>
@@ -48,32 +63,39 @@ function ExitModalPage1Step1({
           name="exitType"
           control={control}
           rules={rules}
-          render={({ field }) => (
+          render={({ field }: ControlRendererProps<ExitFormFields>) => (
             <>
-              {tokensList.map((address) => {
-                const key = `exitType:${address}`
+              {exitTypeList.map((addr) => {
+                const key = `exitForm:exitType:${addr}`
+                const label = addr === null ? 'All' : tokenMap[addr].symbol
 
                 return (
                   <div
                     className={clsx('tokenButton', {
-                      selected: exitType === address,
+                      selected: exitType === addr,
                     })}
                     key={key}
                   >
+                    <label className="fakeInput" htmlFor={key}>
+                      <TokenIcon
+                        key={`exitForm:tokenGroup:${
+                          addr ?? stakedTokenAddress
+                        }`}
+                        address={addr ?? stakedTokenAddress}
+                        $size={24}
+                      />
+
+                      <span className="label">{label}</span>
+                    </label>
+
                     <input
                       {...field}
                       id={key}
                       type="radio"
-                      value={address}
-                      defaultChecked={exitType === address}
+                      value={addr ?? undefined}
+                      defaultChecked={exitType === addr}
+                      disabled={disabled}
                     />
-
-                    <label className="fakeInput" htmlFor={key}>
-                      <TokenIcon address={address} $size={24} />
-                      <span className="label">
-                        {getTokenSymbol(address) || 'All'}
-                      </span>
-                    </label>
                   </div>
                 )
               })}

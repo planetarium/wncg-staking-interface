@@ -1,11 +1,12 @@
 import { AnimatePresence } from 'framer-motion'
 import clsx from 'clsx'
 
+import { REKT_PRICE_IMPACT } from 'config/misc'
 import { slideInDown } from 'constants/motionVariants'
-import { REKT_PRICE_IMPACT } from 'constants/poolLiquidity'
+import { useResponsive } from 'hooks'
 
 import { StyledRektPriceImpact } from './styled'
-import SvgIcon from 'components/SvgIcon'
+import Icon from 'components/Icon'
 
 type RektPriceImpactProps = {
   action: 'join' | 'exit'
@@ -21,6 +22,12 @@ function RektPriceImpact({
   disabled = false,
 }: RektPriceImpactProps) {
   const show = !disabled && priceImpact >= REKT_PRICE_IMPACT
+  const { isHandheld } = useResponsive()
+
+  const message =
+    action === 'join'
+      ? 'If the price impact exceeds 20%, join pool cannot be performed'
+      : 'Slippage is too high. Please choose proportional withdrawal (price impact < 20%)'
 
   return (
     <AnimatePresence>
@@ -33,10 +40,8 @@ function RektPriceImpact({
           variants={slideInDown}
           role="alert"
         >
-          <SvgIcon icon="warning" $size={24} />
-          <h4 className="title">
-            If the price impact exceeds 20%, {action} pool cannot be performed
-          </h4>
+          <Icon icon="warning" $size={isHandheld ? 16 : 24} />
+          <h4 className="title">{message}</h4>
         </StyledRektPriceImpact>
       )}
     </AnimatePresence>

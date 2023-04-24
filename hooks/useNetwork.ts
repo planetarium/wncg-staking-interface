@@ -1,22 +1,17 @@
-import { useEffect, useState } from 'react'
-import { useNetwork as useWagmiNetwork } from 'wagmi'
-import type { Chain } from 'wagmi'
+import { useEffect } from 'react'
+import { useSetAtom } from 'jotai'
+import { useNetwork as _useNetwork } from 'wagmi'
+
+import { currentChainAtom } from 'states/system'
 
 export function useNetwork() {
-  const [chain, setChain] = useState<Chain | undefined>()
-  const [chains, setChains] = useState<Chain[]>([])
+  const { chain: _chain = null } = _useNetwork()
 
-  const { chain: _chain, chains: _chains } = useWagmiNetwork()
+  const setChain = useSetAtom(currentChainAtom)
 
   function updateNetwork() {
     setChain(_chain)
-    setChains(_chains)
   }
 
-  useEffect(updateNetwork, [_chain, _chains])
-
-  return {
-    chain,
-    chains,
-  }
+  useEffect(updateNetwork, [_chain, setChain])
 }

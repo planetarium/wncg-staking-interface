@@ -1,65 +1,48 @@
-import { useMemo } from 'react'
-import { useMount, useUnmount } from 'react-use'
+import { useCallback, useEffect, useMemo } from 'react'
+import { useMount } from 'react-use'
 import { useSetAtom } from 'jotai'
 
-import { breakpointAtom } from 'states/ui'
-import type { Breakpoint } from 'states/ui'
+import { breakpointAtom } from 'states/screen'
+import { Breakpoint } from 'config/constants'
 
-// NOTE: styles/constancts/_breakpoints.scss
-const BP: Record<Breakpoint, number> = {
-  xs: 0,
-  sm: 540,
-  md: 768,
-  lg: 1024,
-  xl: 1280,
-}
-const BP_ENTRIES = Object.entries(BP)
-const BP_LENGTH = BP_ENTRIES.length
-const BP_KEYS = Object.keys(BP) as Breakpoint[]
+const bpEntries = Object.entries(Breakpoint)
+const bpLength = bpEntries.length
+const bpKeys = Object.keys(Breakpoint)
+const bpQueries = Object.values(Breakpoint).map((value, i) => {
+  if (i === bpLength - 1) return `(min-width: ${value}px)`
 
-const MEDIA_QUERIES = BP_ENTRIES.map(([, value], i) => {
-  if (i === BP_LENGTH - 1) {
-    return `(min-width: ${value}px)`
-  }
-  const nextValue = BP_ENTRIES[i + 1][1] - 1
-  if (i === 0) {
-    return `(max-width: ${nextValue}px)`
-  }
-  return `(min-width: ${value}px) and (max-width: ${nextValue}px)`
+  const maxWidth = bpEntries[i + 1][1] - 1
+  if (i === 0) return `(max-width: ${maxWidth}px)`
+  return `(min-width: ${value}px) and (max-width: ${maxWidth}px)`
 })
 
 export function useMediaQuery() {
   const setBreakpoint = useSetAtom(breakpointAtom)
 
-  const mqlList = useMemo(
+  const mql = useMemo(
     () =>
-      MEDIA_QUERIES.map((media) => {
+      bpQueries.map((query) => {
         if (typeof window === 'undefined') return null
-        return window.matchMedia(media)
+        return window.matchMedia(query)
       }),
     []
   )
 
-  function updateBreakpoint() {
-    const matchIndex = mqlList.findIndex((mql) => mql?.matches)
+  const update = useCallback(() => {
+    const match = mql.findIndex((mq) => !!mq?.matches)
+    if (match < 0) return
+    const newBp = bpKeys[match] as Breakpoint
 
-    if (matchIndex > -1) {
-      const newBreakpoint = BP_KEYS[matchIndex]
-      setBreakpoint(newBreakpoint)
+    setBreakpoint(newBp)
+  }, [mql, setBreakpoint])
+
+  useMount(update)
+
+  useEffect(() => {
+    mql.forEach((mq) => mq?.addEventListener('change', update))
+
+    return () => {
+      mql.forEach((mq) => mq?.removeEventListener('change', update))
     }
-  }
-
-  useMount(() => {
-    updateBreakpoint()
-
-    mqlList.forEach((mql) => {
-      mql?.addEventListener('change', updateBreakpoint)
-    })
-  })
-
-  useUnmount(() => {
-    mqlList.forEach((mql) => {
-      mql?.removeEventListener('change', updateBreakpoint)
-    })
-  })
+  }, [mql, update])
 }

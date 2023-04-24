@@ -6,12 +6,9 @@ import {
   MouseEvent,
   ReactNode,
 } from 'react'
+import clsx from 'clsx'
 
-import { ButtonSize, ButtonVariant, StyledButton, StyledLink } from './styled'
-import SvgIcon, { SvgIconType } from '../SvgIcon'
-import ConnectorIcon from 'components/ConnectorIcon'
-
-const nonScalableButtonVariants: ButtonVariant[] = ['text', 'tiny']
+import { StyledButton, StyledLink } from './styled'
 
 export type ButtonProps = {
   children: ReactNode
@@ -19,11 +16,9 @@ export type ButtonProps = {
   as?: string
   dataset?: Record<string, string>
   href?: string
-  leftIcon?: SvgIconType
   loading?: boolean
   onClick?: (e: MouseEvent) => void
   prefetch?: boolean
-  rightIcon?: SvgIconType
   target?: string
   $contain?: boolean
   $size?: ButtonSize
@@ -40,15 +35,13 @@ function Button(
     disabled,
     href,
     id,
-    leftIcon,
     loading,
     onClick,
     prefetch,
-    rightIcon: _rightIcon,
     target,
     type = 'button',
     $contain = false,
-    $size: _$size = 'lg',
+    $size = 'lg',
     $variant = 'primary',
     ...buttonProps
   }: ButtonProps &
@@ -62,22 +55,7 @@ function Button(
     Object.entries(dataset).map(([key, value]) => [`data-${key}`, value])
   )
 
-  const rightIcon = $variant === 'text' ? 'chevronRight' : _rightIcon
-  const $size = nonScalableButtonVariants.includes($variant)
-    ? undefined
-    : _$size
-
-  const label = (
-    <>
-      {leftIcon && <SvgIcon className="leftIcon" icon={leftIcon} />}
-      <span className="label">{children}</span>
-      {rightIcon === 'metaMask' ? (
-        <ConnectorIcon className="rightIcon" icon="metaMask" />
-      ) : rightIcon ? (
-        <SvgIcon className="rightIcon" icon={rightIcon} />
-      ) : null}
-    </>
-  )
+  const label = <div className="label">{children}</div>
 
   if (!href) {
     return (
@@ -107,9 +85,9 @@ function Button(
   return (
     <StyledLink
       id={id}
-      className={className}
+      className={clsx(className, { disabled })}
       prefetch={prefetch}
-      href={href}
+      href={disabled ? '' : href}
       ref={ref as ForwardedRef<HTMLAnchorElement>}
       onClick={onClick}
       target={target}

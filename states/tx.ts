@@ -1,15 +1,29 @@
-import { atom } from 'jotai'
-import { atomWithReset } from 'jotai/utils'
+import { atomWithStorage } from 'jotai/utils'
 
-export const txListAtom = atomWithReset<Tx[]>([])
+export const approveTxAtom = atomWithStorage<ApproveTx>(
+  `wncg:staking:approveTx`,
+  {}
+)
 
-// NOTE: Read-only Derived Atoms
-export const pendingTxListAtom = atom<Tx[]>((get) => {
-  const list = get(txListAtom)
-  return list.filter((tx) => tx.status === 'pending')
-})
+export const claimTxAtom = atomWithStorage<ClaimTx>(`wncg:staking:claimTx`, {})
 
-export const unresolvedTxListAtom = atom<Tx[]>((get) => {
-  const list = get(txListAtom)
-  return list.filter((tx) => tx.status !== 'fulfilled').reverse()
-})
+export const cooldownTxAtom = atomWithStorage<CooldownTx>(
+  `wncg:staking:cooldownTx`,
+  {}
+)
+
+export const harvestTxAtom = atomWithStorage<HarvestTx>(
+  `wncg:staking:harvestTx`,
+  {}
+)
+
+export const stakeTxAtom = atomWithStorage<StakeTx>(`wncg:staking:stakeTx`, {})
+
+export const unstakeTxAtom = atomWithStorage<UnstakeTx>(
+  `wncg:staking:unstakeTx`,
+  {}
+)
+
+export const joinTxAtom = atomWithStorage<JoinTx>(`wncg:staking:joinTx`, {})
+
+export const exitTxAtom = atomWithStorage<ExitTx>(`wncg:staking:exitTx`, {})

@@ -1,4 +1,4 @@
-import { atomWithReset, atomWithStorage } from 'jotai/utils'
+import { atomWithStorage } from 'jotai/utils'
 
 import storeKeys from 'constants/storageKeys'
 
@@ -17,5 +17,3 @@ export const estimationPeriodAtom = atomWithStorage<EstimationPeriod>(
   storeKeys.UserSettings.EstimationPeriod,
   'year'
 )
-
-export const legacyModeAtom = atomWithReset(false)

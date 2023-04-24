@@ -1,9 +1,10 @@
-import { defaultAbiCoder, formatUnits } from 'ethers/lib/utils'
 import type { Log } from '@ethersproject/abstract-provider'
+import { defaultAbiCoder } from '@ethersproject/abi'
 
-import { configService } from 'services/config'
+import config from 'config'
 import { parseLog } from './iface'
 import { getTokenInfo } from './token'
+import { formatUnits } from './formatUnits'
 
 export function parseTxError(error: any): TxError | void {
   if (error?.code === 4001) {
@@ -87,11 +88,14 @@ export function parsePoolBalanceChangedLogs(logs: Log[]) {
   const amount = formatUnits(decodedData?.[0] ?? '0')
 
   return {
-    [configService.nativeAssetAddress]: amount,
+    [config.nativeCurrency.address]: amount,
   }
 }
 
-export function decodeLogData(data: string, types = ['uint256']) {
+export function decodeLogData(
+  data: string,
+  types = ['uint256', 'uint256', 'uint256']
+) {
   try {
     return defaultAbiCoder.decode(types, data)
   } catch {
