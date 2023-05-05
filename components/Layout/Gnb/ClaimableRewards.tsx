@@ -2,6 +2,7 @@ import { memo } from 'react'
 import { useAtomValue } from 'jotai'
 
 import { showHarvestAtom } from 'states/system'
+import config from 'config'
 import { ModalType } from 'config/constants'
 import { MOTION } from 'config/motions'
 import { fadeIn } from 'config/motionVariants'
@@ -12,9 +13,8 @@ import { useFetchUserData } from 'hooks/queries'
 import { StyledGnbClaimableRewards } from './styled'
 import Button from 'components/Button'
 import CountUp from 'components/CountUp'
-import NumberFormat from 'components/NumberFormat'
 import Icon from 'components/Icon'
-import config from 'config'
+import NumberFormat from 'components/NumberFormat'
 import Tooltip from 'components/Tooltip'
 
 function ClaimableRewards() {
@@ -62,7 +62,7 @@ function ClaimableRewards() {
                 <Tooltip
                   message="BAL Rewards have temporarily stopped streaming. Please call the harvest method to start that streaming again."
                   $direction="bottom"
-                  $width={360}
+                  $width={400}
                 />
               </div>
             )}

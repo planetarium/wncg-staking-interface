@@ -434,7 +434,7 @@ export const StyledRektPriceImpact = styled(motion.aside)`
 export const StyledSkeleton = styled(motion.span)`
   ${flexbox('start')}
   overflow: hidden;
-  background-color: var(--realBlack);
+  background-color: var(--realBlack-rgb);
 
   .gradient {
     display: block;
@@ -735,12 +735,12 @@ export const StyledTooltip = styled.p<{
         bottom: ${$direction === 'bottom' ? '98%' : 'auto'};
         width: 0;
         height: 0;
-        border-top: 10px solid
+        border-top: 14px solid
           ${$direction === 'top' ? '#4c17b1' : 'transparent'};
-        border-right: 10px solid transparent;
-        border-bottom: 10px solid
+        border-right: 14px solid transparent;
+        border-bottom: 14px solid
           ${$direction === 'bottom' ? '#4c17b1' : 'transparent'};
-        border-left: 10px solid transparent;
+        border-left: 14px solid transparent;
         content: '';
       }
 

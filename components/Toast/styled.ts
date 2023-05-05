@@ -8,10 +8,12 @@ export const StyledToast = styled.aside`
   position: relative;
 
   .toastHeader {
+    margin-top: -4px;
+
     a {
       ${flexbox('between')}
-      padding: 4px;
-      margin: -4px;
+      padding: 4px 8px;
+      margin: -4px -8px;
       border-radius: 4px;
       transition: 200ms;
 
@@ -50,17 +52,17 @@ export const StyledToast = styled.aside`
   }
 
   .toastContent {
-    margin-top: ${16 - 4}px;
+    margin-top: 16px;
 
     .desc {
-      ${textStyle('body', 4)}
+      ${textStyle('body', 3)}
       color: var(--gray-500);
     }
   }
 
   .detailItem {
     ${flexbox('between', 'start')}
-    ${textStyle('body', 4, 700)}
+    ${textStyle('body', 3, 700)}
     margin-top: 8px;
     color: var(--gray-600);
     white-space: nowrap;
@@ -69,45 +71,54 @@ export const StyledToast = styled.aside`
       margin-top: 0;
     }
 
+    &:has(.allowance) {
+      align-items: center;
+
+      dd {
+        margin-top: 0;
+      }
+    }
+
     dt {
       ${flexbox('start')}
-      flex-shrink: 0;
       margin-right: 8px;
+      flex-shrink: 0;
     }
 
     dd {
       ${flexbox('start', 'end')}
-      flex-grow: 1;
       flex-direction: column;
-      text-align: right;
+      flex-grow: 1;
+      margin-top: 2px;
       overflow: hidden;
+      text-align: right;
 
-      .text {
-        ${textStyle('body', 4)}
-        font-weight: 500 !important;
-        color: var(--gray-500);
-      }
-
-      .number {
-        &:not(.usd) {
-          display: block;
-          max-width: 100%;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          font-weight: 700;
-
-          span {
-            display: block;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            font-weight: 700;
-          }
+      &.allowance {
+        * {
+          font-weight: 500 !important;
+          color: var(--gray-500) !important;
         }
       }
 
-      .usd {
+      .number {
+        display: block;
+        font-weight: 700;
+        width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+
+        span {
+          display: block;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+      }
+
+      .usd,
+      .fiatValue {
+        ${flexbox('end')}
         font-weight: 500;
         color: var(--gray-500);
       }
@@ -118,20 +129,23 @@ export const StyledToast = styled.aside`
       margin-right: 4px;
     }
 
-    .tokenIcon {
-      width: 16px;
-      height: 16px;
-      margin-left: -4px;
-
-      svg {
-        width: 16px;
-        height: 16px;
+    .tokenIconGroup {
+      .tokenIcon {
+        margin-left: -8px;
       }
 
       &:first-child {
         margin-left: 0;
       }
     }
+  }
+
+  .pending {
+    ${textStyle('body', 4)}
+    color: var(--gray-400);
+  }
+
+  .scheduleList {
   }
 
   .scheduleItem {
@@ -156,58 +170,26 @@ export const StyledToast = styled.aside`
   }
 
   .toastFooter {
-    margin-top: 12px;
-
-    button {
-      margin-top: 8px;
-
-      &:first-child {
-        margin-top: 0;
-      }
-    }
+    margin-top: 16px;
   }
 
   ${media(
     'minLaptop',
     css`
-      .toastHeader {
-        margin-top: -4px;
-
-        a {
-          ${flexbox('between')}
-          padding: 4px 8px;
-          margin: -4px -8px;
-        }
-      }
-
       .title {
         ${textStyle('body', 2, 700)}
       }
 
       .toastContent {
-        margin-top: ${20 - 4}px;
-
-        .desc {
-          ${textStyle('body', 3)}
-        }
-      }
-
-      .detailItem {
-        ${flexbox('between', 'start')}
-        ${textStyle('body', 3, 700)}
-        margin-top: 8px;
-      }
-
-      .toastFooter {
-        margin-top: 16px;
+        margin-top: 20px;
       }
     `
   )}
 `
 
 export const StyledToastCloseButton = styled.button`
+  ${flexbox()}
   position: absolute;
-  display: none;
   top: 0;
   right: 0;
   width: 20px;
@@ -222,13 +204,6 @@ export const StyledToastCloseButton = styled.button`
     width: 12px;
     height: 12px;
   }
-
-  ${media(
-    'minLaptop',
-    css`
-      ${flexbox()}
-    `
-  )}
 `
 
 export const StyledToastStatus = styled(motion.strong)<{ $success?: boolean }>`
@@ -236,51 +211,16 @@ export const StyledToastStatus = styled(motion.strong)<{ $success?: boolean }>`
   ${textStyle('body', 3, 700)}
   color: var(--error-400);
 
+  ${({ $success }) =>
+    $success &&
+    css`
+      color: var(--green-600);
+    `}
+
   ${media(
     'minLaptop',
     css`
       ${textStyle('body', 2, 700)}
     `
   )}
-
-  ${({ $success }) =>
-    $success &&
-    css`
-      color: var(--green-600);
-    `}
-`
-
-export const StyledApproveToast = styled(StyledToast)`
-  .detailItem {
-    align-items: center;
-    dt {
-      ${textStyle('caption')}
-      font-weight: 700;
-    }
-
-    dd {
-      flex-grow: 0;
-      width: 50%;
-      overflow: hidden;
-      margin-left: 8px;
-      font-weight: 500 !important;
-
-      .text,
-      .number {
-        ${textStyle('body', 4)}
-        font-weight: 500 !important;
-        color: var(--gray-500);
-      }
-
-      .number {
-        span {
-          display: block;
-          width: 100%;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          font-weight: 500 !important;
-        }
-      }
-    }
-  }
 `

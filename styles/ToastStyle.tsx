@@ -96,7 +96,7 @@ const ToastStyle = createGlobalStyle`
         top: ${GNB_HEIGHT_TABLET}px;
         right: ${16 - TOAST_PADDING}px;
         left: auto;
-        width: 320px;
+        width: ${320 + TOAST_PADDING}px;
         padding: 0;
         transform: none;
       }

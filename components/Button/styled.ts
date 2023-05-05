@@ -112,7 +112,7 @@ export const secondaryButtonStyle = css`
 
 export const outlinedButtonStyle = css`
   color: var(--primary-200);
-  background-color: var(--realBlack);
+  background-color: var(--realBlack-rgb);
   border: 1.5px solid var(--primary-400);
 
   &:not(:disabled):hover {

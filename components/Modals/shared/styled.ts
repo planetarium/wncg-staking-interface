@@ -324,6 +324,14 @@ export const StyledModalCompletePage = styled(StyledModalPage)`
     ${textStyle('body', 3)}
     margin-top: 12px;
 
+    &.accent {
+      dd,
+      .number,
+      .fiatValue {
+        color: var(--primary-500) !important;
+      }
+    }
+
     &:first-child {
       margin-top: 0;
     }

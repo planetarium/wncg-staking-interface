@@ -2,12 +2,12 @@ import { motion } from 'framer-motion'
 import styled, { css } from 'styled-components'
 
 import { fontFamily } from 'styles/constants/typography'
-import { flexbox, media, textStyle } from 'styles/utils'
+import { flexbox, media, posCenterX, textStyle } from 'styles/utils'
 
 export const StyledStakingDashboard = styled(motion.section)`
   .imageContainer {
     ${flexbox('start', 'start')}
-    width: 100%;
+    width: 144px;
     height: 144px;
     overflow: hidden;
 
@@ -26,6 +26,8 @@ export const StyledStakingDashboard = styled(motion.section)`
     css`
       .imageContainer {
         justify-content: center;
+        margin-right: auto;
+        margin-left: auto;
 
         img {
           transform: scale(1.3);
@@ -42,6 +44,7 @@ export const StyledStakingDashboard = styled(motion.section)`
       height: 100%;
 
       .imageContainer {
+        width: 320px;
         height: 320px;
 
         .image {
@@ -59,6 +62,7 @@ export const StyledStakingDashboard = styled(motion.section)`
     'minDesktop',
     css`
       .imageContainer {
+        width: 300px;
         height: 300px;
 
         .image {
@@ -84,6 +88,7 @@ export const StyledStakingDashboardApr = styled(
   .aprItem {
     ${flexbox('start')}
     ${textStyle('body', 3)}
+    position: relative;
     margin-top: 2px;
     color: var(--white);
 
@@ -111,6 +116,10 @@ export const StyledStakingDashboardApr = styled(
     .symbol {
       margin-left: 0;
     }
+  }
+
+  .aprHarvestButton {
+    display: none;
   }
 
   ${({ $fallback }) =>
@@ -182,6 +191,13 @@ export const StyledStakingDashboardApr = styled(
           display: flex;
         }
       }
+
+      .aprHarvestButton {
+        ${posCenterX()}
+        top: calc(100% + 12px);
+        display: flex;
+        width: 99px;
+      }
     `
   )}
 `
@@ -191,6 +207,7 @@ export const StyledStakingDashboardHarvest = styled(motion.div)`
 
   .harvestTooltip {
     display: block;
+    width: 540px;
     padding: 28px;
     text-align: left;
     border-radius: 16px;
@@ -228,6 +245,10 @@ export const StyledStakingDashboardHarvest = styled(motion.div)`
       ${textStyle('body', 4, 700)}
       font-family: inherit;
     }
+  }
+
+  .harvestButton {
+    width: 99px;
   }
 
   ${media(

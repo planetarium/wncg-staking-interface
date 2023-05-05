@@ -120,7 +120,7 @@ export const StyledExitModalPage1Step1 = styled(StyledExitModalPage1Step)`
 
     .tokenIconGroup {
       ${flexbox('start')}
-      box-shadow: 1px 1px 4px rgba(var(--realBlack), 0.24);
+      box-shadow: 1px 1px 4px rgba(var(--realBlack-rgb), 0.24);
 
       .tokenIcon {
         margin-left: -8px;

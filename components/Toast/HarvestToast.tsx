@@ -1,9 +1,13 @@
+import { useState } from 'react'
 import { useMount } from 'react-use'
 import Link from 'next/link'
 import { useSetAtom } from 'jotai'
 import { RESET } from 'jotai/utils'
+import { useTransaction } from 'wagmi'
 
-import { unstakeTxAtom } from 'states/tx'
+import { claimTxAtom } from 'states/tx'
+import config from 'config'
+import { parseTransferLogs } from 'utils/parseTransferLogs'
 import { txUrlFor } from 'utils/txUrlFor'
 import { useFiat, useStaking } from 'hooks'
 import { useWatch } from './useWatch'
@@ -15,25 +19,42 @@ import NumberFormat from 'components/NumberFormat'
 import TokenIcon from 'components/TokenIcon'
 import Status from './Status'
 
-type UnstakeToastProps = {
-  hash: Hash
-  unstakeAmount: string
-}
+type HarvestToastProps = Required<HarvestTx>
 
-export default function UnstakeToast({
+export default function HarvestToast({
   hash,
-  unstakeAmount,
-}: UnstakeToastProps) {
+  harvestAmount,
+}: HarvestToastProps) {
+  const setTx = useSetAtom(claimTxAtom)
+
   const toFiat = useFiat()
-  const { stakedTokenAddress, tokenMap, bptName } = useStaking()
-  const { decimals: stakedTokenDecimals, symbol: stakedTokenSymbol } =
-    tokenMap[stakedTokenAddress]
+  const { rewardTokenAddresses, tokenMap } = useStaking()
 
-  const setTx = useSetAtom(unstakeTxAtom)
-
-  const fiatValue = toFiat(unstakeAmount, stakedTokenAddress)
+  const [amount, setAmount] = useState(harvestAmount)
+  const fiatValue = toFiat(amount, config.bal)
 
   const status = useWatch(hash)
+
+  const balToken = tokenMap[config.bal]
+
+  useTransaction({
+    hash,
+    chainId: config.chainId,
+    enabled: !!hash,
+    suspense: false,
+    async onSuccess(tx) {
+      try {
+        const { logs = [] } = (await tx?.wait()) ?? {}
+
+        const parsedLogs = parseTransferLogs(logs)
+        const actualHarvestedAmount = parsedLogs?.[config.bal]
+
+        if (actualHarvestedAmount) {
+          setAmount(actualHarvestedAmount)
+        }
+      } catch {}
+    },
+  })
 
   useMount(() => setTx(RESET))
 
@@ -42,9 +63,10 @@ export default function UnstakeToast({
       <header className="toastHeader">
         <Link href={txUrlFor(hash)!} target="_blank" rel="noopener">
           <h3 className="title">
-            Withdraw
+            Harvest
             <Icon icon="outlink" />
           </h3>
+
           <Status status={status} />
         </Link>
       </header>
@@ -54,18 +76,14 @@ export default function UnstakeToast({
           <div className="detailItem">
             <dt>
               <div className="token">
-                <TokenIcon address={stakedTokenAddress} />
+                <TokenIcon address={config.bal} dark />
               </div>
-              {bptName}
+              BAL
             </dt>
+
             <dd>
-              <NumberFormat value={unstakeAmount} decimals={8} />
-              <NumberFormat
-                className="usd"
-                value={fiatValue}
-                type="fiat"
-                abbr
-              />
+              <NumberFormat value={amount} />
+              <NumberFormat className="usd" value={fiatValue} type="fiat" />
             </dd>
           </div>
         </dl>
@@ -73,10 +91,8 @@ export default function UnstakeToast({
 
       <footer className="toastFooter">
         <ImportToken
-          address={stakedTokenAddress}
-          decimals={stakedTokenDecimals}
-          name={bptName}
-          symbol={stakedTokenSymbol}
+          {...balToken}
+          name={undefined}
           $size="sm"
           $variant="primary"
         />

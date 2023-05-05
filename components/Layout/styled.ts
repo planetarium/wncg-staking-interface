@@ -25,7 +25,7 @@ export const StyledLayout = styled(motion.div)<{ $root?: boolean }>`
   ${({ $root }) =>
     $root &&
     css`
-      background-color: var(--realBlack);
+      background-color: var(--realBlack-rgb);
     `}
 `
 

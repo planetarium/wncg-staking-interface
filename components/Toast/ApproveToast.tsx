@@ -16,7 +16,7 @@ import { txUrlFor } from 'utils/txUrlFor'
 import { useStaking } from 'hooks'
 import { useWatch } from './useWatch'
 
-import { StyledApproveToast } from './styled'
+import { StyledToast } from './styled'
 import Icon from 'components/Icon'
 import ToastStatus from './Status'
 import TokenIcon from 'components/TokenIcon'
@@ -76,7 +76,7 @@ export default function ApproveToast({
   )
 
   return (
-    <StyledApproveToast>
+    <StyledToast>
       <header className="toastHeader">
         <Link href={txUrlFor(hash)!} target="_blank" rel="noopener">
           <h3 className="title">
@@ -92,17 +92,13 @@ export default function ApproveToast({
           <div className="detailItem">
             <dt>
               <div className="token">
-                <TokenIcon
-                  address={tokenAddress}
-                  dark
-                  $size={tokenAddress === stakedTokenAddress ? 16 : 20}
-                />
+                <TokenIcon address={tokenAddress} dark />
               </div>
               {tokenSymbol}
             </dt>
 
             {hasAllowance && (
-              <dd className={clsx({ text: isMaxApproved })}>
+              <dd className="allowance">
                 {isMaxApproved ? (
                   'Infinite approval'
                 ) : (
@@ -113,6 +109,6 @@ export default function ApproveToast({
           </div>
         </dl>
       </div>
-    </StyledApproveToast>
+    </StyledToast>
   )
 }

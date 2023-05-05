@@ -312,3 +312,14 @@ export function onArrowHover() {
     }
   `
 }
+
+export function backdropFilter(blur: number, opacity: number) {
+  return css`
+    background-color: rgba(0, 0, 0, ${opacity});
+    backdrop-filter: blur(${blur}px);
+
+    &::before {
+      content: '';
+    }
+  `
+}
