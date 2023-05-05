@@ -20,8 +20,7 @@ export function useStake(stakeAmount: string) {
     tokenMap[stakedTokenAddress]?.decimals ?? 18
   ).toString()
 
-  const enabled =
-    !!isApproved && bnum(stakeAmount).gt(0) && !bnum(stakeAmount).isNaN()
+  const enabled = bnum(stakeAmount).gt(0) && !bnum(stakeAmount).isNaN()
 
   const { config: writeConfig } = usePrepareContractWrite({
     address: config.stakingAddress,
@@ -29,6 +28,9 @@ export function useStake(stakeAmount: string) {
     args: [scaledStakeAmount],
     functionName: 'stake',
     enabled,
+    onError(err) {
+      console.log('stake error', err)
+    },
   })
 
   const { writeAsync } = useContractWrite(writeConfig)

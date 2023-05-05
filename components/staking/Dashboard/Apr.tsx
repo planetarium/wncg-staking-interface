@@ -9,13 +9,13 @@ import { fadeIn } from 'config/motionVariants'
 import { useApr, useFiat, useRewards, useStaking } from 'hooks'
 import { useFetchStaking } from 'hooks/queries'
 
-import { StyledDashboardApr } from './styled'
+import { StyledStakingDashboardApr } from './styled'
 import CountUp from 'components/CountUp'
 import Icon from 'components/Icon'
 import Suspense from 'components/Suspense'
 import Harvest from './Harvest'
 
-function DashboardApr() {
+function StakingDashboardApr() {
   const [show, setShow] = useState(true)
 
   const aprs = useApr()
@@ -38,7 +38,11 @@ function DashboardApr() {
   }
 
   return (
-    <StyledDashboardApr {...MOTION} className="aprList" variants={fadeIn}>
+    <StyledStakingDashboardApr
+      {...MOTION}
+      className="aprList"
+      variants={fadeIn}
+    >
       <div className="aprItem">
         <dt>Total Staked</dt>
         <dd className="colon">
@@ -84,8 +88,8 @@ function DashboardApr() {
           </div>
         )
       })}
-    </StyledDashboardApr>
+    </StyledStakingDashboardApr>
   )
 }
 
-export default memo(DashboardApr)
+export default memo(StakingDashboardApr)

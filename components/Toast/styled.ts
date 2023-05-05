@@ -99,6 +99,10 @@ export const StyledToast = styled.aside`
 
           span {
             display: block;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-weight: 700;
           }
         }
       }
@@ -248,12 +252,35 @@ export const StyledToastStatus = styled(motion.strong)<{ $success?: boolean }>`
 
 export const StyledApproveToast = styled(StyledToast)`
   .detailItem {
+    align-items: center;
+    dt {
+      ${textStyle('caption')}
+      font-weight: 700;
+    }
+
     dd {
       flex-grow: 0;
-      flex-shrink: 0;
       width: 50%;
       overflow: hidden;
       margin-left: 8px;
+      font-weight: 500 !important;
+
+      .text,
+      .number {
+        ${textStyle('body', 4)}
+        font-weight: 500 !important;
+        color: var(--gray-500);
+      }
+
+      .number {
+        span {
+          display: block;
+          width: 100%;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          font-weight: 500 !important;
+        }
+      }
     }
   }
 `

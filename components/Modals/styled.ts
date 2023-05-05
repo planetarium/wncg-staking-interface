@@ -12,7 +12,7 @@ export const StyledModalOverlay = styled(motion.div)`
   max-width: 100vw;
   height: 100vh;
   overflow: hidden;
-  background-color: rgba(var(--realBlack), 0.2);
+  background-color: rgba(var(--realBlack), 0.6);
   backdrop-filter: blur(50px);
   transition: 200ms;
 `

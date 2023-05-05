@@ -16,6 +16,7 @@ export const StyledStakingDashboard = styled(motion.section)`
 
       img {
         max-height: 144px !important;
+        transform: scale(1.2);
       }
     }
   }
@@ -25,6 +26,10 @@ export const StyledStakingDashboard = styled(motion.section)`
     css`
       .imageContainer {
         justify-content: center;
+
+        img {
+          transform: scale(1.3);
+        }
       }
     `
   )}
@@ -61,6 +66,7 @@ export const StyledStakingDashboard = styled(motion.section)`
 
           img {
             max-height: 300px !important;
+            transform: scale(1.32);
           }
         }
       }
@@ -68,11 +74,13 @@ export const StyledStakingDashboard = styled(motion.section)`
   )}
 `
 
-type StyledDashboardAprProps = {
+type StyledStakingDashboardAprProps = {
   $fallback?: boolean
 }
 
-export const StyledDashboardApr = styled(motion.dl)<StyledDashboardAprProps>`
+export const StyledStakingDashboardApr = styled(
+  motion.dl
+)<StyledStakingDashboardAprProps>`
   .aprItem {
     ${flexbox('start')}
     ${textStyle('body', 3)}
