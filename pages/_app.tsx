@@ -27,6 +27,7 @@ import ToastContainer from 'components/ToastContainer'
 
 import GlobalStyle from 'styles/GlobalStyle'
 import ToastStyle from 'styles/ToastStyle'
+import { isFirefox } from 'react-device-detect'
 
 type MyAppProps = AppProps & {
   pageProps: {
@@ -64,6 +65,13 @@ function MyApp({ Component, pageProps }: MyAppProps) {
   useMount(() => {
     if (!isProd) return
     ReactGA.initialize(process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID as string)
+  })
+
+  useMount(() => {
+    if (isFirefox) return document.body.classList.add('firefox')
+    else {
+      document.body.classList.add('notFirefox')
+    }
   })
 
   return (

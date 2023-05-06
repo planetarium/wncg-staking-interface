@@ -5,6 +5,7 @@ import config from 'config'
 
 import { StyledGlobalFooter } from './styled'
 import Icon from 'components/Icon'
+import ImportTokenDropdown from './ImportTokenDropdown'
 
 function GlobalFooter() {
   return (
@@ -37,6 +38,8 @@ function GlobalFooter() {
       </div>
 
       <div className="right">
+        <ImportTokenDropdown />
+
         <a
           className="iconButton"
           href={config.links.twitter}

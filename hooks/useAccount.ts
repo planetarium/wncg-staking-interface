@@ -4,12 +4,9 @@ import { useAccount as _useAccount } from 'wagmi'
 import { useSetAtom } from 'jotai'
 
 import { accountAtom, connectorAtom, statusAtom } from 'states/account'
-
-import { useTx } from './useTx'
 import { useUserSettings } from './useUserSettings'
 
 export function useAccount() {
-  const { resetTx } = useTx()
   const resetSettings = useUserSettings()
   const queryClient = useQueryClient()
 
@@ -25,15 +22,12 @@ export function useAccount() {
     onConnect({ connector }) {
       connector?.on('change', () => {
         queryClient.removeQueries([address], { exact: false })
-
-        resetTx()
         resetSettings()
       })
     },
   })
 
   const updateAccount = useCallback(() => {
-    resetTx()
     resetSettings()
     setAccount(address ?? null)
     setConnector(_connector ?? null)
@@ -46,7 +40,6 @@ export function useAccount() {
     address,
     queryClient,
     resetSettings,
-    resetTx,
     setAccount,
     setConnector,
     setStatus,

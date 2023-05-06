@@ -28,7 +28,7 @@ export default function HarvestToast({
   const setTx = useSetAtom(claimTxAtom)
 
   const toFiat = useFiat()
-  const { rewardTokenAddresses, tokenMap } = useStaking()
+  const { tokenMap } = useStaking()
 
   const [amount, setAmount] = useState(harvestAmount)
   const fiatValue = toFiat(amount, config.bal)

@@ -1,7 +1,7 @@
 import { useAtomValue } from 'jotai'
 import { AnimatePresence } from 'framer-motion'
 
-import { showHarvestAtom } from 'states/system'
+import { isHarvestableAtom } from 'states/system'
 import config from 'config'
 import { EXIT_MOTION } from 'config/motions'
 import { fadeIn } from 'config/motionVariants'
@@ -27,12 +27,13 @@ export default function StakingDashboardHarvest({
   const { claimableTokens = '0' } =
     useFetchStaking({
       refetchInterval: 10 * 1_000,
+      refetchOnWindowFocus: 'always',
     }).data ?? {}
   const harvest = useHarvest()
 
-  const showHarvest = useAtomValue(showHarvestAtom)
+  const isHarvestable = useAtomValue(isHarvestableAtom)
 
-  if (!showHarvest) return null
+  if (!isHarvestable) return null
 
   const claimableTokensFiatValue = toFiat(claimableTokens, config.bal)
 

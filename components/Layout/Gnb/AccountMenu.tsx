@@ -1,4 +1,4 @@
-import { memo, useCallback, useRef, useState } from 'react'
+import { memo, useCallback, useRef } from 'react'
 import { useMount, useUnmount } from 'react-use'
 import CopyToClipboard from 'react-copy-to-clipboard'
 import Link from 'next/link'

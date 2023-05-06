@@ -50,9 +50,8 @@ function CooldownModalPage2({ send }: CooldownModalPage2Props) {
         <div className="titleGroup">
           <h2 className="title accent">Cooldown</h2>
           <h3 className="subtitle">
-            You&apos;ll get more rewards if you stay.
-            <br />
-            Do you really want to start cooldown?
+            You&apos;ll get more rewards if you stay. Do you really want to
+            start cooldown?
           </h3>
         </div>
 

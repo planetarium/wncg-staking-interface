@@ -170,6 +170,8 @@ export const StyledStakingDashboardApr = styled(
 
         dt {
           ${textStyle('body', 3)}
+          position: relative;
+          width: 100%;
           color: rgba(var(--white-rgb), 0.6);
         }
 
@@ -207,10 +209,29 @@ export const StyledStakingDashboardHarvest = styled(motion.div)`
 
   .harvestTooltip {
     display: block;
-    width: 540px;
     padding: 28px;
     text-align: left;
     border-radius: 16px;
+    left: auto !important;
+    right: 0;
+
+    &::after {
+      display: none;
+    }
+
+    .title {
+      ${textStyle('body', 3, 700)}
+    }
+
+    @keyframes floatTop {
+      0% {
+        transform: translate3d(0, 0, 0);
+      }
+
+      100% {
+        transform: translate3d(0, 4px, 0);
+      }
+    }
   }
 
   .tooltipHeader,
@@ -248,13 +269,36 @@ export const StyledStakingDashboardHarvest = styled(motion.div)`
   }
 
   .harvestButton {
+    flex-shrink: 0;
     width: 99px;
+    margin-left: 8px;
   }
 
   ${media(
     'minLaptop',
     css`
       display: block;
+    `
+  )}
+
+  ${media(
+    'minDesktop',
+    css`
+      .harvestTooltip {
+        width: 400px;
+        left: 50% !important;
+        right: auto;
+
+        @keyframes floatTop {
+          0% {
+            transform: translate3d(-50%, 0, 0);
+          }
+
+          100% {
+            transform: translate3d(-50%, 4px, 0);
+          }
+        }
+      }
     `
   )}
 `

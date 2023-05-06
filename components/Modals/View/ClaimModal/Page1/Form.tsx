@@ -25,7 +25,7 @@ export default function ClaimModalPage1Form({
   rewardList,
   earnedRewards,
   setValue,
-  disabled,
+  disabled: _disabled,
 }: ClaimModalPage1FormProps) {
   const toFiat = useFiat()
   const { rewardTokenAddresses, tokenMap } = useStaking()
@@ -50,9 +50,14 @@ export default function ClaimModalPage1Form({
           const checked = !!rewardList[i]
           const hasAmount = bnum(amount).gt(0)
 
+          const disabled = _disabled || !hasAmount
+
           return (
             <label
-              className={clsx('rewardCard', { selected: checked })}
+              className={clsx('rewardCard', {
+                selected: checked,
+                disabled,
+              })}
               key={id}
               htmlFor={id}
             >

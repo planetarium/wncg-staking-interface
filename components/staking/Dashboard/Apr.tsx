@@ -1,9 +1,9 @@
-import { memo, useState } from 'react'
+import { memo } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { useAtomValue } from 'jotai'
+import { useAtom, useAtomValue } from 'jotai'
 import clsx from 'clsx'
 
-import { showHarvestAtom } from 'states/system'
+import { isHarvestableAtom, showHarvestTooltipAtom } from 'states/system'
 import config from 'config'
 import { EXIT_MOTION, MOTION } from 'config/motions'
 import { fadeIn } from 'config/motionVariants'
@@ -18,7 +18,7 @@ import Suspense from 'components/Suspense'
 import Harvest from './Harvest'
 
 function StakingDashboardApr() {
-  const [show, setShow] = useState(true)
+  const [show, setShow] = useAtom(showHarvestTooltipAtom)
 
   const aprs = useApr()
   const toFiat = useFiat()
@@ -31,7 +31,7 @@ function StakingDashboardApr() {
 
   const totalStakedInFiatValue = toFiat(totalStaked, stakedTokenAddress)
 
-  const showHarvest = useAtomValue(showHarvestAtom)
+  const isHarvestable = useAtomValue(isHarvestableAtom)
 
   function toggleTooltip() {
     setShow((prev) => !prev)
@@ -58,7 +58,7 @@ function StakingDashboardApr() {
         const symbol = rewardTokenSymbols[i]
         const addr = rewardTokenAddresses[i]
 
-        const showShowHarvest = addr === config.bal && !!showHarvest
+        const showShowHarvest = addr === config.bal && !!isHarvestable
 
         return (
           <div

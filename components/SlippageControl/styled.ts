@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion'
 import styled, { css } from 'styled-components'
 
-import { flexbox, inlineFlexbox, media, textStyle } from 'styles/utils'
+import { flexbox, inlineFlexbox, textStyle } from 'styles/utils'
 
 const SLIPPAGE_TOGGLE_LABEL_WIDTH = 145
 const SLIPPAGE_INPUT_PADDING = 12

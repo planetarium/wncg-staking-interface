@@ -7,7 +7,14 @@ import {
 import { motion } from 'framer-motion'
 import styled, { css } from 'styled-components'
 
-import { flexbox, gradient, media, textGradient, textStyle } from 'styles/utils'
+import {
+  flexbox,
+  gradient,
+  media,
+  noScrollbar,
+  textGradient,
+  textStyle,
+} from 'styles/utils'
 import { buttonStyle } from 'components/Button/styled'
 
 export const StyledGnbSidebar = styled.div`
@@ -20,7 +27,7 @@ export const StyledGnbSidebar = styled.div`
   overflow: hidden;
 
   ${media(
-    'minDesktop',
+    'minLaptop',
     css`
       display: none !important;
     `
@@ -55,15 +62,13 @@ export const StyledGnbSidebarContent = styled(motion.aside)`
   }
 
   > .content {
+    ${noScrollbar()}
     min-width: 100%;
     align-self: stretch;
     flex-grow: 1;
     margin-top: 16px;
     overflow-y: auto;
-
-    &::-webkit-scrollbar {
-      display: none;
-    }
+    scrollbar-width: none;
 
     .sidebarList {
       min-height: calc(100% - ${48 * 2 + 36}px);
@@ -94,7 +99,7 @@ export const StyledGnbSidebarContent = styled(motion.aside)`
 export const StyledGnbSidebarOverlay = styled(motion.div)`
   width: 100%;
   height: 100vh;
-  background-color: rgba(var(--realBlack-rgb), 0.8);
+  background-color: rgba(var(--realBlack-rgb), 0.64);
 `
 
 type StyledSidebarContentItemProps = {

@@ -4,9 +4,10 @@ import {
   MouseEvent,
   useRef,
   PropsWithChildren,
+  useMemo,
 } from 'react'
 import { useMachine } from '@xstate/react'
-import { motion } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 import clsx from 'clsx'
 
 import { EXIT_MOTION } from 'config/motions'
@@ -66,7 +67,11 @@ function TxButton(
     }
   }
 
-  const label = isLoading ? `Ready to confirm in your wallet` : children
+  const label = useMemo(() => {
+    if (!isLoading) return children
+    return isMobile ? `Ready to confirm` : `Ready to confirm in your wallet`
+  }, [children, isLoading, isMobile])
+
   const iconSize = $size === 'sm' ? 16 : 32
 
   return (
@@ -80,22 +85,30 @@ function TxButton(
       $size={$size}
     >
       <>
-        {isLoading && (
-          <motion.div className="leftIcon" {...EXIT_MOTION} variants={fadeIn}>
-            <Lottie animationData="loading" />
-          </motion.div>
-        )}
+        <AnimatePresence>
+          {isLoading && (
+            <motion.div className="leftIcon" {...EXIT_MOTION} variants={fadeIn}>
+              <Lottie animationData="loading" />
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         <span className="label">{label}</span>
 
-        {!isMobile && isLoading && (
-          <motion.div className="rightIcon" {...EXIT_MOTION} variants={fadeIn}>
-            <ConnectorIcon
-              icon={connector?.id as ConnectorIconType}
-              $size={iconSize}
-            />
-          </motion.div>
-        )}
+        <AnimatePresence>
+          {isLoading && (
+            <motion.div
+              className="rightIcon"
+              {...EXIT_MOTION}
+              variants={fadeIn}
+            >
+              <ConnectorIcon
+                icon={connector?.id as ConnectorIconType}
+                $size={iconSize}
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
       </>
     </StyledTxButton>
   )

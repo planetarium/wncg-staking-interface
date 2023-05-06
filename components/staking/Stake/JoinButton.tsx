@@ -1,10 +1,9 @@
 import type { MouseEvent } from 'react'
 
-import { useRouter } from 'next/router'
-import { useAtom } from 'jotai'
+import { useAtom, useSetAtom } from 'jotai'
 import { AnimatePresence } from 'framer-motion'
 
-import { hideJoinTooltipAtom } from 'states/ui'
+import { hideJoinTooltipAtom, showPoolAtom } from 'states/ui'
 import { EXIT_MOTION } from 'config/motions'
 import { fadeIn } from 'config/motionVariants'
 import { bnum } from 'utils/bnum'
@@ -20,17 +19,16 @@ export default function StakeJoinButton() {
   const balanceOf = useBalances()
   const { stakedTokenAddress } = useStaking()
   const { isHandheld } = useResponsive()
-  const router = useRouter()
 
   const hasLpTokenBalance = bnum(balanceOf(stakedTokenAddress)).gt(0)
 
   const [hideJoinTooltip, setHideJoinTooltip] = useAtom(hideJoinTooltipAtom)
+  const setShowPool = useSetAtom(showPoolAtom)
 
   function openModal(e: MouseEvent) {
     e.preventDefault()
     e.stopPropagation()
-
-    router.push(`/wncg?modal=open`)
+    setShowPool(true)
   }
 
   function closeTooltip() {

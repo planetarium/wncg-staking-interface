@@ -1,13 +1,14 @@
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 import { motion } from 'framer-motion'
 
 import { ModalPage } from 'components/Modals/shared'
-import { flexbox, textGradient, textStyle } from 'styles/utils'
+import { backdropFilter, flexbox, textGradient, textStyle } from 'styles/utils'
 import { buttonStyle } from 'components/Button/styled'
 import { GUTTER_TABLET } from 'styles/constants/dimensions'
 
 export const StyledPoolMobileContainer = styled(motion.aside)`
   ${flexbox()}
+  ${backdropFilter(80, 'rgba(var(--black-rgb), 0.6)', 'var(--black)')}
   position: fixed;
   bottom: 0;
   left: 0;

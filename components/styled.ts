@@ -14,17 +14,9 @@ import {
   textGradient,
   textStyle,
 } from 'styles/utils'
-import {
-  ALERT_HEIGHT,
-  GLOBAL_FOOTER_HEIGHT_LAPTOP,
-  GLOBAL_FOOTER_HEIGHT_MOBILE,
-  GUTTER_MOBILE,
-  GUTTER_TABLET,
-} from 'styles/constants/dimensions'
+import { ALERT_HEIGHT } from 'styles/constants/dimensions'
 
 import { StyledButton, buttonStyle } from './Button/styled'
-
-const LINK_BUTTON_PADDING = 4
 
 export const StyledAlert = styled(motion.aside)`
   ${flexbox()}
@@ -106,139 +98,6 @@ export const StyledCountUp = styled.strong`
   .symbol {
     margin-left: 0.25em;
   }
-`
-
-export const StyledGlobalFooter = styled(motion.footer)`
-  position: relative;
-  width: 100%;
-  height: ${GLOBAL_FOOTER_HEIGHT_MOBILE}px;
-  padding: 24px ${GUTTER_MOBILE}px 32px;
-
-  color: var(--gray-500);
-  background-color: rgba(var(--white-rgb), 0.05);
-
-  .env {
-    ${textStyle('body', 4)}
-    position: absolute;
-    top: 0;
-    left: 0;
-    padding: 4px;
-    color: var(--white);
-    background-color: var(--black);
-    border-radius: 4px;
-  }
-
-  .right {
-    ${flexbox()}
-    margin-top: 10px;
-  }
-
-  .title {
-    ${flexbox('between', 'start')}
-    ${textStyle('caption')}
-    color: var(--gray-300);
-
-    strong {
-      flex-shrink: 0;
-      margin-right: 8px;
-      white-space: nowrap;
-    }
-
-    span {
-      text-align: right;
-    }
-  }
-
-  .buttonGroup {
-    margin-top: ${24 - LINK_BUTTON_PADDING}px;
-  }
-
-  .linkButton {
-    ${textStyle('body', 4)}
-    display: block;
-    padding: ${LINK_BUTTON_PADDING}px 0;
-    margin-top: ${12 - LINK_BUTTON_PADDING * 2}px;
-
-    &:first-child {
-      margin-top: 0;
-    }
-
-    a {
-      text-decoration: underline;
-    }
-  }
-
-  .iconButton {
-    ${flexbox()}
-    width: 48px;
-    height: 48px;
-    margin-left: 12px;
-    color: var(--gray-300);
-    border-radius: 50%;
-
-    &:first-child {
-      margin-left: 0;
-    }
-  }
-
-  ${media(
-    'minTablet',
-    css`
-      padding: 32px;
-    `
-  )}
-
-  ${media(
-    'minLaptop',
-    css`
-      ${flexbox('between')}
-      width: 100%;
-      height: ${GLOBAL_FOOTER_HEIGHT_LAPTOP}px;
-      padding: 0 ${GUTTER_TABLET}px;
-
-      .left,
-      .right {
-        ${flexbox('start')}
-      }
-
-      .right {
-        margin-top: 0;
-      }
-
-      .title {
-        ${textStyle('body', 4)}
-      }
-
-      .buttonGroup {
-        ${flexbox('start')}
-        margin-top: 0;
-      }
-
-      .linkButton {
-        margin-top: 0;
-        margin-left: 32px;
-      }
-    `
-  )}
-
-  ${media(
-    'minTablet',
-    css`
-      .title {
-        ${textStyle('body', 4)}
-      }
-    `
-  )}
-
-  ${media(
-    'minDesktop',
-    css`
-      .container {
-        padding-right: 0;
-        padding-left: 0;
-      }
-    `
-  )}
 `
 
 export const StyledHighPriceImpact = styled(motion.div)`
@@ -431,30 +290,28 @@ export const StyledRektPriceImpact = styled(motion.aside)`
   )}
 `
 
-export const StyledSkeleton = styled(motion.span)`
+export const StyledSkeleton = styled(motion.div)<{ $type: 'light' | 'dark' }>`
   ${flexbox('start')}
-  overflow: hidden;
-  background-color: var(--realBlack-rgb);
+  flex-shrink: 0;
 
-  .gradient {
+  span {
     display: block;
-    width: 200%;
-    height: 100%;
-    background-image: linear-gradient(
-      90deg,
-      rgba(33, 35, 34, 0.1) 0%,
-      rgba(33, 35, 34, 0.5) 100%
-    );
-    animation: move 1s infinite;
+    width: 100%;
+    animation: skeletonLoading 2s ease-in-out infinite;
+    background-size: 200% 200%;
+    background-image: ${({ $type }) =>
+      $type === 'light'
+        ? `linear-gradient(90deg, rgba(234, 240, 247, 0.4) 0%, #dce4ed 50%, rgba(234, 240, 247, 0.4) 100%)`
+        : `linear-gradient(90deg, rgba(33, 35, 34, 0.1) 0%, rgba(33, 35, 34, 0.5) 100%)`};
   }
 
-  @keyframes move {
-    from {
-      transform: translate3d(0, 0, 0);
+  @keyframes skeletonLoading {
+    0% {
+      background-position: 0% 51%;
     }
 
-    to {
-      transform: translate3d(100%, 0, 0);
+    100% {
+      background-position: -200% 0;
     }
   }
 `
@@ -754,21 +611,21 @@ export const StyledTooltip = styled.p<{
 
   @keyframes floatTop {
     0% {
-      transform: translate(-50%, 0px);
+      transform: translateY(0);
     }
 
     100% {
-      transform: translate(-50%, 4px);
+      transform: translateY(4px);
     }
   }
 
   @keyframes floatBottom {
     0% {
-      transform: translate(-50%, 0px);
+      transform: translateY(0);
     }
 
     100% {
-      transform: translate(-50%, -4px);
+      transform: translateY(-4px);
     }
   }
 `

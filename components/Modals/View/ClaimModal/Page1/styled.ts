@@ -86,6 +86,10 @@ export const StyledClaimModalPage1Form = styled.form`
       margin-top: 0;
     }
 
+    &.disabled {
+      opacity: 0.5 !important;
+    }
+
     .iconContainer {
       ${flexbox()}
       position: absolute;
@@ -139,6 +143,10 @@ export const StyledClaimModalPage1Form = styled.form`
       width: 100%;
       height: 100%;
       opacity: 0;
+
+      &:disabled {
+        cursor: not-allowed;
+      }
     }
   }
 

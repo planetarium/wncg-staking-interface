@@ -5,6 +5,8 @@ import { useFetchUserData } from 'hooks/queries'
 
 import { StyledRevenueModal } from './styled'
 import { CloseButton } from 'components/Modals/shared'
+import Suspense from 'components/Suspense'
+import ExpectedRevenuePlaceholder from 'components/ExpectedRevenue/Placeholder'
 
 const ExpectedRevenue = dynamic(() => import('components/ExpectedRevenue'), {
   ssr: false,
@@ -32,7 +34,9 @@ function RevenueModal() {
             suggested for the ease of understanding, and are not guaranteed.
           </p>
 
-          <ExpectedRevenue amount={stakedTokenBalance} />
+          <Suspense fallback={<ExpectedRevenuePlaceholder />}>
+            <ExpectedRevenue amount={stakedTokenBalance} />
+          </Suspense>
         </div>
       </div>
     </StyledRevenueModal>

@@ -7,16 +7,15 @@ import {
 } from 'react-hook-form'
 
 import { LiquidityFieldType } from 'config/constants'
-import { ExitFormFields } from '../../../../../../hooks/useExitForm'
+import { bnum } from 'utils/bnum'
+import { useBalances, useResponsive, useStaking } from 'hooks'
+import { ExitFormFields } from 'hooks/useExitForm'
 
 import { StyledExitModalPage1Step2 } from './styled'
-import CountUp from 'components/CountUp'
+import NumberFormat from 'components/NumberFormat'
 import { Control } from 'components/Form'
 import ButtonGroup from './ButtonGroup'
 import PropAmounts from './PropAmounts'
-import NumberFormat from 'components/NumberFormat'
-import { bnum } from 'utils/bnum'
-import { useBalances, useResponsive, useStaking } from 'hooks'
 
 const rules = {
   required: true,

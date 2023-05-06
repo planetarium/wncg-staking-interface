@@ -1,7 +1,7 @@
 import { memo } from 'react'
 import { useAtomValue } from 'jotai'
 
-import { showHarvestAtom } from 'states/system'
+import { isHarvestableAtom } from 'states/system'
 import config from 'config'
 import { ModalType } from 'config/constants'
 import { MOTION } from 'config/motions'
@@ -28,7 +28,7 @@ function ClaimableRewards() {
   const { earnedRewards = [] } = data ?? {}
   const hasRewards = earnedRewards.some((r) => bnum(r).gt(0))
 
-  const showHarvest = useAtomValue(showHarvestAtom)
+  const isHarvestable = useAtomValue(isHarvestableAtom)
 
   function openClaim() {
     addModal({
@@ -44,7 +44,7 @@ function ClaimableRewards() {
         const { symbol } = tokenMap[addr]
         const hasAmount = bnum(amount).gt(0)
 
-        const showEarmarkTooltip = showHarvest && addr === config.bal
+        const showEarmarkTooltip = isHarvestable && addr === config.bal
 
         return (
           <div className="reward" key={`gnb:claimableRewards:${addr}`}>

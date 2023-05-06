@@ -1,7 +1,9 @@
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
+
+import { flexbox, media, textStyle } from 'styles/utils'
 
 import { StyledModalApprovePage } from '../../shared/styled'
-import { textStyle } from 'styles/utils'
+import { CompletePage } from 'components/Modals/shared'
 
 export const StyledApproveModalPage1 = styled(StyledModalApprovePage)`
   .guide {
@@ -49,4 +51,32 @@ export const StyledApproveModalPage1 = styled(StyledModalApprovePage)`
     padding-left: 16px;
     list-style: disc;
   }
+`
+
+export const StyledApprovalModalPage2 = styled(CompletePage)`
+  .tokenSymbol {
+    ${flexbox()}
+    ${textStyle('body', 3, 700)}
+    height: 36px;
+    padding: 0 12px;
+    margin-bottom: 8px;
+    border-radius: 4px;
+    background-color: rgba(var(--white-rgb), 0.08);
+
+    > .tokenIcon,
+    > .tokenIconGroup {
+      margin-right: 8px;
+    }
+  }
+
+  ${media(
+    'minSmLaptop',
+    css`
+      .modalHeader {
+        + .modalFooter {
+          margin-top: 48px !important;
+        }
+      }
+    `
+  )}
 `

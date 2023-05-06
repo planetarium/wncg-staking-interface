@@ -27,7 +27,6 @@ function UnstakeModal() {
     stakedTokenBalance: _stakedTokenBalance,
   } = useFormReturns
 
-  const hash = tx.hash
   const unstakeAmount = tx.unstakeAmount ?? _unstakeAmount
   const stakedTokenBalance = tx.stakedTokenBalance ?? _stakedTokenBalance
 

@@ -1,7 +1,6 @@
 import { memo, useMemo } from 'react'
 
 import { bnum } from 'utils/bnum'
-import { getTokenSymbol } from 'utils/token'
 import { useFiat, useStaking } from 'hooks'
 
 import { StyledExitModalPage1Step2PropAmounts } from './styled'
@@ -18,7 +17,7 @@ function ExitModalPage1Step2PropAmounts({
   exitAmounts,
 }: ExitModalPage1Step2PropAmountsProps) {
   const toFiat = useFiat()
-  const { poolTokenAddresses, poolTokenWeights } = useStaking()
+  const { poolTokenAddresses, poolTokenWeights, tokenMap } = useStaking()
 
   const exitAmountsInFiatValue = useMemo(
     () => exitAmounts.map((amt, i) => toFiat(amt, assets[i])),
@@ -34,7 +33,7 @@ function ExitModalPage1Step2PropAmounts({
           {exitAmounts.map((amt, i) => {
             const address = poolTokenAddresses[i]
             const weight = bnum(poolTokenWeights[i]).times(100).toNumber()
-            const symbol = getTokenSymbol(address)
+            const { symbol } = tokenMap[address]
 
             if (!address || !weight) return null
 

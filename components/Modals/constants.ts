@@ -25,12 +25,10 @@ export const modalDesktopVariants = {
 
 export const modalMobileVariants = {
   initial: {
-    opacity: 0.5,
     y: '100%',
   },
-  animate: { opacity: 1, y: 0 },
+  animate: { y: 0 },
   exit: {
-    opacity: 0.5,
     y: '100%',
   },
 }

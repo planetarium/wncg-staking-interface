@@ -1,9 +1,12 @@
 import { MouseEvent, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 
+import { ModalType } from 'config/constants'
 import { EXIT_MOTION } from 'config/motions'
 import { slideInDown } from 'config/motionVariants'
+import { bnum } from 'utils/bnum'
 import { useFiat, useModal, useStaking } from 'hooks'
+import { useFetchUserData } from 'hooks/queries'
 
 import { StyledSidebarRewards } from './styled'
 import Button from 'components/Button'
@@ -11,9 +14,6 @@ import CountUp from 'components/CountUp'
 import Icon from 'components/Icon'
 import NumberFormat from 'components/NumberFormat'
 import TokenIcon from 'components/TokenIcon'
-import { bnum } from 'utils/bnum'
-import { useFetchUserData } from 'hooks/queries'
-import { ModalType } from 'config/constants'
 
 type SidebarRewardsProps = {
   closeSidebar(e: MouseEvent): void
@@ -24,8 +24,7 @@ export default function SidebarRewards({ closeSidebar }: SidebarRewardsProps) {
 
   const toFiat = useFiat()
   const { addModal } = useModal()
-  const { rewardTokenAddress, rewardTokenAddresses, tokenMap } = useStaking()
-  const { symbol: rewardTokenSymbol } = tokenMap[rewardTokenAddress]
+  const { rewardTokenAddresses, tokenMap } = useStaking()
 
   const { earnedRewards = [] } = useFetchUserData().data ?? {}
   const earnedTokenRewardsFiatValue = earnedRewards
@@ -70,7 +69,6 @@ export default function SidebarRewards({ closeSidebar }: SidebarRewardsProps) {
                 const address = rewardTokenAddresses[i]
                 const { symbol } = tokenMap[address]
                 const fiatValue = toFiat(reward, address)
-                const hasClaimableRewards = bnum(reward).gt(0)
 
                 return (
                   <div

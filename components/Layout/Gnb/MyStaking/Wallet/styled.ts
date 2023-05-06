@@ -140,7 +140,7 @@ export const StyledWalletRewards = styled(motion.div)<{ $show: boolean }>`
   }
 
   .rewardItem {
-    ${flexbox('between')}
+    ${flexbox('between', 'start')}
     ${textStyle('body', 3)}
     flex-direction: row-reverse;
     margin-top: 8px;
@@ -160,10 +160,12 @@ export const StyledWalletRewards = styled(motion.div)<{ $show: boolean }>`
     dd {
       ${flexbox('start')}
       flex-grow: 1;
+      flex-wrap: wrap;
       text-align: left;
 
       .countUp {
         font-weight: 700;
+        margin-right: 4px;
       }
 
       .symbol {
@@ -174,7 +176,6 @@ export const StyledWalletRewards = styled(motion.div)<{ $show: boolean }>`
 
       .parenthesis {
         ${inlineFlexbox('start')}
-        margin-left: 4px;
       }
 
       .number {

@@ -1,16 +1,14 @@
 import {
   fetchSigner,
-  getContract,
-  getProvider,
-  readContracts,
   ReadContractsConfig,
   ReadContractsResult,
 } from '@wagmi/core'
+import { nanoid } from 'nanoid'
 import { Contract, providers } from 'ethers'
 import { Abi } from 'abitype'
+
 import config from 'config'
-import { Multicall3Abi, StakingAbi } from 'config/abi'
-import { nanoid } from 'nanoid'
+import { Multicall3Abi } from 'config/abi'
 
 class ReadContractsPool<
   TAbi extends Abi | readonly unknown[],
@@ -78,13 +76,11 @@ class ReadContractsPool<
     const signerOrProvider =
       this.currentChainId !== config.chainId ? provider : signer ?? provider
 
-    return new Contract(config.multicallContract, Multicall3Abi, provider)
-
-    // return getContract({
-    //   address: config.multicallContract,
-    //   abi: Multicall3Abi,
-    //   signerOrProvider,
-    // })
+    return new Contract(
+      config.multicallContract,
+      Multicall3Abi,
+      signerOrProvider
+    )
   }
 
   private parse(contracts: any[], results: any[]) {

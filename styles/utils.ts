@@ -279,6 +279,18 @@ export function scrollbarX(height = 6, padding = 10) {
   `
 }
 
+export function noScrollbar() {
+  return css`
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+      scrollbar-width: none;
+    }
+  `
+}
+
 // Text gradient
 export function textGradient(type: 1 | 2 | 3 | 4 | 5 | false) {
   if (!type) {
@@ -313,13 +325,23 @@ export function onArrowHover() {
   `
 }
 
-export function backdropFilter(blur: number, opacity: number) {
+export function backdropFilter(
+  blur: number,
+  backdropColor: string,
+  defaultColor = 'var(--black)'
+) {
   return css`
-    background-color: rgba(0, 0, 0, ${opacity});
-    backdrop-filter: blur(${blur}px);
+    @supports (
+      (-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))
+    ) {
+      background-color: ${backdropColor};
+      backdrop-filter: blur(${blur}px);
+    }
 
-    &::before {
-      content: '';
+    @supports not (
+      (-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))
+    ) {
+      background-color: ${defaultColor};
     }
   `
 }

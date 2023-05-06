@@ -22,6 +22,7 @@ export type CryptoIconType =
   | 'cake'
   | 'busd'
   | 'usdt'
+  | 'ncg'
 
 type CryptoIconProps = {
   ariaLabel?: string

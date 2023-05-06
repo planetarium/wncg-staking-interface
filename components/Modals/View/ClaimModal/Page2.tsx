@@ -61,7 +61,7 @@ export default function ClaimModalPage2({
           <dl className="detailList">
             {rewardList.map((check, i) => {
               if (!check) return null
-              const amt = earnedRewards[i]
+              const amt = rewards[i]
 
               const address = rewardTokenAddresses[i]
               const { symbol } = tokenMap[address]

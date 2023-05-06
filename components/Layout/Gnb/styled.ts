@@ -38,6 +38,9 @@ export const StyledGnb = styled.header`
   }
 
   .logo {
+    width: 132px;
+    height: 48px;
+
     a {
       ${flexbox()}
       font-family: ${fontFamily.display};
@@ -63,6 +66,11 @@ export const StyledGnb = styled.header`
       height: ${GNB_HEIGHT_TABLET}px;
       padding-right: ${GUTTER_TABLET / 2}px;
       padding-left: ${GUTTER_TABLET - 20}px;
+
+      .logo {
+        width: 155px;
+        height: 48px;
+      }
     `
   )}
 
@@ -70,6 +78,11 @@ export const StyledGnb = styled.header`
     'minLaptop',
     css`
       padding: 0 16px;
+
+      .logo {
+        width: 196px;
+        height: 52px;
+      }
     `
   )}
 
@@ -79,22 +92,48 @@ export const StyledGnb = styled.header`
       height: ${GNB_HEIGHT_DESKTOP}px;
 
       .logo {
-        svg {
-          width: 150px;
-          height: 44px;
-        }
+        width: 196px;
+        height: 56px;
       }
     `
   )}
 `
 
 export const StyledRootGnb = styled(StyledGnb)`
+  padding: 0 20px;
+
   .logo {
+    width: 180px;
+    height: 32px;
+
     a {
+      ${flexbox('start')}
       ${textStyle('body', 1, 700)}
       text-transform: uppercase;
     }
   }
+
+  ${media(
+    'minTablet',
+    css`
+      padding: 0 16px;
+
+      .logo {
+        width: 249px;
+        height: 48px;
+      }
+    `
+  )}
+
+  ${media(
+    'minLaptop',
+    css`
+      .logo {
+        width: 288px;
+        height: 56px;
+      }
+    `
+  )}
 `
 
 export const StyledGnbAccountMenu = styled(motion.aside)`

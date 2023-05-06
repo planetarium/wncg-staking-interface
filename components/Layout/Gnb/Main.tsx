@@ -1,4 +1,4 @@
-import { MouseEvent, useState } from 'react'
+import { MouseEvent, useMemo, useState } from 'react'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { AnimatePresence } from 'framer-motion'
@@ -6,7 +6,7 @@ import { AnimatePresence } from 'framer-motion'
 import { useAuth, useResponsive } from 'hooks'
 
 import { StyledGnb } from './styled'
-import CryptoIcon from 'components/CryptoIcon'
+import Image from 'components/Image'
 import Suspense from 'components/Suspense'
 import AccountMenu from './AccountMenu'
 import ConnectButton from './ConnectButton'
@@ -25,8 +25,12 @@ export default function MainGnb() {
   const [showSidebar, setShowSidebar] = useState(false)
 
   const { isConnected } = useAuth()
+  const { bp, isBrowser } = useResponsive()
 
-  const { isBrowser } = useResponsive()
+  const logoSrc = useMemo(() => {
+    const breakpoint = bp === 'smLaptop' ? 'laptop' : bp
+    return `/logo-staking-${breakpoint}.png`
+  }, [bp])
 
   function openSidebar(e: MouseEvent) {
     e.stopPropagation()
@@ -53,7 +57,7 @@ export default function MainGnb() {
       <div className="left">
         <h1 className="logo">
           <Link href="/">
-            <CryptoIcon icon="appLogo" />
+            <Image src={logoSrc} alt="WNCG Staking" />
           </Link>
         </h1>
 
@@ -84,7 +88,11 @@ export default function MainGnb() {
         <MenuButton open={openSidebar} />
 
         <AnimatePresence>
-          {showSidebar && <Sidebar closeSidebar={closeSidebar} />}
+          {showSidebar && (
+            <Suspense>
+              <Sidebar closeSidebar={closeSidebar} />
+            </Suspense>
+          )}
         </AnimatePresence>
       </div>
     </StyledGnb>

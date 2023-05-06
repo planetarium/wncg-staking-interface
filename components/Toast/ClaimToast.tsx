@@ -7,7 +7,6 @@ import { useTransaction } from 'wagmi'
 
 import { claimTxAtom } from 'states/tx'
 import config from 'config'
-import { bnum } from 'utils/bnum'
 import { formatUnits } from 'utils/formatUnits'
 import { parseTransferLogs } from 'utils/parseTransferLogs'
 import { txUrlFor } from 'utils/txUrlFor'
@@ -83,7 +82,7 @@ export default function ClaimToast({
         <dl className="detailList">
           {rewardList.map((check, i) => {
             if (!check) return null
-            const amt = earnedRewards[i]
+            const amt = amounts[i]
 
             const address = rewardTokenAddresses[i]
             const { symbol } = tokenMap[address]

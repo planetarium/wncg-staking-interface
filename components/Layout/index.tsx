@@ -5,8 +5,6 @@ import { useRouter } from 'next/router'
 import { useMediaQuery, useResponsive } from 'hooks'
 
 import { StyledLayout, StyledMain } from './styled'
-
-import Modals from 'components/Modals'
 import Code from 'components/Code'
 import GlobalHooks from 'components/GlobalHooks'
 import Suspense from 'components/Suspense'
@@ -17,6 +15,10 @@ const Alerts = dynamic(() => import('./Alerts'), {
 })
 
 const Pool = dynamic(() => import('components/Pool'), {
+  ssr: false,
+})
+
+const Modals = dynamic(() => import('components/Modals'), {
   ssr: false,
 })
 
@@ -36,26 +38,28 @@ function Layout({ children }: PropsWithChildren) {
   }
 
   return (
-    <StyledLayout layoutRoot $root={isRootPage}>
-      <Alerts />
+    <>
+      <StyledLayout layoutRoot $root={isRootPage}>
+        <Alerts />
 
-      <Gnb />
+        <Gnb />
 
-      <Code data={bp} top={0} left={0} maxWidth={100} />
+        <Code data={bp} top={0} left={0} maxWidth={100} />
 
-      <StyledMain ref={mainRef} layout>
-        {children}
-      </StyledMain>
+        <StyledMain ref={mainRef} layout>
+          {children}
+        </StyledMain>
 
-      {!isRootPage && (
-        <Suspense>
-          <Pool />
-        </Suspense>
-      )}
+        {!isRootPage && (
+          <Suspense>
+            <Pool />
+          </Suspense>
+        )}
 
-      <GlobalHooks />
+        <GlobalHooks />
+      </StyledLayout>
       {!isRootPage && <Modals />}
-    </StyledLayout>
+    </>
   )
 }
 

@@ -6,6 +6,7 @@ import { useFetchUserData } from 'hooks/queries'
 
 import { StyledUnstakeModalPage1 } from './styled'
 import Button from 'components/Button'
+import ExpectedRevenuePlaceholder from 'components/ExpectedRevenue/Placeholder'
 import { CloseButton } from 'components/Modals/shared'
 import Suspense from 'components/Suspense'
 
@@ -32,9 +33,8 @@ function UnstakeModalPage1({ send }: UnstakeModalPage1Props) {
         <div className="titleGroup">
           <h2 className="title accent">Estimated Earnings</h2>
           <h3 className="subtitle">
-            You&apos;ll get more rewards if you stay.
-            <br />
-            Do you really want to withdraw?
+            You&apos;ll get more rewards if you stay. Do you really want to
+            withdraw?
           </h3>
         </div>
 
@@ -43,7 +43,7 @@ function UnstakeModalPage1({ send }: UnstakeModalPage1Props) {
 
       <div className="container">
         <div className="modalContent">
-          <Suspense>
+          <Suspense fallback={<ExpectedRevenuePlaceholder />}>
             <ExpectedRevenue amount={stakedTokenBalance} />
           </Suspense>
         </div>

@@ -2,17 +2,17 @@ import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 
 import { ModalType } from 'config/constants'
+import { EXIT_MOTION } from 'config/motions'
+import { fadeIn } from 'config/motionVariants'
+import { bnum } from 'utils/bnum'
 import { useFiat, useModal, useStaking } from 'hooks'
 import { useFetchUserData } from 'hooks/queries'
 
 import { StyledWalletRewards } from './styled'
 import Button from 'components/Button'
 import CountUp from 'components/CountUp'
-import NumberFormat from 'components/NumberFormat'
-import { EXIT_MOTION } from 'config/motions'
-import { fadeIn } from 'config/motionVariants'
 import Icon from 'components/Icon'
-import { bnum } from 'utils/bnum'
+import NumberFormat from 'components/NumberFormat'
 
 type WalletRewardsProps = {
   closeWallet(): void
@@ -66,7 +66,7 @@ export default function WalletRewards({ closeWallet }: WalletRewardsProps) {
                     <CountUp value={amount} plus={showFiatValue} />
                     {showFiatValue && (
                       <span className="parenthesis">
-                        <NumberFormat value={fiatValue} type="fiat" />
+                        <NumberFormat value={fiatValue} type="fiat" abbr />
                       </span>
                     )}
                   </dd>

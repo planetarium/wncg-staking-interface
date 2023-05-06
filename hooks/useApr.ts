@@ -1,10 +1,10 @@
-import { calcApr } from 'utils/calcApr'
-import { useFiat } from './useFiat'
-import { useRewards } from './useRewards'
-import { useStaking } from './useStaking'
-import { useFetchStaking } from './queries'
 import { useAtomValue } from 'jotai'
 import { priceMapAtom } from 'states/system'
+
+import { calcApr } from 'utils/calcApr'
+import { useFiat } from './useFiat'
+import { useStaking } from './useStaking'
+import { useFetchStaking } from './queries'
 
 export function useApr() {
   const toFiat = useFiat()

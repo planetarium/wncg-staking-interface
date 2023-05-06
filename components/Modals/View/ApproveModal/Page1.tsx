@@ -1,10 +1,10 @@
 import { capitalize } from 'utils/capitalize'
-import { useAuth, useConnect } from 'hooks'
+import { useConnect } from 'hooks'
 
 import { StyledApproveModalPage1 } from './styled'
+import ConnectorIcon from 'components/ConnectorIcon'
 import { CloseButton, PendingNotice } from 'components/Modals/shared'
 import TxButton from 'components/TxButton'
-import ConnectorIcon from 'components/ConnectorIcon'
 
 type ApproveModalPage1Props = {
   address: Hash

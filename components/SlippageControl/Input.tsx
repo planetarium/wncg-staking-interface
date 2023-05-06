@@ -17,7 +17,6 @@ export default function SlippageControlInput({
   rules,
   control,
   currentValue,
-  onIsAllowed,
 }: SlippageControlInputProps) {
   const selected =
     isCustomValue &&
@@ -45,7 +44,6 @@ export default function SlippageControlInput({
               max={MAX_SLIPPAGE}
               valueIsNumericString
               allowNegative={false}
-              isAllowed={onIsAllowed}
             />
             <ErrorMessage
               disabled={false}
@@ -57,7 +55,7 @@ export default function SlippageControlInput({
         </StyledSlippageControlInput>
       )
     },
-    [onIsAllowed, selected]
+    [selected]
   )
 
   return (

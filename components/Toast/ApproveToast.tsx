@@ -5,7 +5,6 @@ import { constants } from 'ethers'
 import Link from 'next/link'
 import { useSetAtom } from 'jotai'
 import { RESET } from 'jotai/utils'
-import clsx from 'clsx'
 
 import { approveTxAtom } from 'states/tx'
 import config from 'config'
@@ -13,14 +12,13 @@ import { formatUnits } from 'utils/formatUnits'
 import { bnum } from 'utils/bnum'
 import { parseLog } from 'utils/parseLog'
 import { txUrlFor } from 'utils/txUrlFor'
-import { useStaking } from 'hooks'
 import { useWatch } from './useWatch'
 
 import { StyledToast } from './styled'
 import Icon from 'components/Icon'
-import ToastStatus from './Status'
-import TokenIcon from 'components/TokenIcon'
 import NumberFormat from 'components/NumberFormat'
+import TokenIcon from 'components/TokenIcon'
+import ToastStatus from './Status'
 
 type ToastProps = {
   hash: Hash
@@ -38,8 +36,6 @@ export default function ApproveToast({
   tokenDecimals,
 }: ToastProps) {
   const [allowance, setAllowance] = useState<string | null>(null)
-
-  const { stakedTokenAddress } = useStaking()
 
   const setTx = useSetAtom(approveTxAtom)
 

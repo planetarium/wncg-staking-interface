@@ -1,61 +1,36 @@
 import config from 'config'
-import { useStaking } from 'hooks'
 
 import { StyledMainCard } from './styled'
 import Button from 'components/Button'
+import CryptoIcon from 'components/CryptoIcon'
 import Icon from 'components/Icon'
 import Image from 'components/Image'
-import TokenIcon from 'components/TokenIcon'
 
-export default function MainWncgCard() {
-  const { rewardTokenAddress } = useStaking()
-
+export default function MainNcgCard() {
   return (
     <StyledMainCard>
       <header className="header">
         <h2 className="title">
-          <TokenIcon
-            className="logoIcon"
-            address={rewardTokenAddress}
-            $size={24}
-          />
-          Staking Wrapped Nine Chronicles Gold
+          <CryptoIcon className="logoIcon" icon="ncg" $size={24} />
+          Staking Nine Chronicles Gold
         </h2>
 
         <div className="mobileImage">
-          <Image className="image" src="/img-wncg-3d.png" alt="" priority />
+          <Image className="image" src="/img-ncg-3d.png" alt="" priority />
         </div>
 
         <h4 className="subtitle">
-          Provide WNCG liquidity.
+          Deposit NCGs and earn core items
           <br />
-          You can earn WNCG and BAL reward.
+          in Nine Chronicles.
         </h4>
-
-        <dl className="rewardList">
-          <div className="rewardItem">
-            <dt>
-              <TokenIcon address={rewardTokenAddress} $size={16} />
-              <strong>Wrapped NCG</strong>
-            </dt>
-            <dd>1:1 NCG backed ERC-20 token</dd>
-          </div>
-
-          <div className="rewardItem">
-            <dt>
-              <TokenIcon address={config.bal} $size={16} />
-              <strong>BAL</strong>
-            </dt>
-            <dd>Balancer Governance Token</dd>
-          </div>
-        </dl>
       </header>
 
       <div className="content">
         <ul className="linkList">
           <li className="linkItem">
             <Button href="/wncg" target="_blank" $contain>
-              WNCG staking
+              NCG staking
             </Button>
           </li>
 
@@ -85,7 +60,7 @@ export default function MainWncgCard() {
         </ul>
 
         <div className="tabletImage">
-          <Image className="image" src="/img-wncg-3d.png" alt="" priority />
+          <Image className="image" src="/img-ncg-3d.png" alt="" priority />
         </div>
       </div>
     </StyledMainCard>

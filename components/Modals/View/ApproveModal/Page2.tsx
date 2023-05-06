@@ -7,11 +7,13 @@ import { ModalType } from 'config/constants'
 import { wait } from 'utils/wait'
 import { useModal } from 'hooks'
 
+import { StyledApprovalModalPage2 } from './styled'
 import Button from 'components/Button'
-import { CompletePage } from 'components/Modals/shared'
+import TokenIcon from 'components/TokenIcon'
 
 type ApproveModalPage2Props = {
   buttonLabel: string
+  tokenAddress: Hash
   tokenSymbol: string
   nextAction: ApproveNextAction
   send(event: string): void
@@ -19,6 +21,7 @@ type ApproveModalPage2Props = {
 
 export default function ApproveModalPage2({
   buttonLabel,
+  tokenAddress,
   tokenSymbol,
   nextAction,
   send,
@@ -43,13 +46,14 @@ export default function ApproveModalPage2({
   }, [addModal, nextAction, removeModal, send, setTx, updateModal])
 
   return (
-    <CompletePage>
+    <StyledApprovalModalPage2>
       <header className="modalHeader">
-        <h2 className="title">
+        <div className="tokenSymbol">
+          <TokenIcon address={tokenAddress} $size={16} />
           {tokenSymbol}
-          <br />
-          Approval completed!
-        </h2>
+        </div>
+
+        <h2 className="title">Approval completed!</h2>
       </header>
 
       <footer className="modalFooter">
@@ -57,6 +61,6 @@ export default function ApproveModalPage2({
           {buttonLabel}
         </Button>
       </footer>
-    </CompletePage>
+    </StyledApprovalModalPage2>
   )
 }

@@ -1,24 +1,26 @@
 import styled, { css } from 'styled-components'
 
-import { StyledButton } from 'components/Button/styled'
 import { flexbox, media, posCenterY } from 'styles/utils'
+
+import { StyledButton } from 'components/Button/styled'
 
 export const StyledTxButton = styled(StyledButton)`
   .leftIcon,
   .rightIcon {
     ${flexbox()}
-    position: static;
+    position: relative;
+    z-index: 1;
     width: 32px;
     height: 32px;
+    opacity: 1;
   }
 
   .leftIcon {
-    left: ${({ $size }) => ($size === 'lg' ? 24 : 16)}px;
     margin-right: 8px;
   }
 
   .rightIcon {
-    right: ${({ $size }) => ($size === 'lg' ? 24 : 16)}px;
+    margin-left: 8px;
 
     .icon {
       width: 20px;
@@ -34,6 +36,14 @@ export const StyledTxButton = styled(StyledButton)`
       .rightIcon {
         ${posCenterY()}
         margin: 0;
+      }
+
+      .leftIcon {
+        left: 16px;
+      }
+
+      .rightIcon {
+        right: 16px;
       }
     `
   )}

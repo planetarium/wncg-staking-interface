@@ -1,25 +1,47 @@
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
+import { useAuth } from './useAuth'
+import { ConnectorId } from 'config/constants'
 
 export function useImportToken() {
-  const importToken = useCallback(async (address: string) => {
-    if (typeof window === 'undefined' || !window?.ethereum) return
+  const { connector } = useAuth()
 
-    // FIXME: will going to fix it in next pr
-    // const tokenInfo = getTokenInfo(address)
-    // const options = Object.fromEntries(
-    //   Object.entries(tokenInfo).filter(([key]) => key !== 'name')
-    // )
+  const canImportToken = useMemo(() => {
+    if (typeof window === 'undefined') return false
 
-    // await window.ethereum.request({
-    //   method: 'wallet_watchAsset',
-    //   params: {
-    //     type: 'ERC20',
-    //     options,
-    //   },
-    // })
-  }, [])
+    switch (true) {
+      case window?.ethereum?.isMetaMask &&
+        connector?.id === ConnectorId.MetaMask:
+      case window?.ethereum?.isTrust &&
+        connector?.id === ConnectorId.TrustWallet:
+      case window?.ethereum?.isCoinbaseWallet &&
+        connector?.id === ConnectorId.CoinbaseWallet:
+        return true
+      default:
+        return false
+    }
+  }, [connector?.id])
+
+  const importToken = useCallback(
+    async (options: TokenInfo) => {
+      if (!canImportToken) return
+
+      try {
+        await (window.ethereum as Ethereum).request({
+          method: 'wallet_watchAsset' as any,
+          params: {
+            type: 'ERC20',
+            options,
+          } as any,
+        })
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    [canImportToken]
+  )
 
   return {
     importToken,
+    canImportToken,
   }
 }

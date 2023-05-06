@@ -1,12 +1,15 @@
 import { motion } from 'framer-motion'
 import styled, { css } from 'styled-components'
+
 import { GUTTER_TABLET } from 'styles/constants/dimensions'
 
 import {
+  backdropFilter,
   flexbox,
   gradient,
   inlineFlexbox,
   media,
+  noScrollbar,
   textStyle,
 } from 'styles/utils'
 
@@ -15,16 +18,15 @@ const POOL_BALANCES_COLLAPSE_BUTTON_HEIGHT = 50
 
 export const StyledPoolDesktop = styled(motion.section)`
   ${flexbox('start', 'start')}
+  ${backdropFilter(80, 'rgba(var(--black-rgb), 0.6)', 'var(--black)')}
   position: fixed;
   bottom: 0;
   left: 0;
   z-index: 10;
   flex-direction: column;
   width: 100%;
-  max-height: calc(100vh - 48px);
+  max-height: calc(100vh - 32px);
   overflow: hidden;
-  background-color: rgba(18, 18, 18, 0.6);
-  backdrop-filter: blur(40px);
   border-radius: 32px 32px 0 0;
 
   .utils {
@@ -50,6 +52,7 @@ export const StyledPoolDesktop = styled(motion.section)`
   }
 
   .container {
+    ${noScrollbar()}
     flex-grow: 1;
     width: 100%;
     max-width: 800px;
@@ -57,10 +60,6 @@ export const StyledPoolDesktop = styled(motion.section)`
     margin: 0 auto;
     overflow-x: hidden;
     overflow-y: auto;
-
-    &::-webkit-scrollbar {
-      display: none;
-    }
 
     .left {
       grid-area: 'content';
@@ -94,6 +93,7 @@ export const StyledPoolDesktop = styled(motion.section)`
     'minLaptop',
     css`
       .container {
+        ${noScrollbar()}
         flex-grow: 1;
         display: grid;
         grid-gap: 20px;
@@ -101,15 +101,11 @@ export const StyledPoolDesktop = styled(motion.section)`
         grid-template-columns: 880px 400px;
         grid-column-gap: 48px;
         width: 100%;
-        max-width: ${880 + 400 + 48 + 24 * 2}px;
-        padding: 80px 24px 64px !important;
+        max-width: ${880 + 400 + 48}px;
+        padding: 80px 0 64px !important;
         margin: 0 auto;
         overflow-x: hidden;
         overflow-y: auto;
-
-        &::-webkit-scrollbar {
-          display: none;
-        }
 
         .left {
           grid-area: 'content';
@@ -133,9 +129,8 @@ export const StyledPoolDesktop = styled(motion.section)`
         grid-template-columns: 880px 400px;
         grid-column-gap: 48px;
         width: 100%;
-        max-width: ${880 + 400 + 48 + 24 * 2}px;
-        padding-right: ${GUTTER_TABLET}px !important;
-        padding-left: ${GUTTER_TABLET}px !important;
+        max-width: ${880 + 400 + 48 + 48 * 2}px;
+        padding: 80px 0 64px !important;
         margin: 0 auto;
 
         .left {
@@ -407,6 +402,11 @@ export const StyledPoolInformation = styled.section`
 export const StyledPoolModalOverlay = styled(motion.div)<{
   $isSafari?: boolean
 }>`
+  ${backdropFilter(
+    64,
+    'rgba(var(--realBlack-rgb), 0.2)',
+    'rgba(var(--realBlack-rgb), 0.8)'
+  )}
   position: fixed;
   top: 0;
   left: 0;
@@ -414,13 +414,6 @@ export const StyledPoolModalOverlay = styled(motion.div)<{
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.2);
-  backdrop-filter: blur(32px);
-
-  ${({ $isSafari }) =>
-    $isSafari &&
-    css`
-      background-color: rgba(0, 0, 0, 0.8);
-    `}
 
   ${media(
     'minTablet',

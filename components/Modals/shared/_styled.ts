@@ -1,7 +1,6 @@
 import { motion } from 'framer-motion'
 import styled, { css } from 'styled-components'
 
-import { GUTTER_TABLET } from 'styles/constants/dimensions'
 import {
   backdropFilter,
   flexbox,
@@ -11,8 +10,8 @@ import {
   scrollbar,
   textStyle,
 } from 'styles/utils'
-
 import { buttonStyle } from 'components/Button/styled'
+import { GUTTER_TABLET } from 'styles/constants/dimensions'
 
 const COMPLETE_LOTTIE_SIZE = 80
 const CLOSE_BUTTON_SIZE_MOBILE = 24
@@ -24,12 +23,12 @@ export const StyledModalPage = styled(motion.div)<{ $disabled?: boolean }>`
   flex-direction: column;
   flex-grow: 1;
   width: 100%;
-  padding: 32px 24px 48px !important;
-  max-height: calc(100vh - 48px);
+  padding: 32px 24px 64px !important;
+  max-height: calc(100vh - 32px);
   margin: 0 auto;
   overflow: hidden;
   border-radius: 24px 24px 0 0;
-  box-shadow: 0px 4px 48px rgba(var(--realBlack-rgb), 0.24);
+  box-shadow: 0px 4px 48px rgba(0, 0, 0, 0.24);
 
   &::before {
     position: absolute;
@@ -161,7 +160,6 @@ export const StyledModalPage = styled(motion.div)<{ $disabled?: boolean }>`
   ${media(
     'minTablet',
     css`
-      max-height: calc(100vh - 32px);
       padding-right: ${GUTTER_TABLET}px !important;
       padding-left: ${GUTTER_TABLET}px !important;
 
@@ -498,8 +496,7 @@ export const StyledPendingNotice = styled(motion.footer)`
   left: 0;
   z-index: 1;
   width: 100%;
-  height: 36px;
-  padding: 0 24px;
+  padding: 12px 24px;
   overflow: hidden;
   background-image: ${gradient(2)};
 

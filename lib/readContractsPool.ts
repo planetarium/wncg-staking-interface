@@ -3,7 +3,6 @@ import {
   ReadContractsConfig,
   ReadContractsResult,
 } from '@wagmi/core'
-import { Contract } from 'ethers'
 import { Abi } from 'abitype'
 import { nanoid } from 'nanoid'
 
@@ -60,31 +59,6 @@ class ReadContractsPool<
         ) as ReadContractsResult<TContracts>
       }
     }
-  }
-
-  private parse(contracts: any[], results: any[]) {
-    return results.map(({ returnData, success }, i) => {
-      const { address, abi, functionName } = contracts[i]
-      const contract = new Contract(address, abi)
-
-      if (!success) {
-        return null
-      }
-
-      if (returnData === '0x') {
-        return null
-      }
-
-      try {
-        const result = contract.interface.decodeFunctionResult(
-          functionName,
-          returnData
-        )
-        return Array.isArray(result) && result.length === 1 ? result[0] : result
-      } catch (err) {
-        return null
-      }
-    })
   }
 
   private addPool(key: string, config: ReadContractsConfig<TContracts>) {

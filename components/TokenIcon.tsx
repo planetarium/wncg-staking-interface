@@ -58,7 +58,10 @@ function TokenIcon({
 
   if (token.address === stakedTokenAddress) {
     return (
-      <StyledTokenIconGroup className="tokenIconGroup" $size={$size}>
+      <StyledTokenIconGroup
+        className={clsx('tokenIconGroup', className)}
+        $size={$size}
+      >
         {poolTokenSymbols.map((symb) => {
           let icon = symb.toLowerCase()
           if (icon === 'weth') icon = 'ether'
@@ -66,7 +69,7 @@ function TokenIcon({
           return (
             <CryptoIcon
               key={`tokenIcon:${symb}:${nanoid()}`}
-              className="icon tokenIcon"
+              className="icon"
               icon={icon as CryptoIconType}
               $size={$size}
             />

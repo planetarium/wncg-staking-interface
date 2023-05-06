@@ -11,6 +11,7 @@ import {
   generateRgbVariables,
   inlineFlexbox,
   media,
+  noScrollbar,
 } from './utils'
 
 const GlobalStyle = createGlobalStyle`
@@ -39,6 +40,7 @@ const GlobalStyle = createGlobalStyle`
   }
 
   body {
+    ${noScrollbar()}
     width: 100%;
     max-width: 100vw;
     height: 100vh;
@@ -46,10 +48,6 @@ const GlobalStyle = createGlobalStyle`
     overflow-y: auto;
     font-family: ${fontFamily.text};
     transition: 100ms;
-
-    &::-webkit-scrollbar {
-      display: none;
-    }
   }
 
   h1 {
@@ -270,6 +268,7 @@ const GlobalStyle = createGlobalStyle`
       `
     )}
   }
+
 `
 
 export default GlobalStyle

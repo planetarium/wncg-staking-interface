@@ -4,7 +4,6 @@ import { RESET } from 'jotai/utils'
 import { useDisconnect as _useDisconnect } from 'wagmi'
 
 import { accountAtom, connectorAtom, statusAtom } from 'states/account'
-import { useTx } from './useTx'
 import { useUserSettings } from './useUserSettings'
 
 type UseDisconnectConfig = {
@@ -16,7 +15,6 @@ export function useDisconnect({
   onError,
   onSuccess,
 }: UseDisconnectConfig = {}) {
-  const { resetTx } = useTx()
   const resetSettings = useUserSettings()
 
   const setAccount = useSetAtom(accountAtom)
@@ -28,8 +26,6 @@ export function useDisconnect({
       setAccount(RESET)
       setConnector(RESET)
       setStatus('disconnected')
-
-      resetTx()
       resetSettings()
     },
     onError,

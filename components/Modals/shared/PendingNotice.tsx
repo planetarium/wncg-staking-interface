@@ -7,8 +7,8 @@ import { txUrlFor } from 'utils/txUrlFor'
 import { useResponsive } from 'hooks'
 
 import { StyledPendingNotice } from './styled'
-import Lottie from 'components/Lottie'
 import Icon from 'components/Icon'
+import Lottie from 'components/Lottie'
 
 type PendingNoticeProps = {
   hash?: string

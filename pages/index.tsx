@@ -4,7 +4,8 @@ import Head from 'next/head'
 import { StyledMainPage } from 'styles/pages'
 export { getStaticProps } from 'lib/getStaticProps'
 
-import MainWncgCard from 'components/main/WncgCard'
+import WncgCard from 'components/main/WncgCard'
+import NcgCard from 'components/main/NcgCard'
 
 const Home: NextPage = () => {
   return (
@@ -19,7 +20,15 @@ const Home: NextPage = () => {
 
       <StyledMainPage layout>
         <div className="container">
-          <MainWncgCard />
+          <ul className="cardList">
+            <li className="cardItem">
+              <WncgCard />
+            </li>
+
+            <li className="cardItem">
+              <NcgCard />
+            </li>
+          </ul>
         </div>
       </StyledMainPage>
     </main>

@@ -1,6 +1,6 @@
 import { memo } from 'react'
 import { UseFormWatch } from 'react-hook-form'
-import { useAtom, useSetAtom } from 'jotai'
+import { useAtom } from 'jotai'
 
 import { exitTxAtom } from 'states/tx'
 import { LiquidityFieldType } from 'config/constants'

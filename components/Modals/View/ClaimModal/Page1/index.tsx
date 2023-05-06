@@ -72,8 +72,6 @@ export default function ClaimModalPage1({
         <CloseButton />
       </header>
 
-      {JSON.stringify(rewardList)}
-
       <div className="container">
         <div className="modalContent">
           <Form

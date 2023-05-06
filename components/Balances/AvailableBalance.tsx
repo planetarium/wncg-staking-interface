@@ -2,7 +2,6 @@ import { memo, ReactNode } from 'react'
 import clsx from 'clsx'
 
 import { bnum } from 'utils/bnum'
-import { getTokenSymbol } from 'utils/token'
 import {
   useAuth,
   useBalances,
@@ -27,7 +26,8 @@ function AvailableBalance({ children, className }: AvailableBalanceProps) {
   const balancesFor = useBalances()
   const { openConnectModal } = useConnect()
   const toFiat = useFiat()
-  const { bptAddress, poolTokenAddresses, poolTokenWeights } = useStaking()
+  const { bptAddress, poolTokenAddresses, poolTokenWeights, tokenMap } =
+    useStaking()
 
   const bptBalance = balancesFor(bptAddress)
   const hasBptBalance = bnum(bptBalance).gt(0)
@@ -102,10 +102,10 @@ function AvailableBalance({ children, className }: AvailableBalanceProps) {
           </div>
 
           <dl className="balanceList">
-            {propAmounts.map((amount, i) => {
+            {propAmounts.map((amt, i) => {
               const address = poolTokenAddresses[i]
               const weight = bnum(poolTokenWeights[i]).times(100).toNumber()
-              const symbol = getTokenSymbol(address)
+              const { symbol } = tokenMap[address]
 
               if (!address || !weight) return null
 
@@ -118,11 +118,7 @@ function AvailableBalance({ children, className }: AvailableBalanceProps) {
                   </dt>
 
                   <dd>
-                    <NumberFormat
-                      className="amount"
-                      value={amount}
-                      decimals={4}
-                    />
+                    <NumberFormat className="amount" value={amt} decimals={4} />
                     <div className="fiatValue">
                       <NumberFormat
                         value={propAmountsInFiatValue[i]}

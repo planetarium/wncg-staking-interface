@@ -149,6 +149,7 @@ export default function ApproveModal({
           buttonLabel={buttonLabel}
           nextAction={nextAction}
           send={send}
+          tokenAddress={tokenAddress}
           tokenSymbol={tokenSymbol}
         />
       )}

@@ -1,5 +1,4 @@
 import { MouseEvent, useCallback, useMemo } from 'react'
-import { NumberFormatValues } from 'react-number-format'
 import {
   Control,
   RegisterOptions,
@@ -30,7 +29,6 @@ export type UseSlippageFormReturn = {
   currentValue: string
   slippageInput: string
   formState: UseFormStateReturn<SlippageControlField>
-  onIsAllowed(values: NumberFormatValues): boolean
 }
 
 export const SLIPPAGE_TOLERANCES = ['0.5', '1.0', '2.0']
@@ -70,33 +68,17 @@ export function useSlippageForm(onCloseMenu: () => void) {
         onCloseMenu()
       },
       onChange(e: ReactHookFormChangeEvent<'slippage'>) {
-        const newSlippage = Math.min(
-          bnum(e.target.value.replace('%', '')).toNumber(),
-          MAX_SLIPPAGE
-        )
+        const newSlippage = bnum(e.target.value.replace('%', '')).toString()
 
-        setValue('slippage', newSlippage.toString())
+        setValue('slippage', newSlippage)
         trigger()
 
-        if (newSlippage < MAX_SLIPPAGE) {
+        if (bnum(newSlippage).lt(MAX_SLIPPAGE)) {
           setSlippage(newSlippage.toString())
         }
       },
     }),
     [onCloseMenu, setSlippage, setValue, trigger]
-  )
-
-  const onIsAllowed = useCallback(
-    (values: NumberFormatValues) => {
-      const { value } = values
-
-      if (bnum(value).gt(MAX_SLIPPAGE)) {
-        setValue('slippage', MAX_SLIPPAGE.toString())
-        trigger()
-      }
-      return bnum(value).lte(100)
-    },
-    [setValue, trigger]
   )
 
   const reset = useCallback(() => {
@@ -124,6 +106,5 @@ export function useSlippageForm(onCloseMenu: () => void) {
     currentValue,
     slippageInput,
     formState,
-    onIsAllowed,
   }
 }

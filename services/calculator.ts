@@ -6,11 +6,11 @@ import {
 } from '@balancer-labs/sdk'
 import { WeightedMath } from '@georgeroman/balancer-v2-pools'
 
-import { bnum } from 'utils/bnum'
-import { getTokenInfo } from 'utils/token'
 import config from 'config'
-import { parseUnits } from 'utils/parseUnits'
+import { bnum } from 'utils/bnum'
 import { formatUnits } from 'utils/formatUnits'
+import { parseUnits } from 'utils/parseUnits'
+import { getTokenInfo } from 'utils/token'
 
 const POOL_DECIMALS = 18
 

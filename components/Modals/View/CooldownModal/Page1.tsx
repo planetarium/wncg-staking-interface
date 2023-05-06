@@ -6,7 +6,9 @@ import { useFetchUserData } from 'hooks/queries'
 
 import { StyledCooldownModalPage1 } from './styled'
 import Button from 'components/Button'
+import ExpectedRevenuePlaceholder from 'components/ExpectedRevenue/Placeholder'
 import { CloseButton } from 'components/Modals/shared'
+import Suspense from 'components/Suspense'
 
 const ExpectedRevenue = dynamic(() => import('components/ExpectedRevenue'), {
   ssr: false,
@@ -41,7 +43,9 @@ function CooldownModalPage1({ send }: CooldownModalPage1Props) {
 
       <div className="container">
         <div className="modalContent">
-          <ExpectedRevenue amount={stakedTokenBalance} />
+          <Suspense fallback={<ExpectedRevenuePlaceholder />}>
+            <ExpectedRevenue amount={stakedTokenBalance} />
+          </Suspense>
         </div>
       </div>
 

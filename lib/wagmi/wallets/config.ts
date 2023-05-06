@@ -1,4 +1,4 @@
-import { isFirefox } from 'react-device-detect'
+import { isAndroid, isFirefox, isIOS, isMobile } from 'react-device-detect'
 
 import config from 'config'
 import { ConnectorId } from 'config/constants'
@@ -13,10 +13,12 @@ export const metamaskWalletConfig = {
     Boolean(window.ethereum?.isMetaMask) &&
     metaMaskConnector.ready,
   connectorId: ConnectorId.MetaMask,
-
   deepLink: `https://metamask.app.link/dapp/${config.siteUrl}`,
-  downloadLink:
-    'https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn',
+  downloadLink: isIOS
+    ? 'https://apps.apple.com/us/app/metamask/id1438144202'
+    : isAndroid
+    ? 'https://play.google.com/store/apps/details?id=io.metamask'
+    : 'https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn',
 }
 
 export const coinbaseWalletConfig = {
@@ -32,7 +34,7 @@ export const walletConnectWalletConfig = {
 }
 
 export const binanceWalletConfig = {
-  id: 'binance',
+  id: 'bsc',
   title: 'Binance Wallet',
   installed:
     typeof window !== 'undefined' && Boolean((window as any).BinanceChain),
@@ -40,9 +42,14 @@ export const binanceWalletConfig = {
   guide: {
     desktop: 'https://www.bnbchain.org/en/binance-wallet',
   },
-  downloadLink: isFirefox
-    ? 'https://addons.mozilla.org/en-US/firefox/addon/binance-chain/?src=search'
-    : 'https://chrome.google.com/webstore/detail/binance-wallet/fhbohimaelbohpjbbldcngcnapndodjp',
+  downloadLink:
+    isMobile && isIOS
+      ? 'https://apps.apple.com/us/app/binance-buy-bitcoin-crypto/id1436799971'
+      : isMobile && isAndroid
+      ? 'https://play.google.com/store/apps/details?id=com.binance.dev'
+      : isFirefox
+      ? 'https://addons.mozilla.org/en-US/firefox/addon/binance-chain/?src=search'
+      : 'https://chrome.google.com/webstore/detail/binance-wallet/fhbohimaelbohpjbbldcngcnapndodjp',
 }
 
 export const trustWalletConfig = {
@@ -50,7 +57,11 @@ export const trustWalletConfig = {
   title: 'Trust Wallet',
   connectorId: ConnectorId.TrustWallet,
   installed: !!getTrustWalletProvider(),
-  deepLink: `https://link.trustwallet.com/open_url?coin_id=637&url=${config.siteUrl}`,
+  deepLink: 'https://link.trustwallet.com/open_url?coin_id=637&url=<site_url>',
   downloadLink:
-    'https://chrome.google.com/webstore/detail/trust-wallet/egjidjbpglichdcondbcbdnbeeppgdph/related',
+    isMobile && isIOS
+      ? 'https://apps.apple.com/us/app/trust-crypto-bitcoin-wallet/id1288339409'
+      : isMobile && isAndroid
+      ? 'https://play.google.com/store/apps/details?id=com.wallet.crypto.trustapp'
+      : 'https://chrome.google.com/webstore/detail/trust-wallet/egjidjbpglichdcondbcbdnbeeppgdph/related',
 }

@@ -1,6 +1,6 @@
-import { useRouter } from 'next/router'
+import { useAtom } from 'jotai'
 
-import { getQueryString } from 'utils/getQueryString'
+import { showPoolAtom } from 'states/ui'
 import { useResponsive } from 'hooks'
 
 import PoolDesktop from './Desktop'
@@ -8,18 +8,16 @@ import PoolMobile from './Mobile'
 
 export default function Pool() {
   const { isMobile } = useResponsive()
-  const router = useRouter()
 
-  const showPoolPage =
-    router.pathname === '/wncg' && getQueryString(router.query.modal) === 'open'
+  const [showPool, setShowPool] = useAtom(showPoolAtom)
 
   function closePool() {
-    router.push('/wncg')
+    setShowPool(false)
   }
 
   if (isMobile) {
-    return <PoolMobile show={showPoolPage} closePool={closePool} />
+    return <PoolMobile show={showPool} closePool={closePool} />
   }
 
-  return <PoolDesktop show={showPoolPage} closePool={closePool} />
+  return <PoolDesktop show={showPool} closePool={closePool} />
 }
