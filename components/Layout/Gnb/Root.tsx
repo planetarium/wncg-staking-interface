@@ -20,7 +20,7 @@ export default function RootGnb() {
     <StyledRootGnb>
       <h1 className="logo">
         <Link href="/" onClick={reload}>
-          <Image src={logoSrc} alt="" />
+          <Image src={logoSrc} alt="Nine chronicles gold staking" />
         </Link>
       </h1>
     </StyledRootGnb>

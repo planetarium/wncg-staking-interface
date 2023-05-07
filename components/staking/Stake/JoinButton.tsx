@@ -38,7 +38,9 @@ export default function StakeJoinButton() {
   if (isConnected && !hasLpTokenBalance && !isHandheld) {
     return (
       <StyledStakeJoinButton className="tooltipGroup">
-        <Button onClick={openModal}>Join pool & Get LP tokens</Button>
+        <Button className="joinButton" onClick={openModal}>
+          Join pool & Get LP tokens
+        </Button>
 
         <AnimatePresence>
           {!hideJoinTooltip && (

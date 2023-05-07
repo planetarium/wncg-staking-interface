@@ -4,6 +4,7 @@ import { useAtomValue } from 'jotai'
 import clsx from 'clsx'
 
 import { slippageAtom } from 'states/system'
+import { useAuth } from 'hooks'
 
 import { StyledSlippageControl } from './styled'
 import Menu from './Menu'
@@ -14,6 +15,8 @@ type SlippageControlProps = {
 }
 
 function SlippageControl({ className }: SlippageControlProps) {
+  const { isConnected } = useAuth()
+
   const [show, setShow] = useState(false)
   const menuRef = useRef<HTMLUListElement>(null)
 
@@ -28,15 +31,22 @@ function SlippageControl({ className }: SlippageControlProps) {
     setShow(false)
   }
 
+  const showMenu = !!isConnected && show
+
   return (
     <StyledSlippageControl
       className={clsx('slippageControl', className)}
       $open={show}
     >
-      <Toggle show={show} toggle={toggle} value={slippage} />
+      <Toggle
+        show={show}
+        toggle={toggle}
+        value={slippage}
+        disabled={!isConnected}
+      />
 
       <AnimatePresence>
-        {show && <Menu menuRef={menuRef} closeMenu={closeMenu} />}
+        {showMenu && <Menu menuRef={menuRef} closeMenu={closeMenu} />}
       </AnimatePresence>
     </StyledSlippageControl>
   )

@@ -1,5 +1,5 @@
 import config from 'config'
 
-export function ogImageFor(fileName: string) {
+export function ogImageUrlFor(fileName: string) {
   return `${config.ogAssetUrl}/${fileName}`
 }

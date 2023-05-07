@@ -48,7 +48,6 @@ export default function GnbMyStaking() {
   return (
     <StyledGnbMyStaking>
       <motion.button
-        // {...MOTION}
         className={clsx('stakingButton', { tooltipGroup: unstakeWindow })}
         type="button"
         onClick={toggle}

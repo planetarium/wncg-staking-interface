@@ -4,10 +4,13 @@ import Link from 'next/link'
 import { NextSeo } from 'next-seo'
 
 import { TERMS_SEO } from 'lib/seo'
+export { getStaticProps } from 'lib/getStaticProps'
+
+import { StyledDocsPage } from 'styles/pages/docs'
 
 const Terms: NextPage = () => {
   return (
-    <main className={'main'}>
+    <StyledDocsPage>
       <NextSeo {...TERMS_SEO} />
       <Head>
         <title>Terms of Service / WNCG Staking</title>
@@ -17,15 +20,15 @@ const Terms: NextPage = () => {
         />
       </Head>
 
-      <div className={'container'}>
-        <header className={'header'}>
-          <h1 className={'title'}>Terms of Service</h1>
-          <p className={'updated'}>
+      <div className="container">
+        <header className="header">
+          <h1 className="title">Terms of Service</h1>
+          <p className="updated">
             Updated: <time dateTime="2022-06-23">June 23, 2022</time>
           </p>
         </header>
 
-        <section className={'section'}>
+        <section className="section">
           <h2 className="hidden">Abstract</h2>
           <p>
             Welcome to 
@@ -61,7 +64,7 @@ const Terms: NextPage = () => {
             This Terms of Service Agreement (the “Terms” or “Agreement”)
             explains the terms and conditions by which you may access and use
             the Interface. 
-            <strong className={'underline'}>
+            <strong className="underline">
               Please read this Agreement carefully.
             </strong>{' '}
             This Agreement applies to you (“You”) as a user of the Interface,
@@ -117,7 +120,7 @@ const Terms: NextPage = () => {
           </p>
         </section>
 
-        <section className={'section'}>
+        <section className="section">
           <h2>1. Interface</h2>
           <p>
             The Interface provides access to a decentralized protocol on the
@@ -154,7 +157,7 @@ const Terms: NextPage = () => {
           </p>
         </section>
 
-        <section className={'section'}>
+        <section className="section">
           <h2>2. Access</h2>
           <p>
             Access to the Interface is provided “as is” and on an “as available”
@@ -184,7 +187,7 @@ const Terms: NextPage = () => {
           </p>
         </section>
 
-        <section className={'section'}>
+        <section className="section">
           <h2>3. Eligibility</h2>
           <p>
             To access or use the Interface, you must be able to form a legally
@@ -218,7 +221,7 @@ const Terms: NextPage = () => {
           </p>
         </section>
 
-        <section className={'section'}>
+        <section className="section">
           <h2>4. Modification of this Agreement</h2>
           <p>
             We reserve the right, in our sole discretion, to modify this
@@ -236,7 +239,7 @@ const Terms: NextPage = () => {
           </p>
         </section>
 
-        <section className={'section'}>
+        <section className="section">
           <h2>5. Proprietary Rights</h2>
           <p>
             The HTML and other software code and text used in the Interface is
@@ -246,7 +249,7 @@ const Terms: NextPage = () => {
           </p>
         </section>
 
-        <section className={'section'}>
+        <section className="section">
           <h2>6. Marks, Logos and Branding</h2>
           <p>
             All Nine Chronicles-related marks, logos, and branding used on the
@@ -259,7 +262,7 @@ const Terms: NextPage = () => {
           </p>
         </section>
 
-        <section className={'section'}>
+        <section className="section">
           <h2>7. Privacy</h2>
           <p>
             The Privacy Policy describes the ways we collect, use, store and
@@ -281,7 +284,7 @@ const Terms: NextPage = () => {
           </p>
         </section>
 
-        <section className={'section'}>
+        <section className="section">
           <h2>8. Prohibited Activity</h2>
           <p>
             You agree not to engage in, or attempt to engage in, any of the
@@ -290,7 +293,7 @@ const Terms: NextPage = () => {
           </p>
           <ul>
             <li>
-              <strong className={'underline'}>
+              <strong className="underline">
                 Dishonesty and Violation of Law. You shall not use the Interface
                 in any dishonest or unlawful manner, for fraudulent or malicious
                 activities, or in any manner inconsistent with these Terms or
@@ -298,7 +301,7 @@ const Terms: NextPage = () => {
               </strong>
             </li>
             <li>
-              <strong className={'underline'}>
+              <strong className="underline">
                 Intellectual Property Infringement.
               </strong>{' '}
               Activity that infringes on or violates any copyright, trademark,
@@ -306,15 +309,15 @@ const Terms: NextPage = () => {
               other proprietary or intellectual property rights under the law.
             </li>
             <li>
-              <strong className={'underline'}>Cyberattack.</strong> Activity
-              that seeks to interfere with or compromise the integrity,
-              security, or proper functioning of any computer, server, network,
-              personal device, or other information technology system, including
-              (but not limited to) the deployment of viruses and denial of
-              service attacks.
+              <strong className="underline">Cyberattack.</strong> Activity that
+              seeks to interfere with or compromise the integrity, security, or
+              proper functioning of any computer, server, network, personal
+              device, or other information technology system, including (but not
+              limited to) the deployment of viruses and denial of service
+              attacks.
             </li>
             <li>
-              <strong className={'underline'}>
+              <strong className="underline">
                 Fraud and Misrepresentation.
               </strong>{' '}
               Activity that seeks to defraud us or any other person or entity,
@@ -323,14 +326,14 @@ const Terms: NextPage = () => {
               of another.
             </li>
             <li>
-              <strong className={'underline'}>Market Manipulation.</strong>{' '}
+              <strong className="underline">Market Manipulation.</strong>{' '}
               Activity that violates any applicable law, rule, or regulation
               concerning the integrity of trading markets, including (but not
               limited to) the manipulative tactics commonly known as spoofing
               and wash trading.
             </li>
             <li>
-              <strong className={'underline'}>Other Harmful Acts.</strong>{' '}
+              <strong className="underline">Other Harmful Acts.</strong>{' '}
               Attempts to engage in or engage in, any potentially harmful acts
               that are directed against Nine Chronicles Ltd, including but not
               limited to violating or attempting to violate any security
@@ -344,9 +347,7 @@ const Terms: NextPage = () => {
               Interface or any other Nine Chronicles Ltd, properties.
             </li>
             <li>
-              <strong className={'underline'}>
-                Any Other Unlawful Conduct.
-              </strong>{' '}
+              <strong className="underline">Any Other Unlawful Conduct.</strong>{' '}
               Activity that violates any applicable Law, including, without
               limitation, any relevant and applicable anti-money laundering and
               anti-terrorist financing laws and any relevant and applicable
@@ -355,7 +356,7 @@ const Terms: NextPage = () => {
           </ul>
         </section>
 
-        <section className={'section'}>
+        <section className="section">
           <h2>9. No Professional Advice</h2>
           <p>
             All information provided by the Interface is for informational
@@ -432,7 +433,7 @@ const Terms: NextPage = () => {
           </p>
         </section>
 
-        <section className={'section'}>
+        <section className="section">
           <h2>10. Third-Party Links</h2>
           <p>
             The Interface may contain hyperlinks or references to third party
@@ -447,7 +448,7 @@ const Terms: NextPage = () => {
           </p>
         </section>
 
-        <section className={'section'}>
+        <section className="section">
           <h2>11. No Warranties</h2>
           <p>
             The Interface is provided on an “AS IS” and “AS AVAILABLE” basis. To
@@ -480,7 +481,7 @@ const Terms: NextPage = () => {
           </p>
         </section>
 
-        <section className={'section'}>
+        <section className="section">
           <h2>12. No Fiduciary Duties</h2>
           <p>
             This Agreement is not intended to, and does not, create or impose
@@ -495,7 +496,7 @@ const Terms: NextPage = () => {
           </p>
         </section>
 
-        <section className={'section'}>
+        <section className="section">
           <h2>13. Assumption of Risk</h2>
           <p>
             By accessing and using the Interface, you represent that you
@@ -549,7 +550,7 @@ const Terms: NextPage = () => {
           </p>
         </section>
 
-        <section className={'section'}>
+        <section className="section">
           <h2>14. Release of Claims</h2>
           <p>
             You expressly agree that you assume all risks in connection with
@@ -567,7 +568,7 @@ const Terms: NextPage = () => {
           </p>
         </section>
 
-        <section className={'section'}>
+        <section className="section">
           <h2>15. Indemnity</h2>
           <p>
             You agree to hold harmless, release, defend, and indemnify us and
@@ -582,7 +583,7 @@ const Terms: NextPage = () => {
           </p>
         </section>
 
-        <section className={'section'}>
+        <section className="section">
           <h2>16. Limitation of Liability</h2>
           <p>
             Under no circumstances shall we or any of our officers, directors,
@@ -624,7 +625,7 @@ const Terms: NextPage = () => {
           </p>
         </section>
 
-        <section className={'section'}>
+        <section className="section">
           <h2>17. Dispute Resolution</h2>
           <p>
             We will use our best efforts to resolve any potential disputes
@@ -657,7 +658,7 @@ const Terms: NextPage = () => {
           </p>
         </section>
 
-        <section className={'section'}>
+        <section className="section">
           <h2>18. Class Action and Jury Trial Waiver</h2>
           <p>
             You must bring any and all Disputes against us in your individual
@@ -669,7 +670,7 @@ const Terms: NextPage = () => {
           </p>
         </section>
 
-        <section className={'section'}>
+        <section className="section">
           <h2>19. Governing Law</h2>
           <p>
             You agree that the laws of the British Virgin Islands, without
@@ -682,7 +683,7 @@ const Terms: NextPage = () => {
           </p>
         </section>
 
-        <section className={'section'}>
+        <section className="section">
           <h2>20. Miscellaneous</h2>
           <p>
             We may perform any of our obligations, and exercise any of the
@@ -716,7 +717,7 @@ const Terms: NextPage = () => {
           </p>
         </section>
 
-        <section className={'section'}>
+        <section className="section">
           <h2>21. Contacting Us</h2>
           <p>
             As stated in Section 13, Assumption of Risk, we do not have custody
@@ -738,7 +739,7 @@ const Terms: NextPage = () => {
           </p>
         </section>
       </div>
-    </main>
+    </StyledDocsPage>
   )
 }
 

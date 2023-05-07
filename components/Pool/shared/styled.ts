@@ -127,7 +127,7 @@ export const StyledJoinFormProportionalGuide = styled(motion.aside)`
   )}
 `
 
-export const StyledJoinFormSummary = styled.dl`
+export const StyledJoinFormSummary = styled.dl<{ $disabled: boolean }>`
   width: 100%;
   margin-top: 24px;
   border-top: 2px solid rgba(var(--white-rgb), 0.1);
@@ -207,6 +207,12 @@ export const StyledJoinFormSummary = styled.dl`
       }
     `
   )}
+
+  ${({ $disabled }) =>
+    $disabled &&
+    css`
+      opacity: 0.5;
+    `}
 `
 
 export const StyledJoinFormUnoptimizable = styled(motion.aside)`
@@ -239,7 +245,7 @@ export const StyledJoinFormUnoptimizable = styled(motion.aside)`
   )}
 `
 
-export const StyledJoinFormFooter = styled.footer`
+export const StyledJoinFormFooter = styled.footer<{ $disabled: boolean }>`
   position: relative;
 
   .submitButton {
@@ -254,4 +260,10 @@ export const StyledJoinFormFooter = styled.footer`
       }
     `
   )}
+
+  ${({ $disabled }) =>
+    $disabled &&
+    css`
+      opacity: 0.5;
+    `}
 `

@@ -5,6 +5,7 @@ import {
   QueryClient,
   QueryClientProvider,
 } from '@tanstack/react-query'
+import { isFirefox } from 'react-device-detect'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import type { DehydratedState } from '@tanstack/react-query'
 import { useMount } from 'react-use'
@@ -27,7 +28,6 @@ import ToastContainer from 'components/ToastContainer'
 
 import GlobalStyle from 'styles/GlobalStyle'
 import ToastStyle from 'styles/ToastStyle'
-import { isFirefox } from 'react-device-detect'
 
 type MyAppProps = AppProps & {
   pageProps: {

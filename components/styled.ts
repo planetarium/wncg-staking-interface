@@ -497,7 +497,7 @@ export const StyledTooltip = styled.p<{
   ${flexbox()}
   ${textStyle('body', 4)}
   z-index: -1;
-  width: ${({ $width }) => $width}px;
+  width: ${({ $width }) => ($width === 'auto' ? $width : `${$width}px`)};
   padding: 12px 16px;
   font-weight: 700;
   color: var(--gray-300);

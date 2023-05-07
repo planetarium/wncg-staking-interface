@@ -1,8 +1,7 @@
-import { motion } from 'framer-motion'
-
 import { EXIT_MOTION } from 'config/motions'
 import { fadeIn } from 'config/motionVariants'
 
+import { StyledStakeJoinTooltip } from './styled'
 import Tooltip from 'components/Tooltip'
 
 type StakeJoinTooltipProps = {
@@ -15,7 +14,7 @@ export default function StakeJoinTooltip({
   $gap,
 }: StakeJoinTooltipProps) {
   return (
-    <motion.div {...EXIT_MOTION} variants={fadeIn}>
+    <StyledStakeJoinTooltip {...EXIT_MOTION} variants={fadeIn}>
       <Tooltip
         message="You need LP tokens to stake!"
         closeButton
@@ -26,6 +25,6 @@ export default function StakeJoinTooltip({
         $gap={$gap}
         $noWrap
       />
-    </motion.div>
+    </StyledStakeJoinTooltip>
   )
 }

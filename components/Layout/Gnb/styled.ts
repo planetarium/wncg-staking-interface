@@ -136,6 +136,53 @@ export const StyledRootGnb = styled(StyledGnb)`
   )}
 `
 
+export const StyledDocsGnb = styled(StyledGnb)`
+  padding: 0 20px;
+
+  .logo {
+    width: 132px;
+    height: 48px;
+
+    a {
+      ${flexbox('start')}
+      ${textStyle('body', 1, 700)}
+      text-transform: uppercase;
+    }
+  }
+
+  ${media(
+    'minTablet',
+    css`
+      padding: 0 16px;
+
+      .logo {
+        width: 155px;
+        height: 48px;
+      }
+    `
+  )}
+
+  ${media(
+    'minLaptop',
+    css`
+      .logo {
+        width: 196px;
+        height: 52px;
+      }
+    `
+  )}
+
+  ${media(
+    'minDesktop',
+    css`
+      .logo {
+        width: 196px;
+        height: 56px;
+      }
+    `
+  )}
+`
+
 export const StyledGnbAccountMenu = styled(motion.aside)`
   position: absolute;
   top: calc(100% + 8px);

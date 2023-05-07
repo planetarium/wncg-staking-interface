@@ -13,7 +13,7 @@ function GlobalFooter() {
       <div className="left">
         <h5 className="title">
           <strong>{config.appName}</strong>
-          <span>&copy; 2022 {config.appName}</span>
+          <span>&copy; 2023 {config.appName}</span>
         </h5>
 
         <div className="buttonGroup">

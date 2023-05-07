@@ -147,8 +147,6 @@ export const StyledPoolMobileForm = styled.form`
 `
 
 export const StyledPoolMobileConnect = styled(motion.div)`
-  ${flexbox()}
-  flex-direction: column;
   width: 100%;
   height: 100vh;
 
@@ -157,7 +155,6 @@ export const StyledPoolMobileConnect = styled(motion.div)`
   }
 
   button {
-    width: 200px;
     margin-top: 32px;
   }
 `

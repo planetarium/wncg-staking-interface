@@ -20,7 +20,6 @@ function JoinConnect() {
           exit="exit"
           variants={fadeIn}
         >
-          <h3 className="title">Connect wallet and get LP tokens!</h3>
           <Button
             className="connectButton"
             onClick={openConnectModal}

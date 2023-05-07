@@ -25,7 +25,7 @@ export const StyledPoolDesktop = styled(motion.section)`
   z-index: 10;
   flex-direction: column;
   width: 100%;
-  max-height: calc(100vh - 32px);
+  height: calc(100vh - 32px);
   overflow: hidden;
   border-radius: 32px 32px 0 0;
 
@@ -284,6 +284,10 @@ export const StyledPoolHeader = styled.header`
     margin-top: 12px;
   }
 
+  .connectButton {
+    margin-top: 48px;
+  }
+
   .title {
     ${textStyle('header', 5)}
     padding-right: 40px;
@@ -330,6 +334,10 @@ export const StyledPoolHeader = styled.header`
       .title {
         ${textStyle('header', 4)}
         padding-right: 0;
+      }
+
+      .connectButton {
+        display: none;
       }
 
       .tokenList {

@@ -2,7 +2,7 @@ import { memo } from 'react'
 import { useSetAtom } from 'jotai'
 
 import { optimizeErrorAtom } from 'states/form'
-import { useStaking } from 'hooks'
+import { useAuth, useStaking } from 'hooks'
 
 import { StyledJoinFormHeader } from './styled'
 import Button from 'components/Button'
@@ -23,6 +23,7 @@ function JoinFormHeader({
   reset,
   resetDisabled,
 }: JoinFormHeaderProps) {
+  const { isConnected } = useAuth()
   const { stakedTokenAddress } = useStaking()
 
   const setShowError = useSetAtom(optimizeErrorAtom)
@@ -33,7 +34,7 @@ function JoinFormHeader({
   }
 
   return (
-    <StyledJoinFormHeader className="joinFormHeader">
+    <StyledJoinFormHeader className="joinFormHeader" $disabled={!isConnected}>
       <h3 className="title">
         <TokenIcon address={stakedTokenAddress} $size={24} />
         Join pool
@@ -43,7 +44,7 @@ function JoinFormHeader({
         <Button
           className="optimizeButton"
           onClick={handleOptimize}
-          disabled={optimized}
+          disabled={optimized || !isConnected}
           $contain
           $size="sm"
         >
@@ -54,7 +55,7 @@ function JoinFormHeader({
           className="resetButton"
           type="reset"
           onClick={reset}
-          disabled={resetDisabled}
+          disabled={resetDisabled || !isConnected}
           aria-label="Reset"
         >
           <Icon icon={resetDisabled ? 'refreshOff' : 'refreshOn'} $size={32} />

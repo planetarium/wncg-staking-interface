@@ -1,13 +1,15 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import { NextSeo } from 'next-seo'
-// import styles from 'styles/document.module.scss'
 
 import { PRIVACY_SEO } from 'lib/seo'
+export { getStaticProps } from 'lib/getStaticProps'
+
+import { StyledDocsPage } from 'styles/pages/docs'
 
 const Privacy: NextPage = () => {
   return (
-    <main className={'main'}>
+    <StyledDocsPage>
       <NextSeo {...PRIVACY_SEO} />
       <Head>
         <title>Privacy Policy / WNCG Staking</title>
@@ -17,14 +19,14 @@ const Privacy: NextPage = () => {
         />
       </Head>
 
-      <div className={'container'}>
-        <header className={'header'}>
-          <h1 className={'title'}>Privacy Policy</h1>
+      <div className="container">
+        <header className="header">
+          <h1 className="title">Privacy Policy</h1>
         </header>
 
-        <section className={'section'}>
+        <section className="section">
           <p>
-            <strong className={'bold'}>This Policy</strong> (the “Policy”)
+            <strong className="bold">This Policy</strong> (the “Policy”)
             explains the way of treatment of the information which is provided
             or collected in the web sites on which this Policy is posted. In
             addition the Policy also explains the information which is provided
@@ -52,10 +54,10 @@ const Privacy: NextPage = () => {
           </p>
         </section>
 
-        <section className={'section'}>
+        <section className="section">
           <h2>1. Information to be collected and method of collection</h2>
 
-          <section className={'subSection'}>
+          <section className="subSection">
             <h3>(1) Personal information items to be collected</h3>
             <p>
               Personal information items to be collected by the Company are as
@@ -113,7 +115,7 @@ const Privacy: NextPage = () => {
             </ul>
           </section>
 
-          <section className={'subSection'}>
+          <section className="subSection">
             <h3>(2) Method of collection</h3>
             <p>
               The Company collects the information of users in a way of the
@@ -129,7 +131,7 @@ const Privacy: NextPage = () => {
           </section>
         </section>
 
-        <section className={'section'}>
+        <section className="section">
           <h2>2. Use of collected information</h2>
           <p>
             The Company uses the collected information of users for the
@@ -254,7 +256,7 @@ const Privacy: NextPage = () => {
           </ul>
         </section>
 
-        <section className={'section'}>
+        <section className="section">
           <h2>3. Disclosure of collected information</h2>
           <p>
             Except for the following cases, the Company will not disclose
@@ -262,7 +264,7 @@ const Privacy: NextPage = () => {
           </p>
           <ul>
             <li>
-              <p className={'bold'}>
+              <p className="bold">
                 when the Company disclosing the information with its affiliates,
                 partners, service providers, contractors, agents or licensors;
               </p>
@@ -276,7 +278,7 @@ const Privacy: NextPage = () => {
               </ul>
             </li>
             <li>
-              <p className={'bold'}>
+              <p className="bold">
                 when the users consent to disclose in advance;
               </p>
               <ul>
@@ -297,7 +299,7 @@ const Privacy: NextPage = () => {
               </ul>
             </li>
             <li>
-              <p className={'bold'}>when disclosure is required by the laws:</p>
+              <p className="bold">when disclosure is required by the laws:</p>
               <ul>
                 <li>
                   if required to be disclosed by the laws and regulations; or
@@ -322,7 +324,7 @@ const Privacy: NextPage = () => {
           </p>
         </section>
 
-        <section className={'section'}>
+        <section className="section">
           <h2>4. Cookies, Beacons and Similar Technologies</h2>
           <p>
             The Company may collect collective and impersonal information
@@ -493,7 +495,7 @@ const Privacy: NextPage = () => {
           </p>
         </section>
 
-        <section className={'section'}>
+        <section className="section">
           <h2>5. User’s right</h2>
           <p>
             The users or their legal representatives, as main agents of the
@@ -611,7 +613,7 @@ const Privacy: NextPage = () => {
           </p>
         </section>
 
-        <section className={'section'}>
+        <section className="section">
           <h2>6. Security</h2>
           <p>
             The Company regard the security of personal information of uses as
@@ -670,7 +672,7 @@ const Privacy: NextPage = () => {
           </p>
         </section>
 
-        <section className={'section'}>
+        <section className="section">
           <h2>7. Protection of personal information of children</h2>
           <p>
             In principle, the Company does not collect any information from the
@@ -683,7 +685,7 @@ const Privacy: NextPage = () => {
             that function.
           </p>
           <p>
-            <strong className={'bold'}>
+            <strong className="bold">
               (Additional procedure for collecting personal information from
               children)
             </strong>{' '}
@@ -721,7 +723,7 @@ const Privacy: NextPage = () => {
           </ul>
         </section>
 
-        <section className={'section'}>
+        <section className="section">
           <h2>8. Modification of Privacy Protection Policy</h2>
           <p>
             The Company has the right to amend or modify this Policy from time
@@ -731,7 +733,7 @@ const Privacy: NextPage = () => {
           </p>
         </section>
 
-        <section className={'section'}>
+        <section className="section">
           <h2>9. Others</h2>
           <p>
             Considering it engages in global businesses, the Company may provide
@@ -742,7 +744,7 @@ const Privacy: NextPage = () => {
             those personal information.
           </p>
           <p>
-            <strong className={'bold'}>
+            <strong className="bold">
               (If used in the US, additional security measures may be available)
             </strong>{' '}
             In addition, when the personal information obtained from the
@@ -781,7 +783,7 @@ const Privacy: NextPage = () => {
           </p>
         </section>
 
-        <section className={'section'}>
+        <section className="section">
           <h2>10. Contact information of Company</h2>
           <p>
             Please send all your requests and queries in connection with this
@@ -800,7 +802,7 @@ const Privacy: NextPage = () => {
           The latest update date: <time dateTime="2022-06">June, 2022.</time>
         </p>
       </div>
-    </main>
+    </StyledDocsPage>
   )
 }
 

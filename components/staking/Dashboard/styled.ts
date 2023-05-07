@@ -16,7 +16,7 @@ export const StyledStakingDashboard = styled(motion.section)`
 
       img {
         max-height: 144px !important;
-        transform: scale(1.2);
+        transform: scale(1.25);
       }
     }
   }
@@ -26,26 +26,10 @@ export const StyledStakingDashboard = styled(motion.section)`
     css`
       .imageContainer {
         justify-content: center;
-        margin-right: auto;
-        margin-left: auto;
-
-        img {
-          transform: scale(1.3);
-        }
-      }
-    `
-  )}
-
-  ${media(
-    'minLaptop',
-    css`
-      ${flexbox('between')}
-      flex-direction: column;
-      height: 100%;
-
-      .imageContainer {
         width: 320px;
         height: 320px;
+        margin-right: auto;
+        margin-left: auto;
 
         .image {
           max-height: 320px;
@@ -59,18 +43,41 @@ export const StyledStakingDashboard = styled(motion.section)`
   )}
 
   ${media(
+    'minLaptop',
+    css`
+      ${flexbox('between')}
+      flex-direction: column;
+      height: 100%;
+
+      .imageContainer {
+        width: 336px;
+        height: 336px;
+
+        .image {
+          max-height: 336px;
+
+          img {
+            max-height: 336px !important;
+            transform: scale(1.44);
+          }
+        }
+      }
+    `
+  )}
+
+  ${media(
     'minDesktop',
     css`
       .imageContainer {
-        width: 300px;
-        height: 300px;
+        width: 336px;
+        height: 336px;
 
         .image {
-          max-height: 300px;
+          max-height: 336px;
 
           img {
-            max-height: 300px !important;
-            transform: scale(1.32);
+            max-height: 336px !important;
+            transform: scale(1.44);
           }
         }
       }
@@ -181,12 +188,18 @@ export const StyledStakingDashboardApr = styled(
 
         .countUp {
           ${textStyle('number')}
-          font-size: 2.5rem;
+          font-size: 2rem;
+        }
+
+        .tilde {
+          &::before {
+            font-family: ${fontFamily.text};
+          }
         }
 
         .symbol {
-          font-family: ${fontFamily.digit};
-          font-size: 2rem;
+          font-size: 1rem;
+          font-weight: 700;
         }
 
         .toggler {

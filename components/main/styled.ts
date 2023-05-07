@@ -28,13 +28,19 @@ export const StyledMainCard = styled(motion.div)`
   }
 
   .mobileImage {
-    width: 200px;
-    height: 200px;
+    width: 280px;
+    height: 280px;
     margin: 16px auto 0;
+
+    img {
+      transform: scale(1.2);
+    }
   }
 
   .tabletImage {
     display: none;
+    width: 100%;
+    height: auto;
   }
 
   .rewardList {
@@ -43,7 +49,7 @@ export const StyledMainCard = styled(motion.div)`
 
   .rewardItem {
     ${flexbox()}
-    ${textStyle('body', 4)}
+    ${textStyle('caption')}
     color: var(--gray-400);
     margin-top: 4px;
     white-space: nowrap;
@@ -138,6 +144,7 @@ export const StyledMainCard = styled(motion.div)`
       }
 
       .rewardItem {
+        ${textStyle('body', 4)}
         margin-top: 0;
         margin-left: 16px;
       }
@@ -177,6 +184,11 @@ export const StyledMainCard = styled(motion.div)`
         .subtitle {
           ${textStyle('header', 4)}
         }
+      }
+
+      .tabletImage {
+        width: 880px;
+        height: 880px;
       }
     `
   )}

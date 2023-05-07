@@ -9,7 +9,12 @@ function StakingDashboard() {
   return (
     <StyledStakingDashboard>
       <div className="imageContainer">
-        <Image className="image" src="/apngb-app.png" alt="" priority />
+        <Image
+          className="image"
+          src="/wncg-3d.png"
+          alt="Wrapped nine chronicles gold"
+          priority
+        />
       </div>
 
       <Suspense

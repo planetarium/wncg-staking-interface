@@ -175,12 +175,13 @@ export const StyledSlippageControlMenu = styled(motion.ul)`
   }
 `
 
-export const StyledSlippageControlToggle = styled.div`
+export const StyledSlippageControlToggle = styled.div<{ $disabled: boolean }>`
   ${flexbox('start')}
   ${textStyle('body', 3)}
   color: rgba(var(--white-rgb), 0.6);
   text-align: left;
   white-space: nowrap;
+  transition: 200ms;
 
   .label {
     ${flexbox('start')}
@@ -202,4 +203,15 @@ export const StyledSlippageControlToggle = styled.div`
       font-weight: 700;
     }
   }
+
+  ${({ $disabled }) =>
+    $disabled &&
+    css`
+      opacity: 0.5;
+      cursor: not-allowed;
+
+      * {
+        cursor: not-allowed;
+      }
+    `}
 `

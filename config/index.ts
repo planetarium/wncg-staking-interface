@@ -93,7 +93,7 @@ class ConfigService {
   get ogAssetUrl() {
     return (
       process.env.NEXT_PUBLIC_OG_ASSET_URL ||
-      'https://wncg-staking-resources.s3.us-east-2.amazonaws.com'
+      'https://planetarium-gamefi.imgix.net/open-graph'
     )
   }
 

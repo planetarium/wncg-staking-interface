@@ -1,13 +1,16 @@
 import { memo } from 'react'
 
-import { useStaking } from 'hooks'
+import { useAuth, useConnect, useStaking } from 'hooks'
 
 import { StyledPoolBalances } from './styled'
 import Suspense from 'components/Suspense'
 import TokenIcon from 'components/TokenIcon'
 import Content from './Content'
+import Button from 'components/Button'
 
 function PoolBalances() {
+  const { isConnected } = useAuth()
+  const { openConnectModal } = useConnect()
   const { bptName, poolTokenAddresses } = useStaking()
 
   return (
@@ -24,11 +27,24 @@ function PoolBalances() {
         </div>
 
         <h2 className="title">{bptName}</h2>
+
+        {!isConnected && (
+          <Button
+            className="connectButton"
+            type="button"
+            onClick={openConnectModal}
+            $size="lg"
+          >
+            Connect wallet
+          </Button>
+        )}
       </div>
 
-      <Suspense>
-        <Content />
-      </Suspense>
+      {!!isConnected && (
+        <Suspense>
+          <Content />
+        </Suspense>
+      )}
     </StyledPoolBalances>
   )
 }

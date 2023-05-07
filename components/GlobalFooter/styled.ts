@@ -61,6 +61,7 @@ export const StyledGlobalFooter = styled(motion.footer)`
     display: block;
     padding: ${LINK_BUTTON_PADDING}px 0;
     margin-top: ${12 - LINK_BUTTON_PADDING * 2}px;
+    color: var(--gray-300);
 
     &:first-child {
       margin-top: 0;
@@ -95,6 +96,9 @@ export const StyledGlobalFooter = styled(motion.footer)`
     'minLaptop',
     css`
       ${flexbox('between')}
+      position: fixed;
+      bottom: 0;
+      left: 0%;
       width: 100%;
       height: ${GLOBAL_FOOTER_HEIGHT_LAPTOP}px;
       padding: 0 ${GUTTER_TABLET}px;

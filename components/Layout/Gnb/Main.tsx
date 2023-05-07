@@ -1,6 +1,7 @@
 import { MouseEvent, useMemo, useState } from 'react'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import { AnimatePresence } from 'framer-motion'
 
 import { useAuth, useResponsive } from 'hooks'
@@ -26,6 +27,7 @@ export default function MainGnb() {
 
   const { isConnected } = useAuth()
   const { bp, isBrowser } = useResponsive()
+  const { reload, pathname } = useRouter()
 
   const logoSrc = useMemo(() => {
     const breakpoint = bp === 'smLaptop' ? 'laptop' : bp
@@ -50,13 +52,17 @@ export default function MainGnb() {
     setShow((prev) => !prev)
   }
 
+  function onLogoClick() {
+    if (pathname === '/wncg') reload()
+  }
+
   const showStaking = !!isConnected && isBrowser
 
   return (
     <StyledGnb>
       <div className="left">
         <h1 className="logo">
-          <Link href="/">
+          <Link href="/wncg" onClick={onLogoClick}>
             <Image src={logoSrc} alt="WNCG Staking" />
           </Link>
         </h1>

@@ -16,7 +16,12 @@ export default function MainNcgCard() {
         </h2>
 
         <div className="mobileImage">
-          <Image className="image" src="/img-ncg-3d.png" alt="" priority />
+          <Image
+            className="image"
+            src="/ncg-3d.png"
+            alt="Nine chronicles gold"
+            priority
+          />
         </div>
 
         <h4 className="subtitle">
@@ -29,14 +34,18 @@ export default function MainNcgCard() {
       <div className="content">
         <ul className="linkList">
           <li className="linkItem">
-            <Button href="/wncg" target="_blank" $contain>
+            <Button
+              href="https://docs.nine-chronicles.com/introduction/intro/economic-system/staking-and-monster-collection"
+              target="_blank"
+              $contain
+            >
               NCG staking
             </Button>
           </li>
 
           <li className="linkItem">
             <Button
-              href={config.links.medium}
+              href="https://medium.com/@ninechronicles/monster-collection-v2-update-6cde770c9f31"
               aria-label="Go to medium"
               target="_blank"
               $contain
@@ -48,7 +57,7 @@ export default function MainNcgCard() {
 
           <li className="linkItem">
             <Button
-              href={config.github.repositoryUrl}
+              href="https://github.com/planetarium"
               aria-label="Go to github"
               target="_blank"
               $contain
@@ -60,7 +69,12 @@ export default function MainNcgCard() {
         </ul>
 
         <div className="tabletImage">
-          <Image className="image" src="/img-ncg-3d.png" alt="" priority />
+          <Image
+            className="image"
+            src="/ncg-3d.png"
+            alt="Nine chronicles gold"
+            priority
+          />
         </div>
       </div>
     </StyledMainCard>

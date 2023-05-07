@@ -46,6 +46,10 @@ export const StyledPoolBalances = styled(motion.section)`
     }
   }
 
+  .connectButton {
+    margin-top: 32px;
+  }
+
   .totalBalance {
     min-height: 60px;
     margin-top: 32px;

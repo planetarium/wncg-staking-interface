@@ -21,7 +21,7 @@ import {
 import Header from './Header'
 
 function JoinForm() {
-  const { account, prevAccount } = useAuth()
+  const { account, isConnected, prevAccount } = useAuth()
   const balanceOf = useBalances()
   const { stakedTokenAddress } = useStaking()
 

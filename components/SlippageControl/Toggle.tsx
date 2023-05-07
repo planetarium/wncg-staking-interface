@@ -11,15 +11,20 @@ type SlippageControlToggleProps = {
   show: boolean
   toggle(e: MouseEvent<HTMLButtonElement>): void
   value: string
+  disabled: boolean
 }
 
 function SlippageControlToggle({
   show,
   toggle,
   value,
+  disabled,
 }: SlippageControlToggleProps) {
   return (
-    <StyledSlippageControlToggle className="slippageToggle">
+    <StyledSlippageControlToggle
+      className="slippageToggle"
+      $disabled={disabled}
+    >
       <label className="label" htmlFor="slippageControl">
         Slippage tolerance
         <div className="tooltipGroup">
@@ -35,6 +40,7 @@ function SlippageControlToggle({
         className="toggleButton"
         type="button"
         onClick={toggle}
+        disabled={disabled}
         aria-controls="menu"
         aria-haspopup
       >

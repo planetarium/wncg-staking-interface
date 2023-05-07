@@ -71,7 +71,9 @@ export const StyledJoinFormJoinFormEtherSelect = styled.div`
   )}
 `
 
-export const StyledJoinFormInputField = styled(motion.div)`
+export const StyledJoinFormInputField = styled(motion.div)<{
+  $disabled: boolean
+}>`
   width: calc(50% - ${INPUT_FIELD_GAP / 2}px);
 
   .labelGroup {
@@ -142,6 +144,12 @@ export const StyledJoinFormInputField = styled(motion.div)`
       }
     `
   )}
+
+  ${({ $disabled }) =>
+    $disabled &&
+    css`
+      opacity: 0.5;
+    `}
 `
 
 export const StyledJoinFormWarning = styled(motion.div)`

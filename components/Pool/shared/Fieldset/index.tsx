@@ -1,10 +1,10 @@
 import config from 'config'
-import { useStaking } from 'hooks'
+import { bnum } from 'utils/bnum'
+import { useAuth, useStaking } from 'hooks'
 import { UseJoinFormReturns } from 'hooks/useJoinForm'
 
 import { StyledJoinFormFieldset } from './styled'
 import InputField from './InputField'
-import { bnum } from 'utils/bnum'
 
 type JoinFormFieldsetProps = UseJoinFormReturns
 
@@ -20,6 +20,7 @@ export default function JoinFormFieldset({
   setValue,
   trigger,
 }: JoinFormFieldsetProps) {
+  const { isConnected } = useAuth()
   const { poolTokens } = useStaking()
 
   const isNativeCurrency = watch('isNativeCurrency')
@@ -62,6 +63,7 @@ export default function JoinFormFieldset({
             trigger={trigger}
             value={value}
             weight={weight}
+            disabled={!isConnected}
           />
         )
       })}

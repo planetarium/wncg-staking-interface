@@ -16,9 +16,9 @@ import { JoinFormFields, joinFormFields } from 'hooks/useJoinForm'
 
 import { StyledJoinFormInputField } from './styled'
 import { AvailableBalance, Control } from 'components/Form'
+import NumberFormat from 'components/NumberFormat'
 import EtherSelect from './EtherSelect'
 import Warning from './Warning'
-import NumberFormat from 'components/NumberFormat'
 
 type JoinInputFieldProps = {
   index: number
@@ -49,6 +49,7 @@ function JoinInputField({
   value,
   weight,
   className,
+  disabled,
 }: JoinInputFieldProps) {
   const [showWarning, setShowWarning] = useState(false)
 
@@ -99,7 +100,12 @@ function JoinInputField({
   }, [address, prevAddress])
 
   return (
-    <StyledJoinFormInputField className={className} layoutRoot>
+    <StyledJoinFormInputField
+      className={className}
+      layoutRoot
+      $disabled={!!disabled}
+    >
+      hi
       <div className="labelGroup">
         {isEther ? (
           <EtherSelect
@@ -120,7 +126,6 @@ function JoinInputField({
           decimals={0}
         />
       </div>
-
       <Control<'number'>
         id={id}
         address={token.address}
@@ -132,8 +137,8 @@ function JoinInputField({
         placeholder="0.0"
         showFiatValue
         $size="sm"
+        disabled={disabled}
       />
-
       <AvailableBalance
         layout
         label={availableBalanceLabel}
@@ -141,7 +146,6 @@ function JoinInputField({
         decimals={4}
         fiatValue={maxBalanceInFiatValue}
       />
-
       <AnimatePresence>{showWarning && <Warning />}</AnimatePresence>
     </StyledJoinFormInputField>
   )

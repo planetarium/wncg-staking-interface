@@ -14,6 +14,7 @@ import { StyledJoinFormSummary } from './styled'
 import HighPriceImpact from 'components/HighPriceImpact'
 import NumberFormat from 'components/NumberFormat'
 import RektPriceImpact from 'components/RektPriceImpact'
+import { useAuth } from 'hooks'
 
 type JoinFormSummaryProps = {
   priceImpact: number
@@ -32,6 +33,7 @@ function JoinFormSummary({
   formState,
   disabled = false,
 }: JoinFormSummaryProps) {
+  const { isConnected } = useAuth()
   const priceImpactInPcnt = bnum(priceImpact * 100).toFixed(4)
   const alert = priceImpact >= REKT_PRICE_IMPACT
 
@@ -44,7 +46,7 @@ function JoinFormSummary({
   const hasErrors = Object.keys(formState.errors).length > 0
 
   return (
-    <StyledJoinFormSummary className="joinFormSummary">
+    <StyledJoinFormSummary className="joinFormSummary" $disabled={!isConnected}>
       <div className="summaryItem">
         <dt>Total</dt>
         <dd>

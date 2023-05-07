@@ -45,7 +45,7 @@ export const StyledStakingPage = styled(motion.div)`
       ${flexbox()}
       max-width: unset;
       min-height: calc(100% - ${GLOBAL_FOOTER_HEIGHT_LAPTOP}px);
-      padding-top: ${MAIN_PADDING_LAPTOP}px;
+      padding-top: ${MAIN_PADDING_LAPTOP - 32}px;
       padding-bottom: ${MAIN_PADDING_LAPTOP}px;
 
       .container {
@@ -76,7 +76,8 @@ export const StyledStakingPage = styled(motion.div)`
   ${media(
     'minDesktop',
     css`
-      padding: ${MAIN_PADDING_DESKTOP}px 0;
+      padding-top: ${MAIN_PADDING_DESKTOP - 25}px;
+      padding-bottom: ${MAIN_PADDING_DESKTOP}px;
 
       .container {
         max-width: ${1440 + GUTTER_TABLET * 2}px;

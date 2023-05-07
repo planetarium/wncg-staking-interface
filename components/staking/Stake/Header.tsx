@@ -1,6 +1,5 @@
 import { StyledStakeHeader } from './styled'
 
-// FIXME: remove fx group?
 export default function StakeHeader() {
   return (
     <StyledStakeHeader>

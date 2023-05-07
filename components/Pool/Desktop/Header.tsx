@@ -1,13 +1,17 @@
 import { memo } from 'react'
 
 import { explorerUrlFor } from 'utils/explorerUrlFor'
-import { useStaking } from 'hooks'
+import { useAuth, useConnect, useStaking } from 'hooks'
 
 import { StyledPoolHeader } from './styled'
 import Icon from 'components/Icon'
 import TokenIcon from 'components/TokenIcon'
+import Button from 'components/Button'
 
 function PoolHeader() {
+  const { isConnected } = useAuth()
+  const { openConnectModal } = useConnect()
+
   const {
     bptName,
     poolTokenAddresses,
@@ -18,7 +22,6 @@ function PoolHeader() {
   return (
     <StyledPoolHeader className="poolHeader">
       <strong className="poolName">{bptName}</strong>
-
       <div className="titleGroup">
         <h2 className="title">Join pool, Get LP Tokens!</h2>
 
@@ -41,6 +44,12 @@ function PoolHeader() {
           ))}
         </div>
       </div>
+
+      {!isConnected && (
+        <Button className="connectButton" $size="lg" onClick={openConnectModal}>
+          Connect wallet
+        </Button>
+      )}
     </StyledPoolHeader>
   )
 }

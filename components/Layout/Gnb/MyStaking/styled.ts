@@ -17,7 +17,7 @@ export const StyledGnbMyStaking = styled.div`
     ${buttonStyle}
     ${textStyle('body', 3)}
     height: 48px;
-    padding: 0 16px;
+    padding: 0 16px 0 12px;
     overflow: visible;
     color: var(--white);
     border-radius: 40px;

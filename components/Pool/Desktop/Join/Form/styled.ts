@@ -43,7 +43,7 @@ export const StyledJoinForm = styled(motion.form)`
   }
 `
 
-export const StyledJoinFormHeader = styled.header`
+export const StyledJoinFormHeader = styled.header<{ $disabled: boolean }>`
   position: relative;
   width: 100%;
 
@@ -101,6 +101,14 @@ export const StyledJoinFormHeader = styled.header`
       transition: 250ms;
     }
   }
+
+  ${({ $disabled }) =>
+    $disabled &&
+    css`
+      .title {
+        opacity: 0.5;
+      }
+    `}
 `
 
 export const StyledJoinFormProportionalGuide = styled(motion.aside)`

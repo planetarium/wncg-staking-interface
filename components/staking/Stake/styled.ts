@@ -73,7 +73,7 @@ export const StyledStakingStake = styled(motion.section)`
 export const StyledStakeHeader = styled.header`
   position: relative;
   width: 100%;
-  margin-top: 44px;
+  margin-top: 32px;
 
   .title {
     ${textStyle('display', 5)}
@@ -470,4 +470,20 @@ export const StyledStakeJoinButton = styled(motion.div)`
       max-width: 580px;
     `
   )}
+`
+
+export const StyledStakeJoinTooltip = styled(motion.div)`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+
+  @keyframes floatBottom {
+    0% {
+      transform: translate3d(-50%, 0, 0);
+    }
+
+    100% {
+      transform: translate3d(-50%, -4px, 0);
+    }
+  }
 `

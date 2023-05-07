@@ -23,7 +23,12 @@ export default function MainWncgCard() {
         </h2>
 
         <div className="mobileImage">
-          <Image className="image" src="/img-wncg-3d.png" alt="" priority />
+          <Image
+            className="image"
+            src="/wncg-3d.png"
+            alt="Wrapped ine chronicles gold"
+            priority
+          />
         </div>
 
         <h4 className="subtitle">
@@ -36,7 +41,7 @@ export default function MainWncgCard() {
           <div className="rewardItem">
             <dt>
               <TokenIcon address={rewardTokenAddress} $size={16} />
-              <strong>Wrapped NCG</strong>
+              <strong>WNCG(Wrapped NCG)</strong>
             </dt>
             <dd>1:1 NCG backed ERC-20 token</dd>
           </div>
@@ -58,10 +63,9 @@ export default function MainWncgCard() {
               WNCG staking
             </Button>
           </li>
-
           <li className="linkItem">
             <Button
-              href={config.links.medium}
+              href="https://medium.com/@ninechronicles/introducing-wncg-staking-ft-chapter-iii-a27f26d70522"
               aria-label="Go to medium"
               target="_blank"
               $contain
@@ -70,10 +74,9 @@ export default function MainWncgCard() {
               <Icon icon="medium" $size={32} />
             </Button>
           </li>
-
           <li className="linkItem">
             <Button
-              href={config.github.repositoryUrl}
+              href="https://github.com/planetarium/wncg-staking"
               aria-label="Go to github"
               target="_blank"
               $contain
@@ -85,7 +88,12 @@ export default function MainWncgCard() {
         </ul>
 
         <div className="tabletImage">
-          <Image className="image" src="/img-wncg-3d.png" alt="" priority />
+          <Image
+            className="image"
+            src="/wncg-3d.png"
+            alt="Wrapped ine chronicles gold"
+            priority
+          />
         </div>
       </div>
     </StyledMainCard>

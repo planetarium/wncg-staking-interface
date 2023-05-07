@@ -1,21 +1,33 @@
 import config from 'config'
-import { ogImageFor } from 'utils/ogImageFor'
+
+import { ogImageUrlFor } from 'utils/ogImageUrlFor'
+
+const appName = 'Nine Chronicles Staking'
+const stakingAppName = 'WNCG Staking'
 
 export const DEFAULT_SEO = {
-  title: 'Nine Chronicles Staking',
-  description: 'Nine Chronicles Staking',
+  title: appName,
+  description: appName,
   canonical: config.siteUrl,
   openGraph: {
     type: 'website',
+    locale: 'en_US',
     url: config.siteUrl,
-    title: 'Nine Chronicles Staking',
-    site_name: 'Nine Chronicles Staking',
+    title: appName,
+    site_name: appName,
+    description: appName,
     images: [
       {
-        url: ogImageFor('og-root.png'),
+        url: ogImageUrlFor('og-wncg-staking-main-md.png'),
         width: 1200,
-        height: 630,
-        alt: 'Nine Chronicles Staking',
+        height: 60,
+        alt: appName,
+      },
+      {
+        url: ogImageUrlFor('og-wncg-staking-main-sm.png'),
+        width: 600,
+        height: 600,
+        alt: appName,
       },
     ],
   },
@@ -27,20 +39,26 @@ export const DEFAULT_SEO = {
 }
 
 export const STAKING_SEO = {
-  title: 'WNCG Staking',
+  title: stakingAppName,
   description: 'Stake Balancer LP token and earn rewards!',
   canonical: `${config.siteUrl}/wncg`,
   openGraph: {
     type: 'website',
     url: `${config.siteUrl}/wncg`,
-    title: 'WNCG Staking',
-    site_name: 'WNCG Staking',
+    title: stakingAppName,
+    site_name: stakingAppName,
     images: [
       {
-        url: ogImageFor('og-staking.png'),
+        url: ogImageUrlFor('og-wncg-staking-md.png'),
         width: 1200,
-        height: 630,
-        alt: 'WNCG Staking',
+        height: 600,
+        alt: appName,
+      },
+      {
+        url: ogImageUrlFor('og-wncg-staking-sm.png'),
+        width: 600,
+        height: 600,
+        alt: appName,
       },
     ],
   },
@@ -52,20 +70,26 @@ export const STAKING_SEO = {
 }
 
 export const TERMS_SEO = {
-  title: 'Terms of Service / WNCG Staking',
+  title: `Terms of Service / ${stakingAppName}`,
   description: 'Stake Balancer LP token and earn rewards!',
   canonical: `${config.siteUrl}/wncg/terms`,
   openGraph: {
     type: 'website',
     url: `${config.siteUrl}/wncg/terms`,
-    title: 'Terms of Service / WNCG Staking',
-    site_name: 'WNCG Staking',
+    title: `Terms of Service / ${stakingAppName}`,
+    site_name: stakingAppName,
     images: [
       {
-        url: ogImageFor('og-document.png'),
+        url: ogImageUrlFor('og-wncg-staking-md.png'),
         width: 1200,
-        height: 630,
-        alt: 'WNCG Staking',
+        height: 600,
+        alt: appName,
+      },
+      {
+        url: ogImageUrlFor('og-wncg-staking-sm.png'),
+        width: 600,
+        height: 600,
+        alt: appName,
       },
     ],
   },
@@ -77,20 +101,26 @@ export const TERMS_SEO = {
 }
 
 export const PRIVACY_SEO = {
-  title: 'Privacy Policy / WNCG Staking',
+  title: `Privacy Policy / ${stakingAppName}`,
   description: 'Stake Balancer LP token and earn rewards!',
   canonical: `${config.siteUrl}/wncg/privacy`,
   openGraph: {
     type: 'website',
     url: `${config.siteUrl}/wncg/privacy`,
-    title: 'Privacy Policy / WNCG Staking',
-    site_name: 'WNCG Staking',
+    title: `Privacy Policy / ${stakingAppName}`,
+    site_name: stakingAppName,
     images: [
       {
-        url: ogImageFor('og-document.png'),
+        url: ogImageUrlFor('og-wncg-staking-md.png'),
         width: 1200,
-        height: 630,
-        alt: 'WNCG Staking',
+        height: 600,
+        alt: appName,
+      },
+      {
+        url: ogImageUrlFor('og-wncg-staking-sm.png'),
+        width: 600,
+        height: 600,
+        alt: appName,
       },
     ],
   },
