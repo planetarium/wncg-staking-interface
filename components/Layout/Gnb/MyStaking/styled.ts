@@ -1,8 +1,8 @@
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import { motion } from 'framer-motion'
 
 import { GNB_DROPDOWN_MENU_WIDTH } from 'styles/constants/dimensions'
-import { flexbox, posCenter, textStyle } from 'styles/utils'
+import { flexbox, media, posCenter, textStyle } from 'styles/utils'
 
 import { buttonStyle } from 'components/Button/styled'
 
@@ -15,7 +15,7 @@ export const StyledGnbMyStaking = styled.div`
 
   .stakingButton {
     ${buttonStyle}
-    ${textStyle('body', 3)}
+    ${textStyle('body', 4)}
     height: 48px;
     padding: 0 16px 0 12px;
     overflow: visible;
@@ -24,12 +24,11 @@ export const StyledGnbMyStaking = styled.div`
     background-color: #281e4a;
 
     .icon {
-      margin-right: 4px;
+      margin-right: 2px;
     }
 
     .countUp {
-      ${textStyle('body', 2)}
-      font-weight: 700;
+      ${textStyle('body', 4, 700)}
     }
   }
 
@@ -60,6 +59,32 @@ export const StyledGnbMyStaking = styled.div`
     border-radius: 50%;
     background-color: var(--primary-500);
   }
+
+  ${media(
+    'minLaptop',
+    css`
+      .cooldownBadge {
+        margin-right: -6px;
+      }
+    `
+  )}
+
+  ${media(
+    'minDesktop',
+    css`
+      .stakingButton {
+        ${textStyle('body', 3)}
+
+        .icon {
+          margin-right: 4px;
+        }
+
+        .countUp {
+          ${textStyle('body', 3, 700)}
+        }
+      }
+    `
+  )}
 `
 
 export const StyledMyStakingWallet = styled(motion.aside)`

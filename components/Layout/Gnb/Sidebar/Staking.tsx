@@ -75,7 +75,7 @@ export default function SidebarStaking({ closeSidebar }: SidebarStakingProps) {
         <h3 className="title">My staked LP tokens</h3>
 
         <button className="toggleButton" type="button" onClick={toggle}>
-          <CountUp value={stakedTokenFiatValue} type="fiat" prefix="$" />
+          <CountUp value={stakedTokenBalance} />
           <Icon icon={show ? 'chevronDown' : 'chevronRight'} $size={24} />
         </button>
       </header>

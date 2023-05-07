@@ -8,7 +8,7 @@ const toastAnimation = cssTransition({
   exit: 'toastOut',
 })
 
-export function useToast() {
+export function useToast<T>() {
   function addToast<T>(params: Toast<T>) {
     const { props } = params
 

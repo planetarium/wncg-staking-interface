@@ -1,4 +1,3 @@
-import { capitalize } from 'utils/capitalize'
 import { useConnect } from 'hooks'
 
 import { StyledApproveModalPage1 } from './styled'
@@ -32,7 +31,7 @@ function ApproveModalPage1({
       <header className="modalHeader">
         <div className="titleGroup">
           <h2 className="title accent">
-            Approval for {capitalize(spenderName)}
+            {symbol} approval for {spenderName}
           </h2>
           <h3 className="subtitle">
             Please approve the token spending to {toastLabel}
@@ -79,7 +78,7 @@ function ApproveModalPage1({
 
             <h4 className="guideTitle">
               For other wallets, simply confirm the transaction to approve the
-              token spending.
+              token spending
             </h4>
           </div>
         </div>

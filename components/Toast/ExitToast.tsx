@@ -72,7 +72,7 @@ export default function ExitToast({
             <div className="detailItem">
               <dt>
                 <div className="token">
-                  <TokenIcon address={stakedTokenAddress} $size={16} />
+                  <TokenIcon address={stakedTokenAddress} $size={20} />
                 </div>
                 {bptName}
               </dt>

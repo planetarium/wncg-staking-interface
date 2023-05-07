@@ -12,6 +12,7 @@ import { formatUnits } from 'utils/formatUnits'
 import { bnum } from 'utils/bnum'
 import { parseLog } from 'utils/parseLog'
 import { txUrlFor } from 'utils/txUrlFor'
+import { useStaking } from 'hooks'
 import { useWatch } from './useWatch'
 
 import { StyledToast } from './styled'
@@ -23,7 +24,6 @@ import ToastStatus from './Status'
 type ToastProps = {
   hash: Hash
   toastLabel: string
-  tokenSymbol: string
   tokenAddress: Hash
   tokenDecimals: number
 }
@@ -31,13 +31,13 @@ type ToastProps = {
 export default function ApproveToast({
   hash,
   toastLabel,
-  tokenSymbol,
   tokenAddress,
   tokenDecimals,
 }: ToastProps) {
   const [allowance, setAllowance] = useState<string | null>(null)
 
   const setTx = useSetAtom(approveTxAtom)
+  const { tokenMap } = useStaking()
 
   const status = useWatch(hash)
 
@@ -71,6 +71,8 @@ export default function ApproveToast({
     formatUnits(constants.MaxUint256.toString(), tokenDecimals)
   )
 
+  const { symbol } = tokenMap[tokenAddress]
+
   return (
     <StyledToast>
       <header className="toastHeader">
@@ -88,9 +90,9 @@ export default function ApproveToast({
           <div className="detailItem">
             <dt>
               <div className="token">
-                <TokenIcon address={tokenAddress} dark />
+                <TokenIcon address={tokenAddress} dark $size={20} />
               </div>
-              {tokenSymbol}
+              {symbol}
             </dt>
 
             {hasAllowance && (

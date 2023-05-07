@@ -110,6 +110,7 @@ export const StyledCooldownModalPage2Guide = styled.dl`
       left: 0;
       width: ${GUIDE_ITEM_ICON_SIZE}px;
       height: ${GUIDE_ITEM_ICON_SIZE}px;
+      margin-top: 0;
       color: var(--white);
       background-color: var(--primary-500);
       border-radius: ${GUIDE_ITEM_ICON_SIZE}px;

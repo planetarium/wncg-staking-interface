@@ -1,14 +1,13 @@
 import { useCallback } from 'react'
-
 import { useContractWrite, usePrepareContractWrite } from 'wagmi'
-
-import { networkChainId } from 'utils/network'
 import { constants } from 'ethers'
+
+import config from 'config'
 import { Erc20Abi } from 'config/abi'
 
 const approveConfig = Object.freeze({
   abi: Erc20Abi,
-  chainId: networkChainId,
+  chainId: config.chainId,
   functionName: 'approve',
 })
 

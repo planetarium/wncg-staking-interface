@@ -7,11 +7,23 @@ import { CompletePage, ModalPage } from 'components/Modals/shared'
 export const StyledStakeModalPage0 = styled(ModalPage)`
   max-width: 480px;
 
+  .modalHeader {
+    .title {
+      padding-right: 40px;
+    }
+
+    .desc {
+      margin-top: 24px;
+    }
+  }
+
   ${media(
     'minSmLaptop',
     css`
       .modalHeader {
-        padding-right: ${48}px !important;
+        .title {
+          padding-right: 48px;
+        }
       }
     `
   )}

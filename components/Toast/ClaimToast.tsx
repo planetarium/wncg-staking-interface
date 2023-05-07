@@ -92,7 +92,7 @@ export default function ClaimToast({
               <div className="detailItem" key={`claimToast:rewards:${address}`}>
                 <dt>
                   <div className="token">
-                    <TokenIcon address={address} dark />
+                    <TokenIcon address={address} dark $size={20} />
                   </div>
                   {symbol}
                 </dt>
@@ -116,8 +116,9 @@ export default function ClaimToast({
 
           return (
             <ImportToken
-              key={`claimToast:importToken:${address}`}
               {...token}
+              className="importButton"
+              key={`claimToast:importToken:${address}`}
               name={undefined}
               $size="sm"
               $variant="primary"

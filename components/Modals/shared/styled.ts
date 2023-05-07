@@ -205,7 +205,6 @@ export const StyledModalPage = styled(motion.div)<{ $disabled?: boolean }>`
             margin-bottom: 8px;
             font-weight: 700;
             color: var(--primary-300);
-            text-transform: capitalize;
           }
         }
 
@@ -279,6 +278,21 @@ export const StyledModalCompletePage = styled(StyledModalPage)`
         width: 640px !important;
         height: 480px !important;
       }
+    }
+  }
+
+  .tokenSymbol {
+    ${flexbox()}
+    ${textStyle('body', 3, 700)}
+    height: 36px;
+    padding: 0 12px;
+    margin-bottom: 8px;
+    border-radius: 4px;
+    background-color: rgba(var(--white-rgb), 0.08);
+
+    > .tokenIcon,
+    > .tokenIconGroup {
+      margin-right: 8px;
     }
   }
 
@@ -586,7 +600,7 @@ export const StyledPendingNotice = styled(motion.footer)`
       }
 
       .desc {
-        ${textStyle('body', 3)}
+        ${textStyle('body', 4)}
         display: block;
         margin: 0;
         color: rgba(var(--white-rgb), 0.6);

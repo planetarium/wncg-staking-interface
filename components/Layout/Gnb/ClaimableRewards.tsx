@@ -54,7 +54,20 @@ function ClaimableRewards() {
               plus={hasAmount}
               decimals={isLaptop ? 2 : undefined}
               maxDecimals={isLaptop ? 2 : undefined}
+              abbr
             />
+
+            {hasAmount && (
+              <span className="parenthesis">
+                <NumberFormat
+                  value={fiatValue}
+                  type="fiat"
+                  decimals={isLaptop ? 2 : undefined}
+                  maxDecimals={isLaptop ? 2 : undefined}
+                  abbr
+                />
+              </span>
+            )}
 
             {showEarmarkTooltip && (
               <div className="tooltipGroup">
@@ -65,17 +78,6 @@ function ClaimableRewards() {
                   $width={400}
                 />
               </div>
-            )}
-
-            {hasAmount && (
-              <span className="parenthesis">
-                <NumberFormat
-                  value={fiatValue}
-                  type="fiat"
-                  decimals={isLaptop ? 2 : undefined}
-                  maxDecimals={isLaptop ? 2 : undefined}
-                />
-              </span>
             )}
           </div>
         )

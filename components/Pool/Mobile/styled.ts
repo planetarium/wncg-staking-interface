@@ -7,12 +7,13 @@ import { buttonStyle } from 'components/Button/styled'
 import { GUTTER_TABLET } from 'styles/constants/dimensions'
 
 export const StyledPoolMobileContainer = styled(motion.aside)`
-  ${flexbox()}
+  ${flexbox('center', 'end')}
   ${backdropFilter(80, 'rgba(var(--black-rgb), 0.6)', 'var(--black)')}
   position: fixed;
   bottom: 0;
   left: 0;
   width: 100%;
+  height: 100%;
   z-index: 100;
 `
 

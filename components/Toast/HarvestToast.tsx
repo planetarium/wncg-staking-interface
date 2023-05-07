@@ -18,6 +18,7 @@ import ImportToken from 'components/ImportToken'
 import NumberFormat from 'components/NumberFormat'
 import TokenIcon from 'components/TokenIcon'
 import Status from './Status'
+import { formatUnits } from 'utils/formatUnits'
 
 type HarvestToastProps = Required<HarvestTx>
 
@@ -50,7 +51,7 @@ export default function HarvestToast({
         const actualHarvestedAmount = parsedLogs?.[config.bal]
 
         if (actualHarvestedAmount) {
-          setAmount(actualHarvestedAmount)
+          setAmount(formatUnits(actualHarvestedAmount, balToken.decimals))
         }
       } catch {}
     },
@@ -76,7 +77,7 @@ export default function HarvestToast({
           <div className="detailItem">
             <dt>
               <div className="token">
-                <TokenIcon address={config.bal} dark />
+                <TokenIcon address={config.bal} dark $size={20} />
               </div>
               BAL
             </dt>

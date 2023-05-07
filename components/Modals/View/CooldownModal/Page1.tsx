@@ -9,6 +9,7 @@ import Button from 'components/Button'
 import ExpectedRevenuePlaceholder from 'components/ExpectedRevenue/Placeholder'
 import { CloseButton } from 'components/Modals/shared'
 import Suspense from 'components/Suspense'
+import Icon from 'components/Icon'
 
 const ExpectedRevenue = dynamic(() => import('components/ExpectedRevenue'), {
   ssr: false,
@@ -30,7 +31,11 @@ function CooldownModalPage1({ send }: CooldownModalPage1Props) {
     <StyledCooldownModalPage1>
       <header className="modalHeader">
         <div className="titleGroup">
-          <h2 className="title accent">Estimated Earnings</h2>
+          <h2 className="title accent">
+            <Icon icon="time" $size={16} />
+            Estimated earnings
+          </h2>
+
           <h3 className="subtitle">
             You&apos;ll get more rewards if you stay.
             <br />

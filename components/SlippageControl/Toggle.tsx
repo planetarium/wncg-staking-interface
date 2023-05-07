@@ -25,15 +25,13 @@ function SlippageControlToggle({
       className="slippageToggle"
       $disabled={disabled}
     >
-      <label className="label" htmlFor="slippageControl">
+      <label className="label tooltipGroup" htmlFor="slippageControl">
         Slippage tolerance
-        <div className="tooltipGroup">
-          <Icon className="toggler" icon="info" />
-          <Tooltip $gap={8} $direction="top" $align="center">
-            High slippage tolerance may incur significant losses. <br />
-            So the slippage tolerance setting is limited to &lt;30%.
-          </Tooltip>
-        </div>
+        <Icon className="toggler" icon="info" />
+        <Tooltip $gap={8} $direction="top" $align="center">
+          High slippage tolerance may incur significant losses. <br />
+          So the slippage tolerance setting is limited to &lt;30%.
+        </Tooltip>
       </label>
 
       <button

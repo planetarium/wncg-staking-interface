@@ -7,6 +7,7 @@ import { StyledRevenueModal } from './styled'
 import { CloseButton } from 'components/Modals/shared'
 import Suspense from 'components/Suspense'
 import ExpectedRevenuePlaceholder from 'components/ExpectedRevenue/Placeholder'
+import Icon from 'components/Icon'
 
 const ExpectedRevenue = dynamic(() => import('components/ExpectedRevenue'), {
   ssr: false,
@@ -19,7 +20,10 @@ function RevenueModal() {
     <StyledRevenueModal>
       <header className="modalHeader">
         <div className="titleGroup">
-          <h2 className="subtitle">Estimated Earnings</h2>
+          <h2 className="subtitle">
+            <Icon icon="time" $size={24} />
+            Estimated earnings
+          </h2>
         </div>
 
         <CloseButton />

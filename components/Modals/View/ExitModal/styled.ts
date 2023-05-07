@@ -22,13 +22,14 @@ export const StyledExitModalPage2 = styled(CompletePage)`
       ${flexbox('center', 'end')}
       ${textStyle('body', 3)}
       flex-direction: column;
-      color: var(--primary-500);
 
       .number {
         font-weight: 700;
       }
 
       .fiatValue {
+        color: var(--gray-500);
+
         .number {
           font-weight: 500;
         }

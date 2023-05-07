@@ -70,7 +70,7 @@ export default function StakeForm() {
             spenderName: 'staking',
             tokenAddress: stakedTokenAddress,
             tokenName: bptName,
-            tokenSymbol: bptName,
+            tokenSymbol: `LP token(${bptName})`,
             tokenDecimals: bptDecimals,
             approvePurpose: '',
             buttonLabel: 'Go to stake',

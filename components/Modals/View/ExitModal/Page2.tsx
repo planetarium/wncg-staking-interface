@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useTransaction } from 'wagmi'
 import { motion } from 'framer-motion'
 
@@ -15,6 +15,7 @@ import { StyledExitModalPage2 } from './styled'
 import Button from 'components/Button'
 import NumberFormat from 'components/NumberFormat'
 import TokenIcon from 'components/TokenIcon'
+import ImportToken from 'components/ImportToken'
 
 type ExitModalPage2Props = {
   assets: Hash[]
@@ -33,7 +34,12 @@ export default function ExitModalPage2({
 
   const toFiat = useFiat()
   const { removeModal } = useModal()
-  const { poolTokenAddresses, poolTokenDecimals, tokenMap } = useStaking()
+  const {
+    poolTokenAddresses,
+    poolTokenDecimals,
+    stakedTokenAddress,
+    tokenMap,
+  } = useStaking()
 
   useTransaction({
     chainId: config.chainId,
@@ -79,6 +85,28 @@ export default function ExitModalPage2({
   const exitAmountsInFiatValue = exitAmounts.map((amt, i) =>
     toFiat(amt, assets[i])
   )
+  const totalExitedAmountInFiatValue = exitAmountsInFiatValue
+    .reduce((acc, amt, i) => {
+      return acc.plus(toFiat(amt, assets[i]))
+    }, bnum(0))
+    .toString()
+
+  const importConfig = useMemo(() => {
+    if (isProportional) {
+      const token = tokenMap[stakedTokenAddress]
+      return {
+        ...token,
+        name: undefined,
+      }
+    }
+
+    const tokenOut = tokenMap?.[assets[tokenOutIndex]]
+
+    return {
+      ...tokenOut,
+      name: undefined,
+    }
+  }, [assets, isProportional, stakedTokenAddress, tokenMap, tokenOutIndex])
 
   return (
     <StyledExitModalPage2>
@@ -106,15 +134,10 @@ export default function ExitModalPage2({
                     </dt>
 
                     <dd>
-                      <NumberFormat
-                        className="active"
-                        value={amt}
-                        decimals={8}
-                      />
+                      <NumberFormat value={amt} decimals={8} />
 
                       <span className="fiatValue">
                         <NumberFormat
-                          className="active"
                           value={fiatValue}
                           type="fiat"
                           prefix="$"
@@ -124,9 +147,22 @@ export default function ExitModalPage2({
                   </div>
                 )
               })}
+
+              <div className="detailItem total">
+                <dt>My total exit</dt>
+                <dd>
+                  <NumberFormat
+                    className="active"
+                    value={totalExitedAmountInFiatValue}
+                    type="fiat"
+                  />
+                </dd>
+              </div>
             </motion.dl>
           )}
         </div>
+
+        <ImportToken {...importConfig} />
       </div>
 
       <footer className="modalFooter">

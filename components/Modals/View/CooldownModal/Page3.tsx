@@ -24,7 +24,7 @@ export default function CooldownModalPage3() {
       </div>
 
       <header className="modalHeader">
-        <h2 className="title">Cooldown Started!</h2>
+        <h2 className="title">Cooldown started!</h2>
       </header>
 
       <div className="container">

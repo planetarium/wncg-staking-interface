@@ -61,6 +61,7 @@ function ExitModalPage1(props: ExitModalPage1Props & UseExitFormReturns) {
             setMaxValue={setMaxValue}
             singleExitMaxAmounts={singleExitMaxAmounts}
             singleExitTokenOutIndex={singleExitTokenOutIndex}
+            totalExitFiatValue={totalExitFiatValue}
             hash={hash}
             isNativeCurrency={isNativeCurrency}
           />

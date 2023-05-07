@@ -56,7 +56,7 @@ export default function JoinToast({ hash, joinAmounts }: JoinToastProps) {
               <div className="detailItem" key={`joinToast:${address}:${amt}`}>
                 <dt>
                   <div className="token">
-                    <TokenIcon address={address} />
+                    <TokenIcon address={address} $size={20} />
                   </div>
                   {symbol}
                 </dt>

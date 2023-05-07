@@ -51,7 +51,7 @@ export function useJoinModal(assets: Hash[], joinAmounts: string[]) {
       type: ModalType.Approve,
       props: {
         spender: config.vault,
-        spenderName: 'Join pool',
+        spenderName: 'join pool',
         tokenAddress: tokensToApprove[0].address,
         tokenSymbol: tokensToApprove[0].symbol,
         tokenDecimals: tokensToApprove[0].decimals,
@@ -67,7 +67,7 @@ export function useJoinModal(assets: Hash[], joinAmounts: string[]) {
               type: ModalType.Approve,
               props: {
                 spender: config.vault,
-                spenderName: 'Join pool',
+                spenderName: 'join pool',
                 buttonLabel: 'Join pool',
                 toastLabel: 'join pool',
                 tokenDecimals: tokensToApprove[1].decimals,

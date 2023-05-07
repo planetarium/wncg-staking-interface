@@ -32,7 +32,7 @@ export const StyledUnstakeModalPage2Form = styled.form`
     }
 
     .label {
-      ${textStyle('body', 2, 700)}
+      ${textStyle('body', 3, 700)}
       color: var(--white);
     }
 
@@ -45,10 +45,6 @@ export const StyledUnstakeModalPage2Form = styled.form`
     .checkbox {
       ${posCenterY()}
       right: 20px;
-
-      .check {
-        color: var(--primary-400);
-      }
     }
   }
 
@@ -60,11 +56,12 @@ export const StyledUnstakeModalPage2Form = styled.form`
         margin-top: 40px;
 
         .label {
-          ${textStyle('subtitle', 1)}
+          ${textStyle('body', 2, 700)}
         }
 
         .desc {
-          ${textStyle('body', 2)}
+          ${textStyle('body', 3)}
+          margin-top: 4px;
           color: var(--gray-500);
         }
 

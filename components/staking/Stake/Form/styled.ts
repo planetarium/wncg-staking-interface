@@ -82,6 +82,12 @@ export const StyledStakeForm = styled(motion.form)`
     css`
       margin-top: 96px;
 
+      .inputGroup {
+        width: calc(100% - ${144 + 16}px);
+        flex-shrink: 0;
+        flex-grow: 0;
+      }
+
       .submitButton {
         width: 144px;
         height: 72px;
@@ -103,6 +109,7 @@ export const StyledStakeFormRevenuePopup = styled(motion.aside)`
   position: absolute;
   top: calc(100% + 8px);
   left: 0;
+  z-index: 1;
   padding: 20px;
   width: 100%;
   height: 240px;

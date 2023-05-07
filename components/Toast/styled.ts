@@ -89,11 +89,12 @@ export const StyledToast = styled.aside`
       ${flexbox('start', 'end')}
       flex-direction: column;
       flex-grow: 1;
-      margin-top: 2px;
       overflow: hidden;
       text-align: right;
 
       &.allowance {
+        margin-top: 2px;
+
         * {
           font-weight: 500 !important;
           color: var(--gray-500) !important;
@@ -127,15 +128,15 @@ export const StyledToast = styled.aside`
     .token {
       ${flexbox('start')}
       margin-right: 4px;
-    }
 
-    .tokenIconGroup {
-      .tokenIcon {
-        margin-left: -8px;
-      }
+      .tokenIconGroup {
+        .icon {
+          margin-left: -8px !important;
 
-      &:first-child {
-        margin-left: 0;
+          &:first-child {
+            margin-left: 0 !important;
+          }
+        }
       }
     }
   }
@@ -171,6 +172,14 @@ export const StyledToast = styled.aside`
 
   .toastFooter {
     margin-top: 16px;
+
+    .importButton {
+      margin-top: 8px;
+
+      &:first-child {
+        margin-top: 0;
+      }
+    }
   }
 
   ${media(

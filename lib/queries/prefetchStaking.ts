@@ -9,6 +9,7 @@ const FNS = [
   'earmarkIncentive',
   'FEE_DENOMINATOR',
   'balancerGauge',
+  'BAL_REWARD_POOL',
   'REWARD_TOKEN',
   'STAKED_TOKEN',
   'getBALRewardRate',
@@ -36,6 +37,7 @@ export async function prefetchStaking() {
       _earmarkIncentiveFee,
       _feeDenominator,
       _balancerGauge,
+      _balRewardPool,
       _rewardToken,
       _stakedToken,
       _balRewardRate,
@@ -53,6 +55,7 @@ export async function prefetchStaking() {
     )
 
     const liquidityGaugeAddress = _balancerGauge.toLowerCase() as Hash
+    const balRewardPoolAddress = _balRewardPool.toLowerCase() as Hash
     const rewardTokenAddress = _rewardToken.toLowerCase() as Hash
     const stakedTokenAddress = _stakedToken.toLowerCase() as Hash
 
@@ -70,6 +73,7 @@ export async function prefetchStaking() {
     return {
       cooldownPeriod,
       earmarkIncentivePcnt,
+      balRewardPoolAddress,
       liquidityGaugeAddress,
       rewardEmissions,
       rewardTokenAddress,

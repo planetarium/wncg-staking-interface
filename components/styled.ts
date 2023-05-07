@@ -130,30 +130,26 @@ export const StyledHighPriceImpact = styled(motion.div)`
       width: 16px;
       height: 16px;
     }
-
-    .check {
-      color: var(--primary-400) !important;
-    }
   }
 
   ${media(
     'minLaptop',
     css`
-      padding: 24px 32px;
+      padding: 20px;
 
       .title {
-        ${textStyle('body', 1, 700)}
+        ${textStyle('body', 3, 700)}
       }
 
       .desc {
-        ${textStyle('body', 2)}
+        ${textStyle('body', 4)}
       }
 
       .checkboxGroup {
-        margin-top: 24px;
+        margin-top: 16px;
 
         .label {
-          ${textStyle('body', 2, 700)}
+          ${textStyle('body', 4, 700)}
           margin-right: 12px;
         }
 
@@ -284,7 +280,7 @@ export const StyledRektPriceImpact = styled(motion.aside)`
       padding: 16px;
 
       .title {
-        ${textStyle('body', 2, 700)}
+        ${textStyle('body', 3, 700)}
       }
     `
   )}
@@ -437,15 +433,16 @@ export const StyledPoolTokens = styled.div`
     dd {
       ${flexbox('start')}
       ${textStyle('body', 2)}
+      flex-wrap: wrap;
       margin-top: 2px;
       color: var(--gray-600);
 
       .tokenAmount {
+        margin-right: 4px;
         font-weight: 700;
       }
 
       .fiatValue {
-        margin-left: 4px;
         color: var(--gray-500);
       }
     }
@@ -503,7 +500,7 @@ export const StyledTooltip = styled.p<{
   color: var(--gray-300);
   text-align: ${({ $align }) => $align};
   border-radius: 8px;
-  background-color: var(--brand-black);
+  background-color: var(--gray-700);
   mix-blend-mode: normal;
   box-shadow: 0px 4px 48px rgba(0, 0, 0, 0.48);
   transition: 200ms;

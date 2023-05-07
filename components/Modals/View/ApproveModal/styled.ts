@@ -54,21 +54,6 @@ export const StyledApproveModalPage1 = styled(StyledModalApprovePage)`
 `
 
 export const StyledApprovalModalPage2 = styled(CompletePage)`
-  .tokenSymbol {
-    ${flexbox()}
-    ${textStyle('body', 3, 700)}
-    height: 36px;
-    padding: 0 12px;
-    margin-bottom: 8px;
-    border-radius: 4px;
-    background-color: rgba(var(--white-rgb), 0.08);
-
-    > .tokenIcon,
-    > .tokenIconGroup {
-      margin-right: 8px;
-    }
-  }
-
   ${media(
     'minSmLaptop',
     css`

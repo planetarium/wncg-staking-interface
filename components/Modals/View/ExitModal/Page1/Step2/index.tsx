@@ -20,6 +20,7 @@ type ExitModalPage1Step2Props = {
   setMaxValue(e: MouseEvent<HTMLButtonElement>): void
   singleExitMaxAmounts: string[]
   singleExitTokenOutIndex?: number
+  totalExitFiatValue: string
   watch: UseFormWatch<ExitFormFields>
   hash?: Hash
   isNativeCurrency: boolean
@@ -34,6 +35,7 @@ function ExitModalPage1Step2({
   setMaxValue,
   singleExitMaxAmounts,
   singleExitTokenOutIndex = 0,
+  totalExitFiatValue,
   watch,
   isNativeCurrency,
   hash,
@@ -51,6 +53,7 @@ function ExitModalPage1Step2({
         watch={watch}
         hash={hash}
         setValue={setValue}
+        totalExitFiatValue={totalExitFiatValue}
       />
     )
   }

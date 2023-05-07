@@ -11,6 +11,7 @@ import Button from 'components/Button'
 import CountUp from 'components/CountUp'
 import Lottie from 'components/Lottie'
 import NumberFormat from 'components/NumberFormat'
+import TokenIcon from 'components/TokenIcon'
 
 type StakeModalPage2Props = {
   resetForm(): void
@@ -19,7 +20,7 @@ type StakeModalPage2Props = {
 function StakeModalPage2({ resetForm }: StakeModalPage2Props) {
   const toFiat = useFiat()
   const { removeModal } = useModal()
-  const { stakedTokenAddress } = useStaking()
+  const { stakedTokenAddress, tokenMap } = useStaking()
 
   const { stakeAmount = '0', stakedTokenBalance = '0' } =
     useAtomValue(stakeTxAtom)
@@ -51,7 +52,11 @@ function StakeModalPage2({ resetForm }: StakeModalPage2Props) {
     <StyledStakeModalPage2>
       <header className="modalHeader">
         <Lottie className="confetti" animationData="success" />
-        <h2 className="title">Staking Completed!</h2>
+        <div className="tokenSymbol">
+          <TokenIcon address={stakedTokenAddress} $size={16} />
+          LP token({tokenMap[stakedTokenAddress].symbol})
+        </div>
+        <h2 className="title">Staking completed!</h2>
       </header>
 
       <div className="container">

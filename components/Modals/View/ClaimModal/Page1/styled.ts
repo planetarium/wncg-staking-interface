@@ -90,6 +90,29 @@ export const StyledClaimModalPage1Form = styled.form`
       opacity: 0.5 !important;
     }
 
+    &:not(.disabled):hover {
+      &::before {
+        opacity: 1;
+      }
+    }
+
+    &::before {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: linear-gradient(
+        270deg,
+        rgba(var(--white-rgb), 0.1) 0,
+        rgba(var(--white-rgb), 0.05) 100%
+      );
+      content: '';
+      opacity: 0;
+      pointer-events: none;
+      transition: 200ms;
+    }
+
     .iconContainer {
       ${flexbox()}
       position: absolute;
@@ -125,13 +148,15 @@ export const StyledClaimModalPage1Form = styled.form`
       flex-grow: 1;
       margin-top: 8px;
       pointer-events: none;
+      word-break: break-all;
     }
 
     .fiatValue {
       ${textStyle('subtitle', 1)}
       justify-content: flex-end;
+      align-items: flex-end;
       width: 100%;
-      margin-top: 20px;
+      flex-grow: 1;
       text-align: right;
       pointer-events: none;
     }
@@ -160,6 +185,7 @@ export const StyledClaimModalPage1Form = styled.form`
 
       .rewardCard {
         width: calc(50% - ${16 / 2}px);
+        height: 156px;
         margin-top: 0 !important;
 
         .tokenName {
@@ -174,10 +200,6 @@ export const StyledClaimModalPage1Form = styled.form`
 
         .amount {
           ${textStyle('body', 2)}
-        }
-
-        .fiatValue {
-          margin-top: 24px;
         }
       }
     `

@@ -6,6 +6,7 @@ import {
   UseFormClearErrors,
   UseFormSetValue,
   UseFormTrigger,
+  UseFormWatch,
 } from 'react-hook-form'
 import { AnimatePresence } from 'framer-motion'
 
@@ -33,6 +34,7 @@ type JoinInputFieldProps = {
   trigger: UseFormTrigger<JoinFormFields>
   value: string
   weight: number
+  watch: UseFormWatch<JoinFormFields>
   className?: string
   disabled?: boolean
 }
@@ -47,6 +49,7 @@ function JoinInputField({
   setValue,
   trigger,
   value,
+  watch,
   weight,
   className,
   disabled,
@@ -86,14 +89,18 @@ function JoinInputField({
     trigger()
   }, [maxSafeBalance, name, setValue, trigger])
 
+  const currentValue = watch(name)
+
   useEffect(() => {
     if (address !== config.nativeCurrency.address) return
+    console.log(9999, currentValue)
+    if (currentValue === '') return
     if (bnum(value).gte(maxSafeBalance) && bnum(value).lt(maxBalance)) {
       setShowWarning(true)
     } else {
       setShowWarning(false)
     }
-  }, [address, maxBalance, maxSafeBalance, value])
+  }, [address, currentValue, maxBalance, maxSafeBalance, value])
 
   useEffect(() => {
     if (prevAddress !== address) setShowWarning(false)
@@ -105,7 +112,6 @@ function JoinInputField({
       layoutRoot
       $disabled={!!disabled}
     >
-      hi
       <div className="labelGroup">
         {isEther ? (
           <EtherSelect

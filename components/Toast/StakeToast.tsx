@@ -52,7 +52,7 @@ export default function StakeToast({ hash, stakeAmount }: StakeToastProps) {
           <div className="detailItem">
             <dt>
               <div className="token">
-                <TokenIcon address={stakedTokenAddress} $size={16} />
+                <TokenIcon address={stakedTokenAddress} $size={20} />
               </div>
               {stakedTokenSymbol}
             </dt>

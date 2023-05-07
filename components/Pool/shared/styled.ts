@@ -239,7 +239,7 @@ export const StyledJoinFormUnoptimizable = styled(motion.aside)`
       padding: 16px;
 
       .title {
-        ${textStyle('body', 2, 700)}
+        ${textStyle('body', 3, 700)}
       }
     `
   )}

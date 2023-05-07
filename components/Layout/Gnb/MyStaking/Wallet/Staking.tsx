@@ -54,7 +54,9 @@ export default function WalletStaking({ closeWallet }: WalletStakingProps) {
         <h3 className="title">My staked LP tokens</h3>
         <div className="amount">
           <CountUp value={stakedTokenBalance} />
-          <NumberFormat value={stakedTokenFiatValue} type="fiat" />
+          {hasStakedToken && (
+            <NumberFormat value={stakedTokenFiatValue} type="fiat" />
+          )}
         </div>
       </header>
 

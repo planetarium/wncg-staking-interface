@@ -6,6 +6,16 @@ import { ModalPage } from 'components/Modals/shared'
 import { StyledModalCompletePage } from 'components/Modals/shared/styled'
 
 export const StyledCooldownModalPage1 = styled(ModalPage)`
+  .modalHeader {
+    .title {
+      ${flexbox('start')}
+
+      .icon {
+        margin-right: 4px;
+      }
+    }
+  }
+
   .revenueList {
     margin-top: -16px;
     margin-bottom: -16px;

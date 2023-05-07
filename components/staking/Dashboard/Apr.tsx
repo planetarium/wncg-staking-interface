@@ -50,7 +50,7 @@ function StakingDashboardApr() {
       <div className="aprItem">
         <dt>Total Staked</dt>
         <dd className="colon">
-          <CountUp value={totalStakedInFiatValue} type="fiat" />
+          <CountUp value={totalStakedInFiatValue} type="fiat" abbr />
         </dd>
       </div>
 

@@ -3,8 +3,8 @@ import { useCallback, useMemo } from 'react'
 import { ConnectorId } from 'config/constants'
 import { useAuth } from 'hooks'
 
-import ConnectorIcon from './ConnectorIcon'
 import { StyledImportToken } from './styled'
+import ConnectorIcon from './ConnectorIcon'
 
 type ImportTokenProps = {
   address: Hash

@@ -54,7 +54,7 @@ export default function UnstakeToast({
           <div className="detailItem">
             <dt>
               <div className="token">
-                <TokenIcon address={stakedTokenAddress} />
+                <TokenIcon address={stakedTokenAddress} $size={20} />
               </div>
               {bptName}
             </dt>

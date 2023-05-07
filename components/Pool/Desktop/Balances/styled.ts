@@ -87,6 +87,7 @@ export const StyledPoolBalancesContent = styled.div`
     .placeholder {
       ${flexbox('start')}
       ${textStyle('title', 1)}
+      flex-wrap: wrap;
       margin-top: 4px;
       color: var(--black);
       white-space: nowrap;

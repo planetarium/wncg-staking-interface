@@ -48,7 +48,7 @@ export function useUnstakeForm(): UseUnstakeFormReturns {
     () => ({
       validate: {
         maxAmount: (v: string) =>
-          bnum(v).lte(stakedTokenBalance) || "You don't have enough balance",
+          bnum(v).lte(stakedTokenBalance) || 'Exceeds withdrawable balance',
       },
       onChange() {
         clearErrors('unstakeAmount')

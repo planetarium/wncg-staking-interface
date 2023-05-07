@@ -21,7 +21,7 @@ export default createClient({
     coinbaseConnector,
     walletConnectConnector,
     trustWalletConnector,
-    // bscConnector,
+    bscConnector,
     injectedConnector,
   ],
   webSocketProvider,

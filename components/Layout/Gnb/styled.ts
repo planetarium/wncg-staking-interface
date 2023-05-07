@@ -80,8 +80,8 @@ export const StyledGnb = styled.header`
       padding: 0 16px;
 
       .logo {
-        width: 196px;
-        height: 52px;
+        width: 160px;
+        height: 40px;
       }
     `
   )}
@@ -92,8 +92,8 @@ export const StyledGnb = styled.header`
       height: ${GNB_HEIGHT_DESKTOP}px;
 
       .logo {
-        width: 196px;
-        height: 56px;
+        width: 180px;
+        height: 48px;
       }
     `
   )}
@@ -303,7 +303,7 @@ export const StyledGnbClaimableRewards = styled(motion.div)`
 
   .reward {
     ${flexbox()}
-    ${textStyle('body', 3, 700)}
+    ${textStyle('body', 4, 700)}
 
     &:first-of-type {
       &::before {
@@ -366,6 +366,15 @@ export const StyledGnbClaimableRewards = styled(motion.div)`
         display: block;
         height: 16px;
         margin-left: 4px;
+      }
+    `
+  )}
+
+  ${media(
+    'minDesktop',
+    css`
+      .reward {
+        ${textStyle('body', 3, 700)}
       }
     `
   )}

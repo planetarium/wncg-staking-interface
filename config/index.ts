@@ -90,13 +90,6 @@ class ConfigService {
     return networks[this.chainId]
   }
 
-  get ogAssetUrl() {
-    return (
-      process.env.NEXT_PUBLIC_OG_ASSET_URL ||
-      'https://planetarium-gamefi.imgix.net/open-graph'
-    )
-  }
-
   get poolId() {
     return (
       process.env.NEXT_PUBLIC_BALANCER_POOL_ID ||

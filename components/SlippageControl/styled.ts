@@ -189,7 +189,14 @@ export const StyledSlippageControlToggle = styled.div<{ $disabled: boolean }>`
   }
 
   .tooltipGroup {
-    margin-left: 4px;
+    .toggler {
+      margin-left: 4px;
+    }
+
+    .tooltip {
+      left: 0;
+      transform: none;
+    }
   }
 
   .toggleButton {

@@ -52,12 +52,9 @@ function AvailableBalance({
         <NumberFormat value={maxAmount} symbol={symbol} decimals={decimals} />
 
         {showFiatValue && (
-          <NumberFormat
-            className="usd"
-            value={fiatValue}
-            type="fiat"
-            parenthesis
-          />
+          <span className="parenthesis">
+            <NumberFormat className="usd" value={fiatValue} type="fiat" />
+          </span>
         )}
       </dd>
     </StyledAvailableBalance>

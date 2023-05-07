@@ -1,8 +1,12 @@
 import config from 'config'
-import { LiquidityGaugeAbi, StakingAbi } from 'config/abi'
+import {
+  BalancerRewardPoolAbi,
+  LiquidityGaugeAbi,
+  StakingAbi,
+} from 'config/abi'
+import { readContractsPool } from 'lib/readContractsPool'
 import { bnum } from 'utils/bnum'
 import { formatUnits } from 'utils/formatUnits'
-import { readContractsPool } from 'lib/readContractsPool'
 
 const FNS = [
   'earmarkIncentive',
@@ -21,7 +25,10 @@ const CONTRACTS = FNS.map((fn) => ({
   functionName: fn,
 }))
 
-export async function fetchStaking(liquidityGaugeAddress: Hash) {
+export async function fetchStaking(
+  liquidityGaugeAddress: Hash,
+  balRewardPoolAddress: Hash
+) {
   const contracts = [
     ...CONTRACTS,
     {
@@ -30,6 +37,12 @@ export async function fetchStaking(liquidityGaugeAddress: Hash) {
       chainId: config.chainId,
       functionName: 'claimable_tokens',
       args: [config.stakingAddress],
+    },
+    {
+      address: balRewardPoolAddress,
+      abi: BalancerRewardPoolAbi as Abi,
+      chainId: config.chainId,
+      functionName: 'periodFinish',
     },
   ]
 
@@ -48,6 +61,7 @@ export async function fetchStaking(liquidityGaugeAddress: Hash) {
       _unstakeWindow,
       _totalStaked,
       _claimableTokens,
+      _periodFinish,
     ] = data
 
     const earmarkIncentivePcnt = Math.min(
@@ -68,6 +82,7 @@ export async function fetchStaking(liquidityGaugeAddress: Hash) {
     const accumulatedEarmarkIncentive = bnum(claimableTokens)
       .times(earmarkIncentivePcnt)
       .toString()
+    const periodFinish = _periodFinish.toNumber()
 
     return {
       accumulatedEarmarkIncentive,
@@ -78,6 +93,7 @@ export async function fetchStaking(liquidityGaugeAddress: Hash) {
       rewardEmissions,
       totalStaked,
       unstakePeriod,
+      periodFinish,
     }
   } catch (error) {
     throw error

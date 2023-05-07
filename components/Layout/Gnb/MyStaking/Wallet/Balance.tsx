@@ -40,7 +40,7 @@ function WalletBalance() {
         <h3 className="title">Stakable LP tokens</h3>
         <div className="amount">
           <CountUp value={bptBalance} />
-          <NumberFormat value={fiatValue} type="fiat" />
+          {hasLpToken && <NumberFormat value={fiatValue} type="fiat" />}
         </div>
       </header>
 

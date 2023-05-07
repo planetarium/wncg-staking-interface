@@ -66,7 +66,7 @@ export default function ClaimModalPage1({
   return (
     <StyledClaimModalPage1 $disabled={disabled}>
       <header className="modalHeader">
-        <strong className="title accent">Claim Rewards</strong>
+        <strong className="title accent">Claim rewards</strong>
         <h2 className="subtitle">Select the all coins to get rewards</h2>
 
         <CloseButton />

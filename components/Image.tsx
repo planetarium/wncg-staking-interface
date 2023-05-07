@@ -23,7 +23,7 @@ export default function Image({
   const filePath = useMemo(() => {
     if (!src) return null
     if ((src as string).startsWith('http')) return src
-    return `${baseUrls.imgix}${src}`
+    return `${baseUrls.imgix}/wncg-staking${src}`
   }, [src])
 
   if (!filePath) return null

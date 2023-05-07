@@ -1,6 +1,7 @@
 import type { Log } from '@ethersproject/abstract-provider'
 
 import {
+  balRewardPoolIface,
   ercTokenIface,
   liquidityGaugeIface,
   stakingIface,
@@ -22,9 +23,13 @@ export function parseLog(log: Log) {
           return vaultIface.parseLog(log)
         } catch {
           try {
-            return wethIface.parseLog(log)
+            return balRewardPoolIface.parseLog(log)
           } catch {
-            return null
+            try {
+              return wethIface.parseLog(log)
+            } catch {
+              return null
+            }
           }
         }
       }

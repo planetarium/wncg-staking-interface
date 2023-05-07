@@ -7,6 +7,7 @@ import { useModal } from 'hooks'
 import { StyledModalFailPage } from './styled'
 import Button from 'components/Button'
 import Lottie from 'components/Lottie'
+import { capitalize } from 'utils/string'
 
 type ModalFailPageProps = {
   action: string
@@ -30,7 +31,7 @@ function ModalFailPage({
     <StyledModalFailPage {...MOTION} className={className} variants={fadeIn}>
       <header className="modalHeader">
         <Lottie className="lottie" animationData="fail" />
-        <h2 className="title">{action} failed</h2>
+        <h2 className="title">{capitalize(action)} failed</h2>
         <p className="desc" dangerouslySetInnerHTML={{ __html: reason }}></p>
       </header>
 

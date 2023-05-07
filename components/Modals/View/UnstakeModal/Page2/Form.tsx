@@ -6,7 +6,7 @@ import NumberFormat from 'components/NumberFormat'
 import clsx from 'clsx'
 
 import { bnum } from 'utils/bnum'
-import { useStaking } from 'hooks'
+import { useFiat, useStaking } from 'hooks'
 import { UseUnstakeFormReturns } from '../useUnstakeForm'
 
 import { StyledUnstakeModalPage2Form } from './styled'
@@ -25,6 +25,7 @@ export default function UnstakeModalPage2Form({
   rewardFiatValue,
   ...props
 }: UnstakeModalPage2FormProps) {
+  const toFiat = useFiat()
   const { stakedTokenAddress, tokenMap } = useStaking()
   const hasRewards = earnedRewards.some((r) => bnum(r).gt(0))
 
@@ -40,6 +41,7 @@ export default function UnstakeModalPage2Form({
     placeholder,
     toggleCheck,
   } = props
+  const maxBalanceInFiatValue = toFiat(maxBalance, stakedTokenAddress)
 
   const disabled = _disabled || !hasRewards
 
@@ -54,12 +56,16 @@ export default function UnstakeModalPage2Form({
         decimals={stakedTokenDecimals}
         setMaxValue={setMaxValue}
         showFiatValue
-        disabled={inputDisabled}
+        disabled={inputDisabled || disabled}
         placeholder={placeholder}
-        $size="lg"
+        $size="md"
         type="number"
       />
-      <AvailableBalance label="Withdrawable LP tokens" maxAmount={maxBalance} />
+      <AvailableBalance
+        label="Withdrawable LP tokens"
+        maxAmount={maxBalance}
+        fiatValue={maxBalanceInFiatValue}
+      />
 
       <div className={clsx('claimCheckbox', { disabled })}>
         <h4 className="label">I want to claim the rewards as well.</h4>
@@ -73,7 +79,7 @@ export default function UnstakeModalPage2Form({
           checked={!hasRewards ? false : checked}
           onChange={toggleCheck}
           disabled={disabled}
-          $size={32}
+          $size={24}
         />
       </div>
     </StyledUnstakeModalPage2Form>

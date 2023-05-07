@@ -50,17 +50,18 @@ export const StyledMyStakingWalletSection = styled.section`
 
   .amount {
     ${flexbox('start')}
+    flex-wrap: wrap;
     margin-top: 4px;
     white-space: nowrap;
 
     .countUp {
       ${textStyle('title', 1)}
       color: var(--black);
+      margin-right: 4px;
     }
 
     .number {
       ${textStyle('body', 2)}
-      margin-left: 4px;
       color: var(--gray-500);
     }
   }

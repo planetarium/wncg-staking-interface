@@ -118,12 +118,11 @@ function AvailableBalance({ children, className }: AvailableBalanceProps) {
                   </dt>
 
                   <dd>
-                    <NumberFormat className="amount" value={amt} decimals={4} />
+                    <NumberFormat className="amount" value={amt} />
                     <div className="fiatValue">
                       <NumberFormat
                         value={propAmountsInFiatValue[i]}
-                        prefix="$"
-                        decimals={2}
+                        type="fiat"
                       />
                     </div>
                   </dd>

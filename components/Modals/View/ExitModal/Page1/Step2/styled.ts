@@ -51,6 +51,12 @@ export const StyledExitModalPage1Step2 = styled(StyledExitModalPage1Step)<{
       }
     }
 
+    .fiatValue {
+      ${textStyle('body', 4)}
+      color: var(--gray-25);
+      font-weight: 500 !important ;
+    }
+
     .number,
     .symbol {
       ${textStyle('body', 3)}
@@ -124,7 +130,7 @@ export const StyledExitModalPage1Step2PropAmounts = styled.section`
   }
 
   .propAmount {
-    margin-top: 16px;
+    margin-top: 8px;
     background-color: rgba(var(--white-rgb), 0.05);
     border-radius: 8px;
   }

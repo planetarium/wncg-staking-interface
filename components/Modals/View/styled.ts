@@ -105,6 +105,14 @@ export const StyledConnectModal = styled(ModalPage)`
 export const StyledRevenueModal = styled(ModalPage)`
   .modalHeader {
     ${flexbox('between')}
+
+    .subtitle {
+      ${flexbox('start')}
+
+      .icon {
+        margin-right: 8px;
+      }
+    }
   }
 
   .container {
@@ -121,7 +129,7 @@ export const StyledRevenueModal = styled(ModalPage)`
     font-weight: 500;
     line-height: 1.4285714285714286;
     color: rgba(var(--white-rgb), 0.6);
-    background-color: var(--primary-900);
+    background-color: var(--gray-700);
     border-radius: 8px;
   }
 

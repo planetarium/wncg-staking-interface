@@ -203,7 +203,6 @@ export const StyledModalPage = styled(motion.div)<{ $disabled?: boolean }>`
             margin-bottom: 8px;
             font-weight: 700;
             color: var(--primary-300);
-            text-transform: capitalize;
           }
         }
 

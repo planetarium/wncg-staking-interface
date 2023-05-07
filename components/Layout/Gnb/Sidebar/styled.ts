@@ -181,6 +181,7 @@ const StyledSidebarContentItem = styled(
       ${flexbox('start', 'end')}
       flex-direction: column;
       width: max-content;
+      margin-top: 0;
       white-space: nowrap;
 
       .countUp {

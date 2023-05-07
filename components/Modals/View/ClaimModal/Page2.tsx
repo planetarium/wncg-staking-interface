@@ -70,7 +70,7 @@ export default function ClaimModalPage2({
               return (
                 <div className="detailItem" key={`claimModal:page2:${address}`}>
                   <dt>
-                    <TokenIcon address={address} $size={20} />
+                    <TokenIcon address={address} $size={20} dark />
                     {symbol}
                   </dt>
 
@@ -88,7 +88,7 @@ export default function ClaimModalPage2({
             })}
 
             <div className="detailItem total">
-              <dt>Earned</dt>
+              <dt>Total claimed</dt>
               <dd>
                 <CountUp value={totalClaimFiatValue} type="fiat" />
               </dd>

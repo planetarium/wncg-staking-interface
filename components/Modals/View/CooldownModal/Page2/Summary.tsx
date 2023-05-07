@@ -32,7 +32,7 @@ export default function CooldownModalPage2Summary() {
 
   return (
     <StyledCooldownModalPage2Summary>
-      <p className="desc">(If you cool down from today) Withdrawal period</p>
+      <p className="desc">Withdrawal period (If you cool down from today)</p>
       <p className="period">
         <time dateTime={formatISO(expectedCooldownWindow)}>
           {format(expectedCooldownWindow)}

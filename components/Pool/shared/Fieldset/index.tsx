@@ -62,6 +62,7 @@ export default function JoinFormFieldset({
             setValue={setValue}
             trigger={trigger}
             value={value}
+            watch={watch}
             weight={weight}
             disabled={!isConnected}
           />

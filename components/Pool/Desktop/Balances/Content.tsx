@@ -20,6 +20,7 @@ export default function PoolBalancesContent() {
   const bptBalance = balanceOf(stakedTokenAddress)
   const hasLpToken = !!isConnected && bnum(bptBalance).gt(0)
   const fiatValue = toFiat(bptBalance, stakedTokenAddress)
+  const hasStakedToken = !!isConnected && bnum(stakedTokenBalance).gt(0)
 
   return (
     <StyledPoolBalancesContent>
@@ -29,7 +30,9 @@ export default function PoolBalancesContent() {
         {!!isConnected ? (
           <div className="amount">
             <CountUp value={stakedTokenBalance} />
-            <NumberFormat value={stakedTokenFiatValue} type="fiat" />
+            {hasStakedToken && (
+              <NumberFormat value={stakedTokenFiatValue} type="fiat" />
+            )}
           </div>
         ) : (
           <p className="placeholder">-</p>
@@ -44,7 +47,7 @@ export default function PoolBalancesContent() {
         {!!isConnected ? (
           <div className="amount">
             <CountUp value={bptBalance} />
-            <NumberFormat value={fiatValue} type="fiat" />
+            {hasLpToken && <NumberFormat value={fiatValue} type="fiat" />}
           </div>
         ) : (
           <p className="placeholder">-</p>

@@ -1,5 +1,3 @@
-import { capitalize } from 'utils/string'
-
 import { CloseButton, ModalPage, PendingNotice } from 'components/Modals/shared'
 import TxButton from 'components/TxButton'
 
@@ -26,7 +24,7 @@ function ApprovePage({
       <header className="modalHeader">
         <div className="titleGroup">
           <h2 className="title accent">
-            {symbol} Approval for {capitalize(action)}
+            {symbol} approval for {action}
           </h2>
           <h3 className="subtitle">
             First, Please approve your wallet to have smart contract for{' '}

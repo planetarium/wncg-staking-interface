@@ -8,7 +8,7 @@ import {
 
 import { LiquidityFieldType } from 'config/constants'
 import { bnum } from 'utils/bnum'
-import { useBalances, useResponsive, useStaking } from 'hooks'
+import { useBalances, useFiat, useResponsive, useStaking } from 'hooks'
 import { ExitFormFields } from 'hooks/useExitForm'
 
 import { StyledExitModalPage1Step2 } from './styled'
@@ -28,6 +28,7 @@ type ExitModalPage1Step2PropExitProps = {
   exitAmounts: string[]
   setValue: UseFormSetValue<ExitFormFields>
   control: ReactHookFormControl<ExitFormFields, 'any'>
+  totalExitFiatValue: string
   watch: UseFormWatch<ExitFormFields>
   hash?: Hash
 }
@@ -37,6 +38,7 @@ function ExitModalPage1Step2PropExit({
   exitAmounts,
   setValue,
   control,
+  totalExitFiatValue,
   watch,
   hash,
 }: ExitModalPage1Step2PropExitProps) {
@@ -69,10 +71,17 @@ function ExitModalPage1Step2PropExit({
             </div>
 
             <NumberFormat
+              className="fiatValue"
+              value={totalExitFiatValue}
+              type="fiat"
+            />
+
+            <NumberFormat
               className="totalBalance"
               value={bptBalance}
-              prefix="My balance : "
+              prefix="My total balance : "
               symbol="LP"
+              parenthesis
             />
           </output>
         ) : (

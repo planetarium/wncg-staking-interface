@@ -9,7 +9,7 @@ import {
 import config from 'config'
 import { LiquidityFieldType } from 'config/constants'
 import { bnum } from 'utils/bnum'
-import { useResponsive, useStaking } from 'hooks'
+import { useFiat, useResponsive, useStaking } from 'hooks'
 import { ExitFormFields } from '../../../../../../hooks/useExitForm'
 
 import { StyledExitModalPage1Step2 } from './styled'
@@ -36,6 +36,7 @@ function ExitModalPage1Step2SingleExit({
   watch,
   hash,
 }: ExitModalPage1Step2SingleExitProps) {
+  const toFiat = useFiat()
   const { poolTokens, poolTokenBalances, tokenMap } = useStaking()
   const { isHandheld } = useResponsive()
 
@@ -45,16 +46,18 @@ function ExitModalPage1Step2SingleExit({
 
   const singleExitRules = useMemo(
     () => ({
-      required: 'Please enter valid amount',
+      required: true,
       validate: {
         overflow(v: string) {
           return (
             bnum(v).lte(poolTokenBalances[singleExitTokenOutIndex]) ||
-            'Exceeds pool balance for this token'
+            'Exceeds available exit balance'
           )
         },
         maxAmount(v: string) {
-          return bnum(v).lte(singleExitMaxAmount) || 'Exceeds wallet balance'
+          return (
+            bnum(v).lte(singleExitMaxAmount) || 'Exceeds available exit balance'
+          )
         },
       },
       onChange() {
@@ -74,6 +77,8 @@ function ExitModalPage1Step2SingleExit({
       ? tokenMap[config.nativeCurrency.address]
       : poolTokens[singleExitTokenOutIndex]
 
+  const fiatValue = toFiat(singleExitMaxAmount, singleExitToken?.address)
+
   const disabled = !!hash
 
   return (
@@ -88,17 +93,20 @@ function ExitModalPage1Step2SingleExit({
         className="singleExit"
         control={control as unknown as ReactHookFormControl<FieldValues>}
         name={LiquidityFieldType.ExitAmount}
+        address={singleExitToken?.address}
         rules={singleExitRules}
         decimals={singleExitToken.decimals ?? 18}
         setMaxValue={setMaxValue}
         placeholder="0.0"
-        $size={isHandheld ? 'sm' : 'lg'}
+        $size={isHandheld ? 'sm' : 'md'}
         disabled={disabled}
+        showFiatValue
       />
       <AvailableBalance
         label="Available exit"
         maxAmount={singleExitMaxAmount}
         symbol={singleExitToken.symbol}
+        fiatValue={fiatValue}
         $size={isHandheld ? 'sm' : 'lg'}
       />
     </StyledExitModalPage1Step2>

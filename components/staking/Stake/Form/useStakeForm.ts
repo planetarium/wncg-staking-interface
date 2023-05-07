@@ -28,7 +28,7 @@ export function useStakeForm() {
     () => ({
       validate: {
         maxAmount: (v: string) =>
-          bnum(v).lte(bptBalance) || "You don't have enough balance",
+          bnum(v).lte(bptBalance) || 'Exceeds wallet balance',
       },
       onBlur() {
         setShowPopup(false)

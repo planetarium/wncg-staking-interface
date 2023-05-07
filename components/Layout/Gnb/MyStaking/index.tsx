@@ -7,7 +7,7 @@ import { cooldownWindowAtom, withdrawWindowAtom } from 'states/account'
 import { showMyStakingAtom } from 'states/ui'
 import { EXIT_MOTION } from 'config/motions'
 import { fadeIn, popIn } from 'config/motionVariants'
-import { useFiat, useIsMounted, useStaking } from 'hooks'
+import { useFiat, useIsMounted, useResponsive, useStaking } from 'hooks'
 import { useFetchUserData } from 'hooks/queries'
 
 import { StyledGnbMyStaking } from './styled'
@@ -16,6 +16,7 @@ import Icon from 'components/Icon'
 import Lottie from 'components/Lottie'
 import Suspense from 'components/Suspense'
 import Wallet from './Wallet'
+import { bnum } from 'utils/bnum'
 
 export default function GnbMyStaking() {
   const [show, setShow] = useAtom(showMyStakingAtom)
@@ -23,6 +24,7 @@ export default function GnbMyStaking() {
   const toFiat = useFiat()
   const isMounted = useIsMounted()
   const { stakedTokenAddress } = useStaking()
+  const { isLaptop } = useResponsive()
 
   const { stakedTokenBalance = '0' } =
     useFetchUserData({ enabled: isMounted }).data ?? {}
@@ -45,6 +47,8 @@ export default function GnbMyStaking() {
     setShow(false)
   }
 
+  const hasStakedToken = bnum(stakedTokenBalance).gt(0)
+
   return (
     <StyledGnbMyStaking>
       <motion.button
@@ -54,8 +58,13 @@ export default function GnbMyStaking() {
         variants={fadeIn}
       >
         <Icon icon="coin" $size={24} />
-        My staked LP
-        <CountUp value={stakedTokenBalanceInFiatValue} type="fiat" colon />
+        {isLaptop ? 'My' : 'My staked LP'}
+        <CountUp
+          value={stakedTokenBalanceInFiatValue}
+          type={hasStakedToken ? 'fiat' : undefined}
+          colon
+          abbr
+        />
         <AnimatePresence>
           {cooldownWindow && (
             <motion.div

@@ -88,6 +88,7 @@ export default function ClaimModalPage1Form({
                 className="fiatValue"
                 value={fiatValue}
                 type="fiat"
+                abbr
               />
 
               <input

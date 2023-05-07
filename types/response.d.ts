@@ -42,6 +42,7 @@ type UnserializedStakingResponse = [
   Hash,
   Hash,
   Hash,
+  Hash,
   BigNumber,
   BigNumber,
   BigNumber,
@@ -71,6 +72,7 @@ type PoolResponse = {
 type StakingResponse = {
   cooldownPeriod: number
   earmarkIncentivePcnt: number
+  balRewardPoolAddress: Hash
   liquidityGaugeAddress: Hash
   rewardEmissions: string[]
   rewardTokenAddress: Hash

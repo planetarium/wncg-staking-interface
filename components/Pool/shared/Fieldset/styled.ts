@@ -108,6 +108,20 @@ export const StyledJoinFormInputField = styled(motion.div)<{
     }
   }
 
+  .availableTokenAmount {
+    dd {
+      flex-wrap: wrap;
+
+      .number {
+        margin-right: 4px;
+      }
+
+      .parenthesis {
+        margin-left: 0;
+      }
+    }
+  }
+
   ${media(
     'minLaptop',
     css`

@@ -54,7 +54,7 @@ export const StyledAvailableBalance = styled(motion.dl)<{
     }
   }
 
-  .usd {
+  .parenthesis {
     margin-left: 4px;
   }
 
