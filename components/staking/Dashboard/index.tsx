@@ -9,7 +9,7 @@ function StakingDashboard() {
   return (
     <StyledStakingDashboard>
       <div className="imageContainer">
-        <Image className="image" src="/img-wncg-3d.png" alt="" priority />
+        <Image className="image" src="/apngb-app.png" alt="" priority />
       </div>
 
       <Suspense
