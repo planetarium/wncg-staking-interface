@@ -149,7 +149,7 @@ export default function ExitModalPage2({
               })}
 
               <div className="detailItem total">
-                <dt>My total exit</dt>
+                <dt>Total exit</dt>
                 <dd>
                   <NumberFormat
                     className="active"

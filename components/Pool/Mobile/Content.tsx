@@ -1,13 +1,14 @@
+import Link from 'next/link'
+
 import { wait } from 'utils/wait'
-import { useBalances, useJoinModal, useStaking } from 'hooks'
 import { poolUrlFor } from 'utils/poolUrlFor'
+import { useBalances, useJoinModal, useStaking } from 'hooks'
 import { useFetchUserAllowances } from 'hooks/queries'
 import { UseJoinFormReturns } from 'hooks/useJoinForm'
 
+import Icon from 'components/Icon'
 import { Footer, Summary } from 'components/Pool/shared'
 import Form from './Form'
-import Link from 'next/link'
-import Icon from 'components/Icon'
 
 type PoolMobileContentProps = UseJoinFormReturns
 
@@ -51,15 +52,6 @@ export default function PoolMobileContent(props: PoolMobileContentProps) {
       <div className="container">
         <div className="modalContent">
           <Form {...props} />
-
-          <div className="poolInfo">
-            <h5>Pool information</h5>
-
-            <Link className="linkButton" target="_blank" href={poolUrlFor()}>
-              detail
-              <Icon icon="outlink" />
-            </Link>
-          </div>
 
           <Summary
             totalJoinFiatValue={totalJoinFiatValue}

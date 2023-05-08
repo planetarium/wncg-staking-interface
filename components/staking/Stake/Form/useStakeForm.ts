@@ -58,15 +58,11 @@ export function useStakeForm() {
 
   const inputDisabled = useMemo(() => bnum(bptBalance).isZero(), [bptBalance])
 
-  const placeholder = useMemo(
-    () =>
-      inputDisabled
-        ? `Join pool and get LP tokens`
-        : 'Amount of LP tokens to stake',
-    [inputDisabled]
-  )
-
   function setMaxValue() {
+    if (bnum(bptBalance).isZero()) {
+      return
+    }
+
     setValue('stakeAmount', bptBalance)
     setShowPopup(true)
     clearErrors('stakeAmount')
@@ -95,7 +91,6 @@ export function useStakeForm() {
     inputDisabled,
     maxBalance: bptBalance,
     maxBalanceInFiatValue: bptBalanceInFiatValue,
-    placeholder,
     resetForm,
     rules,
     setMaxValue,

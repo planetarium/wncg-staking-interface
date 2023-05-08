@@ -12,7 +12,7 @@ import {
 import { format } from 'utils/format'
 
 import { useFiat, useResponsive, useStaking } from 'hooks'
-import { useFetchStaking } from 'hooks/queries'
+import { useFetchStaking, useFetchUserData } from 'hooks/queries'
 
 import { StyledExpectedRevenue } from './styled'
 import CountUp from 'components/CountUp'
@@ -21,26 +21,29 @@ import TokenIcon from 'components/TokenIcon'
 
 type ExpectedRevenueProps = {
   amount?: string
-  totalStaked?: string
 }
 
-function ExpectedRevenue({ totalStaked }: ExpectedRevenueProps) {
+function ExpectedRevenue({ amount = '0' }: ExpectedRevenueProps) {
   const toFiat = useFiat()
   const { isMobile } = useResponsive()
   const { rewardEmissions, rewardTokenAddresses, stakedTokenAddress } =
     useStaking()
 
-  const { totalStaked: currentTotalStaked = '0' } = useFetchStaking().data ?? {}
+  const { totalStaked = '0' } = useFetchStaking().data ?? {}
+  const { stakedTokenBalance = '0' } = useFetchUserData().data ?? {}
 
   const priceMap = useAtomValue(priceMapAtom)
   const stakedTokenPrice = priceMap[stakedTokenAddress] ?? '0'
 
-  const expectedTotalStaked = bnum(currentTotalStaked)
-    .plus(totalStaked ?? '0')
-    .toString()
+  const expectedTotalStakedValue = toFiat(
+    bnum(totalStaked).plus(amount).toString(),
+    stakedTokenAddress
+  )
 
   const aprs = rewardEmissions.map(
-    (e) => calcApr(e, stakedTokenPrice, expectedTotalStaked) ?? 0
+    (e, i) =>
+      calcApr(e, priceMap[rewardTokenAddresses[i]], expectedTotalStakedValue) ??
+      0
   )
 
   const revenueMapList = useMemo(() => {
@@ -48,7 +51,7 @@ function ExpectedRevenue({ totalStaked }: ExpectedRevenueProps) {
       const tokenPrice = priceMap[addr] ?? '0'
 
       return calcExpectedRevenue(
-        expectedTotalStaked,
+        stakedTokenBalance,
         aprs[i],
         stakedTokenPrice,
         tokenPrice
@@ -61,9 +64,9 @@ function ExpectedRevenue({ totalStaked }: ExpectedRevenueProps) {
     })
   }, [
     aprs,
-    expectedTotalStaked,
     priceMap,
     rewardTokenAddresses,
+    stakedTokenBalance,
     stakedTokenPrice,
   ])
 

@@ -36,6 +36,8 @@ export function useClaimForm() {
     [earnedRewards, rewardList, rewardTokenAddresses, toFiat]
   )
 
+  console.log(9999, totalClaimFiatValue)
+
   const submitDisabled = useMemo(
     () =>
       earnedRewards.every((amt) => bnum(amt).isZero()) ||

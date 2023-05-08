@@ -1,4 +1,5 @@
 import { MouseEvent, useMemo } from 'react'
+import { useKey } from 'react-use'
 import { useAtomValue } from 'jotai'
 import { AnimatePresence } from 'framer-motion'
 
@@ -33,6 +34,8 @@ function Modals() {
     e.stopPropagation()
     removeModal()
   }
+
+  useKey('Escape', removeModal)
 
   return (
     <Portal>

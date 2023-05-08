@@ -4,10 +4,10 @@ import dynamic from 'next/dynamic'
 import { useFetchUserData } from 'hooks/queries'
 
 import { StyledRevenueModal } from './styled'
+import Fallback from 'components/ExpectedRevenue/Fallback'
+import Icon from 'components/Icon'
 import { CloseButton } from 'components/Modals/shared'
 import Suspense from 'components/Suspense'
-import ExpectedRevenuePlaceholder from 'components/ExpectedRevenue/Placeholder'
-import Icon from 'components/Icon'
 
 const ExpectedRevenue = dynamic(() => import('components/ExpectedRevenue'), {
   ssr: false,
@@ -38,7 +38,7 @@ function RevenueModal() {
             suggested for the ease of understanding, and are not guaranteed.
           </p>
 
-          <Suspense fallback={<ExpectedRevenuePlaceholder />}>
+          <Suspense fallback={<Fallback />}>
             <ExpectedRevenue amount={stakedTokenBalance} />
           </Suspense>
         </div>

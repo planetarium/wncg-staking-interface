@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react'
+import { MouseEvent, useCallback, useMemo } from 'react'
 
 import { ConnectorId } from 'config/constants'
 import { useAuth } from 'hooks'
@@ -44,26 +44,31 @@ export default function ImportToken({
     }
   }, [connector?.id])
 
-  const importToken = useCallback(async () => {
-    if (!canImportToken) return
+  const importToken = useCallback(
+    async (e: MouseEvent<HTMLButtonElement>) => {
+      e.stopPropagation()
 
-    try {
-      await (window.ethereum as Ethereum).request({
-        method: 'wallet_watchAsset' as any,
-        params: {
-          type: 'ERC20',
-          options: {
-            address,
-            decimals,
-            name,
-            symbol,
-          },
-        } as any,
-      })
-    } catch (error) {
-      console.log(error)
-    }
-  }, [address, canImportToken, decimals, name, symbol])
+      if (!canImportToken) return
+
+      try {
+        await (window.ethereum as Ethereum).request({
+          method: 'wallet_watchAsset' as any,
+          params: {
+            type: 'ERC20',
+            options: {
+              address,
+              decimals,
+              name,
+              symbol,
+            },
+          } as any,
+        })
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    [address, canImportToken, decimals, name, symbol]
+  )
 
   if (!canImportToken || !isConnected) return null
 

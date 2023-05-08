@@ -1,5 +1,3 @@
-type ToastType = 'success' | 'error' | 'info'
-
 type ToastMessages = {
   success?: string
   error?: string

@@ -1,6 +1,7 @@
 import { useCallback, useMemo } from 'react'
-import { useAuth } from './useAuth'
+
 import { ConnectorId } from 'config/constants'
+import { useAuth } from './useAuth'
 
 export function useImportToken() {
   const { connector } = useAuth()

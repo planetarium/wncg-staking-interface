@@ -219,7 +219,7 @@ export const StyledJoinFormUnoptimizable = styled(motion.aside)`
   ${flexbox()}
   width: 100%;
   padding: 10px 16px;
-  margin: 32px 0;
+  margin-top: 32px;
   color: var(--white);
   background-color: var(--error-400);
   border-radius: 8px;

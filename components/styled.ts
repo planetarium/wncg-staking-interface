@@ -212,7 +212,7 @@ export const StyledLayout = styled.div`
   width: 100%;
   max-width: 100vw;
   height: 100vh;
-  max-height: 100vh;
+  max-height: -webkit-fill-available;
   overflow: hidden;
 `
 
@@ -226,7 +226,7 @@ export const StyledMain = styled(motion.main)<StyledMainProps>`
   justify-content: flex-start;
   width: 100%;
   height: 100vh;
-  max-height: 100vh;
+  max-height: -webkit-fill-available;
   transition: 500ms;
   overflow: hidden;
   background-color: var(--primary-900);
@@ -286,7 +286,9 @@ export const StyledRektPriceImpact = styled(motion.aside)`
   )}
 `
 
-export const StyledSkeleton = styled(motion.div)<{ $type: 'light' | 'dark' }>`
+export const StyledSkeleton = styled(motion.div)<{
+  $type: 'light' | 'dark' | 'medium'
+}>`
   ${flexbox('start')}
   flex-shrink: 0;
 
@@ -298,6 +300,8 @@ export const StyledSkeleton = styled(motion.div)<{ $type: 'light' | 'dark' }>`
     background-image: ${({ $type }) =>
       $type === 'light'
         ? `linear-gradient(90deg, rgba(234, 240, 247, 0.4) 0%, #dce4ed 50%, rgba(234, 240, 247, 0.4) 100%)`
+        : $type === 'medium'
+        ? `linear-gradient(90deg, rgba(var(--white-rgb), 0.08) 0%, rgba(var(--white-rgb), 0.12) 100%)`
         : `linear-gradient(90deg, rgba(33, 35, 34, 0.1) 0%, rgba(33, 35, 34, 0.5) 100%)`};
   }
 

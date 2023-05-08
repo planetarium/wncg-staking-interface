@@ -37,6 +37,10 @@ export function useExitPool({
     args: [config.poolId, account, account, request],
     functionName: 'exitPool',
     enabled: exitAmounts.some((amt) => bnum(amt).gt(0)),
+    onError(err: any) {
+      console.log('error')
+      console.warn(err.error)
+    },
   })
 
   const { writeAsync } = useContractWrite(writeConfig)

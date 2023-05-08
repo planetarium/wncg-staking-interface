@@ -1,14 +1,14 @@
 import { memo } from 'react'
 import Link from 'next/link'
 
+import { StyledPoolTokens } from './styled'
 import { poolUrlFor } from 'utils/poolUrlFor'
 import { usePropAmounts, useStaking } from 'hooks'
 
-import { StyledPoolTokens } from './styled'
+import config from 'config'
 import Icon from 'components/Icon'
 import NumberFormat from 'components/NumberFormat'
 import TokenIcon from 'components/TokenIcon'
-import config from 'config'
 
 type PoolTokensProps = {
   bptBalance: string

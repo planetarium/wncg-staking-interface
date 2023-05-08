@@ -18,7 +18,11 @@ function Favicon() {
         sizes="16x16"
         href="/favicon/favicon-16x16.png"
       />
-      <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#01d1c3" />
+      <link
+        rel="mask-icon"
+        href="/favicon/safari-pinned-tab.svg"
+        color="#01d1c3"
+      />
       <meta name="msapplication-TileColor" content="#00aba9" />
       <meta name="theme-color" content="#ffffff" />
     </>

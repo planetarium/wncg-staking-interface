@@ -21,7 +21,6 @@ const GlobalStyle = createGlobalStyle`
     font-family: ${fontFamily.text};
     -moz-osx-font-smoothing: grayscale;
     -webkit-font-smoothing: antialiased;
-
   }
 
   :root {
@@ -31,7 +30,7 @@ const GlobalStyle = createGlobalStyle`
 
   html {
     width: 100%;
-    height: 100vh;
+    min-height: -webkit-fill-available;
     overflow: hidden;
     font-size: 16px;
     font-family: ${fontFamily.text};
@@ -43,7 +42,7 @@ const GlobalStyle = createGlobalStyle`
     ${noScrollbar()}
     width: 100%;
     max-width: 100vw;
-    height: 100vh;
+    min-height: -webkit-fill-available;
     overflow-x: hidden;
     overflow-y: auto;
     font-family: ${fontFamily.text};

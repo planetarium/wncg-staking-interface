@@ -95,6 +95,12 @@ export const StyledExitModalPage1Step1 = styled(StyledExitModalPage1Step)`
     background-color: rgba(var(--white-rgb), 0.05);
     transition: 150ms;
 
+    &.disabled {
+      input {
+        cursor: not-allowed;
+      }
+    }
+
     &.selected {
       color: var(--white);
       background-color: var(--primary-500);
@@ -163,9 +169,11 @@ export const StyledExitModalPage1Step1 = styled(StyledExitModalPage1Step)`
           transition: 250ms;
         }
 
-        &:hover {
-          &::before {
-            opacity: 1;
+        &:not(.disabled) {
+          &:hover {
+            &::before {
+              opacity: 1;
+            }
           }
         }
       }

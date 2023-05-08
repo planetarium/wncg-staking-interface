@@ -40,16 +40,17 @@ function ExitModalPage1Step1({
     config.nativeCurrency.address,
   ]
 
+  const disabled = !!hash
+
   const rules = {
     required: true,
     onChange(e: any) {
+      if (disabled) return
       if (!e.target.value) setValue('exitType', null)
       resetField(LiquidityFieldType.ExitAmount)
       resetField(LiquidityFieldType.LiquidityPercent)
     },
   }
-
-  const disabled = !!hash
 
   return (
     <StyledExitModalPage1Step1 $disabled={disabled}>
@@ -73,6 +74,7 @@ function ExitModalPage1Step1({
                   <div
                     className={clsx('tokenButton', {
                       selected: exitType === addr,
+                      disabled,
                     })}
                     key={key}
                   >

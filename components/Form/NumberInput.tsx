@@ -16,6 +16,7 @@ type NumberInputProps = {
   decimals: number
   disabled: boolean
   field: ControllerRenderProps<FieldValues>
+  maxAmount: string
   setMaxValue(e: MouseEvent<HTMLButtonElement>): void
   address?: Hash
   id?: string
@@ -32,6 +33,7 @@ export default function NumberInput({
   disabled,
   field,
   setMaxValue,
+  maxAmount,
   address,
   id,
   onClick,
@@ -56,6 +58,8 @@ export default function NumberInput({
 
   const showTooltip =
     showFiatValue && debouncedFiatValue && bnum(debouncedFiatValue).gt(0)
+
+  const isMaxDisabled = bnum(maxAmount).isZero()
 
   function onBlur() {
     setFocused(false)
@@ -102,12 +106,13 @@ export default function NumberInput({
         placeholder={placeholder}
         autoComplete="off"
       />
+
       <button
         className="maxButton"
         type="button"
         onClick={setMaxValue}
         onBlur={onMaxButtonBlur}
-        disabled={disabled}
+        disabled={disabled || isMaxDisabled}
         aria-label="Enter maximum value"
       >
         max

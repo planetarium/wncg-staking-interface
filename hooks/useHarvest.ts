@@ -9,14 +9,11 @@ import { StakingAbi } from 'config/abi'
 import { ToastType } from 'config/constants'
 import { useSwitchNetwork } from './useSwitchNetwork'
 import { useToast } from './useToast'
-import { useStaking } from './useStaking'
 import { useFetchStaking } from './queries'
 
 export function useHarvest() {
   const { switchBeforeSend } = useSwitchNetwork()
-  const { liquidityGaugeAddress } = useStaking()
   const toast = useToast()
-  console.log(liquidityGaugeAddress)
 
   const setTx = useSetAtom(harvestTxAtom)
   const setShowHarvestTooltip = useSetAtom(showHarvestTooltipAtom)

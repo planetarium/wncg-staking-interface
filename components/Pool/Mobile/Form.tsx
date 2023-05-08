@@ -1,11 +1,11 @@
-import { useSetAtom } from 'jotai'
+import { useAtom } from 'jotai'
 
-import { optimizeErrorAtom } from 'states/form'
+import { showOptimizeErrorAtom } from 'states/form'
 import { useStaking } from 'hooks'
 import type { UseJoinFormReturns } from 'hooks/useJoinForm'
 
-import Button from 'components/Button'
 import { StyledPoolMobileForm } from './styled'
+import Button from 'components/Button'
 import Icon from 'components/Icon'
 import {
   Fieldset,
@@ -24,7 +24,6 @@ export default function PoolMobileForm(props: PoolMobileFormProps) {
     joinAmounts,
     maxBalances,
     setValue,
-    showAlert,
     optimizeDisabled,
     optimized,
     optimize,
@@ -33,20 +32,22 @@ export default function PoolMobileForm(props: PoolMobileFormProps) {
   } = props
 
   const { stakedTokenAddress } = useStaking()
-  const setShowError = useSetAtom(optimizeErrorAtom)
+  const [showOptError, setShowOptError] = useAtom(showOptimizeErrorAtom)
 
   function handleOptimize() {
     optimize()
-    setShowError(true)
+    setShowOptError(true)
+  }
+
+  function handleRefresh() {
+    resetFields()
+    setShowOptError(false)
   }
 
   return (
     <StyledPoolMobileForm>
       <header className="formHeader">
-        <h3 className="title">
-          <TokenIcon address={stakedTokenAddress} $size={24} />
-          Join pool
-        </h3>
+        <SlippageControl />
 
         <div className="buttonGroup">
           <Button
@@ -62,7 +63,7 @@ export default function PoolMobileForm(props: PoolMobileFormProps) {
           <button
             className="resetButton"
             type="reset"
-            onClick={resetFields}
+            onClick={handleRefresh}
             disabled={resetDisabled}
             aria-label="Reset"
           >
@@ -72,27 +73,27 @@ export default function PoolMobileForm(props: PoolMobileFormProps) {
             />
           </button>
         </div>
-
-        <SlippageControl />
       </header>
 
-      {optimizeDisabled && (
-        <Unoptimizable
+      <div>
+        {optimizeDisabled && (
+          <Unoptimizable
+            assets={assets}
+            maxBalances={maxBalances}
+            showAlert={showOptError}
+          />
+        )}
+
+        <Fieldset {...props} />
+
+        <ProportionalGuide
+          joinAmounts={joinAmounts}
           assets={assets}
           maxBalances={maxBalances}
-          showAlert={showAlert}
+          formState={formState}
+          setValue={setValue}
         />
-      )}
-
-      <Fieldset {...props} />
-
-      <ProportionalGuide
-        joinAmounts={joinAmounts}
-        assets={assets}
-        maxBalances={maxBalances}
-        formState={formState}
-        setValue={setValue}
-      />
+      </div>
     </StyledPoolMobileForm>
   )
 }

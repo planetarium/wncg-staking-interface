@@ -71,6 +71,14 @@ class ConfigService {
     }
   }
 
+  get stakingLinks() {
+    return {
+      medium:
+        'https://medium.com/@ninechronicles/introducing-wncg-staking-ft-chapter-iii-a27f26d70522',
+      github: 'https://github.com/planetarium/wncg-staking',
+    }
+  }
+
   get multicallContract() {
     return (
       process.env.NEXT_PUBLIC_MULTICALL_ADDRESS ??

@@ -107,6 +107,7 @@ function CountUp({
         tilde,
       })}
       style={style}
+      title={String(_value)}
     >
       {prefix}
       <ReactCountUp

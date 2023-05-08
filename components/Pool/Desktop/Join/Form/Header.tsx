@@ -1,7 +1,7 @@
 import { memo } from 'react'
 import { useSetAtom } from 'jotai'
 
-import { optimizeErrorAtom } from 'states/form'
+import { showOptimizeErrorAtom } from 'states/form'
 import { useAuth, useStaking } from 'hooks'
 
 import { StyledJoinFormHeader } from './styled'
@@ -26,11 +26,16 @@ function JoinFormHeader({
   const { isConnected } = useAuth()
   const { stakedTokenAddress } = useStaking()
 
-  const setShowError = useSetAtom(optimizeErrorAtom)
+  const setShowOptError = useSetAtom(showOptimizeErrorAtom)
 
   function handleOptimize() {
     optimize()
-    setShowError(true)
+    setShowOptError(true)
+  }
+
+  function handleReset() {
+    reset()
+    setShowOptError(false)
   }
 
   return (
@@ -54,7 +59,7 @@ function JoinFormHeader({
         <button
           className="resetButton"
           type="reset"
-          onClick={reset}
+          onClick={handleReset}
           disabled={resetDisabled || !isConnected}
           aria-label="Reset"
         >

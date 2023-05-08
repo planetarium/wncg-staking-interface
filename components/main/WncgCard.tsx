@@ -65,7 +65,7 @@ export default function MainWncgCard() {
           </li>
           <li className="linkItem">
             <Button
-              href="https://medium.com/@ninechronicles/introducing-wncg-staking-ft-chapter-iii-a27f26d70522"
+              href={config.stakingLinks.medium}
               aria-label="Go to medium"
               target="_blank"
               $contain
@@ -76,7 +76,7 @@ export default function MainWncgCard() {
           </li>
           <li className="linkItem">
             <Button
-              href="https://github.com/planetarium/wncg-staking"
+              href={config.stakingLinks.github}
               aria-label="Go to github"
               target="_blank"
               $contain

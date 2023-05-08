@@ -9,7 +9,9 @@ import {
   UseFormWatch,
 } from 'react-hook-form'
 import { AnimatePresence } from 'framer-motion'
+import { useSetAtom } from 'jotai'
 
+import { showOptimizeErrorAtom } from 'states/form'
 import { useFiat } from 'hooks'
 import config from 'config'
 import { bnum } from 'utils/bnum'
@@ -60,6 +62,8 @@ function JoinInputField({
   const { address, decimals, symbol } = token
   const prevAddress = usePrevious(address)
 
+  const setShowOptError = useSetAtom(showOptimizeErrorAtom)
+
   const id = useMemo(() => `joinForm:inputField:${address}`, [address])
   const availableBalanceLabel = useMemo(
     () => `${symbol} in my wallet`,
@@ -80,8 +84,11 @@ function JoinInputField({
         maxAmount: (v: string) =>
           bnum(v).lte(maxBalance) || `Exceeds wallet balance`,
       },
+      onChange() {
+        setShowOptError(false)
+      },
     }),
-    [maxBalance]
+    [maxBalance, setShowOptError]
   )
 
   const setMaxValue = useCallback(() => {
@@ -93,7 +100,6 @@ function JoinInputField({
 
   useEffect(() => {
     if (address !== config.nativeCurrency.address) return
-    console.log(9999, currentValue)
     if (currentValue === '') return
     if (bnum(value).gte(maxSafeBalance) && bnum(value).lt(maxBalance)) {
       setShowWarning(true)
@@ -132,6 +138,7 @@ function JoinInputField({
           decimals={0}
         />
       </div>
+
       <Control<'number'>
         id={id}
         address={token.address}
@@ -140,11 +147,13 @@ function JoinInputField({
         rules={rules}
         decimals={decimals}
         setMaxValue={setMaxValue}
+        maxAmount={maxBalance}
         placeholder="0.0"
         showFiatValue
         $size="sm"
         disabled={disabled}
       />
+
       <AvailableBalance
         layout
         label={availableBalanceLabel}

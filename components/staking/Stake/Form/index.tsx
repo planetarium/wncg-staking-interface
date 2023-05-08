@@ -33,10 +33,8 @@ export default function StakeForm() {
   const {
     closePopup,
     control,
-    inputDisabled,
     maxBalance,
     maxBalanceInFiatValue,
-    placeholder,
     resetForm,
     rules,
     setMaxValue,
@@ -48,7 +46,6 @@ export default function StakeForm() {
 
   const [debouncedStakeAmount] = useDebounce(stakeAmount, 500)
 
-  const hasBalance = bnum(maxBalance).gt(0)
   const isApproved = bnum(
     allowanceFor(stakedTokenAddress, config.stakingAddress)
   ).gte(stakeAmount)
@@ -118,20 +115,17 @@ export default function StakeForm() {
             decimals={bptDecimals}
             maxAmount={maxBalance}
             setMaxValue={setMaxValue}
-            disabled={inputDisabled}
             showFiatValue
             onMaxButtonBlur={closePopup}
             onClick={togglePopup}
-            placeholder={placeholder}
+            placeholder="Amount of LP tokens to stake"
           />
 
-          {hasBalance && (
-            <AvailableBalance
-              label="LP tokens in my wallet (available to stake)"
-              maxAmount={maxBalance}
-              fiatValue={maxBalanceInFiatValue}
-            />
-          )}
+          <AvailableBalance
+            label="LP tokens in my wallet (available to stake)"
+            maxAmount={maxBalance}
+            fiatValue={maxBalanceInFiatValue}
+          />
         </div>
 
         <SubmitButton disabled={submitDisabled} />

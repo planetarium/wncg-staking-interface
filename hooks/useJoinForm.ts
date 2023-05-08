@@ -8,7 +8,9 @@ import {
   UseFormTrigger,
   UseFormWatch,
 } from 'react-hook-form'
+import { useAtom } from 'jotai'
 
+import { showOptimizeErrorAtom } from 'states/form'
 import config from 'config'
 import { HIGH_PRICE_IMPACT, REKT_PRICE_IMPACT } from 'config/misc'
 import { LiquidityFieldType } from 'config/constants'
@@ -53,20 +55,18 @@ export type UseJoinFormReturns = {
   joinAmounts: string[]
   joinAmountsInFiatValue: string[]
   totalJoinFiatValue: string
-  showAlert: boolean
-  hideAlert(): void
   submitDisabled: boolean
   resetDisabled: boolean
   optimizeDisabled: boolean
 }
 
 export function useJoinForm(): UseJoinFormReturns {
-  const [showAlert, setShowAlert] = useState(false)
-
   const balanceOf = useBalances()
   const toFiat = useFiat()
   const { poolTokenAddresses } = useStaking()
   const { calcPriceImpact, calcOptimizedAmounts } = useJoinMath()
+
+  const [showOptError, setShowOptError] = useAtom(showOptimizeErrorAtom)
 
   const { clearErrors, control, formState, reset, trigger, setValue, watch } =
     useForm<JoinFormFields>({
@@ -147,8 +147,8 @@ export function useJoinForm(): UseJoinFormReturns {
   }, [joinAmounts, optimizedAmounts])
 
   const resetDisabled = useMemo(
-    () => unsanitizedJoinAmounts.every((a) => !a.trim()),
-    [unsanitizedJoinAmounts]
+    () => unsanitizedJoinAmounts.every((a) => !a.trim()) && !showOptError,
+    [showOptError, unsanitizedJoinAmounts]
   )
 
   const submitDisabled = useMemo(
@@ -162,23 +162,19 @@ export function useJoinForm(): UseJoinFormReturns {
 
   const optimize = useCallback(() => {
     if (optimizeDisabled) {
-      setShowAlert(true)
+      setShowOptError(true)
       return
     }
 
     joinFormFields.forEach((field, i) => {
       setValue(field as 'TokenA' | 'TokenB', optimizedAmounts[i])
     })
-    trigger()
-  }, [optimizeDisabled, optimizedAmounts, setValue, trigger])
 
-  function hideAlert() {
-    setShowAlert(false)
-  }
+    trigger()
+  }, [optimizeDisabled, optimizedAmounts, setShowOptError, setValue, trigger])
 
   return {
     assets,
-    showAlert,
     clearErrors,
     control,
     fields: joinFormFields,
@@ -197,7 +193,6 @@ export function useJoinForm(): UseJoinFormReturns {
     joinAmounts,
     joinAmountsInFiatValue,
     totalJoinFiatValue,
-    hideAlert,
     priceImpact,
   }
 }

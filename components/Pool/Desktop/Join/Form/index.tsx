@@ -1,5 +1,7 @@
 import { memo, useEffect } from 'react'
+import { useAtom } from 'jotai'
 
+import { showOptimizeErrorAtom } from 'states/form'
 import { wait } from 'utils/wait'
 import {
   useAuth,
@@ -21,19 +23,19 @@ import {
 import Header from './Header'
 
 function JoinForm() {
-  const { account, isConnected, prevAccount } = useAuth()
+  const { account, prevAccount } = useAuth()
   const balanceOf = useBalances()
   const { stakedTokenAddress } = useStaking()
 
   const { refetch } = useFetchUserAllowances()
 
+  const [showOptError, setShowOptError] = useAtom(showOptimizeErrorAtom)
+
   const joinFormReturns = useJoinForm()
   const {
-    showAlert,
     formState,
     assets,
     maxBalances,
-    hideAlert,
     optimized,
     joinAmounts,
     joinAmountsInFiatValue,
@@ -67,9 +69,9 @@ function JoinForm() {
   useEffect(() => {
     if (account !== prevAccount) {
       resetFields()
-      hideAlert()
+      setShowOptError(false)
     }
-  }, [account, hideAlert, prevAccount, resetFields])
+  }, [account, prevAccount, resetFields, setShowOptError])
 
   return (
     <StyledJoinForm layoutRoot>
@@ -84,7 +86,7 @@ function JoinForm() {
         <Unoptimizable
           assets={assets}
           maxBalances={maxBalances}
-          showAlert={showAlert}
+          showAlert={showOptError}
         />
       )}
 

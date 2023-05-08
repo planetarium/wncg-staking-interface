@@ -11,6 +11,7 @@ export const StyledModalOverlay = styled(motion.div)`
   width: 100%;
   max-width: 100vw;
   height: 100vh;
+  max-height: -webkit-fill-available;
   overflow: hidden;
   background-color: rgba(var(--realBlack-rgb), 0.8);
 

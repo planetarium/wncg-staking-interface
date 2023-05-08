@@ -7,7 +7,7 @@ import { useMemo } from 'react'
 
 type SkeletonProps = {
   $height?: number | string
-  $type?: 'light' | 'dark'
+  $type?: 'light' | 'dark' | 'medium'
   $width?: number | string
   $wrapperHeight?: number | string
   $radius?: number
@@ -19,9 +19,9 @@ type SkeletonProps = {
 }
 
 export default function Skeleton({
-  $width,
+  $width = '100%',
   $height = '100%',
-  $type = 'dark',
+  $type = 'medium',
   $wrapperHeight = $height,
   $radius,
   $mt,

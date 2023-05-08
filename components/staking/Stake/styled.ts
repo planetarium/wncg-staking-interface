@@ -21,6 +21,11 @@ export const StyledStakingStake = styled(motion.section)`
   height: 100%;
   margin-top: 16px;
 
+  .stakeGroup {
+    width: 100%;
+    margin-top: 32px;
+  }
+
   .linkGroup {
     ${flexbox()}
     position: relative;
@@ -41,6 +46,10 @@ export const StyledStakingStake = styled(motion.section)`
     css`
       align-items: center;
       margin: 64px auto 0;
+
+      .stakeGroup {
+        margin-top: 64px;
+      }
     `
   )}
 
@@ -49,6 +58,10 @@ export const StyledStakingStake = styled(motion.section)`
     css`
       align-items: flex-start;
       margin-top: 0;
+
+      .stakeGroup {
+        margin-top: 96px;
+      }
 
       .linkGroup {
         margin-top: 8px;
@@ -65,6 +78,38 @@ export const StyledStakingStake = styled(motion.section)`
     css`
       .linkGroup {
         max-width: 580px;
+      }
+    `
+  )}
+`
+
+export const StyledStakeFallback = styled(motion.div)`
+  ${flexbox('between')}
+  width: 100%;
+
+  .group {
+    width: 560px;
+    height: 72px;
+  }
+
+  .submitButton {
+    width: 120px !important;
+  }
+
+  ${media(
+    'minDesktop',
+    css`
+      .submitButton {
+        width: 144px !important;
+      }
+    `
+  )}
+
+  ${media(
+    'minDesktop',
+    css`
+      .submitButton {
+        width: 160px !important;
       }
     `
   )}
@@ -370,27 +415,17 @@ export const StyledStakeHeader = styled.header`
 
 export const StyledStakeConnect = styled.div`
   width: 100%;
-  margin-top: 32px;
-
-  .placeholder .input {
-    ${textStyle('body', 3)}
-  }
 
   .connectButton {
     ${mdButtonStyle}
-    margin-top: 32px;
+    width: 100%;
   }
 
   ${media(
     'minTablet',
     css`
-      margin-top: 64px;
       margin-right: auto;
       margin-left: auto;
-
-      .placeholder {
-        display: none;
-      }
 
       .connectButton {
         ${lgButtonStyle}
@@ -402,7 +437,6 @@ export const StyledStakeConnect = styled.div`
   ${media(
     'minLaptop',
     css`
-      margin-top: 96px;
       max-width: 560px;
       margin-left: 0;
 
@@ -416,7 +450,6 @@ ${media(
     'minDesktop',
     css`
       max-width: 580px;
-      margin-top: 96px;
     `
   )}
 `

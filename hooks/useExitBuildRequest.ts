@@ -4,6 +4,7 @@ import { WeightedPoolEncoder } from '@balancer-labs/sdk'
 import config from 'config'
 import { bnum } from 'utils/bnum'
 import { parseUnits } from 'utils/parseUnits'
+import { safeBigNumber } from 'utils/safeBigNumber'
 import { useExitMath, useStaking } from 'hooks'
 
 type UseExitPoolRequestParams = {
@@ -69,7 +70,7 @@ export function useExitBuildRequest({
     if (isProportional) return ['0', '0']
     return amounts.map((a, i) => {
       const token = tokenMap[_assets[i]]
-      return parseUnits(a, token.decimals).toString()
+      return safeBigNumber(parseUnits(a, token.decimals).toString())
     })
   }, [_assets, amounts, isProportional, tokenMap])
 

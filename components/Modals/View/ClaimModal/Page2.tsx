@@ -19,20 +19,29 @@ import TokenIcon from 'components/TokenIcon'
 type ClaimModalPage2Props = {
   rewardList: boolean[]
   earnedRewards: string[]
-  totalClaimFiatValue: string
 }
 
 export default function ClaimModalPage2({
   rewardList,
   earnedRewards,
-  totalClaimFiatValue,
 }: ClaimModalPage2Props) {
   const toFiat = useFiat()
   const { removeModal } = useModal()
-  const { rewardTokenAddresses, rewardTokenDecimals } = useRewards()
+  const { rewardTokenAddresses } = useRewards()
   const { tokenMap } = useStaking()
 
-  const [rewards, setRewards] = useState<string[]>(earnedRewards)
+  const initRewards = rewardList.map((check, i) =>
+    check ? earnedRewards[i] : '0'
+  )
+
+  const [rewards, setRewards] = useState<string[]>(initRewards)
+
+  const totalClaimFiatValue = rewards
+    .reduce(
+      (acc, r, i) => acc.plus(toFiat(r, rewardTokenAddresses[i])),
+      bnum(0)
+    )
+    .toString()
 
   const { hash } = useAtomValue(claimTxAtom)
 
@@ -43,8 +52,13 @@ export default function ClaimModalPage2({
       const { logs } = await tx.wait()
 
       const parsedLogs = parseTransferLogs(logs)
-      const list = rewardTokenAddresses.map((addr) => parsedLogs?.[addr] ?? '0')
-      const claimed = list.map((r, i) => formatUnits(r, rewardTokenDecimals[i]))
+
+      const claimed = rewardList.map((check, i) => {
+        if (!check) return '0'
+        const addr = rewardTokenAddresses[i]
+
+        return formatUnits(parsedLogs?.[addr], tokenMap[addr].decimals)
+      })
 
       setRewards(claimed)
     },

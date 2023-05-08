@@ -87,8 +87,9 @@ function StakingDashboardApr() {
               <CountUp
                 value={apr ?? '0'}
                 symbol="%"
-                decimals={2}
-                maxDecimals={2}
+                decimals={8}
+                // decimals={2}
+                // maxDecimals={2}
               />
             </dd>
 

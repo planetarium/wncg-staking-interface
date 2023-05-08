@@ -7,18 +7,21 @@ import { buttonStyle } from 'components/Button/styled'
 import { GUTTER_TABLET } from 'styles/constants/dimensions'
 
 export const StyledPoolMobileContainer = styled(motion.aside)`
-  ${flexbox('center', 'end')}
+  ${flexbox('end')}
   ${backdropFilter(80, 'rgba(var(--black-rgb), 0.6)', 'var(--black)')}
   position: fixed;
+  flex-direction: column;
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 100%;
+  height: calc(100% - 48px);
+  max-height: -webkit-fill-available;
   z-index: 100;
 `
 
 export const StyledPoolMobile = styled(ModalPage)`
   max-width: unset;
+  border-radius: 16px 16px 0 0 !important;
 
   .modalHeader,
   .container,
@@ -33,7 +36,7 @@ export const StyledPoolMobile = styled(ModalPage)`
   }
 
   .poolInfo {
-    ${flexbox('end')}
+    ${flexbox('start')}
     ${textStyle('body', 3)}
     width: 100%;
     margin-top: 24px;
@@ -42,55 +45,45 @@ export const StyledPoolMobile = styled(ModalPage)`
       ${textStyle('body', 3, 700)}
       color: rgba(var(--white-rgb), 0.9);
     }
-
-    .linkButton {
-      ${flexbox('end')}
-      margin-left: 8px;
-      font-weight: 500;
-      color: rgba(var(--white-rgb), 0.6);
-    }
   }
 `
 
 export const StyledPoolMobileHeader = styled.header`
+  .titleGroup {
+    padding-right: 0 !important;
+    margin-top: 12px;
+  }
+
+  .title {
+    padding-right: 0;
+  }
+
   .poolName {
     ${textStyle('body', 3, 700)}
     ${textGradient(4)}
   }
 
-  .titleGroup {
-    margin-top: 12px;
+  .linkButton {
+    ${flexbox('start')}
+    ${textStyle('body', 4, 700)}
+    margin-top: 8px;
+    color: rgba(var(--white-rgb), 0.9);
+
+    .icon {
+      margin-left: 0;
+      color: rgba(var(--white-rgb), 0.6);
+    }
   }
 `
 
 export const StyledPoolMobileForm = styled.form`
   .formHeader {
+    ${flexbox('between')}
     position: relative;
     width: 100%;
 
-    .title {
-      ${flexbox('center', 'start')}
-      ${textStyle('title', 1)}
-      flex-direction: column;
-
-      .tokenIconGroup {
-        margin-bottom: 8px;
-
-        .tokenIcon {
-          margin-left: -8px;
-        }
-      }
-    }
-
     .buttonGroup {
       ${flexbox('end')}
-      position: absolute;
-      top: 32px;
-      right: 0;
-
-      button {
-        flex-shrink: 0;
-      }
     }
 
     .slippageControl {
@@ -115,11 +108,15 @@ export const StyledPoolMobileForm = styled.form`
       }
     }
 
+    .optimizeButton {
+      width: 72px;
+    }
+
     .resetButton {
       ${buttonStyle}
       width: 32px;
       height: 32px;
-      margin-left: 12px;
+      margin-left: 8px;
       overflow: hidden;
       border-radius: 50%;
       background-color: rgba(var(--white-rgb), 0.05);
@@ -149,7 +146,7 @@ export const StyledPoolMobileForm = styled.form`
 
 export const StyledPoolMobileConnect = styled(motion.div)`
   width: 100%;
-  height: 100vh;
+  overflow: hidden;
 
   .title {
     ${textStyle('body', 2, 700)}

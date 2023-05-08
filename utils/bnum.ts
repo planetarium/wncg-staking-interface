@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js'
 
-BigNumber.config({ EXPONENTIAL_AT: [-25, 25] })
+BigNumber.config({ EXPONENTIAL_AT: [-40, 40] })
 
 type SanitizeNumberValueOption = {
   allowEmptyString?: boolean

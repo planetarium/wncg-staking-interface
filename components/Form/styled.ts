@@ -245,6 +245,7 @@ export const StyledNumberInput = styled(StyledBaseInput)<{ $focused: boolean }>`
   .maxButton {
     ${posCenterY()}
     ${textStyle('body', 3)}
+    z-index: 1;
     flex-shrink: 0;
     padding: 0 12px;
     width: ${MAX_BUTTON_WIDTH_MOBILE}px;
@@ -377,6 +378,10 @@ export const StyledRangeInput = styled.div`
     border-radius: 10px;
     background-repeat: no-repeat;
     box-shadow: 0 0 0 1px inset rgba(var(--white-rgb), 0.05);
+
+    &:disabled {
+      cursor: not-allowed;
+    }
 
     &:focus {
       outline: none;

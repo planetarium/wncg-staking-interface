@@ -1,10 +1,10 @@
 import { bnum } from './bnum'
 
 const PERIOD_MAP = {
-  day: bnum(1).div(365).toString(),
-  week: bnum(1).div(52).toString(),
-  month: bnum(1).div(12).toString(),
-  year: '1',
+  day: bnum(1).div(365),
+  week: bnum(1).div(52),
+  month: bnum(1).div(12),
+  year: bnum(1),
 }
 
 export type ExpectedRevenueMap = {
@@ -17,15 +17,15 @@ export type ExpectedRevenueMap = {
 export function calcExpectedRevenue(
   amount: string,
   apr: string,
-  lpTokenPrice: string,
-  rewardTokenPrice: string
+  bptPrice: string,
+  tokenPrice: string
 ): ExpectedRevenueMap {
   const entries = Object.entries(PERIOD_MAP).map(([span, rate]) => {
     const revenue = bnum(amount)
       .times(apr)
       .times(rate)
-      .times(lpTokenPrice)
-      .div(rewardTokenPrice)
+      .times(bptPrice)
+      .div(tokenPrice)
       .div(100)
       .toString()
 

@@ -53,6 +53,7 @@ export default function UnstakeModalPage2Form({
         name="unstakeAmount"
         address={stakedTokenAddress}
         rules={rules}
+        maxAmount={maxBalance}
         decimals={stakedTokenDecimals}
         setMaxValue={setMaxValue}
         showFiatValue

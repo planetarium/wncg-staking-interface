@@ -22,6 +22,7 @@ export const StyledGnbSidebar = styled.div`
   width: 100%;
   max-width: 100vw;
   height: 100vh;
+  max-height: -webkit-fill-available;
   top: 0;
   left: 0;
   overflow: hidden;
@@ -99,6 +100,7 @@ export const StyledGnbSidebarContent = styled(motion.aside)`
 export const StyledGnbSidebarOverlay = styled(motion.div)`
   width: 100%;
   height: 100vh;
+  max-height: -webkit-fill-available;
   background-color: rgba(var(--realBlack-rgb), 0.64);
 `
 

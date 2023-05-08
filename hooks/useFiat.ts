@@ -12,7 +12,7 @@ export function useFiat() {
       if (!tokenAddress) return '0'
 
       const price = priceMap[tokenAddress?.toLowerCase() as Hash] ?? '0'
-      return bnum(amount).times(price).toString()
+      return bnum(amount).times(price).toFixed(18, 3)
     },
     [priceMap]
   )

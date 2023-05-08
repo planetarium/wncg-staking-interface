@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { useAtomValue } from 'jotai'
 import { add, formatISO } from 'date-fns'
 
-import { priceMapAtom, totalStakedAtom } from 'states/system'
+import { priceMapAtom } from 'states/system'
 import { APR_SPAN_LIST } from 'config/misc'
 import { bnum } from 'utils/bnum'
 import { calcApr } from 'utils/calcApr'
@@ -12,6 +12,7 @@ import {
 } from 'utils/calcExpectedRevenue'
 import { format } from 'utils/format'
 import { useFiat, useStaking } from 'hooks'
+import { useFetchStaking } from 'hooks/queries'
 
 import { StyledStakeFormRevenuePopup } from './styled'
 import CountUp from 'components/CountUp'
@@ -33,40 +34,39 @@ export default function StakeFormRevenuePopup({
 
   const priceMap = useAtomValue(priceMapAtom)
   const stakedTokenPrice = priceMap[stakedTokenAddress] ?? '0'
-  const totalStaked = useAtomValue(totalStakedAtom) ?? '0'
-  const expectedTotalStaked = bnum(amount).plus(totalStaked).toString()
+  const { totalStaked = '0' } = useFetchStaking().data ?? {}
+
+  const expectedTotalStakedValue = toFiat(
+    bnum(totalStaked)
+      .plus(amount || '0')
+      .toString(),
+    stakedTokenAddress
+  )
 
   const aprs = useMemo(
     () =>
       rewardEmissions.map(
-        (e) => calcApr(e, stakedTokenPrice, expectedTotalStaked) ?? 0
+        (e, i) =>
+          calcApr(
+            e,
+            priceMap[rewardTokenAddresses[i]],
+            expectedTotalStakedValue
+          ) ?? 0
       ),
-    [expectedTotalStaked, rewardEmissions, stakedTokenPrice]
+    [expectedTotalStakedValue, priceMap, rewardEmissions, rewardTokenAddresses]
   )
 
   const revenueMapList = useMemo(() => {
     const list = rewardTokenAddresses.map((addr, i) => {
       const tokenPrice = priceMap[addr] ?? '0'
-
-      return calcExpectedRevenue(
-        expectedTotalStaked,
-        aprs[i],
-        stakedTokenPrice,
-        tokenPrice
-      )
+      return calcExpectedRevenue(amount, aprs[i], stakedTokenPrice, tokenPrice)
     })
 
     return APR_SPAN_LIST.map((key) => {
       const revenues = list.map((data) => data[key as keyof ExpectedRevenueMap])
       return [key, revenues]
     })
-  }, [
-    aprs,
-    expectedTotalStaked,
-    priceMap,
-    rewardTokenAddresses,
-    stakedTokenPrice,
-  ])
+  }, [amount, aprs, priceMap, rewardTokenAddresses, stakedTokenPrice])
 
   return (
     <StyledStakeFormRevenuePopup className={className}>

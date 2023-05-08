@@ -1,5 +1,7 @@
 import { memo } from 'react'
+import Link from 'next/link'
 
+import { poolUrlFor } from 'utils/poolUrlFor'
 import { useStaking } from 'hooks'
 
 import { StyledPoolMobileHeader } from './styled'
@@ -20,6 +22,11 @@ function PoolMobileHeader({ closePool }: PoolMobileHeaderProps) {
       <div className="titleGroup">
         <h2 className="title poolTitle">Join pool, Get LP Tokens!</h2>
       </div>
+
+      <Link className="linkButton" target="_blank" href={poolUrlFor()}>
+        Pool information
+        <Icon icon="outlink" />
+      </Link>
 
       <StyledCloseButton
         className="closeButton"

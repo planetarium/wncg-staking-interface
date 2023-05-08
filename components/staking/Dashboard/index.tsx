@@ -1,9 +1,10 @@
 import { memo } from 'react'
 
-import { StyledStakingDashboardApr, StyledStakingDashboard } from './styled'
+import { StyledStakingDashboard } from './styled'
 import Image from 'components/Image'
 import Suspense from 'components/Suspense'
 import Apr from './Apr'
+import Fallback from './Fallback'
 
 function StakingDashboard() {
   return (
@@ -17,9 +18,7 @@ function StakingDashboard() {
         />
       </div>
 
-      <Suspense
-        fallback={<StyledStakingDashboardApr as="div" $fallback aria-hidden />}
-      >
+      <Suspense fallback={<Fallback />}>
         <Apr />
       </Suspense>
     </StyledStakingDashboard>

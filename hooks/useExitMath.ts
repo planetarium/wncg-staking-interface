@@ -26,7 +26,7 @@ export function useExitMath() {
     poolTokenBalances,
     poolTokenDecimals,
   } = useStaking()
-  const { addSlippageScaled } = useSlippage()
+  const { addSlippageScaled, minusSlippage } = useSlippage()
 
   const bptBalance = balancesFor(bptAddress)
 
@@ -40,15 +40,24 @@ export function useExitMath() {
       const _bptBalanceScaled = parseUnits(bptBalance, POOL_DECIMALS).toString()
 
       return poolTokenDecimals.map((decimals, i) => {
-        return formatUnits(
-          calculator?.exactBptInForTokenOut(_bptBalanceScaled, i),
-          decimals ?? 18
+        return minusSlippage(
+          formatUnits(
+            calculator?.exactBptInForTokenOut(_bptBalanceScaled, i),
+            decimals ?? 18
+          ),
+          decimals
         )
       })
     } catch (error) {
       return amountsOutPlaceholder
     }
-  }, [amountsOutPlaceholder, bptBalance, calculator, poolTokenDecimals])
+  }, [
+    minusSlippage,
+    amountsOutPlaceholder,
+    bptBalance,
+    calculator,
+    poolTokenDecimals,
+  ])
 
   // NOTE: Maximum BPT allowed: 30%
   const _absMaxBpt = useMemo(() => {

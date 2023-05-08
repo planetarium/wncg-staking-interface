@@ -6,10 +6,10 @@ import { useFetchUserData } from 'hooks/queries'
 
 import { StyledCooldownModalPage1 } from './styled'
 import Button from 'components/Button'
-import ExpectedRevenuePlaceholder from 'components/ExpectedRevenue/Placeholder'
 import { CloseButton } from 'components/Modals/shared'
 import Suspense from 'components/Suspense'
 import Icon from 'components/Icon'
+import Fallback from 'components/ExpectedRevenue/Fallback'
 
 const ExpectedRevenue = dynamic(() => import('components/ExpectedRevenue'), {
   ssr: false,
@@ -37,9 +37,8 @@ function CooldownModalPage1({ send }: CooldownModalPage1Props) {
           </h2>
 
           <h3 className="subtitle">
-            You&apos;ll get more rewards if you stay.
-            <br />
-            Do you really want to start cooldown?
+            You&apos;ll get more rewards if you stay. Do you really want to
+            start cooldown?
           </h3>
         </div>
 
@@ -48,7 +47,7 @@ function CooldownModalPage1({ send }: CooldownModalPage1Props) {
 
       <div className="container">
         <div className="modalContent">
-          <Suspense fallback={<ExpectedRevenuePlaceholder />}>
+          <Suspense fallback={<Fallback />}>
             <ExpectedRevenue amount={stakedTokenBalance} />
           </Suspense>
         </div>

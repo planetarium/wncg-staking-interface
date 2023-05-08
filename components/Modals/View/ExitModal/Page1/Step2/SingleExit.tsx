@@ -10,7 +10,7 @@ import config from 'config'
 import { LiquidityFieldType } from 'config/constants'
 import { bnum } from 'utils/bnum'
 import { useFiat, useResponsive, useStaking } from 'hooks'
-import { ExitFormFields } from '../../../../../../hooks/useExitForm'
+import { ExitFormFields } from 'hooks/useExitForm'
 
 import { StyledExitModalPage1Step2 } from './styled'
 import { AvailableBalance, Control } from 'components/Form'
@@ -19,7 +19,6 @@ type ExitModalPage1Step2SingleExitProps = {
   clearErrors: UseFormClearErrors<ExitFormFields>
   control: ReactHookFormControl<ExitFormFields, 'any'>
   setMaxValue(e: MouseEvent<HTMLButtonElement>): void
-  isNativeCurrency: boolean
   singleExitMaxAmounts: string[]
   singleExitTokenOutIndex?: number
   watch: UseFormWatch<ExitFormFields>
@@ -30,7 +29,6 @@ function ExitModalPage1Step2SingleExit({
   clearErrors,
   control,
   setMaxValue,
-  isNativeCurrency,
   singleExitMaxAmounts,
   singleExitTokenOutIndex = 0,
   watch,
@@ -94,6 +92,7 @@ function ExitModalPage1Step2SingleExit({
         control={control as unknown as ReactHookFormControl<FieldValues>}
         name={LiquidityFieldType.ExitAmount}
         address={singleExitToken?.address}
+        maxAmount={singleExitMaxAmount}
         rules={singleExitRules}
         decimals={singleExitToken.decimals ?? 18}
         setMaxValue={setMaxValue}

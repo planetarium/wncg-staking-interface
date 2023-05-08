@@ -6,10 +6,10 @@ import { useFetchUserData } from 'hooks/queries'
 
 import { StyledUnstakeModalPage1 } from './styled'
 import Button from 'components/Button'
-import ExpectedRevenuePlaceholder from 'components/ExpectedRevenue/Placeholder'
 import { CloseButton } from 'components/Modals/shared'
 import Suspense from 'components/Suspense'
 import Icon from 'components/Icon'
+import Fallback from 'components/ExpectedRevenue/Fallback'
 
 const ExpectedRevenue = dynamic(() => import('components/ExpectedRevenue'), {
   ssr: false,
@@ -47,7 +47,7 @@ function UnstakeModalPage1({ send }: UnstakeModalPage1Props) {
 
       <div className="container">
         <div className="modalContent">
-          <Suspense fallback={<ExpectedRevenuePlaceholder />}>
+          <Suspense fallback={<Fallback />}>
             <ExpectedRevenue amount={stakedTokenBalance} />
           </Suspense>
         </div>

@@ -15,6 +15,14 @@ export const StyledUnstakeModalPage2 = styled(ModalPage)`
 `
 
 export const StyledUnstakeModalPage2Form = styled.form`
+  .maxButton {
+    right: 8px;
+  }
+
+  .input {
+    padding-right: ${54 + 8 * 2}px;
+  }
+
   .claimCheckbox {
     position: relative;
     padding: 20px;
@@ -51,6 +59,14 @@ export const StyledUnstakeModalPage2Form = styled.form`
   ${media(
     'minSmLaptop',
     css`
+      .maxButton {
+        right: 16px;
+      }
+
+      .input {
+        padding-right: ${80 + 16 + 8}px;
+      }
+
       .claimCheckbox {
         padding: 24px 32px;
         margin-top: 40px;

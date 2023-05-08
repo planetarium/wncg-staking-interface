@@ -16,7 +16,6 @@ export const StyledStakeForm = styled(motion.form)`
   position: relative;
   z-index: 1;
   width: 100%;
-  margin-top: 32px;
 
   .inputGroup {
     flex-grow: 1;
@@ -43,8 +42,6 @@ export const StyledStakeForm = styled(motion.form)`
   ${media(
     'minTablet',
     css`
-      margin-top: 64px;
-
       .availableTokenAmount {
         flex-wrap: nowrap;
         white-space: nowrap;
@@ -80,7 +77,7 @@ export const StyledStakeForm = styled(motion.form)`
   ${media(
     'minLaptop',
     css`
-      margin-top: 96px;
+      max-width: 560px;
 
       .inputGroup {
         width: calc(100% - ${144 + 16}px);
@@ -99,7 +96,6 @@ export const StyledStakeForm = styled(motion.form)`
     'minDesktop',
     css`
       max-width: 580px;
-      margin-top: 96px;
     `
   )}
 `

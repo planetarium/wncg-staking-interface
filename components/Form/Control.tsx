@@ -37,11 +37,11 @@ type ConditionalProps<T> = T extends 'text'
     }
   : T extends 'number'
   ? {
+      maxAmount: string
       setMaxValue(e: MouseEvent<HTMLButtonElement>): void
       address?: Hash
       decimals?: number
       showFiatValue?: boolean
-      maxAmount?: string
       onMaxButtonBlur?(e: FocusEvent): void
       min?: never
       max?: never
@@ -71,6 +71,7 @@ export default function FormControl<T>({
   setMaxValue,
   showFiatValue,
   className,
+  maxAmount,
   decimals = 18,
   disabled = false,
   label,
@@ -117,6 +118,7 @@ export default function FormControl<T>({
               field={field}
               setMaxValue={setMaxValue!}
               disabled={disabled}
+              maxAmount={maxAmount!}
               onClick={onClick}
               onMaxButtonBlur={onMaxButtonBlur}
               placeholder={placeholder}
@@ -149,6 +151,7 @@ export default function FormControl<T>({
       id,
       label,
       max,
+      maxAmount,
       min,
       onClick,
       onMaxButtonBlur,

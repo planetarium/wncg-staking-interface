@@ -7,7 +7,7 @@ import {
 } from 'react-hook-form'
 
 import { bnum } from 'utils/bnum'
-import { useAuth } from 'hooks'
+import { useAuth, useResponsive } from 'hooks'
 import { useFetchUserData } from 'hooks/queries'
 
 type UnstakeFormFields = {
@@ -33,6 +33,8 @@ export type UseUnstakeFormReturns = {
 
 export function useUnstakeForm(): UseUnstakeFormReturns {
   const { isConnected } = useAuth()
+  const { isMobile } = useResponsive()
+
   const { stakedTokenBalance = '0' } = useFetchUserData().data ?? {}
 
   const { clearErrors, control, formState, resetField, setValue, watch } =
@@ -75,10 +77,10 @@ export function useUnstakeForm(): UseUnstakeFormReturns {
 
   const placeholder = useMemo(
     () =>
-      inputDisabled
-        ? `You don't have staked tokens to unstake`
+      isMobile
+        ? `Enter withdrawal amount`
         : 'Enter the LP token amount to withdraw',
-    [inputDisabled]
+    [isMobile]
   )
 
   function setMaxValue() {

@@ -1,9 +1,10 @@
 import { motion } from 'framer-motion'
 import styled, { css } from 'styled-components'
 
-import { flexbox, inlineFlexbox, textStyle } from 'styles/utils'
+import { flexbox, inlineFlexbox, media, textStyle } from 'styles/utils'
 
-const SLIPPAGE_TOGGLE_LABEL_WIDTH = 145
+const SLIPPAGE_TOGGLE_LABEL_WIDTH_MOBILE = 135
+const SLIPPAGE_TOGGLE_LABEL_WIDTH_SM_LAPTOP = 145
 const SLIPPAGE_INPUT_PADDING = 12
 const SLIPPAGE_MENU_WIDTH = 144
 
@@ -115,7 +116,7 @@ export const StyledSlippageControlInput = styled.div<{
 export const StyledSlippageControlMenu = styled(motion.ul)`
   position: absolute;
   top: calc(100% + 4px);
-  left: ${SLIPPAGE_TOGGLE_LABEL_WIDTH + 4}px;
+  left: ${SLIPPAGE_TOGGLE_LABEL_WIDTH_MOBILE + 4}px;
   width: ${SLIPPAGE_MENU_WIDTH}px;
   padding: 8px;
   overflow: hidden;
@@ -173,11 +174,18 @@ export const StyledSlippageControlMenu = styled(motion.ul)`
       color: transparent;
     }
   }
+
+  ${media(
+    'minSmLaptop',
+    css`
+      left: ${SLIPPAGE_TOGGLE_LABEL_WIDTH_SM_LAPTOP + 4}px;
+    `
+  )}
 `
 
 export const StyledSlippageControlToggle = styled.div<{ $disabled: boolean }>`
   ${flexbox('start')}
-  ${textStyle('body', 3)}
+  ${textStyle('body', 4)}
   color: rgba(var(--white-rgb), 0.6);
   text-align: left;
   white-space: nowrap;
@@ -185,7 +193,7 @@ export const StyledSlippageControlToggle = styled.div<{ $disabled: boolean }>`
 
   .label {
     ${flexbox('start')}
-    width: ${SLIPPAGE_TOGGLE_LABEL_WIDTH}px;
+    width: ${SLIPPAGE_TOGGLE_LABEL_WIDTH_MOBILE}px;
   }
 
   .tooltipGroup {
@@ -221,4 +229,15 @@ export const StyledSlippageControlToggle = styled.div<{ $disabled: boolean }>`
         cursor: not-allowed;
       }
     `}
+
+  ${media(
+    'minSmLaptop',
+    css`
+      ${textStyle('body', 3)}
+
+      .label {
+        width: ${SLIPPAGE_TOGGLE_LABEL_WIDTH_SM_LAPTOP}px;
+      }
+    `
+  )}
 `

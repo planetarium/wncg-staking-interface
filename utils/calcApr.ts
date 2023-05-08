@@ -7,8 +7,8 @@ export function calcApr(
   totalStakedValue: number | string
 ) {
   const apr = bnum(emissionPerSec)
-    .times(price)
     .times(YEAR_IN_SEC)
+    .times(price)
     .div(totalStakedValue)
     .times(100)
 

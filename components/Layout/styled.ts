@@ -14,7 +14,7 @@ export const StyledLayout = styled(motion.div)<{ $root?: boolean }>`
   width: 100%;
   max-width: 100vw;
   height: 100vh;
-  max-height: 100vh;
+  max-height: -webkit-fill-available;
   overflow: hidden;
   transition: background-color 1000ms;
 

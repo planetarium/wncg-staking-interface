@@ -67,7 +67,6 @@ function ExitModalPage1Step2({
       singleExitTokenOutIndex={singleExitTokenOutIndex}
       watch={watch}
       hash={hash}
-      isNativeCurrency={isNativeCurrency}
     />
   )
 }

@@ -70,11 +70,7 @@ function ClaimModal() {
       )}
 
       {currentPage === 2 && (
-        <Page2
-          rewardList={rewardList}
-          earnedRewards={earnedRewards}
-          totalClaimFiatValue={totalClaimFiatValue}
-        />
+        <Page2 rewardList={rewardList} earnedRewards={earnedRewards} />
       )}
 
       {currentPage === 3 && <Page3 />}

@@ -103,8 +103,8 @@ export const StyledRootGnb = styled(StyledGnb)`
   padding: 0 20px;
 
   .logo {
-    width: 180px;
-    height: 32px;
+    width: 160px;
+    height: 48px;
 
     a {
       ${flexbox('start')}
@@ -119,7 +119,7 @@ export const StyledRootGnb = styled(StyledGnb)`
       padding: 0 16px;
 
       .logo {
-        width: 249px;
+        width: 300px;
         height: 48px;
       }
     `
@@ -128,10 +128,7 @@ export const StyledRootGnb = styled(StyledGnb)`
   ${media(
     'minLaptop',
     css`
-      .logo {
-        width: 288px;
-        height: 56px;
-      }
+      padding: 0 32px;
     `
   )}
 `

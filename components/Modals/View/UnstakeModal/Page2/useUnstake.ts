@@ -5,6 +5,7 @@ import { useContractWrite, usePrepareContractWrite } from 'wagmi'
 import config from 'config'
 import { StakingAbi } from 'config/abi'
 import { bnum } from 'utils/bnum'
+import { safeBigNumber } from 'utils/safeBigNumber'
 import { useAuth, useStaking, useSwitchNetwork } from 'hooks'
 
 export function useUnstake(unstakeAmount: string, checked: boolean) {
@@ -15,10 +16,11 @@ export function useUnstake(unstakeAmount: string, checked: boolean) {
 
   const stakedToken = tokenMap[stakedTokenAddress]
 
-  const scaledUnstakeAmount = parseUnits(
-    bnum(unstakeAmount).toString(),
-    stakedToken.decimals
+  const scaledUnstakeAmount = safeBigNumber(
+    parseUnits(bnum(unstakeAmount).toString(), stakedToken.decimals).toString()
   ).toString()
+
+  console.log(333, scaledUnstakeAmount)
 
   const enabled =
     !!account && bnum(unstakeAmount).gt(0) && !bnum(unstakeAmount).isNaN()

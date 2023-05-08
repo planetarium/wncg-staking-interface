@@ -41,6 +41,8 @@ export const StyledJoinFormFieldset = styled(motion.fieldset)`
 
 export const StyledJoinFormJoinFormEtherSelect = styled.div`
   .dropdownToggle {
+    ${textStyle('body', 4, 700)}
+
     .icon {
       margin-left: 4px;
     }
@@ -78,16 +80,16 @@ export const StyledJoinFormInputField = styled(motion.div)<{
 
   .labelGroup {
     ${flexbox('between')}
-    margin-bottom: 8px;
+    margin-bottom: 4px;
     white-space: nowrap;
 
     > .label {
-      ${textStyle('body', 3, 700)}
+      ${textStyle('body', 4, 700)}
       color: var(--white);
     }
 
     .weight {
-      ${textStyle('body', 3)}
+      ${textStyle('body', 4)}
       color: rgba(var(--white-rgb), 0.9);
     }
   }
@@ -109,6 +111,8 @@ export const StyledJoinFormInputField = styled(motion.div)<{
   }
 
   .availableTokenAmount {
+    margin-top: 4px;
+
     dd {
       flex-wrap: wrap;
 
@@ -118,17 +122,31 @@ export const StyledJoinFormInputField = styled(motion.div)<{
 
       .parenthesis {
         margin-left: 0;
+
+        .number {
+          margin-right: 0px;
+        }
       }
     }
   }
 
   ${media(
-    'minLaptop',
+    'minSmLaptop',
     css`
       .labelGroup {
+        margin-bottom: 8px;
+
         .label {
           ${textStyle('body', 2, 700)}
         }
+
+        .weight {
+          ${textStyle('body', 3)}
+        }
+      }
+
+      .availableTokenAmount {
+        margin-top: 8px;
       }
     `
   )}
