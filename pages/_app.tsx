@@ -11,6 +11,7 @@ import type { DehydratedState } from '@tanstack/react-query'
 import { useMount } from 'react-use'
 import { Provider } from 'jotai'
 import type { AppProps, NextWebVitalsMetric } from 'next/app'
+import Head from 'next/head'
 import Script from 'next/script'
 import { DefaultSeo } from 'next-seo'
 import { WagmiConfig } from 'wagmi'
@@ -22,12 +23,12 @@ import config from 'config'
 import { DEFAULT_SEO } from 'lib/seo'
 import wagmiClient from 'lib/wagmi/client'
 
+import GlobalStyle from 'styles/GlobalStyle'
+import ToastStyle from 'styles/ToastStyle'
+
 import Effects from 'components/GlobalHooks'
 import Layout from 'components/Layout'
 import ToastContainer from 'components/ToastContainer'
-
-import GlobalStyle from 'styles/GlobalStyle'
-import ToastStyle from 'styles/ToastStyle'
 
 type MyAppProps = AppProps & {
   pageProps: {

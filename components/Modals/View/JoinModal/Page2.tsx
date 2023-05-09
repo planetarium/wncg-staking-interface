@@ -1,10 +1,10 @@
 import { memo, useState } from 'react'
-import { useRouter } from 'next/router'
-import { useAtomValue } from 'jotai'
+import { useAtomValue, useSetAtom } from 'jotai'
 import { useTransaction } from 'wagmi'
 import { motion } from 'framer-motion'
 
 import { joinTxAtom } from 'states/tx'
+import { showPoolAtom } from 'states/ui'
 import config from 'config'
 import { MOTION } from 'config/motions'
 import { fadeIn } from 'config/motionVariants'
@@ -30,10 +30,10 @@ function JoinModalPage2({ resetForm }: JoinModalPage2Props) {
   const toFiat = useFiat()
   const { removeModal } = useModal()
   const { stakedTokenAddress, tokenMap } = useStaking()
-  const router = useRouter()
   const stakedToken = tokenMap[stakedTokenAddress]
 
   const { hash, bptBalance: lpTokenBalance = '0' } = useAtomValue(joinTxAtom)
+  const setShowPool = useSetAtom(showPoolAtom)
 
   const amountInFiatValue = toFiat(amount ?? 0, stakedTokenAddress)
   const hadBalanceBefore = bnum(lpTokenBalance).gt(0)
@@ -54,7 +54,7 @@ function JoinModalPage2({ resetForm }: JoinModalPage2Props) {
 
   async function goStake() {
     resetForm()
-    router.push(`/wncg`)
+    setShowPool(false)
     removeModal()
   }
 

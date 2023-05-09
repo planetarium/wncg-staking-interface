@@ -20,8 +20,6 @@ export function useUnstake(unstakeAmount: string, checked: boolean) {
     parseUnits(bnum(unstakeAmount).toString(), stakedToken.decimals).toString()
   ).toString()
 
-  console.log(333, scaledUnstakeAmount)
-
   const enabled =
     !!account && bnum(unstakeAmount).gt(0) && !bnum(unstakeAmount).isNaN()
 

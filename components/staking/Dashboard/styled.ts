@@ -85,13 +85,9 @@ export const StyledStakingDashboard = styled(motion.section)`
   )}
 `
 
-type StyledStakingDashboardAprProps = {
+export const StyledStakingDashboardApr = styled(motion.dl)<{
   $fallback?: boolean
-}
-
-export const StyledStakingDashboardApr = styled(
-  motion.dl
-)<StyledStakingDashboardAprProps>`
+}>`
   .aprItem {
     ${flexbox('start')}
     ${textStyle('body', 3)}
@@ -108,7 +104,7 @@ export const StyledStakingDashboardApr = styled(
     }
 
     .toggler {
-      display: none; // FIXME: 반응형 체크
+      display: none;
       width: 16px;
       height: 16px;
       margin-left: 4px;
@@ -122,6 +118,12 @@ export const StyledStakingDashboardApr = styled(
 
     .symbol {
       margin-left: 0;
+    }
+
+    .approx {
+      &::before {
+        font-family: ${fontFamily.text};
+      }
     }
   }
 

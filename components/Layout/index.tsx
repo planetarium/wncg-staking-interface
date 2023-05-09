@@ -1,13 +1,12 @@
-import { PropsWithChildren, useRef } from 'react'
+import { PropsWithChildren, useEffect, useRef, useState } from 'react'
 import dynamic from 'next/dynamic'
-import { useRouter } from 'next/router'
 import Head from 'next/head'
+import { useRouter } from 'next/router'
 
 import { useMediaQuery } from 'hooks'
 
 import { StyledLayout, StyledMain } from './styled'
 import Favicon from 'components/Favicon'
-import MainFavicon from 'components/MainFavicon'
 import GlobalHooks from 'components/GlobalHooks'
 import Suspense from 'components/Suspense'
 import Gnb from './Gnb'
@@ -31,16 +30,25 @@ function Layout({ children }: PropsWithChildren) {
   useMediaQuery()
 
   const isRootPage = pathname === '/'
-
   const isErrorPage = ['/404', '/500'].includes(route)
 
   if (isErrorPage) {
-    return <StyledLayout layoutRoot>{children}</StyledLayout>
+    return (
+      <StyledLayout layoutRoot>
+        <Head>
+          <Favicon />
+        </Head>
+
+        {children}
+      </StyledLayout>
+    )
   }
 
   return (
     <>
-      <Head>{isRootPage ? <MainFavicon /> : <Favicon />}</Head>
+      <Head>
+        <Favicon />
+      </Head>
 
       <StyledLayout layoutRoot $root={isRootPage}>
         <Alerts />

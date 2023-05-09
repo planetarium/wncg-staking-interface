@@ -50,7 +50,7 @@ export default function UnstakeModalPage3() {
         <div className="modalContent">
           <dl className="detailList">
             <div className="detailItem">
-              <dt>Already had</dt>
+              <dt>Before withdrawal</dt>
               <dd>
                 <NumberFormat value={stakedTokenBalance} decimals={8} />
 

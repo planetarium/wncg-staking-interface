@@ -1,11 +1,11 @@
 import { useMemo } from 'react'
 import { useMount } from 'react-use'
 import { useAtom } from 'jotai'
-import { formatISO } from 'date-fns'
 
 import { currentTimestampAtom } from 'states/system'
 import { bnum } from 'utils/bnum'
 import { format } from 'utils/format'
+import { formatISO } from 'utils/formatISO'
 import { now } from 'utils/now'
 import { useStaking } from 'hooks'
 
@@ -35,9 +35,10 @@ export default function CooldownModalPage2Summary() {
       <p className="desc">Withdrawal period (If you cool down from today)</p>
       <p className="period">
         <time dateTime={formatISO(expectedCooldownWindow)}>
+          {formatISO(expectedCooldownWindow)}
           {format(expectedCooldownWindow)}
         </time>
-        <time className="tilde" dateTime={formatISO(expectedUnstakeWindow)}>
+        <time className="hyphen" dateTime={formatISO(expectedUnstakeWindow)}>
           {format(expectedUnstakeWindow)}
         </time>
       </p>

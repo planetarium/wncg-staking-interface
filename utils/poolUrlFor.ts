@@ -2,8 +2,8 @@ import config from 'config'
 import { Network } from 'config/constants'
 
 export function poolUrlFor() {
-  let networkName = 'app'
+  let networkName = 'ethereum'
   if (config.chainId === Network.GOERLI) networkName = 'goerli'
 
-  return `https://${networkName}.balancer.fi/${config.poolId}`
+  return `https://app.balancer.fi/#/${networkName}/pool/${config.poolId}`
 }

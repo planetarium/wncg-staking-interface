@@ -3,12 +3,12 @@ import { useMount } from 'react-use'
 import Link from 'next/link'
 import { useAtom, useSetAtom } from 'jotai'
 import { RESET } from 'jotai/utils'
-import { formatISO } from 'date-fns'
 
 import { currentTimestampAtom } from 'states/system'
 import { cooldownTxAtom } from 'states/tx'
 import { bnum } from 'utils/bnum'
 import { format } from 'utils/format'
+import { formatISO } from 'utils/formatISO'
 import { now } from 'utils/now'
 import { txUrlFor } from 'utils/txUrlFor'
 import { useStaking } from 'hooks'
@@ -69,7 +69,7 @@ export default function CooldownToast({ hash }: CooldownToastProps) {
                 {format(schedule.cooldownStartsAt, { dateOnly: true })}
               </time>
               <time
-                className="tilde"
+                className="hyphen"
                 dateTime={formatISO(schedule.cooldownEndsAt)}
               >
                 {format(schedule.cooldownEndsAt, { dateOnly: true })}
@@ -83,7 +83,7 @@ export default function CooldownToast({ hash }: CooldownToastProps) {
                 {format(schedule.unstakeStartsAt, { dateOnly: true })}
               </time>
               <time
-                className="tilde"
+                className="hyphen"
                 dateTime={formatISO(schedule.unstakeEndsAt)}
               >
                 {format(schedule.unstakeEndsAt, { dateOnly: true })}

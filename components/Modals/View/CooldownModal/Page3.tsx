@@ -34,7 +34,7 @@ export default function CooldownModalPage3() {
               <dt>Cooldown</dt>
               <dd>
                 <time>{format(cooldownStartsAt, { dateOnly: true })}</time>
-                <time className="tilde">
+                <time className="hyphen">
                   {format(cooldownEndsAt, { dateOnly: true })}
                 </time>
               </dd>
@@ -43,7 +43,7 @@ export default function CooldownModalPage3() {
               <dt>Withdraw</dt>
               <dd>
                 <time>{format(cooldownEndsAt, { dateOnly: true })}</time>
-                <time className="tilde">
+                <time className="hyphen">
                   {format(withdrawEndsAt, { dateOnly: true })}
                 </time>
               </dd>

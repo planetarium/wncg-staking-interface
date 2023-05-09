@@ -1,6 +1,6 @@
 import { memo, useMemo } from 'react'
 import { useAtomValue } from 'jotai'
-import { add, formatISO } from 'date-fns'
+import { add } from 'date-fns'
 
 import { priceMapAtom } from 'states/system'
 import { bnum } from 'utils/bnum'
@@ -10,6 +10,7 @@ import {
   ExpectedRevenueMap,
 } from 'utils/calcExpectedRevenue'
 import { format } from 'utils/format'
+import { formatISO } from 'utils/formatISO'
 
 import { useFiat, useResponsive, useStaking } from 'hooks'
 import { useFetchStaking, useFetchUserData } from 'hooks/queries'

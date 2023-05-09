@@ -1,6 +1,5 @@
 import { useMemo } from 'react'
 import { useAtomValue } from 'jotai'
-import { formatISO } from 'date-fns'
 
 import {
   cooldownWindowAtom,
@@ -10,6 +9,7 @@ import {
 import { ModalType } from 'config/constants'
 import { bnum } from 'utils/bnum'
 import { format } from 'utils/format'
+import { formatISO } from 'utils/formatISO'
 import { joinCountdown } from 'utils/joinCountdown'
 import { useCountdown, useModal } from 'hooks'
 import { useFetchUserData } from 'hooks/queries'
