@@ -92,13 +92,20 @@ export const StyledToast = styled.aside`
       overflow: hidden;
       text-align: right;
 
-      &.allowance {
+      &.allowance,
+      &.text {
         margin-top: 2px;
+        font-weight: 500 !important;
+        color: var(--gray-500) !important;
 
         * {
           font-weight: 500 !important;
           color: var(--gray-500) !important;
         }
+      }
+
+      &.text {
+        margin-top: 0;
       }
 
       .number {

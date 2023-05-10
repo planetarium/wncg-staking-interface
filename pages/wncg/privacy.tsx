@@ -6,17 +6,20 @@ import { PRIVACY_SEO } from 'lib/seo'
 export { getStaticProps } from 'lib/getStaticProps'
 
 import { StyledDocsPage } from 'styles/pages/docs'
+import Favicon from 'components/Favicon'
 
 const Privacy: NextPage = () => {
   return (
     <StyledDocsPage>
       <NextSeo {...PRIVACY_SEO} />
+
       <Head>
         <title>Privacy Policy / WNCG Staking</title>
         <meta
           name="description"
           content="Stake Balancer LP token and earn rewards!"
         />
+        <Favicon />
       </Head>
 
       <div className="container">
@@ -789,7 +792,7 @@ const Privacy: NextPage = () => {
             Please send all your requests and queries in connection with this
             Policy to: 
             <a
-              href="mailto:legal@nine-chronicles.com."
+              href="mailto:legal@nine-chronicles.com"
               target="_blank"
               rel="noreferrer"
             >

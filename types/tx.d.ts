@@ -87,5 +87,4 @@ type ExitTx = {
 
 type HarvestTx = {
   hash?: Hash
-  harvestAmount?: string
 }

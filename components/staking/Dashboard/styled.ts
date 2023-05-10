@@ -280,6 +280,11 @@ export const StyledStakingDashboardHarvest = styled(motion.div)`
     .countUp {
       ${textStyle('body', 4, 700)}
       font-family: inherit;
+
+      .symbol {
+        ${textStyle('body', 4, 700)}
+        margin-left: 2px;
+      }
     }
   }
 

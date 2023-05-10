@@ -118,7 +118,7 @@ export const StyledJoinFormJoinFormEtherSelect = styled.div`
     }
 
     .label {
-      color: var(--gray-400);
+      color: var(--gray-500);
       font-weight: 500 !important;
     }
   }

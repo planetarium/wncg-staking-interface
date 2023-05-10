@@ -42,7 +42,7 @@ function GlobalFooter() {
       <div className="right">
         <ImportTokenDropdown className="browserOnly" />
 
-        <a
+        <Link
           className="iconButton"
           href={config.links.twitter}
           target="_blank"
@@ -50,9 +50,9 @@ function GlobalFooter() {
           aria-label="Open twitter"
         >
           <Icon icon="twitter" $size={24} />
-        </a>
+        </Link>
 
-        <a
+        <Link
           className="iconButton"
           href={config.links.discord}
           target="_blank"
@@ -60,7 +60,17 @@ function GlobalFooter() {
           aria-label="Open discord"
         >
           <Icon icon="discord" $size={24} />
-        </a>
+        </Link>
+
+        <Link
+          className="iconButton"
+          href={config.github.repositoryUrl}
+          target="_blank"
+          rel="noopener"
+          aria-label="Open github"
+        >
+          <Icon icon="github" $size={24} />
+        </Link>
       </div>
     </StyledGlobalFooter>
   )

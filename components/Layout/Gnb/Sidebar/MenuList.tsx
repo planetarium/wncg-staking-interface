@@ -2,6 +2,7 @@ import { memo } from 'react'
 import Link from 'next/link'
 
 import config from 'config'
+import { explorerUrlFor } from 'utils/explorerUrlFor'
 
 import { StyledSidebarMenuList } from './styled'
 
@@ -21,8 +22,12 @@ function MenuList() {
       </li>
 
       <li className="navItem">
-        <Link href={config.github.repositoryUrl} target="_blank" rel="noopener">
-          Github
+        <Link
+          href={explorerUrlFor(config.stakingAddress)}
+          target="_blank"
+          rel="noopener"
+        >
+          Etherscan
         </Link>
       </li>
     </StyledSidebarMenuList>

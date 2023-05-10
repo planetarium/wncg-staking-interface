@@ -9,30 +9,23 @@ import { claimTxAtom } from 'states/tx'
 import config from 'config'
 import { parseTransferLogs } from 'utils/parseTransferLogs'
 import { txUrlFor } from 'utils/txUrlFor'
-import { useFiat, useStaking } from 'hooks'
+import { useStaking } from 'hooks'
 import { useWatch } from './useWatch'
 
 import { StyledToast } from './styled'
 import Icon from 'components/Icon'
 import ImportToken from 'components/ImportToken'
-import NumberFormat from 'components/NumberFormat'
 import TokenIcon from 'components/TokenIcon'
 import Status from './Status'
-import { formatUnits } from 'utils/formatUnits'
 
 type HarvestToastProps = Required<HarvestTx>
 
-export default function HarvestToast({
-  hash,
-  harvestAmount,
-}: HarvestToastProps) {
+export default function HarvestToast({ hash }: HarvestToastProps) {
   const setTx = useSetAtom(claimTxAtom)
 
-  const toFiat = useFiat()
   const { tokenMap } = useStaking()
 
-  const [amount, setAmount] = useState(harvestAmount)
-  const fiatValue = toFiat(amount, config.bal)
+  const [confirmed, setConfirmed] = useState(false)
 
   const status = useWatch(hash)
 
@@ -51,7 +44,7 @@ export default function HarvestToast({
         const actualHarvestedAmount = parsedLogs?.[config.bal]
 
         if (actualHarvestedAmount) {
-          setAmount(formatUnits(actualHarvestedAmount, balToken.decimals))
+          setConfirmed(true)
         }
       } catch {}
     },
@@ -82,9 +75,8 @@ export default function HarvestToast({
               BAL
             </dt>
 
-            <dd>
-              <NumberFormat value={amount} />
-              <NumberFormat className="usd" value={fiatValue} type="fiat" />
+            <dd className="text">
+              {confirmed ? 'Confirmed' : 'Harvesting...'}
             </dd>
           </div>
         </dl>

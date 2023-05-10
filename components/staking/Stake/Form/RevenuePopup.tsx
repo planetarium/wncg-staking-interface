@@ -38,9 +38,7 @@ export default function StakeFormRevenuePopup({
   const { totalStaked = '0' } = useFetchStaking().data ?? {}
 
   const expectedTotalStakedValue = toFiat(
-    bnum(totalStaked)
-      .plus(amount || '0')
-      .toString(),
+    bnum(totalStaked).plus(bnum(amount).toString()).toString(),
     stakedTokenAddress
   )
 

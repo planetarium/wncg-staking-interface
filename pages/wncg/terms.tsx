@@ -7,17 +7,20 @@ import { TERMS_SEO } from 'lib/seo'
 export { getStaticProps } from 'lib/getStaticProps'
 
 import { StyledDocsPage } from 'styles/pages/docs'
+import Favicon from 'components/Favicon'
 
 const Terms: NextPage = () => {
   return (
     <StyledDocsPage>
       <NextSeo {...TERMS_SEO} />
+
       <Head>
         <title>Terms of Service / WNCG Staking</title>
         <meta
           name="description"
           content="Stake Balancer LP token and earn rewards!"
         />
+        <Favicon />
       </Head>
 
       <div className="container">

@@ -18,6 +18,7 @@ export type IconType =
   | 'coin'
   | 'coinStack'
   | 'edit'
+  | 'etherscan'
   | 'copy'
   | 'discord'
   | 'docs'

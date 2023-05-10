@@ -11,6 +11,7 @@ import GlobalHooks from 'components/GlobalHooks'
 import Suspense from 'components/Suspense'
 import Gnb from './Gnb'
 import Code from 'components/Code'
+import RootFavicon from 'components/RootFavicon'
 
 const Alerts = dynamic(() => import('./Alerts'), {
   ssr: false,
@@ -48,10 +49,7 @@ function Layout({ children }: PropsWithChildren) {
 
   return (
     <>
-      <Head>
-        <Favicon />
-      </Head>
-
+      <Head>{isRootPage ? <RootFavicon /> : <Favicon />}</Head>
       <StyledLayout layoutRoot $root={isRootPage}>
         <Alerts />
 

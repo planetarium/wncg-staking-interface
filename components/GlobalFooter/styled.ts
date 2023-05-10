@@ -21,9 +21,8 @@ export const StyledGlobalFooter = styled(motion.footer)`
   width: 100%;
   height: ${GLOBAL_FOOTER_HEIGHT_MOBILE}px;
   padding: 24px ${GUTTER_MOBILE}px 32px;
-
   color: var(--gray-500);
-  background-color: rgba(var(--white-rgb), 0.05);
+  background-color: #1c1140; // rgba(var(--white-rgb), 0.05);
 
   .env {
     ${textStyle('body', 4)}

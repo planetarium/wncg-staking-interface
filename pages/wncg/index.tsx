@@ -8,8 +8,9 @@ export { getStaticProps } from 'lib/getStaticProps'
 
 import { StyledStakingPage } from 'styles/pages/staking'
 
-import Suspense from 'components/Suspense'
+import Favicon from 'components/Favicon'
 import GlobalFooter from 'components/GlobalFooter'
+import Suspense from 'components/Suspense'
 
 const Dashboard = dynamic(() => import('components/staking/Dashboard'), {
   suspense: true,
@@ -29,6 +30,7 @@ const WncgStaking: NextPage = () => {
           name="description"
           content="Stake Balancer LP token and earn rewards!"
         />
+        <Favicon />
       </Head>
 
       <StyledStakingPage layout>

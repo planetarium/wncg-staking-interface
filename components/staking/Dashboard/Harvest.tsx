@@ -5,7 +5,8 @@ import { isHarvestableAtom } from 'states/system'
 import config from 'config'
 import { EXIT_MOTION } from 'config/motions'
 import { fadeIn } from 'config/motionVariants'
-import { useFiat, useHarvest } from 'hooks'
+import { bnum } from 'utils/bnum'
+import { useFiat, useHarvest, useStaking } from 'hooks'
 import { useFetchStaking } from 'hooks/queries'
 
 import { StyledStakingDashboardHarvest } from './styled'
@@ -24,6 +25,7 @@ export default function StakingDashboardHarvest({
   closeTooltip,
 }: StakingDashboardHarvestProps) {
   const toFiat = useFiat()
+  const { earmarkIncentivePcnt } = useStaking()
   const { claimableTokens = '0' } =
     useFetchStaking({
       refetchInterval: 10 * 1_000,
@@ -35,7 +37,10 @@ export default function StakingDashboardHarvest({
 
   if (!isHarvestable) return null
 
-  const claimableTokensFiatValue = toFiat(claimableTokens, config.bal)
+  const harvestRewardAmount = bnum(claimableTokens)
+    .times(earmarkIncentivePcnt)
+    .toString()
+  const harvestRewardInFiatValue = toFiat(harvestRewardAmount, config.bal)
 
   return (
     <AnimatePresence>
@@ -67,11 +72,11 @@ export default function StakingDashboardHarvest({
 
             <footer className="tooltipFooter">
               <p className="desc">
-                Get <CountUp value={claimableTokens} />
+                Get <CountUp value={harvestRewardAmount} symbol="BAL" />
                 <span className="parenthesis">
-                  <CountUp value={claimableTokensFiatValue} type="fiat" />
+                  <CountUp value={harvestRewardInFiatValue} type="fiat" />
                 </span>{' '}
-                as a reward!
+                as the harvest reward!
               </p>
 
               {harvest && (

@@ -4,6 +4,7 @@ import Link from 'next/link'
 import config from 'config'
 import { MOTION } from 'config/motions'
 import { fadeIn } from 'config/motionVariants'
+import { explorerUrlFor } from 'utils/explorerUrlFor'
 
 import { StyledGnbMenuList } from './styled'
 import Icon from 'components/Icon'
@@ -44,16 +45,20 @@ function GnbMenuList() {
       </li>
 
       <li className="navItem">
-        <Link href={config.github.repositoryUrl} target="_blank" rel="noopener">
+        <Link
+          href={explorerUrlFor(config.stakingAddress)}
+          target="_blank"
+          rel="noopener"
+        >
           <span className="textButton">
-            Github
+            Etherscan
             <Icon icon="outlink" />
           </span>
 
           <Icon
             className="iconButton"
-            icon="github"
-            ariaLabel="Documents"
+            icon="etherscan"
+            ariaLabel="Etherscan"
             $size={24}
           />
         </Link>

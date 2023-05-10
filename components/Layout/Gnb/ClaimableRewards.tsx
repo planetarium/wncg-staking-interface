@@ -73,8 +73,7 @@ function ClaimableRewards() {
               <div className="tooltipGroup">
                 <Icon className="toggler" icon="warning" />
                 <Tooltip
-                  message="BAL Rewards have temporarily stopped streaming. Please call the harvest method to start that streaming again."
-                  $direction="bottom"
+                  message="BAL rewards have temporarily stopped streaming. Please execute harvest to resume the streaming."
                   $width={400}
                 />
               </div>

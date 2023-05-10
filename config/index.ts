@@ -54,8 +54,7 @@ class ConfigService {
 
   get github() {
     const repositoryName =
-      process.env.NEXT_PUBLIC_GITHUB_REPO ??
-      'planetarium/wncg-staking-interface'
+      process.env.NEXT_PUBLIC_GITHUB_REPO ?? 'planetarium/wncg-staking'
 
     return {
       repositoryName,
@@ -66,7 +65,8 @@ class ConfigService {
   get links() {
     return {
       discord: 'https://discord.gg/planetarium',
-      medium: 'https://ninechronicles.medium.com',
+      medium:
+        'https://ninechronicles.medium.com/introducing-wncg-staking-ft-chapter-iii-a27f26d70522',
       twitter: 'https://twitter.com/NineChronicles',
     }
   }

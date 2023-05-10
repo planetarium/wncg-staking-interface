@@ -5,7 +5,7 @@ import { ogImageUrlFor } from 'utils/ogImageUrlFor'
 const appName = 'Nine Chronicles Staking'
 const stakingAppName = 'WNCG Staking'
 
-export const DEFAULT_SEO = {
+export const MAIN_SEO = {
   title: appName,
   description: appName,
   canonical: config.siteUrl,

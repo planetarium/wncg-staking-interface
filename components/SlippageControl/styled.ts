@@ -164,7 +164,7 @@ export const StyledSlippageControlMenu = styled(motion.ul)`
       ${textStyle('body', 2)}
       flex-grow: 1;
       font-weight: inherit;
-      color: var(--gray-400);
+      color: var(--gray-500);
     }
 
     .icon {

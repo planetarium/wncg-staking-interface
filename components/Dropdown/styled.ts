@@ -52,7 +52,7 @@ export const StyledDropdownMenu = styled(motion.div)`
       padding: 8px 8px 8px 12px;
       white-space: nowrap;
       text-align: left;
-      color: var(--gray-400);
+      color: var(--gray-500);
       border-radius: 4px;
       transition: 150ms;
 

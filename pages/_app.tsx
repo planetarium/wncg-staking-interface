@@ -11,16 +11,13 @@ import type { DehydratedState } from '@tanstack/react-query'
 import { useMount } from 'react-use'
 import { Provider } from 'jotai'
 import type { AppProps, NextWebVitalsMetric } from 'next/app'
-import Head from 'next/head'
 import Script from 'next/script'
-import { DefaultSeo } from 'next-seo'
 import { WagmiConfig } from 'wagmi'
 import { queryClientAtom } from 'jotai-tanstack-query'
 import { useHydrateAtoms } from 'jotai/utils'
 import 'react-toastify/dist/ReactToastify.css'
 
 import config from 'config'
-import { DEFAULT_SEO } from 'lib/seo'
 import wagmiClient from 'lib/wagmi/client'
 
 import GlobalStyle from 'styles/GlobalStyle'
@@ -101,8 +98,6 @@ function MyApp({ Component, pageProps }: MyAppProps) {
               <WagmiConfig client={wagmiClient}>
                 <GlobalStyle />
                 <ToastStyle />
-
-                <DefaultSeo {...DEFAULT_SEO} />
 
                 <Layout>
                   <Component {...pageProps} />

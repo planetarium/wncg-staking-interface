@@ -9,7 +9,6 @@ import { StakingAbi } from 'config/abi'
 import { ToastType } from 'config/constants'
 import { useSwitchNetwork } from './useSwitchNetwork'
 import { useToast } from './useToast'
-import { useFetchStaking } from './queries'
 
 export function useHarvest() {
   const { switchBeforeSend } = useSwitchNetwork()
@@ -17,8 +16,6 @@ export function useHarvest() {
 
   const setTx = useSetAtom(harvestTxAtom)
   const setShowHarvestTooltip = useSetAtom(showHarvestTooltipAtom)
-
-  const { claimableTokens = '0' } = useFetchStaking().data ?? {}
 
   const { config: writeConfig } = usePrepareContractWrite({
     address: config.stakingAddress,
@@ -38,7 +35,6 @@ export function useHarvest() {
 
       const props = {
         hash: res.hash,
-        harvestAmount: claimableTokens,
       }
 
       setTx(props)
@@ -57,7 +53,7 @@ export function useHarvest() {
       }
       throw error
     }
-  }, [claimableTokens, setShowHarvestTooltip, setTx, toast, writeAsync])
+  }, [setShowHarvestTooltip, setTx, toast, writeAsync])
 
   return writeAsync ? harvest : null
 }
