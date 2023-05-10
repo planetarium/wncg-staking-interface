@@ -1,16 +1,13 @@
 export const modalDesktopVariants = {
   initial: {
-    opacity: 0,
     x: '-50%',
     y: '-48%',
   },
   animate: {
-    opacity: 1,
     x: '-50%',
     y: '-50%',
     transition: {
       duration: 0.3,
-      delay: 0.2,
     },
   },
   exit: {

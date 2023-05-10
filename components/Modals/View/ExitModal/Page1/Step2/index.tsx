@@ -65,6 +65,7 @@ function ExitModalPage1Step2({
       setMaxValue={setMaxValue}
       singleExitMaxAmounts={singleExitMaxAmounts}
       singleExitTokenOutIndex={singleExitTokenOutIndex}
+      isNativeCurrency={isNativeCurrency}
       watch={watch}
       hash={hash}
     />

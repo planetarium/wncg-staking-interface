@@ -6,7 +6,9 @@ import { flexbox, media, textStyle } from 'styles/utils'
 
 const INPUT_FIELD_GAP = 24
 
-export const StyledJoinFormFieldset = styled(motion.fieldset)`
+export const StyledJoinFormFieldset = styled(motion.fieldset)<{
+  $reverse: boolean
+}>`
   width: 100%;
   padding: 0;
   margin-top: 32px;
@@ -15,10 +17,6 @@ export const StyledJoinFormFieldset = styled(motion.fieldset)`
   .joinInputField {
     width: 100%;
     margin-top: 24px;
-
-    &:first-child {
-      margin-top: 0;
-    }
   }
 
   ${media(
@@ -28,7 +26,19 @@ export const StyledJoinFormFieldset = styled(motion.fieldset)`
 
       .joinInputField {
         width: calc(50% - ${24 / 2}px);
-        margin-top: 0;
+        margin-top: 0 !important;
+      }
+    `
+  )}
+
+  ${media(
+    'minTablet',
+    css`
+      ${flexbox('between', 'start')}
+
+      .joinInputField {
+        width: calc(50% - ${24 / 2}px);
+        margin-top: 0 !important;
         margin-left: 16px;
 
         &:first-child {
@@ -37,6 +47,56 @@ export const StyledJoinFormFieldset = styled(motion.fieldset)`
       }
     `
   )}
+
+  ${({ $reverse }) =>
+    $reverse &&
+    css`
+      ${flexbox('start', 'start')}
+      flex-direction: column-reverse;
+
+      .joinInputField {
+        &:last-child {
+          margin-top: 0;
+        }
+      }
+
+      ${media(
+        'minTablet',
+        css`
+          ${flexbox('between', 'start')}
+          flex-direction: row-reverse;
+
+          .joinInputField {
+            margin-left: 16px;
+
+            &:last-child {
+              margin-left: 0;
+            }
+          }
+        `
+      )}
+    `}
+
+  ${({ $reverse }) =>
+    !$reverse &&
+    css`
+      .joinInputField {
+        &:first-child {
+          margin-top: 0;
+        }
+      }
+
+      ${media(
+        'minTablet',
+        css`
+          margin-top: 24px;
+
+          &:first-child {
+            margin-top: 0;
+          }
+        `
+      )}
+    `}
 `
 
 export const StyledJoinFormJoinFormEtherSelect = styled.div`
@@ -64,7 +124,7 @@ export const StyledJoinFormJoinFormEtherSelect = styled.div`
   }
 
   ${media(
-    'minLaptop',
+    'minSmLaptop',
     css`
       .dropdownToggle {
         ${textStyle('body', 2, 700)}

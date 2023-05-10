@@ -4,7 +4,7 @@ import { motion } from 'framer-motion'
 import { ModalPage } from 'components/Modals/shared'
 import { backdropFilter, flexbox, textGradient, textStyle } from 'styles/utils'
 import { buttonStyle } from 'components/Button/styled'
-import { GUTTER_TABLET } from 'styles/constants/dimensions'
+import { GUTTER_MOBILE, GUTTER_TABLET } from 'styles/constants/dimensions'
 
 export const StyledPoolMobileContainer = styled(motion.aside)`
   ${flexbox('end')}
@@ -26,7 +26,7 @@ export const StyledPoolMobile = styled(ModalPage)`
   .modalHeader,
   .container,
   .modalFooter {
-    max-width: ${800 - GUTTER_TABLET * 2}px;
+    max-width: ${800 - GUTTER_MOBILE * 2}px;
     margin: 0 auto;
   }
 
@@ -98,8 +98,7 @@ export const StyledPoolMobileForm = styled.form`
       }
 
       .tooltip {
-        width: 100%;
-        bottom: calc(100% + 4px);
+        width: calc(100vw - ${24 * 2}px);
         white-space: initial;
       }
 

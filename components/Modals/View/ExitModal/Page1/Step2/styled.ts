@@ -123,7 +123,11 @@ export const StyledExitModalPage1Step2ButtonGroup = styled.div`
   }
 `
 
-export const StyledExitModalPage1Step2PropAmounts = styled.section`
+export const StyledExitModalPage1Step2PropAmounts = styled.section<{
+  $reverse?: boolean
+}>`
+  width: 100%;
+
   .title {
     ${textStyle('body', 3, 700)}
     margin-top: 16px;
@@ -136,12 +140,8 @@ export const StyledExitModalPage1Step2PropAmounts = styled.section`
   }
 
   .detailItem {
+    width: 100%;
     padding: 20px 24px;
-    margin-top: -16px;
-
-    &:first-child {
-      margin-top: 0;
-    }
 
     dt {
       ${flexbox('start')}
@@ -187,12 +187,8 @@ export const StyledExitModalPage1Step2PropAmounts = styled.section`
     css`
       .detailItem {
         ${flexbox('between')}
-        padding: 20px 24px;
         margin-top: -${20 * 2 - 16}px;
-
-        &:first-child {
-          margin-top: 0;
-        }
+        padding: 20px 24px;
 
         dt {
           ${flexbox('start')}
@@ -236,4 +232,28 @@ export const StyledExitModalPage1Step2PropAmounts = styled.section`
       }
     `
   )}
+
+  ${({ $reverse }) =>
+    $reverse
+      ? css`
+          .detailList {
+            ${flexbox('start', 'start')}
+            flex-direction: column-reverse;
+            width: 100%;
+          }
+
+          .detailItem {
+            &:last-child {
+              margin-top: 0;
+              /* background-color: pink; */
+            }
+          }
+        `
+      : css`
+          .detailItem {
+            &:first-child {
+              margin-top: 0;
+            }
+          }
+        `}
 `

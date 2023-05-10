@@ -267,7 +267,7 @@ export const StyledPoolBalances = styled(
     `}
 `
 
-export const StyledPoolHeader = styled.header`
+export const StyledPoolHeader = styled.header<{ $reverse: boolean }>`
   .poolName {
     ${textStyle('body', 3)}
     display: inline-block;
@@ -295,6 +295,7 @@ export const StyledPoolHeader = styled.header`
 
   .tokenList {
     ${flexbox('end')}
+    flex-direction: ${({ $reverse }) => ($reverse ? 'row-reverse' : 'row')};
     padding-top: 12px;
     padding-bottom: 8px;
     margin-left: 16px;
@@ -303,13 +304,24 @@ export const StyledPoolHeader = styled.header`
   .tokenItem {
     ${flexbox('start')}
     ${textStyle('body', 3)}
-    margin-left: 12px;
+    ${({ $reverse }) =>
+      $reverse
+        ? css`
+            margin-right: 12px;
+
+            &:first-child {
+              margin-right: 0;
+            }
+          `
+        : css`
+            margin-left: 12px;
+
+            &:first-child {
+              margin-left: 0;
+            }
+          `}
     color: var(--gray-400);
     white-space: nowrap;
-
-    &:first-child {
-      margin-left: 0;
-    }
 
     .tokenIcon {
       margin-right: 4px;

@@ -93,19 +93,23 @@ function JoinInputField({
 
   const setMaxValue = useCallback(() => {
     setValue(name, maxSafeBalance)
+    setShowOptError(false)
     trigger()
-  }, [maxSafeBalance, name, setValue, trigger])
+  }, [maxSafeBalance, name, setShowOptError, setValue, trigger])
 
   const currentValue = watch(name)
 
   useEffect(() => {
     if (address !== config.nativeCurrency.address) return
-    if (currentValue === '') return
-    if (bnum(value).gte(maxSafeBalance) && bnum(value).lt(maxBalance)) {
-      setShowWarning(true)
-    } else {
+
+    if (currentValue === '') {
       setShowWarning(false)
+      return
     }
+
+    if (bnum(value).gte(maxSafeBalance) && bnum(value).lt(maxBalance))
+      setShowWarning(true)
+    else setShowWarning(false)
   }, [address, currentValue, maxBalance, maxSafeBalance, value])
 
   useEffect(() => {

@@ -48,7 +48,10 @@ export function useJoinMath() {
           fixedTokenIndex,
           'send'
         ) || {}
-      const propAmounts = send ?? ['0', '0']
+      const propAmounts = (send ?? ['0', '0']).map((amt) =>
+        bnum(amt).toString()
+      )
+
       return propAmounts[1 - fixedTokenIndex]
     },
     [calculator]
@@ -59,7 +62,7 @@ export function useJoinMath() {
       const _propMinAmounts = availableBalances.map((balance, i) => {
         return (
           calculator?.propAmountsGiven(balance, i, 'send')?.send ?? ['0', '0']
-        ).map((amount) => removeTrailingZero(amount))
+        ).map((amt) => bnum(amt).toString())
       })
 
       const length = availableBalances.length

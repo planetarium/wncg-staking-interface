@@ -3,9 +3,17 @@ import { MouseEvent, useMemo, useRef } from 'react'
 import { ConnectorId } from 'config/constants'
 import { EXIT_MOTION } from 'config/motions'
 import { slideInUp } from 'config/motionVariants'
-import { useAuth, useCloseOnBlur, useImportToken, useStaking } from 'hooks'
+import {
+  useAuth,
+  useCloseOnBlur,
+  useImportToken,
+  useResponsive,
+  useStaking,
+} from 'hooks'
 
 import { StyledGlobalFooterImportTokenDropdownMenu } from './styled'
+import ConnectorIcon from 'components/ConnectorIcon'
+import Icon from 'components/Icon'
 import TokenIcon from 'components/TokenIcon'
 
 type GlobalFooterImportTokenDropdownProps = {
@@ -19,6 +27,7 @@ export default function GlobalFooterImportTokenDropdownMenu({
 
   const { connector } = useAuth()
   const { importToken: _importToken } = useImportToken()
+  const { isHandheld } = useResponsive()
   const { rewardTokenAddress, stakedTokenAddress, tokenMap } = useStaking()
 
   useCloseOnBlur(menuRef, closeDropdown)
@@ -49,6 +58,13 @@ export default function GlobalFooterImportTokenDropdownMenu({
       className="tokenMenu"
       variants={slideInUp}
     >
+      <header className="dropdownHeader">
+        <h4 className="title">Import token</h4>
+        <button className="closeButton" type="button" onClick={closeDropdown}>
+          <Icon icon="close" $size={24} />
+        </button>
+      </header>
+
       {list.map((addr) => {
         const { symbol } = tokenMap[addr]
 
@@ -63,6 +79,12 @@ export default function GlobalFooterImportTokenDropdownMenu({
             {symbol}
 
             <TokenIcon className="token" address={addr} $size={16} />
+            {isHandheld && (
+              <ConnectorIcon
+                className="rightIcon"
+                icon={connector.id as ConnectorIconType}
+              />
+            )}
           </button>
         )
       })}

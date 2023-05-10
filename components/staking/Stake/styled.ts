@@ -506,6 +506,17 @@ export const StyledStakeJoinButton = styled(motion.div)`
 `
 
 export const StyledStakeJoinTooltip = styled(motion.div)`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+
+  .tooltip {
+    pointer-events: initial;
+  }
+
   @keyframes floatBottom {
     0% {
       transform: translate3d(-50%, 0, 0);

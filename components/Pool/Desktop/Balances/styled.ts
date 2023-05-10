@@ -23,7 +23,7 @@ export const StyledPoolBalances = styled(motion.section)`
     );
     background-color: var(--gray-900);
 
-    .token {
+    .tokenIconGroup {
       ${flexbox()}
 
       .tokenIcon {

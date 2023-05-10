@@ -6,7 +6,7 @@ export const GNB_HEIGHT_DESKTOP = 88
 
 export const ALERT_HEIGHT = 56
 
-export const GLOBAL_FOOTER_HEIGHT_MOBILE = 210
+export const GLOBAL_FOOTER_HEIGHT_MOBILE = 266
 export const GLOBAL_FOOTER_HEIGHT_LAPTOP = 72
 
 export const GUTTER_MOBILE = 20

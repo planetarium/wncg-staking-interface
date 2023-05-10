@@ -7,18 +7,20 @@ import { hideJoinTooltipAtom, showPoolAtom } from 'states/ui'
 import { EXIT_MOTION } from 'config/motions'
 import { fadeIn } from 'config/motionVariants'
 import { bnum } from 'utils/bnum'
-import { useAuth, useStaking } from 'hooks'
+import { useAuth, useModal, useStaking } from 'hooks'
 import { useFetchUserBalances } from 'hooks/queries'
 
 import { StyledStakeJoinButton } from './styled'
 import Arrow from 'components/Arrow'
 import JoinTooltip from './JoinTooltip'
+import { ModalType } from 'config/constants'
 
 export default function StakeJoinButton() {
   const { isConnected } = useAuth()
   const balanceMap = (useFetchUserBalances().data ??
     {}) as unknown as BalanceMap
   const { stakedTokenAddress } = useStaking()
+  const { addModal } = useModal()
 
   const hasLpTokenBalance = bnum(balanceMap[stakedTokenAddress]).gt(0)
 
@@ -28,6 +30,7 @@ export default function StakeJoinButton() {
   function openModal(e: MouseEvent) {
     e.preventDefault()
     e.stopPropagation()
+
     setShowPool(true)
   }
 

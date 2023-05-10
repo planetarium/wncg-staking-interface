@@ -25,8 +25,13 @@ function TokenIcon({
   dark = false,
   $size = 24,
 }: TokenIconProps) {
-  const { poolTokenSymbols, rewardTokenAddress, stakedTokenAddress, tokenMap } =
-    useStaking()
+  const {
+    poolTokenSymbols,
+    rewardTokenAddress,
+    shouldReversePoolTokenOrder,
+    stakedTokenAddress,
+    tokenMap,
+  } = useStaking()
   const token = tokenMap[address]
 
   const element = useMemo(() => {
@@ -61,6 +66,7 @@ function TokenIcon({
       <StyledTokenIconGroup
         className={clsx('tokenIconGroup', className)}
         $size={$size}
+        $reverse={shouldReversePoolTokenOrder}
       >
         {poolTokenSymbols.map((symb) => {
           let icon = symb.toLowerCase()

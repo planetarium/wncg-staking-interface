@@ -20,11 +20,7 @@ import CountUp from 'components/CountUp'
 import Lottie from 'components/Lottie'
 import NumberFormat from 'components/NumberFormat'
 
-type JoinModalPage2Props = {
-  resetForm(): void
-}
-
-function JoinModalPage2({ resetForm }: JoinModalPage2Props) {
+function JoinModalPage2() {
   const [amount, setAmount] = useState<string | null>(null)
 
   const toFiat = useFiat()
@@ -48,12 +44,10 @@ function JoinModalPage2({ resetForm }: JoinModalPage2Props) {
   )
 
   function closeModal() {
-    resetForm()
     removeModal()
   }
 
   async function goStake() {
-    resetForm()
     setShowPool(false)
     removeModal()
   }

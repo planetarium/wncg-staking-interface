@@ -10,6 +10,7 @@ import { StyledJoinModalPage1 } from './styled'
 import { CloseButton, PendingNotice } from 'components/Modals/shared'
 import NumberFormat from 'components/NumberFormat'
 import TxButton from 'components/TxButton'
+import clsx from 'clsx'
 
 type JoinModalPage1Props = {
   assets: Hash[]
@@ -27,6 +28,7 @@ function JoinModalPage1({
   send,
 }: JoinModalPage1Props) {
   const [tx, setTx] = useAtom(joinTxAtom)
+  const { shouldReversePoolTokenOrder, tokenMap } = useStaking()
 
   const nativeAssetIndex = assets.findIndex(
     (addr) => addr === config.nativeCurrency.address
@@ -35,7 +37,6 @@ function JoinModalPage1({
     nativeAssetIndex >= 0 && bnum(joinAmounts[nativeAssetIndex]).gt(0)
 
   const _join = useJoinPool(assets, joinAmounts, hasNativeAsset)
-  const { tokenMap } = useStaking()
 
   async function join() {
     if (!_join) {
@@ -85,7 +86,11 @@ function JoinModalPage1({
           </h3>
         </div>
 
-        <p className="amountGroup">
+        <p
+          className={clsx('amountGroup', {
+            reverse: shouldReversePoolTokenOrder,
+          })}
+        >
           {joinAmounts.map((amt, i) => {
             const { symbol, address } = tokenMap[assets[i]]
 

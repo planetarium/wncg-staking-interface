@@ -1,9 +1,11 @@
 import { useMemo } from 'react'
+import { useSetAtom } from 'jotai'
 
+import { showPoolAtom } from 'states/ui'
 import config from 'config'
 import { ModalType } from 'config/constants'
 import { bnum } from 'utils/bnum'
-import { useAllowances, useModal, useStaking } from 'hooks'
+import { useAllowances, useModal, useResponsive, useStaking } from 'hooks'
 
 type OpenJoinParams = {
   assets: Hash[]
@@ -17,7 +19,10 @@ type OpenJoinParams = {
 export function useJoinModal(assets: Hash[], joinAmounts: string[]) {
   const allowanceFor = useAllowances()
   const { addModal } = useModal()
+  const { isMobile } = useResponsive()
   const { tokenMap } = useStaking()
+
+  const setShowPool = useSetAtom(showPoolAtom)
 
   const shouldApprove = useMemo(
     () =>
@@ -33,6 +38,8 @@ export function useJoinModal(assets: Hash[], joinAmounts: string[]) {
   )
 
   function openJoin(params: OpenJoinParams) {
+    if (isMobile) setShowPool(false)
+
     const joinModalConfig = {
       type: ModalType.Join,
       props: params,

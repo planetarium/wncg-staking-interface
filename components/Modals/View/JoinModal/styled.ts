@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components'
 
 import { CompletePage, ModalPage } from 'components/Modals/shared'
-import { media, textStyle } from 'styles/utils'
+import { flexbox, media, textStyle } from 'styles/utils'
 
 export const StyledJoinModalPage1 = styled(ModalPage)`
   .usd {
@@ -11,9 +11,30 @@ export const StyledJoinModalPage1 = styled(ModalPage)`
   }
 
   .amountGroup {
+    ${flexbox('start')}
     ${textStyle('body', 3)}
     margin-top: 8px;
     color: var(--primary-300);
+
+    &.reverse {
+      justify-content: flex-end;
+      flex-direction: row-reverse;
+
+      .number {
+        &::before {
+          display: none;
+        }
+
+        &:first-child::after {
+          display: none;
+        }
+
+        &::after {
+          content: '/';
+          margin: 0 0.25em;
+        }
+      }
+    }
 
     .number {
       &:first-child::before {

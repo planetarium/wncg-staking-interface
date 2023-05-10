@@ -22,6 +22,7 @@ type ExitModalPage1Step2SingleExitProps = {
   singleExitMaxAmounts: string[]
   singleExitTokenOutIndex?: number
   watch: UseFormWatch<ExitFormFields>
+  isNativeCurrency: boolean
   hash?: Hash
 }
 
@@ -31,6 +32,7 @@ function ExitModalPage1Step2SingleExit({
   setMaxValue,
   singleExitMaxAmounts,
   singleExitTokenOutIndex = 0,
+  isNativeCurrency,
   watch,
   hash,
 }: ExitModalPage1Step2SingleExitProps) {

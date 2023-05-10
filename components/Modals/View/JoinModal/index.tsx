@@ -72,7 +72,7 @@ function JoinModal({
           totalJoinFiatValue={totalJoinFiatValue}
         />
       )}
-      {currentPage === 2 && <Page2 resetForm={resetForm} />}
+      {currentPage === 2 && <Page2 />}
       {currentPage === 3 && <Page3 />}
     </>
   )

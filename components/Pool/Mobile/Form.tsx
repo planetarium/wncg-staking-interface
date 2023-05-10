@@ -13,7 +13,6 @@ import {
   Unoptimizable,
 } from 'components/Pool/shared'
 import SlippageControl from 'components/SlippageControl'
-import TokenIcon from 'components/TokenIcon'
 
 type PoolMobileFormProps = UseJoinFormReturns
 

@@ -59,7 +59,7 @@ export default function ImportToken({
               address,
               decimals,
               name,
-              symbol,
+              symbol: symbol.length > 11 ? 'BPT' : symbol,
             },
           } as any,
         })

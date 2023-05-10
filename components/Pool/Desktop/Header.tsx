@@ -17,10 +17,14 @@ function PoolHeader() {
     poolTokenAddresses,
     poolTokenSymbols,
     poolTokenWeightsInPcnt,
+    shouldReversePoolTokenOrder,
   } = useStaking()
 
   return (
-    <StyledPoolHeader className="poolHeader">
+    <StyledPoolHeader
+      className="poolHeader"
+      $reverse={shouldReversePoolTokenOrder}
+    >
       <strong className="poolName">{bptName}</strong>
       <div className="titleGroup">
         <h2 className="title">Join pool, Get LP Tokens!</h2>

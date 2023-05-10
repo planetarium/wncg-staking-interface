@@ -472,18 +472,43 @@ export const StyledTokenIcon = styled.span<{ $size: number }>`
   }
 `
 
-export const StyledTokenIconGroup = styled.span<{ $size: number }>`
+export const StyledTokenIconGroup = styled.span<{
+  $size: number
+  $reverse: boolean
+}>`
   ${inlineFlexbox('start')}
-  height: ${({ $size }) => `${$size}px`};
   flex-shrink: 0;
+  height: ${({ $size }) => $size}px;
 
-  .icon {
-    margin-left: ${({ $size }) => `${$size / -6}px`};
+  ${({ $reverse, $size }) =>
+    $reverse
+      ? css`
+          flex-direction: row-reverse;
 
-    &:first-child {
-      margin-left: 0 !important;
-    }
-  }
+          .icon {
+            position: relative;
+            margin-right: -${$size / 4}px;
+
+            &:first-child {
+              position: relative;
+              margin-right: 0;
+            }
+
+            &:last-child {
+              margin-left: 0 !important;
+            }
+          }
+        `
+      : css`
+          .icon {
+            margin-left: -${$size / 4}px;
+
+            &:first-child {
+              position: relative;
+              margin-left: 0 !important;
+            }
+          }
+        `}
 `
 
 export const StyledTooltip = styled.p<{

@@ -57,6 +57,7 @@ function JoinFormProportionalGuide({
   const show =
     Object.keys(formState?.errors).length === 0 &&
     hasSingleSidedField &&
+    !bnum(propAmount).isZero() &&
     bnum(propAmount).lte(maxBalances[1 - singleSidedFieldIndex])
 
   return (

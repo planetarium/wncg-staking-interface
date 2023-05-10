@@ -17,7 +17,12 @@ function ExitModalPage1Step2PropAmounts({
   exitAmounts,
 }: ExitModalPage1Step2PropAmountsProps) {
   const toFiat = useFiat()
-  const { poolTokenAddresses, poolTokenWeights, tokenMap } = useStaking()
+  const {
+    poolTokenAddresses,
+    poolTokenWeights,
+    shouldReversePoolTokenOrder,
+    tokenMap,
+  } = useStaking()
 
   const exitAmountsInFiatValue = useMemo(
     () => exitAmounts.map((amt, i) => toFiat(amt, assets[i])),
@@ -25,7 +30,9 @@ function ExitModalPage1Step2PropAmounts({
   )
 
   return (
-    <StyledExitModalPage1Step2PropAmounts>
+    <StyledExitModalPage1Step2PropAmounts
+      $reverse={shouldReversePoolTokenOrder}
+    >
       <h5 className="title">You will receive</h5>
 
       <div className="propAmount">

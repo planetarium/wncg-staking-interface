@@ -1,5 +1,6 @@
 import { memo, MouseEvent } from 'react'
 
+import { useResponsive } from 'hooks'
 import { SLIPPAGE_TOLERANCES } from './useSlippageForm'
 
 import { StyledSlippageControlToggle } from './styled'
@@ -20,6 +21,8 @@ function SlippageControlToggle({
   value,
   disabled,
 }: SlippageControlToggleProps) {
+  const { isMobile } = useResponsive()
+
   return (
     <StyledSlippageControlToggle
       className="slippageToggle"
@@ -28,8 +31,13 @@ function SlippageControlToggle({
       <label className="label tooltipGroup" htmlFor="slippageControl">
         Slippage tolerance
         <Icon className="toggler" icon="info" />
-        <Tooltip $gap={8} $direction="top" $align="center">
-          High slippage tolerance may incur significant losses. <br />
+        <Tooltip
+          $gap={8}
+          $direction={isMobile ? 'bottom' : 'top'}
+          $align="center"
+        >
+          High slippage tolerance may incur significant losses.{' '}
+          <br className="afterMobile" />
           So the slippage tolerance setting is limited to &lt;30%.
         </Tooltip>
       </label>

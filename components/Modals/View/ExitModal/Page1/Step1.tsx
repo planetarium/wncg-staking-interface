@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import {
   Control,
   Controller,
@@ -30,15 +31,22 @@ function ExitModalPage1Step1({
   resetField,
   hash,
 }: ExitModalPage1Step1Props) {
-  const { poolTokenAddresses, stakedTokenAddress, tokenMap } = useStaking()
+  const {
+    poolTokenAddresses,
+    shouldReversePoolTokenOrder,
+    stakedTokenAddress,
+    tokenMap,
+  } = useStaking()
 
   const exitType = watch('exitType')
 
-  const exitTypeList = [
-    null,
-    ...poolTokenAddresses,
-    config.nativeCurrency.address,
-  ]
+  const exitTypeList = useMemo(() => {
+    if (shouldReversePoolTokenOrder) {
+      return [null, ...poolTokenAddresses, config.nativeCurrency.address]
+    }
+
+    return [null, ...poolTokenAddresses, config.nativeCurrency.address]
+  }, [poolTokenAddresses, shouldReversePoolTokenOrder])
 
   const disabled = !!hash
 

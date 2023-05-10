@@ -7,7 +7,13 @@ import { StyledGlobalFooterImportTokenDropdown } from './styled'
 import ConnectorIcon from 'components/ConnectorIcon'
 import DropdownMenu from './ImportTokenDropdownMenu'
 
-export default function GlobalFooterImportTokenDropdown() {
+type GlobalFooterImportTokenDropdownProps = {
+  className?: string
+}
+
+export default function GlobalFooterImportTokenDropdown({
+  className,
+}: GlobalFooterImportTokenDropdownProps) {
   const [show, setShow] = useState(false)
 
   const { connector } = useAuth()
@@ -25,7 +31,7 @@ export default function GlobalFooterImportTokenDropdown() {
   if (!canImportToken) return null
 
   return (
-    <StyledGlobalFooterImportTokenDropdown>
+    <StyledGlobalFooterImportTokenDropdown className={className}>
       <button className="tokenToggle" type="button" onClick={toggle}>
         Import token
         <ConnectorIcon icon={connector?.id as ConnectorIconType} $size={16} />

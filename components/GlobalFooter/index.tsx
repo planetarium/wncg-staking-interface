@@ -10,6 +10,8 @@ import ImportTokenDropdown from './ImportTokenDropdown'
 function GlobalFooter() {
   return (
     <StyledGlobalFooter role="contentinfo" layout>
+      <ImportTokenDropdown className="handheldOnly" />
+
       <div className="left">
         <h5 className="title">
           <strong>{config.appName}</strong>
@@ -38,7 +40,7 @@ function GlobalFooter() {
       </div>
 
       <div className="right">
-        <ImportTokenDropdown />
+        <ImportTokenDropdown className="browserOnly" />
 
         <a
           className="iconButton"

@@ -35,7 +35,6 @@ export default function CooldownModalPage2Summary() {
       <p className="desc">Withdrawal period (If you cool down from today)</p>
       <p className="period">
         <time dateTime={formatISO(expectedCooldownWindow)}>
-          {formatISO(expectedCooldownWindow)}
           {format(expectedCooldownWindow)}
         </time>
         <time className="hyphen" dateTime={formatISO(expectedUnstakeWindow)}>

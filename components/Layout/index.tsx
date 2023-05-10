@@ -3,13 +3,14 @@ import dynamic from 'next/dynamic'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 
-import { useMediaQuery } from 'hooks'
+import { useMediaQuery, useResponsive } from 'hooks'
 
 import { StyledLayout, StyledMain } from './styled'
 import Favicon from 'components/Favicon'
 import GlobalHooks from 'components/GlobalHooks'
 import Suspense from 'components/Suspense'
 import Gnb from './Gnb'
+import Code from 'components/Code'
 
 const Alerts = dynamic(() => import('./Alerts'), {
   ssr: false,
@@ -27,6 +28,7 @@ function Layout({ children }: PropsWithChildren) {
   const mainRef = useRef<HTMLDivElement>(null)
 
   const { route, pathname } = useRouter()
+  const { bp } = useResponsive()
   useMediaQuery()
 
   const isRootPage = pathname === '/'
@@ -55,6 +57,7 @@ function Layout({ children }: PropsWithChildren) {
 
         <Gnb />
 
+        <Code data={bp} z={1000} top={0} left={0} />
         <StyledMain ref={mainRef} layout>
           {children}
         </StyledMain>
