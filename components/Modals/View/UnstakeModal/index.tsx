@@ -25,10 +25,12 @@ function UnstakeModal() {
   const {
     unstakeAmount: _unstakeAmount,
     stakedTokenBalance: _stakedTokenBalance,
+    totalClaimFiatValue: _totalClaimFiatValue,
   } = useFormReturns
 
   const unstakeAmount = tx.unstakeAmount ?? _unstakeAmount
   const stakedTokenBalance = tx.stakedTokenBalance ?? _stakedTokenBalance
+  const totalClaimFiatValue = tx.totalClaimFiatValue ?? _totalClaimFiatValue
 
   const stateMachine = useRef(unstakeMachine)
   const [state, send] = useMachine(stateMachine.current, {
@@ -57,7 +59,15 @@ function UnstakeModal() {
   return (
     <>
       {currentPage === 1 && <Page1 send={send} />}
-      {currentPage === 2 && <Page2 send={send} {...useFormReturns} />}
+      {currentPage === 2 && (
+        <Page2
+          send={send}
+          {...useFormReturns}
+          stakedTokenBalance={stakedTokenBalance}
+          totalClaimFiatValue={totalClaimFiatValue}
+          unstakeAmount={unstakeAmount}
+        />
+      )}
       {currentPage === 3 && <Page3 />}
       {currentPage === 4 && <Page4 />}
     </>

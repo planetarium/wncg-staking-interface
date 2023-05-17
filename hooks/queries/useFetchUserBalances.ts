@@ -6,7 +6,11 @@ import { useAuth, useStaking } from 'hooks'
 import { formatUnits } from 'utils/formatUnits'
 
 export function useFetchUserBalances(options: UseFetchOptions = {}) {
-  const { enabled = true, refetchInterval, refetchOnWindowFocus } = options
+  const {
+    enabled = true,
+    refetchInterval,
+    refetchOnWindowFocus = 'always',
+  } = options
 
   const { account } = useAuth()
   const { stakedTokenAddress, poolTokenAddresses, tokenMap } = useStaking()

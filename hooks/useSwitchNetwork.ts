@@ -21,7 +21,7 @@ export function useSwitchNetwork() {
   }
 
   function switchBeforeSend(error: any) {
-    if (error.name === 'ChainMismatchError') {
+    if (error.name === 'ChainMismatchError' || error.code === 'NETWORK_ERROR') {
       try {
         switchNetwork()
       } catch (error: any) {}

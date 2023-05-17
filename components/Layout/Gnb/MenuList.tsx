@@ -13,34 +13,24 @@ function GnbMenuList() {
   return (
     <StyledGnbMenuList {...MOTION} variants={fadeIn}>
       <li className="navItem">
-        <Link href={config.docs.notion} target="_blank" rel="noopener">
-          <span className="textButton">
-            Docs
-            <Icon icon="outlink" />
-          </span>
-
-          <Icon
-            className="iconButton"
-            icon="docs"
-            ariaLabel="Documents"
-            $size={24}
-          />
+        <Link
+          href={config.docs.notion}
+          target="_blank"
+          rel="noopener"
+          aria-label="Documents"
+        >
+          <Icon className="iconButton" icon="docs" $size={24} />
         </Link>
       </li>
 
       <li className="navItem">
-        <Link href={config.links.medium} target="_blank" rel="noopener">
-          <span className="textButton">
-            Medium
-            <Icon icon="outlink" />
-          </span>
-
-          <Icon
-            className="iconButton"
-            icon="medium"
-            ariaLabel="Medium"
-            $size={24}
-          />
+        <Link
+          href={config.links.medium}
+          target="_blank"
+          rel="noopener"
+          aria-label="Medium"
+        >
+          <Icon className="iconButton" icon="medium" $size={24} />
         </Link>
       </li>
 
@@ -49,18 +39,9 @@ function GnbMenuList() {
           href={explorerUrlFor(config.stakingAddress)}
           target="_blank"
           rel="noopener"
+          aria-label="Etherscan"
         >
-          <span className="textButton">
-            Etherscan
-            <Icon icon="outlink" />
-          </span>
-
-          <Icon
-            className="iconButton"
-            icon="etherscan"
-            ariaLabel="Etherscan"
-            $size={24}
-          />
+          <Icon className="iconButton" icon="etherscan" $size={24} />
         </Link>
       </li>
     </StyledGnbMenuList>

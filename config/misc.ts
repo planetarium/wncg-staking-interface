@@ -26,3 +26,4 @@ export const REKT_PRICE_IMPACT = 0.2
 export const MAX_SLIPPAGE = 30
 
 export const APR_SPAN_LIST = ['day', 'week', 'month', 'year']
+export const BASE_GAS_FEE = 0.05

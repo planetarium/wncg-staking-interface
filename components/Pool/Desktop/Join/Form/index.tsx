@@ -1,7 +1,5 @@
 import { memo, useEffect } from 'react'
-import { useAtom } from 'jotai'
 
-import { showOptimizeErrorAtom } from 'states/form'
 import { wait } from 'utils/wait'
 import {
   useAuth,
@@ -16,9 +14,10 @@ import { StyledJoinForm } from './styled'
 import {
   Fieldset,
   Summary,
-  ProportionalGuide,
-  Unoptimizable,
+  ProportionalGuideBanner,
+  UnoptimizableAlert,
   Footer,
+  OptimizedBanner,
 } from 'components/Pool/shared'
 import Header from './Header'
 
@@ -28,8 +27,6 @@ function JoinForm() {
   const { stakedTokenAddress } = useStaking()
 
   const { refetch } = useFetchUserAllowances()
-
-  const [showOptError, setShowOptError] = useAtom(showOptimizeErrorAtom)
 
   const joinFormReturns = useJoinForm()
   const {
@@ -48,6 +45,8 @@ function JoinForm() {
     submitDisabled,
     resetDisabled,
     watch,
+    focusedElement,
+    setFocusedElement,
   } = joinFormReturns
 
   const _openJoin = useJoinModal(assets, joinAmounts)
@@ -69,9 +68,8 @@ function JoinForm() {
   useEffect(() => {
     if (account !== prevAccount) {
       resetFields()
-      setShowOptError(false)
     }
-  }, [account, prevAccount, resetFields, setShowOptError])
+  }, [account, prevAccount, resetFields, setFocusedElement])
 
   return (
     <StyledJoinForm layoutRoot>
@@ -80,25 +78,29 @@ function JoinForm() {
         optimized={optimized}
         reset={resetFields}
         resetDisabled={resetDisabled}
+        setFocusedElement={setFocusedElement}
       />
 
       {optimizeDisabled && (
-        <Unoptimizable
+        <UnoptimizableAlert
           assets={assets}
           maxBalances={maxBalances}
-          showAlert={showOptError}
+          focusedElement={focusedElement}
+          optimizeDisabled={optimizeDisabled}
         />
       )}
 
-      <Fieldset {...joinFormReturns} />
+      <OptimizedBanner optimized={optimized} focusedElement={focusedElement} />
 
-      <ProportionalGuide
+      <ProportionalGuideBanner
         joinAmounts={joinAmounts}
         assets={assets}
         maxBalances={maxBalances}
         formState={formState}
         setValue={setValue}
       />
+
+      <Fieldset {...joinFormReturns} />
 
       <Summary
         priceImpact={priceImpact}

@@ -2,9 +2,8 @@ import { createGlobalStyle, css } from 'styled-components'
 
 import {
   GNB_HEIGHT_DESKTOP,
+  GNB_HEIGHT_MOBILE,
   GNB_HEIGHT_TABLET,
-  GUTTER_MOBILE,
-  GUTTER_TABLET,
 } from './constants/dimensions'
 import { gradient, media } from './utils'
 
@@ -13,11 +12,10 @@ const TOAST_BODY_PADDING = 16
 
 const ToastStyle = createGlobalStyle`
   .toastContainer {
-    top: 16px;
-    left: 50%;
-    width: calc(100% - ${GUTTER_MOBILE * 2}px);
+    top: ${GNB_HEIGHT_MOBILE}px;
+    right: ${16 - TOAST_PADDING}px;
+    width: 320px;
     padding: 0;
-    transform: translateX(-50%);
   }
 
   .toast {
@@ -33,7 +31,6 @@ const ToastStyle = createGlobalStyle`
 
   .toastBody {
     display: block;
-    width: 100%;
     padding: ${TOAST_BODY_PADDING}px;
     border-radius: 8px; 
     background-color: var(--white);
@@ -62,14 +59,14 @@ const ToastStyle = createGlobalStyle`
     background-image: ${gradient(1)};
   }
 
-  .toastIn,
-  .toastOut {
-    animation-name: slideFromTop;
-    animation-duration: 300ms;
+  .fadeIn,
+  .fadeOut {
+    animation-name: fadeIn;
+    animation-duration: 200ms;
     animation-timing-function: ease-in;
   }
 
-  .toastOut {
+  .fadeOut {
     animation-direction: reverse;
     animation-fill-mode: forwards;
   }
@@ -78,34 +75,7 @@ const ToastStyle = createGlobalStyle`
     'minTablet',
     css`
       .toastContainer {
-        width: calc(100% - ${GUTTER_TABLET * 2}px);
-      }
-
-      .toastIn,
-      .toastOut {
-        animation-name: slideFromRight;
-        animation-duration: 200ms;
-      }
-    `
-  )}
-
-  ${media(
-    'minLaptop',
-    css`
-      .toastContainer {
-        top: ${GNB_HEIGHT_TABLET}px;
-        right: ${16 - TOAST_PADDING}px;
-        left: auto;
-        width: ${320 + TOAST_PADDING}px;
-        padding: 0;
-        transform: none;
-      }
-
-      .toastBody {
-        &::before {
-          width: calc(100% - 8px);
-          border-radius: 0 0 50px 0;
-        }
+        top: ${GNB_HEIGHT_TABLET - 8}px;
       }
 
       .toast {
@@ -113,7 +83,7 @@ const ToastStyle = createGlobalStyle`
       }
 
       .progressBar {
-        width: calc(100% - ${TOAST_PADDING}px);
+        max-width: calc(100% - ${TOAST_PADDING}px) !important;
       }
     `
   )}
@@ -127,25 +97,13 @@ const ToastStyle = createGlobalStyle`
     `
   )}
 
-  @keyframes slideFromRight {
+  @keyframes fadeIn {
     0% {
       transform: translate3d(120%, 0, 0);
     }
 
     100% {
       transform: translate3d(0, 0, 0);
-    }
-  }
-
-  @keyframes slideFromTop {
-    0% {
-      transform: translate3d(0, -120%, 0);
-      opacity: 0;
-    }
-
-    100% {
-      transform: translate3d(0, 0, 0);
-      opacity: 1;
     }
   }
 `

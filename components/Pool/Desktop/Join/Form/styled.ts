@@ -4,21 +4,6 @@ import styled, { css } from 'styled-components'
 
 import { flexbox, gradient, media, textStyle } from 'styles/utils'
 
-export const StyledJoinFormAlert = styled(motion.aside)`
-  ${flexbox()}
-  ${textStyle('body', 2)}
-  width: 100%;
-  height: 56px;
-  margin-bottom: 32px;
-  font-weight: 700;
-  background-color: var(--error-400);
-  border-radius: 8px;
-
-  .icon {
-    margin-right: 12px;
-  }
-`
-
 export const StyledJoinForm = styled(motion.form)`
   ${flexbox('start')}
   width: 100%;
@@ -67,8 +52,29 @@ export const StyledJoinFormHeader = styled.header<{ $disabled: boolean }>`
     top: 0;
     right: 0;
 
+    .optimizeButton {
+      &:disabled {
+        color: rgba(var(--white-rgb), 0.5);
+      }
+    }
+
     button {
       flex-shrink: 0;
+    }
+  }
+
+  .tooltipGroup {
+    .tooltip {
+      left: auto;
+      right: 0;
+      width: min-content;
+      transform: none;
+    }
+
+    &:has(.optimizeButton:disabled) {
+      .tooltip {
+        opacity: 0 !important;
+      }
     }
   }
 
@@ -235,7 +241,7 @@ export const StyledJoinFormUtils = styled.div`
   }
 `
 
-export const StyledJoinFormUnoptimizable = styled(motion.aside)`
+export const StyledJoinFormUnoptimizableAlert = styled(motion.aside)`
   ${flexbox()}
   width:100%;
   padding: 16px;

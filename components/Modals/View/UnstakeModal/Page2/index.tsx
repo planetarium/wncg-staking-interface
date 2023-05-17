@@ -17,19 +17,15 @@ type UnstakeModalPage2Props = {
 } & UseUnstakeFormReturns
 
 function UnstakeModalPage2({ send, ...props }: UnstakeModalPage2Props) {
-  const { checked, unstakeAmount, submitDisabled, stakedTokenBalance } = props
-
-  const toFiat = useFiat()
-  const { rewardTokenAddresses } = useStaking()
+  const {
+    checked,
+    unstakeAmount,
+    submitDisabled,
+    stakedTokenBalance,
+    totalClaimFiatValue,
+  } = props
 
   const tx = useAtomValue(unstakeTxAtom)
-
-  const { earnedRewards = [] } = useFetchUserData().data ?? {}
-  const rewardsInFiatValue = earnedRewards
-    .reduce((acc, r, i) => {
-      return acc.plus(toFiat(r, rewardTokenAddresses[i]))
-    }, bnum(0))
-    .toString()
 
   const disabled = !!tx.hash
 
@@ -49,8 +45,7 @@ function UnstakeModalPage2({ send, ...props }: UnstakeModalPage2Props) {
           <Form
             {...props}
             disabled={disabled}
-            earnedRewards={earnedRewards}
-            rewardFiatValue={rewardsInFiatValue}
+            totalClaimFiatValue={totalClaimFiatValue}
           />
         </div>
       </div>
@@ -60,7 +55,7 @@ function UnstakeModalPage2({ send, ...props }: UnstakeModalPage2Props) {
         unstakeAmount={unstakeAmount}
         checked={checked}
         disabled={submitDisabled || disabled}
-        rewardFiatValue={rewardsInFiatValue}
+        rewardFiatValue={totalClaimFiatValue}
         stakedTokenBalance={stakedTokenBalance}
       />
 

@@ -11,7 +11,7 @@ import { bnum } from 'utils/bnum'
 import { format } from 'utils/format'
 import { formatISO } from 'utils/formatISO'
 import { joinCountdown } from 'utils/joinCountdown'
-import { useCountdown, useModal } from 'hooks'
+import { useCountdown, useModal, useStaking } from 'hooks'
 import { useFetchUserData } from 'hooks/queries'
 
 import { StyledWalletUnstakeWindow } from './styled'
@@ -23,6 +23,8 @@ type WalletUnstakeWindowProps = {
 export default function WalletUnstakeWindow({
   closeSidebar,
 }: WalletUnstakeWindowProps) {
+  const { cooldownPeriod } = useStaking()
+
   const cooldownWindow = useAtomValue(cooldownWindowAtom)
   const unstakeWindow = useAtomValue(withdrawWindowAtom)
   const unstakeTimestamps = useAtomValue(unstakeTimestampsAtom)
@@ -69,6 +71,14 @@ export default function WalletUnstakeWindow({
     closeSidebar(e)
   }
 
+  const startsAt = cooldownWindow
+    ? unstakeTimestamps.cooldownEndsAt - cooldownPeriod
+    : unstakeTimestamps.cooldownEndsAt
+
+  const endsAt = cooldownWindow
+    ? unstakeTimestamps.cooldownEndsAt
+    : unstakeTimestamps.withdrawEndsAt
+
   return (
     <StyledWalletUnstakeWindow
       $unstake={unstakeWindow}
@@ -83,14 +93,9 @@ export default function WalletUnstakeWindow({
         </strong>
 
         <div className="period">
-          <time dateTime={formatISO(unstakeTimestamps!.cooldownEndsAt)}>
-            {format(unstakeTimestamps!.cooldownEndsAt)}
-          </time>
-          <time
-            dateTime={formatISO(unstakeTimestamps!.withdrawEndsAt)}
-            className="tilde"
-          >
-            {format(unstakeTimestamps!.withdrawEndsAt)}
+          <time dateTime={formatISO(startsAt)}>{format(startsAt)}</time>
+          <time dateTime={formatISO(endsAt)} className="hyphen">
+            {format(endsAt)}
           </time>
         </div>
       </div>

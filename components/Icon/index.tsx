@@ -40,6 +40,7 @@ export type IconType =
   | 'refreshOff'
   | 'secure'
   | 'slideClose'
+  | 'star'
   | 'telegram'
   | 'time'
   | 'twitter'

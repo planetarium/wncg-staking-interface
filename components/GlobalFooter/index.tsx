@@ -1,4 +1,5 @@
-import { memo } from 'react'
+import { memo, useState } from 'react'
+import { useHotkeys } from 'react-hotkeys-hook'
 import Link from 'next/link'
 
 import config from 'config'
@@ -8,13 +9,33 @@ import Icon from 'components/Icon'
 import ImportTokenDropdown from './ImportTokenDropdown'
 
 function GlobalFooter() {
+  const [showVersion, setShowVersion] = useState(false)
+
+  const currentBuildUrl = ''
+
+  useHotkeys('d+e+v', function () {
+    setShowVersion((prev) => !prev)
+  })
+
   return (
     <StyledGlobalFooter role="contentinfo" layout>
       <ImportTokenDropdown className="handheldOnly" />
 
       <div className="left">
         <h5 className="title">
-          <strong>{config.appName}</strong>
+          <strong>
+            {config.appName}
+            {showVersion && (
+              <Link
+                className="version"
+                href={currentBuildUrl}
+                target="_blank"
+                rel="noopener"
+              >
+                v2.1.0
+              </Link>
+            )}
+          </strong>
           <span>&copy; 2023 {config.appName}</span>
         </h5>
 

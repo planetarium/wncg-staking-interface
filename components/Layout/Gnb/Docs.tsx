@@ -10,7 +10,8 @@ export default function DocsGnb() {
   const { bp } = useResponsive()
 
   const logoSrc = useMemo(() => {
-    const breakpoint = bp === 'smLaptop' ? 'laptop' : bp
+    const breakpoint =
+      bp === 'smLaptop' ? 'laptop' : bp === null ? 'desktop' : bp
     return `/logo-staking-${breakpoint}.png`
   }, [bp])
 

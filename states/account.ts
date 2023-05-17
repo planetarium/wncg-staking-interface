@@ -26,12 +26,10 @@ export const cooldownWindowAtom = atom((get) => {
 export const withdrawWindowAtom = atom((get) => {
   const currentTimestamp = get(currentTimestampAtom)
   const unstakeTimestamps = get(unstakeTimestampsAtom)
-
   if (unstakeTimestamps == null) return false
-  if (!unstakeTimestamps.withdrawEndsAt) return false
 
   return (
-    unstakeTimestamps.withdrawEndsAt - currentTimestamp > 0 &&
+    currentTimestamp - unstakeTimestamps.withdrawEndsAt < 0 &&
     currentTimestamp - unstakeTimestamps.cooldownEndsAt >= 0
   )
 })

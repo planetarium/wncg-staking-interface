@@ -4,16 +4,15 @@ import { useWaitForTransaction } from 'wagmi'
 
 import { joinTxAtom } from 'states/tx'
 import config from 'config'
-import { useFetchUserBalances } from 'hooks/queries'
+import { useRefetch } from 'hooks'
 
 export function useWatch(send: (event: string) => void) {
-  const { refetch: refetchBalances } = useFetchUserBalances({
-    suspense: false,
+  const refetch = useRefetch({
+    userBalances: true,
+    pool: true,
+    userData: true,
+    userAllowances: true,
   })
-
-  // const { refetch: refetchLpPoolBalances } = useFetchLpPoolBalances({
-  //   suspense: false,
-  // })
 
   const tx = useAtomValue(joinTxAtom)
 
@@ -22,7 +21,9 @@ export function useWatch(send: (event: string) => void) {
     enabled: !!tx.hash,
     chainId: config.chainId,
     suspense: false,
-    onSuccess() {
+    async onSuccess() {
+      await refetch()
+
       send('SUCCESS')
     },
     onError() {
@@ -31,11 +32,10 @@ export function useWatch(send: (event: string) => void) {
   })
 
   useMount(() => {
-    refetchBalances()
+    refetch()
   })
 
   useUnmount(() => {
-    refetchBalances()
-    // refetchLpPoolBalances()
+    refetch()
   })
 }

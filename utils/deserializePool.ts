@@ -4,7 +4,6 @@ export function deserializePool(pool: PoolResponse): Pool {
   const {
     id,
     address,
-    symbol,
     swapFee,
     totalLiquidity,
     totalShares,
@@ -37,7 +36,7 @@ export function deserializePool(pool: PoolResponse): Pool {
   return {
     bptAddress,
     bptTotalSupply: totalShares ?? '0',
-    bptSymbol: symbol,
+    bptSymbol: bptName,
     bptName,
     bptDecimals: 18,
     poolId: id,

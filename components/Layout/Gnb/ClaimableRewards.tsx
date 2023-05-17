@@ -75,6 +75,7 @@ function ClaimableRewards() {
                 <Tooltip
                   message="BAL rewards have temporarily stopped streaming. Please execute harvest to resume the streaming."
                   $width={400}
+                  $direction="bottom"
                 />
               </div>
             )}
@@ -90,7 +91,7 @@ function ClaimableRewards() {
         $size="sm"
         $variant="tertiary"
       >
-        Claim rewards
+        Claim
       </Button>
     </StyledGnbClaimableRewards>
   )

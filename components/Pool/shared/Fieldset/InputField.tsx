@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect, useMemo, useState } from 'react'
+import { memo, useCallback, useEffect, useMemo } from 'react'
 import { usePrevious } from 'react-use'
 import {
   Control as ReactHookFormControl,
@@ -8,22 +8,24 @@ import {
   UseFormTrigger,
   UseFormWatch,
 } from 'react-hook-form'
-import { AnimatePresence } from 'framer-motion'
-import { useSetAtom } from 'jotai'
 
-import { showOptimizeErrorAtom } from 'states/form'
 import { useFiat } from 'hooks'
 import config from 'config'
 import { bnum } from 'utils/bnum'
-import { JoinFormFields, joinFormFields } from 'hooks/useJoinForm'
+import {
+  JoinFormFields,
+  JoinFormFocusedElement,
+  joinFormFields,
+} from 'hooks/useJoinForm'
 
 import { StyledJoinFormInputField } from './styled'
 import { AvailableBalance, Control } from 'components/Form'
 import NumberFormat from 'components/NumberFormat'
 import EtherSelect from './EtherSelect'
-import Warning from './Warning'
+import Notice from './Notice'
 
 type JoinInputFieldProps = {
+  activeField: LiquidityFieldType | null
   index: number
   token: TokenInfo
   clearErrors: UseFormClearErrors<JoinFormFields>
@@ -31,17 +33,22 @@ type JoinInputFieldProps = {
   maxBalance: string
   maxSafeBalance: string
   name: 'TokenA' | 'TokenB'
-  resetFields(): void
+  focusedElement: JoinFormFocusedElement
   setValue: UseFormSetValue<JoinFormFields>
+  formState: UseFormStateReturn<JoinFormFields>
   trigger: UseFormTrigger<JoinFormFields>
   value: string
   weight: number
   watch: UseFormWatch<JoinFormFields>
+  setFocusedElement(value: JoinFormFocusedElement): void
+  optimizeDisabled: boolean
+  setActiveField(field: LiquidityFieldType | null): void
   className?: string
   disabled?: boolean
 }
 
 function JoinInputField({
+  activeField,
   index,
   token,
   control,
@@ -50,19 +57,20 @@ function JoinInputField({
   maxSafeBalance,
   setValue,
   trigger,
+  formState,
+  focusedElement,
   value,
-  watch,
+  setActiveField,
   weight,
   className,
+  setFocusedElement,
+  optimizeDisabled,
   disabled,
+  watch,
 }: JoinInputFieldProps) {
-  const [showWarning, setShowWarning] = useState(false)
-
   const toFiat = useFiat()
   const { address, decimals, symbol } = token
   const prevAddress = usePrevious(address)
-
-  const setShowOptError = useSetAtom(showOptimizeErrorAtom)
 
   const id = useMemo(() => `joinForm:inputField:${address}`, [address])
   const availableBalanceLabel = useMemo(
@@ -71,7 +79,7 @@ function JoinInputField({
   )
 
   const isEther = [config.weth, config.nativeCurrency.address].includes(address)
-  const isNativeCurrency = isEther && address === config.nativeCurrency.address
+  const isNativeCurrency = watch('isNativeCurrency')
 
   const maxBalanceInFiatValue = useMemo(
     () => toFiat(maxBalance, address),
@@ -85,36 +93,32 @@ function JoinInputField({
           bnum(v).lte(maxBalance) || `Exceeds wallet balance`,
       },
       onChange() {
-        setShowOptError(false)
+        if (activeField !== name) setActiveField(name)
+        setFocusedElement('Input')
       },
     }),
-    [maxBalance, setShowOptError]
+    [activeField, maxBalance, name, setActiveField, setFocusedElement]
   )
 
   const setMaxValue = useCallback(() => {
     setValue(name, maxSafeBalance)
-    setShowOptError(false)
+    setFocusedElement('MaxButton')
+    setActiveField(name)
     trigger()
-  }, [maxSafeBalance, name, setShowOptError, setValue, trigger])
-
-  const currentValue = watch(name)
+  }, [
+    maxSafeBalance,
+    name,
+    setActiveField,
+    setFocusedElement,
+    setValue,
+    trigger,
+  ])
 
   useEffect(() => {
-    if (address !== config.nativeCurrency.address) return
-
-    if (currentValue === '') {
-      setShowWarning(false)
-      return
+    if (prevAddress !== address) {
+      setFocusedElement(null)
     }
-
-    if (bnum(value).gte(maxSafeBalance) && bnum(value).lt(maxBalance))
-      setShowWarning(true)
-    else setShowWarning(false)
-  }, [address, currentValue, maxBalance, maxSafeBalance, value])
-
-  useEffect(() => {
-    if (prevAddress !== address) setShowWarning(false)
-  }, [address, prevAddress])
+  }, [address, prevAddress, setFocusedElement])
 
   return (
     <StyledJoinFormInputField
@@ -165,7 +169,17 @@ function JoinInputField({
         decimals={4}
         fiatValue={maxBalanceInFiatValue}
       />
-      <AnimatePresence>{showWarning && <Warning />}</AnimatePresence>
+
+      {isEther && (
+        <Notice
+          activeField={activeField}
+          currentField={name}
+          formState={formState}
+          focusedElement={focusedElement}
+          optimizeDisabled={optimizeDisabled}
+          joinAmount={value}
+        />
+      )}
     </StyledJoinFormInputField>
   )
 }

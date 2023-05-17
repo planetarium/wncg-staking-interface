@@ -4,47 +4,53 @@ import { AnimatePresence } from 'framer-motion'
 import { EXIT_MOTION } from 'config/motions'
 import { slideInDown } from 'config/motionVariants'
 import { bnum } from 'utils/bnum'
-import { useStaking } from 'hooks'
+import { useAuth, useStaking } from 'hooks'
+import type { JoinFormFocusedElement } from 'hooks/useJoinForm'
 
-import { StyledJoinFormUnoptimizable } from './styled'
+import { StyledJoinFormUnoptimizableAlert } from './styled'
 import Icon from 'components/Icon'
 
 type JoinFormUnoptimizableProps = {
   assets: Hash[]
+  focusedElement: JoinFormFocusedElement
   maxBalances: string[]
-  showAlert: boolean
+  optimizeDisabled: boolean
 }
 
-function JoinFormUnoptimizable({
+function JoinFormUnoptimizableAlert({
   assets,
+  focusedElement,
   maxBalances,
-  showAlert,
+  optimizeDisabled,
 }: JoinFormUnoptimizableProps) {
+  const { isConnected } = useAuth()
   const { tokenMap } = useStaking()
 
   const message = useMemo(() => {
-    if (maxBalances.every((b) => bnum(b).isZero()))
-      return `Your balance is empty.`
+    if (maxBalances.every((b) => bnum(b).isZero())) return `Balance is empty.`
     const tokenIndex = maxBalances.findIndex((b) => bnum(b).isZero())
     const { symbol } = tokenMap[assets[tokenIndex]]
     return `Optimization is not possible because ${symbol} is 0.`
   }, [assets, maxBalances, tokenMap])
 
+  const showAlert =
+    !!isConnected && focusedElement === 'OptimizeButton' && optimizeDisabled
+
   return (
     <AnimatePresence>
       {showAlert && (
-        <StyledJoinFormUnoptimizable
+        <StyledJoinFormUnoptimizableAlert
           {...EXIT_MOTION}
           className="joinFormAlert"
           variants={slideInDown}
           role="alert"
         >
-          <Icon icon="warning" $size={24} />
-          <h4 className="title">{message}</h4>
-        </StyledJoinFormUnoptimizable>
+          <Icon icon="warning" />
+          <p className="desc">{message}</p>
+        </StyledJoinFormUnoptimizableAlert>
       )}
     </AnimatePresence>
   )
 }
 
-export default memo(JoinFormUnoptimizable)
+export default memo(JoinFormUnoptimizableAlert)

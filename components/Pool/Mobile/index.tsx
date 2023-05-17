@@ -1,8 +1,6 @@
 import { memo, useEffect } from 'react'
 import { AnimatePresence } from 'framer-motion'
-import { useSetAtom } from 'jotai'
 
-import { showOptimizeErrorAtom } from 'states/form'
 import { EXIT_MOTION } from 'config/motions'
 import { useAuth, useJoinForm } from 'hooks'
 
@@ -27,14 +25,12 @@ function PoolMobile({ show, closePool }: PoolMobileProps) {
 
   const joinFormReturns = useJoinForm()
   const { resetFields } = joinFormReturns
-  const setShowOptError = useSetAtom(showOptimizeErrorAtom)
 
   useEffect(() => {
     if (account !== prevAccount) {
       resetFields()
-      setShowOptError(false)
     }
-  }, [account, prevAccount, resetFields, setShowOptError])
+  }, [account, prevAccount, resetFields])
 
   return (
     <>

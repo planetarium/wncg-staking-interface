@@ -1,7 +1,7 @@
 export const queryKeys = {
   Build: 'staking:build',
-  FallbackPriceMap: 'staking:fallbackPriceMap',
-  PriceMap: 'staking:priceMap',
+  FallbackPrices: 'staking:fallbackPriceMap',
+  Prices: 'staking:priceMap',
   Staking: {
     Data: 'staking:data',
     FallbackPrices: 'staking:fallbackPrices',

@@ -464,7 +464,7 @@ export const StyledGnbMenuList = styled(motion.ul)`
     button {
       ${inlineFlexbox()}
       ${textStyle('body', 3)}
-      padding: 8px 12px;
+      padding: 8px;
       color: var(--white);
       border-radius: 4px;
       transition: 150ms;
@@ -472,18 +472,6 @@ export const StyledGnbMenuList = styled(motion.ul)`
       &:hover {
         background-color: rgba(var(--white-rgb), 0.05);
       }
-    }
-
-    .textButton,
-    .iconButton {
-      transition: 150ms;
-    }
-
-    .textButton {
-      ${flexbox()}
-      position: absolute;
-      opacity: 0;
-      text-transform: capitalize;
     }
 
     .iconButton {
@@ -496,32 +484,6 @@ export const StyledGnbMenuList = styled(motion.ul)`
     'maxLaptop',
     css`
       display: none;
-    `
-  )}
-
-  ${media(
-    'minDesktop',
-    css`
-      li {
-        margin-left: 12px;
-
-        > a,
-        > button {
-          width: auto;
-          height: auto;
-          padding: 8px 12px;
-        }
-
-        .textButton {
-          position: static;
-          opacity: 1;
-        }
-
-        .iconButton {
-          position: absolute;
-          opacity: 0;
-        }
-      }
     `
   )}
 `

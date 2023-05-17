@@ -4,11 +4,19 @@ import { toast } from 'react-toastify'
 import { useWaitForTransaction } from 'wagmi'
 
 import config from 'config'
-import { useRefetch } from './useRefetch'
+import { useRefetch } from 'hooks'
 
 export function useWatch(hash: Hash) {
   const [status, setStatus] = useState<null | 0 | 1>(null)
-  const refetch = useRefetch()
+
+  const refetch = useRefetch({
+    userData: true,
+    staking: true,
+    pool: true,
+    poolSnapshot: true,
+    userBalances: true,
+    userAllowances: true,
+  })
 
   useWaitForTransaction({
     enabled: !!hash,

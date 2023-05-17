@@ -14,17 +14,24 @@ export const metamaskWalletConfig = {
     metaMaskConnector.ready,
   connectorId: ConnectorId.MetaMask,
   deepLink: `https://metamask.app.link/dapp/${config.siteUrl}`,
-  downloadLink: isIOS
-    ? 'https://apps.apple.com/us/app/metamask/id1438144202'
-    : isAndroid
-    ? 'https://play.google.com/store/apps/details?id=io.metamask'
-    : 'https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn',
+  downloadLink:
+    isMobile && isIOS
+      ? 'https://apps.apple.com/us/app/metamask/id1438144202'
+      : isMobile && isAndroid
+      ? 'https://play.google.com/store/apps/details?id=io.metamask'
+      : 'https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn',
 }
 
 export const coinbaseWalletConfig = {
   id: 'coinbase',
   title: 'Coinbase Wallet',
   connectorId: ConnectorId.CoinbaseWallet,
+  downloadLink:
+    isMobile && isIOS
+      ? 'https://apps.apple.com/us/app/coinbase-wallet-nfts-crypto/id1278383455'
+      : isMobile && isAndroid
+      ? 'https://play.google.com/store/apps/details?id=org.toshi'
+      : 'https://chrome.google.com/webstore/detail/coinbase-wallet-extension/hnfanknocfeofbddgcijnmhnfnkdnaad',
 }
 
 export const walletConnectWalletConfig = {
@@ -34,7 +41,7 @@ export const walletConnectWalletConfig = {
 }
 
 export const binanceWalletConfig = {
-  id: 'bsc',
+  id: 'binance',
   title: 'Binance Wallet',
   installed:
     typeof window !== 'undefined' && Boolean((window as any).BinanceChain),
@@ -57,7 +64,7 @@ export const trustWalletConfig = {
   title: 'Trust Wallet',
   connectorId: ConnectorId.TrustWallet,
   installed: !!getTrustWalletProvider(),
-  deepLink: 'https://link.trustwallet.com/open_url?coin_id=637&url=<site_url>',
+  deepLink: `https://link.trustwallet.com/open_url?coin_id=637&url=${config.baseUrl}`,
   downloadLink:
     isMobile && isIOS
       ? 'https://apps.apple.com/us/app/trust-crypto-bitcoin-wallet/id1288339409'

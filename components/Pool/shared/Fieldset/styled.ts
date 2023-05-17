@@ -11,30 +11,23 @@ export const StyledJoinFormFieldset = styled(motion.fieldset)<{
 }>`
   width: 100%;
   padding: 0;
-  margin-top: 32px;
+  margin-top: 24px;
   border: 0;
 
   .joinInputField {
     width: 100%;
     margin-top: 24px;
+
+    &:first-child {
+      margin-top: 0;
+    }
   }
 
   ${media(
     'minTablet',
     css`
       ${flexbox('between', 'start')}
-
-      .joinInputField {
-        width: calc(50% - ${24 / 2}px);
-        margin-top: 0 !important;
-      }
-    `
-  )}
-
-  ${media(
-    'minTablet',
-    css`
-      ${flexbox('between', 'start')}
+      margin-top: 32px;
 
       .joinInputField {
         width: calc(50% - ${24 / 2}px);
@@ -89,8 +82,6 @@ export const StyledJoinFormFieldset = styled(motion.fieldset)<{
       ${media(
         'minTablet',
         css`
-          margin-top: 24px;
-
           &:first-child {
             margin-top: 0;
           }
@@ -241,6 +232,76 @@ export const StyledJoinFormInputField = styled(motion.div)<{
     $disabled &&
     css`
       opacity: 0.5;
+    `}
+`
+
+export const StyledJoinFormNotice = styled(motion.aside)<{
+  $suggestion?: boolean
+}>`
+  ${textStyle('body', 4)}
+  padding: 16px;
+  margin-top: 8px;
+  background-color: var(--primary-50);
+  border-radius: 4px;
+  transition: 200ms;
+
+  .badge {
+    ${flexbox('start')}
+    ${textStyle('body', 4, 700)}
+    color: var(--primary-500);
+
+    .icon {
+      margin-right: ${2 + 4}px;
+      margin-left: 2px;
+    }
+
+    .lottie {
+      width: 16px;
+      height: 16px;
+      overflow: hidden;
+
+      > div {
+        position: relative;
+        top: 2px;
+        width: 36px !important;
+        height: 36px !important;
+
+        svg {
+          width: 36px !important;
+          height: 36px !important;
+        }
+      }
+    }
+  }
+
+  .title {
+    ${textStyle('body', 4, 700)}
+    padding: 0 2px;
+    margin-top: 8px;
+    color: var(--gray-700);
+  }
+
+  .desc {
+    padding: 0 2px;
+    margin-top: 2px;
+    color: var(--gray-600);
+  }
+
+  ${media(
+    'minTablet',
+    css`
+      margin-top: 12px;
+    `
+  )}
+
+  ${({ $suggestion }) =>
+    $suggestion &&
+    css`
+      background-color: #f2fffe;
+
+      .badge {
+        color: var(--green-600);
+      }
     `}
 `
 

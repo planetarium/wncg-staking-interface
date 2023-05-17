@@ -11,21 +11,6 @@ import { flexbox, gradient, media, textStyle } from 'styles/utils'
 
 const INPUT_FIELD_GAP = 24
 
-export const StyledJoinFormAlert = styled(motion.aside)`
-  ${flexbox()}
-  ${textStyle('body', 2)}
-    width: 100%;
-  height: 56px;
-  margin-bottom: 32px;
-  font-weight: 700;
-  background-color: var(--error-400);
-  border-radius: 8px;
-
-  .icon {
-    margin-right: 12px;
-  }
-`
-
 export const StyledJoinFormInputField = styled(motion.div)`
   width: 100%;
 
@@ -54,24 +39,20 @@ export const StyledJoinFormInputField = styled(motion.div)`
   )}
 `
 
-export const StyledJoinFormProportionalGuide = styled(motion.aside)`
+export const StyledJoinFormProportionalGuideBanner = styled(motion.aside)`
   width: 100%;
-  padding: 16px;
+  padding: 6px 12px;
   margin-top: 24px;
-  background-image: ${gradient(2)};
   border-radius: 6px;
+  background-color: var(--primary-500);
 
   .title {
+    ${flexbox('start')}
     ${textStyle('body', 4, 700)}
+  }
 
-    .number {
-      margin: 0 0.2em;
-      font-weight: 700;
-
-      .symbol {
-        margin-left: 0.2em;
-      }
-    }
+  .desc {
+    flex-grow: 1;
   }
 
   .addButton {
@@ -79,7 +60,7 @@ export const StyledJoinFormProportionalGuide = styled(motion.aside)`
     ${textStyle('button', 3)}
     position: relative;
     flex-shrink: 0;
-    padding: 8px 16px;
+    padding: 4px 12px;
     margin-top: 10px;
     color: var(--white);
     background-color: rgba(var(--white-rgb), 0.1);
@@ -101,16 +82,46 @@ export const StyledJoinFormProportionalGuide = styled(motion.aside)`
     }
   }
 
+  .desc {
+    font-weight: 500;
+
+    .number {
+      margin: 0 0.2em;
+
+      .symbol {
+        margin-left: 0.2em;
+      }
+    }
+  }
+
   ${media(
     'minSmLaptop',
     css`
-      ${flexbox('between')}
-      padding: 12px 12px 12px 24px;
+      ${flexbox('start')}
+      padding: 6px 12px;
       margin-top: 24px;
       margin-bottom: 0;
 
       .title {
-        ${textStyle('body', 3, 700)}
+        ${textStyle('body', 4, 700)}
+
+        &::after {
+          display: block;
+          width: 2px;
+          height: 10px;
+          margin: 0 8px;
+          border-radius: 40px;
+          background-color: var(--primary-400);
+          content: '';
+        }
+
+        .icon {
+          margin-right: 8px;
+        }
+      }
+
+      .desc {
+        ${textStyle('body', 4)}
       }
 
       .addButton {
@@ -215,31 +226,79 @@ export const StyledJoinFormSummary = styled.dl<{ $disabled: boolean }>`
     `}
 `
 
-export const StyledJoinFormUnoptimizable = styled(motion.aside)`
+export const StyledJoinFormUnoptimizableAlert = styled(motion.aside)`
   ${flexbox()}
   width: 100%;
-  padding: 10px 16px;
-  margin-top: 32px;
-  color: var(--white);
+  padding: 12px;
+  margin-top: 24px;
   background-color: var(--error-400);
+  border-radius: 6px;
+
+  .desc {
+    ${textStyle('body', 4, 700)}
+    margin-left: 12px;
+    color: var(--white);
+  }
+
+  ${media(
+    'minTablet',
+    css`
+      padding: 8px 12px;
+      margin-top: 32px;
+    `
+  )}
+`
+
+export const StyledJoinFormOptimizedBanner = styled(motion.aside)`
+  ${textStyle('body', 4)}
+  width: 100%;
+  padding: 12px;
+  margin-top: 24px;
+  background-color: var(--primary-500);
   border-radius: 8px;
 
   .title {
+    ${flexbox('start')}
     ${textStyle('body', 4, 700)}
+
+    .icon {
+      margin-left: 4px;
+    }
   }
 
-  .icon {
-    flex-shrink: 0;
-    margin-right: 12px;
+  .desc {
+    margin-top: 4px;
+    color: rgba(var(--white-rgb), 0.8);
   }
 
   ${media(
     'minSmLaptop',
     css`
-      padding: 16px;
+      ${flexbox('start')}
+      padding: 8px 12px;
+      margin-top: 32px;
 
       .title {
-        ${textStyle('body', 3, 700)}
+        margin-right: 8px;
+
+        &::after {
+          display: block;
+          width: 2px;
+          height: 10px;
+          margin-left: 10px;
+          content: '';
+          border-radius: 10px;
+          background-color: var(--primary-400);
+        }
+
+        .icon {
+          margin-left: 2px;
+        }
+      }
+
+      .desc {
+        margin-top: 0;
+        color: var(--white);
       }
     `
   )}

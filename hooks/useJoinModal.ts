@@ -67,7 +67,6 @@ export function useJoinModal(assets: Hash[], joinAmounts: string[]) {
           ? `Go to ${tokensToApprove[1].symbol} approval`
           : 'Join pool',
         toastLabel: 'join pool',
-        // FIXME: 문구 수정
         completeMessage: tokensToApprove[1] ? undefined : completeMessage,
         nextAction: tokensToApprove[1]
           ? {

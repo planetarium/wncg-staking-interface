@@ -23,7 +23,6 @@ export const isNativeAssetAtom = atom((get) => {
   const currentEtherType = get(etherTypeAtom)
   return currentEtherType === config.nativeCurrency.address
 })
-export const showOptimizeErrorAtom = atomWithReset(false)
 
 type PendingJoinTx = {
   amounts?: string[]

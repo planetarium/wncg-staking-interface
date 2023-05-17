@@ -13,7 +13,6 @@ export type StyledButtonProps = {
   $size?: ButtonSize
 }
 
-// NOTE: Button default style
 export const buttonStyle = css`
   ${flexbox()}
   position: relative;
@@ -76,7 +75,6 @@ export const buttonStyle = css`
   }
 `
 
-// NOTE: Button variants
 export const primaryButtonStyle = css`
   color: var(--white);
   background-color: var(--primary-500);
@@ -146,7 +144,6 @@ export const tertiaryButtonStyle = css`
   }
 `
 
-// NOTE: Button sizes
 export const lgButtonStyle = css`
   ${textStyle('button', 1)}
   height: 72px;

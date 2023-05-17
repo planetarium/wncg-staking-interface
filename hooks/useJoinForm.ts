@@ -8,9 +8,7 @@ import {
   UseFormTrigger,
   UseFormWatch,
 } from 'react-hook-form'
-import { useAtom } from 'jotai'
 
-import { showOptimizeErrorAtom } from 'states/form'
 import config from 'config'
 import { HIGH_PRICE_IMPACT, REKT_PRICE_IMPACT } from 'config/misc'
 import { LiquidityFieldType } from 'config/constants'
@@ -39,6 +37,8 @@ export type JoinFormFields = {
 
 export type UseJoinFormReturns = {
   assets: Hash[]
+  activeField: LiquidityFieldType | null
+  setActiveField(value: LiquidityFieldType | null): void
   maxBalances: string[]
   maxSafeBalances: string[]
   formState: UseFormStateReturn<JoinFormFields>
@@ -58,15 +58,27 @@ export type UseJoinFormReturns = {
   submitDisabled: boolean
   resetDisabled: boolean
   optimizeDisabled: boolean
+  setFocusedElement(value: JoinFormFocusedElement): void
+  focusedElement: JoinFormFocusedElement
 }
 
+export type JoinFormFocusedElement =
+  | 'Input'
+  | 'MaxButton'
+  | 'OptimizeButton'
+  | null
+
 export function useJoinForm(): UseJoinFormReturns {
+  const [activeField, setActiveField] = useState<LiquidityFieldType | null>(
+    null
+  )
+  const [focusedElement, setFocusedElement] =
+    useState<JoinFormFocusedElement>(null)
+
   const balanceOf = useBalances()
   const toFiat = useFiat()
-  const { poolTokenAddresses } = useStaking()
+  const { poolTokenAddresses, tokenMap } = useStaking()
   const { calcPriceImpact, calcOptimizedAmounts } = useJoinMath()
-
-  const [showOptError, setShowOptError] = useAtom(showOptimizeErrorAtom)
 
   const { clearErrors, control, formState, reset, trigger, setValue, watch } =
     useForm<JoinFormFields>({
@@ -76,6 +88,7 @@ export function useJoinForm(): UseJoinFormReturns {
 
   const resetFields = useCallback(() => {
     reset(defaultValues)
+    setFocusedElement(null)
   }, [reset])
 
   const isNativeCurrency = watch('isNativeCurrency')
@@ -147,8 +160,8 @@ export function useJoinForm(): UseJoinFormReturns {
   }, [joinAmounts, optimizedAmounts])
 
   const resetDisabled = useMemo(
-    () => unsanitizedJoinAmounts.every((a) => !a.trim()) && !showOptError,
-    [showOptError, unsanitizedJoinAmounts]
+    () => unsanitizedJoinAmounts.every((a) => !a.trim()),
+    [unsanitizedJoinAmounts]
   )
 
   const submitDisabled = useMemo(
@@ -161,20 +174,19 @@ export function useJoinForm(): UseJoinFormReturns {
   )
 
   const optimize = useCallback(() => {
-    if (optimizeDisabled) {
-      setShowOptError(true)
-      return
-    }
+    setFocusedElement('OptimizeButton')
 
     joinFormFields.forEach((field, i) => {
       setValue(field as 'TokenA' | 'TokenB', optimizedAmounts[i])
     })
 
     trigger()
-  }, [optimizeDisabled, optimizedAmounts, setShowOptError, setValue, trigger])
+  }, [optimizedAmounts, setValue, trigger])
 
   return {
     assets,
+    activeField,
+    setActiveField,
     clearErrors,
     control,
     fields: joinFormFields,
@@ -194,5 +206,7 @@ export function useJoinForm(): UseJoinFormReturns {
     joinAmountsInFiatValue,
     totalJoinFiatValue,
     priceImpact,
+    setFocusedElement,
+    focusedElement,
   }
 }

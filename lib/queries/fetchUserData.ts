@@ -28,9 +28,6 @@ export async function fetchUserData(account: Hash): Promise<UserDataResponse> {
     'any'
   )
 
-  // FIXME: earnedRewards는 provider로 따로 가져오기
-  // console.log(333, provider, provider.getNetwork())
-
   const contract = new Contract(
     config.stakingAddress,
     StakingAbi,
@@ -51,11 +48,18 @@ export async function fetchUserData(account: Hash): Promise<UserDataResponse> {
       _cooldowns,
     ] = data as unknown as BigNumber[]
 
-    const _earnedBAL = await contract?.earnedBAL(account)
-    const _earnedWNCG = await contract?.earnedWNCG(account)
+    let _earnedBAL = null
+    let _earnedWNCG = null
+
+    const currentNetwork = await provider.getNetwork()
+    if (currentNetwork.chainId === config.chainId) {
+      _earnedBAL = await contract?.earnedBAL(account)
+      _earnedWNCG = await contract?.earnedWNCG(account)
+    }
 
     const stakedTokenBalance = formatUnits(_stakedTokenBalance)
     const earnedRewards = [formatUnits(_earnedWNCG), formatUnits(_earnedBAL)]
+
     const _cooldownEndsAt = _getCooldownEndTimestamp?.toNumber() ?? 0
     const _withdrawEndsAt = _getWithdrawEndTimestamp?.toNumber() ?? 0
     const cooldowns = _cooldowns?.toNumber() ?? 0

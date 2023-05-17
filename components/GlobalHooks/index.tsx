@@ -1,9 +1,20 @@
 import { memo } from 'react'
+import dynamic from 'next/dynamic'
 
 import Suspense from 'components/Suspense'
-import BaseEffect from './BaseEffect'
-import MediaQueryEffect from './MediaQueryEffect'
 import Web3 from './Web3'
+
+const Contract = dynamic(() => import('./Contract'), {
+  suspense: true,
+})
+
+const Interface = dynamic(() => import('./Interface'), {
+  suspense: true,
+})
+
+const Unstake = dynamic(() => import('./Unstake'), {
+  suspense: true,
+})
 
 function GlobalHooks() {
   return (
@@ -11,10 +22,16 @@ function GlobalHooks() {
       <Web3 />
 
       <Suspense>
-        <BaseEffect />
+        <Contract />
       </Suspense>
 
-      <MediaQueryEffect />
+      <Suspense>
+        <Interface />
+      </Suspense>
+
+      <Suspense>
+        <Unstake />
+      </Suspense>
     </>
   )
 }

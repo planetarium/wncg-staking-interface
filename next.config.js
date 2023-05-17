@@ -25,7 +25,10 @@ const nextConfig = {
   exportPathMap: async function (defaultPathMap) {
     return {
       ...defaultPathMap,
-      '/': { page: '/' },
+      '/': { page: '/', __nextDefaultLocale: 'en' },
+      '/wncg': { page: '/wncg', __nextDefaultLocale: 'en' },
+      '/wncg/terms': { page: '/wncg/terms', __nextDefaultLocale: 'en' },
+      '/wncg/privacy': { page: '/wncg/privacy', __nextDefaultLocale: 'en' },
     }
   },
 }

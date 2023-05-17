@@ -10,7 +10,13 @@ import { bnum } from 'utils/bnum'
 import { calcTotalPoolValue } from 'utils/calcTotalPoolValue'
 import { useStaking } from 'hooks/useStaking'
 
-export function useFetchPrices() {
+export function useFetchPrices(options: UseFetchOptions = {}) {
+  const {
+    enabled = true,
+    refetchInterval = 10 * MINUTE_MS,
+    refetchOnWindowFocus = 'always',
+    suspense = true,
+  } = options
   const queryClient = useQueryClient()
   const {
     bptAddress,
@@ -22,14 +28,26 @@ export function useFetchPrices() {
 
   const setPriceMap = useSetAtom(priceMapAtom)
 
+  const initialData = queryClient.getQueryData<PriceMap>(
+    [queryKeys.FallbackPrices],
+    {
+      exact: false,
+    }
+  )
+
   return useQuery<PriceMap>(
     [queryKeys.Staking.Prices, config.weth],
     () =>
       fetchPrices(config.weth, ...poolTokenAddresses, ...rewardTokenAddresses),
     {
+      enabled,
       staleTime: Infinity,
-      refetchInterval: 5 * MINUTE_MS,
+      cacheTime: Infinity,
+      refetchInterval,
+      refetchOnWindowFocus,
       useErrorBoundary: false,
+      initialData,
+      suspense,
       onSuccess(data) {
         if (!data) return
 
@@ -45,14 +63,13 @@ export function useFetchPrices() {
 
         setPriceMap((prev) => ({ ...prev, ...data, [bptAddress]: bptPrice }))
       },
-
       onError() {
-        const fallbackPriceMap =
-          queryClient.getQueryData<PriceMap>([queryKeys.FallbackPriceMap], {
+        const state =
+          queryClient.getQueryData<PriceMap>([queryKeys.FallbackPrices], {
             exact: false,
           }) ?? {}
 
-        setPriceMap((prev) => ({ ...prev, ...fallbackPriceMap }))
+        setPriceMap((prev) => ({ ...prev, ...state }))
       },
     }
   )

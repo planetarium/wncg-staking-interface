@@ -14,12 +14,6 @@ export const { chains, provider, webSocketProvider } = configureChains(CHAINS, [
   infuraProvider({ apiKey: apiKeys.infura }),
   jsonRpcProvider({
     rpc(chain) {
-      // return (
-      //   nodeRealUrlFor(chain.network) ?? {
-      //     http: chain.rpcUrls.default.http?.[0],
-      //     webSocket: chain.rpcUrls.default.webSocket?.[0],
-      //   }
-      // )
       return nodeRealUrlFor(chain.network)
     },
   }),

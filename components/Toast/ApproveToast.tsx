@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { useTransaction } from 'wagmi'
 import { useMount } from 'react-use'
-import { constants } from 'ethers'
 import Link from 'next/link'
 import { useSetAtom } from 'jotai'
 import { RESET } from 'jotai/utils'
@@ -9,19 +8,18 @@ import { RESET } from 'jotai/utils'
 import { approveTxAtom } from 'states/tx'
 import config from 'config'
 import { formatUnits } from 'utils/formatUnits'
-import { bnum } from 'utils/bnum'
 import { parseLog } from 'utils/parseLog'
 import { txUrlFor } from 'utils/txUrlFor'
+import { bnum } from 'utils/bnum'
 import { useStaking } from 'hooks'
 import { useWatch } from './useWatch'
 
 import { StyledToast } from './styled'
 import Icon from 'components/Icon'
-import NumberFormat from 'components/NumberFormat'
 import TokenIcon from 'components/TokenIcon'
 import ToastStatus from './Status'
 
-type ToastProps = {
+type ApproveToastProps = {
   hash: Hash
   toastLabel: string
   tokenAddress: Hash
@@ -33,8 +31,8 @@ export default function ApproveToast({
   toastLabel,
   tokenAddress,
   tokenDecimals,
-}: ToastProps) {
-  const [allowance, setAllowance] = useState<string | null>(null)
+}: ApproveToastProps) {
+  const [pending, setPending] = useState<boolean | null>(null)
 
   const setTx = useSetAtom(approveTxAtom)
   const { tokenMap } = useStaking()
@@ -55,21 +53,14 @@ export default function ApproveToast({
           .map((l) => parseLog(l))
           .find((l) => l?.name === 'Approval')
 
-        const _allowance = approvalLog?.args?.value?.toString() ?? '0'
-        const newAllowance = formatUnits(_allowance, tokenDecimals)
+        const allowance = approvalLog?.args?.value?.toString() ?? '0'
 
-        if (newAllowance) {
-          setAllowance(newAllowance)
+        if (allowance != null) {
+          setPending(true)
         }
       } catch {}
     },
   })
-
-  const hasAllowance = bnum(allowance ?? '0').gt(0)
-
-  const isMaxApproved = bnum(allowance ?? '0').eq(
-    formatUnits(constants.MaxUint256.toString(), tokenDecimals)
-  )
 
   const { symbol } = tokenMap[tokenAddress]
 
@@ -95,15 +86,13 @@ export default function ApproveToast({
               {symbol}
             </dt>
 
-            {hasAllowance && (
-              <dd className="allowance">
-                {isMaxApproved ? (
-                  'Infinite approval'
-                ) : (
-                  <NumberFormat value={allowance!} />
-                )}
-              </dd>
-            )}
+            <dd className="text">
+              {pending === null
+                ? 'Pending...'
+                : pending
+                ? 'Confirmed'
+                : 'Failed'}
+            </dd>
           </div>
         </dl>
       </div>

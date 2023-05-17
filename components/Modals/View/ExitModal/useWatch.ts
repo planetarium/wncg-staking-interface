@@ -3,16 +3,15 @@ import { useAtomValue } from 'jotai'
 import { useWaitForTransaction } from 'wagmi'
 
 import { exitTxAtom } from 'states/tx'
-import { useFetchUserBalances } from 'hooks/queries'
 import config from 'config'
+import { useRefetch } from 'hooks'
 
 export function useWatch(send: (event: string) => void) {
-  const { refetch: refetchBalances } = useFetchUserBalances({
-    suspense: false,
+  const refetch = useRefetch({
+    userBalances: true,
+    pool: true,
+    userData: true,
   })
-  // const { refetch: refetchLpPoolBalances } = useFetchLpPoolBalances({
-  //   suspense: false,
-  // })
 
   const tx = useAtomValue(exitTxAtom)
 
@@ -30,11 +29,10 @@ export function useWatch(send: (event: string) => void) {
   })
 
   useMount(() => {
-    refetchBalances()
+    refetch()
   })
 
   useUnmount(() => {
-    refetchBalances()
-    // refetchLpPoolBalances()
+    refetch()
   })
 }

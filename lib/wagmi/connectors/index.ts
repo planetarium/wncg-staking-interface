@@ -3,6 +3,7 @@ import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
 import { WalletConnectConnector } from 'wagmi/connectors/walletConnect'
 import { InjectedConnector } from 'wagmi/connectors/injected'
 
+import config from 'config'
 import { chains } from '../chains'
 import { BinanceWalletConnector } from './binanceWallet'
 import { TrustWalletConnector } from './trustWallet'
@@ -24,15 +25,7 @@ export const coinbaseConnector = new CoinbaseWalletConnector({
 export const walletConnectConnector = new WalletConnectConnector({
   chains,
   options: {
-    // FIXME: WalletConnect Cloud id
-    projectId: '',
-  },
-})
-
-export const walletConnectNoQrCodeConnector = new WalletConnectConnector({
-  chains,
-  options: {
-    projectId: '',
+    projectId: config.walletConnectProjectId ?? '#',
   },
 })
 

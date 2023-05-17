@@ -60,8 +60,10 @@ type StakeTx = {
 
 type UnstakeTx = {
   hash?: Hash
+  earnedRewards?: string[]
   unstakeAmount?: string
   stakedTokenBalance?: string
+  totalClaimFiatValue?: string
 }
 
 type JoinTx = {

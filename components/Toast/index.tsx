@@ -16,12 +16,6 @@ import StakeToast from './StakeToast'
 import UnstakeToast from './UnstakeToast'
 
 export default function Toast(toast: Toast<any>) {
-  const hasModalInView = useAtomValue(hasModalInViewAtom)
-
-  useEffect(() => {
-    if (hasModalInView) toastify.dismiss()
-  }, [hasModalInView])
-
   return renderToast(toast)
 }
 

@@ -15,6 +15,7 @@ import { StyledGlobalFooterImportTokenDropdownMenu } from './styled'
 import ConnectorIcon from 'components/ConnectorIcon'
 import Icon from 'components/Icon'
 import TokenIcon from 'components/TokenIcon'
+import config from 'config'
 
 type GlobalFooterImportTokenDropdownProps = {
   closeDropdown(): void
@@ -28,12 +29,13 @@ export default function GlobalFooterImportTokenDropdownMenu({
   const { connector } = useAuth()
   const { importToken: _importToken } = useImportToken()
   const { isHandheld } = useResponsive()
-  const { rewardTokenAddress, stakedTokenAddress, tokenMap } = useStaking()
+  const { bptSymbol, rewardTokenAddress, stakedTokenAddress, tokenMap } =
+    useStaking()
 
   useCloseOnBlur(menuRef, closeDropdown)
 
   const list = useMemo(
-    () => [rewardTokenAddress, stakedTokenAddress],
+    () => [config.bal, rewardTokenAddress, stakedTokenAddress],
     [rewardTokenAddress, stakedTokenAddress]
   )
 
@@ -42,7 +44,7 @@ export default function GlobalFooterImportTokenDropdownMenu({
     const tokenInfo = tokenMap[value as Hash]
     const { symbol } = tokenInfo
 
-    const tokenSymbol = value === stakedTokenAddress ? 'BPT' : symbol
+    const tokenSymbol = value === stakedTokenAddress ? bptSymbol : symbol
 
     _importToken({ ...tokenInfo, symbol: tokenSymbol })
     closeDropdown()
@@ -78,7 +80,7 @@ export default function GlobalFooterImportTokenDropdownMenu({
           >
             {symbol}
 
-            <TokenIcon className="token" address={addr} $size={16} />
+            <TokenIcon className="token" address={addr} $size={16} dark />
             {isHandheld && (
               <ConnectorIcon
                 className="rightIcon"

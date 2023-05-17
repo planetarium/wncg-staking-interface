@@ -41,7 +41,6 @@ export default function JoinFormEtherSelect({
       'isNativeCurrency',
       symbol === config.nativeCurrency.symbol ? true : false
     )
-
     setValue(name as 'TokenA' | 'TokenB', '')
     trigger()
   }

@@ -45,7 +45,7 @@ function ApproveModalPage1({
         <div className="modalContent">
           <div className="guide">
             <ConnectorIcon icon="metaMask" $size={20} />
-            <h4 className="guideTitle">For Metamask, follow these steps:</h4>
+            <h4 className="guideTitle">For MetaMask, follow these steps:</h4>
 
             <ol>
               <li>

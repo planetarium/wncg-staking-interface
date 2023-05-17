@@ -4,15 +4,12 @@ import { useWaitForTransaction } from 'wagmi'
 
 import { cooldownTxAtom } from 'states/tx'
 import config from 'config'
-import { useFetchStaking, useFetchUserData } from 'hooks/queries'
+import { useRefetch } from 'hooks'
 
 export function useWatch(send: (event: string) => void) {
-  const { refetch: refetchStaking } = useFetchStaking({
-    enabled: true,
-    suspense: false,
-  })
-  const { refetch: refetchUserData } = useFetchUserData({
-    suspense: false,
+  const refetch = useRefetch({
+    staking: true,
+    userData: true,
   })
 
   const tx = useAtomValue(cooldownTxAtom)
@@ -23,8 +20,7 @@ export function useWatch(send: (event: string) => void) {
     suspense: false,
     chainId: config.chainId,
     async onSuccess() {
-      await refetchStaking()
-      await refetchUserData()
+      await refetch()
       send('SUCCESS')
     },
     onError() {
@@ -33,12 +29,10 @@ export function useWatch(send: (event: string) => void) {
   })
 
   useMount(() => {
-    refetchStaking()
-    refetchUserData()
+    refetch()
   })
 
   useUnmount(() => {
-    refetchStaking()
-    refetchUserData()
+    refetch()
   })
 }

@@ -185,6 +185,7 @@ export const StyledStakingDashboardApr = styled(motion.dl)<{
         }
 
         dd {
+          height: 48px;
           margin-top: 8px;
         }
 

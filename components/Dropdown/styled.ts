@@ -66,7 +66,7 @@ export const StyledDropdownMenu = styled(motion.div)`
       flex-grow: 1;
       text-align: left;
       transition: 150ms;
-      color: var(--gray-400);
+      color: var(--gray-500);
     }
 
     .icon {

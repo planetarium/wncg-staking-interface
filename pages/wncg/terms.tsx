@@ -4,7 +4,6 @@ import Link from 'next/link'
 import { NextSeo } from 'next-seo'
 
 import { TERMS_SEO } from 'lib/seo'
-export { getStaticProps } from 'lib/getStaticProps'
 
 import { StyledDocsPage } from 'styles/pages/docs'
 import Favicon from 'components/Favicon'

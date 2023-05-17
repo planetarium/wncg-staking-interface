@@ -1,10 +1,10 @@
 import { useCallback } from 'react'
 import { useConnect as _useConnect } from 'wagmi'
 
+import config from 'config'
 import { ModalType } from 'config/constants'
 import { createWallets } from 'lib/wagmi/wallets'
 import { useModal } from './useModal'
-import config from 'config'
 
 export function useConnect() {
   const { addModal, removeModal } = useModal()
@@ -42,7 +42,8 @@ export function useConnect() {
         if (
           error?.code === 4001 ||
           error?.code === 'ACTION_REJECTED' ||
-          error.error === 'Rejected by user'
+          error.error === 'Rejected by user' ||
+          Object.keys(error).length === 0 // NOTE: WalletConnect UserRejection
         )
           return
         if (

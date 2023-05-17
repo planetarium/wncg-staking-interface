@@ -30,7 +30,9 @@ class ConfigService {
   }
 
   get dexPlatformName() {
-    return 'Balancer'
+    return this.network.nativeCurrency.symbol === 'ETH'
+      ? 'Balancer'
+      : 'PancakeSwap'
   }
 
   get domain() {
@@ -80,10 +82,7 @@ class ConfigService {
   }
 
   get multicallContract() {
-    return (
-      process.env.NEXT_PUBLIC_MULTICALL_ADDRESS ??
-      '0xcA11bde05977b3631167028862bE2a173976CA11'
-    ) // Universal
+    return '0xcA11bde05977b3631167028862bE2a173976CA11' // Universal
       .toLowerCase() as Hash
   }
 
@@ -138,6 +137,10 @@ class ConfigService {
 
   get version() {
     return process.env.NEXT_PUBLIC_VERSION ?? 'v2.0.0'
+  }
+
+  get walletConnectProjectId() {
+    return process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID
   }
 
   get zeroAddress(): Hash {

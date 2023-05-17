@@ -1,6 +1,5 @@
 import { useAtom } from 'jotai'
 
-import { showOptimizeErrorAtom } from 'states/form'
 import { useStaking } from 'hooks'
 import type { UseJoinFormReturns } from 'hooks/useJoinForm'
 
@@ -9,8 +8,8 @@ import Button from 'components/Button'
 import Icon from 'components/Icon'
 import {
   Fieldset,
-  ProportionalGuide,
-  Unoptimizable,
+  ProportionalGuideBanner,
+  UnoptimizableAlert,
 } from 'components/Pool/shared'
 import SlippageControl from 'components/SlippageControl'
 
@@ -28,20 +27,8 @@ export default function PoolMobileForm(props: PoolMobileFormProps) {
     optimize,
     resetFields,
     resetDisabled,
+    focusedElement,
   } = props
-
-  const { stakedTokenAddress } = useStaking()
-  const [showOptError, setShowOptError] = useAtom(showOptimizeErrorAtom)
-
-  function handleOptimize() {
-    optimize()
-    setShowOptError(true)
-  }
-
-  function handleRefresh() {
-    resetFields()
-    setShowOptError(false)
-  }
 
   return (
     <StyledPoolMobileForm>
@@ -51,7 +38,7 @@ export default function PoolMobileForm(props: PoolMobileFormProps) {
         <div className="buttonGroup">
           <Button
             className="optimizeButton"
-            onClick={handleOptimize}
+            onClick={optimize}
             disabled={optimized}
             $contain
             $size="sm"
@@ -62,7 +49,7 @@ export default function PoolMobileForm(props: PoolMobileFormProps) {
           <button
             className="resetButton"
             type="reset"
-            onClick={handleRefresh}
+            onClick={resetFields}
             disabled={resetDisabled}
             aria-label="Reset"
           >
@@ -75,17 +62,16 @@ export default function PoolMobileForm(props: PoolMobileFormProps) {
       </header>
 
       <div>
-        {optimizeDisabled && (
-          <Unoptimizable
-            assets={assets}
-            maxBalances={maxBalances}
-            showAlert={showOptError}
-          />
-        )}
+        <UnoptimizableAlert
+          assets={assets}
+          maxBalances={maxBalances}
+          focusedElement={focusedElement}
+          optimizeDisabled={optimizeDisabled}
+        />
 
         <Fieldset {...props} />
 
-        <ProportionalGuide
+        <ProportionalGuideBanner
           joinAmounts={joinAmounts}
           assets={assets}
           maxBalances={maxBalances}

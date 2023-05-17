@@ -3,27 +3,15 @@ import { useAtomValue } from 'jotai'
 import { useWaitForTransaction } from 'wagmi'
 
 import { unstakeTxAtom } from 'states/tx'
-import {
-  useFetchUserData,
-  useFetchUserBalances,
-  useFetchStaking,
-} from 'hooks/queries'
 import config from 'config'
+import { useRefetch } from 'hooks'
 
 export function useWatch(send: (event: string) => void) {
-  const { refetch: refetchUserData } = useFetchUserData({
-    suspense: false,
-  })
-  const { refetch: refetchBalances } = useFetchUserBalances({
-    suspense: false,
-  })
-
-  // const { refetch: refetchLpPoolBalances } = useFetchLpPoolBalances({
-  //   suspense: false,
-  // })
-
-  const { refetch: refetchStaking } = useFetchStaking({
-    suspense: false,
+  const refetch = useRefetch({
+    userData: true,
+    userBalances: true,
+    pool: true,
+    staking: true,
   })
 
   const tx = useAtomValue(unstakeTxAtom)
@@ -34,8 +22,7 @@ export function useWatch(send: (event: string) => void) {
     chainId: config.chainId,
     suspense: false,
     async onSuccess() {
-      await refetchUserData()
-      // await refetchLpPoolBalances()
+      await refetch()
       send('SUCCESS')
     },
     onError() {
@@ -44,14 +31,10 @@ export function useWatch(send: (event: string) => void) {
   })
 
   useMount(() => {
-    refetchUserData()
-    refetchBalances()
+    refetch()
   })
 
   useUnmount(() => {
-    refetchUserData()
-    refetchBalances()
-    // refetchLpPoolBalances()
-    refetchStaking()
+    refetch()
   })
 }

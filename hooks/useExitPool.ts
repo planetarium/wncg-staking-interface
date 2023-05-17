@@ -3,7 +3,7 @@ import { useContractWrite, usePrepareContractWrite } from 'wagmi'
 import config from 'config'
 import { BalancerVaultAbi } from 'config/abi'
 import { bnum } from 'utils/bnum'
-import { useAuth, useExitBuildRequest } from 'hooks'
+import { useAuth, useExitBuildRequest, useSwitchNetwork } from 'hooks'
 
 type UseExitPoolParams = {
   assets: Hash[]
@@ -21,6 +21,7 @@ export function useExitPool({
   exactOut,
 }: UseExitPoolParams) {
   const { account } = useAuth()
+  const { switchBeforeSend } = useSwitchNetwork()
 
   const request = useExitBuildRequest({
     assets,
@@ -37,10 +38,7 @@ export function useExitPool({
     args: [config.poolId, account, account, request],
     functionName: 'exitPool',
     enabled: exitAmounts.some((amt) => bnum(amt).gt(0)),
-    onError(err: any) {
-      console.log('error')
-      console.warn(err.error)
-    },
+    onError: switchBeforeSend,
   })
 
   const { writeAsync } = useContractWrite(writeConfig)

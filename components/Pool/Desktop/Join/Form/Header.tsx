@@ -1,20 +1,21 @@
 import { memo } from 'react'
-import { useSetAtom } from 'jotai'
 
-import { showOptimizeErrorAtom } from 'states/form'
 import { useAuth, useStaking } from 'hooks'
+import { JoinFormFocusedElement } from 'hooks/useJoinForm'
 
 import { StyledJoinFormHeader } from './styled'
 import Button from 'components/Button'
 import Icon from 'components/Icon'
 import SlippageControl from 'components/SlippageControl'
 import TokenIcon from 'components/TokenIcon'
+import Tooltip from 'components/Tooltip'
 
 type JoinFormHeaderProps = {
   optimize(): void
   optimized: boolean
   reset(): void
   resetDisabled: boolean
+  setFocusedElement(value: JoinFormFocusedElement): void
 }
 
 function JoinFormHeader({
@@ -22,20 +23,14 @@ function JoinFormHeader({
   optimized,
   reset,
   resetDisabled,
+  setFocusedElement,
 }: JoinFormHeaderProps) {
   const { isConnected } = useAuth()
-  const { stakedTokenAddress } = useStaking()
-
-  const setShowOptError = useSetAtom(showOptimizeErrorAtom)
-
-  function handleOptimize() {
-    optimize()
-    setShowOptError(true)
-  }
+  const { bptName, stakedTokenAddress } = useStaking()
 
   function handleReset() {
     reset()
-    setShowOptError(false)
+    setFocusedElement(null)
   }
 
   return (
@@ -46,15 +41,22 @@ function JoinFormHeader({
       </h3>
 
       <div className="buttonGroup">
-        <Button
-          className="optimizeButton"
-          onClick={handleOptimize}
-          disabled={optimized || !isConnected}
-          $contain
-          $size="sm"
-        >
-          Optimize{optimized ? 'd' : ''}
-        </Button>
+        <div className="tooltipGroup">
+          <Button
+            className="optimizeButton toggler"
+            onClick={optimize}
+            disabled={optimized || !isConnected}
+            $contain
+            $size="sm"
+          >
+            Optimize{optimized ? 'd' : ''}
+          </Button>
+          <Tooltip
+            message={`Join ${bptName} pool with the optimized ratio`}
+            $noWrap
+            $direction="bottom"
+          />
+        </div>
 
         <button
           className="resetButton"

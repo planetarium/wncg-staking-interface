@@ -5,11 +5,6 @@ import { useResponsive } from 'hooks'
 import { StyledExpectedRevenue } from './styled'
 import Skeleton from 'components/Skeleton'
 
-type ExpectedRevenueProps = {
-  amount?: string
-  totalStaked?: string
-}
-
 const LIST = ['day', 'week', 'month', 'year']
 
 function ExpectedRevenueFallback() {

@@ -15,19 +15,16 @@ import { AvailableBalance, Control } from 'components/Form'
 
 type UnstakeModalPage2FormProps = {
   disabled: boolean
-  earnedRewards: string[]
-  rewardFiatValue: string
 } & UseUnstakeFormReturns
 
 export default function UnstakeModalPage2Form({
   disabled: _disabled,
-  earnedRewards,
-  rewardFiatValue,
+  totalClaimFiatValue,
   ...props
 }: UnstakeModalPage2FormProps) {
   const toFiat = useFiat()
   const { stakedTokenAddress, tokenMap } = useStaking()
-  const hasRewards = earnedRewards.some((r) => bnum(r).gt(0))
+  const hasRewards = bnum(totalClaimFiatValue).gt(0)
 
   const stakedTokenDecimals = tokenMap[stakedTokenAddress].decimals
 
@@ -72,7 +69,7 @@ export default function UnstakeModalPage2Form({
         <h4 className="label">I want to claim the rewards as well.</h4>
         <p className="desc">
           Claimable rewards
-          <NumberFormat value={rewardFiatValue} type="fiat" colon />
+          <NumberFormat value={totalClaimFiatValue} type="fiat" colon />
         </p>
 
         <Checkbox

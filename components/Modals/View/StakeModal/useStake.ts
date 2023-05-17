@@ -5,10 +5,11 @@ import { useContractWrite, usePrepareContractWrite } from 'wagmi'
 import config from 'config'
 import { StakingAbi } from 'config/abi'
 import { bnum } from 'utils/bnum'
-import { useStaking } from 'hooks'
+import { useStaking, useSwitchNetwork } from 'hooks'
 
 export function useStake(stakeAmount: string) {
   const { stakedTokenAddress, tokenMap } = useStaking()
+  const { switchBeforeSend } = useSwitchNetwork()
 
   const scaledStakeAmount = parseUnits(
     bnum(stakeAmount).toString(),
@@ -23,6 +24,7 @@ export function useStake(stakeAmount: string) {
     args: [scaledStakeAmount],
     functionName: 'stake',
     enabled,
+    onError: switchBeforeSend,
   })
 
   const { writeAsync } = useContractWrite(writeConfig)

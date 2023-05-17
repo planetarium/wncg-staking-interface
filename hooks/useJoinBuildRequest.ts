@@ -2,8 +2,8 @@ import { useMemo } from 'react'
 import { WeightedPoolEncoder } from '@balancer-labs/sdk'
 
 import config from 'config'
-import { useCalculator, useSlippage, useStaking } from 'hooks'
 import { parseUnits } from 'utils/parseUnits'
+import { useCalculator, useSlippage, useStaking } from 'hooks'
 
 type UseJoinBuildRequestParams = {
   assets: Hash[]

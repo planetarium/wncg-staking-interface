@@ -26,6 +26,7 @@ const GlobalStyle = createGlobalStyle`
   :root {
     ${generateHexVariables()};
     ${generateRgbVariables()};
+    --w3m-z-index: 10000 !important;
   }
 
   html {

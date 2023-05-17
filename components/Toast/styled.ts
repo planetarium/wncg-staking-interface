@@ -71,30 +71,27 @@ export const StyledToast = styled.aside`
       margin-top: 0;
     }
 
-    &:has(.allowance) {
-      align-items: center;
-
-      dd {
-        margin-top: 0;
-      }
-    }
-
     dt {
       ${flexbox('start')}
       margin-right: 8px;
       flex-shrink: 0;
     }
 
+    &:has(.text) {
+      align-items: center;
+    }
+
     dd {
       ${flexbox('start', 'end')}
       flex-direction: column;
       flex-grow: 1;
+      margin-top: 2px;
       overflow: hidden;
       text-align: right;
 
       &.allowance,
       &.text {
-        margin-top: 2px;
+        margin-top: 0;
         font-weight: 500 !important;
         color: var(--gray-500) !important;
 

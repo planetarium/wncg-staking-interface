@@ -10,10 +10,11 @@ import { useStaking, useJoinMath } from 'hooks'
 
 import { JoinFormFields } from 'hooks/useJoinForm'
 
-import { StyledJoinFormProportionalGuide } from './styled'
+import { StyledJoinFormProportionalGuideBanner } from './styled'
 import NumberFormat from 'components/NumberFormat'
+import Icon from 'components/Icon'
 
-type JoinFormProportionalGuideProps = {
+type JoinFormProportionalGuideBannerProps = {
   joinAmounts: string[]
   assets: Hash[]
   maxBalances: string[]
@@ -21,13 +22,13 @@ type JoinFormProportionalGuideProps = {
   setValue: UseFormSetValue<JoinFormFields>
 }
 
-function JoinFormProportionalGuide({
+function JoinFormProportionalGuideBanner({
   joinAmounts,
   assets,
   maxBalances,
   formState,
   setValue,
-}: JoinFormProportionalGuideProps) {
+}: JoinFormProportionalGuideBannerProps) {
   const { tokenMap } = useStaking()
   const { calcPropAmount } = useJoinMath()
 
@@ -63,29 +64,37 @@ function JoinFormProportionalGuide({
   return (
     <AnimatePresence>
       {show && (
-        <StyledJoinFormProportionalGuide
+        <StyledJoinFormProportionalGuideBanner
           {...EXIT_MOTION}
           className="joinFormProportionalGuide"
           variants={slideInDown}
         >
           <h4 className="title">
-            Recomendation👍🏻 : Add{' '}
-            <NumberFormat value={propAmount} symbol={subjectToken.symbol} />{' '}
+            <Icon icon="star" />
+            Recommendation
+          </h4>
+
+          <p className="desc">
+            Add
+            <NumberFormat
+              value={propAmount}
+              symbol={subjectToken.symbol}
+            />{' '}
             matching with{' '}
             <NumberFormat
               value={joinAmounts[singleSidedFieldIndex]}
               symbol={selectedToken.symbol}
             />{' '}
             for the minimal slippage.
-          </h4>
+          </p>
 
           <button className="addButton" type="button" onClick={handleAdd}>
             Add <NumberFormat value={propAmount} /> {subjectToken.symbol}
           </button>
-        </StyledJoinFormProportionalGuide>
+        </StyledJoinFormProportionalGuideBanner>
       )}
     </AnimatePresence>
   )
 }
 
-export default memo(JoinFormProportionalGuide)
+export default memo(JoinFormProportionalGuideBanner)

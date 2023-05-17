@@ -5,6 +5,7 @@ import clsx from 'clsx'
 import { StyledLottie } from './styled'
 
 import arrowDownAnimation from './animation-arrow-down.json'
+import bellAnimation from './animation-bell.json'
 import coinAnimation from './animation-coin.json'
 import completedAnimation from './animation-completed.json'
 import failAnimation from './animation-fail.json'
@@ -19,6 +20,7 @@ import toastLoadingAnimation from './animation-toast-loading.json'
 
 type LottieType =
   | 'arrowDown'
+  | 'bell'
   | 'coin'
   | 'completed'
   | 'fail'
@@ -45,6 +47,8 @@ export default function Lottie({
     switch (_animationData) {
       case 'arrowDown':
         return arrowDownAnimation
+      case 'bell':
+        return bellAnimation
       case 'coin':
         return coinAnimation
       case 'completed':

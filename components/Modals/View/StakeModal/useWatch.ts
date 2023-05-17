@@ -4,25 +4,15 @@ import { useWaitForTransaction } from 'wagmi'
 
 import { stakeTxAtom } from 'states/tx'
 import config from 'config'
-import {
-  useFetchStaking,
-  useFetchUserBalances,
-  useFetchUserData,
-} from 'hooks/queries'
+import { useRefetch } from 'hooks'
 
 export function useWatch(send: (event: string) => void) {
   const tx = useAtomValue(stakeTxAtom)
 
-  const { refetch: refetchBalances } = useFetchUserBalances({
-    suspense: false,
-  })
-
-  const { refetch: refetchUserData } = useFetchUserData({
-    suspense: false,
-  })
-
-  const { refetch: refetchStaking } = useFetchStaking({
-    suspense: false,
+  const refetch = useRefetch({
+    userBalances: true,
+    userData: true,
+    staking: true,
   })
 
   useWaitForTransaction({
@@ -31,7 +21,7 @@ export function useWatch(send: (event: string) => void) {
     chainId: config.chainId,
     suspense: false,
     async onSuccess() {
-      await refetchUserData()
+      await refetch()
       send('SUCCESS')
     },
     onError() {
@@ -40,14 +30,10 @@ export function useWatch(send: (event: string) => void) {
   })
 
   useMount(() => {
-    refetchUserData()
-    refetchBalances()
-    refetchStaking()
+    refetch()
   })
 
   useUnmount(() => {
-    refetchUserData()
-    refetchBalances()
-    refetchStaking()
+    refetch()
   })
 }

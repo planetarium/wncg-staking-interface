@@ -9,6 +9,7 @@ import InputField from './InputField'
 type JoinFormFieldsetProps = UseJoinFormReturns
 
 export default function JoinFormFieldset({
+  activeField,
   clearErrors,
   joinAmounts,
   maxBalances,
@@ -17,8 +18,13 @@ export default function JoinFormFieldset({
   control,
   fields,
   resetFields,
+  formState,
+  optimizeDisabled,
   setValue,
   trigger,
+  setFocusedElement,
+  setActiveField,
+  focusedElement,
 }: JoinFormFieldsetProps) {
   const { isConnected } = useAuth()
   const { poolTokens, shouldReversePoolTokenOrder } = useStaking()
@@ -56,14 +62,19 @@ export default function JoinFormFieldset({
             name={field}
             clearErrors={clearErrors}
             control={control}
+            formState={formState}
+            activeField={activeField}
+            focusedElement={focusedElement}
+            setFocusedElement={setFocusedElement}
             maxBalance={maxBalance}
             maxSafeBalance={maxSafeBalance}
-            resetFields={resetFields}
             setValue={setValue}
             trigger={trigger}
             value={value}
+            setActiveField={setActiveField}
             watch={watch}
             weight={weight}
+            optimizeDisabled={optimizeDisabled}
             disabled={!isConnected}
           />
         )

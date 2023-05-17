@@ -439,10 +439,6 @@ export const StyledStakeConnect = styled.div`
     css`
       max-width: 560px;
       margin-left: 0;
-
-      .connectButton {
-        ${lgButtonStyle}
-      }
     `
   )}
 
@@ -454,27 +450,27 @@ ${media(
   )}
 `
 
-export const StyledStakeJoinButton = styled(motion.div)`
+export const StyledStakeJoinButton = styled(motion.div)<{
+  $hasBalance: boolean
+}>`
   width: 100%;
+  margin-top: 4px;
 
   .joinButton {
     ${buttonStyle}
     ${textStyle('button', 3)}
     width: 100%;
     height: 48px;
-    margin-top: 4px;
     color: var(--white);
   }
 
   ${media(
     'minTablet',
     css`
-      max-width: 560px;
       margin: 16px auto 0;
 
       .joinButton {
         ${textStyle('button', 2)}
-        max-width: 400px;
         margin: 0 auto;
         height: 56px;
 
@@ -503,6 +499,23 @@ export const StyledStakeJoinButton = styled(motion.div)`
       max-width: 580px;
     `
   )}
+
+  ${({ $hasBalance }) =>
+    !$hasBalance &&
+    css`
+      .joinButton {
+        margin-top: 8px;
+      }
+
+      ${media(
+        'minTablet',
+        css`
+          .joinButton {
+            margin-top: 0;
+          }
+        `
+      )}
+    `}
 `
 
 export const StyledStakeJoinTooltip = styled(motion.div)`

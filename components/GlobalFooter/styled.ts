@@ -1,7 +1,13 @@
 import { motion } from 'framer-motion'
 import styled, { css } from 'styled-components'
 
-import { flexbox, media, posCenterY, textStyle } from 'styles/utils'
+import {
+  flexbox,
+  inlineFlexbox,
+  media,
+  posCenterY,
+  textStyle,
+} from 'styles/utils'
 import {
   GLOBAL_FOOTER_HEIGHT_LAPTOP,
   GLOBAL_FOOTER_HEIGHT_MOBILE,
@@ -22,7 +28,7 @@ export const StyledGlobalFooter = styled(motion.footer)`
   height: ${GLOBAL_FOOTER_HEIGHT_MOBILE}px;
   padding: 24px ${GUTTER_MOBILE}px 32px;
   color: var(--gray-500);
-  background-color: #1c1140; // rgba(var(--white-rgb), 0.05);
+  background-color: #1c1140;
 
   .env {
     ${textStyle('body', 4)}
@@ -44,6 +50,22 @@ export const StyledGlobalFooter = styled(motion.footer)`
     ${flexbox('between', 'start')}
     ${textStyle('caption')}
     color: var(--gray-300);
+
+    .version {
+      ${inlineFlexbox('start')}
+      ${textStyle('caption')}
+      color: var(--gray-300);
+
+      &::before {
+        display: block;
+        content: '';
+        width: 1px;
+        height: 8px;
+        margin: 0 8px;
+        background-color: var(--gray-500);
+        border-radius: 10px;
+      }
+    }
 
     strong {
       flex-shrink: 0;
@@ -84,7 +106,7 @@ export const StyledGlobalFooter = styled(motion.footer)`
     color: var(--gray-300);
     border-radius: 50%;
 
-    &:first-child {
+    &:first-of-type {
       margin-left: 0;
     }
   }
@@ -118,6 +140,10 @@ export const StyledGlobalFooter = styled(motion.footer)`
 
       .title {
         ${textStyle('body', 4)}
+
+        strong {
+          margin-right: 16px;
+        }
       }
 
       .buttonGroup {
@@ -177,6 +203,7 @@ export const StyledGlobalFooterImportTokenDropdown = styled.div`
     'minLaptop',
     css`
       width: auto;
+      margin-right: 16px;
       margin-bottom: 0;
     `
   )}
