@@ -11,11 +11,16 @@ import ImportTokenDropdown from './ImportTokenDropdown'
 function GlobalFooter() {
   const [showVersion, setShowVersion] = useState(false)
 
-  const currentBuildUrl = ''
+  const currentBranch = process.env.NEXT_PUBLIC_AWS_BRANCH ?? ''
+  const jobId = Number(process.env.NEXT_PUBLIC_AWS_JOB_ID ?? '0')
 
-  useHotkeys('d+e+v', function () {
-    setShowVersion((prev) => !prev)
-  })
+  useHotkeys(
+    'd+e+v',
+    function () {
+      setShowVersion((prev) => !prev)
+    },
+    { splitKey: ',' }
+  )
 
   return (
     <StyledGlobalFooter role="contentinfo" layout>
@@ -26,14 +31,9 @@ function GlobalFooter() {
           <strong>
             {config.appName}
             {showVersion && (
-              <Link
-                className="version"
-                href={currentBuildUrl}
-                target="_blank"
-                rel="noopener"
-              >
-                v2.1.0
-              </Link>
+              <span className="version">
+                {currentBranch}#{jobId}
+              </span>
             )}
           </strong>
           <span>&copy; 2023 {config.appName}</span>

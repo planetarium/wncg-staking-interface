@@ -2,7 +2,7 @@ import { createClient } from 'wagmi'
 
 import { provider, webSocketProvider } from './chains'
 import {
-  // bscConnector,
+  bscConnector,
   coinbaseConnector,
   injectedConnector,
   metaMaskConnector,
@@ -21,7 +21,7 @@ export default createClient({
     coinbaseConnector,
     walletConnectConnector,
     trustWalletConnector,
-    // bscConnector,
+    bscConnector,
     injectedConnector,
   ],
   webSocketProvider,
