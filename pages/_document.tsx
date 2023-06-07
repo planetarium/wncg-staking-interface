@@ -7,6 +7,8 @@ import Document, {
 } from 'next/document'
 import { ServerStyleSheet } from 'styled-components'
 
+import config from 'config'
+
 class MyDocument extends Document {
   static async getInitialProps(ctx: DocumentContext) {
     const sheet = new ServerStyleSheet()
@@ -30,6 +32,8 @@ class MyDocument extends Document {
   }
 
   render() {
+    const isProd = config.env === 'production'
+
     return (
       <Html lang="en">
         <Head>
@@ -40,7 +44,19 @@ class MyDocument extends Document {
             rel="stylesheet"
           />
         </Head>
+
         <body>
+          {isProd && config.googleTagManager && (
+            <noscript>
+              <iframe
+                src={`https://www.googletagmanager.com/ns.html?id=${config.googleTagManager}`}
+                height="0"
+                width="0"
+                style={{ display: 'none', visibility: 'hidden' }}
+              />
+            </noscript>
+          )}
+
           <Main />
           <div id="modal" />
           <NextScript />

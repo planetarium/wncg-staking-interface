@@ -65,6 +65,10 @@ class ConfigService {
     }
   }
 
+  get googleTagManager() {
+    return process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER ?? ''
+  }
+
   get links() {
     return {
       discord: 'https://discord.gg/planetarium',
