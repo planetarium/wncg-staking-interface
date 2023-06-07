@@ -32,8 +32,6 @@ export default function GnbMyStaking() {
     stakedTokenAddress
   )
 
-  console.log(stakedTokenBalance)
-
   const cooldownWindow = useAtomValue(cooldownWindowAtom)
   const unstakeWindow = useAtomValue(withdrawWindowAtom)
 

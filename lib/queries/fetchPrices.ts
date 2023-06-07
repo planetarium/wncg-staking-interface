@@ -7,11 +7,11 @@ import { parseTokenPrices } from 'utils/parseTokenPrices'
 import { uniqAddress } from 'utils/uniqAddress'
 
 const FIAT_CURRENCY = 'usd'
-const IS_PROD = config.env === 'production'
+const isProd = config.env === 'production'
 
 const client = axios.create({
-  baseURL: IS_PROD ? baseUrls.coingeckoPro : baseUrls.coingecko,
-  headers: IS_PROD
+  baseURL: isProd ? baseUrls.coingeckoPro : baseUrls.coingecko,
+  headers: isProd
     ? {
         'x-cg-pro-api-key': apiKeys.coingecko,
       }
