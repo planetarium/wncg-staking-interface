@@ -46,7 +46,7 @@ class ConfigService {
       terms: 'https://stake.nine-chronicles.com/wncg/terms',
       privacy: 'https://stake.nine-chronicles.com/wncg/privacy',
       auditReport:
-        'https://github.com/planetarium/wncg-staking/blob/main/contracts/audits/%5BTheori%5D%20Planetarium%20WNCG%20Staking%20Protocol%20Security%20Audit%20Final%20Report.pdf',
+        'https://github.com/planetarium/staking_contract_wncg_eth/blob/main/audit/%5BTheori%5D%20Planetarium%20WNCG%20Staking%20Protocol%20Security%20Audit%20Final%20Report.pdf',
     }
   }
 
@@ -56,7 +56,8 @@ class ConfigService {
 
   get github() {
     const repositoryName =
-      process.env.NEXT_PUBLIC_GITHUB_REPO ?? 'planetarium/wncg-staking'
+      process.env.NEXT_PUBLIC_GITHUB_REPO ??
+      'planetarium/staking_contract_wncg_eth'
 
     return {
       repositoryName,
@@ -77,7 +78,7 @@ class ConfigService {
     return {
       medium:
         'https://medium.com/@ninechronicles/introducing-wncg-staking-ft-chapter-iii-a27f26d70522',
-      github: 'https://github.com/planetarium/wncg-staking',
+      github: 'https://github.com/planetarium/staking_contract_wncg_eth',
     }
   }
 
