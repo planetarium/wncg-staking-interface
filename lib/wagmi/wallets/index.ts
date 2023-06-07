@@ -18,7 +18,7 @@ const walletConfigs = (_: WalletParams): WalletConfig[] => {
     coinbaseWalletConfig,
     walletConnectWalletConfig,
     trustWalletConfig,
-    // binanceWalletConfig,
+    binanceWalletConfig,
   ]
 }
 

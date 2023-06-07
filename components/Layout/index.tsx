@@ -1,4 +1,4 @@
-import { PropsWithChildren, useEffect, useRef, useState } from 'react'
+import { PropsWithChildren, useRef } from 'react'
 import dynamic from 'next/dynamic'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
@@ -6,12 +6,12 @@ import { useRouter } from 'next/router'
 import { useMediaQuery, useResponsive } from 'hooks'
 
 import { StyledLayout, StyledMain } from './styled'
+import Code from 'components/Code'
 import Favicon from 'components/Favicon'
 import GlobalHooks from 'components/GlobalHooks'
 import RootFavicon from 'components/RootFavicon'
 import Suspense from 'components/Suspense'
 import Gnb from './Gnb'
-import Code from 'components/Code'
 
 const Alerts = dynamic(() => import('./Alerts'), {
   ssr: false,

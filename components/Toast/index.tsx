@@ -1,8 +1,3 @@
-import { useEffect } from 'react'
-import { toast as toastify } from 'react-toastify'
-import { useAtomValue } from 'jotai'
-
-import { hasModalInViewAtom } from 'states/ui'
 import { ToastType } from 'config/constants'
 import { assertUnreachable } from 'utils/assertUnreachable'
 

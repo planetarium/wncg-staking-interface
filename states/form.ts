@@ -1,5 +1,5 @@
 import { atom } from 'jotai'
-import { atomWithReset, atomWithStorage } from 'jotai/utils'
+import { atomWithStorage } from 'jotai/utils'
 
 import config from 'config'
 

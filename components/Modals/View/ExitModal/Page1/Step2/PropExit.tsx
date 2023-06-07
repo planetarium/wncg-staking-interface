@@ -8,7 +8,7 @@ import {
 
 import { LiquidityFieldType } from 'config/constants'
 import { bnum } from 'utils/bnum'
-import { useBalances, useFiat, useResponsive, useStaking } from 'hooks'
+import { useBalances, useResponsive, useStaking } from 'hooks'
 import { ExitFormFields } from 'hooks/useExitForm'
 
 import { StyledExitModalPage1Step2 } from './styled'

@@ -1,5 +1,3 @@
-import config from 'config'
-
 import { StyledMainCard } from './styled'
 import Button from 'components/Button'
 import CryptoIcon from 'components/CryptoIcon'

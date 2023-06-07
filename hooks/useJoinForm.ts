@@ -77,7 +77,7 @@ export function useJoinForm(): UseJoinFormReturns {
 
   const balanceOf = useBalances()
   const toFiat = useFiat()
-  const { poolTokenAddresses, tokenMap } = useStaking()
+  const { poolTokenAddresses } = useStaking()
   const { calcPriceImpact, calcOptimizedAmounts } = useJoinMath()
 
   const { clearErrors, control, formState, reset, trigger, setValue, watch } =

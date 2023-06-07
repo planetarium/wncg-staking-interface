@@ -4,7 +4,7 @@ import { motion } from 'framer-motion'
 import { ModalPage } from 'components/Modals/shared'
 import { backdropFilter, flexbox, textGradient, textStyle } from 'styles/utils'
 import { buttonStyle } from 'components/Button/styled'
-import { GUTTER_MOBILE, GUTTER_TABLET } from 'styles/constants/dimensions'
+import { GUTTER_MOBILE } from 'styles/constants/dimensions'
 
 export const StyledPoolMobileContainer = styled(motion.aside)`
   ${flexbox('end')}

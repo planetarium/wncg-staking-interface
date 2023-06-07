@@ -2,9 +2,6 @@ import { memo } from 'react'
 import { useAtomValue } from 'jotai'
 
 import { unstakeTxAtom } from 'states/tx'
-import { bnum } from 'utils/bnum'
-import { useFiat, useStaking } from 'hooks'
-import { useFetchUserData } from 'hooks/queries'
 import type { UseUnstakeFormReturns } from '../useUnstakeForm'
 
 import { StyledUnstakeModalPage2 } from './styled'

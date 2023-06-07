@@ -7,10 +7,8 @@ import { RESET } from 'jotai/utils'
 
 import { approveTxAtom } from 'states/tx'
 import config from 'config'
-import { formatUnits } from 'utils/formatUnits'
 import { parseLog } from 'utils/parseLog'
 import { txUrlFor } from 'utils/txUrlFor'
-import { bnum } from 'utils/bnum'
 import { useStaking } from 'hooks'
 import { useWatch } from './useWatch'
 

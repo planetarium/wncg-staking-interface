@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components'
 
-import { flexbox, media, textStyle } from 'styles/utils'
+import { media, textStyle } from 'styles/utils'
 
 import { StyledModalApprovePage } from '../../shared/styled'
 import { CompletePage } from 'components/Modals/shared'

@@ -1,6 +1,3 @@
-import { useAtom } from 'jotai'
-
-import { useStaking } from 'hooks'
 import type { UseJoinFormReturns } from 'hooks/useJoinForm'
 
 import { StyledPoolMobileForm } from './styled'

@@ -2,7 +2,6 @@ import { useCallback } from 'react'
 
 import { bnum } from 'utils/bnum'
 import { hasAmounts } from 'utils/hasAmounts'
-import { removeTrailingZero } from 'utils/removeTrailingZero'
 import { useCalculator, useFiat, useSlippage, useStaking } from 'hooks'
 
 export function useJoinMath() {

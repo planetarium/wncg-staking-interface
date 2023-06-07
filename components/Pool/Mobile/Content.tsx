@@ -1,12 +1,8 @@
-import Link from 'next/link'
-
 import { wait } from 'utils/wait'
-import { poolUrlFor } from 'utils/poolUrlFor'
 import { useBalances, useJoinModal, useStaking } from 'hooks'
 import { useFetchUserAllowances } from 'hooks/queries'
 import { UseJoinFormReturns } from 'hooks/useJoinForm'
 
-import Icon from 'components/Icon'
 import { Footer, Summary } from 'components/Pool/shared'
 import Form from './Form'
 
