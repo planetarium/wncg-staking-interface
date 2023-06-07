@@ -86,26 +86,15 @@ export default function ExitModalPage2({
     toFiat(amt, assets[i])
   )
   const totalExitedAmountInFiatValue = exitAmountsInFiatValue
-    .reduce((acc, amt, i) => {
-      return acc.plus(toFiat(amt, assets[i]))
-    }, bnum(0))
+    .reduce((acc, amt) => acc.plus(amt), bnum(0))
     .toString()
 
-  const importConfig = useMemo(() => {
+  const importTokenAddress = useMemo(() => {
     if (isProportional) {
-      const token = tokenMap[stakedTokenAddress]
-      return {
-        ...token,
-        name: undefined,
-      }
+      return stakedTokenAddress
     }
 
-    const tokenOut = tokenMap?.[assets[tokenOutIndex]]
-
-    return {
-      ...tokenOut,
-      name: undefined,
-    }
+    return tokenMap?.[assets[tokenOutIndex]]?.address
   }, [assets, isProportional, stakedTokenAddress, tokenMap, tokenOutIndex])
 
   return (
@@ -162,7 +151,7 @@ export default function ExitModalPage2({
           )}
         </div>
 
-        <ImportToken {...importConfig} />
+        <ImportToken address={importTokenAddress} />
       </div>
 
       <footer className="modalFooter">

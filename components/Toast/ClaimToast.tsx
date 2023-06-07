@@ -112,11 +112,10 @@ export default function ClaimToast({
           if (!check) return null
 
           const address = rewardTokenAddresses[i]
-          const token = tokenMap[address]
 
           return (
             <ImportToken
-              {...token}
+              address={address}
               className="importButton"
               key={`claimToast:importToken:${address}`}
               name={undefined}

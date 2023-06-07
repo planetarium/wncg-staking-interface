@@ -1,15 +1,14 @@
 import { MouseEvent, useCallback, useMemo } from 'react'
 
+import config from 'config'
 import { ConnectorId } from 'config/constants'
-import { useAuth } from 'hooks'
+import { useAuth, useStaking } from 'hooks'
 
 import { StyledImportToken } from './styled'
 import ConnectorIcon from './ConnectorIcon'
 
 type ImportTokenProps = {
   address: Hash
-  decimals: number
-  symbol: string
   className?: string
   name?: string
   $variant?: ButtonVariant
@@ -19,15 +18,31 @@ type ImportTokenProps = {
 
 export default function ImportToken({
   address,
-  decimals,
-  symbol,
-  name = symbol,
+  name,
   className,
   $variant = 'tertiary',
   $size = 'md',
   $contain = false,
 }: ImportTokenProps) {
   const { connector, isConnected } = useAuth()
+  const { bptName, bptSymbol, stakedTokenAddress, tokenMap } = useStaking()
+
+  const importTokenConfig = useMemo(() => {
+    if (address === stakedTokenAddress) {
+      return {
+        ...tokenMap[stakedTokenAddress],
+        name: bptName,
+        symbol: bptSymbol,
+      }
+    }
+
+    return tokenMap[address]
+  }, [address, bptName, bptSymbol, stakedTokenAddress, tokenMap])
+
+  name =
+    name ?? address === config.bal
+      ? importTokenConfig.symbol
+      : importTokenConfig.name
 
   const canImportToken = useMemo(() => {
     if (typeof window === 'undefined') return false
@@ -56,10 +71,7 @@ export default function ImportToken({
           params: {
             type: 'ERC20',
             options: {
-              address,
-              decimals,
-              name,
-              symbol: symbol.length > 11 ? 'BPT' : symbol,
+              ...importTokenConfig,
             },
           } as any,
         })
@@ -67,7 +79,7 @@ export default function ImportToken({
         console.log(error)
       }
     },
-    [address, canImportToken, decimals, name, symbol]
+    [canImportToken, importTokenConfig]
   )
 
   if (!canImportToken || !isConnected) return null

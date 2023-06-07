@@ -33,7 +33,7 @@ function ExitModalPage1Step1({
 }: ExitModalPage1Step1Props) {
   const {
     poolTokenAddresses,
-    shouldReversePoolTokenOrder,
+    shouldReversePoolTokenOrderOnDisplay,
     stakedTokenAddress,
     tokenMap,
   } = useStaking()
@@ -41,12 +41,12 @@ function ExitModalPage1Step1({
   const exitType = watch('exitType')
 
   const exitTypeList = useMemo(() => {
-    if (shouldReversePoolTokenOrder) {
+    if (shouldReversePoolTokenOrderOnDisplay) {
       return [null, ...poolTokenAddresses, config.nativeCurrency.address]
     }
 
     return [null, ...poolTokenAddresses, config.nativeCurrency.address]
-  }, [poolTokenAddresses, shouldReversePoolTokenOrder])
+  }, [poolTokenAddresses, shouldReversePoolTokenOrderOnDisplay])
 
   const disabled = !!hash
 

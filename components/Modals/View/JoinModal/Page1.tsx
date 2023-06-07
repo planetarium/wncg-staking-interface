@@ -28,7 +28,7 @@ function JoinModalPage1({
   send,
 }: JoinModalPage1Props) {
   const [tx, setTx] = useAtom(joinTxAtom)
-  const { shouldReversePoolTokenOrder, tokenMap } = useStaking()
+  const { shouldReversePoolTokenOrderOnDisplay, tokenMap } = useStaking()
 
   const nativeAssetIndex = assets.findIndex(
     (addr) => addr === config.nativeCurrency.address
@@ -88,7 +88,7 @@ function JoinModalPage1({
 
         <p
           className={clsx('amountGroup', {
-            reverse: shouldReversePoolTokenOrder,
+            reverse: shouldReversePoolTokenOrderOnDisplay,
           })}
         >
           {joinAmounts.map((amt, i) => {

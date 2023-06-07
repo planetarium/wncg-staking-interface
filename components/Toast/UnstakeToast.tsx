@@ -25,9 +25,7 @@ export default function UnstakeToast({
   unstakeAmount,
 }: UnstakeToastProps) {
   const toFiat = useFiat()
-  const { stakedTokenAddress, tokenMap, bptName } = useStaking()
-  const { decimals: stakedTokenDecimals, symbol: stakedTokenSymbol } =
-    tokenMap[stakedTokenAddress]
+  const { stakedTokenAddress, bptName } = useStaking()
 
   const setTx = useSetAtom(unstakeTxAtom)
 
@@ -74,9 +72,6 @@ export default function UnstakeToast({
       <footer className="toastFooter">
         <ImportToken
           address={stakedTokenAddress}
-          decimals={stakedTokenDecimals}
-          name={bptName}
-          symbol={stakedTokenSymbol}
           $size="sm"
           $variant="primary"
         />

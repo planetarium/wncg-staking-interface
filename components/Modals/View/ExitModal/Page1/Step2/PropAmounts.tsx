@@ -20,7 +20,7 @@ function ExitModalPage1Step2PropAmounts({
   const {
     poolTokenAddresses,
     poolTokenWeights,
-    shouldReversePoolTokenOrder,
+    shouldReversePoolTokenOrderOnDisplay,
     tokenMap,
   } = useStaking()
 
@@ -31,7 +31,7 @@ function ExitModalPage1Step2PropAmounts({
 
   return (
     <StyledExitModalPage1Step2PropAmounts
-      $reverse={shouldReversePoolTokenOrder}
+      $reverse={shouldReversePoolTokenOrderOnDisplay}
     >
       <h5 className="title">You will receive</h5>
 

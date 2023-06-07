@@ -13,7 +13,8 @@ export function useJoinPool(
   hasNativeCurrency: boolean
 ) {
   const { account } = useAuth()
-  const { poolTokenDecimals, shouldReversePoolTokenOrder } = useStaking()
+  const { poolTokenDecimals, shouldReversePoolTokenOrderOnDisplay } =
+    useStaking()
   const { switchBeforeSend } = useSwitchNetwork()
 
   const request = useJoinBuildRequest({
@@ -23,7 +24,7 @@ export function useJoinPool(
 
   const args = [config.poolId, account, account, request]
 
-  const baseTokenIndex = shouldReversePoolTokenOrder ? 0 : 1
+  const baseTokenIndex = shouldReversePoolTokenOrderOnDisplay ? 0 : 1
 
   const { config: writeConfig } = usePrepareContractWrite({
     address: config.vault,

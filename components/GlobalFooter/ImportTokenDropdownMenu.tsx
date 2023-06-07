@@ -1,5 +1,6 @@
 import { MouseEvent, useMemo, useRef } from 'react'
 
+import config from 'config'
 import { ConnectorId } from 'config/constants'
 import { EXIT_MOTION } from 'config/motions'
 import { slideInUp } from 'config/motionVariants'
@@ -15,7 +16,6 @@ import { StyledGlobalFooterImportTokenDropdownMenu } from './styled'
 import ConnectorIcon from 'components/ConnectorIcon'
 import Icon from 'components/Icon'
 import TokenIcon from 'components/TokenIcon'
-import config from 'config'
 
 type GlobalFooterImportTokenDropdownProps = {
   closeDropdown(): void

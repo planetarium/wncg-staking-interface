@@ -55,13 +55,8 @@ export function useStaking() {
       stakedTokenAddress: '' as Hash,
       unstakePeriod: 0,
       totalStaked: '',
+      shouldReversePoolTokenOrderOnDisplay: false,
     } as BuildResponse)
 
-  const shouldReversePoolTokenOrder =
-    data.poolTokenAddresses.findIndex((addr) => addr === config.weth) === 0
-
-  return {
-    ...data,
-    shouldReversePoolTokenOrder,
-  }
+  return data
 }

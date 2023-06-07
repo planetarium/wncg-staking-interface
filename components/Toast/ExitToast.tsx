@@ -30,26 +30,16 @@ export default function ExitToast({
 }: ExitToast) {
   const toFiat = useFiat()
   const { bptName, stakedTokenAddress, tokenMap } = useStaking()
-  const { decimals: stakedTokenDecimals, symbol: stakedTokenSymbol } =
-    tokenMap[stakedTokenAddress]
+  const { decimals: stakedTokenDecimals } = tokenMap[stakedTokenAddress]
 
   const setTx = useSetAtom(exitTxAtom)
 
   const status = useWatch(hash)
 
-  const importTokenConfig = isProportional
-    ? {
-        address: stakedTokenAddress,
-        decimals: stakedTokenDecimals,
-        name: bptName,
-        symbol: stakedTokenSymbol,
-      }
+  const importTokenAddress = isProportional
+    ? stakedTokenAddress
     : tokenMap[assets[tokenOutIndex]].address !== config.nativeCurrency.address
-    ? {
-        address: tokenMap[assets[tokenOutIndex]].address,
-        decimals: tokenMap[assets[tokenOutIndex]].decimals,
-        symbol: tokenMap[assets[tokenOutIndex]].symbol,
-      }
+    ? tokenMap[assets[tokenOutIndex]].address
     : null
 
   useMount(() => setTx(RESET))
@@ -120,9 +110,13 @@ export default function ExitToast({
         </dl>
       </div>
 
-      {importTokenConfig && (
+      {importTokenAddress && (
         <footer className="toastFooter">
-          <ImportToken {...importTokenConfig} $size="sm" $variant="primary" />
+          <ImportToken
+            address={importTokenAddress}
+            $size="sm"
+            $variant="primary"
+          />
         </footer>
       )}
     </StyledToast>

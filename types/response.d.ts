@@ -34,6 +34,7 @@ type Pool = {
   poolTokenWeights: string[]
   poolTokenWeightsInPcnt: number[]
   poolTokenSymbols: string[]
+  shouldReversePoolTokenOrderOnDisplay: boolean
 }
 
 type UnserializedStakingResponse = [

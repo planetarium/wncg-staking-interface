@@ -24,8 +24,7 @@ export default function StakeToast({ hash, stakeAmount }: StakeToastProps) {
   const toFiat = useFiat()
   const { stakedTokenAddress, tokenMap } = useStaking()
 
-  const { decimals: stakedTokenDecimals, symbol: stakedTokenSymbol } =
-    tokenMap[stakedTokenAddress]
+  const { symbol: stakedTokenSymbol } = tokenMap[stakedTokenAddress]
 
   const setTx = useSetAtom(stakeTxAtom)
 
@@ -72,8 +71,6 @@ export default function StakeToast({ hash, stakeAmount }: StakeToastProps) {
       <footer className="toastFooter">
         <ImportToken
           address={stakedTokenAddress}
-          decimals={stakedTokenDecimals}
-          symbol={stakedTokenSymbol}
           $size="sm"
           $variant="primary"
         />

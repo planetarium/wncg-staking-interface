@@ -9,7 +9,6 @@ import { claimTxAtom } from 'states/tx'
 import config from 'config'
 import { parseTransferLogs } from 'utils/parseTransferLogs'
 import { txUrlFor } from 'utils/txUrlFor'
-import { useStaking } from 'hooks'
 import { useWatch } from './useWatch'
 
 import { StyledToast } from './styled'
@@ -23,13 +22,9 @@ type HarvestToastProps = Required<HarvestTx>
 export default function HarvestToast({ hash }: HarvestToastProps) {
   const setTx = useSetAtom(claimTxAtom)
 
-  const { tokenMap } = useStaking()
-
   const [confirmed, setConfirmed] = useState(false)
 
   const status = useWatch(hash)
-
-  const balToken = tokenMap[config.bal]
 
   useTransaction({
     hash,
@@ -84,7 +79,7 @@ export default function HarvestToast({ hash }: HarvestToastProps) {
 
       <footer className="toastFooter">
         <ImportToken
-          {...balToken}
+          address={config.bal}
           name={undefined}
           $size="sm"
           $variant="primary"

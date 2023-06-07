@@ -1,3 +1,4 @@
+import config from 'config'
 import { bnum } from './bnum'
 
 export function deserializePool(pool: PoolResponse): Pool {
@@ -29,14 +30,21 @@ export function deserializePool(pool: PoolResponse): Pool {
   )
   const poolTokenSymbols = poolTokens.map((t) => t.symbol)
 
+  const shouldReversePoolTokenOrderOnDisplay =
+    poolTokenAddresses.findIndex((addr) => addr === config.weth) === 0
+
   const bptName = poolTokenSymbols
     .map((symb, i) => `${poolTokenWeightsInPcnt[i]}${symb}`)
     .join('-')
 
+  const bptSymbol = `${
+    poolTokenSymbols[shouldReversePoolTokenOrderOnDisplay ? 1 : 0]
+  } BPT`
+
   return {
     bptAddress,
     bptTotalSupply: totalShares ?? '0',
-    bptSymbol: bptName,
+    bptSymbol,
     bptName,
     bptDecimals: 18,
     poolId: id,
@@ -51,5 +59,6 @@ export function deserializePool(pool: PoolResponse): Pool {
     poolTokenWeights,
     poolTokenWeightsInPcnt,
     poolTokenSymbols,
+    shouldReversePoolTokenOrderOnDisplay,
   }
 }

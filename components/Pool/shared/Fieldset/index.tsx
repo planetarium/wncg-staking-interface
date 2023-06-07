@@ -27,12 +27,15 @@ export default function JoinFormFieldset({
   focusedElement,
 }: JoinFormFieldsetProps) {
   const { isConnected } = useAuth()
-  const { poolTokens, shouldReversePoolTokenOrder } = useStaking()
+  const { poolTokens, shouldReversePoolTokenOrderOnDisplay } = useStaking()
 
   const isNativeCurrency = watch('isNativeCurrency')
 
   return (
-    <StyledJoinFormFieldset layoutRoot $reverse={shouldReversePoolTokenOrder}>
+    <StyledJoinFormFieldset
+      layoutRoot
+      $reverse={shouldReversePoolTokenOrderOnDisplay}
+    >
       {poolTokens.map((poolToken, i) => {
         const field = fields[i] as 'TokenA' | 'TokenB'
         let address = poolToken.address

@@ -17,13 +17,13 @@ function PoolHeader() {
     poolTokenAddresses,
     poolTokenSymbols,
     poolTokenWeightsInPcnt,
-    shouldReversePoolTokenOrder,
+    shouldReversePoolTokenOrderOnDisplay,
   } = useStaking()
 
   return (
     <StyledPoolHeader
       className="poolHeader"
-      $reverse={shouldReversePoolTokenOrder}
+      $reverse={shouldReversePoolTokenOrderOnDisplay}
     >
       <strong className="poolName">{bptName}</strong>
       <div className="titleGroup">
