@@ -22,8 +22,7 @@ function StakeModalPage1({
   send,
 }: StakeModalPage1Props) {
   const toFiat = useFiat()
-  const { stakedTokenAddress, tokenMap } = useStaking()
-  const { symbol } = tokenMap[stakedTokenAddress]
+  const { bptName, stakedTokenAddress } = useStaking()
 
   const [tx, setTx] = useAtom(stakeTxAtom)
 
@@ -66,7 +65,7 @@ function StakeModalPage1({
     <StyledStakeModalPage1 $disabled={!!tx.hash}>
       <header className="modalHeader">
         <div className="titleGroup">
-          <h2 className="title accent">LP token({symbol}) staking</h2>
+          <h2 className="title accent">LP token({bptName}) staking</h2>
           <h3 className="subtitle">
             Do you want to stake?
             <strong className="amount">

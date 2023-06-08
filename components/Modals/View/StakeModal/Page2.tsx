@@ -20,7 +20,7 @@ type StakeModalPage2Props = {
 function StakeModalPage2({ resetForm }: StakeModalPage2Props) {
   const toFiat = useFiat()
   const { removeModal } = useModal()
-  const { stakedTokenAddress, tokenMap } = useStaking()
+  const { bptName, stakedTokenAddress } = useStaking()
 
   const { stakeAmount = '0', stakedTokenBalance = '0' } =
     useAtomValue(stakeTxAtom)
@@ -54,7 +54,7 @@ function StakeModalPage2({ resetForm }: StakeModalPage2Props) {
         <Lottie className="confetti" animationData="success" />
         <div className="tokenSymbol">
           <TokenIcon address={stakedTokenAddress} $size={16} />
-          LP token({tokenMap[stakedTokenAddress].symbol})
+          LP token({bptName})
         </div>
         <h2 className="title">Staking completed!</h2>
       </header>

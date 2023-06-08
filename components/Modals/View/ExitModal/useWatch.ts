@@ -5,6 +5,7 @@ import { useWaitForTransaction } from 'wagmi'
 import { exitTxAtom } from 'states/tx'
 import config from 'config'
 import { useRefetch } from 'hooks'
+import { wait } from 'utils/wait'
 
 export function useWatch(send: (event: string) => void) {
   const refetch = useRefetch({
@@ -20,7 +21,8 @@ export function useWatch(send: (event: string) => void) {
     enabled: !!tx.hash,
     chainId: config.chainId,
     suspense: false,
-    onSuccess() {
+    async onSuccess() {
+      await wait(100)
       send('SUCCESS')
     },
     onError() {
