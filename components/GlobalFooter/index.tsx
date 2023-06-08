@@ -13,10 +13,12 @@ function GlobalFooter() {
 
   const currentBranch = process.env.NEXT_PUBLIC_AWS_BRANCH ?? ''
   const jobId = Number(process.env.NEXT_PUBLIC_AWS_JOB_ID ?? '0')
+  const commitHash = process.env.NEXT_PUBLIC_AWS_COMMIT_ID ?? ''
 
   useHotkeys(
     'd+e+v',
     function () {
+      if (process.env.NODE_ENV === 'development') return
       setShowVersion((prev) => !prev)
     },
     { splitKey: ',' }
@@ -32,7 +34,7 @@ function GlobalFooter() {
             {config.appName}
             {showVersion && (
               <span className="version">
-                {currentBranch}#{jobId}
+                {currentBranch}#{jobId} ({commitHash.slice(0, 6)})
               </span>
             )}
           </strong>
