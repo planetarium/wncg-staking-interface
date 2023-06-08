@@ -49,6 +49,8 @@ export default function ImportToken({
 
   const canImportToken = useMemo(() => {
     if (typeof window === 'undefined') return false
+    if (address.toLowerCase() === config.nativeCurrency.address) return false
+
     switch (true) {
       case window?.ethereum?.isMetaMask &&
         connector?.id === ConnectorId.MetaMask:
@@ -60,7 +62,7 @@ export default function ImportToken({
       default:
         return false
     }
-  }, [connector?.id])
+  }, [address, connector?.id])
 
   const importToken = useCallback(
     async (e: MouseEvent<HTMLButtonElement>) => {

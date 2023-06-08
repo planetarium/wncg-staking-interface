@@ -32,7 +32,7 @@ export default function JoinFormOptimizedBanner({
           </span>
 
           <p className="desc">
-            The maximum amount is entered while maintaining a 5:5 ratio within
+            The maximum amount is entered while maintaining a pool ratio within
             the balance.
           </p>
         </StyledJoinFormOptimizedBanner>
