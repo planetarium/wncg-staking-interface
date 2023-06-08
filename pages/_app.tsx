@@ -1,5 +1,4 @@
 import { PropsWithChildren, useRef } from 'react'
-import ReactGA from 'react-ga4'
 import {
   Hydrate,
   QueryClient,
@@ -59,11 +58,6 @@ function MyApp({ Component, pageProps }: MyAppProps) {
     })
   )
   const isProd = config.env === 'production'
-
-  useMount(() => {
-    if (!isProd) return
-    ReactGA.initialize(process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID as string)
-  })
 
   useMount(() => {
     if (isFirefox) return document.body.classList.add('firefox')

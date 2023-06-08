@@ -9,6 +9,8 @@ import Icon from 'components/Icon'
 import SlippageControl from 'components/SlippageControl'
 import TokenIcon from 'components/TokenIcon'
 import Tooltip from 'components/Tooltip'
+import { useAtomValue } from 'jotai'
+import { joinTxAtom } from 'states/tx'
 
 type JoinFormHeaderProps = {
   optimize(): void
@@ -27,6 +29,8 @@ function JoinFormHeader({
 }: JoinFormHeaderProps) {
   const { isConnected } = useAuth()
   const { bptName, stakedTokenAddress } = useStaking()
+
+  const tx = useAtomValue(joinTxAtom)
 
   function handleReset() {
     reset()
@@ -69,7 +73,7 @@ function JoinFormHeader({
         </button>
       </div>
 
-      <SlippageControl />
+      <SlippageControl disabled={!!tx.hash} />
     </StyledJoinFormHeader>
   )
 }

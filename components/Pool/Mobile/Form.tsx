@@ -1,3 +1,6 @@
+import { useAtomValue } from 'jotai'
+
+import { joinTxAtom } from 'states/tx'
 import type { UseJoinFormReturns } from 'hooks/useJoinForm'
 
 import { StyledPoolMobileForm } from './styled'
@@ -27,10 +30,12 @@ export default function PoolMobileForm(props: PoolMobileFormProps) {
     focusedElement,
   } = props
 
+  const tx = useAtomValue(joinTxAtom)
+
   return (
     <StyledPoolMobileForm>
       <header className="formHeader">
-        <SlippageControl />
+        <SlippageControl disabled={!!tx.hash} />
 
         <div className="buttonGroup">
           <Button

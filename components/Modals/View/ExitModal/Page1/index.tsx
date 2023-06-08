@@ -39,7 +39,7 @@ function ExitModalPage1(props: ExitModalPage1Props & UseExitFormReturns) {
 
   return (
     <StyledExitModalPage1 $disabled={!!hash}>
-      <Header />
+      <Header disabled={!!hash} />
 
       <div className="container">
         <div className="modalContent">

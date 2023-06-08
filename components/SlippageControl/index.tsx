@@ -12,9 +12,10 @@ import Toggle from './Toggle'
 
 type SlippageControlProps = {
   className?: string
+  disabled?: boolean
 }
 
-function SlippageControl({ className }: SlippageControlProps) {
+function SlippageControl({ className, disabled }: SlippageControlProps) {
   const { isConnected } = useAuth()
 
   const [show, setShow] = useState(false)
@@ -24,6 +25,7 @@ function SlippageControl({ className }: SlippageControlProps) {
 
   function toggle(e: MouseEvent<HTMLButtonElement>) {
     e.stopPropagation()
+    if (disabled) return
     setShow((prev) => !prev)
   }
 
