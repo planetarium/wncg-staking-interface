@@ -36,7 +36,10 @@ export default function ImportToken({
       }
     }
 
-    return tokenMap[address]
+    return {
+      ...tokenMap[address],
+      name: tokenMap[address].symbol,
+    }
   }, [address, bptName, bptSymbol, stakedTokenAddress, tokenMap])
 
   name =

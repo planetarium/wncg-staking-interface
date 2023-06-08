@@ -78,12 +78,7 @@ export default function HarvestToast({ hash }: HarvestToastProps) {
       </div>
 
       <footer className="toastFooter">
-        <ImportToken
-          address={config.bal}
-          name={undefined}
-          $size="sm"
-          $variant="primary"
-        />
+        <ImportToken address={config.bal} $size="sm" $variant="primary" />
       </footer>
     </StyledToast>
   )

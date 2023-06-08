@@ -118,7 +118,6 @@ export default function ClaimToast({
               address={address}
               className="importButton"
               key={`claimToast:importToken:${address}`}
-              name={undefined}
               $size="sm"
               $variant="primary"
             />

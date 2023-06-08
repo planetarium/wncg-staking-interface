@@ -119,7 +119,6 @@ export default function ClaimModalPage2({
               <ImportToken
                 {...token}
                 key={`claimModal:page2:importToken:${address}`}
-                name={undefined}
               />
             )
           })}

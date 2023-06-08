@@ -46,7 +46,7 @@ export default function GlobalFooterImportTokenDropdownMenu({
 
     const tokenSymbol = value === stakedTokenAddress ? bptSymbol : symbol
 
-    _importToken({ ...tokenInfo, symbol: tokenSymbol })
+    _importToken({ ...tokenInfo, name: tokenSymbol, symbol: tokenSymbol })
     closeDropdown()
   }
 
