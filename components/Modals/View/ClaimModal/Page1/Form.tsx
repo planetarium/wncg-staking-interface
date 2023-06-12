@@ -43,7 +43,7 @@ export default function ClaimModalPage1Form({
     <StyledClaimModalPage1Form>
       <fieldset className="rewardGroup">
         {rewardTokenAddresses.map((addr, i) => {
-          const { symbol } = tokenMap[addr]
+          const { symbol = '' } = tokenMap[addr] ?? {}
           const amount = earnedRewards[i]
           const fiatValue = toFiat(amount, addr)
           const id = `claimModal:page1:form:${addr}`

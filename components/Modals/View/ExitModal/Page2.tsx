@@ -112,7 +112,7 @@ export default function ExitModalPage2({
 
                 if (bnum(amt).isZero()) return null
 
-                const { symbol } = tokenMap[addr]
+                const { symbol = '' } = tokenMap[addr] ?? {}
                 const fiatValue = exitAmountsInFiatValue[i]
 
                 return (

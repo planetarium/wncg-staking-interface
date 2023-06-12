@@ -67,7 +67,7 @@ export default function SidebarRewards({ closeSidebar }: SidebarRewardsProps) {
             <dl className="detailList">
               {earnedRewards.map((reward, i) => {
                 const address = rewardTokenAddresses[i]
-                const { symbol } = tokenMap[address]
+                const { symbol = '' } = tokenMap[address] ?? {}
                 const fiatValue = toFiat(reward, address)
 
                 return (

@@ -8,7 +8,7 @@ export function parseTransferLogs(logs: Log[]) {
     return parseLog(log)?.name === 'Transfer'
   })
 
-  const tokenAddresses = transferLogs.map((log) => log.address.toLowerCase())
+  const tokenAddresses = transferLogs.map((log) => log.address?.toLowerCase())
 
   const transferedAmounts = transferLogs.map(
     (log) => decodeLogData(log.data, ['uint256'])?.[0] ?? null

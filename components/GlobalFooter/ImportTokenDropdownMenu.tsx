@@ -41,8 +41,8 @@ export default function GlobalFooterImportTokenDropdownMenu({
 
   function importToken(e: MouseEvent<HTMLButtonElement>) {
     const { value } = e.currentTarget
-    const tokenInfo = tokenMap[value as Hash]
-    const { symbol } = tokenInfo
+    const tokenInfo = tokenMap[value as Hash] ?? {}
+    const { symbol = '' } = tokenInfo
 
     const tokenSymbol = value === stakedTokenAddress ? bptSymbol : symbol
 
@@ -68,7 +68,7 @@ export default function GlobalFooterImportTokenDropdownMenu({
       </header>
 
       {list.map((addr) => {
-        const { symbol } = tokenMap[addr]
+        const { symbol = '' } = tokenMap[addr] ?? {} ?? ''
 
         return (
           <button

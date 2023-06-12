@@ -60,7 +60,7 @@ export default function ApproveToast({
     },
   })
 
-  const { symbol } = tokenMap[tokenAddress]
+  const { symbol = '' } = tokenMap[tokenAddress] ?? {}
 
   return (
     <StyledToast>

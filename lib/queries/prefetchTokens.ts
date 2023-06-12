@@ -15,7 +15,7 @@ export async function prefetchTokens(tokensList: Hash[]) {
     const tokensMap = new Map<Hash, TokenInfo>()
 
     responses.forEach((r) => {
-      const address = r.address.toLowerCase() as Hash
+      const address = r.address?.toLowerCase() as Hash
 
       tokensMap.set(address, {
         address: address,

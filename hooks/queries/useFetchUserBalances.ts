@@ -28,7 +28,7 @@ export function useFetchUserBalances(options: UseFetchOptions = {}) {
       refetchOnWindowFocus,
       select(data) {
         const entries = Object.entries(data).map(([addr, balance]) => {
-          const { decimals } = tokenMap[addr as Hash]
+          const { decimals = 18 } = tokenMap[addr as Hash] ?? {}
           return [addr, formatUnits(balance ?? '0', decimals)]
         })
         return Object.fromEntries(entries)

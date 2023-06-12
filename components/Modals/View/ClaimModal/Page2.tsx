@@ -78,7 +78,7 @@ export default function ClaimModalPage2({
               const amt = rewards[i]
 
               const address = rewardTokenAddresses[i]
-              const { symbol } = tokenMap[address]
+              const { symbol = '' } = tokenMap[address] ?? {}
               const active = !bnum(amt).isZero()
 
               return (

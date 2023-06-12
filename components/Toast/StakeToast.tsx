@@ -24,7 +24,7 @@ export default function StakeToast({ hash, stakeAmount }: StakeToastProps) {
   const toFiat = useFiat()
   const { stakedTokenAddress, tokenMap } = useStaking()
 
-  const { symbol: stakedTokenSymbol } = tokenMap[stakedTokenAddress]
+  const { symbol: stakedTokenSymbol = '' } = tokenMap[stakedTokenAddress] ?? {}
 
   const setTx = useSetAtom(stakeTxAtom)
 

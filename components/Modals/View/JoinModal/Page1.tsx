@@ -92,7 +92,7 @@ function JoinModalPage1({
           })}
         >
           {joinAmounts.map((amt, i) => {
-            const { symbol, address } = tokenMap[assets[i]]
+            const { symbol = '', address = '' } = tokenMap[assets[i]] ?? {}
 
             return (
               <NumberFormat

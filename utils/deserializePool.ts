@@ -16,12 +16,12 @@ export function deserializePool(pool: PoolResponse): Pool {
 
   const poolTokens = tokens.map((t) => ({
     ...t,
-    address: t.address.toLowerCase() as Hash,
+    address: t.address?.toLowerCase() as Hash,
   }))
 
-  const bptAddress = address.toLowerCase() as Hash
+  const bptAddress = address?.toLowerCase() as Hash
 
-  const poolTokenAddresses = tokensList.map((a) => a.toLowerCase() as Hash)
+  const poolTokenAddresses = tokensList.map((a) => a?.toLowerCase() as Hash)
   const poolTokenBalances = poolTokens.map((t) => t.balance)
   const poolTokenDecimals = poolTokens.map((t) => t.decimals)
   const poolTokenWeights = poolTokens.map((t) => t.weight)

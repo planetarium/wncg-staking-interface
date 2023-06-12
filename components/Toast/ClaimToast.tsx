@@ -85,7 +85,7 @@ export default function ClaimToast({
             const amt = amounts[i]
 
             const address = rewardTokenAddresses[i]
-            const { symbol } = tokenMap[address]
+            const { symbol = '' } = tokenMap[address] ?? {}
             const fiatValue = toFiat(amt, address)
 
             return (

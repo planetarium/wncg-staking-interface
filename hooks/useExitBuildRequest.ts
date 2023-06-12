@@ -70,7 +70,7 @@ export function useExitBuildRequest({
     if (isProportional) return ['0', '0']
     return amounts.map((a, i) => {
       const token = tokenMap[_assets[i]]
-      return safeBigNumber(parseUnits(a, token.decimals).toString())
+      return safeBigNumber(parseUnits(a, token?.decimals ?? 18).toString())
     })
   }, [_assets, amounts, isProportional, tokenMap])
 

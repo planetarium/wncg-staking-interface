@@ -33,7 +33,7 @@ export function useJoinBuildRequest({
     () =>
       amounts.map((amt, i) => {
         const token = tokenMap[assets[i]]
-        return parseUnits(amt, token.decimals).toString()
+        return parseUnits(amt, token?.decimals ?? 18).toString()
       }),
     [amounts, assets, tokenMap]
   )

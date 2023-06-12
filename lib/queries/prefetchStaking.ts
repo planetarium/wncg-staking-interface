@@ -54,13 +54,13 @@ export async function prefetchStaking() {
       1
     )
 
-    const liquidityGaugeAddress = _balancerGauge.toLowerCase() as Hash
-    const balRewardPoolAddress = _balRewardPool.toLowerCase() as Hash
-    const rewardTokenAddress = _rewardToken.toLowerCase() as Hash
-    const stakedTokenAddress = _stakedToken.toLowerCase() as Hash
+    const liquidityGaugeAddress = _balancerGauge?.toLowerCase() as Hash
+    const balRewardPoolAddress = _balRewardPool?.toLowerCase() as Hash
+    const rewardTokenAddress = _rewardToken?.toLowerCase() as Hash
+    const stakedTokenAddress = _stakedToken?.toLowerCase() as Hash
 
     const rewardTokenAddresses = [_rewardToken, config.bal].map(
-      (a) => a.toLowerCase() as Hash
+      (a) => a?.toLowerCase() as Hash
     )
     const rewardEmissions = [_wncgEmissionPerSec, _balRewardRate].map((e) =>
       formatUnits(e)

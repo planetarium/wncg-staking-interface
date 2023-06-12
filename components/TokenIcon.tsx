@@ -40,8 +40,8 @@ function TokenIcon({
     switch (true) {
       case token.symbol === 'ETH':
       case token.symbol === 'WETH':
-      case address === config.nativeCurrency.address.toLowerCase():
-      case address === config.weth.toLowerCase():
+      case address === config.nativeCurrency.address:
+      case address === config.weth:
         return <CryptoIcon className="icon" icon="ether" $size={$size} />
       case token.symbol === 'WNCG':
       case address === rewardTokenAddress:
@@ -69,7 +69,7 @@ function TokenIcon({
         $reverse={shouldReversePoolTokenOrderOnDisplay}
       >
         {poolTokenSymbols.map((symb) => {
-          let icon = symb.toLowerCase()
+          let icon = symb?.toLowerCase()
           if (icon === 'weth') icon = 'ether'
 
           return (
