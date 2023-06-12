@@ -6,8 +6,8 @@ type LiquidityFieldType = import('config/constants').LiquidityFieldType
 
 type ModalType = import('config/constants').ModalType
 
-type Network = import('config/constants').Network
-
 type Slippage = import('config/constants').Slippage
 
 type ToastType = import('config/constants').ToastType
+
+type ChainId = import('config/chains').ChainId

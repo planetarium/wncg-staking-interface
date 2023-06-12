@@ -1,7 +1,7 @@
 import { memo } from 'react'
 
 import { explorerUrlFor } from 'utils/explorerUrlFor'
-import { useAuth, useConnect, useStaking } from 'hooks'
+import { useAuth, useChain, useConnect, useStaking } from 'hooks'
 
 import { StyledPoolHeader } from './styled'
 import Icon from 'components/Icon'
@@ -10,10 +10,11 @@ import Button from 'components/Button'
 
 function PoolHeader() {
   const { isConnected } = useAuth()
+  const { chainId } = useChain()
   const { openConnectModal } = useConnect()
 
   const {
-    bptName,
+    lpToken,
     poolTokenAddresses,
     poolTokenSymbols,
     poolTokenWeightsInPcnt,
@@ -25,7 +26,7 @@ function PoolHeader() {
       className="poolHeader"
       $reverse={shouldReversePoolTokenOrderOnDisplay}
     >
-      <strong className="poolName">{bptName}</strong>
+      <strong className="poolName">{lpToken.name}</strong>
       <div className="titleGroup">
         <h2 className="title">Join pool, Get LP Tokens!</h2>
 
@@ -34,7 +35,7 @@ function PoolHeader() {
             <a
               className="tokenItem"
               key={`poolHeader:${addr}`}
-              href={explorerUrlFor(addr)}
+              href={explorerUrlFor(chainId, addr)}
               target="_blank"
               rel="noopener"
               aria-label="Open in Etherscan"

@@ -6,7 +6,7 @@ import {
   UseFormWatch,
 } from 'react-hook-form'
 
-import config from 'config'
+import { NATIVE_CURRENCY_ADDRESS } from 'config/constants/addresses'
 import { LiquidityFieldType } from 'config/constants'
 import { bnum } from 'utils/bnum'
 import { useFiat, useResponsive, useStaking } from 'hooks'
@@ -37,7 +37,7 @@ function ExitModalPage1Step2SingleExit({
   hash,
 }: ExitModalPage1Step2SingleExitProps) {
   const toFiat = useFiat()
-  const { poolTokens, poolTokenBalances, tokenMap } = useStaking()
+  const { poolTokens, poolTokenBalances, tokens } = useStaking()
   const { isHandheld } = useResponsive()
 
   const exitType = watch('exitType')
@@ -73,8 +73,8 @@ function ExitModalPage1Step2SingleExit({
   )
 
   const singleExitToken =
-    exitType === config.nativeCurrency.address
-      ? tokenMap[config.nativeCurrency.address]
+    exitType === NATIVE_CURRENCY_ADDRESS
+      ? tokens[NATIVE_CURRENCY_ADDRESS]
       : poolTokens[singleExitTokenOutIndex]
 
   const fiatValue = toFiat(singleExitMaxAmount, singleExitToken?.address)

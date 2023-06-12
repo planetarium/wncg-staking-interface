@@ -1,62 +1,37 @@
-import { useQueryClient } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 
-import config from 'config'
-import { queryKeys } from 'config/queryKeys'
+import { QUERY_KEYS } from 'config/constants/queryKeys'
+import { useChain } from './useChain'
+import { build } from 'lib/queries/build'
 
-export function useStaking() {
-  const queryClient = useQueryClient()
+type UseStakingReturnEthereum = LiquidityPool &
+  EthereumStaking & {
+    tokens: TokenMap
+    priceMap: PriceMap
+  }
 
-  const data =
-    queryClient.getQueryData<BuildResponse>([queryKeys.Build], {
-      exact: false,
-    }) ??
-    ({
-      tokenMap: {},
-      pool: {
-        id: config.poolId,
-        address: '' as Hash,
-        createTime: 0,
-        factory: '',
-        symbol: '',
-        name: '',
-        swapFee: '',
-        owner: '',
-        totalLiquidity: '',
-        totalShares: '',
-        totalSwapFee: '',
-        totalSwapVolume: '',
-        tokens: [],
-        tokensList: [],
-      },
-      balRewardPoolAddress: '' as Hash,
-      bptAddress: '' as Hash,
-      bptTotalSupply: '',
-      bptSymbol: '',
-      bptName: '',
-      bptDecimals: 18,
-      poolId: config.poolId,
-      poolSwapFee: '',
-      poolTotalLiquidity: '',
-      poolTotalSwapVolume: '',
-      poolTotalSwapFee: '',
-      poolTokens: [],
-      poolTokenAddresses: [],
-      poolTokenBalances: [],
-      poolTokenDecimals: [],
-      poolTokenWeights: [],
-      poolTokenWeightsInPcnt: [],
-      poolTokenSymbols: [],
-      cooldownPeriod: 0,
-      earmarkIncentivePcnt: 0.01,
-      liquidityGaugeAddress: '' as Hash,
-      rewardEmissions: [],
-      rewardTokenAddress: '' as Hash,
-      rewardTokenAddresses: [],
-      stakedTokenAddress: '' as Hash,
-      unstakePeriod: 0,
-      totalStaked: '',
-      shouldReversePoolTokenOrderOnDisplay: false,
-    } as BuildResponse)
+type UseStakingReturnBsc = LiquidityPool &
+  Staking & {
+    tokens: TokenMap
+    priceMap: PriceMap
+  }
 
-  return data
+type UseStakingReturn<T extends 'ethereum' | undefined> = T extends undefined
+  ? UseStakingReturnBsc
+  : UseStakingReturnEthereum
+
+export function useStaking<T extends 'ethereum' | undefined>() {
+  const { chainId } = useChain()
+
+  const { data } = useQuery([QUERY_KEYS.Build, chainId], () => build(chainId), {
+    staleTime: Infinity,
+    cacheTime: Infinity,
+  })
+
+  return {
+    ...data?.pool,
+    ...data?.staking,
+    tokens: data?.tokens,
+    priceMap: data?.priceMap,
+  } as UseStakingReturn<T>
 }

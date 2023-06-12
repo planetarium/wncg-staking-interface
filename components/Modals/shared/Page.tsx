@@ -1,7 +1,6 @@
 import { memo, PropsWithChildren } from 'react'
 
-import { MOTION } from 'config/motions'
-import { fadeIn } from 'config/motionVariants'
+import { ANIMATION_MAP, MOTION } from 'config/constants/motions'
 
 import { StyledModalPage } from './styled'
 
@@ -15,7 +14,7 @@ function ModalPage({ children, className, $disabled }: ModalPageProps) {
     <StyledModalPage
       {...MOTION}
       className={className}
-      variants={fadeIn}
+      variants={ANIMATION_MAP.fadeIn}
       $disabled={$disabled}
     >
       {children}

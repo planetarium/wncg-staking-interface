@@ -17,12 +17,12 @@ function StakedBalance({ children, className }: StakedBalanceProps) {
   const { isConnected } = useAuth()
   const { openConnectModal } = useConnect()
   const toFiat = useFiat()
-  const { bptAddress } = useStaking()
+  const { lpToken } = useStaking()
   const { stakedTokenBalance = '0' } = useFetchUserData().data ?? {}
 
   const fiatValue = useMemo(
-    () => toFiat(stakedTokenBalance, bptAddress),
-    [bptAddress, stakedTokenBalance, toFiat]
+    () => toFiat(stakedTokenBalance, lpToken.address),
+    [lpToken.address, stakedTokenBalance, toFiat]
   )
 
   const hasStakedTokenBalance = bnum(stakedTokenBalance).gt(0)

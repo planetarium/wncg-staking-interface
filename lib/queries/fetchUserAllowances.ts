@@ -1,17 +1,17 @@
-import config from 'config'
 import { Erc20Abi } from 'config/abi'
 import { readContractsPool } from 'lib/readContractsPool'
 import { formatUnits } from 'utils/formatUnits'
 
 export async function fetchUserAllowances(
-  pairs: AllowancePair[],
-  account: Hash
+  chainId: ChainId,
+  account: Hash,
+  pairs: AllowancePair[]
 ) {
   const contracts = pairs.map(([t, spender]) => ({
     address: t.address,
     abi: Erc20Abi as Abi,
     args: [account, spender],
-    chainId: config.chainId,
+    chainId,
     functionName: 'allowance',
   }))
 

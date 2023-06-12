@@ -19,11 +19,4 @@ export const YEAR_MS = YEAR * 1_000
 export const UNIT = bnum(1)
 export const PAGE_PER = 5
 
-export const HIGH_PRICE_IMPACT = 0.01
-
-export const REKT_PRICE_IMPACT = 0.2
-
-export const MAX_SLIPPAGE = 30
-
 export const APR_SPAN_LIST = ['day', 'week', 'month', 'year']
-export const BASE_GAS_FEE = 0.05

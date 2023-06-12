@@ -1,6 +1,6 @@
-import config from 'config'
+import { CHAINS } from 'config/chains'
 
-export function txUrlFor(hash?: string) {
+export function txUrlFor(chainId: ChainId, hash?: string) {
   if (!hash) return ''
-  return `${config.blockExplorerUrl}/tx/${hash}`
+  return `${CHAINS[chainId].explorer}/tx/${hash}`
 }

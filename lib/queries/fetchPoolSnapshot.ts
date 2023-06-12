@@ -2,9 +2,12 @@ import { request } from 'graphql-request'
 import { jsonToGraphQLQuery } from 'json-to-graphql-query'
 
 import config from 'config'
-import { DAY } from 'config/misc'
+import { CHAINS } from 'config/chains'
+import { DAY } from 'config/constants/time'
 import { bnum } from 'utils/bnum'
 import { now } from 'utils/now'
+import { balancerPoolIdFor } from 'utils/balancerPoolIdFor'
+import { DEX } from 'config/constants/dex'
 
 type FetchPoolSnapshotResponse = {
   pool: {
@@ -19,12 +22,25 @@ type FetchPoolSnapshotResponse = {
   }[]
 }
 
-export async function fetchPoolSnapshot(currentTimestamp: number = now()) {
+export async function fetchPoolSnapshot(
+  chainId: ChainId,
+  currentTimestamp: number = now()
+) {
+  const { dexPoolId: poolId } = DEX[chainId as ChainId]
+  const { subgraph: endpoint } = CHAINS[chainId as ChainId]
+
+  if (!poolId || !endpoint)
+    return {
+      poolTokenBalances: [],
+      totalSwapVolumeIn24Hr: '0',
+      totalSwapFeesIn24Hr: '0',
+    }
+
   const query = {
     query: {
       pool: {
         __args: {
-          id: config.poolId,
+          id: poolId,
         },
         swapFee: true,
         tokens: {
@@ -35,7 +51,7 @@ export async function fetchPoolSnapshot(currentTimestamp: number = now()) {
       swaps: {
         __args: {
           where: {
-            poolId: config.poolId,
+            poolId: poolId,
             timestamp_lt: currentTimestamp,
             timestamp_gte: currentTimestamp - DAY,
           },
@@ -46,7 +62,7 @@ export async function fetchPoolSnapshot(currentTimestamp: number = now()) {
   }
 
   const { pool, swaps } = await request<FetchPoolSnapshotResponse>(
-    config.subgraph,
+    endpoint,
     jsonToGraphQLQuery(query)
   )
 

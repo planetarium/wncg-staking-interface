@@ -9,11 +9,14 @@ import {
   UseFormWatch,
 } from 'react-hook-form'
 
-import config from 'config'
+import { NATIVE_CURRENCY_ADDRESS } from 'config/constants/addresses'
 import { LiquidityFieldType } from 'config/constants'
-import { HIGH_PRICE_IMPACT, REKT_PRICE_IMPACT } from 'config/misc'
+import {
+  HIGH_PRICE_IMPACT,
+  REKT_PRICE_IMPACT,
+} from 'config/constants/liquidityPool'
 import { bnum } from 'utils/bnum'
-import { useBalances, useFiat, useExitMath, useStaking } from 'hooks'
+import { useBalances, useChain, useFiat, useExitMath, useStaking } from 'hooks'
 
 export type ExitFormFields = {
   [LiquidityFieldType.LiquidityPercent]: string
@@ -58,12 +61,14 @@ const defaultValues: ExitFormFields = {
 
 export function useExitForm(): UseExitFormReturns {
   const balanceOf = useBalances()
+  const { chainId } = useChain()
+  const { nativeCurrency } = useChain()
   const toFiat = useFiat()
-  const { poolTokenAddresses, stakedTokenAddress } = useStaking()
   const { calcBptIn, calcExitAmounts, calcPriceImpact, singleExitMaxAmounts } =
     useExitMath()
+  const { lpToken, poolTokenAddresses } = useStaking()
 
-  const bptBalance = balanceOf(stakedTokenAddress)
+  const lpBalance = balanceOf(lpToken.address)
 
   const {
     clearErrors,
@@ -82,30 +87,36 @@ export function useExitForm(): UseExitFormReturns {
   const bptOutPcnt = watch(LiquidityFieldType.LiquidityPercent)
   const tokenOutAmount = watch(LiquidityFieldType.ExitAmount)
   const priceImpactAgreement = watch('priceImpactAgreement')
-  const isNativeCurrency = exitType === config.nativeCurrency.address
+  const isNativeCurrency = exitType === NATIVE_CURRENCY_ADDRESS
 
   const isProportional = exitType === null
 
   const assets = useMemo(() => {
-    if (exitType !== config.nativeCurrency.address) return poolTokenAddresses
+    if (exitType !== NATIVE_CURRENCY_ADDRESS) return poolTokenAddresses
 
     const _assets = [...poolTokenAddresses]
-    _assets[poolTokenAddresses.indexOf(config.weth)] =
-      config.nativeCurrency.address
+    _assets[poolTokenAddresses.indexOf(nativeCurrency.wrappedTokenAddress)] =
+      NATIVE_CURRENCY_ADDRESS
     return _assets
-  }, [exitType, poolTokenAddresses])
+  }, [exitType, nativeCurrency.wrappedTokenAddress, poolTokenAddresses])
 
   const singleExitTokenOutIndex = useMemo(() => {
-    if (isProportional) return 0
-    if (exitType === config.nativeCurrency.address) {
-      return poolTokenAddresses.indexOf(config.weth)
+    switch (true) {
+      case isProportional:
+        return 0
+      case exitType === NATIVE_CURRENCY_ADDRESS:
+        return poolTokenAddresses.indexOf(nativeCurrency.wrappedTokenAddress)
+      case exitType && poolTokenAddresses.includes(exitType):
+        return poolTokenAddresses.indexOf(exitType!)
+      default:
+        return -1
     }
-    if (poolTokenAddresses.includes(exitType)) {
-      return poolTokenAddresses.indexOf(exitType)
-    }
-
-    return -1
-  }, [exitType, isProportional, poolTokenAddresses])
+  }, [
+    exitType,
+    isProportional,
+    nativeCurrency.wrappedTokenAddress,
+    poolTokenAddresses,
+  ])
 
   const singleExitMaxed = useMemo(
     () =>
@@ -143,8 +154,8 @@ export function useExitForm(): UseExitFormReturns {
     ]
   )
 
-  const exitAmount = bnum(bptBalance).times(bptOutPcnt).div(100).toFixed(18, 3)
-  const exitAmountInFiatValue = toFiat(exitAmount, stakedTokenAddress)
+  const exitAmount = bnum(lpBalance).times(bptOutPcnt).div(100).toFixed(18, 3)
+  const exitAmountInFiatValue = toFiat(exitAmount, lpToken.address)
 
   const priceImpact = useMemo(
     () =>
@@ -187,8 +198,8 @@ export function useExitForm(): UseExitFormReturns {
       poolTokenAddresses
         .reduce((acc, addr, i) => {
           const address =
-            exitType === config.nativeCurrency.address
-              ? config.nativeCurrency.address
+            exitType === NATIVE_CURRENCY_ADDRESS
+              ? NATIVE_CURRENCY_ADDRESS
               : addr
 
           return acc.plus(toFiat(exitAmounts[i], address))

@@ -43,7 +43,7 @@ type ApproveTx = {
 
 type ClaimTx = {
   hash?: Hash
-  earnedRewards?: string[]
+  earnedTokenRewards?: string[]
   rewardList?: boolean[]
   totalClaimFiatValue?: string
 }
@@ -60,7 +60,7 @@ type StakeTx = {
 
 type UnstakeTx = {
   hash?: Hash
-  earnedRewards?: string[]
+  earnedTokenRewards?: string[]
   unstakeAmount?: string
   stakedTokenBalance?: string
   totalClaimFiatValue?: string
@@ -70,7 +70,7 @@ type JoinTx = {
   hash?: Hash
   assets?: Hash[]
   joinAmounts?: string[]
-  bptBalance?: string
+  lpBalance?: string
   totalJoinFiatValue?: string
 }
 

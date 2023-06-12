@@ -2,10 +2,14 @@ import { useMemo } from 'react'
 import { WeightedPoolEncoder } from '@balancer-labs/sdk'
 
 import config from 'config'
+import {
+  NATIVE_CURRENCY_ADDRESS,
+  ZERO_ADDRESS,
+} from 'config/constants/addresses'
 import { bnum } from 'utils/bnum'
 import { parseUnits } from 'utils/parseUnits'
 import { safeBigNumber } from 'utils/safeBigNumber'
-import { useExitMath, useStaking } from 'hooks'
+import { useChain, useExitMath, useStaking } from 'hooks'
 
 type UseExitPoolRequestParams = {
   assets: Hash[]
@@ -22,16 +26,17 @@ export function useExitBuildRequest({
   exitType,
   bptOutPcnt,
 }: UseExitPoolRequestParams) {
-  const { poolTokenAddresses, tokenMap } = useStaking()
+  const { nativeCurrency } = useChain()
   const { calcBptIn } = useExitMath()
+  const { poolTokenAddresses, tokens } = useStaking()
 
   const isProportional = exitType === null
 
   const assets = useMemo(
     () =>
       _assets.map((addr) => {
-        if (addr !== config.nativeCurrency.address) return addr
-        return config.zeroAddress
+        if (addr !== NATIVE_CURRENCY_ADDRESS) return addr
+        return ZERO_ADDRESS
       }),
     [_assets]
   )
@@ -40,14 +45,20 @@ export function useExitBuildRequest({
     if (isProportional) return -1
 
     switch (true) {
-      case exitType === config.nativeCurrency.address:
-        return poolTokenAddresses.indexOf(config.weth)
+      case exitType === nativeCurrency.address:
+        return poolTokenAddresses.indexOf(nativeCurrency.wrappedTokenAddress)
       case poolTokenAddresses.includes(exitType):
         return poolTokenAddresses.indexOf(exitType)
       default:
         return -1
     }
-  }, [exitType, isProportional, poolTokenAddresses])
+  }, [
+    exitType,
+    isProportional,
+    nativeCurrency.address,
+    nativeCurrency.wrappedTokenAddress,
+    poolTokenAddresses,
+  ])
 
   const bptIn = useMemo(() => {
     return calcBptIn({
@@ -68,11 +79,12 @@ export function useExitBuildRequest({
 
   const minAmountsOut = useMemo(() => {
     if (isProportional) return ['0', '0']
-    return amounts.map((a, i) => {
-      const token = tokenMap[_assets[i]]
-      return safeBigNumber(parseUnits(a, token?.decimals ?? 18).toString())
-    })
-  }, [_assets, amounts, isProportional, tokenMap])
+    return amounts.map((a, i) =>
+      safeBigNumber(
+        parseUnits(a, tokens[_assets[i]]?.decimals ?? 18).toString()
+      )
+    )
+  }, [_assets, amounts, isProportional, tokens])
 
   const userData = useMemo(() => {
     switch (true) {

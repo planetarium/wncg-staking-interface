@@ -1,14 +1,14 @@
 import { useState } from 'react'
 import { useMount } from 'react-use'
 import Link from 'next/link'
-import { useSetAtom } from 'jotai'
 import { RESET } from 'jotai/utils'
 import { useTransaction } from 'wagmi'
+import { useSetAtom } from 'jotai'
 
-import { claimTxAtom } from 'states/tx'
-import config from 'config'
+import { harvestTxAtom } from 'states/tx'
 import { parseTransferLogs } from 'utils/parseTransferLogs'
 import { txUrlFor } from 'utils/txUrlFor'
+import { useChain } from 'hooks'
 import { useWatch } from './useWatch'
 
 import { StyledToast } from './styled'
@@ -16,19 +16,22 @@ import Icon from 'components/Icon'
 import ImportToken from 'components/ImportToken'
 import TokenIcon from 'components/TokenIcon'
 import Status from './Status'
+import { BAL_ADDRESS } from 'config/constants/addresses'
 
 type HarvestToastProps = Required<HarvestTx>
 
 export default function HarvestToast({ hash }: HarvestToastProps) {
-  const setTx = useSetAtom(claimTxAtom)
-
   const [confirmed, setConfirmed] = useState(false)
+  const { chainId } = useChain()
+  const bal = BAL_ADDRESS[chainId] as Hash
 
   const status = useWatch(hash)
 
+  const setTx = useSetAtom(harvestTxAtom)
+
   useTransaction({
     hash,
-    chainId: config.chainId,
+    chainId,
     enabled: !!hash,
     suspense: false,
     async onSuccess(tx) {
@@ -36,7 +39,7 @@ export default function HarvestToast({ hash }: HarvestToastProps) {
         const { logs = [] } = (await tx?.wait()) ?? {}
 
         const parsedLogs = parseTransferLogs(logs)
-        const actualHarvestedAmount = parsedLogs?.[config.bal]
+        const actualHarvestedAmount = parsedLogs?.[bal]
 
         if (actualHarvestedAmount) {
           setConfirmed(true)
@@ -50,7 +53,7 @@ export default function HarvestToast({ hash }: HarvestToastProps) {
   return (
     <StyledToast>
       <header className="toastHeader">
-        <Link href={txUrlFor(hash)!} target="_blank" rel="noopener">
+        <Link href={txUrlFor(chainId, hash)!} target="_blank" rel="noopener">
           <h3 className="title">
             Harvest
             <Icon icon="outlink" />
@@ -65,7 +68,7 @@ export default function HarvestToast({ hash }: HarvestToastProps) {
           <div className="detailItem">
             <dt>
               <div className="token">
-                <TokenIcon address={config.bal} dark $size={20} />
+                <TokenIcon address={bal} $dark $size={20} />
               </div>
               BAL
             </dt>
@@ -78,7 +81,7 @@ export default function HarvestToast({ hash }: HarvestToastProps) {
       </div>
 
       <footer className="toastFooter">
-        <ImportToken address={config.bal} $size="sm" $variant="primary" />
+        <ImportToken address={bal} $size="sm" $variant="primary" />
       </footer>
     </StyledToast>
   )

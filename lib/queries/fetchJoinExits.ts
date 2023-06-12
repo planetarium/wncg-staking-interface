@@ -2,8 +2,9 @@ import { QueryFunctionContext } from '@tanstack/react-query'
 import { request } from 'graphql-request'
 import { jsonToGraphQLQuery } from 'json-to-graphql-query'
 
-import config from 'config'
 import { PAGE_PER } from 'config/misc'
+import { CHAINS } from 'config/chains'
+import { balancerPoolIdFor } from 'utils/balancerPoolIdFor'
 
 type FetchJoinExitsResponse = {
   data: {
@@ -15,9 +16,11 @@ export async function fetchPoolJoinExits({
   pageParam = 0,
   queryKey,
 }: QueryFunctionContext): Promise<JoinExit[]> {
-  const [, showMine, account] = queryKey || []
+  const [, showMine, account, chainId] = queryKey || []
   const shouldFilterJoinExits = showMine && account
   const where = shouldFilterJoinExits ? { user: account } : {}
+
+  const poolId = balancerPoolIdFor(chainId as ChainId)
 
   const query = {
     query: {
@@ -28,7 +31,7 @@ export async function fetchPoolJoinExits({
           first: PAGE_PER,
           skip: pageParam,
           where: {
-            pool: config.poolId,
+            pool: poolId,
             ...where,
           },
         },
@@ -43,7 +46,7 @@ export async function fetchPoolJoinExits({
   }
 
   const { data } = await request<FetchJoinExitsResponse>(
-    config.subgraph,
+    CHAINS[chainId as ChainId].subgraph ?? '',
     jsonToGraphQLQuery(query)
   )
 

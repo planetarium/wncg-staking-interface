@@ -1,13 +1,14 @@
 import { useSwitchNetwork as _useSwitchNetwork } from 'wagmi'
 
 import { useConnect } from './useConnect'
-import config from 'config'
+import { useChain } from './useChain'
 
 export function useSwitchNetwork() {
+  const { chainId } = useChain()
   const { openConnectModal } = useConnect()
 
   const { switchNetwork: _switchNetwork } = _useSwitchNetwork({
-    chainId: config.chainId,
+    chainId,
     throwForSwitchChainNotSupported: false,
   })
 

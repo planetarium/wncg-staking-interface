@@ -4,7 +4,7 @@ import {
   balRewardPoolIface,
   ercTokenIface,
   liquidityGaugeIface,
-  stakingIface,
+  stakingEthereumIface,
   vaultIface,
   wethIface,
 } from 'lib/interface'
@@ -14,7 +14,7 @@ export function parseLog(log: Log) {
     return ercTokenIface.parseLog(log)
   } catch {
     try {
-      return stakingIface.parseLog(log)
+      return stakingEthereumIface.parseLog(log)
     } catch {
       try {
         return liquidityGaugeIface.parseLog(log)

@@ -2,6 +2,7 @@ import { atom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 
 import config from 'config'
+import { NATIVE_CURRENCY_ADDRESS } from 'config/constants/addresses'
 
 type PendingTx = {
   hash?: Hash
@@ -18,7 +19,7 @@ export const pendingStakeTxAtom = atomWithStorage<PendingStakeTx>(
 )
 
 // NOTE: Join Form
-export const etherTypeAtom = atom(config.nativeCurrency.address)
+export const etherTypeAtom = atom(NATIVE_CURRENCY_ADDRESS)
 export const isNativeAssetAtom = atom((get) => {
   const currentEtherType = get(etherTypeAtom)
   return currentEtherType === config.nativeCurrency.address

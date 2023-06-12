@@ -1,6 +1,5 @@
-import config from 'config'
 import { bnum } from 'utils/bnum'
-import { useAuth, useStaking } from 'hooks'
+import { useAuth, useChain, useStaking } from 'hooks'
 import { UseJoinFormReturns } from 'hooks/useJoinForm'
 
 import { StyledJoinFormFieldset } from './styled'
@@ -27,6 +26,7 @@ export default function JoinFormFieldset({
   focusedElement,
 }: JoinFormFieldsetProps) {
   const { isConnected } = useAuth()
+  const { nativeCurrency } = useChain()
   const { poolTokens, shouldReversePoolTokenOrderOnDisplay } = useStaking()
 
   const isNativeCurrency = watch('isNativeCurrency')
@@ -36,16 +36,14 @@ export default function JoinFormFieldset({
       layoutRoot
       $reverse={shouldReversePoolTokenOrderOnDisplay}
     >
-      {poolTokens.map((poolToken, i) => {
+      {poolTokens.map((t, i) => {
         const field = fields[i] as 'TokenA' | 'TokenB'
-        let address = poolToken.address
-        if (isNativeCurrency && poolToken.address === config.weth) {
-          poolToken = {
-            ...poolToken,
-            address: config.nativeCurrency.address,
-            decimals: config.nativeCurrency.decimals,
-            name: config.nativeCurrency.name,
-            symbol: config.nativeCurrency.symbol,
+        let address = t.address
+        const { coingeckoId, wrappedTokenAddress, ...rest } = nativeCurrency
+        if (t.address === wrappedTokenAddress && isNativeCurrency) {
+          t = {
+            ...t,
+            ...rest,
           }
         }
 
@@ -54,14 +52,14 @@ export default function JoinFormFieldset({
 
         const value = joinAmounts[i]
 
-        const weight = bnum(poolToken.weight).times(100).toNumber()
+        const weight = bnum(t.weight).times(100).toNumber()
 
         return (
           <InputField
             className="joinInputField"
             index={i}
             key={`joinForm:inputField:${address}`}
-            token={poolToken}
+            token={t}
             name={field}
             clearErrors={clearErrors}
             control={control}

@@ -7,17 +7,14 @@ import { STAKING_SEO } from 'lib/seo'
 export { getStaticProps } from 'lib/getStaticProps'
 
 import { StyledStakingPage } from 'styles/pages/staking'
-
 import Favicon from 'components/Favicon'
 import GlobalFooter from 'components/GlobalFooter'
+import GlobalHooks from 'components/GlobalHooks'
 import Suspense from 'components/Suspense'
+import Stake from 'components/staking/Stake'
 
 const Dashboard = dynamic(() => import('components/staking/Dashboard'), {
   suspense: true,
-})
-
-const Stake = dynamic(() => import('components/staking/Stake'), {
-  ssr: false,
 })
 
 const WncgStaking: NextPage = () => {
@@ -48,6 +45,7 @@ const WncgStaking: NextPage = () => {
       </StyledStakingPage>
 
       <GlobalFooter />
+      <GlobalHooks />
     </>
   )
 }

@@ -22,7 +22,7 @@ import wagmiClient from 'lib/wagmi/client'
 import GlobalStyle from 'styles/GlobalStyle'
 import ToastStyle from 'styles/ToastStyle'
 
-import Effects from 'components/GlobalHooks'
+import ErrorBoundary from 'components/ErrorBoundary'
 import Layout from 'components/Layout'
 import ToastContainer from 'components/ToastContainer'
 
@@ -46,8 +46,9 @@ function MyApp({ Component, pageProps }: MyAppProps) {
     new QueryClient({
       defaultOptions: {
         queries: {
-          cacheTime: Infinity,
           suspense: true,
+          staleTime: Infinity,
+          cacheTime: Infinity,
           keepPreviousData: true,
           refetchOnReconnect: true,
           useErrorBoundary(error: any) {
@@ -57,7 +58,6 @@ function MyApp({ Component, pageProps }: MyAppProps) {
       },
     })
   )
-  const isProd = config.env === 'production'
 
   useMount(() => {
     if (isFirefox) return document.body.classList.add('firefox')
@@ -68,7 +68,7 @@ function MyApp({ Component, pageProps }: MyAppProps) {
 
   return (
     <>
-      {isProd && config.googleTagManager && (
+      {config.env === 'production' && config.googleTagManager && (
         <Script
           id="gtm"
           strategy="afterInteractive"
@@ -78,26 +78,28 @@ function MyApp({ Component, pageProps }: MyAppProps) {
         />
       )}
 
-      <QueryClientProvider client={queryClient.current}>
-        <Hydrate state={pageProps.dehydratedState}>
-          <Provider>
-            <HydrateAtoms queryClient={queryClient.current}>
-              <WagmiConfig client={wagmiClient}>
-                <GlobalStyle />
-                <ToastStyle />
+      <ErrorBoundary>
+        <QueryClientProvider client={queryClient.current}>
+          <Hydrate state={pageProps.dehydratedState}>
+            <Provider>
+              <HydrateAtoms queryClient={queryClient.current}>
+                <WagmiConfig client={wagmiClient}>
+                  <GlobalStyle />
+                  <ToastStyle />
 
-                <Layout>
-                  <Component {...pageProps} />
-                </Layout>
+                  <Layout>
+                    <Component {...pageProps} />
+                  </Layout>
 
-                <ToastContainer />
-                <Effects />
-                <ReactQueryDevtools />
-              </WagmiConfig>
-            </HydrateAtoms>
-          </Provider>
-        </Hydrate>
-      </QueryClientProvider>
+                  <ToastContainer />
+
+                  <ReactQueryDevtools />
+                </WagmiConfig>
+              </HydrateAtoms>
+            </Provider>
+          </Hydrate>
+        </QueryClientProvider>
+      </ErrorBoundary>
     </>
   )
 }

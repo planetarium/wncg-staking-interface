@@ -27,13 +27,13 @@ export default function UnstakeModalPage2Footer({
   checked = false,
 }: UnstakeModalPage2FooterProps) {
   const toFiat = useFiat()
-  const { stakedTokenAddress } = useStaking()
+  const { lpToken } = useStaking()
 
   const [tx, setTx] = useAtom(unstakeTxAtom)
 
   const _unstake = useUnstake(unstakeAmount, checked)
 
-  const lpFiatValue = toFiat(unstakeAmount, stakedTokenAddress)
+  const lpFiatValue = toFiat(unstakeAmount, lpToken.address)
   const fiatValue = checked
     ? bnum(lpFiatValue).plus(rewardFiatValue).toString()
     : lpFiatValue

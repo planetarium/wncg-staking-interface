@@ -2,8 +2,7 @@ import { memo } from 'react'
 import { motion } from 'framer-motion'
 import { secondsInDay } from 'date-fns'
 
-import { MOTION } from 'config/motions'
-import { fadeIn } from 'config/motionVariants'
+import { ANIMATION_MAP, MOTION } from 'config/constants/motions'
 import { bnum } from 'utils/bnum'
 import { useStaking } from 'hooks'
 
@@ -11,30 +10,30 @@ import { StyledCooldownModalPage2BarGraph } from './styled'
 import NumberFormat from 'components/NumberFormat'
 
 function CooldownModalPage2BarGraph() {
-  const { cooldownPeriod, unstakePeriod } = useStaking()
-  const totalPeriod = bnum(cooldownPeriod).plus(unstakePeriod).toString()
+  const { cooldownSeconds, withdrawSeconds } = useStaking()
+  const totalPeriod = bnum(cooldownSeconds).plus(withdrawSeconds).toString()
 
-  const cooldownPcnt = bnum(cooldownPeriod)
+  const cooldownPcnt = bnum(cooldownSeconds)
     .div(totalPeriod)
     .times(100)
     .toString()
 
   const unstakePcnt = bnum(100).minus(cooldownPcnt).toString()
-  const cooldownPeriodInDays = cooldownPeriod / secondsInDay
-  const unstakePeriodInDays = unstakePeriod / secondsInDay
+  const cooldownSecondsInDays = cooldownSeconds / secondsInDay
+  const withdrawSecondsInDays = withdrawSeconds / secondsInDay
 
   return (
     <StyledCooldownModalPage2BarGraph>
       <motion.div
         className="bar cooldown"
         {...MOTION}
-        variants={fadeIn}
+        variants={ANIMATION_MAP.fadeIn}
         style={{ width: `${cooldownPcnt}%` }}
       >
         <dt>Cooldown</dt>
         <dd>
           <NumberFormat
-            value={cooldownPeriodInDays}
+            value={cooldownSecondsInDays}
             decimals={0}
             maxDecimals={2}
             suffix=" days"
@@ -45,13 +44,13 @@ function CooldownModalPage2BarGraph() {
       <motion.div
         className="bar unstake"
         {...MOTION}
-        variants={fadeIn}
+        variants={ANIMATION_MAP.fadeIn}
         style={{ width: `${unstakePcnt}%` }}
       >
         <dt>Withdraw</dt>
         <dd>
           <NumberFormat
-            value={unstakePeriodInDays}
+            value={withdrawSecondsInDays}
             decimals={0}
             maxDecimals={2}
             suffix=" days"

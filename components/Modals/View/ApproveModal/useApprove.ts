@@ -4,20 +4,21 @@ import { constants } from 'ethers'
 
 import config from 'config'
 import { Erc20Abi } from 'config/abi'
-import { useSwitchNetwork } from 'hooks'
+import { useChain, useSwitchNetwork } from 'hooks'
 
 const approveConfig = Object.freeze({
   abi: Erc20Abi,
-  chainId: config.chainId,
   functionName: 'approve',
 })
 
 export function useApprove(tokenAddress: Hash, spender: string) {
   const { switchBeforeSend } = useSwitchNetwork()
+  const { chainId } = useChain()
 
   const { config } = usePrepareContractWrite({
     ...approveConfig,
     address: tokenAddress as Hash,
+    chainId,
     args: [spender, constants.MaxUint256],
     enabled: !!tokenAddress && !!spender,
     onError: switchBeforeSend,

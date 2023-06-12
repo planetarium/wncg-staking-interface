@@ -4,13 +4,14 @@ import { useSetAtom } from 'jotai'
 
 import { showHarvestTooltipAtom } from 'states/system'
 import { harvestTxAtom } from 'states/tx'
-import config from 'config'
-import { StakingAbi } from 'config/abi'
+import { StakingEthereumAbi } from 'config/abi'
 import { ToastType } from 'config/constants'
+import { useChain } from './useChain'
 import { useSwitchNetwork } from './useSwitchNetwork'
 import { useToast } from './useToast'
 
 export function useHarvest() {
+  const { chainId, stakingAddress } = useChain()
   const { switchBeforeSend } = useSwitchNetwork()
   const toast = useToast()
 
@@ -18,9 +19,9 @@ export function useHarvest() {
   const setShowHarvestTooltip = useSetAtom(showHarvestTooltipAtom)
 
   const { config: writeConfig } = usePrepareContractWrite({
-    address: config.stakingAddress,
-    abi: StakingAbi,
-    chainId: config.chainId,
+    address: stakingAddress,
+    abi: StakingEthereumAbi,
+    chainId,
     functionName: 'earmarkRewards',
     onError: switchBeforeSend,
   })

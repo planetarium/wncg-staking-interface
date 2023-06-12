@@ -1,14 +1,14 @@
 import { memo, useEffect } from 'react'
 import { AnimatePresence } from 'framer-motion'
 
-import { EXIT_MOTION } from 'config/motions'
+import {
+  ANIMATION_MAP,
+  EXIT_MOTION,
+  TRANSITION_MAP,
+} from 'config/constants/motions'
 import { useAuth, useJoinForm } from 'hooks'
 
-import {
-  modalMobileVariants,
-  modalOverlayVariants,
-  modalTransition,
-} from 'components/Modals/constants'
+import { modalOverlayVariants } from 'components/Modals/constants'
 import { StyledPoolMobile, StyledPoolMobileContainer } from './styled'
 import { StyledModalOverlay } from 'components/Modals/styled'
 import Header from './Header'
@@ -39,7 +39,7 @@ function PoolMobile({ show, closePool }: PoolMobileProps) {
           <StyledModalOverlay
             {...EXIT_MOTION}
             variants={modalOverlayVariants}
-            transition={modalTransition}
+            transition={TRANSITION_MAP.modal}
             onClick={closePool}
           />
         )}
@@ -49,8 +49,8 @@ function PoolMobile({ show, closePool }: PoolMobileProps) {
         {show && (
           <StyledPoolMobileContainer
             {...EXIT_MOTION}
-            variants={modalMobileVariants}
-            transition={modalTransition}
+            variants={ANIMATION_MAP.appearInUp}
+            transition={TRANSITION_MAP.modal}
             style={{ maxWidth: 'unset', width: '100%' }}
           >
             <StyledPoolMobile>

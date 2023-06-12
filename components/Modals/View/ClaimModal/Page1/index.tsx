@@ -2,6 +2,7 @@ import { UseFormSetValue } from 'react-hook-form'
 import { useAtom } from 'jotai'
 
 import { claimTxAtom } from 'states/tx'
+import { isEthereum } from 'utils/isEthereum'
 import { useClaim } from '../useClaim'
 import { ClaimFormFields } from '../useClaimForm'
 
@@ -9,10 +10,13 @@ import { StyledClaimModalPage1 } from './styled'
 import { Checkout, CloseButton, PendingNotice } from 'components/Modals/shared'
 import TxButton from 'components/TxButton'
 import Form from './Form'
+import Summary from './Summary'
+import { useChain } from 'hooks'
+import { useMemo } from 'react'
 
 type ClaimModalPage1Props = {
   rewardList: boolean[]
-  earnedRewards: string[]
+  earnedTokenRewards: string[]
   send(event: string): void
   setValue: UseFormSetValue<ClaimFormFields>
   submitDisabled: boolean
@@ -21,7 +25,7 @@ type ClaimModalPage1Props = {
 
 export default function ClaimModalPage1({
   rewardList,
-  earnedRewards,
+  earnedTokenRewards,
   send,
   setValue,
   submitDisabled,
@@ -29,7 +33,9 @@ export default function ClaimModalPage1({
 }: ClaimModalPage1Props) {
   const [tx, setTx] = useAtom(claimTxAtom)
 
-  const _claim = useClaim(rewardList, earnedRewards)
+  const { chainId } = useChain()
+
+  const _claim = useClaim(rewardList, earnedTokenRewards)
 
   async function claim() {
     if (!_claim) {
@@ -43,7 +49,7 @@ export default function ClaimModalPage1({
       setTx({
         hash: txHash,
         rewardList,
-        earnedRewards,
+        earnedTokenRewards,
         totalClaimFiatValue,
       })
       send('NEXT')
@@ -67,19 +73,27 @@ export default function ClaimModalPage1({
     <StyledClaimModalPage1 $disabled={disabled}>
       <header className="modalHeader">
         <strong className="title accent">Claim rewards</strong>
-        <h2 className="subtitle">Select the all coins to get rewards</h2>
+        <h2 className="subtitle">
+          {isEthereum(chainId)
+            ? 'Select the all coins to get rewards'
+            : 'Claim to get rewards'}
+        </h2>
 
         <CloseButton />
       </header>
 
       <div className="container">
         <div className="modalContent">
-          <Form
-            rewardList={rewardList}
-            setValue={setValue}
-            earnedRewards={earnedRewards}
-            disabled={disabled}
-          />
+          {isEthereum(chainId) ? (
+            <Form
+              rewardList={rewardList}
+              setValue={setValue}
+              earnedTokenRewards={earnedTokenRewards}
+              disabled={disabled}
+            />
+          ) : (
+            <Summary earnedTokenRewards={earnedTokenRewards} />
+          )}
         </div>
       </div>
 

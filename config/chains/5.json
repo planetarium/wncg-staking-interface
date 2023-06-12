@@ -1,0 +1,29 @@
+{
+  "id": 5,
+  "network": "goerli",
+  "rpcUrls": {
+    "default": {
+      "http": ["https://rpc.ankr.com/eth_goerli"]
+    },
+    "public": {
+      "http": ["https://rpc.ankr.com/eth_goerli"]
+    }
+  },
+  "assetPlatform": "ethereum",
+  "chainId": 5,
+  "chainName": "Ethereum",
+  "explorer": "https://goerli.etherscan.io",
+  "explorerName": "Etherscan",
+  "name": "Goerli Testnet",
+  "rpcUrl": "https://goerli.infura.io/v3",
+  "shortName": "Goerli",
+  "subgraph": "https://api.thegraph.com/subgraphs/name/balancer-labs/balancer-goerli-v2",
+  "nativeCurrency": {
+    "name": "Ether",
+    "address": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+    "symbol": "ETH",
+    "decimals": 18,
+    "coingeckoId": "ethereum",
+    "wrappedTokenAddress": "0xdfcea9088c8a88a76ff74892c1457c17dfeef9c1"
+  }
+}

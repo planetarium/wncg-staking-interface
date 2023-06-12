@@ -21,14 +21,14 @@ function ClaimModal() {
 
   const {
     rewardList: _rewardList,
-    earnedRewards: _earnedRewards,
+    earnedTokenRewards: _earnedTokenRewards,
     setValue,
     submitDisabled,
     totalClaimFiatValue: _totalClaimFiatValue,
   } = useClaimForm()
 
   const hash = tx.hash
-  const earnedRewards = tx.earnedRewards ?? _earnedRewards
+  const earnedTokenRewards = tx.earnedTokenRewards ?? _earnedTokenRewards
   const rewardList = tx.rewardList ?? _rewardList
   const totalClaimFiatValue = tx.totalClaimFiatValue ?? _totalClaimFiatValue
 
@@ -49,7 +49,7 @@ function ClaimModal() {
         type: ToastType.Claim,
         props: {
           hash,
-          earnedRewards,
+          earnedTokenRewards,
           rewardList,
         },
       })
@@ -62,7 +62,7 @@ function ClaimModal() {
         <Page1
           rewardList={rewardList}
           send={send}
-          earnedRewards={earnedRewards}
+          earnedTokenRewards={earnedTokenRewards}
           setValue={setValue}
           submitDisabled={submitDisabled}
           totalClaimFiatValue={totalClaimFiatValue}
@@ -70,7 +70,10 @@ function ClaimModal() {
       )}
 
       {currentPage === 2 && (
-        <Page2 rewardList={rewardList} earnedRewards={earnedRewards} />
+        <Page2
+          rewardList={rewardList}
+          earnedTokenRewards={earnedTokenRewards}
+        />
       )}
 
       {currentPage === 3 && <Page3 />}

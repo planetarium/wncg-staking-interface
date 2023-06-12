@@ -1,8 +1,6 @@
 import { memo, useMemo } from 'react'
-import { useAtomValue } from 'jotai'
 import { add } from 'date-fns'
 
-import { priceMapAtom } from 'states/system'
 import { bnum } from 'utils/bnum'
 import { calcApr } from 'utils/calcApr'
 import {
@@ -27,29 +25,30 @@ type ExpectedRevenueProps = {
 function ExpectedRevenue({ amount = '0' }: ExpectedRevenueProps) {
   const toFiat = useFiat()
   const { isMobile } = useResponsive()
-  const { rewardEmissions, rewardTokenAddresses, stakedTokenAddress } =
-    useStaking()
+  const { lpToken, rewardEmissionsPerSec, rewardTokenAddresses } = useStaking()
 
   const { totalStaked = '0' } = useFetchStaking().data ?? {}
   const { stakedTokenBalance = '0' } = useFetchUserData().data ?? {}
 
-  const priceMap = useAtomValue(priceMapAtom)
-  const stakedTokenPrice = priceMap[stakedTokenAddress] ?? '0'
+  const stakedTokenPrice = toFiat(1, lpToken.address) ?? '0'
 
   const expectedTotalStakedValue = toFiat(
     bnum(totalStaked).plus(amount).toString(),
-    stakedTokenAddress
+    lpToken.address
   )
 
-  const aprs = rewardEmissions.map(
+  const aprs = rewardEmissionsPerSec.map(
     (e, i) =>
-      calcApr(e, priceMap[rewardTokenAddresses[i]], expectedTotalStakedValue) ??
-      0
+      calcApr(
+        e,
+        toFiat(1, rewardTokenAddresses[i]),
+        expectedTotalStakedValue
+      ) ?? 0
   )
 
   const revenueMapList = useMemo(() => {
     const list = rewardTokenAddresses.map((addr, i) => {
-      const tokenPrice = priceMap[addr] ?? '0'
+      const tokenPrice = toFiat(1, addr)
 
       return calcExpectedRevenue(
         stakedTokenBalance,
@@ -63,13 +62,7 @@ function ExpectedRevenue({ amount = '0' }: ExpectedRevenueProps) {
       const revenues = list.map((data) => data[key as keyof ExpectedRevenueMap])
       return [key, revenues]
     })
-  }, [
-    aprs,
-    priceMap,
-    rewardTokenAddresses,
-    stakedTokenBalance,
-    stakedTokenPrice,
-  ])
+  }, [aprs, rewardTokenAddresses, stakedTokenBalance, stakedTokenPrice, toFiat])
 
   return (
     <StyledExpectedRevenue className="revenueList">

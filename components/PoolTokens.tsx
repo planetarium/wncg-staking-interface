@@ -1,28 +1,30 @@
 import { memo } from 'react'
 import Link from 'next/link'
-
-import { StyledPoolTokens } from './styled'
-import { poolUrlFor } from 'utils/poolUrlFor'
-import { usePropAmounts, useStaking } from 'hooks'
+import clsx from 'clsx'
 
 import config from 'config'
+import { dexPoolUrlFor } from 'utils/dexPoolUrlFor'
+import { useChain, usePropAmounts, useStaking } from 'hooks'
+
+import { StyledPoolTokens } from './styled'
 import Icon from 'components/Icon'
 import NumberFormat from 'components/NumberFormat'
 import TokenIcon from 'components/TokenIcon'
 
 type PoolTokensProps = {
-  bptBalance: string
+  lpBalance: string
   className?: string
 }
 
-function PoolTokens({ bptBalance, className }: PoolTokensProps) {
-  const { poolTokens } = useStaking()
-  const { propAmounts, propAmountsInFiatValue } = usePropAmounts(bptBalance)
+function PoolTokens({ lpBalance, className }: PoolTokensProps) {
+  const { chainId } = useChain()
+  const { poolTokens, shouldReversePoolTokenOrderOnDisplay } = useStaking()
+  const { propAmounts, propAmountsInFiatValue } = usePropAmounts(lpBalance)
 
   return (
     <StyledPoolTokens className={className}>
       <header className="header">
-        <Link href={poolUrlFor()} target="_blank" rel="noopener">
+        <Link href={dexPoolUrlFor(chainId)} target="_blank" rel="noopener">
           <h4 className="title">My tokens funded in pool</h4>
 
           <div className="tooltipGroup">
@@ -32,7 +34,11 @@ function PoolTokens({ bptBalance, className }: PoolTokensProps) {
         </Link>
       </header>
 
-      <dl className="poolTokensList">
+      <dl
+        className={clsx('poolTokensList', {
+          reverse: shouldReversePoolTokenOrderOnDisplay,
+        })}
+      >
         {poolTokens.map((token, i) => {
           const { address, symbol } = token
           const amount = propAmounts[i]

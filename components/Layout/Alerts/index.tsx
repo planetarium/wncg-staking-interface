@@ -2,16 +2,16 @@ import { useAtomValue } from 'jotai'
 import { AnimatePresence } from 'framer-motion'
 
 import { currentChainIdAtom } from 'states/system'
-import config from 'config'
 
 import { StyledAlerts } from './styled'
 import NetworkAlert from './NetworkAlert'
+import { useChain } from 'hooks'
 
 export default function Alerts() {
+  const { chainId } = useChain()
   const currentChainId = useAtomValue(currentChainIdAtom)
 
-  const invalidNetwork =
-    currentChainId != null && currentChainId !== config.chainId
+  const invalidNetwork = currentChainId != null && currentChainId !== chainId
 
   const enabled = invalidNetwork
 

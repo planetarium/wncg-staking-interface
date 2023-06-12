@@ -5,7 +5,7 @@ import { RESET } from 'jotai/utils'
 
 import { unstakeTxAtom } from 'states/tx'
 import { txUrlFor } from 'utils/txUrlFor'
-import { useFiat, useStaking } from 'hooks'
+import { useChain, useFiat, useStaking } from 'hooks'
 import { useWatch } from './useWatch'
 
 import { StyledToast } from './styled'
@@ -24,12 +24,12 @@ export default function UnstakeToast({
   hash,
   unstakeAmount,
 }: UnstakeToastProps) {
+  const { chainId } = useChain()
   const toFiat = useFiat()
-  const { stakedTokenAddress, bptName } = useStaking()
+  const { lpToken } = useStaking()
+  const fiatValue = toFiat(unstakeAmount, lpToken.address)
 
   const setTx = useSetAtom(unstakeTxAtom)
-
-  const fiatValue = toFiat(unstakeAmount, stakedTokenAddress)
 
   const status = useWatch(hash)
 
@@ -38,7 +38,7 @@ export default function UnstakeToast({
   return (
     <StyledToast>
       <header className="toastHeader">
-        <Link href={txUrlFor(hash)!} target="_blank" rel="noopener">
+        <Link href={txUrlFor(chainId, hash)!} target="_blank" rel="noopener">
           <h3 className="title">
             Withdraw
             <Icon icon="outlink" />
@@ -52,9 +52,9 @@ export default function UnstakeToast({
           <div className="detailItem">
             <dt>
               <div className="token">
-                <TokenIcon address={stakedTokenAddress} $size={20} />
+                <TokenIcon address={lpToken.address} $size={20} />
               </div>
-              {bptName}
+              {lpToken.name}
             </dt>
             <dd>
               <NumberFormat value={unstakeAmount} decimals={8} />
@@ -70,11 +70,7 @@ export default function UnstakeToast({
       </div>
 
       <footer className="toastFooter">
-        <ImportToken
-          address={stakedTokenAddress}
-          $size="sm"
-          $variant="primary"
-        />
+        <ImportToken address={lpToken.address} $size="sm" $variant="primary" />
       </footer>
     </StyledToast>
   )

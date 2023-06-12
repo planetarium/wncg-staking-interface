@@ -10,8 +10,7 @@ import { useMachine } from '@xstate/react'
 import { AnimatePresence, motion } from 'framer-motion'
 import clsx from 'clsx'
 
-import { EXIT_MOTION } from 'config/motions'
-import { fadeIn } from 'config/motionVariants'
+import { ANIMATION_MAP, EXIT_MOTION } from 'config/constants/motions'
 import { useAuth, useResponsive } from 'hooks'
 import { txButtonMachine } from './stateMachine'
 
@@ -87,7 +86,11 @@ function TxButton(
       <>
         <AnimatePresence>
           {isLoading && (
-            <motion.div className="leftIcon" {...EXIT_MOTION} variants={fadeIn}>
+            <motion.div
+              className="leftIcon"
+              {...EXIT_MOTION}
+              variants={ANIMATION_MAP.fadeIn}
+            >
               <Lottie animationData="loading" />
             </motion.div>
           )}
@@ -100,7 +103,7 @@ function TxButton(
             <motion.div
               className="rightIcon"
               {...EXIT_MOTION}
-              variants={fadeIn}
+              variants={ANIMATION_MAP.fadeIn}
             >
               <ConnectorIcon
                 icon={connector?.id as ConnectorIconType}

@@ -10,12 +10,6 @@ export default function StakeHeader() {
         <br />
         &amp; Get rewards!
       </h1>
-
-      {/* <div className="effectGroup" aria-hidden>
-        <span className="effect lightBlue large" />
-        <span className="effect lightGray small" />
-        <span className="effect purple large" />
-      </div> */}
     </StyledStakeHeader>
   )
 }

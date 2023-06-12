@@ -1,39 +1,17 @@
-import { request } from 'graphql-request'
-import { jsonToGraphQLQuery } from 'json-to-graphql-query'
+import { CHAINS } from 'config/chains'
+import { assertUnreachable } from 'utils/assertUnreachable'
+import { fetchBalancerPool } from './ethereum/fetchBalancerPool'
+import { fetchPancakeSwapPool } from './bsc/fetchPancakeSwapPool'
 
-import config from 'config'
+export function fetchPool(chainId: ChainId) {
+  const { assetPlatform } = CHAINS[chainId]
 
-const query = {
-  query: {
-    pool: {
-      __args: {
-        id: config.poolId,
-      },
-      totalShares: true,
-      tokens: {
-        symbol: true,
-        name: true,
-        decimals: true,
-        address: true,
-        balance: true,
-        weight: true,
-      },
-    },
-  },
-}
-
-type FetchPoolResponse = {
-  pool: {
-    totalShares: string
-    tokens: PoolToken[]
+  switch (assetPlatform) {
+    case 'ethereum':
+      return fetchBalancerPool(chainId)
+    case 'binance-smart-chain':
+      return fetchPancakeSwapPool(chainId)
+    default:
+      assertUnreachable(chainId)
   }
-}
-
-export async function fetchPool() {
-  const { pool } = await request<FetchPoolResponse>(
-    config.subgraph,
-    jsonToGraphQLQuery(query)
-  )
-
-  return pool
 }

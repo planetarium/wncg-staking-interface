@@ -1,8 +1,6 @@
 import { useMemo } from 'react'
-import { useAtomValue } from 'jotai'
 import { add } from 'date-fns'
 
-import { priceMapAtom } from 'states/system'
 import { APR_SPAN_LIST } from 'config/misc'
 import { bnum } from 'utils/bnum'
 import { calcApr } from 'utils/calcApr'
@@ -30,34 +28,37 @@ export default function StakeFormRevenuePopup({
   className,
 }: StakeFormRevenueProps) {
   const toFiat = useFiat()
-  const { rewardEmissions, rewardTokenAddresses, stakedTokenAddress } =
-    useStaking()
+  const { rewardEmissionsPerSec, rewardTokenAddresses, lpToken } = useStaking()
 
-  const priceMap = useAtomValue(priceMapAtom)
-  const stakedTokenPrice = priceMap[stakedTokenAddress] ?? '0'
+  const stakedTokenPrice = toFiat(1, lpToken.address)
   const { totalStaked = '0' } = useFetchStaking().data ?? {}
 
   const expectedTotalStakedValue = toFiat(
     bnum(totalStaked).plus(bnum(amount).toString()).toString(),
-    stakedTokenAddress
+    lpToken.address
   )
 
   const aprs = useMemo(
     () =>
-      rewardEmissions.map(
+      rewardEmissionsPerSec.map(
         (e, i) =>
           calcApr(
             e,
-            priceMap[rewardTokenAddresses[i]],
+            toFiat(1, rewardTokenAddresses[i]),
             expectedTotalStakedValue
           ) ?? 0
       ),
-    [expectedTotalStakedValue, priceMap, rewardEmissions, rewardTokenAddresses]
+    [
+      expectedTotalStakedValue,
+      rewardEmissionsPerSec,
+      rewardTokenAddresses,
+      toFiat,
+    ]
   )
 
   const revenueMapList = useMemo(() => {
     const list = rewardTokenAddresses.map((addr, i) => {
-      const tokenPrice = priceMap[addr] ?? '0'
+      const tokenPrice = toFiat(1, addr)
       return calcExpectedRevenue(amount, aprs[i], stakedTokenPrice, tokenPrice)
     })
 
@@ -65,7 +66,7 @@ export default function StakeFormRevenuePopup({
       const revenues = list.map((data) => data[key as keyof ExpectedRevenueMap])
       return [key, revenues]
     })
-  }, [amount, aprs, priceMap, rewardTokenAddresses, stakedTokenPrice])
+  }, [amount, aprs, rewardTokenAddresses, stakedTokenPrice, toFiat])
 
   return (
     <StyledStakeFormRevenuePopup className={className}>

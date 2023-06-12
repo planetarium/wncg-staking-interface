@@ -1,20 +1,23 @@
-import { memo } from 'react'
+import { memo, useEffect } from 'react'
 import { useInterval, useMount } from 'react-use'
-import { useQueryClient } from '@tanstack/react-query'
-import { useSetAtom } from 'jotai'
+import { useAtom, useSetAtom } from 'jotai'
 
-import { currentTimestampAtom, priceMapAtom } from 'states/system'
-import { queryKeys } from 'config/queryKeys'
+import { chainIdAtom, currentTimestampAtom } from 'states/system'
+
 import { now } from 'utils/now'
 import { useFetchPrices } from 'hooks/queries'
+import { useRouter } from 'next/router'
+import { ChainId } from 'config/chains'
+import { useRefetch } from 'hooks'
 
 function InterfaceHook() {
-  const queryClient = useQueryClient()
+  const router = useRouter()
 
   const setCurrentTimestamp = useSetAtom(currentTimestampAtom)
-  const setPriceMap = useSetAtom(priceMapAtom)
 
-  useFetchPrices()
+  useFetchPrices({
+    refetchInterval: 60 * 60 * 3 * 1_000, // 3 hour
+  })
 
   useInterval(() => {
     setCurrentTimestamp(now())
@@ -22,15 +25,6 @@ function InterfaceHook() {
 
   useMount(() => {
     setCurrentTimestamp(now())
-  })
-
-  useMount(() => {
-    const defaultPriceMap = (queryClient.getQueryData(
-      [queryKeys.FallbackPrices],
-      { exact: false }
-    ) ?? {}) as PriceMap
-
-    setPriceMap(defaultPriceMap)
   })
 
   return null

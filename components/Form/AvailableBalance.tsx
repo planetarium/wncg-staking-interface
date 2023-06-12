@@ -1,7 +1,6 @@
 import { memo } from 'react'
 
-import { MOTION } from 'config/motions'
-import { slideInDown } from 'config/motionVariants'
+import { ANIMATION_MAP, MOTION } from 'config/constants/motions'
 import { bnum } from 'utils/bnum'
 import { useAuth } from 'hooks'
 
@@ -42,7 +41,7 @@ function AvailableBalance({
       {...MOTION}
       className="availableTokenAmount"
       layout={layout}
-      variants={slideInDown}
+      variants={ANIMATION_MAP.slideInDown}
       transition={{ easing: 'linear' }}
       $disabled={disabled}
       $size={$size}

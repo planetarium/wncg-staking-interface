@@ -1,2 +1,0 @@
-export const MAX_TOAST_LENGTH_DESKTOP = 6
-export const MAX_TOAST_LENGTH_MOBILE = 2

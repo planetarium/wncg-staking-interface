@@ -1,8 +1,10 @@
 import { memo } from 'react'
 import { useAtom } from 'jotai'
+import clsx from 'clsx'
 
 import { joinTxAtom } from 'states/tx'
 import config from 'config'
+import { NATIVE_CURRENCY_ADDRESS } from 'config/constants/addresses'
 import { bnum } from 'utils/bnum'
 import { useJoinPool, useStaking } from 'hooks'
 
@@ -10,12 +12,11 @@ import { StyledJoinModalPage1 } from './styled'
 import { CloseButton, PendingNotice } from 'components/Modals/shared'
 import NumberFormat from 'components/NumberFormat'
 import TxButton from 'components/TxButton'
-import clsx from 'clsx'
 
 type JoinModalPage1Props = {
   assets: Hash[]
   joinAmounts: string[]
-  bptBalance: string
+  lpBalance: string
   totalJoinFiatValue: string
   send(value: string): void
 }
@@ -23,15 +24,15 @@ type JoinModalPage1Props = {
 function JoinModalPage1({
   assets,
   joinAmounts,
-  bptBalance,
+  lpBalance,
   totalJoinFiatValue,
   send,
 }: JoinModalPage1Props) {
   const [tx, setTx] = useAtom(joinTxAtom)
-  const { shouldReversePoolTokenOrderOnDisplay, tokenMap } = useStaking()
+  const { shouldReversePoolTokenOrderOnDisplay, tokens } = useStaking()
 
   const nativeAssetIndex = assets.findIndex(
-    (addr) => addr === config.nativeCurrency.address
+    (addr) => addr === NATIVE_CURRENCY_ADDRESS
   )
   const hasNativeAsset =
     nativeAssetIndex >= 0 && bnum(joinAmounts[nativeAssetIndex]).gt(0)
@@ -51,7 +52,7 @@ function JoinModalPage1({
       setTx({
         hash: txHash,
         joinAmounts,
-        bptBalance,
+        lpBalance: lpBalance,
         totalJoinFiatValue,
       })
 
@@ -92,11 +93,11 @@ function JoinModalPage1({
           })}
         >
           {joinAmounts.map((amt, i) => {
-            const { symbol = '', address = '' } = tokenMap[assets[i]] ?? {}
+            const symbol = tokens[assets[i]]?.symbol ?? ''
 
             return (
               <NumberFormat
-                key={`joinModalPage1:${address}`}
+                key={`joinModalPage1:${assets[i]}`}
                 value={amt}
                 symbol={symbol}
                 decimals={8}

@@ -9,6 +9,7 @@ import { Abi } from 'abitype'
 
 import config from 'config'
 import { Multicall3Abi } from 'config/abi'
+import { MULTICALL_3_ADDRESS } from 'config/constants/addresses'
 
 class ReadContractsPool<
   TAbi extends Abi | readonly unknown[],
@@ -21,7 +22,7 @@ class ReadContractsPool<
   batchInterval = 3000
   pool: { [key in string]: ReadContractsConfig<TContracts> } = {}
   result: { [key in string]: ReadContractsResult<TContracts> } = {}
-  currentChainId?: Network
+  currentChainId?: ChainId
 
   constructor() {
     setInterval(() => {
@@ -71,16 +72,13 @@ class ReadContractsPool<
       window?.ethereum as any as providers.ExternalProvider,
       'any'
     )
+    // FIXME: config.chainId
     const signer = await fetchSigner({ chainId: config.chainId })
 
     const signerOrProvider =
       this.currentChainId !== config.chainId ? provider : signer ?? provider
 
-    return new Contract(
-      config.multicallContract,
-      Multicall3Abi,
-      signerOrProvider
-    )
+    return new Contract(MULTICALL_3_ADDRESS, Multicall3Abi, signerOrProvider)
   }
 
   private parse(contracts: any[], results: any[]) {
@@ -166,7 +164,7 @@ class ReadContractsPool<
 
   public call(
     config: ReadContractsConfig<TContracts>,
-    currentChainId?: Network
+    currentChainId?: ChainId
   ): Promise<ReadContractsResult<TContracts>> {
     this.currentChainId = currentChainId
     const key = nanoid()

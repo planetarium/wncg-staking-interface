@@ -1,47 +1,63 @@
 import { memo } from 'react'
+import dynamic from 'next/dynamic'
 import { motion } from 'framer-motion'
 
-import { MOTION } from 'config/motions'
-import { fadeIn } from 'config/motionVariants'
-import { useFetchUserBalances } from 'hooks/queries'
-
+import { ANIMATION_MAP, MOTION } from 'config/constants/motions'
 import { useAuth } from 'hooks'
 
 import { StyledStakingStake } from './styled'
 import Suspense from 'components/Suspense'
 import Connect from './Connect'
 import Fallback from './Fallback'
-import Form from './Form'
 import Header from './Header'
-import JoinButton from './JoinButton'
+
+const Form = dynamic(() => import('./Form'), { ssr: false })
+const JoinButton = dynamic(() => import('./JoinButton'), { ssr: false })
 
 function StakingStake() {
   const { isConnected } = useAuth()
-  const balanceMap = useFetchUserBalances().data ?? {}
-
-  const isFetching = !!isConnected && Object.keys(balanceMap).length === 0
 
   return (
     <StyledStakingStake>
       <Header />
 
-      {isFetching && <Fallback />}
+      {/* {isFetching && <Fallback />} */}
 
-      {!isFetching && (
-        <motion.div {...MOTION} className="stakeGroup" variants={fadeIn}>
+      {/* {!isFetching && (
+        <motion.div
+          {...MOTION}
+          className="stakeGroup"
+          variants={ANIMATION_MAP.fadeIn}
+        >
           {isConnected === true && (
-            <Suspense>
+            <Suspense fallback={<Fallback />}>
               <Form />
             </Suspense>
           )}
 
           {isConnected === false && <Connect />}
 
-          <Suspense>
-            <JoinButton />
-          </Suspense>
+          <JoinButton />
         </motion.div>
-      )}
+      )} */}
+
+      <motion.div
+        {...MOTION}
+        className="stakeGroup"
+        variants={ANIMATION_MAP.fadeIn}
+      >
+        {isConnected === true && (
+          <Suspense fallback={<Fallback />}>
+            <Form />
+          </Suspense>
+        )}
+
+        {isConnected === false && <Connect />}
+
+        <Suspense>
+          <JoinButton />
+        </Suspense>
+      </motion.div>
     </StyledStakingStake>
   )
 }

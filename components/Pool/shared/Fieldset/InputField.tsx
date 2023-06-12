@@ -9,6 +9,7 @@ import {
   UseFormWatch,
 } from 'react-hook-form'
 
+import { NATIVE_CURRENCY_ADDRESS } from 'config/constants/addresses'
 import { useFiat } from 'hooks'
 import config from 'config'
 import { bnum } from 'utils/bnum'
@@ -78,7 +79,7 @@ function JoinInputField({
     [symbol]
   )
 
-  const isEther = [config.weth, config.nativeCurrency.address].includes(address)
+  const isEther = [config.wrapped, NATIVE_CURRENCY_ADDRESS].includes(address)
   const isNativeCurrency = watch('isNativeCurrency')
 
   const maxBalanceInFiatValue = useMemo(

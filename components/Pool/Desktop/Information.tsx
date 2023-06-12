@@ -1,21 +1,28 @@
 import { memo } from 'react'
 
-import { poolUrlFor } from 'utils/poolUrlFor'
+import { dexPoolUrlFor } from 'utils/dexPoolUrlFor'
 
 import { StyledPoolInformation } from './styled'
 import Icon from 'components/Icon'
 import NumberFormat from 'components/NumberFormat'
-import { usePool } from 'hooks/usePool'
+import { usePoolSnapshot } from 'hooks/usePoolSnapshot'
+import { useChain } from 'hooks'
 
 function PoolInformation() {
   const { poolValueIn24Hr, totalSwapVolumeIn24Hr, totalSwapFeesIn24Hr } =
-    usePool()
+    usePoolSnapshot()
+  const { chainId } = useChain()
 
   return (
     <StyledPoolInformation className="poolInformation">
       <header className="header">
         <h3 className="title">Pool information</h3>
-        <a className="link" href={poolUrlFor()} target="_blank" rel="noopener">
+        <a
+          className="link"
+          href={dexPoolUrlFor(chainId)}
+          target="_blank"
+          rel="noopener"
+        >
           detail
           <Icon icon="outlink" />
         </a>

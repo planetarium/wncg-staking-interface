@@ -7,7 +7,7 @@ import { claimTxAtom } from 'states/tx'
 import { bnum } from 'utils/bnum'
 import { formatUnits } from 'utils/formatUnits'
 import { parseTransferLogs } from 'utils/parseTransferLogs'
-import { useFiat, useModal, useRewards, useStaking } from 'hooks'
+import { useFiat, useModal, useStaking } from 'hooks'
 
 import { StyledClaimModalPage2 } from './styled'
 import Button from 'components/Button'
@@ -18,27 +18,26 @@ import TokenIcon from 'components/TokenIcon'
 
 type ClaimModalPage2Props = {
   rewardList: boolean[]
-  earnedRewards: string[]
+  earnedTokenRewards: string[]
 }
 
 export default function ClaimModalPage2({
   rewardList,
-  earnedRewards,
+  earnedTokenRewards,
 }: ClaimModalPage2Props) {
   const toFiat = useFiat()
   const { removeModal } = useModal()
-  const { rewardTokenAddresses } = useRewards()
-  const { tokenMap } = useStaking()
+  const { rewardTokenAddresses, tokens } = useStaking()
 
   const initRewards = rewardList.map((check, i) =>
-    check ? earnedRewards[i] : '0'
+    check ? earnedTokenRewards[i] : '0'
   )
 
   const [rewards, setRewards] = useState<string[]>(initRewards)
 
   const totalClaimFiatValue = rewards
     .reduce(
-      (acc, r, i) => acc.plus(toFiat(r, rewardTokenAddresses[i])),
+      (acc, amt, i) => acc.plus(toFiat(amt, rewardTokenAddresses[i])),
       bnum(0)
     )
     .toString()
@@ -57,7 +56,7 @@ export default function ClaimModalPage2({
         if (!check) return '0'
         const addr = rewardTokenAddresses[i]
 
-        return formatUnits(parsedLogs?.[addr], tokenMap[addr].decimals)
+        return formatUnits(parsedLogs?.[addr], tokens[addr].decimals)
       })
 
       setRewards(claimed)
@@ -78,13 +77,13 @@ export default function ClaimModalPage2({
               const amt = rewards[i]
 
               const address = rewardTokenAddresses[i]
-              const { symbol = '' } = tokenMap[address] ?? {}
+              const symbol = tokens[address]?.symbol
               const active = !bnum(amt).isZero()
 
               return (
                 <div className="detailItem" key={`claimModal:page2:${address}`}>
                   <dt>
-                    <TokenIcon address={address} $size={20} dark />
+                    <TokenIcon address={address} $size={20} $dark />
                     {symbol}
                   </dt>
 
@@ -113,7 +112,7 @@ export default function ClaimModalPage2({
             if (!check) return null
 
             const address = rewardTokenAddresses[i]
-            const token = tokenMap[address]
+            const token = tokens[address]
 
             return (
               <ImportToken

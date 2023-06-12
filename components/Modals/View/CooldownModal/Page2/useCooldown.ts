@@ -1,18 +1,18 @@
 import { useCallback } from 'react'
 import { useContractWrite, usePrepareContractWrite } from 'wagmi'
 
-import { useAuth, useSwitchNetwork } from 'hooks'
-import config from 'config'
-import { StakingAbi } from 'config/abi'
+import { StakingEthereumAbi } from 'config/abi'
+import { useAuth, useChain, useSwitchNetwork } from 'hooks'
 
 export function useCooldown() {
   const { account } = useAuth()
+  const { chainId, stakingAddress } = useChain()
   const { switchBeforeSend } = useSwitchNetwork()
 
   const { config: writeConfig } = usePrepareContractWrite({
-    address: config.stakingAddress,
-    abi: StakingAbi,
-    chainId: config.chainId,
+    address: stakingAddress,
+    abi: StakingEthereumAbi,
+    chainId,
     functionName: 'cooldown',
     enabled: !!account,
     onError: switchBeforeSend,

@@ -1,0 +1,29 @@
+{
+  "id": 1,
+  "network": "homestead",
+  "rpcUrls": {
+    "default": {
+      "http": ["https://cloudflare-eth.com"]
+    },
+    "public": {
+      "http": ["https://cloudflare-eth.com"]
+    }
+  },
+  "assetPlatform": "ethereum",
+  "chainId": 1,
+  "chainName": "Ethereum",
+  "explorer": "https://etherscan.io",
+  "explorerName": "Etherscan",
+  "name": "Ethereum Mainnet",
+  "rpcUrl": "https://mainnet.infura.io/v3",
+  "shortName": "Ethereum",
+  "subgraph": "https://api.thegraph.com/subgraphs/name/balancer-labs/balancer-v2",
+  "nativeCurrency": {
+    "name": "Ether",
+    "address": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+    "symbol": "ETH",
+    "decimals": 18,
+    "coingeckoId": "ethereum",
+    "wrappedTokenAddress": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
+  }
+}

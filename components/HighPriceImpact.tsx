@@ -1,8 +1,11 @@
 import { AnimatePresence } from 'framer-motion'
 import clsx from 'clsx'
 
-import { HIGH_PRICE_IMPACT, REKT_PRICE_IMPACT } from 'config/misc'
-import { slideInDown } from 'config/motionVariants'
+import {
+  HIGH_PRICE_IMPACT,
+  REKT_PRICE_IMPACT,
+} from 'config/constants/liquidityPool'
+import { ANIMATION_MAP } from 'config/constants/motions'
 
 import { StyledHighPriceImpact } from './styled'
 import Checkbox from 'components/Checkbox'
@@ -35,7 +38,7 @@ function HighPriceImpact({
           initial="initial"
           animate="animate"
           exit="exit"
-          variants={slideInDown}
+          variants={ANIMATION_MAP.slideInDown}
           role="alert"
         >
           <h4 className="title">

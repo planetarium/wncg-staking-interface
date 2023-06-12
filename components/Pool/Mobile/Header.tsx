@@ -1,8 +1,8 @@
 import { memo } from 'react'
 import Link from 'next/link'
 
-import { poolUrlFor } from 'utils/poolUrlFor'
-import { useStaking } from 'hooks'
+import { dexPoolUrlFor } from 'utils/dexPoolUrlFor'
+import { useChain, useStaking } from 'hooks'
 
 import { StyledPoolMobileHeader } from './styled'
 import { StyledCloseButton } from 'components/Modals/shared/styled'
@@ -13,17 +13,22 @@ type PoolMobileHeaderProps = {
 }
 
 function PoolMobileHeader({ closePool }: PoolMobileHeaderProps) {
-  const { bptName } = useStaking()
+  const { chainId } = useChain()
+  const { lpToken } = useStaking()
 
   return (
     <StyledPoolMobileHeader className="modalHeader">
-      <strong className="poolName">{bptName}</strong>
+      <strong className="poolName">{lpToken.name}</strong>
 
       <div className="titleGroup">
         <h2 className="title poolTitle">Join pool, Get LP Tokens!</h2>
       </div>
 
-      <Link className="linkButton" target="_blank" href={poolUrlFor()}>
+      <Link
+        className="linkButton"
+        target="_blank"
+        href={dexPoolUrlFor(chainId)}
+      >
         Pool information
         <Icon icon="outlink" />
       </Link>

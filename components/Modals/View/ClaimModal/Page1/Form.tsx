@@ -3,8 +3,7 @@ import { UseFormSetValue } from 'react-hook-form'
 import { AnimatePresence, motion } from 'framer-motion'
 import clsx from 'clsx'
 
-import { EXIT_MOTION } from 'config/motions'
-import { fadeIn } from 'config/motionVariants'
+import { ANIMATION_MAP, EXIT_MOTION } from 'config/constants/motions'
 import { bnum } from 'utils/bnum'
 import { useFiat, useStaking } from 'hooks'
 import { ClaimFormFields } from '../useClaimForm'
@@ -16,19 +15,19 @@ import TokenIcon from 'components/TokenIcon'
 
 type ClaimModalPage1FormProps = {
   rewardList: boolean[]
-  earnedRewards: string[]
+  earnedTokenRewards: string[]
   setValue: UseFormSetValue<ClaimFormFields>
   disabled: boolean
 }
 
 export default function ClaimModalPage1Form({
   rewardList,
-  earnedRewards,
+  earnedTokenRewards,
   setValue,
   disabled: _disabled,
 }: ClaimModalPage1FormProps) {
   const toFiat = useFiat()
-  const { rewardTokenAddresses, tokenMap } = useStaking()
+  const { rewardTokenAddresses, tokens } = useStaking()
 
   function onCheckboxChange(e: ChangeEvent<HTMLInputElement>) {
     const { value: index, checked } = e.currentTarget
@@ -43,13 +42,14 @@ export default function ClaimModalPage1Form({
     <StyledClaimModalPage1Form>
       <fieldset className="rewardGroup">
         {rewardTokenAddresses.map((addr, i) => {
-          const { symbol = '' } = tokenMap[addr] ?? {}
-          const amount = earnedRewards[i]
-          const fiatValue = toFiat(amount, addr)
           const id = `claimModal:page1:form:${addr}`
-          const checked = !!rewardList[i]
+
+          const amount = earnedTokenRewards[i]
+          const fiatValue = toFiat(amount, addr)
           const hasAmount = bnum(amount).gt(0)
 
+          const symbol = tokens[addr]?.symbol
+          const checked = !!rewardList[i]
           const disabled = _disabled || !hasAmount
 
           return (
@@ -66,7 +66,7 @@ export default function ClaimModalPage1Form({
                   <motion.div
                     {...EXIT_MOTION}
                     className="iconContainer"
-                    variants={fadeIn}
+                    variants={ANIMATION_MAP.fadeIn}
                   >
                     <Icon icon="check" $size={32} />
                   </motion.div>

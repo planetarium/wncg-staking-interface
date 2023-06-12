@@ -2,11 +2,9 @@ import { useAtomValue } from 'jotai'
 import { AnimatePresence } from 'framer-motion'
 
 import { isHarvestableAtom } from 'states/system'
-import config from 'config'
-import { EXIT_MOTION } from 'config/motions'
-import { fadeIn } from 'config/motionVariants'
+import { ANIMATION_MAP, EXIT_MOTION } from 'config/constants/motions'
 import { bnum } from 'utils/bnum'
-import { useFiat, useHarvest, useStaking } from 'hooks'
+import { useChain, useFiat, useHarvest, useStaking } from 'hooks'
 import { useFetchStaking } from 'hooks/queries'
 
 import { StyledStakingDashboardHarvest } from './styled'
@@ -14,6 +12,7 @@ import Button from 'components/Button'
 import CountUp from 'components/CountUp'
 import Icon from 'components/Icon'
 import Tooltip from 'components/Tooltip'
+import { BAL_ADDRESS } from 'config/constants/addresses'
 
 type StakingDashboardHarvestProps = {
   show: boolean
@@ -24,13 +23,17 @@ export default function StakingDashboardHarvest({
   show,
   closeTooltip,
 }: StakingDashboardHarvestProps) {
+  const { chainId } = useChain()
   const toFiat = useFiat()
-  const { earmarkIncentivePcnt } = useStaking()
-  const { claimableTokens = '0' } =
-    useFetchStaking({
-      refetchInterval: 10 * 1_000,
-      refetchOnWindowFocus: 'always',
-    }).data ?? {}
+  const { earmarkIncentivePcnt } = useStaking<'ethereum'>()
+
+  // FIXME: 수정
+  // const { claimableTokens = '0' } =
+  //   useFetchStaking({
+  //     refetchInterval: 10 * 1_000,
+  //     refetchOnWindowFocus: 'always',
+  //   }).data ?? {}
+  const claimableTokens = '0'
   const harvest = useHarvest()
 
   const isHarvestable = useAtomValue(isHarvestableAtom)
@@ -40,12 +43,18 @@ export default function StakingDashboardHarvest({
   const harvestRewardAmount = bnum(claimableTokens)
     .times(earmarkIncentivePcnt)
     .toString()
-  const harvestRewardInFiatValue = toFiat(harvestRewardAmount, config.bal)
+  const harvestRewardInFiatValue = toFiat(
+    harvestRewardAmount,
+    BAL_ADDRESS[chainId] as Hash
+  )
 
   return (
     <AnimatePresence>
       {show && (
-        <StyledStakingDashboardHarvest {...EXIT_MOTION} variants={fadeIn}>
+        <StyledStakingDashboardHarvest
+          {...EXIT_MOTION}
+          variants={ANIMATION_MAP.fadeIn}
+        >
           <Tooltip
             as="div"
             className="harvestTooltip"

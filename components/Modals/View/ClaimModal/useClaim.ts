@@ -1,32 +1,48 @@
 import { useCallback, useMemo } from 'react'
 import { useContractWrite, usePrepareContractWrite } from 'wagmi'
 
-import config from 'config'
-import { StakingAbi } from 'config/abi'
-import { useAuth, useRewards, useSwitchNetwork } from 'hooks'
+import { StakingEthereumAbi } from 'config/abi'
+import { isEthereum } from 'utils/isEthereum'
 import { parseUnits } from 'utils/parseUnits'
+import { useAuth, useChain, useStaking, useSwitchNetwork } from 'hooks'
 
-export function useClaim(rewardList: boolean[], earnedRewards: string[]) {
+export function useClaim(rewardList: boolean[], earnedTokenRewards: string[]) {
   const { account } = useAuth()
+  const { chainId, stakingAddress } = useChain()
   const { switchBeforeSend } = useSwitchNetwork()
-  const { rewardTokenDecimals } = useRewards()
+  const { rewardTokenAddresses, tokens } = useStaking()
 
   const functionName = useMemo(() => {
+    switch (true) {
+      case !isEthereum(chainId):
+      case rewardList.every((r) => !!r):
+        return 'claimAllRewards'
+      case rewardList[0]:
+        return 'claimWNCGRewards'
+      case rewardList[1]:
+        return 'claimBALRewards'
+    }
     if (rewardList.every((r) => !!r)) return 'claimAllRewards'
     if (rewardList[0]) return 'claimWNCGRewards'
     if (rewardList[1]) return 'claimBALRewards'
     return ''
-  }, [rewardList])
+  }, [chainId, rewardList])
 
   const args = useMemo(() => {
     if (functionName !== 'claimWNCGRewards') return []
-    return [parseUnits(earnedRewards[0], rewardTokenDecimals[0]).toString()]
-  }, [earnedRewards, functionName, rewardTokenDecimals])
+
+    return [
+      parseUnits(
+        earnedTokenRewards[0],
+        tokens[rewardTokenAddresses[0]]?.decimals ?? 18
+      ).toString(),
+    ]
+  }, [earnedTokenRewards, functionName, rewardTokenAddresses, tokens])
 
   const { config: writeConfig } = usePrepareContractWrite({
-    address: config.stakingAddress,
-    abi: StakingAbi,
-    chainId: config.chainId,
+    address: stakingAddress,
+    abi: StakingEthereumAbi,
+    chainId,
     functionName,
     args,
     enabled: !!account && rewardList.some((r) => !!r) && !!functionName,

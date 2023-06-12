@@ -1,7 +1,10 @@
 import { useMemo } from 'react'
 import { WeightedPoolEncoder } from '@balancer-labs/sdk'
 
-import config from 'config'
+import {
+  NATIVE_CURRENCY_ADDRESS,
+  ZERO_ADDRESS,
+} from 'config/constants/addresses'
 import { parseUnits } from 'utils/parseUnits'
 import { useCalculator, useSlippage, useStaking } from 'hooks'
 
@@ -18,24 +21,23 @@ export function useJoinBuildRequest({
 }: UseJoinBuildRequestParams) {
   const calculator = useCalculator('join')
   const { minusSlippageScaled } = useSlippage()
-  const { tokenMap } = useStaking()
+  const { tokens } = useStaking()
 
   const joinTokenAddresses = useMemo(
     () =>
       assets.map((addr) => {
-        if (addr !== config.nativeCurrency.address) return addr
-        return config.zeroAddress
+        if (addr !== NATIVE_CURRENCY_ADDRESS) return addr
+        return ZERO_ADDRESS
       }),
     [assets]
   )
 
   const maxAmountsIn = useMemo(
     () =>
-      amounts.map((amt, i) => {
-        const token = tokenMap[assets[i]]
-        return parseUnits(amt, token?.decimals ?? 18).toString()
-      }),
-    [amounts, assets, tokenMap]
+      amounts.map((amt, i) =>
+        parseUnits(amt, tokens[assets[i]]?.decimals ?? 18).toString()
+      ),
+    [amounts, assets, tokens]
   )
 
   const minBptOut = useMemo(() => {

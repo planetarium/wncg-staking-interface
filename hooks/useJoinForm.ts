@@ -10,7 +10,11 @@ import {
 } from 'react-hook-form'
 
 import config from 'config'
-import { HIGH_PRICE_IMPACT, REKT_PRICE_IMPACT } from 'config/misc'
+import { NATIVE_CURRENCY_ADDRESS } from 'config/constants/addresses'
+import {
+  HIGH_PRICE_IMPACT,
+  REKT_PRICE_IMPACT,
+} from 'config/constants/liquidityPool'
 import { LiquidityFieldType } from 'config/constants'
 import { bnum } from 'utils/bnum'
 import { useBalances, useFiat, useStaking } from 'hooks'
@@ -97,8 +101,8 @@ export function useJoinForm(): UseJoinFormReturns {
   const assets = useMemo(() => {
     return poolTokenAddresses.map((addr) => {
       if (!isNativeCurrency) return addr
-      if (addr !== config.weth) return addr
-      return config.nativeCurrency.address
+      if (addr !== config.wrapped) return addr
+      return NATIVE_CURRENCY_ADDRESS
     })
   }, [isNativeCurrency, poolTokenAddresses])
 
@@ -136,7 +140,7 @@ export function useJoinForm(): UseJoinFormReturns {
     () =>
       maxBalances.map((balance, i) => {
         const address = assets[i]
-        if (address !== config.nativeCurrency.address) return balance
+        if (address !== NATIVE_CURRENCY_ADDRESS) return balance
         const safeBalance = bnum(balance).minus(0.05)
         return safeBalance.gt(0) ? safeBalance.toString() : '0'
       }),

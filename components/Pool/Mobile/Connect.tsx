@@ -1,11 +1,10 @@
 import { AnimatePresence } from 'framer-motion'
 
-import { fadeIn } from 'constants/motionVariants'
+import { ANIMATION_MAP, EXIT_MOTION } from 'config/constants/motions'
 import { useAuth, useConnect } from 'hooks'
 
 import { StyledPoolMobileConnect } from './styled'
 import Button from 'components/Button'
-import { EXIT_MOTION } from 'config/motions'
 
 function JoinConnect() {
   const { isConnected } = useAuth()
@@ -14,7 +13,10 @@ function JoinConnect() {
   return (
     <AnimatePresence>
       {!isConnected && (
-        <StyledPoolMobileConnect {...EXIT_MOTION} variants={fadeIn}>
+        <StyledPoolMobileConnect
+          {...EXIT_MOTION}
+          variants={ANIMATION_MAP.fadeIn}
+        >
           <Button
             className="connectButton"
             onClick={openConnectModal}

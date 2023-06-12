@@ -1,4 +1,4 @@
-import { DAY, HOUR, MINUTE, SECOND } from 'config/misc'
+import { DAY, HOUR, MINUTE, SECOND } from 'config/constants/time'
 
 export function parseCountdown(timestamp: number, leadingZero: boolean) {
   const days = Math.max(0, Math.floor(timestamp / DAY))

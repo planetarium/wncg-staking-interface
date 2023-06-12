@@ -11,14 +11,14 @@ import Button from 'components/Button'
 function PoolBalances() {
   const { isConnected } = useAuth()
   const { openConnectModal } = useConnect()
-  const { bptName, stakedTokenAddress } = useStaking()
+  const { lpToken } = useStaking()
 
   return (
     <StyledPoolBalances layout>
       <div className="balancesHeader">
-        <TokenIcon address={stakedTokenAddress} $size={48} />
+        <TokenIcon address={lpToken.address} $size={48} />
 
-        <h2 className="title">{bptName}</h2>
+        <h2 className="title">{lpToken.name}</h2>
 
         {!isConnected && (
           <Button

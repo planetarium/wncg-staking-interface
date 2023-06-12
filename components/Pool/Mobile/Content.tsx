@@ -10,7 +10,7 @@ type PoolMobileContentProps = UseJoinFormReturns
 
 export default function PoolMobileContent(props: PoolMobileContentProps) {
   const balanceOf = useBalances()
-  const { stakedTokenAddress } = useStaking()
+  const { lpToken } = useStaking()
 
   const { refetch } = useFetchUserAllowances()
 
@@ -38,7 +38,7 @@ export default function PoolMobileContent(props: PoolMobileContentProps) {
       joinAmounts,
       joinAmountsInFiatValue,
       totalJoinFiatValue,
-      bptBalance: balanceOf(stakedTokenAddress),
+      lpBalance: balanceOf(lpToken.address),
       resetForm: resetFields,
     })
   }

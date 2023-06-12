@@ -13,7 +13,7 @@ import NumberFormat from 'components/NumberFormat'
 export default function UnstakeModalPage3() {
   const toFiat = useFiat()
   const { removeModal } = useModal()
-  const { stakedTokenAddress } = useStaking()
+  const { lpToken } = useStaking()
 
   const { unstakeAmount = '0', stakedTokenBalance = '0' } =
     useAtomValue(unstakeTxAtom)
@@ -21,7 +21,7 @@ export default function UnstakeModalPage3() {
 
   const stakedTokenBalanceInFiatValue = toFiat(
     stakedTokenBalance,
-    stakedTokenAddress
+    lpToken.address
   )
 
   const totalStakedTokenBalance = bnum(stakedTokenBalance)
@@ -30,10 +30,10 @@ export default function UnstakeModalPage3() {
 
   const totalStakedTokenBalanceInFiatValue = toFiat(
     totalStakedTokenBalance,
-    stakedTokenAddress
+    lpToken.address
   )
 
-  const unstakeAmountInFiatValue = toFiat(unstakeAmount, stakedTokenAddress)
+  const unstakeAmountInFiatValue = toFiat(unstakeAmount, lpToken.address)
 
   function closeModal() {
     removeModal()

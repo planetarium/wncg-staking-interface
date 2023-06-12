@@ -4,8 +4,7 @@ import { AnimatePresence } from 'framer-motion'
 
 import { slippageAtom } from 'states/system'
 import { hideJoinTooltipAtom, showPoolAtom } from 'states/ui'
-import { EXIT_MOTION } from 'config/motions'
-import { fadeIn } from 'config/motionVariants'
+import { ANIMATION_MAP, EXIT_MOTION } from 'config/constants/motions'
 import { bnum } from 'utils/bnum'
 import { useAuth, useBalances, useStaking, useResponsive } from 'hooks'
 
@@ -18,9 +17,9 @@ export default function MainStakeJoinButton() {
   const { isConnected } = useAuth()
   const balanceOf = useBalances()
   const { isMobile } = useResponsive()
-  const { stakedTokenAddress } = useStaking()
+  const { lpToken } = useStaking()
 
-  const hasLpTokenBalance = bnum(balanceOf(stakedTokenAddress)).gt(0)
+  const hasLpTokenBalance = bnum(balanceOf(lpToken.address)).gt(0)
 
   const [hideJoinTooltip, setHideJoinTooltip] = useAtom(hideJoinTooltipAtom)
   const setShowPool = useSetAtom(showPoolAtom)
@@ -29,6 +28,7 @@ export default function MainStakeJoinButton() {
   function openModal(e: MouseEvent) {
     e.preventDefault()
     e.stopPropagation()
+
     setShowPool(true)
     setSlippage(null)
   }
@@ -41,7 +41,7 @@ export default function MainStakeJoinButton() {
     <StyledStakeJoinButton
       {...EXIT_MOTION}
       className="tooltipGroup"
-      variants={fadeIn}
+      variants={ANIMATION_MAP.fadeIn}
       $hasBalance={hasLpTokenBalance}
     >
       {(hasLpTokenBalance || !isConnected) && (

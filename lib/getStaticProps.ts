@@ -1,41 +1,72 @@
 import { dehydrate, QueryClient } from '@tanstack/react-query'
+import type { GetStaticPropsContext } from 'next'
 
-import { queryKeys } from 'config/queryKeys'
+import { ChainId } from 'config/chains'
+import { LIQUIDITY_POOL_PLACEHOLDER } from 'config/constants/placeholders'
+import { QUERY_KEYS } from 'config/constants/queryKeys'
+import { getQueryString } from 'utils/getQueryString'
 import { build } from 'lib/queries/build'
+import { fetchPrices } from 'lib/queries/fetchPrices'
+import { fetchPool } from 'lib/queries/fetchPool'
 import { fetchPoolSnapshot } from 'lib/queries/fetchPoolSnapshot'
-import { now } from 'utils/now'
-import { fetchPrices } from './queries/fetchPrices'
-import { getBptPrice } from 'utils/getBptPrice'
+import { fetchStaking } from 'lib/queries/fetchStaking'
 
-export async function getStaticProps() {
+export async function getStaticProps(ctx: GetStaticPropsContext) {
   const queryClient = new QueryClient()
-  const buildTime = now()
 
-  const buildData = await build()
-  const priceMap = await fetchPrices(
-    ...buildData.rewardTokenAddresses,
-    ...buildData.poolTokenAddresses
+  const _chainId = getQueryString(ctx.params?.chainId)
+  const chainId = (Number(_chainId) ?? ChainId.ETHEREUM) as ChainId
+
+  const {
+    pool = LIQUIDITY_POOL_PLACEHOLDER,
+    staking = {
+      rewardTokenAddresses: [],
+    },
+  } = (await build(chainId)) ?? {}
+
+  await queryClient.prefetchQuery(
+    [QUERY_KEYS.Build, chainId],
+    () => build(chainId),
+    {
+      staleTime: Infinity,
+      cacheTime: Infinity,
+    }
   )
 
-  const bptPrice = getBptPrice(
-    buildData.poolTokens,
-    buildData.bptTotalSupply,
-    priceMap
+  await queryClient.prefetchQuery(
+    [QUERY_KEYS.Pool.Data, chainId],
+    () => fetchPool(chainId),
+    {
+      staleTime: Infinity,
+      cacheTime: Infinity,
+    }
   )
 
-  await queryClient.prefetchQuery<BuildResponse>([queryKeys.Build], build, {
-    staleTime: Infinity,
-    cacheTime: Infinity,
-  })
+  await queryClient.prefetchQuery(
+    [QUERY_KEYS.Staking.Data, chainId],
+    () => fetchStaking(chainId),
+    {
+      staleTime: Infinity,
+      cacheTime: Infinity,
+    }
+  )
 
-  queryClient.setQueryData<PriceMap>([queryKeys.FallbackPrices], {
-    ...priceMap,
-    [buildData.bptAddress]: bptPrice,
-  })
+  await queryClient.prefetchQuery(
+    [QUERY_KEYS.Staking.Prices, chainId],
+    () =>
+      fetchPrices(chainId, [
+        ...pool?.poolTokenAddresses,
+        ...staking?.rewardTokenAddresses,
+      ]),
+    {
+      staleTime: Infinity,
+      cacheTime: Infinity,
+    }
+  )
 
   await queryClient.prefetchQuery<PoolSnapshotResponse>(
-    [queryKeys.Pool.Snapshot, buildTime],
-    () => fetchPoolSnapshot(buildTime),
+    [QUERY_KEYS.Pool.Snapshot, chainId],
+    () => fetchPoolSnapshot(chainId),
     {
       staleTime: Infinity,
       cacheTime: Infinity,
@@ -46,6 +77,6 @@ export async function getStaticProps() {
     props: {
       dehydratedState: dehydrate(queryClient),
     },
-    revalidate: 60 * 60 * 24, // 24 hour
+    revalidate: 60 * 60 * 24, // 1 day
   }
 }

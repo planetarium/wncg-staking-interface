@@ -4,8 +4,8 @@ import { NumericFormat } from 'react-number-format'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useDebounce } from 'use-debounce'
 
-import { EXIT_MOTION } from 'config/motions'
-import { fadeIn } from 'config/motionVariants'
+import { ANIMATION_MAP, EXIT_MOTION } from 'config/constants/motions'
+
 import { bnum } from 'utils/bnum'
 import { useFiat } from 'hooks'
 
@@ -85,7 +85,7 @@ export default function NumberInput({
           <motion.div
             {...EXIT_MOTION}
             className="tooltip"
-            variants={fadeIn}
+            variants={ANIMATION_MAP.fadeIn}
             transition={{ duration: 0.1 }}
           >
             <NumberFormat value={debouncedFiatValue} type="fiat" />

@@ -1,22 +1,30 @@
 import { useQuery } from '@tanstack/react-query'
 
-import { queryKeys } from 'config/queryKeys'
+import { QUERY_KEYS } from 'config/constants/queryKeys'
+import { useChain } from 'hooks/useChain'
 import { fetchPoolSnapshot } from 'lib/queries/fetchPoolSnapshot'
 
+// FIXME: Pool은 발란서에만 존재하나?
 export function useFetchPoolSnapshot(options: UseFetchOptions = {}) {
+  const { chainId } = useChain()
+
   const {
     enabled = true,
     refetchInterval,
     refetchOnWindowFocus = 'always',
-    suspense = true,
+    suspense,
   } = options
 
-  return useQuery([queryKeys.Pool.Snapshot], () => fetchPoolSnapshot(), {
-    enabled,
-    staleTime: Infinity,
-    refetchInterval,
-    refetchOnWindowFocus,
-    suspense,
-    useErrorBoundary: false,
-  })
+  return useQuery(
+    [QUERY_KEYS.Pool.Snapshot, chainId],
+    () => fetchPoolSnapshot(chainId),
+    {
+      enabled,
+      staleTime: Infinity,
+      refetchInterval,
+      refetchOnWindowFocus,
+      suspense,
+      useErrorBoundary: false,
+    }
+  )
 }

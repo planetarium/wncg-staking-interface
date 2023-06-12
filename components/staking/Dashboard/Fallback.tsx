@@ -1,5 +1,4 @@
-import { MOTION } from 'config/motions'
-import { fadeIn } from 'config/motionVariants'
+import { ANIMATION_MAP, MOTION } from 'config/constants/motions'
 import { useResponsive } from 'hooks'
 
 import { StyledStakingDashboardApr } from './styled'
@@ -7,13 +6,10 @@ import Skeleton from 'components/Skeleton'
 
 export default function StakingDashboardAprFallback() {
   const { isHandheld } = useResponsive()
+
   if (isHandheld)
     return (
-      <StyledStakingDashboardApr
-        {...MOTION}
-        className="aprList"
-        variants={fadeIn}
-      >
+      <StyledStakingDashboardApr className="aprList">
         <Skeleton className="aprItem" $width={170} $height={20} />
         <Skeleton className="aprItem" $width={80} $height={20} $mt={2} />
         <Skeleton className="aprItem" $width={100} $height={20} $mt={2} />
@@ -21,11 +17,7 @@ export default function StakingDashboardAprFallback() {
     )
 
   return (
-    <StyledStakingDashboardApr
-      {...MOTION}
-      className="aprList"
-      variants={fadeIn}
-    >
+    <StyledStakingDashboardApr className="aprList">
       <div className="aprItem">
         <dt>
           <Skeleton className="aprItem" $width={83} $height={20} />

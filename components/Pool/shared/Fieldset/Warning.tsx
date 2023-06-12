@@ -1,13 +1,15 @@
 import config from 'config'
-import { EXIT_MOTION } from 'config/motions'
-import { slideInDown } from 'config/motionVariants'
+import { ANIMATION_MAP, EXIT_MOTION } from 'config/constants/motions'
 
 import { StyledJoinFormWarning } from './styled'
 import Icon from 'components/Icon'
 
 export default function JoinFormWarning() {
   return (
-    <StyledJoinFormWarning {...EXIT_MOTION} variants={slideInDown}>
+    <StyledJoinFormWarning
+      {...EXIT_MOTION}
+      variants={ANIMATION_MAP.slideInDown}
+    >
       <Icon icon="warning" />
       <p className="desc">
         To ensure a smooth transaction,{' '}

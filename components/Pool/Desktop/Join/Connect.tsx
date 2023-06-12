@@ -1,6 +1,6 @@
 import { AnimatePresence } from 'framer-motion'
 
-import { fadeIn } from 'constants/motionVariants'
+import { ANIMATION_MAP } from 'config/constants/motions'
 import { useAuth, useConnect } from 'hooks'
 
 import { StyledJoinConnect } from './styled'
@@ -18,7 +18,7 @@ function JoinConnect() {
           initial="initial"
           animate="animate"
           exit="exit"
-          variants={fadeIn}
+          variants={ANIMATION_MAP.fadeIn}
         >
           <Button
             className="connectButton"

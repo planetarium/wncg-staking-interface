@@ -2,9 +2,9 @@ import { memo } from 'react'
 import { AnimatePresence } from 'framer-motion'
 
 import config from 'config'
-import { slideInDown } from 'config/motionVariants'
+import { ANIMATION_MAP } from 'config/constants/motions'
 import { txUrlFor } from 'utils/txUrlFor'
-import { useResponsive } from 'hooks'
+import { useChain, useResponsive } from 'hooks'
 
 import { StyledPendingNotice } from './styled'
 import Icon from 'components/Icon'
@@ -15,8 +15,9 @@ type PendingNoticeProps = {
 }
 
 function PendingNotice({ hash }: PendingNoticeProps) {
+  const { chainId } = useChain()
   const { isHandheld } = useResponsive()
-  const link = txUrlFor(hash)
+  const link = txUrlFor(chainId, hash)
 
   function openBscScan() {
     if (!link) return
@@ -31,7 +32,7 @@ function PendingNotice({ hash }: PendingNoticeProps) {
           initial="initial"
           animate="animate"
           exit="exit"
-          variants={slideInDown}
+          variants={ANIMATION_MAP.slideInDown}
         >
           <Lottie className="lottie" animationData="loading" />
 

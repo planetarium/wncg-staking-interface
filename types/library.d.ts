@@ -71,3 +71,8 @@ type UseFetchOptions = {
   refetchOnWindowFocus?: 'always'
   suspense?: boolean
 }
+
+type RpcUrls = {
+  http: readonly string[]
+  webSocket?: readonly string[]
+}

@@ -10,12 +10,12 @@ import Lottie from 'components/Lottie'
 
 export default function CooldownModalPage3() {
   const { removeModal } = useModal()
-  const { cooldownPeriod } = useStaking()
+  const { cooldownSeconds } = useStaking()
 
   const { cooldownEndsAt = 0, withdrawEndsAt = 0 } =
     useAtomValue(unstakeTimestampsAtom) ?? {}
 
-  const cooldownStartsAt = Math.max(0, cooldownEndsAt - cooldownPeriod)
+  const cooldownStartsAt = Math.max(0, cooldownEndsAt - cooldownSeconds)
 
   return (
     <StyledCooldownModalPage3>

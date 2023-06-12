@@ -21,7 +21,7 @@ function ExitModalPage1Step2PropAmounts({
     poolTokenAddresses,
     poolTokenWeights,
     shouldReversePoolTokenOrderOnDisplay,
-    tokenMap,
+    tokens,
   } = useStaking()
 
   const exitAmountsInFiatValue = useMemo(
@@ -40,7 +40,7 @@ function ExitModalPage1Step2PropAmounts({
           {exitAmounts.map((amt, i) => {
             const address = poolTokenAddresses[i]
             const weight = bnum(poolTokenWeights[i]).times(100).toNumber()
-            const { symbol = '' } = tokenMap[address] ?? {}
+            const symbol = tokens[address]?.symbol ?? ''
 
             if (!address || !weight) return null
 

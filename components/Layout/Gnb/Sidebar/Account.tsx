@@ -6,11 +6,10 @@ import { AnimatePresence, motion } from 'framer-motion'
 import clsx from 'clsx'
 
 import { currentChainAtom } from 'states/system'
-import { EXIT_MOTION } from 'config/motions'
-import { fadeIn, slideInDown } from 'config/motionVariants'
+import { ANIMATION_MAP, EXIT_MOTION } from 'config/constants/motions'
 import { explorerUrlFor } from 'utils/explorerUrlFor'
 import { truncateAddress } from 'utils/truncateAddress'
-import { useAuth, useConnect, useCopy, useDisconnect } from 'hooks'
+import { useAuth, useChain, useConnect, useCopy, useDisconnect } from 'hooks'
 
 import { StyledSidebarAccount } from './styled'
 import Button from 'components/Button'
@@ -25,6 +24,8 @@ export default function SidebarAccount({ closeSidebar }: SidebarAccountProps) {
   const [show, setShow] = useState(false)
 
   const { account, connector, isConnected } = useAuth()
+  const { chainId } = useChain()
+
   const { openConnectModal } = useConnect()
   const { onCopy, copied } = useCopy()
   const disconnect = useDisconnect({
@@ -53,7 +54,7 @@ export default function SidebarAccount({ closeSidebar }: SidebarAccountProps) {
         {isConnected && (
           <motion.button
             {...EXIT_MOTION}
-            variants={fadeIn}
+            variants={ANIMATION_MAP.fadeIn}
             className="toggleButton"
             type="button"
             onClick={toggle}
@@ -73,7 +74,7 @@ export default function SidebarAccount({ closeSidebar }: SidebarAccountProps) {
           <motion.dd
             className="accountDetails"
             {...EXIT_MOTION}
-            variants={slideInDown}
+            variants={ANIMATION_MAP.slideInDown}
           >
             <div className="buttonGroup">
               <CopyToClipboard text={account!} onCopy={onCopy}>
@@ -86,7 +87,7 @@ export default function SidebarAccount({ closeSidebar }: SidebarAccountProps) {
               </CopyToClipboard>
 
               <Link
-                href={explorerUrlFor(account!)}
+                href={explorerUrlFor(chainId, account!)}
                 onClick={closeSidebar}
                 target="_blank"
                 rel="noopener"

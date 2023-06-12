@@ -1,6 +1,9 @@
-import config from 'config'
+import { CHAINS } from 'config/chains'
 
-export function explorerUrlFor(address?: string): string {
-  if (!address) return ''
-  return `${config.blockExplorerUrl}/address/${address}`
+export function explorerUrlFor(chainId: ChainId, address?: string): string {
+  const currentNetwork = CHAINS[chainId]
+
+  if (!currentNetwork) return ''
+
+  return `${currentNetwork.explorer}/address/${address}`
 }

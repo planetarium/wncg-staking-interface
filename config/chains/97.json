@@ -1,0 +1,28 @@
+{
+  "id": 97,
+  "network": "bsc",
+  "rpcUrls": {
+    "default": {
+      "http": ["https://data-seed-prebsc-1-s1.binance.org:8545"]
+    },
+    "public": {
+      "http": ["https://data-seed-prebsc-1-s1.binance.org:8545"]
+    }
+  },
+  "assetPlatform": "binance-smart-chain",
+  "chainId": 97,
+  "chainName": "Binance Smart Chain Testnet",
+  "explorer": "https://testnet.bscscan.com",
+  "explorerName": "BscScan",
+  "name": "BNB Smart Chain Testnet",
+  "rpcUrl": "https://data-seed-prebsc-1-s1.binance.org:8545",
+  "shortName": "BSC Testnet",
+  "nativeCurrency": {
+    "address": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+    "coingeckoId": "binancecoin",
+    "decimals": 18,
+    "name": "Binance Chain Native Token",
+    "symbol": "TBNB",
+    "wrappedTokenAddress": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
+  }
+}

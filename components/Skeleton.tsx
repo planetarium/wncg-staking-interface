@@ -1,6 +1,6 @@
 import clsx from 'clsx'
 
-import { EXIT_MOTION } from 'config/motions'
+import { EXIT_MOTION } from 'config/constants/motions'
 
 import { StyledSkeleton } from './styled'
 import { useMemo } from 'react'

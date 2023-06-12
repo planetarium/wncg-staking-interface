@@ -3,10 +3,10 @@ import { useAtomValue } from 'jotai'
 import { useWaitForTransaction } from 'wagmi'
 
 import { cooldownTxAtom } from 'states/tx'
-import config from 'config'
-import { useRefetch } from 'hooks'
+import { useChain, useRefetch } from 'hooks'
 
 export function useWatch(send: (event: string) => void) {
+  const { chainId } = useChain()
   const refetch = useRefetch({
     staking: true,
     userData: true,
@@ -18,7 +18,7 @@ export function useWatch(send: (event: string) => void) {
     hash: tx.hash!,
     enabled: !!tx.hash,
     suspense: false,
-    chainId: config.chainId,
+    chainId,
     async onSuccess() {
       await refetch()
       send('SUCCESS')

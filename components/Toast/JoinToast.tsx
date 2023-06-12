@@ -5,7 +5,7 @@ import { RESET } from 'jotai/utils'
 
 import { joinTxAtom } from 'states/tx'
 import { txUrlFor } from 'utils/txUrlFor'
-import { useFiat, useStaking } from 'hooks'
+import { useChain, useFiat, useStaking } from 'hooks'
 import { useWatch } from './useWatch'
 
 import { StyledToast } from './styled'
@@ -21,8 +21,9 @@ type JoinToastProps = {
 }
 
 export default function JoinToast({ hash, joinAmounts }: JoinToastProps) {
+  const { chainId } = useChain()
   const toFiat = useFiat()
-  const { poolTokens, stakedTokenAddress } = useStaking()
+  const { lpToken, poolTokens } = useStaking()
 
   const setTx = useSetAtom(joinTxAtom)
 
@@ -33,7 +34,7 @@ export default function JoinToast({ hash, joinAmounts }: JoinToastProps) {
   return (
     <StyledToast>
       <header className="toastHeader">
-        <Link href={txUrlFor(hash)!} target="_blank" rel="noopener">
+        <Link href={txUrlFor(chainId, hash)!} target="_blank" rel="noopener">
           <h3 className="title">
             Join pool
             <Icon icon="outlink" />
@@ -73,11 +74,7 @@ export default function JoinToast({ hash, joinAmounts }: JoinToastProps) {
       </div>
 
       <footer className="toastFooter">
-        <ImportToken
-          address={stakedTokenAddress}
-          $size="sm"
-          $variant="primary"
-        />
+        <ImportToken address={lpToken.address} $size="sm" $variant="primary" />
       </footer>
     </StyledToast>
   )

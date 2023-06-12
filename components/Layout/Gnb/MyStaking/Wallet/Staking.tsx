@@ -3,8 +3,7 @@ import { motion } from 'framer-motion'
 
 import { isUnstakeWindowAtom } from 'states/account'
 import { ModalType } from 'config/constants'
-import { MOTION } from 'config/motions'
-import { fadeIn } from 'config/motionVariants'
+import { ANIMATION_MAP, MOTION } from 'config/constants/motions'
 import { bnum } from 'utils/bnum'
 import { useFiat, useModal, useStaking } from 'hooks'
 import { useFetchUserData } from 'hooks/queries'
@@ -24,13 +23,13 @@ type WalletStakingProps = {
 export default function WalletStaking({ closeWallet }: WalletStakingProps) {
   const toFiat = useFiat()
   const { addModal } = useModal()
-  const { stakedTokenAddress } = useStaking()
+  const { lpToken } = useStaking()
 
   const { stakedTokenBalance = '0' } = useFetchUserData().data ?? {}
 
   const isUnstakeWindow = useAtomValue(isUnstakeWindowAtom)
 
-  const stakedTokenFiatValue = toFiat(stakedTokenBalance, stakedTokenAddress)
+  const stakedTokenFiatValue = toFiat(stakedTokenBalance, lpToken.address)
 
   function openCooldown() {
     addModal({
@@ -72,7 +71,7 @@ export default function WalletStaking({ closeWallet }: WalletStakingProps) {
       </Suspense>
 
       {!isUnstakeWindow && (
-        <motion.div {...MOTION} variants={fadeIn}>
+        <motion.div {...MOTION} variants={ANIMATION_MAP.fadeIn}>
           <Button
             className="actionButton"
             onClick={openCooldown}

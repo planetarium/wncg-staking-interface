@@ -6,7 +6,7 @@ import {
 } from 'react-hook-form'
 import clsx from 'clsx'
 
-import { HIGH_PRICE_IMPACT } from 'config/misc'
+import { HIGH_PRICE_IMPACT } from 'config/constants/liquidityPool'
 import { ExitFormFields } from 'hooks/useExitForm'
 
 import { StyledExitModalPage1Step3 } from './styled'

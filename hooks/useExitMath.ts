@@ -1,7 +1,6 @@
 import { useCallback, useMemo } from 'react'
 import BigNumber from 'bignumber.js'
 
-import { POOL_DECIMALS } from 'constants/tokens'
 import { formatUnits } from 'utils/formatUnits'
 import { bnum } from 'utils/bnum'
 import { hasAmounts } from 'utils/hasAmounts'
@@ -19,16 +18,11 @@ type ExitMathParams = {
 export function useExitMath() {
   const balancesFor = useBalances()
   const calculator = useCalculator('exit')
-  const {
-    bptAddress,
-    bptTotalSupply,
-    poolTokenAddresses,
-    poolTokenBalances,
-    poolTokenDecimals,
-  } = useStaking()
+  const { lpToken, poolTokenAddresses, poolTokenBalances, poolTokenDecimals } =
+    useStaking()
   const { addSlippageScaled, minusSlippage } = useSlippage()
 
-  const bptBalance = balancesFor(bptAddress)
+  const lpBalance = balancesFor(lpToken.address)
 
   const amountsOutPlaceholder = useMemo(
     () => poolTokenAddresses.map((_) => '0') ?? [],
@@ -37,12 +31,12 @@ export function useExitMath() {
 
   const singleExitMaxAmounts = useMemo(() => {
     try {
-      const _bptBalanceScaled = parseUnits(bptBalance, POOL_DECIMALS).toString()
+      const _lpBalanceScaled = parseUnits(lpBalance).toString()
 
       return poolTokenDecimals.map((decimals, i) => {
         return minusSlippage(
           formatUnits(
-            calculator?.exactBptInForTokenOut(_bptBalanceScaled, i),
+            calculator?.exactBptInForTokenOut(_lpBalanceScaled, i),
             decimals ?? 18
           ),
           decimals
@@ -54,22 +48,22 @@ export function useExitMath() {
   }, [
     minusSlippage,
     amountsOutPlaceholder,
-    bptBalance,
+    lpBalance,
     calculator,
     poolTokenDecimals,
   ])
 
   // NOTE: Maximum BPT allowed: 30%
   const _absMaxBpt = useMemo(() => {
-    const poolMax = bnum(bptTotalSupply)
+    const poolMax = bnum(lpToken.totalSupply)
       .times(0.3)
-      .toFixed(POOL_DECIMALS, BigNumber.ROUND_DOWN)
-    return BigNumber.min(bptBalance, poolMax).toString()
-  }, [bptBalance, bptTotalSupply])
+      .toFixed(18, BigNumber.ROUND_DOWN)
+    return BigNumber.min(lpBalance, poolMax).toString()
+  }, [lpBalance, lpToken.totalSupply])
 
   const _propBptIn = useCallback(
-    (pcnt: string) => bnum(bptBalance).times(pcnt).div(100).toString(),
-    [bptBalance]
+    (pcnt: string) => bnum(lpBalance).times(pcnt).div(100).toString(),
+    [lpBalance]
   )
 
   const _propAmounts = useCallback(
@@ -99,9 +93,9 @@ export function useExitMath() {
       let _bptIn: string
 
       if (isProportional) {
-        _bptIn = parseUnits(_propBptIn(bptOutPcnt), POOL_DECIMALS).toString()
+        _bptIn = parseUnits(_propBptIn(bptOutPcnt)).toString()
       } else if (!exactOut) {
-        _bptIn = parseUnits(_absMaxBpt, POOL_DECIMALS).toString()
+        _bptIn = parseUnits(_absMaxBpt).toString()
       } else {
         _bptIn =
           calculator

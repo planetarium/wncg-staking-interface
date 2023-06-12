@@ -8,7 +8,7 @@ import {
 import { useAtom } from 'jotai'
 
 import { slippageAtom } from 'states/system'
-import { MAX_SLIPPAGE } from 'config/misc'
+import { MAX_SLIPPAGE } from 'config/constants/liquidityPool'
 import { bnum } from 'utils/bnum'
 import { wait } from 'utils/wait'
 

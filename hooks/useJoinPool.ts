@@ -2,10 +2,15 @@ import { useContractWrite, usePrepareContractWrite } from 'wagmi'
 import { parseUnits } from 'ethers/lib/utils.js'
 
 import config from 'config'
-import { useAuth, useStaking, useSwitchNetwork } from 'hooks'
 
 import { BalancerVaultAbi } from 'config/abi'
-import { useJoinBuildRequest } from './useJoinBuildRequest'
+import {
+  useAuth,
+  useChain,
+  useJoinBuildRequest,
+  useStaking,
+  useSwitchNetwork,
+} from 'hooks'
 
 export function useJoinPool(
   assets: Hash[],
@@ -13,8 +18,12 @@ export function useJoinPool(
   hasNativeCurrency: boolean
 ) {
   const { account } = useAuth()
-  const { poolTokenDecimals, shouldReversePoolTokenOrderOnDisplay } =
-    useStaking()
+  const { chainId } = useChain()
+  const {
+    balancerGaugeAddress,
+    poolTokenDecimals,
+    shouldReversePoolTokenOrderOnDisplay,
+  } = useStaking<'ethereum'>()
   const { switchBeforeSend } = useSwitchNetwork()
 
   const request = useJoinBuildRequest({
@@ -26,11 +35,12 @@ export function useJoinPool(
 
   const baseTokenIndex = shouldReversePoolTokenOrderOnDisplay ? 0 : 1
 
+  // FIXME: network에 따라 달라짐
   const { config: writeConfig } = usePrepareContractWrite({
-    address: config.vault,
+    address: balancerGaugeAddress,
     abi: BalancerVaultAbi,
     args,
-    chainId: config.chainId,
+    chainId,
     functionName: 'joinPool',
     overrides: hasNativeCurrency
       ? {

@@ -1,9 +1,8 @@
 import { MouseEvent, useMemo } from 'react'
 import { UseFormSetValue, UseFormTrigger } from 'react-hook-form'
 
-import config from 'config'
 import { LiquidityFieldType } from 'config/constants'
-import { useStaking } from 'hooks'
+import { useChain, useStaking } from 'hooks'
 import { JoinFormFields } from 'hooks/useJoinForm'
 
 import { StyledJoinFormJoinFormEtherSelect } from './styled'
@@ -22,16 +21,17 @@ export default function JoinFormEtherSelect({
   setValue,
   trigger,
 }: JoinFormEtherSelectProps) {
-  const { tokenMap } = useStaking()
-  const wrappedToken = tokenMap[config.weth] ?? {}
+  const { nativeCurrency } = useChain()
+  const { tokens } = useStaking()
 
+  const wrappedToken = tokens[nativeCurrency.wrappedTokenAddress]
   const selectedToken = isNativeCurrency
-    ? config.nativeCurrency.symbol
+    ? nativeCurrency.symbol
     : wrappedToken.symbol
 
   const list = useMemo(
-    () => [config.nativeCurrency.symbol, wrappedToken.symbol],
-    [wrappedToken.symbol]
+    () => [nativeCurrency.symbol, wrappedToken.symbol],
+    [nativeCurrency.symbol, wrappedToken.symbol]
   )
 
   function onSelectEtherType(e: MouseEvent) {
@@ -39,7 +39,7 @@ export default function JoinFormEtherSelect({
 
     setValue(
       'isNativeCurrency',
-      symbol === config.nativeCurrency.symbol ? true : false
+      symbol === nativeCurrency.symbol ? true : false
     )
     setValue(name as 'TokenA' | 'TokenB', '')
     trigger()

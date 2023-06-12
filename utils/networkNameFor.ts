@@ -1,5 +1,5 @@
-import networkConfigs from 'config/networks'
+import { CHAINS } from 'config/chains'
 
-export function networkNameFor(network: Network): string {
-  return networkConfigs[network].shortName
+export function networkNameFor(chainId: ChainId): string {
+  return CHAINS[chainId].name
 }

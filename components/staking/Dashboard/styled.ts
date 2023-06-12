@@ -4,7 +4,7 @@ import styled, { css } from 'styled-components'
 import { fontFamily } from 'styles/constants/typography'
 import { flexbox, media, posCenterX, textStyle } from 'styles/utils'
 
-export const StyledStakingDashboard = styled(motion.section)`
+export const StyledStakingDashboard = styled.section`
   .imageContainer {
     ${flexbox('start', 'start')}
     width: 144px;
@@ -85,7 +85,7 @@ export const StyledStakingDashboard = styled(motion.section)`
   )}
 `
 
-export const StyledStakingDashboardApr = styled(motion.dl)<{
+export const StyledStakingDashboardApr = styled.dl<{
   $fallback?: boolean
 }>`
   .aprItem {

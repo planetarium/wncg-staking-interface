@@ -1,4 +1,4 @@
-import { DAY, MONTH, WEEK, YEAR } from 'config/misc'
+import { DAY, MONTH, WEEK, YEAR } from 'config/constants/time'
 import { assertUnreachable } from 'utils/assertUnreachable'
 
 export type Span = 'day' | 'week' | 'month' | 'year'

@@ -399,6 +399,18 @@ export const StyledPoolTokens = styled.div`
     flex-direction: column;
     width: 100%;
     margin-top: 8px;
+
+    &.reverse {
+      flex-direction: column-reverse;
+
+      .poolTokensItem {
+        margin-top: 8px !important;
+
+        &:last-child {
+          margin-top: 0 !important;
+        }
+      }
+    }
   }
 
   .poolTokensItem {
@@ -453,62 +465,54 @@ export const StyledPoolTokens = styled.div`
   }
 `
 
-export const StyledTokenIcon = styled.span<{ $size: number }>`
-  ${flexbox()}
+type StyledIconProps = {
+  $size: number
+}
+
+export const StyledTokenFragment = styled.div<StyledIconProps>`
+  ${inlineFlexbox()}
   flex-shrink: 0;
-  width: ${({ $size }) => `${$size}px`};
-  height: ${({ $size }) => `${$size}px`};
   overflow: hidden;
+  width: ${({ $size }) => $size}px;
+  height: ${({ $size }) => $size}px;
   border-radius: 50%;
 
-  &.placeholder {
-    background-color: var(--primary-500);
-  }
+  .icon {
+    width: ${({ $size }) => $size}px;
+    height: ${({ $size }) => $size}px;
 
-  img,
-  svg {
-    width: ${({ $size }) => `${$size}px`};
-    height: ${({ $size }) => `${$size}px`};
+    &.placeholder {
+      background-color: rgba(var(--gray-25-rgb), 0.4);
+    }
   }
 `
 
-export const StyledTokenIconGroup = styled.span<{
-  $size: number
-  $reverse: boolean
-}>`
-  ${inlineFlexbox('start')}
+export const StyledTokenIcon = styled.span<StyledIconProps>`
+  ${inlineFlexbox()}
   flex-shrink: 0;
+  overflow: hidden;
+  justify-content: flex-start;
+  min-width: ${({ $size }) => $size}px;
   height: ${({ $size }) => $size}px;
 
-  ${({ $reverse, $size }) =>
-    $reverse
-      ? css`
-          flex-direction: row-reverse;
+  .mainToken {
+    z-index: 2;
+  }
 
-          .icon {
-            position: relative;
-            margin-right: -${$size / 4}px;
+  .tokenFragment {
+    ${inlineFlexbox()}
+    flex-shrink: 0;
+    overflow: hidden;
 
-            &:first-child {
-              position: relative;
-              margin-right: 0;
-            }
+    &:not(:first-child) {
+      margin-left: -${({ $size }) => $size / 4}px;
+    }
 
-            &:last-child {
-              margin-left: 0 !important;
-            }
-          }
-        `
-      : css`
-          .icon {
-            margin-left: -${$size / 4}px;
-
-            &:first-child {
-              position: relative;
-              margin-left: 0 !important;
-            }
-          }
-        `}
+    &:first-child {
+      position: relative;
+      margin-left: 0 !important;
+    }
+  }
 `
 
 export const StyledTooltip = styled.p<{

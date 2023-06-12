@@ -3,14 +3,14 @@ import { useAtomValue } from 'jotai'
 
 import BigNumber from 'bignumber.js'
 
-import { slippageAtom } from 'states/userSettings'
+import { slippageAtom } from 'states/system'
 import { bnum } from 'utils/bnum'
 import { parseUnits } from 'utils/parseUnits'
 import { formatUnits } from 'utils/formatUnits'
 
 export function useSlippage() {
   const slippage = useAtomValue(slippageAtom)
-  const slippageBasisPoints = bnum(slippage || 0)
+  const slippageBasisPoints = bnum(slippage ?? 0)
     .div(100)
     .toNumber()
 

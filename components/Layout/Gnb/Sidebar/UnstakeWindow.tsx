@@ -23,7 +23,7 @@ type WalletUnstakeWindowProps = {
 export default function WalletUnstakeWindow({
   closeSidebar,
 }: WalletUnstakeWindowProps) {
-  const { cooldownPeriod } = useStaking()
+  const { cooldownSeconds } = useStaking()
 
   const cooldownWindow = useAtomValue(cooldownWindowAtom)
   const unstakeWindow = useAtomValue(withdrawWindowAtom)
@@ -72,7 +72,7 @@ export default function WalletUnstakeWindow({
   }
 
   const startsAt = cooldownWindow
-    ? unstakeTimestamps.cooldownEndsAt - cooldownPeriod
+    ? unstakeTimestamps.cooldownEndsAt - cooldownSeconds
     : unstakeTimestamps.cooldownEndsAt
 
   const endsAt = cooldownWindow

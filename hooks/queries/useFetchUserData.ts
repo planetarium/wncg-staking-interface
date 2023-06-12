@@ -2,22 +2,23 @@ import { useSetAtom } from 'jotai'
 import { useQuery } from '@tanstack/react-query'
 
 import { unstakeTimestampsAtom } from 'states/account'
-import { queryKeys } from 'config/queryKeys'
+import { QUERY_KEYS } from 'config/constants/queryKeys'
 import { fetchUserData } from 'lib/queries/fetchUserData'
-import { useAuth } from 'hooks'
+import { useAuth, useChain } from 'hooks'
 
 export function useFetchUserData(options: UseFetchOptions = {}) {
-  const { enabled: _enabled = true, refetchInterval, suspense = true } = options
+  const { enabled: _enabled = true, refetchInterval, suspense } = options
 
   const { account, isConnected } = useAuth()
+  const { chainId } = useChain()
 
   const setUnstakeTimestamps = useSetAtom(unstakeTimestampsAtom)
 
   const enabled = _enabled && !!account && !!isConnected
 
-  return useQuery<UserDataResponse>(
-    [queryKeys.User.Data, account!],
-    () => fetchUserData(account!),
+  return useQuery(
+    [QUERY_KEYS.User.Data, account!, chainId],
+    () => fetchUserData(chainId, account!),
     {
       enabled,
       staleTime: Infinity,
@@ -27,15 +28,8 @@ export function useFetchUserData(options: UseFetchOptions = {}) {
       suspense,
       useErrorBoundary: false,
       onSuccess(data) {
-        if (!data) return
-
-        const { cooldownEndsAt, withdrawEndsAt, cooldowns } = data
-
-        setUnstakeTimestamps({
-          cooldownEndsAt,
-          withdrawEndsAt,
-          cooldowns,
-        })
+        const { stakedTokenBalance, ...rest } = data
+        setUnstakeTimestamps(rest)
       },
     }
   )

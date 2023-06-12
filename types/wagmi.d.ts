@@ -89,7 +89,8 @@ type NetworkConfig = {
   explorer: string
   explorerName: string
   rpcUrl: string
-  subgraph: string
+  subgraph?: string
+  platform: string
   nativeCurrency: {
     name: string
     address: Hash

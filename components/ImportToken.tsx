@@ -2,7 +2,8 @@ import { MouseEvent, useCallback, useMemo } from 'react'
 
 import config from 'config'
 import { ConnectorId } from 'config/constants'
-import { useAuth, useStaking } from 'hooks'
+import { isEthereum } from 'utils/isEthereum'
+import { useAuth, useChain, useStaking } from 'hooks'
 
 import { StyledImportToken } from './styled'
 import ConnectorIcon from './ConnectorIcon'
@@ -25,31 +26,39 @@ export default function ImportToken({
   $contain = false,
 }: ImportTokenProps) {
   const { connector, isConnected } = useAuth()
-  const { bptName, bptSymbol, stakedTokenAddress, tokenMap } = useStaking()
+  const { chainId } = useChain()
+  const { lpToken, tokens } = useStaking()
 
-  const importTokenConfig = useMemo(() => {
-    if (address === stakedTokenAddress) {
-      return {
-        ...tokenMap[stakedTokenAddress],
-        name: bptName,
-        symbol: bptSymbol,
-      }
+  const importOptions = useMemo(() => {
+    if (address === lpToken.address) {
+      const { totalSupply, ...rest } = lpToken
+      return rest
     }
 
     return {
-      ...tokenMap[address],
-      name: tokenMap[address].symbol,
+      ...tokens[address],
+      name: tokens[address].symbol,
     }
-  }, [address, bptName, bptSymbol, stakedTokenAddress, tokenMap])
+  }, [address, lpToken, tokens])
 
-  name =
-    name ?? address === config.bal
-      ? importTokenConfig.symbol
-      : importTokenConfig.name
+  const labelSymbol = useMemo(
+    () =>
+      address === lpToken.address && isEthereum(chainId)
+        ? importOptions.name
+        : importOptions.symbol,
+    [
+      address,
+      chainId,
+      importOptions.name,
+      importOptions.symbol,
+      lpToken.address,
+    ]
+  )
 
-  const canImportToken = useMemo(() => {
+  const importDisabled = useMemo(() => {
     if (typeof window === 'undefined') return false
     if (address.toLowerCase() === config.nativeCurrency.address) return false
+    if (!isConnected) return false
 
     switch (true) {
       case window?.ethereum?.isMetaMask &&
@@ -62,51 +71,46 @@ export default function ImportToken({
       default:
         return false
     }
-  }, [address, connector?.id])
+  }, [address, connector?.id, isConnected])
 
-  const importToken = useCallback(
+  const onImportToken = useCallback(
     async (e: MouseEvent<HTMLButtonElement>) => {
       e.stopPropagation()
-
-      if (!canImportToken) return
+      if (!importDisabled) return
 
       try {
         await (window.ethereum as Ethereum).request({
           method: 'wallet_watchAsset' as any,
           params: {
             type: 'ERC20',
-            options: {
-              ...importTokenConfig,
-            },
-          } as any,
+            options: importOptions,
+          },
         })
       } catch (error) {
         console.log(error)
       }
     },
-    [canImportToken, importTokenConfig]
+    [importDisabled, importOptions]
   )
 
-  if (!canImportToken || !isConnected) return null
-
-  const iconSize = $size === 'sm' ? 16 : 32
+  if (!importDisabled) return null
 
   return (
     <StyledImportToken
       className={className}
-      onClick={importToken}
+      onClick={onImportToken}
       $variant={$variant}
       $size={$size}
       $contain={$contain}
     >
       <span className="label">
-        Import <strong>{name} token</strong>
+        Import <strong>{labelSymbol} token</strong>
       </span>
 
       <span className="rightIcon">
         <ConnectorIcon
           icon={connector!.id as ConnectorIconType}
-          $size={iconSize}
+          $size={$size === 'sm' ? 16 : 32}
         />
       </span>
     </StyledImportToken>

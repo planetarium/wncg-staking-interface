@@ -1,39 +1,31 @@
 import { useQuery } from '@tanstack/react-query'
 
-import { queryKeys } from 'config/queryKeys'
+import { QUERY_KEYS } from 'config/constants/queryKeys'
 import { fetchUserBalances } from 'lib/queries/fetchUserBalances'
-import { useAuth, useStaking } from 'hooks'
-import { formatUnits } from 'utils/formatUnits'
+import { useAuth, useChain, useStaking } from 'hooks'
 
 export function useFetchUserBalances(options: UseFetchOptions = {}) {
-  const {
-    enabled = true,
-    refetchInterval,
-    refetchOnWindowFocus = 'always',
-  } = options
+  const { enabled = true, refetchInterval, refetchOnWindowFocus } = options
 
   const { account } = useAuth()
-  const { stakedTokenAddress, poolTokenAddresses, tokenMap } = useStaking()
+  const { chainId } = useChain()
+  const { lpToken, poolTokenAddresses } = useStaking()
 
   const shouldFetch = enabled && !!account
 
   return useQuery<RawBalanceMap>(
-    [queryKeys.User.Balances, account],
+    [QUERY_KEYS.User.Balances, account, chainId],
     () =>
-      fetchUserBalances(account!, stakedTokenAddress, ...poolTokenAddresses),
+      fetchUserBalances(chainId, account!, [
+        lpToken.address,
+        ...poolTokenAddresses,
+      ]),
     {
       enabled: shouldFetch,
       staleTime: Infinity,
       refetchInterval,
       refetchOnWindowFocus,
-      select(data) {
-        const entries = Object.entries(data).map(([addr, balance]) => {
-          const { decimals = 18 } = tokenMap[addr as Hash] ?? {}
-          return [addr, formatUnits(balance ?? '0', decimals)]
-        })
-        return Object.fromEntries(entries)
-      },
-      suspense: false,
+      suspense: true,
     }
   )
 }

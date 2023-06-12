@@ -3,8 +3,7 @@ import type { UseFormSetValue, UseFormStateReturn } from 'react-hook-form'
 import { AnimatePresence } from 'framer-motion'
 
 import { LiquidityFieldType } from 'config/constants'
-import { EXIT_MOTION } from 'config/motions'
-import { slideInDown } from 'constants/motionVariants'
+import { ANIMATION_MAP, EXIT_MOTION } from 'config/constants/motions'
 import { bnum } from 'utils/bnum'
 import { useStaking, useJoinMath } from 'hooks'
 
@@ -29,7 +28,7 @@ function JoinFormProportionalGuideBanner({
   formState,
   setValue,
 }: JoinFormProportionalGuideBannerProps) {
-  const { tokenMap } = useStaking()
+  const { tokens } = useStaking()
   const { calcPropAmount } = useJoinMath()
 
   const singleSidedFieldIndex = joinAmounts.findIndex((amount, i) => {
@@ -42,9 +41,9 @@ function JoinFormProportionalGuideBanner({
     : '0'
 
   const selectedTokenAddress = assets[singleSidedFieldIndex]
-  const selectedToken = tokenMap[selectedTokenAddress] ?? {}
+  const selectedToken = tokens[selectedTokenAddress] ?? {}
   const subjectTokenAddress = assets[1 - singleSidedFieldIndex]
-  const subjectToken = tokenMap[subjectTokenAddress] ?? {}
+  const subjectToken = tokens[subjectTokenAddress] ?? {}
 
   function handleAdd() {
     const fieldType =
@@ -67,7 +66,7 @@ function JoinFormProportionalGuideBanner({
         <StyledJoinFormProportionalGuideBanner
           {...EXIT_MOTION}
           className="joinFormProportionalGuide"
-          variants={slideInDown}
+          variants={ANIMATION_MAP.slideInDown}
         >
           <h4 className="title">
             <Icon icon="star" />

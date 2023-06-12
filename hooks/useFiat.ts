@@ -1,11 +1,13 @@
 import { useCallback } from 'react'
-import { useAtomValue } from 'jotai'
 
-import { priceMapAtom } from 'states/system'
 import { bnum } from 'utils/bnum'
+import { useFetchPrices } from './queries'
+import { useStaking } from './useStaking'
 
 export function useFiat() {
-  const priceMap = useAtomValue(priceMapAtom)
+  const { priceMap: initPriceMap } = useStaking()
+
+  const { data: priceMap = initPriceMap } = useFetchPrices()
 
   const toFiat = useCallback(
     (amount: string | number, tokenAddress: string) => {

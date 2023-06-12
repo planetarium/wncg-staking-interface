@@ -2,6 +2,8 @@ type FiatPrice = {
   usd: number
 }
 
+type PriceResponse = { [id: string]: FiatPrice }
+
 type RawPriceMap = { [address: Hash]: string | null }
 type PriceMap = { [address: Hash]: string }
 
@@ -16,17 +18,22 @@ type PoolToken = {
 
 type PoolAction = 'join' | 'exit'
 
+type SerializedPool = {
+  address: string
+  symbol: stirng
+  name: string
+  totalShares: string
+  totalSwapFee: string
+  tokens: PoolToken[]
+}
+
 type Pool = {
   bptAddress: Hash
   bptTotalSupply: string
   bptSymbol: string
   bptName: string
   bptDecimals: number
-  poolId: string
-  poolSwapFee: string
-  poolTotalLiquidity: string
-  poolTotalSwapVolume: string
-  poolTotalSwapFee: string
+
   poolTokens: PoolToken[]
   poolTokenAddresses: Hash[]
   poolTokenBalances: string[]
@@ -37,62 +44,46 @@ type Pool = {
   shouldReversePoolTokenOrderOnDisplay: boolean
 }
 
-type UnserializedStakingResponse = [
-  BigNumber,
-  BigNumber,
-  Hash,
-  Hash,
-  Hash,
-  Hash,
-  BigNumber,
-  BigNumber,
-  BigNumber,
-  BigNumber,
-  BigNumber
-]
+type LiquidityPool = {
+  lpToken: {
+    address: Hash
+    decimals: number
+    name: string
+    symbol: string
+    totalSupply: string
+  }
 
-type PriceResponse = { [id: string]: FiatPrice }
+  poolTokens: PoolToken[]
 
-type PoolResponse = {
-  id: string
-  address: string
-  createTime: number
-  factory: string
-  symbol: stirng
-  name: string
-  swapFee: string
-  owner: string
-  totalLiquidity: string
-  totalShares: string
+  poolTokenAddresses: Hash[]
+  poolTokenBalances: string[]
+  poolTokenDecimals: decimals[]
+  poolTokenSymbols: string[]
+  poolTokenWeights: string[]
+  poolTokenWeightsInPcnt: number[]
+
   totalSwapFee: string
-  totalSwapVolume: string
-  tokens: PoolToken[]
-  tokensList: string[]
+  shouldReversePoolTokenOrderOnDisplay: stboodlring
 }
 
-type StakingResponse = {
-  cooldownPeriod: number
-  earmarkIncentivePcnt: number
-  balRewardPoolAddress: Hash
-  liquidityGaugeAddress: Hash
-  rewardEmissions: string[]
-  rewardTokenAddress: Hash
+type Staking = {
+  cooldownSeconds: number
+  rewardEmissionsPerSec: string[]
   rewardTokenAddresses: Hash[]
-  stakedTokenAddress: Hash
-  unstakePeriod: number
+  withdrawSeconds: number
   totalStaked: string
 }
 
-type BuildResponse = {
-  tokenMap: TokenMap
-  pool: PoolResponse
-} & Pool &
-  StakingResponse
+type EthereumStaking = Staking & {
+  balancerGaugeAddress: Hash
+  balRewardPoolAddress: Hash
+  earmarkIncentivePcnt: number
+}
 
 type UserDataResponse = {
   cooldownEndsAt: number
   cooldowns: number
-  earnedRewards: string[]
+  earnedTokenRewards: string[]
   stakedTokenBalance: string
   withdrawEndsAt: number
   hasRewards: boolena

@@ -28,7 +28,7 @@ function JoinFormHeader({
   setFocusedElement,
 }: JoinFormHeaderProps) {
   const { isConnected } = useAuth()
-  const { bptName, stakedTokenAddress } = useStaking()
+  const { lpToken } = useStaking()
 
   const tx = useAtomValue(joinTxAtom)
 
@@ -40,7 +40,7 @@ function JoinFormHeader({
   return (
     <StyledJoinFormHeader className="joinFormHeader" $disabled={!isConnected}>
       <h3 className="title">
-        <TokenIcon address={stakedTokenAddress} $size={24} />
+        <TokenIcon address={lpToken.address} $size={24} />
         Join pool
       </h3>
 
@@ -56,7 +56,7 @@ function JoinFormHeader({
             Optimize{optimized ? 'd' : ''}
           </Button>
           <Tooltip
-            message={`Join ${bptName} pool with the optimized ratio`}
+            message={`Join ${lpToken.name} pool with the optimized ratio`}
             $noWrap
             $direction="bottom"
           />

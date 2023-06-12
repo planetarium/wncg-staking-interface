@@ -2,11 +2,10 @@ import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 
 import { ModalType } from 'config/constants'
-import { EXIT_MOTION } from 'config/motions'
-import { fadeIn } from 'config/motionVariants'
+import { ANIMATION_MAP, EXIT_MOTION } from 'config/constants/motions'
 import { bnum } from 'utils/bnum'
 import { useFiat, useModal, useStaking } from 'hooks'
-import { useFetchUserData } from 'hooks/queries'
+import { useFetchUserRewards } from 'hooks/queries'
 
 import { StyledWalletRewards } from './styled'
 import Button from 'components/Button'
@@ -23,10 +22,10 @@ export default function WalletRewards({ closeWallet }: WalletRewardsProps) {
 
   const toFiat = useFiat()
   const { addModal } = useModal()
-  const { rewardTokenAddresses, tokenMap } = useStaking()
+  const { rewardTokenAddresses, tokens } = useStaking()
 
-  const { earnedRewards = [], hasRewards = false } =
-    useFetchUserData().data ?? {}
+  const { earnedTokenRewards = [], hasRewards = false } =
+    useFetchUserRewards().data ?? {}
 
   function toggle() {
     setShow((prev) => !prev)
@@ -48,11 +47,14 @@ export default function WalletRewards({ closeWallet }: WalletRewardsProps) {
 
       <AnimatePresence>
         {show && (
-          <motion.dl {...EXIT_MOTION} className="rewardList" variants={fadeIn}>
+          <motion.dl
+            {...EXIT_MOTION}
+            className="rewardList"
+            variants={ANIMATION_MAP.fadeIn}
+          >
             {rewardTokenAddresses.map((addr, i) => {
-              const amount = earnedRewards[i]
+              const amount = earnedTokenRewards[i]
               const fiatValue = toFiat(amount, addr)
-              const { symbol = '' } = tokenMap[addr] ?? {}
 
               const showFiatValue = bnum(amount).gt(0)
 
@@ -61,7 +63,7 @@ export default function WalletRewards({ closeWallet }: WalletRewardsProps) {
                   className="rewardItem"
                   key={`gnb:myStaking:walletStaking:${addr}`}
                 >
-                  <dt>{symbol}</dt>
+                  <dt>{tokens[addr]?.symbol}</dt>
                   <dd>
                     <CountUp value={amount} plus={showFiatValue} />
                     {showFiatValue && (

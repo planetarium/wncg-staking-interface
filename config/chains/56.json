@@ -1,0 +1,28 @@
+{
+  "id": 56,
+  "network": "bsc",
+  "assetPlatform": "binance-smart-chain",
+  "chainId": 56,
+  "chainName": "Binance Smart Chain",
+  "explorer": "https://bscscan.com",
+  "explorerName": "BscScan",
+  "name": "BNB Smart Chain",
+  "rpcUrl": "https://bsc-dataseed.binance.org",
+  "rpcUrls": {
+    "default": {
+      "http": ["https://bsc-dataseed.binance.org"]
+    },
+    "public": {
+      "http": ["https://bsc-dataseed.binance.org"]
+    }
+  },
+  "shortName": "BSC Mainnet",
+  "nativeCurrency": {
+    "name": "Binance Chain Native Token",
+    "address": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+    "symbol": "BNB",
+    "decimals": 18,
+    "coingeckoId": "binancecoin",
+    "wrappedTokenAddress": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c"
+  }
+}

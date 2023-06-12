@@ -43,13 +43,13 @@ function ExitModalPage1Step2PropExit({
   hash,
 }: ExitModalPage1Step2PropExitProps) {
   const balanceOf = useBalances()
-  const { stakedTokenAddress } = useStaking()
   const { isMobile } = useResponsive()
+  const { lpToken } = useStaking()
 
   const bptOutPcnt = watch(LiquidityFieldType.LiquidityPercent)
 
-  const bptBalance = balanceOf(stakedTokenAddress)
-  const bptOutAmount = bnum(bptBalance).times(bptOutPcnt).div(100).toString()
+  const lpBalance = balanceOf(lpToken.address)
+  const bptOutAmount = bnum(lpBalance).times(bptOutPcnt).div(100).toString()
 
   const disabled = !!hash
 
@@ -78,7 +78,7 @@ function ExitModalPage1Step2PropExit({
 
             <NumberFormat
               className="totalBalance"
-              value={bptBalance}
+              value={lpBalance}
               prefix="My total balance : "
               symbol="LP"
               parenthesis

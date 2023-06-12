@@ -4,9 +4,8 @@ import { AnimatePresence } from 'framer-motion'
 
 import config from 'config'
 import { LiquidityFieldType } from 'config/constants'
-import { BASE_GAS_FEE } from 'config/misc'
-import { EXIT_MOTION } from 'config/motions'
-import { slideInDown } from 'config/motionVariants'
+import { BASE_GAS_FEE } from 'config/constants/liquidityPool'
+import { ANIMATION_MAP, EXIT_MOTION } from 'config/constants/motions'
 import { bnum } from 'utils/bnum'
 import { useBalances, useJoinMath } from 'hooks'
 import { JoinFormFocusedElement, JoinFormFields } from 'hooks/useJoinForm'
@@ -26,7 +25,7 @@ type JoinFormNoticeProps = {
 
 const motionVariants = {
   ...EXIT_MOTION,
-  variants: slideInDown,
+  variants: ANIMATION_MAP.slideInDown,
   transition: {
     duration: 0.2,
   },

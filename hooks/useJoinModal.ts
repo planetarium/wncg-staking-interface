@@ -2,7 +2,6 @@ import { useMemo } from 'react'
 import { useSetAtom } from 'jotai'
 
 import { showPoolAtom } from 'states/ui'
-import config from 'config'
 import { ModalType } from 'config/constants'
 import { bnum } from 'utils/bnum'
 import { useAllowances, useModal, useResponsive, useStaking } from 'hooks'
@@ -11,7 +10,7 @@ type OpenJoinParams = {
   assets: Hash[]
   joinAmounts: string[]
   joinAmountsInFiatValue: string[]
-  bptBalance: string
+  lpBalance: string
   totalJoinFiatValue: string
   resetForm(): void
 }
@@ -20,21 +19,21 @@ export function useJoinModal(assets: Hash[], joinAmounts: string[]) {
   const allowanceFor = useAllowances()
   const { addModal } = useModal()
   const { isMobile } = useResponsive()
-  const { tokenMap } = useStaking()
+  const { tokens, balancerGaugeAddress } = useStaking<'ethereum'>()
 
   const setShowPool = useSetAtom(showPoolAtom)
 
   const shouldApprove = useMemo(
     () =>
       assets.filter((addr, i) => {
-        return bnum(allowanceFor(addr, config.vault)).lt(joinAmounts[i])
+        return bnum(allowanceFor(addr, balancerGaugeAddress)).lt(joinAmounts[i])
       }),
-    [allowanceFor, assets, joinAmounts]
+    [allowanceFor, assets, balancerGaugeAddress, joinAmounts]
   )
 
   const tokensToApprove = useMemo(
-    () => shouldApprove.map((addr) => tokenMap[addr]),
-    [shouldApprove, tokenMap]
+    () => shouldApprove.map((addr) => tokens[addr]),
+    [shouldApprove, tokens]
   )
 
   function openJoin(params: OpenJoinParams) {
@@ -57,7 +56,7 @@ export function useJoinModal(assets: Hash[], joinAmounts: string[]) {
     addModal({
       type: ModalType.Approve,
       props: {
-        spender: config.vault,
+        spender: balancerGaugeAddress,
         spenderName: 'join pool',
         tokenAddress: tokensToApprove[0].address,
         tokenSymbol: tokensToApprove[0].symbol,
@@ -72,7 +71,7 @@ export function useJoinModal(assets: Hash[], joinAmounts: string[]) {
           ? {
               type: ModalType.Approve,
               props: {
-                spender: config.vault,
+                spender: balancerGaugeAddress,
                 spenderName: 'join pool',
                 buttonLabel: 'Join pool',
                 toastLabel: 'join pool',

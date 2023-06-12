@@ -24,7 +24,7 @@ import Header from './Header'
 function JoinForm() {
   const { account, prevAccount } = useAuth()
   const balanceOf = useBalances()
-  const { stakedTokenAddress } = useStaking()
+  const { lpToken } = useStaking()
 
   const { refetch } = useFetchUserAllowances()
 
@@ -60,7 +60,7 @@ function JoinForm() {
       joinAmounts,
       joinAmountsInFiatValue,
       totalJoinFiatValue,
-      bptBalance: balanceOf(stakedTokenAddress),
+      lpBalance: balanceOf(lpToken.address),
       resetForm: resetFields,
     })
   }

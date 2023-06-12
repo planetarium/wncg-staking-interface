@@ -1,7 +1,6 @@
 import { AnimatePresence } from 'framer-motion'
 
-import { EXIT_MOTION } from 'config/motions'
-import { slideInDown } from 'config/motionVariants'
+import { ANIMATION_MAP, EXIT_MOTION } from 'config/constants/motions'
 import type { JoinFormFocusedElement } from 'hooks/useJoinForm'
 
 import { StyledJoinFormOptimizedBanner } from './styled'
@@ -24,7 +23,7 @@ export default function JoinFormOptimizedBanner({
         <StyledJoinFormOptimizedBanner
           {...EXIT_MOTION}
           layout
-          variants={slideInDown}
+          variants={ANIMATION_MAP.slideInDown}
         >
           <span className="title">
             Optimized

@@ -34,14 +34,6 @@ export const ModalType = {
 
 export type ModalType = (typeof ModalType)[keyof typeof ModalType]
 
-export const Network = {
-  MAINNET: 1,
-  GOERLI: 5,
-  GÖRLI: 5,
-} as const
-
-export type Network = (typeof Network)[keyof typeof Network]
-
 export const ToastType = {
   Approve: 'Approve',
   Claim: 'Claim',

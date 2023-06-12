@@ -1,57 +1,75 @@
 import axios, { AxiosResponse } from 'axios'
 
-import config from 'config'
 import { apiKeys, baseUrls } from 'config/api'
-import { convertAddress } from 'utils/convertAddress'
-import { parseTokenPrices } from 'utils/parseTokenPrices'
-import { uniqAddress } from 'utils/uniqAddress'
+import { CHAINS } from 'config/chains'
+import { getPricingAsset } from 'utils/getPricingAsset'
+import { platformIdFor } from 'utils/platformIdFor'
 
 const FIAT_CURRENCY = 'usd'
-const isProd = config.env === 'production'
 
-const client = axios.create({
-  baseURL: isProd ? baseUrls.coingeckoPro : baseUrls.coingecko,
-  headers: isProd
-    ? {
-        'x-cg-pro-api-key': apiKeys.coingecko,
-      }
-    : undefined,
+const coingeckoClient = axios.create({
+  baseURL: baseUrls.coingeckoPro,
+  headers: {
+    'x-cg-pro-api-key': apiKeys.coingecko,
+  },
 })
 
-async function fetchErcTokenPrices(addresses: Hash[]): Promise<PriceMap> {
+async function fetchErcTokenPrices(
+  chainId: ChainId,
+  addresses: Hash[]
+): Promise<PriceMap> {
   const requests: Promise<AxiosResponse<PriceResponse, any>>[] = []
-  const { platformId } = config.nativeCurrency.coingecko
+  const platformId = platformIdFor(chainId)
 
-  addresses.forEach((_address) => {
-    const address = convertAddress(_address)
-    const endpoint = `/simple/token_price/${platformId}?contract_addresses=${address}&vs_currencies=${FIAT_CURRENCY}`
-    const request = client.get<PriceResponse>(endpoint)
+  addresses.forEach((addr) => {
+    const asset = getPricingAsset(chainId, addr)
+    const endpoint = `/simple/token_price/${platformId}?contract_addresses=${asset}&vs_currencies=${FIAT_CURRENCY}`
+    const request = coingeckoClient.get<PriceResponse>(endpoint)
+
     requests.push(request)
   })
 
-  const responses = await Promise.all(requests)
+  try {
+    const responses = await Promise.all(requests)
 
-  return parseTokenPrices(responses, addresses)
-}
+    const priceDataList: [Hash, string][] = responses
+      .map((r) => r.data)
+      .map((price, i) => {
+        const address = addresses[i]
+        const pricingAsset = getPricingAsset(chainId, address)
 
-async function fetchNativeTokenPrice(): Promise<PriceMap> {
-  const { id } = config.nativeCurrency.coingecko
-  const endpoint = `/simple/price?ids=${id}&vs_currencies=${FIAT_CURRENCY}`
+        return [address, price[pricingAsset]?.usd?.toString() ?? '0']
+      })
 
-  const response = await client.get<PriceResponse>(endpoint)
-
-  return {
-    [config.nativeCurrency.address]:
-      response?.data?.[id]?.[FIAT_CURRENCY]?.toString() ?? '0',
+    return Object.fromEntries(priceDataList)
+  } catch (error: any) {
+    throw error
   }
 }
 
-export async function fetchPrices(...args: Hash[]): Promise<PriceMap> {
-  const addresses = uniqAddress(args)
+async function fetchNativeTokenPrice(chainId: ChainId): Promise<PriceMap> {
+  const { nativeCurrency } = CHAINS[chainId]
+  const { address, coingeckoId } = nativeCurrency
 
+  const endpoint = `/simple/price?ids=${coingeckoId}&vs_currencies=${FIAT_CURRENCY}`
+
+  const response = await coingeckoClient.get<PriceResponse>(endpoint)
+
+  return {
+    [address.toLowerCase()]:
+      response?.data?.[coingeckoId]?.[FIAT_CURRENCY]?.toString() ?? '0',
+  }
+}
+
+export async function fetchPrices(
+  chainId: ChainId,
+  addresses: Hash[]
+): Promise<PriceMap> {
   try {
-    const requests = [fetchNativeTokenPrice(), fetchErcTokenPrices(addresses)]
-
+    const requests = [
+      fetchNativeTokenPrice(chainId),
+      fetchErcTokenPrices(chainId, addresses),
+    ]
     const responses = await Promise.all(requests)
 
     return Object.fromEntries(

@@ -2,31 +2,29 @@ import { useCallback } from 'react'
 import { parseUnits } from 'ethers/lib/utils.js'
 import { useContractWrite, usePrepareContractWrite } from 'wagmi'
 
-import config from 'config'
-import { StakingAbi } from 'config/abi'
+import { StakingEthereumAbi } from 'config/abi'
 import { bnum } from 'utils/bnum'
 import { safeBigNumber } from 'utils/safeBigNumber'
-import { useAuth, useStaking, useSwitchNetwork } from 'hooks'
+import { useAuth, useChain, useStaking, useSwitchNetwork } from 'hooks'
 
 export function useUnstake(unstakeAmount: string, checked: boolean) {
   const { account } = useAuth()
-  const { stakedTokenAddress, tokenMap } = useStaking()
+  const { chainId, stakingAddress } = useChain()
+  const { lpToken } = useStaking()
 
   const { switchBeforeSend } = useSwitchNetwork()
 
-  const stakedToken = tokenMap[stakedTokenAddress]
-
   const scaledUnstakeAmount = safeBigNumber(
-    parseUnits(bnum(unstakeAmount).toString(), stakedToken.decimals).toString()
+    parseUnits(bnum(unstakeAmount).toString(), lpToken.decimals).toString()
   ).toString()
 
   const enabled =
     !!account && bnum(unstakeAmount).gt(0) && !bnum(unstakeAmount).isNaN()
 
   const { config: writeConfig } = usePrepareContractWrite({
-    address: config.stakingAddress,
-    chainId: config.chainId,
-    abi: StakingAbi,
+    address: stakingAddress,
+    chainId,
+    abi: StakingEthereumAbi,
     args: [scaledUnstakeAmount, checked],
     functionName: 'withdraw',
     enabled,

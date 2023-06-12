@@ -1,0 +1,7 @@
+{
+  "chainId": 56,
+  "network": "bsc",
+  "dexPlatform": "pancakeswap",
+  "dexPoolId": "0x9c07bbdd045c24a619d568f7e28c1d2f6cb59804",
+  "dexPlatformUrl": "https://pancakeswap.finance"
+}

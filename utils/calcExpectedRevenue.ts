@@ -17,14 +17,14 @@ export type ExpectedRevenueMap = {
 export function calcExpectedRevenue(
   amount: string,
   apr: string,
-  bptPrice: string,
+  lpTokenPrice: string,
   tokenPrice: string
 ): ExpectedRevenueMap {
   const entries = Object.entries(PERIOD_MAP).map(([span, rate]) => {
     const revenue = bnum(amount)
       .times(apr)
       .times(rate)
-      .times(bptPrice)
+      .times(lpTokenPrice)
       .div(tokenPrice)
       .div(100)
       .toString()

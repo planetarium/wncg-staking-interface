@@ -2,11 +2,10 @@ import { MouseEvent, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 
 import { ModalType } from 'config/constants'
-import { EXIT_MOTION } from 'config/motions'
-import { slideInDown } from 'config/motionVariants'
+import { ANIMATION_MAP, EXIT_MOTION } from 'config/constants/motions'
 import { bnum } from 'utils/bnum'
 import { useFiat, useModal, useStaking } from 'hooks'
-import { useFetchUserData } from 'hooks/queries'
+import { useFetchUserRewards } from 'hooks/queries'
 
 import { StyledSidebarRewards } from './styled'
 import Button from 'components/Button'
@@ -24,16 +23,16 @@ export default function SidebarRewards({ closeSidebar }: SidebarRewardsProps) {
 
   const toFiat = useFiat()
   const { addModal } = useModal()
-  const { rewardTokenAddresses, tokenMap } = useStaking()
+  const { rewardTokenAddresses, tokens } = useStaking()
 
-  const { earnedRewards = [] } = useFetchUserData().data ?? {}
-  const earnedTokenRewardsFiatValue = earnedRewards
-    .reduce((acc, r, i) => {
-      return acc.plus(toFiat(r, rewardTokenAddresses[i]))
+  const { earnedTokenRewards = [] } = useFetchUserRewards().data ?? {}
+  const earnedTokenRewardsFiatValue = earnedTokenRewards
+    .reduce((acc, amt, i) => {
+      return acc.plus(toFiat(amt, rewardTokenAddresses[i]))
     }, bnum(0))
     .toString()
 
-  const hasClaimableRewards = earnedRewards.some((r) => bnum(r).gt(0))
+  const hasClaimableRewards = earnedTokenRewards.some((r) => bnum(r).gt(0))
 
   function toggle() {
     setShow((prev) => !prev)
@@ -62,12 +61,12 @@ export default function SidebarRewards({ closeSidebar }: SidebarRewardsProps) {
           <motion.div
             className="content"
             {...EXIT_MOTION}
-            variants={slideInDown}
+            variants={ANIMATION_MAP.slideInDown}
           >
             <dl className="detailList">
-              {earnedRewards.map((reward, i) => {
+              {earnedTokenRewards.map((reward, i) => {
                 const address = rewardTokenAddresses[i]
-                const { symbol = '' } = tokenMap[address] ?? {}
+                const symbol = tokens[address]?.symbol
                 const fiatValue = toFiat(reward, address)
 
                 return (

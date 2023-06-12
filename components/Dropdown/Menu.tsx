@@ -1,12 +1,11 @@
 import { MouseEvent as ReactMouseEvent, useRef } from 'react'
 import clsx from 'clsx'
 
-import { slideInDown } from 'constants/motionVariants'
+import { ANIMATION_MAP, EXIT_MOTION } from 'config/constants/motions'
 
 import { StyledDropdownMenu } from './styled'
 import Icon from 'components/Icon'
 import { useCloseOnBlur } from 'hooks'
-import { EXIT_MOTION } from 'config/motions'
 
 type DropdownMenuProps = {
   closeMenu(): void
@@ -42,7 +41,7 @@ function DropdownMenu({
       className="dropdownMenu"
       ref={menuRef}
       {...EXIT_MOTION}
-      variants={slideInDown}
+      variants={ANIMATION_MAP.slideInDown}
       aria-labelledby={id}
       aria-orientation="vertical"
       role="menu"

@@ -1,4 +1,4 @@
-import networks from 'config/networks'
+import { CHAINS } from 'config/chains'
 
 class ConfigService {
   get assetPlatform() {
@@ -7,10 +7,6 @@ class ConfigService {
 
   get appName() {
     return `WNCG Staking`
-  }
-
-  get bal() {
-    return (this.network.addresses.bal?.toLowerCase() ?? '') as Hash
   }
 
   get baseUrl() {
@@ -26,7 +22,7 @@ class ConfigService {
   }
 
   get chainId() {
-    return (Number(process.env.NEXT_PUBLIC_CHAIN_ID) ?? 1) as Network
+    return (Number(process.env.NEXT_PUBLIC_CHAIN_ID) ?? 1) as ChainId
   }
 
   get dexPlatformName() {
@@ -86,11 +82,6 @@ class ConfigService {
     }
   }
 
-  get multicallContract() {
-    return '0xcA11bde05977b3631167028862bE2a173976CA11' // Universal
-      .toLowerCase() as Hash
-  }
-
   get nativeCurrency() {
     return {
       ...this.network.nativeCurrency,
@@ -99,7 +90,7 @@ class ConfigService {
   }
 
   get network() {
-    return networks[this.chainId]
+    return CHAINS[this.chainId]
   }
 
   get poolId() {
@@ -125,19 +116,8 @@ class ConfigService {
     return this.network.subgraph
   }
 
-  get usdt() {
-    return (this.network.addresses.usdt?.toLowerCase() ?? '') as Hash
-  }
-
-  get weth() {
-    return (this.network.addresses.weth?.toLowerCase() ?? '') as Hash
-  }
-
-  get vault() {
-    return (
-      process.env.NEXT_PUBLIC_VAULT_ADDRESS ??
-      '0xBA12222222228d8Ba445958a75a0704d566BF2C8'
-    ).toLowerCase() as Hash
+  get wrapped() {
+    return '0x'
   }
 
   get version() {
@@ -146,10 +126,6 @@ class ConfigService {
 
   get walletConnectProjectId() {
     return process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID
-  }
-
-  get zeroAddress(): Hash {
-    return `0x0000000000000000000000000000000000000000`
   }
 }
 

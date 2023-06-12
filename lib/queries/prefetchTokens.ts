@@ -1,42 +1,53 @@
 import { fetchToken } from '@wagmi/core'
 
-import config from 'config'
+import { CHAINS } from 'config/chains'
+import { NATIVE_CURRENCY_ADDRESS } from 'config/constants/addresses'
+import { TOKENS } from 'config/constants/tokens'
 
-export async function prefetchTokens(tokensList: Hash[]) {
+export async function prefetchTokens(chainId: ChainId, tokenList: Hash[]) {
+  const defaultTokens = Object.keys(TOKENS[chainId])
+  const missingTokens = tokenList.filter(
+    (addr) => !defaultTokens.includes(addr)
+  )
+
+  if (!missingTokens.length) return TOKENS[chainId]
+
+  const promises = missingTokens.map((addr) =>
+    fetchToken({
+      address: addr,
+      chainId,
+    })
+  )
+
   try {
-    const promises = tokensList.map((a) =>
-      fetchToken({
-        address: a,
-        chainId: config.chainId,
-      })
-    )
-
     const responses = await Promise.all(promises)
-    const tokensMap = new Map<Hash, TokenInfo>()
 
-    responses.forEach((r) => {
-      const address = r.address?.toLowerCase() as Hash
+    const _missingTokenMap = new Map<Hash, TokenInfo>()
 
-      tokensMap.set(address, {
-        address: address,
-        decimals: r.decimals,
-        name: r.name,
-        symbol: r.symbol,
+    responses.forEach((res, i) => {
+      const { decimals, name, symbol } = res
+      const address = missingTokens[i].toLowerCase() as Hash
+
+      _missingTokenMap.set(address, {
+        address,
+        decimals,
+        name,
+        symbol,
       })
     })
 
-    const tokenMap = Object.fromEntries(tokensMap) as {
+    const missingTokenMap = Object.fromEntries(_missingTokenMap) satisfies {
       [address: Hash]: TokenInfo
     }
 
-    tokenMap[config.nativeCurrency.address] = {
-      address: config.nativeCurrency.address,
-      decimals: config.nativeCurrency.decimals,
-      name: config.nativeCurrency.name,
-      symbol: config.nativeCurrency.symbol,
-    }
+    const { nativeCurrency } = CHAINS[chainId]
+    const { coingeckoId, wrappedTokenAddress, ...rest } = nativeCurrency
 
-    return tokenMap
+    return {
+      ...TOKENS[chainId],
+      ...missingTokenMap,
+      [NATIVE_CURRENCY_ADDRESS]: rest,
+    }
   } catch (error) {
     throw error
   }

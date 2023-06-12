@@ -8,7 +8,7 @@ import {
 } from 'react-hook-form'
 import clsx from 'clsx'
 
-import config from 'config'
+import { NATIVE_CURRENCY_ADDRESS } from 'config/constants/addresses'
 import { LiquidityFieldType } from 'config/constants'
 import { useStaking } from 'hooks'
 import { ExitFormFields } from 'hooks/useExitForm'
@@ -32,20 +32,20 @@ function ExitModalPage1Step1({
   hash,
 }: ExitModalPage1Step1Props) {
   const {
+    lpToken,
     poolTokenAddresses,
     shouldReversePoolTokenOrderOnDisplay,
-    stakedTokenAddress,
-    tokenMap,
+    tokens,
   } = useStaking()
 
   const exitType = watch('exitType')
 
   const exitTypeList = useMemo(() => {
     if (shouldReversePoolTokenOrderOnDisplay) {
-      return [null, ...poolTokenAddresses, config.nativeCurrency.address]
+      return [null, ...poolTokenAddresses, NATIVE_CURRENCY_ADDRESS]
     }
 
-    return [null, ...poolTokenAddresses, config.nativeCurrency.address]
+    return [null, ...poolTokenAddresses, NATIVE_CURRENCY_ADDRESS]
   }, [poolTokenAddresses, shouldReversePoolTokenOrderOnDisplay])
 
   const disabled = !!hash
@@ -76,7 +76,7 @@ function ExitModalPage1Step1({
             <>
               {exitTypeList.map((addr) => {
                 const key = `exitForm:exitType:${addr}`
-                const label = addr === null ? 'All' : tokenMap[addr].symbol
+                const label = addr === null ? 'All' : tokens[addr].symbol
 
                 return (
                   <div
@@ -88,10 +88,8 @@ function ExitModalPage1Step1({
                   >
                     <label className="fakeInput" htmlFor={key}>
                       <TokenIcon
-                        key={`exitForm:tokenGroup:${
-                          addr ?? stakedTokenAddress
-                        }`}
-                        address={addr ?? stakedTokenAddress}
+                        key={`exitForm:tokenGroup:${addr ?? lpToken.address}`}
+                        address={addr ?? lpToken.address}
                         $size={24}
                       />
 

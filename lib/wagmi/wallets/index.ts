@@ -1,4 +1,3 @@
-import config from 'config'
 import {
   binanceWalletConfig,
   coinbaseWalletConfig,
@@ -22,10 +21,7 @@ const walletConfigs = (_: WalletParams): WalletConfig[] => {
   ]
 }
 
-export function createWallets({
-  chainId = config.chainId,
-  connect,
-}: WalletParams) {
+export function createWallets({ chainId, connect }: WalletParams) {
   return walletConfigs({
     chainId,
     connect,

@@ -6,11 +6,14 @@ import { useAtomValue } from 'jotai'
 import clsx from 'clsx'
 
 import { currentChainAtom } from 'states/system'
-import { EXIT_MOTION } from 'config/motions'
-import { dropdownTransition, slideInDown } from 'config/motionVariants'
+import {
+  ANIMATION_MAP,
+  EXIT_MOTION,
+  TRANSITION_MAP,
+} from 'config/constants/motions'
 import { explorerUrlFor } from 'utils/explorerUrlFor'
 import { truncateAddress } from 'utils/truncateAddress'
-import { useAuth, useCopy, useDisconnect } from 'hooks'
+import { useAuth, useCopy, useChain, useDisconnect } from 'hooks'
 
 import { StyledGnbAccountMenu } from './styled'
 import Button from 'components/Button'
@@ -23,9 +26,11 @@ type AccountMenuProps = {
 
 function AccountMenu({ closeMenu }: AccountMenuProps) {
   const menuRef = useRef<HTMLDivElement>(null)
-  const { onCopy, copied } = useCopy()
 
   const { account, connector } = useAuth()
+  const { chainId } = useChain()
+  const { onCopy, copied } = useCopy()
+
   const disconnect = useDisconnect({
     onSuccess: closeMenu,
   })
@@ -51,8 +56,8 @@ function AccountMenu({ closeMenu }: AccountMenuProps) {
     <StyledGnbAccountMenu
       {...EXIT_MOTION}
       ref={menuRef}
-      variants={slideInDown}
-      transition={dropdownTransition}
+      variants={ANIMATION_MAP.slideInDown}
+      transition={TRANSITION_MAP.dropdown}
       role="menu"
     >
       <header className="header">
@@ -72,7 +77,7 @@ function AccountMenu({ closeMenu }: AccountMenuProps) {
           </CopyToClipboard>
 
           <Link
-            href={explorerUrlFor(account ?? '')}
+            href={explorerUrlFor(chainId, account!)}
             onClick={closeMenu}
             target="_blank"
             rel="noopener"

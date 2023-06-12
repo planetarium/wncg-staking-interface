@@ -6,7 +6,7 @@ import {
 } from 'react-hook-form'
 import clsx from 'clsx'
 
-import { REKT_PRICE_IMPACT } from 'constants/poolLiquidity'
+import { REKT_PRICE_IMPACT } from 'config/constants/liquidityPool'
 import { bnum } from 'utils/bnum'
 import { JoinFormFields } from 'hooks/useJoinForm'
 

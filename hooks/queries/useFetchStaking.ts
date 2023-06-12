@@ -2,38 +2,40 @@ import { useQuery } from '@tanstack/react-query'
 import { useAtomValue, useSetAtom } from 'jotai'
 
 import { currentTimestampAtom, isHarvestableAtom } from 'states/system'
-import { queryKeys } from 'config/queryKeys'
+import { QUERY_KEYS } from 'config/constants/queryKeys'
 import { fetchStaking } from 'lib/queries/fetchStaking'
+import { useChain } from 'hooks/useChain'
 import { useStaking } from 'hooks/useStaking'
 
 export function useFetchStaking(options: UseFetchOptions = {}) {
   const {
-    enabled: _enabled = true,
+    enabled = true,
     refetchInterval,
-    refetchOnWindowFocus = 'always',
-    suspense = true,
+    refetchOnWindowFocus,
+    suspense,
   } = options
-  const { balRewardPoolAddress, liquidityGaugeAddress } = useStaking()
+
+  const { chainId, stakingAddress } = useChain()
+  const props = useStaking<'ethereum'>()
 
   const currentTimestamp = useAtomValue(currentTimestampAtom)
   const setIsHarvestable = useSetAtom(isHarvestableAtom)
 
-  const enabled = _enabled && !!liquidityGaugeAddress
-
   return useQuery(
-    [queryKeys.Staking.Data, liquidityGaugeAddress],
-    () => fetchStaking(liquidityGaugeAddress, balRewardPoolAddress),
+    [QUERY_KEYS.Staking.Data, stakingAddress, chainId],
+    () => fetchStaking(chainId),
     {
       enabled,
       staleTime: Infinity,
       refetchInterval,
       refetchOnWindowFocus,
-      suspense,
+      suspense: false,
       useErrorBoundary: false,
+      placeholderData: props,
       onSuccess(data) {
-        if (!data) return
-        if (data.periodFinish > currentTimestamp) setIsHarvestable(false)
-        else setIsHarvestable(true)
+        // if (!data) return
+        // if (data.periodFinish > currentTimestamp) setIsHarvestable(false)
+        // else setIsHarvestable(true)
       },
     }
   )

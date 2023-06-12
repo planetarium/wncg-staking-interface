@@ -4,14 +4,8 @@ import { useAtomValue } from 'jotai'
 import { AnimatePresence } from 'framer-motion'
 
 import { modalAtom } from 'states/ui'
-import { EXIT_MOTION } from 'config/motions'
+import { ANIMATION_MAP, EXIT_MOTION } from 'config/constants/motions'
 import { useModal, useResponsive } from 'hooks'
-import {
-  modalDesktopVariants,
-  modalMobileVariants,
-  modalOverlayVariants,
-  modalTransition,
-} from './constants'
 
 import { StyledModalContainer, StyledModalOverlay } from './styled'
 import Portal from './Portal'
@@ -26,7 +20,7 @@ function Modals() {
   const isPortable = useMemo(() => bp === 'mobile' || bp === 'tablet', [bp])
 
   const motionVariants = useMemo(
-    () => (isPortable ? modalMobileVariants : modalDesktopVariants),
+    () => (isPortable ? ANIMATION_MAP.appearInUp : ANIMATION_MAP.popInCenter),
     [isPortable]
   )
 
@@ -43,8 +37,8 @@ function Modals() {
         {modal && (
           <StyledModalOverlay
             {...EXIT_MOTION}
-            variants={modalOverlayVariants}
-            transition={modalTransition}
+            variants={ANIMATION_MAP.fadeIn}
+            transition={{ duration: 0.4 }}
             onClick={closeModal}
           />
         )}
@@ -55,7 +49,7 @@ function Modals() {
           <StyledModalContainer
             {...EXIT_MOTION}
             variants={motionVariants}
-            transition={modalTransition}
+            transition={{ duration: 0.4 }}
           >
             <View modal={modal} />
           </StyledModalContainer>

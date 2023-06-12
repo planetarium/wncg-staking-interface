@@ -1,0 +1,21 @@
+{
+  "chainId": 56,
+  "tokens": {
+    "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee": {
+      "name": "BNB",
+      "symbol": "BNB",
+      "address": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+      "chainId": 56,
+      "decimals": 18,
+      "pricingAsset": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+    },
+    "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c": {
+      "name": "Wrapped BNB",
+      "symbol": "WBNB",
+      "address": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "chainId": 56,
+      "decimals": 18,
+      "pricingAsset": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c"
+    }
+  }
+}

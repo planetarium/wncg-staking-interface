@@ -2,13 +2,12 @@ import { memo } from 'react'
 import { useAtomValue } from 'jotai'
 
 import { isHarvestableAtom } from 'states/system'
-import config from 'config'
+import { BAL_ADDRESS } from 'config/constants/addresses'
 import { ModalType } from 'config/constants'
-import { MOTION } from 'config/motions'
-import { fadeIn } from 'config/motionVariants'
+import { ANIMATION_MAP, MOTION } from 'config/constants/motions'
 import { bnum } from 'utils/bnum'
-import { useFiat, useModal, useResponsive, useStaking } from 'hooks'
-import { useFetchUserData } from 'hooks/queries'
+import { useChain, useFiat, useModal, useResponsive, useStaking } from 'hooks'
+import { useFetchUserRewards } from 'hooks/queries'
 
 import { StyledGnbClaimableRewards } from './styled'
 import Button from 'components/Button'
@@ -18,15 +17,16 @@ import NumberFormat from 'components/NumberFormat'
 import Tooltip from 'components/Tooltip'
 
 function ClaimableRewards() {
+  const { chainId } = useChain()
   const toFiat = useFiat()
   const { addModal } = useModal()
   const { isLaptop } = useResponsive()
-  const { rewardTokenAddresses, tokenMap } = useStaking()
+  const { rewardTokenAddresses, tokens } = useStaking()
 
-  const { data } = useFetchUserData()
+  const { data } = useFetchUserRewards()
 
-  const { earnedRewards = [] } = data ?? {}
-  const hasRewards = earnedRewards.some((r) => bnum(r).gt(0))
+  const { earnedTokenRewards = [] } = data ?? {}
+  const hasRewards = earnedTokenRewards.some((amt) => bnum(amt).gt(0))
 
   const isHarvestable = useAtomValue(isHarvestableAtom)
 
@@ -37,18 +37,26 @@ function ClaimableRewards() {
   }
 
   return (
-    <StyledGnbClaimableRewards {...MOTION} variants={fadeIn}>
+    <StyledGnbClaimableRewards
+      key="GnbClaimableRewards"
+      {...MOTION}
+      variants={ANIMATION_MAP.fadeIn}
+    >
       {rewardTokenAddresses?.map((addr, i) => {
-        const amount = earnedRewards[i]
+        if (!addr) return null
+
+        const amount = earnedTokenRewards[i]
         const fiatValue = toFiat(amount, addr)
-        const { symbol = '' } = tokenMap[addr] ?? {}
+        const symbol = tokens[addr]?.symbol
+
         const hasAmount = bnum(amount).gt(0)
 
-        const showEarmarkTooltip = isHarvestable && addr === config.bal
+        const showHarvest = isHarvestable && addr === BAL_ADDRESS[chainId]
 
         return (
           <div className="reward" key={`gnb:claimableRewards:${addr}`}>
             <CountUp
+              start={0}
               value={amount}
               symbol={symbol}
               plus={hasAmount}
@@ -69,7 +77,7 @@ function ClaimableRewards() {
               </span>
             )}
 
-            {showEarmarkTooltip && (
+            {showHarvest && (
               <div className="tooltipGroup">
                 <Icon className="toggler" icon="warning" />
                 <Tooltip

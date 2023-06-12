@@ -2,16 +2,19 @@ import { memo } from 'react'
 import Link from 'next/link'
 
 import config from 'config'
-import { MOTION } from 'config/motions'
-import { fadeIn } from 'config/motionVariants'
+import { ANIMATION_MAP, MOTION } from 'config/constants/motions'
+
 import { explorerUrlFor } from 'utils/explorerUrlFor'
 
 import { StyledGnbMenuList } from './styled'
 import Icon from 'components/Icon'
+import { useChain } from 'hooks'
 
 function GnbMenuList() {
+  const { chainId, stakingAddress } = useChain()
+
   return (
-    <StyledGnbMenuList {...MOTION} variants={fadeIn}>
+    <StyledGnbMenuList {...MOTION} variants={ANIMATION_MAP.fadeIn}>
       <li className="navItem">
         <Link
           href={config.docs.notion}
@@ -36,7 +39,7 @@ function GnbMenuList() {
 
       <li className="navItem">
         <Link
-          href={explorerUrlFor(config.stakingAddress)}
+          href={explorerUrlFor(chainId, stakingAddress)}
           target="_blank"
           rel="noopener"
           aria-label="Etherscan"

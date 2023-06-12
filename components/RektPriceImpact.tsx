@@ -1,8 +1,8 @@
 import { AnimatePresence } from 'framer-motion'
 import clsx from 'clsx'
 
-import { REKT_PRICE_IMPACT } from 'config/misc'
-import { slideInDown } from 'constants/motionVariants'
+import { REKT_PRICE_IMPACT } from 'config/constants/liquidityPool'
+import { ANIMATION_MAP } from 'config/constants/motions'
 import { useResponsive } from 'hooks'
 
 import { StyledRektPriceImpact } from './styled'
@@ -37,7 +37,7 @@ function RektPriceImpact({
           initial="initial"
           animate="animate"
           exit="exit"
-          variants={slideInDown}
+          variants={ANIMATION_MAP.slideInDown}
           role="alert"
         >
           <Icon icon="warning" $size={isHandheld ? 16 : 24} />

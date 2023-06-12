@@ -1,8 +1,7 @@
 import { memo, useMemo } from 'react'
 import { AnimatePresence } from 'framer-motion'
 
-import { EXIT_MOTION } from 'config/motions'
-import { slideInDown } from 'config/motionVariants'
+import { ANIMATION_MAP, EXIT_MOTION } from 'config/constants/motions'
 import { bnum } from 'utils/bnum'
 import { useAuth, useStaking } from 'hooks'
 import type { JoinFormFocusedElement } from 'hooks/useJoinForm'
@@ -24,14 +23,14 @@ function JoinFormUnoptimizableAlert({
   optimizeDisabled,
 }: JoinFormUnoptimizableProps) {
   const { isConnected } = useAuth()
-  const { tokenMap } = useStaking()
+  const { tokens } = useStaking()
 
   const message = useMemo(() => {
     if (maxBalances.every((b) => bnum(b).isZero())) return `Balance is empty.`
     const tokenIndex = maxBalances.findIndex((b) => bnum(b).isZero())
-    const { symbol = '' } = tokenMap[assets[tokenIndex]] ?? {}
+    const symbol = tokens[assets[tokenIndex]]?.symbol ?? ''
     return `Optimization is not possible because ${symbol} is 0.`
-  }, [assets, maxBalances, tokenMap])
+  }, [assets, maxBalances, tokens])
 
   const showAlert =
     !!isConnected && focusedElement === 'OptimizeButton' && optimizeDisabled
@@ -42,7 +41,7 @@ function JoinFormUnoptimizableAlert({
         <StyledJoinFormUnoptimizableAlert
           {...EXIT_MOTION}
           className="joinFormAlert"
-          variants={slideInDown}
+          variants={ANIMATION_MAP.slideInDown}
           role="alert"
         >
           <Icon icon="warning" />

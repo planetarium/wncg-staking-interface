@@ -10,7 +10,7 @@ import config from 'config'
 import { formatUnits } from 'utils/formatUnits'
 import { parseTransferLogs } from 'utils/parseTransferLogs'
 import { txUrlFor } from 'utils/txUrlFor'
-import { useFiat, useStaking } from 'hooks'
+import { useChain, useFiat, useStaking } from 'hooks'
 import { useWatch } from './useWatch'
 
 import { StyledToast } from './styled'
@@ -23,17 +23,18 @@ import Status from './Status'
 type ClaimToastProps = Required<ClaimTx>
 
 export default function ClaimToast({
-  earnedRewards,
+  earnedTokenRewards,
   hash,
   rewardList,
 }: ClaimToastProps) {
+  const { chainId } = useChain()
+  const toFiat = useFiat()
+  const { rewardTokenAddresses, tokens } = useStaking()
+
   const setTx = useSetAtom(claimTxAtom)
 
-  const toFiat = useFiat()
-  const { rewardTokenAddresses, tokenMap } = useStaking()
-
   const claimedRewards = rewardList.map((check, i) =>
-    check ? earnedRewards[i] : '0'
+    check ? earnedTokenRewards[i] : '0'
   )
 
   const [amounts, setAmounts] = useState(claimedRewards)
@@ -42,7 +43,7 @@ export default function ClaimToast({
 
   useTransaction({
     hash,
-    chainId: config.chainId,
+    chainId,
     enabled: !!hash,
     suspense: false,
     async onSuccess(tx) {
@@ -52,8 +53,7 @@ export default function ClaimToast({
         const parsedLogs = parseTransferLogs(logs)
         const actualClaimedRewards = rewardTokenAddresses.map(
           (addr) =>
-            formatUnits(parsedLogs?.[addr] ?? '0', tokenMap[addr].decimals) ??
-            '0'
+            formatUnits(parsedLogs?.[addr] ?? '0', tokens[addr].decimals) ?? '0'
         )
 
         if (logs.length > 0) {
@@ -68,7 +68,7 @@ export default function ClaimToast({
   return (
     <StyledToast>
       <header className="toastHeader">
-        <Link href={txUrlFor(hash)!} target="_blank" rel="noopener">
+        <Link href={txUrlFor(chainId, hash)!} target="_blank" rel="noopener">
           <h3 className="title">
             Claim rewards
             <Icon icon="outlink" />
@@ -85,14 +85,14 @@ export default function ClaimToast({
             const amt = amounts[i]
 
             const address = rewardTokenAddresses[i]
-            const { symbol = '' } = tokenMap[address] ?? {}
+            const symbol = tokens[address]?.symbol ?? ''
             const fiatValue = toFiat(amt, address)
 
             return (
               <div className="detailItem" key={`claimToast:rewards:${address}`}>
                 <dt>
                   <div className="token">
-                    <TokenIcon address={address} dark $size={20} />
+                    <TokenIcon address={address} $dark $size={20} />
                   </div>
                   {symbol}
                 </dt>

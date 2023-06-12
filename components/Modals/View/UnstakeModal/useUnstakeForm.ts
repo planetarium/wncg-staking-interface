@@ -7,8 +7,8 @@ import {
 } from 'react-hook-form'
 
 import { bnum } from 'utils/bnum'
-import { useAuth, useFiat, useResponsive, useRewards } from 'hooks'
-import { useFetchUserData } from 'hooks/queries'
+import { useAuth, useFiat, useResponsive, useStaking } from 'hooks'
+import { useFetchUserData, useFetchUserRewards } from 'hooks/queries'
 
 type UnstakeFormFields = {
   unstakeAmount: string
@@ -35,11 +35,11 @@ export type UseUnstakeFormReturns = {
 export function useUnstakeForm(): UseUnstakeFormReturns {
   const { isConnected } = useAuth()
   const toFiat = useFiat()
-  const { rewardTokenAddresses } = useRewards()
+  const { rewardTokenAddresses } = useStaking()
   const { isMobile } = useResponsive()
 
-  const { stakedTokenBalance = '0', earnedRewards = [] } =
-    useFetchUserData().data ?? {}
+  const { stakedTokenBalance = '0' } = useFetchUserData().data ?? {}
+  const { earnedTokenRewards = [] } = useFetchUserRewards().data ?? {}
 
   const { clearErrors, control, formState, resetField, setValue, watch } =
     useForm<UnstakeFormFields>({
@@ -74,10 +74,10 @@ export function useUnstakeForm(): UseUnstakeFormReturns {
     [formState, isConnected, unstakeAmount]
   )
 
-  const inputDisabled = useMemo(
-    () => bnum(stakedTokenBalance).isZero(),
-    [stakedTokenBalance]
-  )
+  const inputDisabled = useMemo(() => {
+    console.log(stakedTokenBalance, bnum(stakedTokenBalance).isZero())
+    return bnum(stakedTokenBalance).isZero()
+  }, [stakedTokenBalance])
 
   const placeholder = useMemo(
     () =>
@@ -89,12 +89,12 @@ export function useUnstakeForm(): UseUnstakeFormReturns {
 
   const totalClaimFiatValue = useMemo(
     () =>
-      earnedRewards
+      earnedTokenRewards
         .reduce((acc, amt, i) => {
           return acc.plus(toFiat(amt, rewardTokenAddresses[i]))
         }, bnum(0))
         .toString(),
-    [earnedRewards, rewardTokenAddresses, toFiat]
+    [earnedTokenRewards, rewardTokenAddresses, toFiat]
   )
 
   function setMaxValue() {

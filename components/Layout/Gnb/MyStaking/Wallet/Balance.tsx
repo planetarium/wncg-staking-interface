@@ -15,17 +15,17 @@ import PoolTokens from 'components/PoolTokens'
 function WalletBalance() {
   const toFiat = useFiat()
   const { addModal } = useModal()
-  const { stakedTokenAddress } = useStaking()
+  const { lpToken } = useStaking()
 
   const setShowMyStaking = useSetAtom(showMyStakingAtom)
 
   const balanceOf = useBalances()
-  const bptBalance = balanceOf(stakedTokenAddress)
+  const lpBalance = balanceOf(lpToken.address)
 
-  const hasLpToken = bnum(bptBalance).gt(0)
+  const hasLpToken = bnum(lpBalance).gt(0)
   const exitDisabled = !hasLpToken
 
-  const fiatValue = toFiat(bptBalance, stakedTokenAddress)
+  const fiatValue = toFiat(lpBalance, lpToken.address)
 
   function openExit() {
     setShowMyStaking(false)
@@ -39,13 +39,13 @@ function WalletBalance() {
       <header className="header">
         <h3 className="title">Stakable LP tokens</h3>
         <div className="amount">
-          <CountUp value={bptBalance} />
+          <CountUp value={lpBalance} />
           {hasLpToken && <NumberFormat value={fiatValue} type="fiat" />}
         </div>
       </header>
 
       <div className="content">
-        {hasLpToken && <PoolTokens bptBalance={bptBalance} />}
+        {hasLpToken && <PoolTokens lpBalance={lpBalance} />}
 
         <Button
           className="actionButton"

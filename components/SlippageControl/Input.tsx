@@ -2,7 +2,7 @@ import { useCallback } from 'react'
 import { Controller } from 'react-hook-form'
 import { NumericFormat } from 'react-number-format'
 
-import { MAX_SLIPPAGE } from 'config/misc'
+import { MAX_SLIPPAGE } from 'config/constants/liquidityPool'
 import { bnum } from 'utils/bnum'
 import { SlippageControlField, UseSlippageFormReturn } from './useSlippageForm'
 

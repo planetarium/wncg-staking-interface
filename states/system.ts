@@ -1,13 +1,22 @@
+import { ChainId } from 'config/chains'
 import { atom } from 'jotai'
-import { atomWithStorage } from 'jotai/utils'
+import { atomWithStorage, selectAtom } from 'jotai/utils'
 
 export const currentTimestampAtom = atom(0)
 export const priceMapAtom = atom<PriceMap>({})
 export const totalStakedAtom = atom<string | null>(null)
 
+export type AssetPlatform = 'ethereum' | 'bsc'
+
+export const assetPlatformAtom = atom<AssetPlatform>('ethereum')
+
+const isTestnet = Boolean(process.env.NEXT_PUBLIC_IS_TESTNET ?? 'true')
+
+export const chainIdAtom = atom<ChainId | null>(null)
+
 export const currentChainAtom = atom<Chain | null>(null)
-export const currentChainIdAtom = atom<Network | null>(
-  (get) => (get(currentChainAtom)?.id as Network) ?? null
+export const currentChainIdAtom = atom<ChainId | null>(
+  (get) => (get(currentChainAtom)?.id as ChainId) ?? null
 )
 
 export const slippageAtom = atomWithStorage<string | null>(

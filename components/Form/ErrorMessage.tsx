@@ -1,8 +1,7 @@
 import { memo } from 'react'
 import { AnimatePresence } from 'framer-motion'
 
-import { EXIT_MOTION } from 'config/motions'
-import { slideInDown } from 'config/motionVariants'
+import { ANIMATION_MAP, EXIT_MOTION } from 'config/constants/motions'
 
 import { StyledErrorMessage } from './styled'
 import Icon from 'components/Icon'
@@ -22,7 +21,7 @@ function ErrorMessage({ disabled, error, icon = false }: ErrorMessageProps) {
         <StyledErrorMessage
           {...EXIT_MOTION}
           className="errorMsg"
-          variants={slideInDown}
+          variants={ANIMATION_MAP.slideInDown}
           layout
         >
           {icon && <Icon icon="warning" />}

@@ -2,25 +2,26 @@ import { useCallback } from 'react'
 import { parseUnits } from 'ethers/lib/utils'
 import { useContractWrite, usePrepareContractWrite } from 'wagmi'
 
-import config from 'config'
-import { StakingAbi } from 'config/abi'
+import { StakingEthereumAbi } from 'config/abi'
 import { bnum } from 'utils/bnum'
-import { useStaking, useSwitchNetwork } from 'hooks'
+import { useChain, useStaking, useSwitchNetwork } from 'hooks'
 
 export function useStake(stakeAmount: string) {
-  const { stakedTokenAddress, tokenMap } = useStaking()
+  const { chainId, stakingAddress } = useChain()
+  const { lpToken, tokens } = useStaking()
   const { switchBeforeSend } = useSwitchNetwork()
 
   const scaledStakeAmount = parseUnits(
     bnum(stakeAmount).toString(),
-    tokenMap[stakedTokenAddress]?.decimals ?? 18
+    tokens[lpToken.address]?.decimals ?? 18
   ).toString()
 
   const enabled = bnum(stakeAmount).gt(0) && !bnum(stakeAmount).isNaN()
 
   const { config: writeConfig } = usePrepareContractWrite({
-    address: config.stakingAddress,
-    abi: StakingAbi,
+    address: stakingAddress,
+    abi: StakingEthereumAbi,
+    chainId,
     args: [scaledStakeAmount],
     functionName: 'stake',
     enabled,

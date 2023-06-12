@@ -26,15 +26,14 @@ function AvailableBalance({ children, className }: AvailableBalanceProps) {
   const balancesFor = useBalances()
   const { openConnectModal } = useConnect()
   const toFiat = useFiat()
-  const { bptAddress, poolTokenAddresses, poolTokenWeights, tokenMap } =
-    useStaking()
+  const { lpToken, poolTokenAddresses, poolTokenWeights, tokens } = useStaking()
 
-  const bptBalance = balancesFor(bptAddress)
-  const hasBptBalance = bnum(bptBalance).gt(0)
+  const lpBalance = balancesFor(lpToken.address)
+  const hasBptBalance = bnum(lpBalance).gt(0)
 
-  const { propAmounts, propAmountsInFiatValue } = usePropAmounts(bptBalance)
+  const { propAmounts, propAmountsInFiatValue } = usePropAmounts(lpBalance)
 
-  const fiatValue = toFiat(bptBalance, bptAddress)
+  const fiatValue = toFiat(lpBalance, lpToken.address)
 
   return (
     <StyledAvailableBalance className={clsx('availableBalance', className)}>
@@ -46,7 +45,7 @@ function AvailableBalance({ children, className }: AvailableBalanceProps) {
             <dt className="hidden">Your balance</dt>
             <dd>
               {isConnected ? (
-                <NumberFormat className="value" value={bptBalance} />
+                <NumberFormat className="value" value={lpBalance} />
               ) : (
                 <button
                   className="connectButton"
@@ -105,9 +104,10 @@ function AvailableBalance({ children, className }: AvailableBalanceProps) {
             {propAmounts.map((amt, i) => {
               const address = poolTokenAddresses[i]
               const weight = bnum(poolTokenWeights[i]).times(100).toNumber()
-              const { symbol = '' } = tokenMap[address] ?? {}
 
               if (!address || !weight) return null
+
+              const symbol = tokens[address]?.symbol
 
               return (
                 <div className="balanceItem" key={`availableBalance:${symbol}`}>

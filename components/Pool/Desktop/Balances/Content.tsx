@@ -10,16 +10,16 @@ import PoolTokens from 'components/PoolTokens'
 export default function PoolBalancesContent() {
   const { isConnected } = useAuth()
   const toFiat = useFiat()
-  const { stakedTokenAddress } = useStaking()
+  const { lpToken } = useStaking()
 
   const balanceOf = useBalances()
   const { stakedTokenBalance = '0' } = useFetchUserData().data ?? {}
 
-  const stakedTokenFiatValue = toFiat(stakedTokenBalance, stakedTokenAddress)
+  const stakedTokenFiatValue = toFiat(stakedTokenBalance, lpToken.address)
 
-  const bptBalance = balanceOf(stakedTokenAddress)
-  const hasLpToken = !!isConnected && bnum(bptBalance).gt(0)
-  const fiatValue = toFiat(bptBalance, stakedTokenAddress)
+  const lpBalance = balanceOf(lpToken.address)
+  const hasLpToken = !!isConnected && bnum(lpBalance).gt(0)
+  const fiatValue = toFiat(lpBalance, lpToken.address)
   const hasStakedToken = !!isConnected && bnum(stakedTokenBalance).gt(0)
 
   return (
@@ -46,7 +46,7 @@ export default function PoolBalancesContent() {
 
         {!!isConnected ? (
           <div className="amount">
-            <CountUp value={bptBalance} />
+            <CountUp value={lpBalance} />
             {hasLpToken && <NumberFormat value={fiatValue} type="fiat" />}
           </div>
         ) : (
@@ -55,7 +55,7 @@ export default function PoolBalancesContent() {
       </header>
 
       {hasLpToken && (
-        <PoolTokens className="poolTokens" bptBalance={bptBalance} />
+        <PoolTokens className="poolTokens" lpBalance={lpBalance} />
       )}
     </StyledPoolBalancesContent>
   )

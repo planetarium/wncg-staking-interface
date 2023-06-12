@@ -7,10 +7,11 @@ import {
 import { WeightedMath } from '@georgeroman/balancer-v2-pools'
 
 import config from 'config'
+import { NATIVE_CURRENCY_ADDRESS } from 'config/constants/addresses'
+import { PLACEHOLDER_TOKEN, TOKENS } from 'config/constants/tokens'
 import { bnum } from 'utils/bnum'
 import { formatUnits } from 'utils/formatUnits'
 import { parseUnits } from 'utils/parseUnits'
-import { getTokenInfo } from 'utils/token'
 
 const POOL_DECIMALS = 18
 
@@ -22,8 +23,9 @@ type PriceImpactOption = {
 
 export default class CalculatorService {
   constructor(
-    public pool: PoolResponse,
-    public bptBalance: string,
+    public chainId: ChainId,
+    public pool: SerializedPool,
+    public lpBalance: string,
     public action: PoolAction,
     public useNativeAsset = false
   ) {}
@@ -40,7 +42,7 @@ export default class CalculatorService {
       weights,
       amountsIn,
       bnum(this.poolTotalShares.toString()),
-      bnum(this.poolSwapFee.toString())
+      bnum(this.pool.totalSwapFee.toString())
     )
   }
 
@@ -56,7 +58,7 @@ export default class CalculatorService {
       weights,
       amountsOut,
       bnum(this.poolTotalShares.toString()),
-      bnum(this.poolSwapFee.toString())
+      bnum(this.pool.totalSwapFee.toString())
     )
   }
 
@@ -77,7 +79,7 @@ export default class CalculatorService {
       weight,
       amountOut,
       bnum(this.poolTotalShares.toString()),
-      bnum(this.poolSwapFee.toString())
+      bnum(this.pool.totalSwapFee.toString())
     )
   }
 
@@ -90,7 +92,7 @@ export default class CalculatorService {
       weight,
       bnum(bptAmount),
       bnum(this.poolTotalShares.toString()),
-      bnum(this.poolSwapFee.toString())
+      bnum(this.pool.totalSwapFee.toString())
     )
   }
 
@@ -101,7 +103,7 @@ export default class CalculatorService {
 
     const types = ['send', 'receive']
     const fixedTokenAddress = this.tokenOf(type, index)
-    const fixedToken = getTokenInfo(fixedTokenAddress)
+    const fixedToken = this.getTokenInfo(fixedTokenAddress)
     const fixedTokenDecimals = fixedToken?.decimals ?? 18
     const fixedAmount = bnum(amount).toFixed(fixedTokenDecimals)
     const fixedDenormAmount = parseUnits(fixedAmount, fixedTokenDecimals)
@@ -117,7 +119,7 @@ export default class CalculatorService {
       ratios.forEach((ratio, i) => {
         if (i !== index || type !== types[ratioType]) {
           const tokenAddress = this.tokenOf(types[ratioType], i)
-          const token = getTokenInfo(tokenAddress)
+          const token = this.getTokenInfo(tokenAddress)
 
           amounts[types[ratioType] as 'send' | 'receive'][i] = formatUnits(
             fixedDenormAmount.times(ratio).div(fixedRatio).toFixed(0),
@@ -153,7 +155,7 @@ export default class CalculatorService {
     } else {
       bptAmount =
         option.queryBpt ||
-        bnum(parseUnits(this.bptBalance || '0', POOL_DECIMALS).toString())
+        bnum(parseUnits(this.lpBalance || '0', POOL_DECIMALS).toString())
 
       tokenAmounts = this.poolTokens.map((_, i) => {
         if (i !== tokenIndex) return '0'
@@ -206,15 +208,15 @@ export default class CalculatorService {
 
   get tokenAddresses() {
     if (this.useNativeAsset) {
-      return this.pool.tokensList.map((address) => {
-        if (isSameAddress(address, config.weth)) {
-          return config.nativeCurrency.address
+      return this.poolTokens.map((t) => {
+        if (isSameAddress(t.address, config.wrapped)) {
+          return NATIVE_CURRENCY_ADDRESS
         }
-        return address
+        return t.address
       })
     }
 
-    return this.pool.tokensList
+    return this.poolTokens.map((t) => t.address)
   }
 
   get poolTokens() {
@@ -241,8 +243,9 @@ export default class CalculatorService {
     return parseUnits(this.pool.totalShares, POOL_DECIMALS).toString()
   }
 
-  get poolSwapFee() {
-    return parseUnits(this.pool.swapFee, 18)
+  private getTokenInfo(address: Hash) {
+    return (TOKENS[this.chainId]?.[address] ??
+      PLACEHOLDER_TOKEN) satisfies TokenInfo
   }
 
   private get sendTokens() {

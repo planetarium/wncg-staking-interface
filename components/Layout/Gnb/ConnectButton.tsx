@@ -1,7 +1,6 @@
 import { MouseEvent } from 'react'
 
-import { MOTION } from 'config/motions'
-import { fadeIn } from 'config/motionVariants'
+import { ANIMATION_MAP, MOTION } from 'config/constants/motions'
 import { truncateAddress } from 'utils/truncateAddress'
 import { useAuth, useConnect } from 'hooks'
 
@@ -26,7 +25,7 @@ function GnbConnectButton({ toggle }: GnbConnectProps) {
 
   if (!!isConnected && !!account) {
     return (
-      <StyledGnbConnectButton {...MOTION} variants={fadeIn}>
+      <StyledGnbConnectButton {...MOTION} variants={ANIMATION_MAP.fadeIn}>
         <button className="accountButton" type="button" onClick={toggle}>
           <Jazzicon address={account!} diameter={24} />
           <strong className="address">{truncateAddress(account!, 5, 4)}</strong>
@@ -37,7 +36,7 @@ function GnbConnectButton({ toggle }: GnbConnectProps) {
   }
 
   return (
-    <StyledGnbConnectButton {...MOTION} variants={fadeIn}>
+    <StyledGnbConnectButton {...MOTION} variants={ANIMATION_MAP.fadeIn}>
       <Button onClick={openConnectModal} disabled={disabled} $size="md">
         Connect Wallet
       </Button>

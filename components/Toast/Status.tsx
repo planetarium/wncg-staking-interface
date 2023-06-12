@@ -1,5 +1,4 @@
-import { MOTION } from 'config/motions'
-import { fadeIn } from 'config/motionVariants'
+import { ANIMATION_MAP, MOTION } from 'config/constants/motions'
 import { assertUnreachable } from 'utils/assertUnreachable'
 
 import { StyledToastStatus } from './styled'
@@ -13,13 +12,13 @@ export default function ToastStatus({ status }: ToastStatusProps) {
   switch (status) {
     case 0:
       return (
-        <StyledToastStatus {...MOTION} variants={fadeIn}>
+        <StyledToastStatus {...MOTION} variants={ANIMATION_MAP.fadeIn}>
           Fail
         </StyledToastStatus>
       )
     case 1:
       return (
-        <StyledToastStatus {...MOTION} variants={fadeIn} $success>
+        <StyledToastStatus {...MOTION} variants={ANIMATION_MAP.fadeIn} $success>
           Success <Icon icon="check" />
         </StyledToastStatus>
       )
