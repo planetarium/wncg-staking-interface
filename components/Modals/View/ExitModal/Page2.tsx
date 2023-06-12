@@ -112,14 +112,14 @@ export default function ExitModalPage2({
 
                 if (bnum(amt).isZero()) return null
 
-                const { symbol = '' } = tokenMap[addr] ?? {}
+                const { symbol } = tokenMap[addr] ?? {}
                 const fiatValue = exitAmountsInFiatValue[i]
 
                 return (
                   <div className="detailItem" key={`exitResult:${amt}:${addr}`}>
                     <dt>
                       <TokenIcon address={addr} $size={20} />
-                      {symbol}
+                      {symbol ?? ''}
                     </dt>
 
                     <dd>
