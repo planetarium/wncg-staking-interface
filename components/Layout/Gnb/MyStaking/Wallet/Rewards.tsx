@@ -52,7 +52,7 @@ export default function WalletRewards({ closeWallet }: WalletRewardsProps) {
             {rewardTokenAddresses.map((addr, i) => {
               const amount = earnedRewards[i]
               const fiatValue = toFiat(amount, addr)
-              const { symbol } = tokenMap[addr]
+              const { symbol = '' } = tokenMap[addr] ?? {}
 
               const showFiatValue = bnum(amount).gt(0)
 

@@ -29,7 +29,7 @@ function JoinFormUnoptimizableAlert({
   const message = useMemo(() => {
     if (maxBalances.every((b) => bnum(b).isZero())) return `Balance is empty.`
     const tokenIndex = maxBalances.findIndex((b) => bnum(b).isZero())
-    const { symbol } = tokenMap[assets[tokenIndex]]
+    const { symbol = '' } = tokenMap[assets[tokenIndex]] ?? {}
     return `Optimization is not possible because ${symbol} is 0.`
   }, [assets, maxBalances, tokenMap])
 

@@ -26,7 +26,7 @@ function JoinModalPage2() {
   const toFiat = useFiat()
   const { removeModal } = useModal()
   const { stakedTokenAddress, tokenMap } = useStaking()
-  const stakedToken = tokenMap[stakedTokenAddress]
+  const stakedToken = tokenMap[stakedTokenAddress] ?? {}
 
   const { hash, bptBalance: lpTokenBalance = '0' } = useAtomValue(joinTxAtom)
   const setShowPool = useSetAtom(showPoolAtom)
@@ -63,7 +63,7 @@ function JoinModalPage2() {
       const claimed = parsedLogs?.[stakedTokenAddress]
 
       if (claimed) {
-        setAmount(formatUnits(claimed, stakedToken.decimals))
+        setAmount(formatUnits(claimed, stakedToken?.decimals ?? 18))
       }
     },
   })

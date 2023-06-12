@@ -41,7 +41,7 @@ function ClaimableRewards() {
       {rewardTokenAddresses?.map((addr, i) => {
         const amount = earnedRewards[i]
         const fiatValue = toFiat(amount, addr)
-        const { symbol } = tokenMap[addr]
+        const { symbol = '' } = tokenMap[addr] ?? {}
         const hasAmount = bnum(amount).gt(0)
 
         const showEarmarkTooltip = isHarvestable && addr === config.bal

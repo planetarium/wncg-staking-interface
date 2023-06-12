@@ -23,7 +23,7 @@ export default function JoinFormEtherSelect({
   trigger,
 }: JoinFormEtherSelectProps) {
   const { tokenMap } = useStaking()
-  const wrappedToken = tokenMap[config.weth]
+  const wrappedToken = tokenMap[config.weth] ?? {}
 
   const selectedToken = isNativeCurrency
     ? config.nativeCurrency.symbol

@@ -41,7 +41,7 @@ async function fetchNativeTokenPrice(): Promise<PriceMap> {
   const response = await client.get<PriceResponse>(endpoint)
 
   return {
-    [config.nativeCurrency.address.toLowerCase()]:
+    [config.nativeCurrency.address]:
       response?.data?.[id]?.[FIAT_CURRENCY]?.toString() ?? '0',
   }
 }

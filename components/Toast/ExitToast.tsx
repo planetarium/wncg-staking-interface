@@ -30,7 +30,8 @@ export default function ExitToast({
 }: ExitToast) {
   const toFiat = useFiat()
   const { bptName, stakedTokenAddress, tokenMap } = useStaking()
-  const { decimals: stakedTokenDecimals } = tokenMap[stakedTokenAddress]
+  const { decimals: stakedTokenDecimals = 18 } =
+    tokenMap[stakedTokenAddress] ?? {}
 
   const setTx = useSetAtom(exitTxAtom)
 
@@ -82,7 +83,7 @@ export default function ExitToast({
               if (i !== tokenOutIndex) return null
 
               const addr = assets[i]
-              const { symbol } = tokenMap[addr]
+              const { symbol = '' } = tokenMap[addr] ?? {}
               const fiatValue = toFiat(amt, addr)
 
               return (

@@ -94,7 +94,7 @@ class ConfigService {
   get nativeCurrency() {
     return {
       ...this.network.nativeCurrency,
-      address: this.network.nativeCurrency.address.toLowerCase() as Hash,
+      address: this.network.nativeCurrency.address?.toLowerCase() as Hash,
     }
   }
 

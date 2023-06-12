@@ -26,7 +26,8 @@ export default function UnstakeModalPage2Form({
   const { stakedTokenAddress, tokenMap } = useStaking()
   const hasRewards = bnum(totalClaimFiatValue).gt(0)
 
-  const stakedTokenDecimals = tokenMap[stakedTokenAddress].decimals
+  const { decimals: stakedTokenDecimals = 18 } =
+    tokenMap[stakedTokenAddress] ?? {}
 
   const {
     checked,

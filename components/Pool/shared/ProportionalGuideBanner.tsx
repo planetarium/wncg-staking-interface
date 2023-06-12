@@ -42,9 +42,9 @@ function JoinFormProportionalGuideBanner({
     : '0'
 
   const selectedTokenAddress = assets[singleSidedFieldIndex]
-  const selectedToken = tokenMap[selectedTokenAddress]
+  const selectedToken = tokenMap[selectedTokenAddress] ?? {}
   const subjectTokenAddress = assets[1 - singleSidedFieldIndex]
-  const subjectToken = tokenMap[subjectTokenAddress]
+  const subjectToken = tokenMap[subjectTokenAddress] ?? {}
 
   function handleAdd() {
     const fieldType =
