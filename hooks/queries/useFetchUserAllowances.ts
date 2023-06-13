@@ -35,14 +35,14 @@ export function useFetchUserAllowances(options: UseFetchOptions = {}) {
   )
 
   return useQuery<AllowanceMap>(
-    [QUERY_KEYS.User.Allowances, account!, chainId],
+    [QUERY_KEYS.User.Allowances, account!, chainId, ...pairAddressList],
     () => fetchUserAllowances(chainId, account!, pairs),
     {
       enabled,
       staleTime: Infinity,
       refetchInterval,
       refetchOnWindowFocus,
-      suspense: suspense ?? true,
+      suspense: true,
       useErrorBoundary: false,
     }
   )

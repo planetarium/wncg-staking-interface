@@ -7,7 +7,10 @@ import {
 import { WeightedMath } from '@georgeroman/balancer-v2-pools'
 
 import config from 'config'
-import { NATIVE_CURRENCY_ADDRESS } from 'config/constants/addresses'
+import {
+  NATIVE_CURRENCY_ADDRESS,
+  WETH_ADDRESS,
+} from 'config/constants/addresses'
 import { PLACEHOLDER_TOKEN, TOKENS } from 'config/constants/tokens'
 import { bnum } from 'utils/bnum'
 import { formatUnits } from 'utils/formatUnits'
@@ -209,7 +212,7 @@ export default class CalculatorService {
   get tokenAddresses() {
     if (this.useNativeAsset) {
       return this.poolTokens.map((t) => {
-        if (isSameAddress(t.address, config.wrapped)) {
+        if (isSameAddress(t.address, WETH_ADDRESS[this.chainId])) {
           return NATIVE_CURRENCY_ADDRESS
         }
         return t.address

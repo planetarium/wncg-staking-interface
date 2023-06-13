@@ -12,7 +12,7 @@ export const assetPlatformAtom = atom<AssetPlatform>('ethereum')
 
 const isTestnet = Boolean(process.env.NEXT_PUBLIC_IS_TESTNET ?? 'true')
 
-export const chainIdAtom = atom<ChainId | null>(null)
+export const chainIdAtom = atom<ChainId>(ChainId.ETHEREUM)
 
 export const currentChainAtom = atom<Chain | null>(null)
 export const currentChainIdAtom = atom<ChainId | null>(

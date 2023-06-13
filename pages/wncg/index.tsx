@@ -12,12 +12,31 @@ import GlobalFooter from 'components/GlobalFooter'
 import GlobalHooks from 'components/GlobalHooks'
 import Suspense from 'components/Suspense'
 import Stake from 'components/staking/Stake'
+import { useLocation } from 'react-use'
+import { useEffect } from 'react'
+import { ChainId } from 'config/chains'
+import { useAtom, useSetAtom } from 'jotai'
+import { chainIdAtom } from 'states/system'
+import { useRouter } from 'next/router'
+import { getQueryString } from 'utils/getQueryString'
 
 const Dashboard = dynamic(() => import('components/staking/Dashboard'), {
   suspense: true,
 })
 
 const WncgStaking: NextPage = () => {
+  const { query } = useRouter()
+  const [chainId, setChainId] = useAtom(chainIdAtom)
+
+  // useEffect(() => {
+  //   const newChainId = Number(getQueryString(query?.chainId))
+
+  //   if (newChainId && newChainId !== chainId) {
+  //     console.log(chainId, '➡️', newChainId)
+  //     setChainId(newChainId as ChainId)
+  //   }
+  // }, [chainId, query?.chainId, setChainId])
+
   return (
     <>
       <NextSeo {...STAKING_SEO} />

@@ -13,12 +13,10 @@ import GlobalFooter from 'components/GlobalFooter'
 import GlobalHooks from 'components/GlobalHooks'
 import Suspense from 'components/Suspense'
 import Stake from 'components/staking/Stake'
-import { useMount } from 'react-use'
+import { useLocation, useMount } from 'react-use'
 import { useRouter } from 'next/router'
-import { useAtom } from 'jotai'
+import { useSetAtom } from 'jotai'
 import { chainIdAtom } from 'states/system'
-import { useEffect } from 'react'
-import { ChainId } from 'config/chains'
 
 const Dashboard = dynamic(() => import('components/staking/Dashboard'), {
   suspense: true,
@@ -26,13 +24,17 @@ const Dashboard = dynamic(() => import('components/staking/Dashboard'), {
 
 const WncgStaking: NextPage = () => {
   const router = useRouter()
-  const [chainId, setChainId] = useAtom(chainIdAtom)
+  const setChainId = useSetAtom(chainIdAtom)
 
-  useEffect(() => {
-    console.log('mounted', router.query?.chainId)
-    setChainId(Number(router.query?.chainId ?? ChainId.ETHEREUM) as ChainId)
-  }, [router.query?.chainId, setChainId])
+  useMount(() => {
+    const pathArr = router.asPath.split('/')
+    const chainId = Number(pathArr[pathArr.length - 1])
+    console.log(pathArr, chainId)
 
+    if (chainId > 0) {
+      setChainId(chainId as ChainId)
+    }
+  })
   return (
     <>
       <NextSeo {...STAKING_SEO} />

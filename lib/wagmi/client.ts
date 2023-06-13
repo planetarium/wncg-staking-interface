@@ -11,7 +11,7 @@ import {
 } from './connectors'
 
 export default createClient({
-  autoConnect: true,
+  autoConnect: false,
   provider,
   logger: {
     warn: null,

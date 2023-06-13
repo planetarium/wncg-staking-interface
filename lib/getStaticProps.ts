@@ -11,11 +11,11 @@ import { fetchPool } from 'lib/queries/fetchPool'
 import { fetchPoolSnapshot } from 'lib/queries/fetchPoolSnapshot'
 import { fetchStaking } from 'lib/queries/fetchStaking'
 
-export async function getStaticProps(ctx: GetStaticPropsContext) {
+export async function getStaticProps({ params }: GetStaticPropsContext) {
   const queryClient = new QueryClient()
 
-  const _chainId = getQueryString(ctx.params?.chainId)
-  const chainId = (Number(_chainId) ?? ChainId.ETHEREUM) as ChainId
+  const _chainId = getQueryString(params?.chainId)
+  const chainId = Math.max(Number(_chainId), ChainId.ETHEREUM) as ChainId
 
   const {
     pool = LIQUIDITY_POOL_PLACEHOLDER,

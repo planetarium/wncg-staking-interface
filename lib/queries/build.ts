@@ -9,7 +9,7 @@ import { prefetchTokens } from './prefetchTokens'
 
 export async function build(chainId: ChainId) {
   console.log('Building >>> ', chainId)
-  chainId = (chainId ? Number(chainId) : ChainId.ETHEREUM) as ChainId
+  chainId = Math.max(Number(chainId), ChainId.ETHEREUM) as ChainId
 
   try {
     const pool = await prefetchPool(chainId)

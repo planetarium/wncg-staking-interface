@@ -13,13 +13,11 @@ export function useFetchUserBalances(options: UseFetchOptions = {}) {
 
   const shouldFetch = enabled && !!account
 
+  const list = [lpToken.address, ...poolTokenAddresses]
+
   return useQuery<RawBalanceMap>(
-    [QUERY_KEYS.User.Balances, account, chainId],
-    () =>
-      fetchUserBalances(chainId, account!, [
-        lpToken.address,
-        ...poolTokenAddresses,
-      ]),
+    [QUERY_KEYS.User.Balances, account, chainId, ...list],
+    () => fetchUserBalances(chainId, account!, list),
     {
       enabled: shouldFetch,
       staleTime: Infinity,

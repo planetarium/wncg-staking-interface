@@ -7,7 +7,7 @@ import { useAtomValue } from 'jotai'
 import { chainIdAtom } from 'states/system'
 
 export function useChain() {
-  const chainId = useAtomValue(chainIdAtom) ?? ChainId.ETHEREUM
+  const chainId = useAtomValue(chainIdAtom)
 
   const chain = CHAINS[chainId]
   const dex = DEX[chainId]

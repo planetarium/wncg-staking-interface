@@ -1,4 +1,4 @@
-import { build } from 'lib/queries/build'
+import { fetchStaking } from 'lib/queries/fetchStaking'
 import type { NextApiResponse, NextApiRequest } from 'next'
 
 import { getQueryString } from 'utils/getQueryString'
@@ -11,8 +11,7 @@ export default async function handler(
   const chainId = Number(_chainId) as ChainId
 
   try {
-    const data = await build(chainId)
-    console.log('build:::', chainId)
+    const data = await fetchStaking(chainId)
 
     res.setHeader('Access-Control-Allow-Origin', '*')
     res.status(200).json(data)

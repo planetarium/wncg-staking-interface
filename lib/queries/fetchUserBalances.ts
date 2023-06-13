@@ -7,6 +7,7 @@ export async function fetchUserBalances(
   account: Hash,
   addresses: Hash[]
 ): Promise<RawBalanceMap> {
+  console.log(44444, chainId)
   try {
     const promises = [
       fetchBalance({

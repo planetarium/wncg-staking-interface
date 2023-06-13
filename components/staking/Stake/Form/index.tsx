@@ -101,7 +101,11 @@ export default function StakeForm() {
   }, [account, prevAccount, resetForm])
 
   return (
-    <StyledStakeForm {...MOTION} onSubmit={handleSubmit}>
+    <StyledStakeForm
+      {...MOTION}
+      onSubmit={handleSubmit}
+      variants={ANIMATION_MAP.fadeIn}
+    >
       <div className="field">
         <div className="inputGroup">
           <Control<'number'>

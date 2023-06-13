@@ -1,4 +1,4 @@
-import { PropsWithChildren, useRef } from 'react'
+import { PropsWithChildren, useEffect, useRef } from 'react'
 import {
   Hydrate,
   QueryClient,
@@ -42,6 +42,10 @@ function HydrateAtoms({ queryClient, children }: HydrateAtomsProps) {
 }
 
 function MyApp({ Component, pageProps }: MyAppProps) {
+  useMount(() => {
+    wagmiClient.autoConnect()
+  })
+
   const queryClient = useRef(
     new QueryClient({
       defaultOptions: {

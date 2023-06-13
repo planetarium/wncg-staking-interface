@@ -1,10 +1,9 @@
 import { readContracts } from 'wagmi'
 
 import { StakingEthereumAbi } from 'config/abi'
-import { balAddressFor } from 'utils/balAddressFor'
 import { bnum } from 'utils/bnum'
 import { formatUnits } from 'utils/formatUnits'
-import { STAKING_ADDRESS } from 'config/constants/addresses'
+import { BAL_ADDRESS, STAKING_ADDRESS } from 'config/constants/addresses'
 
 const FNS = [
   'earmarkIncentive',
@@ -62,9 +61,11 @@ export async function prefetchStaking(chainId: ChainId) {
     const rewardTokenAddress = (_rewardToken?.toLowerCase() ?? '') as Hash
     const stakedTokenAddress = (_stakedToken?.toLowerCase() ?? '') as Hash
 
-    const rewardTokenAddresses = [_rewardToken, balAddressFor(chainId)].map(
-      (a) => a?.toLowerCase() as Hash
-    )
+    const rewardTokenAddresses = [
+      _rewardToken,
+      (BAL_ADDRESS[chainId] ?? '') as Hash,
+    ].map((a) => a?.toLowerCase() as Hash)
+
     const rewardEmissions = [_wncgEmissionPerSec, _balRewardRate].map((e) =>
       formatUnits(e)
     )

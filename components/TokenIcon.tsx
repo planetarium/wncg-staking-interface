@@ -86,7 +86,7 @@ function TokenIcon({
     useStaking()
 
   const element = useMemo(() => {
-    if (address === lpToken.address) {
+    if (address === lpToken?.address) {
       const list = [...poolTokenAddresses]
       if (shouldReversePoolTokenOrderOnDisplay) list.reverse()
 
@@ -105,7 +105,7 @@ function TokenIcon({
     $dark,
     $size,
     address,
-    lpToken.address,
+    lpToken?.address,
     poolTokenAddresses,
     shouldReversePoolTokenOrderOnDisplay,
   ])

@@ -9,7 +9,6 @@ import {
   UseFormWatch,
 } from 'react-hook-form'
 
-import config from 'config'
 import { NATIVE_CURRENCY_ADDRESS } from 'config/constants/addresses'
 import {
   HIGH_PRICE_IMPACT,
@@ -17,7 +16,7 @@ import {
 } from 'config/constants/liquidityPool'
 import { LiquidityFieldType } from 'config/constants'
 import { bnum } from 'utils/bnum'
-import { useBalances, useFiat, useStaking } from 'hooks'
+import { useBalances, useChain, useFiat, useStaking } from 'hooks'
 import { useJoinMath } from './useJoinMath'
 
 export const joinFormFields: LiquidityFieldType[] = [
@@ -80,6 +79,7 @@ export function useJoinForm(): UseJoinFormReturns {
     useState<JoinFormFocusedElement>(null)
 
   const balanceOf = useBalances()
+  const { nativeCurrency } = useChain()
   const toFiat = useFiat()
   const { poolTokenAddresses } = useStaking()
   const { calcPriceImpact, calcOptimizedAmounts } = useJoinMath()
@@ -101,10 +101,10 @@ export function useJoinForm(): UseJoinFormReturns {
   const assets = useMemo(() => {
     return poolTokenAddresses.map((addr) => {
       if (!isNativeCurrency) return addr
-      if (addr !== config.wrapped) return addr
+      if (addr !== nativeCurrency.wrappedTokenAddress) return addr
       return NATIVE_CURRENCY_ADDRESS
     })
-  }, [isNativeCurrency, poolTokenAddresses])
+  }, [isNativeCurrency, nativeCurrency.wrappedTokenAddress, poolTokenAddresses])
 
   const unsanitizedJoinAmounts = joinFormFields.map((field) =>
     watch(field as any)

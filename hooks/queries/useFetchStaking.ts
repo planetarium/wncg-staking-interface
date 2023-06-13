@@ -6,6 +6,8 @@ import { QUERY_KEYS } from 'config/constants/queryKeys'
 import { fetchStaking } from 'lib/queries/fetchStaking'
 import { useChain } from 'hooks/useChain'
 import { useStaking } from 'hooks/useStaking'
+import axios from 'axios'
+import config from 'config'
 
 export function useFetchStaking(options: UseFetchOptions = {}) {
   const {
@@ -29,9 +31,9 @@ export function useFetchStaking(options: UseFetchOptions = {}) {
       staleTime: Infinity,
       refetchInterval,
       refetchOnWindowFocus,
-      suspense: false,
+      suspense: true,
       useErrorBoundary: false,
-      placeholderData: props,
+      // placeholderData: props,
       onSuccess(data) {
         // if (!data) return
         // if (data.periodFinish > currentTimestamp) setIsHarvestable(false)

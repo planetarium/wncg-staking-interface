@@ -16,9 +16,15 @@ type UseStakingReturnBsc = LiquidityPool &
     priceMap: PriceMap
   }
 
-type UseStakingReturn<T extends 'ethereum' | undefined> = T extends undefined
-  ? UseStakingReturnBsc
-  : UseStakingReturnEthereum
+export type UseStakingReturn<T extends 'ethereum' | undefined> =
+  T extends undefined ? UseStakingReturnBsc : UseStakingReturnEthereum
+
+type BuildResponse = {
+  pool: LiquidityPool
+  staking: Staking | EthereumStaking
+  tokens: TokenMap
+  priceMap: PriceMap
+}
 
 export function useStaking<T extends 'ethereum' | undefined>() {
   const { chainId } = useChain()
@@ -26,6 +32,9 @@ export function useStaking<T extends 'ethereum' | undefined>() {
   const { data } = useQuery([QUERY_KEYS.Build, chainId], () => build(chainId), {
     staleTime: Infinity,
     cacheTime: Infinity,
+    onSuccess(data) {
+      console.log(111111, data)
+    },
   })
 
   return {

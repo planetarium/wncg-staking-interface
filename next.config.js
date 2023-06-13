@@ -29,6 +29,8 @@ const nextConfig = {
       '/wncg': { page: '/wncg', __nextDefaultLocale: 'en' },
       '/wncg/terms': { page: '/wncg/terms', __nextDefaultLocale: 'en' },
       '/wncg/privacy': { page: '/wncg/privacy', __nextDefaultLocale: 'en' },
+      '/404': { page: '/404', __nextDefaultLocale: 'en' },
+      '/500': { page: '/500', __nextDefaultLocale: 'en' },
     }
   },
 }

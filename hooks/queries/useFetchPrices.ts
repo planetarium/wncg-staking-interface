@@ -19,18 +19,19 @@ export function useFetchPrices(options: UseFetchOptions = {}) {
   const { chainId } = useChain()
   const {
     lpToken: initLpToken,
-    rewardTokenAddresses,
-    poolTokenAddresses,
+    rewardTokenAddresses = [],
+    poolTokenAddresses = [],
   } = useStaking()
 
   const { lpToken = initLpToken, poolTokens = [] } = useFetchPool().data ?? {}
 
   const setPriceMap = useSetAtom(priceMapAtom)
 
+  const list = [...poolTokenAddresses, ...rewardTokenAddresses]
+
   return useQuery<PriceMap>(
-    [QUERY_KEYS.Staking.Prices, chainId],
-    () =>
-      fetchPrices(chainId, [...poolTokenAddresses, ...rewardTokenAddresses]),
+    [QUERY_KEYS.Staking.Prices, chainId, ...list],
+    () => fetchPrices(chainId, list),
     {
       enabled,
       staleTime: Infinity,
@@ -43,8 +44,8 @@ export function useFetchPrices(options: UseFetchOptions = {}) {
         const lpTokenPrice = calcLpTokenPrice(
           chainId,
           poolTokens,
-          lpToken.address,
-          lpToken.totalSupply,
+          lpToken?.address,
+          lpToken?.totalSupply ?? '0',
           data
         )
 
