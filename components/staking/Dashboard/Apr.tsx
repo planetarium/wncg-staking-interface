@@ -67,7 +67,7 @@ function StakingDashboardApr() {
           <CountUp value={totalStakedInFiatValue} type="fiat" abbr />
         </dd>
       </div>
-      {chainId}/{JSON.stringify(query)}
+
       {aprs.map((apr, i) => {
         const addr = rewardTokenAddresses[i]
         if (!addr) return null

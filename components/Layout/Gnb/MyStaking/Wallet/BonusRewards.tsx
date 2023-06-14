@@ -7,19 +7,19 @@ import { bnum } from 'utils/bnum'
 import { useFiat, useModal, useStaking } from 'hooks'
 import { useFetchUserRewards } from 'hooks/queries'
 
-import { StyledWalletRewards } from './styled'
+import { StyledWalletBonusRewards } from './styled'
 import Button from 'components/Button'
 import CountUp from 'components/CountUp'
 import Icon from 'components/Icon'
 import NumberFormat from 'components/NumberFormat'
 
-type WalletRewardsProps = {
+type WalletBonusRewardsProps = {
   closeWallet(): void
 }
 
-export default function WalletRewards({ closeWallet }: WalletRewardsProps) {
-  const [show, setShow] = useState(false)
-
+export default function WalletBonusRewards({
+  closeWallet,
+}: WalletBonusRewardsProps) {
   const toFiat = useFiat()
   const { addModal } = useModal()
   const { rewardTokenAddresses, tokens } = useStaking()
@@ -27,11 +27,15 @@ export default function WalletRewards({ closeWallet }: WalletRewardsProps) {
   const { earnedTokenRewards = [], hasRewards = false } =
     useFetchUserRewards().data ?? {}
 
+  const hasBonusReward = rewardTokenAddresses.length > 1
+  const [show, setShow] = useState(!hasBonusReward)
+
   function toggle() {
+    if (!hasBonusReward) return
     setShow((prev) => !prev)
   }
 
-  function openClaim() {
+  function onClickClaimRewards() {
     addModal({
       type: ModalType.Claim,
     })
@@ -39,7 +43,7 @@ export default function WalletRewards({ closeWallet }: WalletRewardsProps) {
   }
 
   return (
-    <StyledWalletRewards $show={show}>
+    <StyledWalletBonusRewards $show={show}>
       <button className="rewardToggle" type="button" onClick={toggle}>
         Earned rewards
         <Icon icon={show ? 'chevronDown' : 'chevronRight'} />
@@ -82,7 +86,7 @@ export default function WalletRewards({ closeWallet }: WalletRewardsProps) {
                 <dd>
                   <Button
                     className="claimButton"
-                    onClick={openClaim}
+                    onClick={onClickClaimRewards}
                     $size="sm"
                     $variant="tertiary"
                   >
@@ -94,6 +98,6 @@ export default function WalletRewards({ closeWallet }: WalletRewardsProps) {
           </motion.dl>
         )}
       </AnimatePresence>
-    </StyledWalletRewards>
+    </StyledWalletBonusRewards>
   )
 }

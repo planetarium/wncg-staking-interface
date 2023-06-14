@@ -2,7 +2,6 @@ import { useMemo } from 'react'
 import { add } from 'date-fns'
 
 import { APR_SPAN_LIST } from 'config/misc'
-import { bnum } from 'utils/bnum'
 import { calcApr } from 'utils/calcApr'
 import {
   ExpectedRevenueMap,
@@ -11,32 +10,29 @@ import {
 import { format } from 'utils/format'
 import { formatISO } from 'utils/formatISO'
 import { useFiat, useStaking } from 'hooks'
-import { useFetchStaking } from 'hooks/queries'
 
-import { StyledStakeFormRevenuePopup } from './styled'
+import { StyledStakeFormRevenuePopupBonusRewards } from './styled'
 import CountUp from 'components/CountUp'
 import Icon from 'components/Icon'
 import TokenIcon from 'components/TokenIcon'
 
-type StakeFormRevenueProps = {
+type StakeFormRevenuePopupBonusRewardsProps = {
   amount: string
+  expectedTotalStaked: string
   className?: string
 }
 
-export default function StakeFormRevenuePopup({
+export default function StakeFormRevenuePopupBonusRewards({
   amount,
+  expectedTotalStaked,
   className,
-}: StakeFormRevenueProps) {
+}: StakeFormRevenuePopupBonusRewardsProps) {
   const toFiat = useFiat()
   const { rewardEmissionsPerSec, rewardTokenAddresses, lpToken } = useStaking()
 
   const stakedTokenPrice = toFiat(1, lpToken.address)
-  const { totalStaked = '0' } = useFetchStaking().data ?? {}
 
-  const expectedTotalStakedValue = toFiat(
-    bnum(totalStaked).plus(bnum(amount).toString()).toString(),
-    lpToken.address
-  )
+  const expectedTotalStakedValue = toFiat(expectedTotalStaked, lpToken?.address)
 
   const aprs = useMemo(
     () =>
@@ -69,7 +65,7 @@ export default function StakeFormRevenuePopup({
   }, [amount, aprs, rewardTokenAddresses, stakedTokenPrice, toFiat])
 
   return (
-    <StyledStakeFormRevenuePopup className={className}>
+    <StyledStakeFormRevenuePopupBonusRewards className={className}>
       <header className="header">
         <Icon icon="time" />
         <h3 className="title">Estimated earnings</h3>
@@ -123,6 +119,6 @@ export default function StakeFormRevenuePopup({
           })}
         </dl>
       </div>
-    </StyledStakeFormRevenuePopup>
+    </StyledStakeFormRevenuePopupBonusRewards>
   )
 }

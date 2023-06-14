@@ -1,9 +1,9 @@
+import { StyledExpectedRevenueBonusRewards } from './styled'
 import Skeleton from 'components/Skeleton'
-import { StyledExpectedRevenue } from './styled'
 
 function ExpectedRevenuePlaceholder() {
   return (
-    <StyledExpectedRevenue className="revenueList">
+    <StyledExpectedRevenueBonusRewards className="revenueList">
       <ul className="revenueList">
         <li className="revenueItem">
           <Skeleton $height={68} />
@@ -18,7 +18,7 @@ function ExpectedRevenuePlaceholder() {
           <Skeleton $height={68} />
         </li>
       </ul>
-    </StyledExpectedRevenue>
+    </StyledExpectedRevenueBonusRewards>
   )
 }
 

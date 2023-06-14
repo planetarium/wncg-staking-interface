@@ -14,7 +14,8 @@ import CountUp from 'components/CountUp'
 import Icon from 'components/Icon'
 import NumberFormat from 'components/NumberFormat'
 import Suspense from 'components/Suspense'
-import Rewards from './Rewards'
+import BonusRewards from './BonusRewards'
+import SingleRewards from './SingleRewards'
 
 type WalletStakingProps = {
   closeWallet(): void
@@ -23,7 +24,7 @@ type WalletStakingProps = {
 export default function WalletStaking({ closeWallet }: WalletStakingProps) {
   const toFiat = useFiat()
   const { addModal } = useModal()
-  const { lpToken } = useStaking()
+  const { lpToken, rewardTokenAddresses } = useStaking()
 
   const { stakedTokenBalance = '0' } = useFetchUserData().data ?? {}
 
@@ -46,6 +47,7 @@ export default function WalletStaking({ closeWallet }: WalletStakingProps) {
   }
 
   const hasStakedToken = bnum(stakedTokenBalance).gt(0)
+  const hasBonusRewards = rewardTokenAddresses.length > 1
 
   return (
     <StyledWalletStaking>
@@ -67,7 +69,11 @@ export default function WalletStaking({ closeWallet }: WalletStakingProps) {
       )}
 
       <Suspense>
-        <Rewards closeWallet={closeWallet} />
+        {hasBonusRewards ? (
+          <BonusRewards closeWallet={closeWallet} />
+        ) : (
+          <SingleRewards closeWallet={closeWallet} />
+        )}
       </Suspense>
 
       {!isUnstakeWindow && (
