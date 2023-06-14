@@ -3,7 +3,7 @@
   "network": "bsc",
   "assetPlatform": "binance-smart-chain",
   "chainId": 56,
-  "chainName": "Binance Smart Chain",
+  "chainName": "BNB Smart Chain",
   "explorer": "https://bscscan.com",
   "explorerName": "BscScan",
   "name": "BNB Smart Chain",

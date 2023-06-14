@@ -1,15 +1,21 @@
+import Link from 'next/link'
+
 import config from 'config'
 import { ChainId } from 'config/chains'
 import { BAL_ADDRESS, WNCG_ADDRESS } from 'config/constants/addresses'
+import { chainNameFor } from 'utils/chainNameFor'
+import { isEthereum } from 'utils/isEthereum'
 
 import { StyledMainCard } from './styled'
 import Button from 'components/Button'
 import Icon from 'components/Icon'
 import Image from 'components/Image'
 import TokenIcon from 'components/TokenIcon'
+import CryptoIcon from 'components/CryptoIcon'
 
 export default function MainWncgCard() {
   const chainId = ChainId.ETHEREUM
+  const supportedChains = [ChainId.ETHEREUM, ChainId.BSC]
 
   return (
     <StyledMainCard>
@@ -22,6 +28,23 @@ export default function MainWncgCard() {
           />
           Staking Wrapped Nine Chronicles Gold
         </h2>
+
+        <div className="linkGroup">
+          {supportedChains.map((c) => {
+            return (
+              <Link
+                className="chainButton"
+                key={`wncgCard:links:${c}`}
+                href={`/wncg/${c}`}
+                target="_blank"
+                rel="noopener"
+              >
+                <CryptoIcon icon={isEthereum(c) ? 'ether' : 'bnb'} $size={24} />
+                {chainNameFor(c)}
+              </Link>
+            )
+          })}
+        </div>
 
         <div className="mobileImage">
           <Image
@@ -38,23 +61,30 @@ export default function MainWncgCard() {
           You can earn WNCG and BAL reward.
         </h4>
 
-        <dl className="rewardList">
-          <div className="rewardItem">
-            <dt>
-              <TokenIcon address={WNCG_ADDRESS[chainId]} $size={16} />
-              <strong>WNCG(Wrapped NCG)</strong>
-            </dt>
-            <dd>1:1 NCG backed ERC-20 token</dd>
-          </div>
+        <div className="group">
+          <p className="desc afterLaptop">
+            WNCG Staking is available on Ethereum and BNB Smart Chain. *BAL
+            reward is only on Ethereum.
+          </p>
 
-          <div className="rewardItem">
-            <dt>
-              <TokenIcon address={BAL_ADDRESS[chainId] as Hash} $size={16} />
-              <strong>BAL</strong>
-            </dt>
-            <dd>Balancer Governance Token</dd>
-          </div>
-        </dl>
+          <dl className="rewardList">
+            <div className="rewardItem">
+              <dt>
+                <TokenIcon address={WNCG_ADDRESS[chainId]} $size={16} />
+                <strong>WNCG(Wrapped NCG)</strong>
+              </dt>
+              <dd>1:1 NCG backed ERC-20 token</dd>
+            </div>
+
+            <div className="rewardItem">
+              <dt>
+                <TokenIcon address={BAL_ADDRESS[chainId] as Hash} $size={16} />
+                <strong>BAL</strong>
+              </dt>
+              <dd>Balancer Governance Token</dd>
+            </div>
+          </dl>
+        </div>
       </header>
 
       <div className="content">

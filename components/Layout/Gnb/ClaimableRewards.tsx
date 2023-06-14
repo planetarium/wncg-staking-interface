@@ -2,10 +2,11 @@ import { memo } from 'react'
 import { useAtomValue } from 'jotai'
 
 import { isHarvestableAtom } from 'states/system'
-import { BAL_ADDRESS } from 'config/constants/addresses'
 import { ModalType } from 'config/constants'
+import { BAL_ADDRESS } from 'config/constants/addresses'
 import { ANIMATION_MAP, MOTION } from 'config/constants/motions'
 import { bnum } from 'utils/bnum'
+import { isBsc } from 'utils/isBsc'
 import { useChain, useFiat, useModal, useResponsive, useStaking } from 'hooks'
 import { useFetchUserRewards } from 'hooks/queries'
 
@@ -14,6 +15,7 @@ import Button from 'components/Button'
 import CountUp from 'components/CountUp'
 import Icon from 'components/Icon'
 import NumberFormat from 'components/NumberFormat'
+import TokenIcon from 'components/TokenIcon'
 import Tooltip from 'components/Tooltip'
 
 function ClaimableRewards() {
@@ -55,6 +57,8 @@ function ClaimableRewards() {
 
         return (
           <div className="reward" key={`gnb:claimableRewards:${addr}`}>
+            {isBsc(chainId) && <TokenIcon address={addr} $size={24} />}
+
             <CountUp
               start={0}
               value={amount}

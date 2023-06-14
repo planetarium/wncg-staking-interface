@@ -56,6 +56,10 @@ export const StyledGnb = styled.header`
     }
   }
 
+  .settings {
+    ${flexbox('end')}
+  }
+
   .account {
     position: relative;
   }
@@ -82,6 +86,10 @@ export const StyledGnb = styled.header`
       .logo {
         width: 160px;
         height: 40px;
+      }
+
+      .settings {
+        flex-direction: row-reverse;
       }
     `
   )}
@@ -379,7 +387,7 @@ export const StyledGnbClaimableRewards = styled(motion.div)`
 
 export const StyledGnbConnectButton = styled(motion.div)`
   ${flexbox()}
-  width: 204px;
+  width: 160px;
 
   button {
     width: 100%;
@@ -388,15 +396,14 @@ export const StyledGnbConnectButton = styled(motion.div)`
 
   .accountButton {
     ${flexbox()}
-    ${textStyle('body', 2)}
+    ${textStyle('body', 2, 700)}
     padding: 0 16px;
-    font-weight: 700;
     color: var(--white);
     border-radius: 8px;
     background-color: rgba(var(--white-rgb), 0.1);
 
     .jazzicon {
-      margin-right: 12px;
+      margin-right: 8px;
     }
 
     .icon {
@@ -436,10 +443,17 @@ export const StyledGnbConnectButton = styled(motion.div)`
 
 export const StyledGnbMenuButton = styled(motion.button)`
   ${inlineFlexbox()}
-  width: 32px;
-  height: 32px;
-  margin-left: 16px;
+  width: 24px;
+  height: 24px;
   color: var(--white);
+
+  ${media(
+    'minTablet',
+    css`
+      width: 32px;
+      height: 32px;
+    `
+  )}
 
   ${media(
     'minLaptop',

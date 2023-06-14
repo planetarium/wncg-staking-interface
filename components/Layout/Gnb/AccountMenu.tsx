@@ -1,5 +1,4 @@
-import { memo, useCallback, useRef } from 'react'
-import { useMount, useUnmount } from 'react-use'
+import { memo, useRef } from 'react'
 import CopyToClipboard from 'react-copy-to-clipboard'
 import Link from 'next/link'
 import { useAtomValue } from 'jotai'
@@ -13,7 +12,13 @@ import {
 } from 'config/constants/motions'
 import { explorerUrlFor } from 'utils/explorerUrlFor'
 import { truncateAddress } from 'utils/truncateAddress'
-import { useAuth, useCopy, useChain, useDisconnect } from 'hooks'
+import {
+  useAuth,
+  useChain,
+  useCloseOnBlur,
+  useCopy,
+  useDisconnect,
+} from 'hooks'
 
 import { StyledGnbAccountMenu } from './styled'
 import Button from 'components/Button'
@@ -37,20 +42,7 @@ function AccountMenu({ closeMenu }: AccountMenuProps) {
 
   const chain = useAtomValue(currentChainAtom)
 
-  const closeOnBlur = useCallback(
-    (e: MouseEvent) => {
-      if (!menuRef?.current?.contains(e.target as Node)) closeMenu()
-    },
-    [closeMenu]
-  )
-
-  useMount(() => {
-    window.addEventListener('click', closeOnBlur, { passive: true })
-  })
-
-  useUnmount(() => {
-    window.removeEventListener('click', closeOnBlur)
-  })
+  useCloseOnBlur(menuRef, closeMenu)
 
   return (
     <StyledGnbAccountMenu

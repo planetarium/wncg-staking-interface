@@ -1,8 +1,12 @@
 import styled, { css } from 'styled-components'
 import { motion } from 'framer-motion'
 
-import { ALERT_HEIGHT } from 'styles/constants/dimensions'
-import { flexbox, textStyle } from 'styles/utils'
+import {
+  ALERT_HEIGHT,
+  GUTTER_MOBILE,
+  GUTTER_TABLET,
+} from 'styles/constants/dimensions'
+import { flexbox, media, textStyle } from 'styles/utils'
 
 import { buttonStyle } from 'components/Button/styled'
 
@@ -31,6 +35,7 @@ export const StyledAlerts = styled(motion.aside)<StyledAlertsProps>`
 
 export const StyledAlertContent = styled(motion.div)`
   ${flexbox()}
+  padding: 0 ${GUTTER_MOBILE}px;
   height: ${ALERT_HEIGHT}px;
 
   .desc,
@@ -39,18 +44,46 @@ export const StyledAlertContent = styled(motion.div)`
   }
 
   .desc {
-    ${textStyle('body', 2)}
-    font-weight: 700;
+    ${textStyle('body', 4, 700)}
   }
 
   .switchButton {
     ${buttonStyle}
     ${textStyle('caption')}
+    flex-shrink: 0;
     height: 32px;
     padding: 0 16px;
     font-weight: 700;
     color: var(--orange-500);
     background-color: var(--white);
     border-radius: 50px;
+    white-space: nowrap;
   }
+
+  ${media(
+    'minTablet',
+    css`
+      padding: 0 ${GUTTER_TABLET}px;
+    `
+  )}
+
+  ${media(
+    'minLaptop',
+    css`
+      .desc {
+        ${textStyle('body', 2, 700)}
+      }
+
+      .switchButton {
+        ${buttonStyle}
+        ${textStyle('caption')}
+    height: 32px;
+        padding: 0 16px;
+        font-weight: 700;
+        color: var(--orange-500);
+        background-color: var(--white);
+        border-radius: 50px;
+      }
+    `
+  )}
 `

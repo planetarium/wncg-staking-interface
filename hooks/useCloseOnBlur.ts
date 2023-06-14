@@ -1,22 +1,41 @@
 import { RefObject, useCallback } from 'react'
 import { useMount, useUnmount } from 'react-use'
 
+type CloseOnBlurOptions = {
+  capture?: boolean
+  passive?: boolean
+}
+
 export function useCloseOnBlur(
   ref: RefObject<HTMLElement>,
-  onClose: () => void
+  onClose: () => void,
+  options: CloseOnBlurOptions = {}
 ) {
+  const { capture = true, passive = true } = options
+
   const closeOnBlur = useCallback(
     (e: MouseEvent) => {
+      console.log(
+        ref?.current?.classList,
+        e.target,
+        ref?.current?.contains(e.target as Node)
+      )
+
       if (!ref?.current?.contains(e.target as Node)) {
         onClose()
-        window.removeEventListener('click', closeOnBlur)
+        window.removeEventListener('click', closeOnBlur, {
+          capture,
+        })
       }
     },
-    [onClose, ref]
+    [capture, onClose, ref]
   )
 
   useMount(() => {
-    window.addEventListener('click', closeOnBlur, { passive: false })
+    window.addEventListener('click', closeOnBlur, {
+      capture,
+      passive,
+    })
   })
 
   useUnmount(() => {

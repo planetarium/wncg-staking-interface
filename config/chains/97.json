@@ -11,7 +11,7 @@
   },
   "assetPlatform": "binance-smart-chain",
   "chainId": 97,
-  "chainName": "Binance Smart Chain Testnet",
+  "chainName": "BNB Smart Chain",
   "explorer": "https://testnet.bscscan.com",
   "explorerName": "BscScan",
   "name": "BNB Smart Chain Testnet",

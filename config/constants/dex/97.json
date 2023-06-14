@@ -2,6 +2,7 @@
   "chainId": 97,
   "network": "bscTestnet",
   "dexPlatform": "pancakeswap",
+  "dexPlatformName": "PancakeSwap",
   "dexPoolId": "0xacf4fcab4b08c9452cb7fd9f8a5bbd6e8f40b52e",
   "dexPlatformUrl": "https://pancakeswap.finance"
 }

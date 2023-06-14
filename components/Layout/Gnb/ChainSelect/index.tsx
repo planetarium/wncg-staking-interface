@@ -1,27 +1,38 @@
-import Dropdown from 'components/Dropdown'
-import { useAtom } from 'jotai'
-import { useRouter } from 'next/router'
-import { MouseEvent } from 'react'
-import { chainIdAtom } from 'states/system'
+import { MouseEvent, useState } from 'react'
+import { AnimatePresence } from 'framer-motion'
 
-export default function GnbChainSelectDesktop() {
-  const router = useRouter()
-  const [chainId, setChainId] = useAtom(chainIdAtom)
+import { ChainId } from 'config/chains'
 
-  function onChainChange(e: MouseEvent<HTMLButtonElement>) {
-    const { value } = e.currentTarget
-    router.replace(router.pathname, `/wncg/${value}`, { shallow: true })
-    setChainId(Number(value) as ChainId)
+import { StyledGnbChainSelect } from './styled'
+import Menu from './Menu'
+import Toggle from './Toggle'
+
+const SUPPORTED_CHAINS = [
+  ChainId.ETHEREUM,
+  ChainId.GOERLI,
+  ChainId.BSC,
+  ChainId.BSC_TESTNET,
+]
+
+export default function GnbChainSelect() {
+  const [showMenu, setShowMenu] = useState(false)
+
+  function toggle(e: MouseEvent<HTMLButtonElement>) {
+    e.stopPropagation()
+    setShowMenu((prev) => !prev)
+  }
+
+  function closeMenu() {
+    setShowMenu(false)
   }
 
   return (
-    <>
-      <Dropdown
-        id="network"
-        value={String(chainId)}
-        list={['1', '5', '56', '97']}
-        onChange={onChainChange}
-      />
-    </>
+    <StyledGnbChainSelect>
+      <Toggle toggle={toggle} />
+
+      <AnimatePresence>
+        {showMenu && <Menu list={SUPPORTED_CHAINS} closeMenu={closeMenu} />}
+      </AnimatePresence>
+    </StyledGnbChainSelect>
   )
 }

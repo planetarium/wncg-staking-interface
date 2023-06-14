@@ -10,6 +10,7 @@ type DexInfo = {
   chainId: ChainId
   network: string
   dexPlatform: string
+  dexPlatformName: string
   dexPlatformUrl: string
   dexPoolId: string
 }

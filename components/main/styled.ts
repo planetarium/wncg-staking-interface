@@ -25,6 +25,10 @@ export const StyledMainCard = styled(motion.div)`
       ${textStyle('header', 6)}
       margin-top: 16px;
     }
+
+    .linkGroup {
+      display: none;
+    }
   }
 
   .mobileImage {
@@ -43,8 +47,13 @@ export const StyledMainCard = styled(motion.div)`
     height: auto;
   }
 
-  .rewardList {
+  .group {
     margin-top: 16px;
+  }
+
+  .desc {
+    ${textStyle('caption')}
+    color: var(--gray-400);
   }
 
   .rewardItem {
@@ -138,9 +147,16 @@ export const StyledMainCard = styled(motion.div)`
         display: flex;
       }
 
+      .group {
+        margin-top: 20px;
+      }
+
       .rewardList {
         ${flexbox()}
-        margin-top: 20px;
+      }
+
+      .desc {
+        ${textStyle('body', 4)}
       }
 
       .rewardItem {
@@ -178,17 +194,49 @@ export const StyledMainCard = styled(motion.div)`
   )}
 
   ${media(
-    'minDesktop',
+    'minLaptop',
     css`
       .header {
         .subtitle {
           ${textStyle('header', 4)}
+          margin-top: 20px;
+        }
+
+        .linkGroup {
+          ${flexbox()}
+          margin-top: 40px;
+        }
+
+        .chainButton {
+          ${flexbox()}
+          ${textStyle('body', 4)}
+          padding: 8px 12px;
+          margin-left: 12px;
+          color: var(--gray-25);
+          background-color: var(--gray-900);
+          border-radius: 50px;
+
+          &:first-child {
+            margin-left: 0;
+          }
+
+          .cryptoIcon {
+            margin-right: 8px;
+          }
         }
       }
 
       .tabletImage {
         width: 880px;
         height: 880px;
+      }
+
+      .group {
+        margin-top: 40px;
+
+        .rewardList {
+          margin-top: 8px;
+        }
       }
     `
   )}

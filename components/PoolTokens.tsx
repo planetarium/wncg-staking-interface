@@ -17,7 +17,7 @@ type PoolTokensProps = {
 }
 
 function PoolTokens({ lpBalance, className }: PoolTokensProps) {
-  const { chainId } = useChain()
+  const { chainId, dexPlatformName } = useChain()
   const { poolTokens, shouldReversePoolTokenOrderOnDisplay } = useStaking()
   const { propAmounts, propAmountsInFiatValue } = usePropAmounts(lpBalance)
 
@@ -29,7 +29,7 @@ function PoolTokens({ lpBalance, className }: PoolTokensProps) {
 
           <div className="tooltipGroup">
             <Icon icon="outlink" />
-            <p className="tooltip">Go to {config.dexPlatformName}</p>
+            <p className="tooltip">Go to {dexPlatformName}</p>
           </div>
         </Link>
       </header>

@@ -8,12 +8,12 @@ import { useAuth, useResponsive } from 'hooks'
 
 import { StyledGnb } from './styled'
 import Image from 'components/Image'
+import Suspense from 'components/Suspense'
 import AccountMenu from './AccountMenu'
+import ChainSelect from './ChainSelect'
 import MenuButton from './MenuButton'
 import MenuList from './MenuList'
 import Sidebar from './Sidebar'
-import Suspense from 'components/Suspense'
-import GnbChainSelectDesktop from './ChainSelect'
 
 const ConnectButton = dynamic(() => import('./ConnectButton'), {
   ssr: false,
@@ -88,16 +88,19 @@ export default function MainGnb() {
       <div className="right">
         <MenuList />
 
-        <div className="account">
-          <ConnectButton toggle={toggle} />
+        <div className="settings">
+          <ChainSelect />
 
-          <AnimatePresence>
-            <GnbChainSelectDesktop />
-            {show && <AccountMenu closeMenu={closeMenu} />}
-          </AnimatePresence>
+          <div className="account">
+            <ConnectButton toggle={toggle} />
+
+            <AnimatePresence>
+              {show && <AccountMenu closeMenu={closeMenu} />}
+            </AnimatePresence>
+          </div>
+
+          <MenuButton open={openSidebar} />
         </div>
-
-        <MenuButton open={openSidebar} />
 
         <AnimatePresence>
           {showSidebar && <Sidebar closeSidebar={closeSidebar} />}

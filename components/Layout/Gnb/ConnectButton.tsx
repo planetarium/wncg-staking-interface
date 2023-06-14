@@ -28,8 +28,7 @@ function GnbConnectButton({ toggle }: GnbConnectProps) {
       <StyledGnbConnectButton {...MOTION} variants={ANIMATION_MAP.fadeIn}>
         <button className="accountButton" type="button" onClick={toggle}>
           <Jazzicon address={account!} diameter={24} />
-          <strong className="address">{truncateAddress(account!, 5, 4)}</strong>
-          <Icon icon="check" $size={24} />
+          <strong className="address">{truncateAddress(account!, 5, 3)}</strong>
         </button>
       </StyledGnbConnectButton>
     )

@@ -1,4 +1,4 @@
-import { memo } from 'react'
+import { MouseEvent, memo } from 'react'
 import { useSetAtom } from 'jotai'
 
 import { showMyStakingAtom } from 'states/ui'
@@ -27,7 +27,9 @@ function WalletBalance() {
 
   const fiatValue = toFiat(lpBalance, lpToken.address)
 
-  function openExit() {
+  function onClickExit(e: MouseEvent) {
+    e.stopPropagation()
+
     setShowMyStaking(false)
     addModal({
       type: ModalType.Exit,
@@ -51,7 +53,7 @@ function WalletBalance() {
           className="actionButton"
           type="button"
           disabled={exitDisabled}
-          onClick={openExit}
+          onClick={onClickExit}
           $size="md"
           $variant="secondary"
         >
