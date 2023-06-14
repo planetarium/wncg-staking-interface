@@ -3,7 +3,7 @@ import { UseFormSetValue, UseFormTrigger } from 'react-hook-form'
 
 import { LiquidityFieldType } from 'config/constants'
 import { useChain, useStaking } from 'hooks'
-import { JoinFormFields } from 'hooks/useJoinForm'
+import { JoinFormFields } from 'hooks/balancer/useJoinForm'
 
 import { StyledJoinFormJoinFormEtherSelect } from './styled'
 import Dropdown from 'components/Dropdown'
@@ -38,7 +38,7 @@ export default function JoinFormEtherSelect({
     const { value: symbol } = e.currentTarget as HTMLButtonElement
 
     setValue(
-      'isNativeCurrency',
+      LiquidityFieldType.UseNative,
       symbol === nativeCurrency.symbol ? true : false
     )
     setValue(name as 'TokenA' | 'TokenB', '')

@@ -17,14 +17,14 @@ import TokenIcon from 'components/TokenIcon'
 
 type ExitModalPage2Props = {
   assets: Hash[]
-  isProportional: boolean
+  isPropExit: boolean
   tokenOutIndex: number
   hash?: Hash
 }
 
 export default function ExitModalPage2({
   assets,
-  isProportional,
+  isPropExit,
   hash,
   tokenOutIndex,
 }: ExitModalPage2Props) {
@@ -43,9 +43,9 @@ export default function ExitModalPage2({
     async onSuccess(tx) {
       const { logs } = await tx.wait()
 
-      const tokenOut = isProportional ? null : assets[tokenOutIndex]
+      const tokenOut = isPropExit ? null : assets[tokenOutIndex]
 
-      if (isProportional || tokenOut !== nativeCurrency.address) {
+      if (isPropExit || tokenOut !== nativeCurrency.address) {
         const parsedLogs = parseTransferLogs(logs)
         const receivedTokens = assets.map((addr) => parsedLogs?.[addr])
 
@@ -85,12 +85,12 @@ export default function ExitModalPage2({
     .toString()
 
   const importTokenAddress = useMemo(() => {
-    if (isProportional) {
+    if (isPropExit) {
       return lpToken.address
     }
 
     return tokens?.[assets[tokenOutIndex]]?.address
-  }, [assets, isProportional, lpToken.address, tokens, tokenOutIndex])
+  }, [assets, isPropExit, lpToken.address, tokens, tokenOutIndex])
 
   return (
     <StyledExitModalPage2>

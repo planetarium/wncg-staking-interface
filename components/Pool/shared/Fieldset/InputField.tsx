@@ -9,13 +9,14 @@ import {
   UseFormWatch,
 } from 'react-hook-form'
 
+import { LiquidityFieldType } from 'config/constants'
 import { useChain, useFiat } from 'hooks'
 import { bnum } from 'utils/bnum'
 import {
   JoinFormFields,
   JoinFormFocusedElement,
   joinFormFields,
-} from 'hooks/useJoinForm'
+} from 'hooks/balancer/useJoinForm'
 
 import { StyledJoinFormInputField } from './styled'
 import { AvailableBalance, Control } from 'components/Form'
@@ -82,7 +83,7 @@ function JoinInputField({
     nativeCurrency.wrappedTokenAddress,
     nativeCurrency.address,
   ].includes(address)
-  const isNativeCurrency = watch('isNativeCurrency')
+  const isNativeCurrency = watch(LiquidityFieldType.UseNative)
 
   const maxBalanceInFiatValue = useMemo(
     () => toFiat(maxBalance, address),
@@ -105,7 +106,7 @@ function JoinInputField({
 
   const setMaxValue = useCallback(() => {
     setValue(name, maxSafeBalance)
-    setFocusedElement('MaxButton')
+    setFocusedElement('Max')
     setActiveField(name)
     trigger()
   }, [

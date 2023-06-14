@@ -7,7 +7,7 @@ import {
 import clsx from 'clsx'
 
 import { HIGH_PRICE_IMPACT } from 'config/constants/liquidityPool'
-import { ExitFormFields } from 'hooks/useExitForm'
+import { ExitFormFields } from 'hooks/balancer/useExitForm'
 
 import { StyledExitModalPage1Step3 } from './styled'
 import HighPriceImpact from 'components/HighPriceImpact'

@@ -1,13 +1,12 @@
 import { motion } from 'framer-motion'
 import styled, { css } from 'styled-components'
 
+import { flexbox, gradient, media, textStyle } from 'styles/utils'
 import {
   buttonStyle,
   lgButtonStyle,
   mdButtonStyle,
 } from 'components/Button/styled'
-
-import { flexbox, gradient, media, textStyle } from 'styles/utils'
 
 const INPUT_FIELD_GAP = 24
 
@@ -41,7 +40,7 @@ export const StyledJoinFormInputField = styled(motion.div)`
 
 export const StyledJoinFormProportionalGuideBanner = styled(motion.aside)`
   width: 100%;
-  padding: 6px 12px;
+  padding: 10px 12px;
   margin-top: 24px;
   border-radius: 6px;
   background-color: var(--primary-500);
@@ -62,7 +61,7 @@ export const StyledJoinFormProportionalGuideBanner = styled(motion.aside)`
     flex-shrink: 0;
     padding: 4px 12px;
     margin-top: 10px;
-    color: var(--white);
+    color: rgba(var(--gray-100-rgb), 0.9);
     background-color: rgba(var(--white-rgb), 0.1);
     border-radius: 50px;
 
@@ -98,7 +97,7 @@ export const StyledJoinFormProportionalGuideBanner = styled(motion.aside)`
     'minSmLaptop',
     css`
       ${flexbox('start')}
-      padding: 6px 12px;
+      padding: 10px 12px;
       margin-top: 24px;
       margin-bottom: 0;
 
@@ -109,7 +108,7 @@ export const StyledJoinFormProportionalGuideBanner = styled(motion.aside)`
           display: block;
           width: 2px;
           height: 10px;
-          margin: 0 8px;
+          margin: 0 10px;
           border-radius: 40px;
           background-color: var(--primary-400);
           content: '';
@@ -122,6 +121,7 @@ export const StyledJoinFormProportionalGuideBanner = styled(motion.aside)`
 
       .desc {
         ${textStyle('body', 4)}
+        color: rgba(var(--gray-100-rgb), 0.8);
       }
 
       .addButton {

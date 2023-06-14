@@ -28,15 +28,6 @@ const WncgStaking: NextPage = () => {
   const { query } = useRouter()
   const [chainId, setChainId] = useAtom(chainIdAtom)
 
-  // useEffect(() => {
-  //   const newChainId = Number(getQueryString(query?.chainId))
-
-  //   if (newChainId && newChainId !== chainId) {
-  //     console.log(chainId, '➡️', newChainId)
-  //     setChainId(newChainId as ChainId)
-  //   }
-  // }, [chainId, query?.chainId, setChainId])
-
   return (
     <>
       <NextSeo {...STAKING_SEO} />

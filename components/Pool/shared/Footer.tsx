@@ -1,7 +1,8 @@
+import { useAuth } from 'hooks'
+
 import { StyledJoinFormFooter } from './styled'
 import Button from 'components/Button'
 import { Checkout } from 'components/Modals/shared'
-import { useAuth } from 'hooks'
 
 type JoinFormFooterProps = {
   totalJoinFiatValue: string

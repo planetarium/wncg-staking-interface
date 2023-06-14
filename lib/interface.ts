@@ -1,10 +1,10 @@
 import { Interface } from '@ethersproject/abi'
 
 import {
+  BalancerLiquidityGaugeAbi,
   BalancerRewardPoolAbi,
   BalancerVaultAbi,
   Erc20Abi,
-  LiquidityGaugeAbi,
   Multicall3Abi,
   StakingBscAbi,
   StakingEthereumAbi,
@@ -13,7 +13,7 @@ import {
 
 export const balRewardPoolIface = new Interface(BalancerRewardPoolAbi)
 export const ercTokenIface = new Interface(Erc20Abi)
-export const liquidityGaugeIface = new Interface(LiquidityGaugeAbi)
+export const liquidityGaugeIface = new Interface(BalancerLiquidityGaugeAbi)
 export const multicall3 = new Interface(Multicall3Abi)
 export const stakingBscIface = new Interface(StakingBscAbi)
 export const stakingEthereumIface = new Interface(StakingEthereumAbi)

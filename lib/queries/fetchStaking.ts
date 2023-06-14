@@ -5,7 +5,7 @@ import { fetchEthereumStaking } from './ethereum/fetchEthereumStaking'
 
 export async function fetchStaking(
   chainId: ChainId
-): Promise<Staking | EthereumStaking> {
+): Promise<EthereumStaking | BscStaking> {
   const { assetPlatform } = CHAINS[chainId]
 
   switch (assetPlatform) {

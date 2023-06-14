@@ -11,7 +11,7 @@ import clsx from 'clsx'
 import { NATIVE_CURRENCY_ADDRESS } from 'config/constants/addresses'
 import { LiquidityFieldType } from 'config/constants'
 import { useStaking } from 'hooks'
-import { ExitFormFields } from 'hooks/useExitForm'
+import { ExitFormFields } from 'hooks/balancer/useExitForm'
 
 import { StyledExitModalPage1Step1 } from './styled'
 import TokenIcon from 'components/TokenIcon'

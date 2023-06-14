@@ -4,9 +4,9 @@ import { explorerUrlFor } from 'utils/explorerUrlFor'
 import { useAuth, useChain, useConnect, useStaking } from 'hooks'
 
 import { StyledPoolHeader } from './styled'
+import Button from 'components/Button'
 import Icon from 'components/Icon'
 import TokenIcon from 'components/TokenIcon'
-import Button from 'components/Button'
 
 function PoolHeader() {
   const { isConnected } = useAuth()

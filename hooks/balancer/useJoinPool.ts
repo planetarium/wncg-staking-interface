@@ -2,15 +2,9 @@ import { useContractWrite, usePrepareContractWrite } from 'wagmi'
 import { parseUnits } from 'ethers/lib/utils.js'
 
 import config from 'config'
-
 import { BalancerVaultAbi } from 'config/abi'
-import {
-  useAuth,
-  useChain,
-  useJoinBuildRequest,
-  useStaking,
-  useSwitchNetwork,
-} from 'hooks'
+import { useAuth, useChain, useStaking, useSwitchNetwork } from 'hooks'
+import { useJoinBuildRequest } from './useJoinBuildRequest'
 
 export function useJoinPool(
   assets: Hash[],

@@ -29,7 +29,6 @@ const WncgStaking: NextPage = () => {
   useMount(() => {
     const pathArr = router.asPath.split('/')
     const chainId = Number(pathArr[pathArr.length - 1])
-    console.log(pathArr, chainId)
 
     if (chainId > 0) {
       setChainId(chainId as ChainId)

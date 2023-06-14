@@ -4,8 +4,8 @@ import { useAtom } from 'jotai'
 
 import { exitTxAtom } from 'states/tx'
 import { LiquidityFieldType } from 'config/constants'
-import { useExitPool } from 'hooks'
-import { ExitFormFields } from 'hooks/useExitForm'
+import { useExitPool } from 'hooks/balancer'
+import { ExitFormFields } from 'hooks/balancer/useExitForm'
 
 import { Checkout } from 'components/Modals/shared'
 import TxButton from 'components/TxButton'
@@ -13,7 +13,7 @@ import TxButton from 'components/TxButton'
 type ExitModalPage1FooterProps = {
   assets: Hash[]
   bptIn: string
-  exactOut: boolean
+  isExactOut: boolean
   exitAmounts: string[]
   send(value: string): void
   submitDisabled: boolean
@@ -24,7 +24,7 @@ type ExitModalPage1FooterProps = {
 function ExitModalPage1Footer({
   assets,
   bptIn,
-  exactOut,
+  isExactOut,
   exitAmounts,
   submitDisabled,
   send,
@@ -41,7 +41,7 @@ function ExitModalPage1Footer({
     exitType,
     exitAmounts,
     bptOutPcnt,
-    exactOut,
+    isExactOut,
   })
 
   async function exitPool() {

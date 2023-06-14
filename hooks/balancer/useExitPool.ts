@@ -3,20 +3,15 @@ import { useContractWrite, usePrepareContractWrite } from 'wagmi'
 import config from 'config'
 import { BalancerVaultAbi } from 'config/abi'
 import { bnum } from 'utils/bnum'
-import {
-  useAuth,
-  useChain,
-  useExitBuildRequest,
-  useStaking,
-  useSwitchNetwork,
-} from 'hooks'
+import { useAuth, useChain, useStaking, useSwitchNetwork } from 'hooks'
+import { useExitBuildRequest } from './useExitBuildRequest'
 
 type UseExitPoolParams = {
   assets: Hash[]
   bptOutPcnt: string
   exitAmounts: string[]
   exitType: Hash | null
-  exactOut: boolean
+  isExactOut: boolean
 }
 
 export function useExitPool({
@@ -24,7 +19,7 @@ export function useExitPool({
   bptOutPcnt,
   exitType,
   exitAmounts,
-  exactOut,
+  isExactOut,
 }: UseExitPoolParams) {
   const { account } = useAuth()
   const { chainId } = useChain()
@@ -35,7 +30,7 @@ export function useExitPool({
     assets,
     amounts: exitAmounts,
     exitType,
-    exactOut,
+    isExactOut,
     bptOutPcnt,
   })
 

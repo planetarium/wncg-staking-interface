@@ -19,11 +19,13 @@ export function useFetchPrices(options: UseFetchOptions = {}) {
   const { chainId } = useChain()
   const {
     lpToken: initLpToken,
-    rewardTokenAddresses = [],
-    poolTokenAddresses = [],
+    rewardTokenAddresses,
+    poolTokenAddresses,
+    poolTokens: initPoolTokens,
   } = useStaking()
 
-  const { lpToken = initLpToken, poolTokens = [] } = useFetchPool().data ?? {}
+  const { lpToken = initLpToken, poolTokens = initPoolTokens } =
+    useFetchPool().data ?? {}
 
   const setPriceMap = useSetAtom(priceMapAtom)
 

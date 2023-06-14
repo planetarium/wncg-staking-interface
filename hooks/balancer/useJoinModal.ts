@@ -6,15 +6,6 @@ import { ModalType } from 'config/constants'
 import { bnum } from 'utils/bnum'
 import { useAllowances, useModal, useResponsive, useStaking } from 'hooks'
 
-type OpenJoinParams = {
-  assets: Hash[]
-  joinAmounts: string[]
-  joinAmountsInFiatValue: string[]
-  lpBalance: string
-  totalJoinFiatValue: string
-  resetForm(): void
-}
-
 export function useJoinModal(assets: Hash[], joinAmounts: string[]) {
   const allowanceFor = useAllowances()
   const { addModal } = useModal()
@@ -36,8 +27,16 @@ export function useJoinModal(assets: Hash[], joinAmounts: string[]) {
     [shouldApprove, tokens]
   )
 
-  function openJoin(params: OpenJoinParams) {
+  function openJoinModal(params: {
+    assets: Hash[]
+    joinAmounts: string[]
+    lpBalance: string
+    totalJoinFiatValue: string
+    resetForm(): void
+  }) {
     if (isMobile) setShowPool(false)
+
+    const spender = balancerGaugeAddress
 
     const joinModalConfig = {
       type: ModalType.Join,
@@ -50,36 +49,35 @@ export function useJoinModal(assets: Hash[], joinAmounts: string[]) {
     }
 
     const titleSuffix = ' to join pool'
-    const completeMessage =
-      'Now you can join pool and no more approval is required for this smart contract.'
+    const spenderName = 'join pool'
+    const toastLabel = spenderName
+    const buttonLabel = 'Join pool'
 
     addModal({
       type: ModalType.Approve,
       props: {
-        spender: balancerGaugeAddress,
-        spenderName: 'join pool',
+        spender,
+        spenderName,
         tokenAddress: tokensToApprove[0].address,
         tokenSymbol: tokensToApprove[0].symbol,
         tokenDecimals: tokensToApprove[0].decimals,
         titleSuffix,
         buttonLabel: tokensToApprove[1]
           ? `Go to ${tokensToApprove[1].symbol} approval`
-          : 'Join pool',
-        toastLabel: 'join pool',
-        completeMessage: tokensToApprove[1] ? undefined : completeMessage,
+          : buttonLabel,
+        toastLabel,
         nextAction: tokensToApprove[1]
           ? {
               type: ModalType.Approve,
               props: {
                 spender: balancerGaugeAddress,
-                spenderName: 'join pool',
-                buttonLabel: 'Join pool',
-                toastLabel: 'join pool',
+                spenderName,
+                buttonLabel,
+                toastLabel,
                 tokenDecimals: tokensToApprove[1].decimals,
                 tokenAddress: tokensToApprove[1].address,
                 tokenSymbol: tokensToApprove[1].symbol,
                 titleSuffix,
-                completeMessage,
                 nextAction: joinModalConfig,
               },
             }
@@ -88,5 +86,5 @@ export function useJoinModal(assets: Hash[], joinAmounts: string[]) {
     })
   }
 
-  return openJoin
+  return openJoinModal
 }

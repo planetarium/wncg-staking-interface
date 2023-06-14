@@ -4,7 +4,7 @@ import { AnimatePresence } from 'framer-motion'
 import { ANIMATION_MAP, EXIT_MOTION } from 'config/constants/motions'
 import { bnum } from 'utils/bnum'
 import { useAuth, useStaking } from 'hooks'
-import type { JoinFormFocusedElement } from 'hooks/useJoinForm'
+import type { JoinFormFocusedElement } from 'hooks/balancer/useJoinForm'
 
 import { StyledJoinFormUnoptimizableAlert } from './styled'
 import Icon from 'components/Icon'
@@ -33,7 +33,7 @@ function JoinFormUnoptimizableAlert({
   }, [assets, maxBalances, tokens])
 
   const showAlert =
-    !!isConnected && focusedElement === 'OptimizeButton' && optimizeDisabled
+    !!isConnected && focusedElement === 'Optimize' && optimizeDisabled
 
   return (
     <AnimatePresence>

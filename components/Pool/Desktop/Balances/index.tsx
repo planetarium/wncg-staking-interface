@@ -3,10 +3,10 @@ import { memo } from 'react'
 import { useAuth, useConnect, useStaking } from 'hooks'
 
 import { StyledPoolBalances } from './styled'
+import Button from 'components/Button'
 import Suspense from 'components/Suspense'
 import TokenIcon from 'components/TokenIcon'
 import Content from './Content'
-import Button from 'components/Button'
 
 function PoolBalances() {
   const { isConnected } = useAuth()

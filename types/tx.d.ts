@@ -79,8 +79,8 @@ type ExitTx = {
   hash?: Hash
   exitAmounts?: string[]
   totalExitFiatValue?: string
-  isProportional?: boolean
-  exactOut?: boolean
+  isPropExit?: boolean
+  isExactOut?: boolean
   exitType?: Hash | null
   bptOutPcnt?: string
   bptIn?: string

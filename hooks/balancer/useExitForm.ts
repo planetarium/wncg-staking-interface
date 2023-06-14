@@ -9,14 +9,14 @@ import {
   UseFormWatch,
 } from 'react-hook-form'
 
-import { NATIVE_CURRENCY_ADDRESS } from 'config/constants/addresses'
 import { LiquidityFieldType } from 'config/constants'
 import {
   HIGH_PRICE_IMPACT,
   REKT_PRICE_IMPACT,
 } from 'config/constants/liquidityPool'
 import { bnum } from 'utils/bnum'
-import { useBalances, useChain, useFiat, useExitMath, useStaking } from 'hooks'
+import { useBalances, useChain, useFiat, useStaking } from 'hooks'
+import { useExitMath } from './useExitMath'
 
 export type ExitFormFields = {
   [LiquidityFieldType.LiquidityPercent]: string
@@ -30,15 +30,15 @@ export type UseExitFormReturns = {
   bptIn: string
   control: Control<ExitFormFields>
   clearErrors: UseFormClearErrors<ExitFormFields>
-  exactOut: boolean
+  isExactOut: boolean
   exitAmount: string
   exitAmounts: string[]
   exitAmountInFiatValue: string
   exitType: Hash | null
   totalExitFiatValue: string
-  isProportional: boolean
+  isPropExit: boolean
   bptOutPcnt: string
-  isNativeCurrency: boolean
+  isNative: boolean
   setValue: UseFormSetValue<ExitFormFields>
   submitDisabled: boolean
   singleExitMaxed: boolean
@@ -87,24 +87,29 @@ export function useExitForm(): UseExitFormReturns {
   const bptOutPcnt = watch(LiquidityFieldType.LiquidityPercent)
   const tokenOutAmount = watch(LiquidityFieldType.ExitAmount)
   const priceImpactAgreement = watch('priceImpactAgreement')
-  const isNativeCurrency = exitType === NATIVE_CURRENCY_ADDRESS
+  const isNative = exitType === nativeCurrency.address
 
-  const isProportional = exitType === null
+  const isPropExit = exitType === null
 
   const assets = useMemo(() => {
-    if (exitType !== NATIVE_CURRENCY_ADDRESS) return poolTokenAddresses
+    if (exitType !== nativeCurrency.address) return poolTokenAddresses
 
     const _assets = [...poolTokenAddresses]
     _assets[poolTokenAddresses.indexOf(nativeCurrency.wrappedTokenAddress)] =
-      NATIVE_CURRENCY_ADDRESS
+      nativeCurrency.address
     return _assets
-  }, [exitType, nativeCurrency.wrappedTokenAddress, poolTokenAddresses])
+  }, [
+    exitType,
+    nativeCurrency.address,
+    nativeCurrency.wrappedTokenAddress,
+    poolTokenAddresses,
+  ])
 
   const singleExitTokenOutIndex = useMemo(() => {
     switch (true) {
-      case isProportional:
+      case isPropExit:
         return 0
-      case exitType === NATIVE_CURRENCY_ADDRESS:
+      case exitType === nativeCurrency.address:
         return poolTokenAddresses.indexOf(nativeCurrency.wrappedTokenAddress)
       case exitType && poolTokenAddresses.includes(exitType):
         return poolTokenAddresses.indexOf(exitType!)
@@ -113,33 +118,29 @@ export function useExitForm(): UseExitFormReturns {
     }
   }, [
     exitType,
-    isProportional,
+    isPropExit,
+    nativeCurrency.address,
     nativeCurrency.wrappedTokenAddress,
     poolTokenAddresses,
   ])
 
   const singleExitMaxed = useMemo(
     () =>
-      !isProportional &&
+      !isPropExit &&
       bnum(tokenOutAmount).eq(singleExitMaxAmounts[singleExitTokenOutIndex]),
-    [
-      isProportional,
-      singleExitMaxAmounts,
-      singleExitTokenOutIndex,
-      tokenOutAmount,
-    ]
+    [isPropExit, singleExitMaxAmounts, singleExitTokenOutIndex, tokenOutAmount]
   )
 
-  const exactOut = useMemo(
-    () => !isProportional && !singleExitMaxed,
-    [isProportional, singleExitMaxed]
+  const isExactOut = useMemo(
+    () => !isPropExit && !singleExitMaxed,
+    [isPropExit, singleExitMaxed]
   )
 
   const bptIn = useMemo(
     () =>
       calcBptIn({
-        exactOut,
-        isProportional,
+        isExactOut,
+        isPropExit,
         tokenOutAmount,
         tokenOutIndex: singleExitTokenOutIndex,
         bptOutPcnt,
@@ -147,8 +148,8 @@ export function useExitForm(): UseExitFormReturns {
     [
       bptOutPcnt,
       calcBptIn,
-      exactOut,
-      isProportional,
+      isExactOut,
+      isPropExit,
       singleExitTokenOutIndex,
       tokenOutAmount,
     ]
@@ -160,8 +161,8 @@ export function useExitForm(): UseExitFormReturns {
   const priceImpact = useMemo(
     () =>
       calcPriceImpact({
-        exactOut,
-        isProportional,
+        isExactOut,
+        isPropExit,
         tokenOutIndex: singleExitTokenOutIndex,
         tokenOutAmount,
         bptOutPcnt,
@@ -169,8 +170,8 @@ export function useExitForm(): UseExitFormReturns {
     [
       bptOutPcnt,
       calcPriceImpact,
-      exactOut,
-      isProportional,
+      isExactOut,
+      isPropExit,
       singleExitTokenOutIndex,
       tokenOutAmount,
     ]
@@ -179,7 +180,7 @@ export function useExitForm(): UseExitFormReturns {
   const exitAmounts = useMemo(
     () =>
       calcExitAmounts({
-        isProportional,
+        isPropExit,
         tokenOutIndex: singleExitTokenOutIndex,
         tokenOutAmount,
         bptOutPcnt,
@@ -187,7 +188,7 @@ export function useExitForm(): UseExitFormReturns {
     [
       bptOutPcnt,
       calcExitAmounts,
-      isProportional,
+      isPropExit,
       singleExitTokenOutIndex,
       tokenOutAmount,
     ]
@@ -198,28 +199,26 @@ export function useExitForm(): UseExitFormReturns {
       poolTokenAddresses
         .reduce((acc, addr, i) => {
           const address =
-            exitType === NATIVE_CURRENCY_ADDRESS
-              ? NATIVE_CURRENCY_ADDRESS
-              : addr
+            exitType === nativeCurrency.address ? nativeCurrency.address : addr
 
           return acc.plus(toFiat(exitAmounts[i], address))
         }, bnum(0))
         .toString() ?? '0',
-    [exitAmounts, exitType, poolTokenAddresses, toFiat]
+    [exitAmounts, exitType, nativeCurrency.address, poolTokenAddresses, toFiat]
   )
 
   const submitDisabled = useMemo(
     () =>
-      (!isProportional && exitAmounts.every((a) => bnum(a).isZero())) ||
+      (!isPropExit && exitAmounts.every((a) => bnum(a).isZero())) ||
       Object.values(formState.errors).length > 0 ||
       priceImpact >= REKT_PRICE_IMPACT ||
       (priceImpact >= HIGH_PRICE_IMPACT && !priceImpactAgreement),
-    [exitAmounts, formState, isProportional, priceImpact, priceImpactAgreement]
+    [exitAmounts, formState, isPropExit, priceImpact, priceImpactAgreement]
   )
 
   const setMaxValue = useCallback(
     (e: MouseEvent<HTMLButtonElement>): void => {
-      if (isProportional) return
+      if (isPropExit) return
 
       setValue(
         LiquidityFieldType.ExitAmount,
@@ -229,7 +228,7 @@ export function useExitForm(): UseExitFormReturns {
     },
     [
       clearErrors,
-      isProportional,
+      isPropExit,
       setValue,
       singleExitMaxAmounts,
       singleExitTokenOutIndex,
@@ -245,15 +244,15 @@ export function useExitForm(): UseExitFormReturns {
     bptIn,
     clearErrors,
     control,
-    exactOut,
+    isExactOut,
     exitType,
     exitAmount,
     exitAmounts,
     exitAmountInFiatValue,
     bptOutPcnt,
-    isNativeCurrency,
+    isNative,
     setValue,
-    isProportional,
+    isPropExit,
     singleExitTokenOutIndex,
     singleExitMaxAmounts,
     singleExitMaxed,

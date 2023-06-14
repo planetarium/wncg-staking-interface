@@ -8,8 +8,8 @@ import { parseUnits } from 'utils/parseUnits'
 import { useBalances, useCalculator, useSlippage, useStaking } from 'hooks'
 
 type ExitMathParams = {
-  exactOut: boolean
-  isProportional: boolean
+  isExactOut: boolean
+  isPropExit: boolean
   tokenOutIndex: number
   tokenOutAmount: string
   bptOutPcnt: string
@@ -84,17 +84,17 @@ export function useExitMath() {
 
   const calcBptIn = useCallback(
     ({
-      exactOut,
-      isProportional,
+      isExactOut,
+      isPropExit,
       tokenOutAmount,
       tokenOutIndex,
       bptOutPcnt,
     }: ExitMathParams) => {
       let _bptIn: string
 
-      if (isProportional) {
+      if (isPropExit) {
         _bptIn = parseUnits(_propBptIn(bptOutPcnt)).toString()
-      } else if (!exactOut) {
+      } else if (!isExactOut) {
         _bptIn = parseUnits(_absMaxBpt).toString()
       } else {
         _bptIn =
@@ -103,7 +103,7 @@ export function useExitMath() {
             .toString() ?? '0'
       }
 
-      if (exactOut) return addSlippageScaled(_bptIn)
+      if (isExactOut) return addSlippageScaled(_bptIn)
       return _bptIn
     },
     [_absMaxBpt, _propBptIn, addSlippageScaled, calculator]
@@ -111,12 +111,12 @@ export function useExitMath() {
 
   const calcExitAmounts = useCallback(
     ({
-      isProportional,
+      isPropExit,
       tokenOutIndex,
       tokenOutAmount,
       bptOutPcnt,
-    }: Omit<ExitMathParams, 'exactOut'>) => {
-      if (isProportional) return _propAmounts(bptOutPcnt)
+    }: Omit<ExitMathParams, 'isExactOut'>) => {
+      if (isPropExit) return _propAmounts(bptOutPcnt)
 
       return poolTokenAddresses.map((_, i) => {
         if (i !== tokenOutIndex) return '0'
@@ -130,9 +130,9 @@ export function useExitMath() {
     (params: ExitMathParams) => {
       const _amountsOut = calcExitAmounts(params)
 
-      const { exactOut, isProportional, tokenOutAmount, tokenOutIndex } = params
+      const { isExactOut, isPropExit, tokenOutAmount, tokenOutIndex } = params
 
-      if (isProportional || !hasAmounts(_amountsOut)) return 0
+      if (isPropExit || !hasAmounts(_amountsOut)) return 0
       if (checkTokenOutAmountExceedsPoolBalance(tokenOutIndex, tokenOutAmount))
         return 1
 
@@ -142,7 +142,7 @@ export function useExitMath() {
         const impact =
           calculator
             ?.priceImpact(_amountsOut, {
-              exactOut,
+              isExactOut,
               tokenIndex: tokenOutIndex,
               queryBpt: bnum(_bptIn),
             })

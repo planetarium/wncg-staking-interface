@@ -6,15 +6,16 @@ import {
 } from 'react-hook-form'
 import clsx from 'clsx'
 
+import { LiquidityFieldType } from 'config/constants'
 import { REKT_PRICE_IMPACT } from 'config/constants/liquidityPool'
 import { bnum } from 'utils/bnum'
-import { JoinFormFields } from 'hooks/useJoinForm'
+import { useAuth } from 'hooks'
+import { JoinFormFields } from 'hooks/balancer/useJoinForm'
 
 import { StyledJoinFormSummary } from './styled'
 import HighPriceImpact from 'components/HighPriceImpact'
 import NumberFormat from 'components/NumberFormat'
 import RektPriceImpact from 'components/RektPriceImpact'
-import { useAuth } from 'hooks'
 
 type JoinFormSummaryProps = {
   priceImpact: number
@@ -37,10 +38,10 @@ function JoinFormSummary({
   const priceImpactInPcnt = bnum(priceImpact * 100).toFixed(4)
   const alert = priceImpact >= REKT_PRICE_IMPACT
 
-  const priceImpactAgreement = watch('priceImpactAgreement')
+  const priceImpactAgreement = watch(LiquidityFieldType.HighPriceImpact)
 
   function toggle() {
-    setValue('priceImpactAgreement', !priceImpactAgreement)
+    setValue(LiquidityFieldType.HighPriceImpact, !priceImpactAgreement)
   }
 
   const hasErrors = Object.keys(formState.errors).length > 0
