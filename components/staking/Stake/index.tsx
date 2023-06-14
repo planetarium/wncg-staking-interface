@@ -21,26 +21,6 @@ function StakingStake() {
     <StyledStakingStake>
       <Header />
 
-      {/* {isFetching && <Fallback />} */}
-
-      {/* {!isFetching && (
-        <motion.div
-          {...MOTION}
-          className="stakeGroup"
-          variants={ANIMATION_MAP.fadeIn}
-        >
-          {isConnected === true && (
-            <Suspense fallback={<Fallback />}>
-              <Form />
-            </Suspense>
-          )}
-
-          {isConnected === false && <Connect />}
-
-          <JoinButton />
-        </motion.div>
-      )} */}
-
       <motion.div
         {...MOTION}
         className="stakeGroup"
@@ -54,9 +34,7 @@ function StakingStake() {
 
         {isConnected === false && <Connect />}
 
-        <Suspense>
-          <JoinButton />
-        </Suspense>
+        <JoinButton />
       </motion.div>
     </StyledStakingStake>
   )

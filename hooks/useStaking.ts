@@ -32,9 +32,6 @@ export function useStaking<T extends 'ethereum' | undefined>() {
   const { data } = useQuery([QUERY_KEYS.Build, chainId], () => build(chainId), {
     staleTime: Infinity,
     cacheTime: Infinity,
-    onSuccess(data) {
-      console.log(111111, data)
-    },
   })
 
   return {

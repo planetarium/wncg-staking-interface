@@ -32,8 +32,13 @@ export default function GnbChainSelectMenu({
 
   function onSelectChain(e: MouseEvent<HTMLButtonElement>) {
     const { value } = e.currentTarget
-    router.replace(router.pathname, `/wncg/${value}`, { shallow: true })
-    setChainId(Number(value) as ChainId)
+    const newPathname = `/wncg/${value}`
+
+    if (newPathname !== router.pathname) {
+      router.replace(router.pathname, `/wncg/${value}`, { shallow: true })
+      setChainId(Number(value) as ChainId)
+    }
+
     closeMenu()
   }
 

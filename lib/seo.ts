@@ -12,7 +12,7 @@ export const MAIN_SEO = {
     url: config.siteUrl,
     title: config.appName,
     site_name: config.appName,
-    description: 'FIXME:',
+    description: 'NCG & WNCG Staking',
     images: [
       {
         url: ogImageUrlFor('og-wncg-staking-main-md.png'),
