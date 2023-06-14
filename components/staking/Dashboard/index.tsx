@@ -12,7 +12,7 @@ function StakingDashboard() {
       <div className="imageContainer">
         <Image
           className="image"
-          src="/wncg-3d.png"
+          src="/wncg-3d.webp"
           alt="Wrapped nine chronicles gold"
           priority
         />

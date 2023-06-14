@@ -16,7 +16,7 @@ export default function MainNcgCard() {
         <div className="mobileImage">
           <Image
             className="image"
-            src="/ncg-3d.png"
+            src="/ncg-3d.webp"
             alt="Nine chronicles gold"
             priority
           />
@@ -69,7 +69,7 @@ export default function MainNcgCard() {
         <div className="tabletImage">
           <Image
             className="image"
-            src="/ncg-3d.png"
+            src="/ncg-3d.webp"
             alt="Nine chronicles gold"
             priority
           />
