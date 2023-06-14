@@ -1,6 +1,7 @@
+import { LiquidityFieldType } from 'config/constants'
 import { bnum } from 'utils/bnum'
 import { useAuth, useChain, useStaking } from 'hooks'
-import { UseJoinFormReturns } from 'hooks/useJoinForm'
+import { UseJoinFormReturns } from 'hooks/balancer/useJoinForm'
 
 import { StyledJoinFormFieldset } from './styled'
 import InputField from './InputField'
@@ -29,7 +30,7 @@ export default function JoinFormFieldset({
   const { nativeCurrency } = useChain()
   const { poolTokens, shouldReversePoolTokenOrderOnDisplay } = useStaking()
 
-  const isNativeCurrency = watch('isNativeCurrency')
+  const isNativeCurrency = watch(LiquidityFieldType.UseNative)
 
   return (
     <StyledJoinFormFieldset

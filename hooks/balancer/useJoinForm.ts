@@ -9,13 +9,13 @@ import {
   UseFormWatch,
 } from 'react-hook-form'
 
-import { NATIVE_CURRENCY_ADDRESS } from 'config/constants/addresses'
 import {
   HIGH_PRICE_IMPACT,
   REKT_PRICE_IMPACT,
 } from 'config/constants/liquidityPool'
 import { LiquidityFieldType } from 'config/constants'
 import { bnum } from 'utils/bnum'
+import { isEthereum } from 'utils/isEthereum'
 import { useBalances, useChain, useFiat, useStaking } from 'hooks'
 import { useJoinMath } from './useJoinMath'
 
@@ -27,21 +27,22 @@ export const joinFormFields: LiquidityFieldType[] = [
 const defaultValues = {
   [LiquidityFieldType.TokenA]: '',
   [LiquidityFieldType.TokenB]: '',
-  isNativeCurrency: true,
-  priceImpactAgreement: false,
+  [LiquidityFieldType.UseNative]: true,
+  [LiquidityFieldType.HighPriceImpact]: false,
 }
 
 export type JoinFormFields = {
   [LiquidityFieldType.TokenA]: string
   [LiquidityFieldType.TokenB]: string
-  isNativeCurrency: boolean
-  priceImpactAgreement: boolean
+  [LiquidityFieldType.UseNative]: boolean
+  [LiquidityFieldType.HighPriceImpact]: boolean
 }
 
 export type UseJoinFormReturns = {
   assets: Hash[]
   activeField: LiquidityFieldType | null
   setActiveField(value: LiquidityFieldType | null): void
+  isNative: boolean
   maxBalances: string[]
   maxSafeBalances: string[]
   formState: UseFormStateReturn<JoinFormFields>
@@ -56,7 +57,7 @@ export type UseJoinFormReturns = {
   trigger: UseFormTrigger<JoinFormFields>
   watch: UseFormWatch<JoinFormFields>
   joinAmounts: string[]
-  joinAmountsInFiatValue: string[]
+  joinAmountsFiatValue: string[]
   totalJoinFiatValue: string
   submitDisabled: boolean
   resetDisabled: boolean
@@ -65,11 +66,7 @@ export type UseJoinFormReturns = {
   focusedElement: JoinFormFocusedElement
 }
 
-export type JoinFormFocusedElement =
-  | 'Input'
-  | 'MaxButton'
-  | 'OptimizeButton'
-  | null
+export type JoinFormFocusedElement = 'Input' | 'Max' | 'Optimize' | null
 
 export function useJoinForm(): UseJoinFormReturns {
   const [activeField, setActiveField] = useState<LiquidityFieldType | null>(
@@ -79,7 +76,7 @@ export function useJoinForm(): UseJoinFormReturns {
     useState<JoinFormFocusedElement>(null)
 
   const balanceOf = useBalances()
-  const { nativeCurrency } = useChain()
+  const { chainId, nativeCurrency } = useChain()
   const toFiat = useFiat()
   const { poolTokenAddresses } = useStaking()
   const { calcPriceImpact, calcOptimizedAmounts } = useJoinMath()
@@ -95,16 +92,21 @@ export function useJoinForm(): UseJoinFormReturns {
     setFocusedElement(null)
   }, [reset])
 
-  const isNativeCurrency = watch('isNativeCurrency')
-  const priceImpactAgreement = watch('priceImpactAgreement')
+  const isNative = watch(LiquidityFieldType.UseNative)
+  const priceImpactAgreement = watch(LiquidityFieldType.HighPriceImpact)
 
   const assets = useMemo(() => {
     return poolTokenAddresses.map((addr) => {
-      if (!isNativeCurrency) return addr
+      if (!isNative) return addr
       if (addr !== nativeCurrency.wrappedTokenAddress) return addr
-      return NATIVE_CURRENCY_ADDRESS
+      return nativeCurrency.address
     })
-  }, [isNativeCurrency, nativeCurrency.wrappedTokenAddress, poolTokenAddresses])
+  }, [
+    isNative,
+    nativeCurrency.address,
+    nativeCurrency.wrappedTokenAddress,
+    poolTokenAddresses,
+  ])
 
   const unsanitizedJoinAmounts = joinFormFields.map((field) =>
     watch(field as any)
@@ -114,16 +116,16 @@ export function useJoinForm(): UseJoinFormReturns {
     bnum(a).toString()
   ) as string[]
 
-  const joinAmountsInFiatValue = joinAmounts.map((amount, i) =>
+  const joinAmountsFiatValue = joinAmounts.map((amount, i) =>
     toFiat(amount, assets[i])
   )
 
   const totalJoinFiatValue = useMemo(
     () =>
-      joinAmountsInFiatValue
+      joinAmountsFiatValue
         .reduce((acc, fiatValue) => acc.plus(fiatValue), bnum(0))
         .toString(),
-    [joinAmountsInFiatValue]
+    [joinAmountsFiatValue]
   )
 
   const priceImpact = useMemo(
@@ -140,11 +142,11 @@ export function useJoinForm(): UseJoinFormReturns {
     () =>
       maxBalances.map((balance, i) => {
         const address = assets[i]
-        if (address !== NATIVE_CURRENCY_ADDRESS) return balance
+        if (address !== nativeCurrency.address) return balance
         const safeBalance = bnum(balance).minus(0.05)
         return safeBalance.gt(0) ? safeBalance.toString() : '0'
       }),
-    [maxBalances, assets]
+    [maxBalances, assets, nativeCurrency.address]
   )
 
   const optimizedAmounts = useMemo(
@@ -172,13 +174,14 @@ export function useJoinForm(): UseJoinFormReturns {
     () =>
       joinAmounts.every((a) => bnum(a).isZero()) ||
       Object.values(formState.errors).length > 0 ||
-      priceImpact >= REKT_PRICE_IMPACT ||
-      (priceImpact >= HIGH_PRICE_IMPACT && !priceImpactAgreement),
-    [formState.errors, joinAmounts, priceImpact, priceImpactAgreement]
+      (isEthereum(chainId) &&
+        (priceImpact >= REKT_PRICE_IMPACT ||
+          (priceImpact >= HIGH_PRICE_IMPACT && !priceImpactAgreement))),
+    [chainId, formState, joinAmounts, priceImpact, priceImpactAgreement]
   )
 
   const optimize = useCallback(() => {
-    setFocusedElement('OptimizeButton')
+    setFocusedElement('Optimize')
 
     joinFormFields.forEach((field, i) => {
       setValue(field as 'TokenA' | 'TokenB', optimizedAmounts[i])
@@ -195,6 +198,7 @@ export function useJoinForm(): UseJoinFormReturns {
     control,
     fields: joinFormFields,
     formState,
+    isNative,
     maxBalances,
     maxSafeBalances,
     optimized,
@@ -207,7 +211,7 @@ export function useJoinForm(): UseJoinFormReturns {
     trigger,
     watch,
     joinAmounts,
-    joinAmountsInFiatValue,
+    joinAmountsFiatValue,
     totalJoinFiatValue,
     priceImpact,
     setFocusedElement,

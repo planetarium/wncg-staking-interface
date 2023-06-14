@@ -52,7 +52,42 @@ export const LiquidityFieldType = {
   LiquidityPercent: 'LiquidityPercent',
   TokenA: 'TokenA',
   TokenB: 'TokenB',
+  UseNative: 'UseNative',
+  HighPriceImpact: 'HighPriceImpact',
 } as const
 
 export type LiquidityFieldType =
   (typeof LiquidityFieldType)[keyof typeof LiquidityFieldType]
+
+export const JoinPoolField = {
+  TokenA: 'TokenA',
+  TokenB: 'TokenB',
+} as const
+
+export type JoinPoolField = (typeof JoinPoolField)[keyof typeof JoinPoolField]
+
+export const ExitPoolField = {
+  ExitAmount: 'ExitAmount',
+  LiquidityPercent: 'LiquidityPercent',
+} as const
+
+export type ExitPoolField = (typeof ExitPoolField)[keyof typeof ExitPoolField]
+
+export const AddLiquidityField = {
+  TokenA: 'TokenA',
+  TokenB: 'TokenB',
+  UseNative: 'UseNative',
+} as const
+
+export type AddLiquidityField =
+  (typeof AddLiquidityField)[keyof typeof AddLiquidityField]
+
+export const RemoveLiquidityField = {
+  Percent: 'Percent',
+  UseNative: 'UseNative',
+} as const
+
+export type RemoveLiquidityField =
+  (typeof RemoveLiquidityField)[keyof typeof RemoveLiquidityField]
+
+export type DexPlatform = 'balancer' | 'pancakeSwap'

@@ -6,7 +6,7 @@ import {
   UseFormWatch,
 } from 'react-hook-form'
 
-import { ExitFormFields } from 'hooks/useExitForm'
+import { ExitFormFields } from 'hooks/balancer/useExitForm'
 
 import PropExit from './PropExit'
 import SingleExit from './SingleExit'
@@ -23,7 +23,7 @@ type ExitModalPage1Step2Props = {
   totalExitFiatValue: string
   watch: UseFormWatch<ExitFormFields>
   hash?: Hash
-  isNativeCurrency: boolean
+  isNative: boolean
 }
 
 function ExitModalPage1Step2({
@@ -37,7 +37,7 @@ function ExitModalPage1Step2({
   singleExitTokenOutIndex = 0,
   totalExitFiatValue,
   watch,
-  isNativeCurrency,
+  isNative,
   hash,
 }: ExitModalPage1Step2Props) {
   const exitType = watch('exitType')
@@ -65,7 +65,7 @@ function ExitModalPage1Step2({
       setMaxValue={setMaxValue}
       singleExitMaxAmounts={singleExitMaxAmounts}
       singleExitTokenOutIndex={singleExitTokenOutIndex}
-      isNativeCurrency={isNativeCurrency}
+      isNative={isNative}
       watch={watch}
       hash={hash}
     />

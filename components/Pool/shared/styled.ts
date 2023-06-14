@@ -1,13 +1,12 @@
 import { motion } from 'framer-motion'
 import styled, { css } from 'styled-components'
 
+import { flexbox, gradient, media, textStyle } from 'styles/utils'
 import {
   buttonStyle,
   lgButtonStyle,
   mdButtonStyle,
 } from 'components/Button/styled'
-
-import { flexbox, gradient, media, textStyle } from 'styles/utils'
 
 const INPUT_FIELD_GAP = 24
 

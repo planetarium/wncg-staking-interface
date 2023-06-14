@@ -1,7 +1,6 @@
 import { useMemo } from 'react'
 import { WeightedPoolEncoder } from '@balancer-labs/sdk'
 
-import config from 'config'
 import {
   NATIVE_CURRENCY_ADDRESS,
   ZERO_ADDRESS,
@@ -9,20 +8,21 @@ import {
 import { bnum } from 'utils/bnum'
 import { parseUnits } from 'utils/parseUnits'
 import { safeBigNumber } from 'utils/safeBigNumber'
-import { useChain, useExitMath, useStaking } from 'hooks'
+import { useChain, useStaking } from 'hooks'
+import { useExitMath } from './useExitMath'
 
 type UseExitPoolRequestParams = {
   assets: Hash[]
   amounts: string[]
   exitType: Hash | null
-  exactOut: boolean
+  isExactOut: boolean
   bptOutPcnt: string
 }
 
 export function useExitBuildRequest({
   assets: _assets,
   amounts,
-  exactOut,
+  isExactOut,
   exitType,
   bptOutPcnt,
 }: UseExitPoolRequestParams) {
@@ -30,7 +30,7 @@ export function useExitBuildRequest({
   const { calcBptIn } = useExitMath()
   const { poolTokenAddresses, tokens } = useStaking()
 
-  const isProportional = exitType === null
+  const isPropExit = exitType === null
 
   const assets = useMemo(
     () =>
@@ -42,7 +42,7 @@ export function useExitBuildRequest({
   )
 
   const singleExitTokenOutIndex = useMemo(() => {
-    if (isProportional) return -1
+    if (isPropExit) return -1
 
     switch (true) {
       case exitType === nativeCurrency.address:
@@ -54,7 +54,7 @@ export function useExitBuildRequest({
     }
   }, [
     exitType,
-    isProportional,
+    isPropExit,
     nativeCurrency.address,
     nativeCurrency.wrappedTokenAddress,
     poolTokenAddresses,
@@ -62,15 +62,15 @@ export function useExitBuildRequest({
 
   const bptIn = useMemo(() => {
     return calcBptIn({
-      exactOut,
-      isProportional: exitType === null,
+      isExactOut,
+      isPropExit: exitType === null,
       tokenOutIndex: singleExitTokenOutIndex,
       tokenOutAmount: amounts[singleExitTokenOutIndex],
       bptOutPcnt,
     })
   }, [
     calcBptIn,
-    exactOut,
+    isExactOut,
     exitType,
     singleExitTokenOutIndex,
     amounts,
@@ -78,20 +78,20 @@ export function useExitBuildRequest({
   ])
 
   const minAmountsOut = useMemo(() => {
-    if (isProportional) return ['0', '0']
+    if (isPropExit) return ['0', '0']
     return amounts.map((a, i) =>
       safeBigNumber(
         parseUnits(a, tokens[_assets[i]]?.decimals ?? 18).toString()
       )
     )
-  }, [_assets, amounts, isProportional, tokens])
+  }, [_assets, amounts, isPropExit, tokens])
 
   const userData = useMemo(() => {
     switch (true) {
-      case isProportional:
+      case isPropExit:
         return WeightedPoolEncoder.exitExactBPTInForTokensOut(bptIn)
 
-      case exactOut:
+      case isExactOut:
         return WeightedPoolEncoder.exitBPTInForExactTokensOut(
           minAmountsOut,
           bptIn
@@ -107,7 +107,7 @@ export function useExitBuildRequest({
           tokenOutIndex
         )
     }
-  }, [bptIn, exactOut, isProportional, minAmountsOut])
+  }, [bptIn, isExactOut, isPropExit, minAmountsOut])
 
   return {
     assets,

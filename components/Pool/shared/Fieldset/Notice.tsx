@@ -7,8 +7,12 @@ import { LiquidityFieldType } from 'config/constants'
 import { BASE_GAS_FEE } from 'config/constants/liquidityPool'
 import { ANIMATION_MAP, EXIT_MOTION } from 'config/constants/motions'
 import { bnum } from 'utils/bnum'
-import { useBalances, useJoinMath } from 'hooks'
-import { JoinFormFocusedElement, JoinFormFields } from 'hooks/useJoinForm'
+import { useBalances } from 'hooks'
+import { useJoinMath } from 'hooks/balancer'
+import {
+  JoinFormFocusedElement,
+  JoinFormFields,
+} from 'hooks/balancer/useJoinForm'
 
 import { StyledJoinFormNotice } from './styled'
 import Icon from 'components/Icon'
@@ -108,7 +112,7 @@ export default function JoinFormNotice({
 
         return <SuggestionNotice />
 
-      case 'MaxButton':
+      case 'Max':
         if (activeField === currentField) {
           return bnum(joinAmount).gt(0) ? (
             <SubtractionNotice />
@@ -119,7 +123,7 @@ export default function JoinFormNotice({
 
         return <SuggestionNotice />
 
-      case 'OptimizeButton':
+      case 'Optimize':
         if (bnum(joinAmount).isZero()) return <ZeroAmountNotice />
 
         return bnum(joinAmount).gt(maxSafeBalance) ? (
@@ -136,8 +140,7 @@ export default function JoinFormNotice({
   const shouldValidate =
     Object.keys(formState.errors)?.length === 0 &&
     element != null &&
-    ((optimizeDisabled && focusedElement !== 'OptimizeButton') ||
-      !optimizeDisabled)
+    ((optimizeDisabled && focusedElement !== 'Optimize') || !optimizeDisabled)
 
   return <AnimatePresence>{shouldValidate && element}</AnimatePresence>
 }

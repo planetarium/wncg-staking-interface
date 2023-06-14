@@ -2,9 +2,9 @@ import { ChainId } from '../chains'
 import type { ChainMap } from '../types'
 
 export const DEX_PROTOCOL_ADDRESS: ChainMap<Hash> = {
-  [ChainId.ETHEREUM]: '0xba12222222228d8ba445958a75a0704d566bf2c8',
+  [ChainId.ETHEREUM]: '0xba12222222228d8ba445958a75a0704d566bf2c8', // NOTE: BalancerVault
   [ChainId.GOERLI]: '0xba12222222228d8ba445958a75a0704d566bf2c8',
-  [ChainId.BSC]: '0x10ed43c718714eb63d5aa57b78b54704e256024e',
+  [ChainId.BSC]: '0x10ed43c718714eb63d5aa57b78b54704e256024e', // NOTE: PancakeRouter
   [ChainId.BSC_TESTNET]: '0xd99d1c33f9fc3444f8101754abc46c52416550d1',
 }
 
@@ -35,6 +35,13 @@ export const BAL_ADDRESS: ChainMap<Hash | null> = {
   [ChainId.GOERLI]: '0xfa8449189744799ad2ace7e0ebac8bb7575eff47',
   [ChainId.BSC]: null,
   [ChainId.BSC_TESTNET]: null,
+}
+
+export const ZAP_ADDRESS: ChainMap<Hash | null> = {
+  [ChainId.ETHEREUM]: null,
+  [ChainId.GOERLI]: null,
+  [ChainId.BSC]: '0xd4c4a7c55c9f7b3c48bafb6e8643ba79f42418df',
+  [ChainId.BSC_TESTNET]: '0xd85835207054f25620109bdc745ec1d1f84f04e1',
 }
 
 export const NATIVE_CURRENCY_ADDRESS: Hash =

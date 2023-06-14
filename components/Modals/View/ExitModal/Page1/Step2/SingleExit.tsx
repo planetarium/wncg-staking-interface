@@ -10,7 +10,7 @@ import { NATIVE_CURRENCY_ADDRESS } from 'config/constants/addresses'
 import { LiquidityFieldType } from 'config/constants'
 import { bnum } from 'utils/bnum'
 import { useFiat, useResponsive, useStaking } from 'hooks'
-import { ExitFormFields } from 'hooks/useExitForm'
+import { ExitFormFields } from 'hooks/balancer/useExitForm'
 
 import { StyledExitModalPage1Step2 } from './styled'
 import { AvailableBalance, Control } from 'components/Form'
@@ -22,7 +22,7 @@ type ExitModalPage1Step2SingleExitProps = {
   singleExitMaxAmounts: string[]
   singleExitTokenOutIndex?: number
   watch: UseFormWatch<ExitFormFields>
-  isNativeCurrency: boolean
+  isNative: boolean
   hash?: Hash
 }
 
@@ -32,7 +32,7 @@ function ExitModalPage1Step2SingleExit({
   setMaxValue,
   singleExitMaxAmounts,
   singleExitTokenOutIndex = 0,
-  isNativeCurrency,
+  isNative,
   watch,
   hash,
 }: ExitModalPage1Step2SingleExitProps) {

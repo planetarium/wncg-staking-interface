@@ -1,8 +1,9 @@
-import { buttonStyle, lgButtonStyle } from 'components/Button/styled'
 import { motion } from 'framer-motion'
 import styled, { css } from 'styled-components'
 
 import { flexbox, gradient, media, textStyle } from 'styles/utils'
+
+import { buttonStyle, lgButtonStyle } from 'components/Button/styled'
 
 export const StyledJoinForm = styled(motion.form)`
   ${flexbox('start')}

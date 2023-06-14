@@ -62,11 +62,13 @@ type LiquidityPool = {
   poolTokenWeights: string[]
   poolTokenWeightsInPcnt: number[]
 
+  poolReserves: string[]
+
   totalSwapFee: string
   shouldReversePoolTokenOrderOnDisplay: stboodlring
 }
 
-type Staking = {
+type BscStaking = {
   cooldownSeconds: number
   rewardEmissionsPerSec: string[]
   rewardTokenAddresses: Hash[]
@@ -74,7 +76,7 @@ type Staking = {
   totalStaked: string
 }
 
-type EthereumStaking = Staking & {
+type EthereumStaking = BscStaking & {
   balancerGaugeAddress: Hash
   balRewardPoolAddress: Hash
   earmarkIncentivePcnt: number

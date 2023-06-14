@@ -1,7 +1,7 @@
 import { useAtomValue } from 'jotai'
 
 import { joinTxAtom } from 'states/tx'
-import type { UseJoinFormReturns } from 'hooks/useJoinForm'
+import type { UseJoinFormReturns } from 'hooks/balancer/useJoinForm'
 
 import { StyledPoolMobileForm } from './styled'
 import Button from 'components/Button'

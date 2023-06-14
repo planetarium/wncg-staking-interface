@@ -1,13 +1,8 @@
 import { memo, useEffect } from 'react'
 
 import { wait } from 'utils/wait'
-import {
-  useAuth,
-  useBalances,
-  useJoinForm,
-  useJoinModal,
-  useStaking,
-} from 'hooks'
+import { useAuth, useBalances, useStaking } from 'hooks'
+import { useJoinForm, useJoinModal } from 'hooks/balancer'
 import { useFetchUserAllowances } from 'hooks/queries'
 
 import { StyledJoinForm } from './styled'
@@ -35,7 +30,6 @@ function JoinForm() {
     maxBalances,
     optimized,
     joinAmounts,
-    joinAmountsInFiatValue,
     resetFields,
     totalJoinFiatValue,
     optimize,
@@ -58,7 +52,6 @@ function JoinForm() {
     _openJoin({
       assets,
       joinAmounts,
-      joinAmountsInFiatValue,
       totalJoinFiatValue,
       lpBalance: balanceOf(lpToken.address),
       resetForm: resetFields,

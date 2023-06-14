@@ -1,5 +1,13 @@
 export const QUERY_KEYS = {
   Build: 'staking:build',
+  Harvest: 'staking:harvest',
+  Liquidity: {
+    AddLiquidity: {
+      OptimizedAmounts: 'staking:addLiquidity:optimizedAmounts',
+      PropAmounts: 'staking:addLiquidity:propAmounts',
+    },
+    RemoveLiquidity: 'staking:removeLiquidity',
+  },
   FallbackPrices: 'staking:fallbackPriceMap',
   Prices: 'staking:priceMap',
   Staking: {
@@ -21,5 +29,9 @@ export const QUERY_KEYS = {
     Allowances: 'user:allowances',
     Balances: 'user:balances',
     UnstakeTimestamps: 'user:unstakeTimestamps',
+  },
+  Zap: {
+    In: 'zap:in',
+    Out: 'zap:out',
   },
 } as const

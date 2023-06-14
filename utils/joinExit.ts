@@ -33,25 +33,25 @@ export function buildJoin({
 type BuildExitParams = {
   assets: string[]
   bptIn: string
-  exactOut: boolean
-  isProportional: boolean
+  isExactOut: boolean
+  isPropExit: boolean
   minAmountsOut: string[]
 }
 
 export function buildExit({
   assets,
   bptIn,
-  exactOut,
-  isProportional,
+  isExactOut,
+  isPropExit,
   minAmountsOut,
 }: BuildExitParams) {
   let userData: string
 
   switch (true) {
-    case isProportional:
+    case isPropExit:
       userData = WeightedPoolEncoder.exitExactBPTInForTokensOut(bptIn)
       break
-    case exactOut:
+    case isExactOut:
       userData = WeightedPoolEncoder.exitBPTInForExactTokensOut(
         minAmountsOut,
         bptIn
@@ -80,7 +80,7 @@ export function buildExit({
 type BuildSingleExitParams = {
   assets: string[]
   bptIn: string
-  exactOut: boolean
+  isExactOut: boolean
   minAmountsOut: string[]
   tokenOutIndex: number
 }
@@ -88,11 +88,11 @@ type BuildSingleExitParams = {
 export function buildSingleExit({
   assets,
   bptIn,
-  exactOut,
+  isExactOut,
   minAmountsOut,
   tokenOutIndex,
 }: BuildSingleExitParams) {
-  const userData = exactOut
+  const userData = isExactOut
     ? WeightedPoolEncoder.exitBPTInForExactTokensOut(minAmountsOut, bptIn)
     : WeightedPoolEncoder.exitExactBPTInForOneTokenOut(bptIn, tokenOutIndex)
 

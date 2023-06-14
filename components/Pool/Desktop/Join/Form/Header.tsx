@@ -1,7 +1,9 @@
 import { memo } from 'react'
+import { useAtomValue } from 'jotai'
 
+import { joinTxAtom } from 'states/tx'
 import { useAuth, useStaking } from 'hooks'
-import { JoinFormFocusedElement } from 'hooks/useJoinForm'
+import { JoinFormFocusedElement } from 'hooks/balancer/useJoinForm'
 
 import { StyledJoinFormHeader } from './styled'
 import Button from 'components/Button'
@@ -9,8 +11,6 @@ import Icon from 'components/Icon'
 import SlippageControl from 'components/SlippageControl'
 import TokenIcon from 'components/TokenIcon'
 import Tooltip from 'components/Tooltip'
-import { useAtomValue } from 'jotai'
-import { joinTxAtom } from 'states/tx'
 
 type JoinFormHeaderProps = {
   optimize(): void

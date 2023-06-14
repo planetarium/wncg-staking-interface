@@ -6,7 +6,8 @@ import {
   EXIT_MOTION,
   TRANSITION_MAP,
 } from 'config/constants/motions'
-import { useAuth, useJoinForm } from 'hooks'
+import { useAuth } from 'hooks'
+import { useJoinForm } from 'hooks/balancer'
 
 import { modalOverlayVariants } from 'components/Modals/constants'
 import { StyledPoolMobile, StyledPoolMobileContainer } from './styled'

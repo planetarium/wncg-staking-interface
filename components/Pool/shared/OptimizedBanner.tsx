@@ -1,7 +1,7 @@
 import { AnimatePresence } from 'framer-motion'
 
 import { ANIMATION_MAP, EXIT_MOTION } from 'config/constants/motions'
-import type { JoinFormFocusedElement } from 'hooks/useJoinForm'
+import type { JoinFormFocusedElement } from 'hooks/balancer/useJoinForm'
 
 import { StyledJoinFormOptimizedBanner } from './styled'
 import Icon from 'components/Icon'
@@ -15,7 +15,7 @@ export default function JoinFormOptimizedBanner({
   focusedElement,
   optimized,
 }: JoinFormOptimizeBannerProps) {
-  const showBanner = focusedElement === 'OptimizeButton' && optimized
+  const showBanner = focusedElement === 'Optimize' && optimized
 
   return (
     <AnimatePresence>

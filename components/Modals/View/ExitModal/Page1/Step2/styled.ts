@@ -4,7 +4,7 @@ import { flexbox, media, textStyle } from 'styles/utils'
 import { StyledExitModalPage1Step } from '../styled'
 
 export const StyledExitModalPage1Step2 = styled(StyledExitModalPage1Step)<{
-  $isProportional?: boolean
+  $isPropExit?: boolean
 }>`
   .header {
     justify-content: space-between;
@@ -89,8 +89,8 @@ export const StyledExitModalPage1Step2 = styled(StyledExitModalPage1Step)<{
     margin-top: 20px;
   }
 
-  ${({ $isProportional }) =>
-    $isProportional &&
+  ${({ $isPropExit }) =>
+    $isPropExit &&
     css`
       .header {
         align-items: flex-start;

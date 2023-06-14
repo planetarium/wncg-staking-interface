@@ -1,7 +1,8 @@
 import { wait } from 'utils/wait'
-import { useBalances, useJoinModal, useStaking } from 'hooks'
+import { useBalances, useStaking } from 'hooks'
+import { useJoinModal } from 'hooks/balancer'
+import { UseJoinFormReturns } from 'hooks/balancer/useJoinForm'
 import { useFetchUserAllowances } from 'hooks/queries'
-import { UseJoinFormReturns } from 'hooks/useJoinForm'
 
 import { Footer, Summary } from 'components/Pool/shared'
 import Form from './Form'
@@ -17,7 +18,6 @@ export default function PoolMobileContent(props: PoolMobileContentProps) {
   const {
     assets,
     joinAmounts,
-    joinAmountsInFiatValue,
     resetFields,
     totalJoinFiatValue,
     priceImpact,
@@ -36,7 +36,6 @@ export default function PoolMobileContent(props: PoolMobileContentProps) {
     _openJoin({
       assets,
       joinAmounts,
-      joinAmountsInFiatValue,
       totalJoinFiatValue,
       lpBalance: balanceOf(lpToken.address),
       resetForm: resetFields,

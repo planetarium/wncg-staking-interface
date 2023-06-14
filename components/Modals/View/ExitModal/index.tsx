@@ -5,7 +5,8 @@ import { useAtomValue } from 'jotai'
 
 import { exitTxAtom } from 'states/tx'
 import { ToastType } from 'config/constants'
-import { useExitForm, useToast } from 'hooks'
+import { useToast } from 'hooks'
+import { useExitForm } from 'hooks/balancer'
 import { exitMachine, pageFor } from './stateMachine'
 import { useWatch } from './useWatch'
 
@@ -22,7 +23,7 @@ function ExitModal() {
     exitAmounts: _exitAmounts,
     exitAmountInFiatValue: _exitAmountInFiatValue,
     totalExitFiatValue: _totalExitFiatValue,
-    isProportional: _isProportional,
+    isPropExit: _isPropExit,
     singleExitTokenOutIndex,
   } = exitFormReturns
 
@@ -31,7 +32,7 @@ function ExitModal() {
   const assets = tx.assets ?? _assets
   const bptIn = tx.bptIn ?? _bptIn
   const exitAmounts = tx.exitAmounts ?? _exitAmounts
-  const isProportional = tx.isProportional ?? _isProportional
+  const isPropExit = tx.isPropExit ?? _isPropExit
   const totalExitFiatValue = tx.totalExitFiatValue ?? _totalExitFiatValue
   const tokenOutIndex = tx.tokenOutIndex ?? singleExitTokenOutIndex
 
@@ -57,7 +58,7 @@ function ExitModal() {
           totalExitFiatValue,
           tokenOutIndex,
           bptIn,
-          isProportional,
+          isPropExit,
         },
       })
     }
@@ -70,7 +71,7 @@ function ExitModal() {
       )}
       {currentPage === 2 && (
         <Page2
-          isProportional={isProportional}
+          isPropExit={isPropExit}
           assets={assets}
           tokenOutIndex={tokenOutIndex}
           hash={tx.hash}

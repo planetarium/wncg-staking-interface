@@ -5,13 +5,13 @@ import { AnimatePresence } from 'framer-motion'
 import { LiquidityFieldType } from 'config/constants'
 import { ANIMATION_MAP, EXIT_MOTION } from 'config/constants/motions'
 import { bnum } from 'utils/bnum'
-import { useStaking, useJoinMath } from 'hooks'
-
-import { JoinFormFields } from 'hooks/useJoinForm'
+import { useStaking } from 'hooks'
+import { useJoinMath } from 'hooks/balancer'
+import { JoinFormFields } from 'hooks/balancer/useJoinForm'
 
 import { StyledJoinFormProportionalGuideBanner } from './styled'
-import NumberFormat from 'components/NumberFormat'
 import Icon from 'components/Icon'
+import NumberFormat from 'components/NumberFormat'
 
 type JoinFormProportionalGuideBannerProps = {
   joinAmounts: string[]

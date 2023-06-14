@@ -1,7 +1,7 @@
+export { default as BalancerLiquidityGaugeAbi } from './BalancerLiquidityGauge.json'
 export { default as BalancerRewardPoolAbi } from './BalancerRewardPool.json'
 export { default as BalancerVaultAbi } from './BalancerVault.json'
 export { default as Erc20Abi } from './Erc20.json'
-export { default as LiquidityGaugeAbi } from './LiquidityGauge.json'
 export { default as Multicall3Abi } from './Multicall3.json'
 export { default as PancakePairAbi } from './PancakePair.json'
 export { default as PancakeRouterAbi } from './PancakeRouter.json'

@@ -1,12 +1,12 @@
 import { memo } from 'react'
 
 import { dexPoolUrlFor } from 'utils/dexPoolUrlFor'
+import { useChain } from 'hooks'
+import { usePoolSnapshot } from 'hooks/usePoolSnapshot'
 
 import { StyledPoolInformation } from './styled'
 import Icon from 'components/Icon'
 import NumberFormat from 'components/NumberFormat'
-import { usePoolSnapshot } from 'hooks/usePoolSnapshot'
-import { useChain } from 'hooks'
 
 function PoolInformation() {
   const { poolValueIn24Hr, totalSwapVolumeIn24Hr, totalSwapFeesIn24Hr } =

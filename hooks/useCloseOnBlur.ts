@@ -15,12 +15,6 @@ export function useCloseOnBlur(
 
   const closeOnBlur = useCallback(
     (e: MouseEvent) => {
-      console.log(
-        ref?.current?.classList,
-        e.target,
-        ref?.current?.contains(e.target as Node)
-      )
-
       if (!ref?.current?.contains(e.target as Node)) {
         onClose()
         window.removeEventListener('click', closeOnBlur, {

@@ -1,4 +1,4 @@
-import type { UseExitFormReturns } from 'hooks/useExitForm'
+import type { UseExitFormReturns } from 'hooks/balancer/useExitForm'
 
 import { StyledExitModalPage1 } from './styled'
 import { PendingNotice } from 'components/Modals/shared'
@@ -19,7 +19,7 @@ function ExitModalPage1(props: ExitModalPage1Props & UseExitFormReturns) {
     bptIn,
     clearErrors,
     control,
-    exactOut,
+    isExactOut,
     exitAmounts,
     priceImpact,
     singleExitTokenOutIndex,
@@ -33,8 +33,8 @@ function ExitModalPage1(props: ExitModalPage1Props & UseExitFormReturns) {
     setValue,
     setMaxValue,
     hash,
-    isProportional,
-    isNativeCurrency,
+    isPropExit,
+    isNative,
   } = props
 
   return (
@@ -63,10 +63,10 @@ function ExitModalPage1(props: ExitModalPage1Props & UseExitFormReturns) {
             singleExitTokenOutIndex={singleExitTokenOutIndex}
             totalExitFiatValue={totalExitFiatValue}
             hash={hash}
-            isNativeCurrency={isNativeCurrency}
+            isNative={isNative}
           />
 
-          {!isProportional && (
+          {!isPropExit && (
             <Step3
               priceImpact={priceImpact}
               setValue={setValue}
@@ -80,7 +80,7 @@ function ExitModalPage1(props: ExitModalPage1Props & UseExitFormReturns) {
 
       <Footer
         assets={assets}
-        exactOut={exactOut}
+        isExactOut={isExactOut}
         exitAmounts={exitAmounts}
         send={send}
         watch={watch}

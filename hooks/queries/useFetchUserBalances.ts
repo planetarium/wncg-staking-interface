@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { useQuery } from '@tanstack/react-query'
 
 import { QUERY_KEYS } from 'config/constants/queryKeys'
@@ -5,25 +6,33 @@ import { fetchUserBalances } from 'lib/queries/fetchUserBalances'
 import { useAuth, useChain, useStaking } from 'hooks'
 
 export function useFetchUserBalances(options: UseFetchOptions = {}) {
-  const { enabled = true, refetchInterval, refetchOnWindowFocus } = options
+  const {
+    enabled: _enabled = true,
+    refetchInterval,
+    refetchOnWindowFocus = 'always',
+    suspense = true,
+  } = options
 
-  const { account } = useAuth()
+  const { account, isConnected } = useAuth()
   const { chainId } = useChain()
   const { lpToken, poolTokenAddresses } = useStaking()
 
-  const shouldFetch = enabled && !!account
+  const enabled = _enabled && !!isConnected
 
-  const list = [lpToken.address, ...poolTokenAddresses]
+  const list = useMemo(
+    () => [lpToken.address, ...poolTokenAddresses],
+    [lpToken.address, poolTokenAddresses]
+  )
 
   return useQuery<RawBalanceMap>(
     [QUERY_KEYS.User.Balances, account, chainId, ...list],
     () => fetchUserBalances(chainId, account!, list),
     {
-      enabled: shouldFetch,
+      enabled,
       staleTime: Infinity,
       refetchInterval,
       refetchOnWindowFocus,
-      suspense: true,
+      suspense,
     }
   )
 }
