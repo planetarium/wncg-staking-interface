@@ -25,6 +25,7 @@ import ToastStyle from 'styles/ToastStyle'
 import ErrorBoundary from 'components/ErrorBoundary'
 import Layout from 'components/Layout'
 import ToastContainer from 'components/ToastContainer'
+import DefaultSeo from 'components/DefaultSeo'
 
 type MyAppProps = AppProps & {
   pageProps: {
@@ -88,6 +89,7 @@ function MyApp({ Component, pageProps }: MyAppProps) {
             <Provider>
               <HydrateAtoms queryClient={queryClient.current}>
                 <WagmiConfig client={wagmiClient}>
+                  <DefaultSeo />
                   <GlobalStyle />
                   <ToastStyle />
 

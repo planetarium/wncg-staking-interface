@@ -6,7 +6,7 @@ class ConfigService {
   }
 
   get appName() {
-    return `WNCG Staking`
+    return `Nine Chronicles Staking`
   }
 
   get baseUrl() {
@@ -72,6 +72,10 @@ class ConfigService {
         'https://ninechronicles.medium.com/introducing-wncg-staking-ft-chapter-iii-a27f26d70522',
       twitter: 'https://twitter.com/NineChronicles',
     }
+  }
+
+  get stakingAppName() {
+    return `WNCG Staking`
   }
 
   get stakingLinks() {

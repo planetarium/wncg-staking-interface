@@ -31,14 +31,14 @@ function GlobalFooter() {
       <div className="left">
         <h5 className="title">
           <strong>
-            {config.appName}
+            {config.stakingAppName}
             {showVersion && (
               <span className="version">
                 {currentBranch}#{jobId} ({commitHash.slice(0, 6)})
               </span>
             )}
           </strong>
-          <span>&copy; 2023 {config.appName}</span>
+          <span>&copy; 2023 {config.stakingAppName}</span>
         </h5>
 
         <div className="buttonGroup">
