@@ -1,8 +1,8 @@
 import { useMemo, useState } from 'react'
 import NextImage, { ImageProps as NextImageProps } from 'next/image'
 
-import { StyledImage } from './styled'
 import { baseUrls } from 'config/api'
+import { StyledImage } from './styled'
 
 type ImageProps = {
   objectFit?: 'cover' | 'contain'
