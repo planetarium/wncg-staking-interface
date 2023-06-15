@@ -25,7 +25,7 @@ export default function MainWncgCard() {
         <div className="mobileImage">
           <Image
             className="image"
-            src="/wncg-3d.png"
+            src="/wncg-3d.webp"
             alt="Wrapped ine chronicles gold"
             priority
           />
@@ -90,7 +90,7 @@ export default function MainWncgCard() {
         <div className="tabletImage">
           <Image
             className="image"
-            src="/wncg-3d.png"
+            src="/wncg-3d.webp"
             alt="Wrapped ine chronicles gold"
             priority
           />
