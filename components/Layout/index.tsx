@@ -15,7 +15,7 @@ const Alerts = dynamic(() => import('./Alerts'), {
   ssr: false,
 })
 
-const Pool = dynamic(() => import('components/Pool'), {
+const BalancerPool = dynamic(() => import('components/BalancerPool'), {
   ssr: false,
 })
 
@@ -62,7 +62,7 @@ function Layout({ children }: PropsWithChildren) {
         <>
           <Modals />
           <Suspense>
-            <Pool />
+            <BalancerPool />
           </Suspense>
         </>
       )}

@@ -3,10 +3,10 @@ import { useAtom } from 'jotai'
 import { showPoolAtom } from 'states/ui'
 import { useResponsive } from 'hooks'
 
-import PoolDesktop from './Desktop'
-import PoolMobile from './Mobile'
+import BalancerPoolDesktop from './Desktop'
+import BalancerPoolMobile from './Mobile'
 
-export default function Pool() {
+export default function BalancerPool() {
   const { isMobile } = useResponsive()
 
   const [showPool, setShowPool] = useAtom(showPoolAtom)
@@ -16,8 +16,8 @@ export default function Pool() {
   }
 
   if (isMobile) {
-    return <PoolMobile show={showPool} closePool={closePool} />
+    return <BalancerPoolMobile show={showPool} closePool={closePool} />
   }
 
-  return <PoolDesktop show={showPool} closePool={closePool} />
+  return <BalancerPoolDesktop show={showPool} closePool={closePool} />
 }

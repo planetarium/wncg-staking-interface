@@ -16,12 +16,12 @@ import Header from './Header'
 import Connect from './Connect'
 import Content from './Content'
 
-type PoolMobileProps = {
+type BalancerPoolMobileProps = {
   show: boolean
   closePool(): void
 }
 
-function PoolMobile({ show, closePool }: PoolMobileProps) {
+function BalancerPoolMobile({ show, closePool }: BalancerPoolMobileProps) {
   const { account, prevAccount, isConnected } = useAuth()
 
   const joinFormReturns = useJoinForm()
@@ -66,4 +66,4 @@ function PoolMobile({ show, closePool }: PoolMobileProps) {
   )
 }
 
-export default memo(PoolMobile)
+export default memo(BalancerPoolMobile)
