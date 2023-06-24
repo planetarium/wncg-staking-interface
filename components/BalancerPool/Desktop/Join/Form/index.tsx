@@ -13,7 +13,7 @@ import {
   UnoptimizableAlert,
   Footer,
   OptimizedBanner,
-} from 'components/Pool/shared'
+} from 'components/BalancerPool/shared'
 import Header from './Header'
 
 function JoinForm() {

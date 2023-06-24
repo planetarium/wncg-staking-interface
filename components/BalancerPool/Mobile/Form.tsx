@@ -10,7 +10,7 @@ import {
   Fieldset,
   ProportionalGuideBanner,
   UnoptimizableAlert,
-} from 'components/Pool/shared'
+} from 'components/BalancerPool/shared'
 import SlippageControl from 'components/SlippageControl'
 
 type PoolMobileFormProps = UseJoinFormReturns

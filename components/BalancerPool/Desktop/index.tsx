@@ -14,12 +14,12 @@ import Header from './Header'
 import Information from './Information'
 import Join from './Join'
 
-type PoolDesktopProps = {
+type BalancerPoolDesktopProps = {
   show: boolean
   closePool(): void
 }
 
-function PoolDesktop({ show, closePool }: PoolDesktopProps) {
+function BalancerPoolDesktop({ show, closePool }: BalancerPoolDesktopProps) {
   return (
     <>
       <AnimatePresence>
@@ -65,4 +65,4 @@ function PoolDesktop({ show, closePool }: PoolDesktopProps) {
   )
 }
 
-export default memo(PoolDesktop)
+export default memo(BalancerPoolDesktop)

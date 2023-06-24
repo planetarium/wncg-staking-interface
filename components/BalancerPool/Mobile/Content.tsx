@@ -4,7 +4,7 @@ import { useJoinModal } from 'hooks/balancer'
 import { UseJoinFormReturns } from 'hooks/balancer/useJoinForm'
 import { useFetchUserAllowances } from 'hooks/queries'
 
-import { Footer, Summary } from 'components/Pool/shared'
+import { Footer, Summary } from 'components/BalancerPool/shared'
 import Form from './Form'
 
 type PoolMobileContentProps = UseJoinFormReturns
