@@ -4,7 +4,7 @@ import { dexPoolUrlFor } from 'utils/dexPoolUrlFor'
 import { useChain } from 'hooks'
 import { usePoolSnapshot } from 'hooks/usePoolSnapshot'
 
-import { StyledPoolInformation } from './styled'
+import { StyledBalancerPoolInformation } from './styled'
 import Icon from 'components/Icon'
 import NumberFormat from 'components/NumberFormat'
 
@@ -14,7 +14,7 @@ function PoolInformation() {
   const { chainId } = useChain()
 
   return (
-    <StyledPoolInformation className="poolInformation">
+    <StyledBalancerPoolInformation className="poolInformation">
       <header className="header">
         <h3 className="title">Pool information</h3>
         <a
@@ -48,7 +48,7 @@ function PoolInformation() {
           </dd>
         </div>
       </dl>
-    </StyledPoolInformation>
+    </StyledBalancerPoolInformation>
   )
 }
 

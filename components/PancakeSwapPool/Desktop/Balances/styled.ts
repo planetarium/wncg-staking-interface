@@ -13,6 +13,8 @@ export const StyledAddLiquidityPoolBalances = styled(motion.section)`
   overflow: hidden;
 
   .balancesHeader {
+    ${flexbox()}
+    flex-direction: column;
     padding: 32px;
     overflow: hidden;
     background-image: linear-gradient(

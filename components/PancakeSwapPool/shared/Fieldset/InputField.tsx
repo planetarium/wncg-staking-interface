@@ -1,80 +1,57 @@
 import { memo, useCallback, useMemo } from 'react'
-import {
-  Control as ReactHookFormControl,
-  FieldValues,
-  UseFormClearErrors,
-  UseFormSetValue,
-  UseFormTrigger,
-  UseFormStateReturn,
-  UseFormWatch,
-} from 'react-hook-form'
+import { Control as ReactHookFormControl, FieldValues } from 'react-hook-form'
 import clsx from 'clsx'
 
 import { useAuth, useChain, useFiat } from 'hooks'
-import config from 'config'
 import { LiquidityFieldType } from 'config/constants'
 import { bnum } from 'utils/bnum'
 import { wait } from 'utils/wait'
 import { useAddLiquidityMath } from 'hooks/pancakeswap'
-import type {
-  AddLiquidityForm,
-  AddLiquidityFormElement,
+import {
+  FIELDS,
+  UseAddLiquidityFormReturns,
 } from 'hooks/pancakeswap/useAddLiquidityForm'
 
 import { StyledAddLiquidityFormInputField } from './styled'
 import { AvailableBalance, Control } from 'components/Form'
 import Notice from './Notice'
+import EtherSelect from './EtherSelect'
 
 type AddLiquidityFormInputFieldProps = {
   index: number
-  activeField: AddLiquidityField | null
-  className?: string
-  clearErrors: UseFormClearErrors<AddLiquidityForm>
-  control: ReactHookFormControl<AddLiquidityForm>
-  disabled?: boolean
-  focusedElement: AddLiquidityFormElement
-  formState: UseFormStateReturn<AddLiquidityForm>
-  maxBalance: string
-  maxSafeBalance: string
-  name: 'TokenA' | 'TokenB'
-  resetFields(): void
-  setActiveField(field: 'TokenA' | 'TokenB'): void
-  setFocusedElement(value: AddLiquidityFormElement): void
-  setValue: UseFormSetValue<AddLiquidityForm>
-  subjectFieldName: 'TokenA' | 'TokenB'
   token: TokenInfo
-  trigger: UseFormTrigger<AddLiquidityForm>
+  name: 'TokenA' | 'TokenB'
   value: string
-  watch: UseFormWatch<AddLiquidityForm>
-  optimizeDisabled: boolean
-}
+  className?: string
+} & UseAddLiquidityFormReturns
 
 function AddLiquidityFormInputField({
   index,
+  isNative,
   activeField,
   className,
+  optimizeDisabled,
   control,
   focusedElement,
   formState,
-  maxBalance,
-  maxSafeBalance,
+  maxBalances,
+  maxSafeBalances,
   name,
   resetFields,
   setActiveField,
   setFocusedElement,
   setValue,
-  subjectFieldName,
   token,
   trigger,
   value,
   watch,
-  optimizeDisabled,
 }: AddLiquidityFormInputFieldProps) {
   const { isConnected } = useAuth()
   const { nativeCurrency } = useChain()
   const toFiat = useFiat()
-  const { address, decimals, symbol } = token
   const { calcPropAmountIn } = useAddLiquidityMath()
+
+  const { address, decimals, symbol } = token
 
   const id = useMemo(() => `addLiquidityForm:InputField:${address}`, [address])
   const availableBalanceLabel = useMemo(
@@ -82,7 +59,12 @@ function AddLiquidityFormInputField({
     [symbol]
   )
 
-  const maxBalanceInFiatValue = useMemo(
+  const subjectFieldName = FIELDS[1 - index]
+
+  const maxBalance = maxBalances[index]
+  const maxSafeBalance = maxSafeBalances[index]
+
+  const maxBalanceFiatValue = useMemo(
     () => toFiat(maxBalance, address),
     [address, maxBalance, toFiat]
   )
@@ -111,43 +93,42 @@ function AddLiquidityFormInputField({
         if (bNewAmount.isNaN()) return
 
         const subjectAmount = await calcPropAmountIn(
-          bnum(event.target.value).toString(),
-          1 - index
+          bNewAmount.toString(),
+          index
         )
 
         setValue(subjectFieldName, subjectAmount!)
+
         await wait(50)
         trigger(subjectFieldName)
       },
     }),
     [
-      maxBalance,
       activeField,
-      name,
-      symbol,
-      setFocusedElement,
-      setActiveField,
       calcPropAmountIn,
       index,
+      maxBalance,
+      name,
+      resetFields,
+      setActiveField,
+      setFocusedElement,
       setValue,
       subjectFieldName,
+      symbol,
       trigger,
-      resetFields,
     ]
   )
 
   const setMaxValue = useCallback(async () => {
-    setActiveField(name)
-    setValue(name, maxSafeBalance)
-
     const subjectAmount = await calcPropAmountIn(
       bnum(maxSafeBalance).toString(),
-      1 - index
+      index
     )
 
-    setValue(subjectFieldName, subjectAmount!)
-
+    setActiveField(name)
     setFocusedElement('Max')
+    setValue(name, maxSafeBalance)
+    setValue(subjectFieldName, bnum(subjectAmount).toString()!)
     trigger()
   }, [
     calcPropAmountIn,
@@ -161,15 +142,18 @@ function AddLiquidityFormInputField({
     trigger,
   ])
 
-  const isNative = token.address === nativeCurrency.address
+  const isEther = [
+    nativeCurrency.wrappedTokenAddress,
+    nativeCurrency.address,
+  ].includes(address)
 
   const disabled = !isConnected
 
   const showMisc =
     activeField &&
     activeField !== name &&
-    (focusedElement === 'Input' || focusedElement === 'Max') &&
-    bnum(watch(name)).gt(0)
+    ((focusedElement === 'Input' && bnum(watch(name)).gt(0)) ||
+      focusedElement === 'Max')
 
   return (
     <StyledAddLiquidityFormInputField
@@ -178,17 +162,37 @@ function AddLiquidityFormInputField({
       $disabled={disabled}
     >
       <div className="labelGroup">
-        <label className="label" htmlFor={id}>
-          {symbol}
+        {isEther ? (
+          <>
+            <EtherSelect
+              name={FIELDS[index]}
+              isNative={isNative}
+              setFocusedElement={setFocusedElement}
+              setValue={setValue}
+              trigger={trigger}
+            />
+            <span
+              className={clsx('misc parenthesis', {
+                active: showMisc,
+              })}
+            >
+              updated to match the pool ratio
+            </span>
+          </>
+        ) : (
+          <label className="label" htmlFor={id}>
+            {symbol}
 
-          <span
-            className={clsx('misc parenthesis', {
-              active: showMisc,
-            })}
-          >
-            updated to match the pool ratio
-          </span>
-        </label>
+            <span
+              className={clsx('misc parenthesis', {
+                active: showMisc,
+              })}
+            >
+              updated to match the pool ratio
+            </span>
+          </label>
+        )}
+
         <span className="weight parenthesis">50%</span>
       </div>
 
@@ -211,16 +215,16 @@ function AddLiquidityFormInputField({
         layout
         label={availableBalanceLabel}
         maxAmount={maxBalance}
-        fiatValue={maxBalanceInFiatValue}
+        fiatValue={maxBalanceFiatValue}
       />
 
-      {isNative && (
+      {isNative && isEther && (
         <Notice
           activeField={activeField}
           currentField={name}
           formState={formState}
           focusedElement={focusedElement}
-          joinAmount={value}
+          amountIn={value}
           optimizeDisabled={optimizeDisabled}
         />
       )}

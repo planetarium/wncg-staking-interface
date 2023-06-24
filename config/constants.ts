@@ -21,12 +21,14 @@ export type ConnectorId = (typeof ConnectorId)[keyof typeof ConnectorId]
 
 export const ModalType = {
   Approve: 'Approve',
+  AddLiquidity: 'AddLiquidity',
   Claim: 'Claim',
   Connect: 'Connect',
   Cooldown: 'Cooldown',
   Exit: 'Exit',
   Join: 'Join',
   Revenue: 'Revenue',
+  RemoveLiquidity: 'RemoveLiquidity',
   Stake: 'Stake',
   SwitchNetwork: 'SwitchNetwork',
   Unstake: 'Unstake',
@@ -35,11 +37,13 @@ export const ModalType = {
 export type ModalType = (typeof ModalType)[keyof typeof ModalType]
 
 export const ToastType = {
+  AddLiquidity: 'AddLiquidity',
   Approve: 'Approve',
   Claim: 'Claim',
   Cooldown: 'Cooldown',
   Exit: 'Exit',
   Harvest: 'Harvest',
+  RemoveLiquidity: 'RemoveLiquidity',
   Join: 'Join',
   Stake: 'Stake',
   Unstake: 'Unstake',

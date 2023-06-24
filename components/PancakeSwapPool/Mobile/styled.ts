@@ -20,7 +20,7 @@ export const StyledPoolMobileContainer = styled(motion.aside)`
   z-index: 100;
 `
 
-export const StyledPoolMobile = styled(ModalPage)`
+export const StyledPancakeSwapPoolMobile = styled(ModalPage)`
   max-width: unset;
   border-radius: 16px 16px 0 0 !important;
 
@@ -49,7 +49,7 @@ export const StyledPoolMobile = styled(ModalPage)`
   }
 `
 
-export const StyledPoolMobileHeader = styled.header`
+export const StyledPancakeSwapPoolMobileHeader = styled.header`
   .titleGroup {
     padding-right: 0 !important;
     margin-top: 12px;
@@ -77,7 +77,7 @@ export const StyledPoolMobileHeader = styled.header`
   }
 `
 
-export const StyledPoolMobileForm = styled.form`
+export const StyledPancakeSwapPoolMobileForm = styled.div`
   .formHeader {
     ${flexbox('between')}
     position: relative;
@@ -109,7 +109,7 @@ export const StyledPoolMobileForm = styled.form`
     }
 
     .optimizeButton {
-      width: 72px;
+      width: 80px;
     }
 
     .resetButton {
@@ -144,7 +144,7 @@ export const StyledPoolMobileForm = styled.form`
   }
 `
 
-export const StyledPoolMobileConnect = styled(motion.div)`
+export const StyledPancakeSwapPoolMobileConnect = styled(motion.div)`
   width: 100%;
   overflow: hidden;
 

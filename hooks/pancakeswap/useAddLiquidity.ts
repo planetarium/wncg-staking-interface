@@ -1,63 +1,73 @@
-import { useMemo } from 'react'
+import { useState } from 'react'
 import { useAtomValue } from 'jotai'
-import { useContractWrite, usePrepareContractWrite } from 'wagmi'
+import { useContractWrite, usePrepareContractWrite, useQuery } from 'wagmi'
 
 import { slippageAtom } from 'states/system'
-import { PancakeRouterAbi } from 'config/abi'
-import { DEX_PROTOCOL_ADDRESS } from 'config/constants/addresses'
+import { QUERY_KEYS } from 'config/constants/queryKeys'
 import { MINUTE } from 'config/misc'
-import { calcSlippageAmount } from 'utils/calcSlippageAmount'
-import { now } from 'utils/now'
-import { parseUnits } from 'utils/parseUnits'
-import { useAuth, useBalances, useChain, useStaking } from 'hooks'
 import { bnum } from 'utils/bnum'
+import { now } from 'utils/now'
+import { prepareAddLiquidity } from 'lib/queries/bsc/prepareAddLiquidity'
+import { useAuth, useChain } from 'hooks'
+import { useAddLiquidityMath } from './useAddLiquidityMath'
 
-export function useAddLiquidity(amountsIn: string[]) {
-  const TIMESTAMP = now() + MINUTE * 3
-
+export function useAddLiquidity(assets: Hash[], amountsIn: string[]) {
+  const [deadline, setDeadline] = useState(
+    `0x${(now() + 5 * MINUTE).toString(16)}`
+  )
   const { account, isConnected } = useAuth()
-  const balanceOf = useBalances()
-  const { chainId } = useChain()
-  const { poolTokenAddresses, poolTokenDecimals } = useStaking()
-  const maxAvailableAmountsIn = poolTokenAddresses.map((addr) =>
-    balanceOf(addr)
-  )
-
-  const scaledAmountsIn = amountsIn.map((amt, i) =>
-    parseUnits(amt, poolTokenDecimals[i]).toString()
-  )
+  const { chainId, nativeCurrency } = useChain()
+  const hasNativeCurrency = assets.includes(nativeCurrency.address)
+  const { maxBalances } = useAddLiquidityMath(hasNativeCurrency)
 
   const slippage = useAtomValue(slippageAtom) ?? '0.5'
 
-  const scaledMinAmountsIn = useMemo(
-    () => scaledAmountsIn.map((amt) => calcSlippageAmount(amt, slippage)[0]),
-    [scaledAmountsIn, slippage]
-  )
-
-  const args = [
-    ...poolTokenAddresses, // tokenA, tokenB
-    ...scaledAmountsIn, // amountADesired, amountBDesired
-    ...scaledMinAmountsIn, // amountAMin, amountBMin
-    account, // to
-    `0x${TIMESTAMP.toString(16)}`, // deadline
-  ]
-
   const enabled =
     !!isConnected &&
-    scaledAmountsIn.some(
-      (amt, i) => bnum(amt).gt(0) && bnum(amt).lte(maxAvailableAmountsIn[i])
+    amountsIn.every(
+      (amt, i) => bnum(amt).gt(0) && bnum(amt).lte(maxBalances[i])
     )
 
+  const { data } = useQuery(
+    [
+      QUERY_KEYS.Liquidity.AddLiquidity,
+      chainId,
+      account,
+      ...assets,
+      ...amountsIn,
+      slippage,
+      deadline,
+    ],
+    () =>
+      prepareAddLiquidity(
+        chainId,
+        account!,
+        assets,
+        amountsIn,
+        slippage,
+        deadline
+      ),
+    {
+      enabled,
+      useErrorBoundary: false,
+      onError(err: any) {
+        if (
+          err?.code?.includes('EXPIRED') ||
+          err?.reason?.includes('EXPIRED')
+        ) {
+          setDeadline(`0x${(now() + 5 * MINUTE).toString(16)}`)
+        }
+      },
+    }
+  )
+
   const { config: _config } = usePrepareContractWrite({
-    address: DEX_PROTOCOL_ADDRESS[chainId] as Hash,
-    abi: PancakeRouterAbi as NonPayableAbi[],
-    args,
-    chainId,
-    functionName: 'addLiquidity',
-    enabled,
+    ...data?.contract,
+    overrides: data?.overrides,
+    enabled: !!data,
   })
 
-  const { writeAsync } = useContractWrite(_config)
+  const { writeAsync } = useContractWrite(_config as any)
 
   async function addLiquidity() {
     try {

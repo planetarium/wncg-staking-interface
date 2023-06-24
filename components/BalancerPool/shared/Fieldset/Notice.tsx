@@ -7,7 +7,6 @@ import { BASE_GAS_FEE } from 'config/constants/liquidityPool'
 import { ANIMATION_MAP, EXIT_MOTION } from 'config/constants/motions'
 import { bnum } from 'utils/bnum'
 import { useBalances, useChain } from 'hooks'
-import { useJoinMath } from 'hooks/balancer'
 import { JoinPoolFormElement, JoinPoolForm } from 'hooks/balancer/useJoinForm'
 
 import { StyledJoinFormNotice } from './styled'

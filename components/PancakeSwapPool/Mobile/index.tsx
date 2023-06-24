@@ -10,11 +10,14 @@ import { useAuth } from 'hooks'
 import { useAddLiquidityForm } from 'hooks/pancakeswap'
 
 import { modalOverlayVariants } from 'components/Modals/constants'
-import { StyledPoolMobile, StyledPoolMobileContainer } from './styled'
+import {
+  StyledPancakeSwapPoolMobile,
+  StyledPoolMobileContainer,
+} from './styled'
 import { StyledModalOverlay } from 'components/Modals/styled'
-import Header from './Header'
 import Connect from './Connect'
 import Content from './Content'
+import Header from './Header'
 
 type PancakeSwapPoolMobileProps = {
   show: boolean
@@ -28,7 +31,8 @@ function PancakeSwapPoolMobile({
   const { account, prevAccount, isConnected } = useAuth()
 
   const addLiquidityFormReturns = useAddLiquidityForm()
-  const { resetFields } = addLiquidityFormReturns
+  const { resetFields, setActiveField, setFocusedElement } =
+    addLiquidityFormReturns
 
   useEffect(() => {
     if (account !== prevAccount) {
@@ -57,7 +61,7 @@ function PancakeSwapPoolMobile({
             transition={TRANSITION_MAP.modal}
             style={{ maxWidth: 'unset', width: '100%' }}
           >
-            <StyledPoolMobile>
+            <StyledPancakeSwapPoolMobile>
               <Header closePool={closePool} />
 
               {!!isConnected ? (
@@ -65,7 +69,7 @@ function PancakeSwapPoolMobile({
               ) : (
                 <Connect />
               )}
-            </StyledPoolMobile>
+            </StyledPancakeSwapPoolMobile>
           </StyledPoolMobileContainer>
         )}
       </AnimatePresence>

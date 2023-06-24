@@ -6,14 +6,16 @@ import { useAuth, useBalances, useStaking } from 'hooks'
 import { useAddLiquidityForm, useAddLiquidityModal } from 'hooks/pancakeswap'
 
 import { StyledAddLiquidityForm } from './styled'
-import Arrow from './Arrow'
 import Button from 'components/Button'
 import { Checkout } from 'components/Modals/shared'
-import OptimizeBanner from './OptimizeBanner'
-import OptimizeError from './OptimizeError'
-import Fieldset from './Fieldset'
-import Summary from './Summary'
-import Utils from './Utils'
+import {
+  Arrow,
+  Fieldset,
+  Summary,
+  UnoptimizableAlert,
+} from 'components/PancakeSwapPool/shared'
+import Header from './Header'
+import { useUnmount } from 'react-use'
 
 function AddLiquidityForm() {
   const { account, prevAccount } = useAuth()
@@ -22,18 +24,19 @@ function AddLiquidityForm() {
 
   const addLiquidityReturns = useAddLiquidityForm()
   const {
-    assets,
     activeField,
-    fields,
-    focusedElement,
-    formState,
-    optimized,
+    setActiveField,
     amountsIn,
+    amountsInFiatValueSum,
+    assets,
+    focusedElement,
+    maxBalances,
     optimize,
+    optimized,
+    optimizeDisabled,
     resetFields,
     setFocusedElement,
     submitDisabled,
-    amountsInFiatValueSum,
   } = addLiquidityReturns
 
   const openAddLiquidity = useAddLiquidityModal(assets, amountsIn)
@@ -59,21 +62,27 @@ function AddLiquidityForm() {
     }
   }, [account, prevAccount, resetFields, setFocusedElement])
 
+  useUnmount(() => {
+    resetFields()
+    setFocusedElement(null)
+    setActiveField(null)
+  })
+
   return (
     <StyledAddLiquidityForm layoutRoot>
-      <Utils
+      <Header
         optimize={optimize}
         optimized={optimized}
         focusedElement={focusedElement}
       />
 
-      <OptimizeError
+      <UnoptimizableAlert
         activeField={activeField as 'TokenA' | 'TokenB' | null}
-        fields={fields}
-        formState={formState}
+        assets={assets}
         focusedElement={focusedElement}
+        maxBalances={maxBalances}
+        optimizeDisabled={optimizeDisabled}
       />
-      <OptimizeBanner focusedElement={focusedElement} optimized={optimized} />
 
       <Fieldset {...addLiquidityReturns} />
 

@@ -94,6 +94,8 @@ export async function fetchBalancerPool(
 
     totalSwapFee,
 
+    poolReserves: poolTokenBalances,
+
     shouldReversePoolTokenOrderOnDisplay,
   }
 }

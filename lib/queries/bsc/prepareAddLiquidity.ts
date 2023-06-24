@@ -1,8 +1,9 @@
+import { BigNumber } from 'ethers'
+
 import { PancakeRouterAbi } from 'config/abi'
 import { CHAINS } from 'config/chains'
 import { DEX_PROTOCOL_ADDRESS } from 'config/constants/addresses'
 import { MINUTE } from 'config/misc'
-import { BigNumber } from 'ethers'
 import { calcSlippageAmount } from 'utils/calcSlippageAmount'
 import { now } from 'utils/now'
 import { parseUnits } from 'utils/parseUnits'
@@ -11,18 +12,16 @@ export function prepareAddLiquidity(
   chainId: ChainId,
   account: Hash,
   assets: Hash[],
-  joinAmounts: string[],
-  slippage = '0.5'
+  amountsIn: string[],
+  slippage = '0.5',
+  deadline: string
 ) {
   const { nativeCurrency } = CHAINS[chainId]
-  const DEADLINE = `0x${(now() + 3 * MINUTE).toString(16)}`
   const hasNativeCurrency = assets.includes(nativeCurrency.address)
 
-  const scaledJoinAmounts = joinAmounts.map((amt, i) =>
-    parseUnits(amt).toString()
-  )
+  const scaledAmountsIn = amountsIn.map((amt, i) => parseUnits(amt).toString())
 
-  const scaledMinJoinAmounts = scaledJoinAmounts.map(
+  const scaledMinAmountsIn = scaledAmountsIn.map(
     (amt) => calcSlippageAmount(amt, slippage)[0]
   )
 
@@ -36,19 +35,13 @@ export function prepareAddLiquidity(
   const args = hasNativeCurrency
     ? [
         assets[tokenIndex],
-        scaledJoinAmounts[tokenIndex],
-        scaledMinJoinAmounts[tokenIndex],
-        scaledMinJoinAmounts[ethIndex],
+        scaledAmountsIn[tokenIndex],
+        scaledMinAmountsIn[tokenIndex],
+        scaledMinAmountsIn[ethIndex],
         account,
-        DEADLINE,
+        deadline,
       ]
-    : [
-        ...assets,
-        ...scaledJoinAmounts,
-        ...scaledMinJoinAmounts,
-        account,
-        DEADLINE,
-      ]
+    : [...assets, ...scaledAmountsIn, ...scaledMinAmountsIn, account, deadline]
 
   const contract = {
     address: DEX_PROTOCOL_ADDRESS[chainId] as Hash,
@@ -60,7 +53,7 @@ export function prepareAddLiquidity(
 
   const overrides = hasNativeCurrency
     ? {
-        value: BigNumber.from(scaledJoinAmounts[ethIndex]),
+        value: BigNumber.from(scaledAmountsIn[ethIndex]),
       }
     : undefined
 

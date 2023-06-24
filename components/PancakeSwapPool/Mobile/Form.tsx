@@ -1,39 +1,42 @@
 import { useAtomValue } from 'jotai'
+import { useUnmount } from 'react-use'
 
-import { joinTxAtom } from 'states/tx'
+import { addLiquidityAtom } from 'states/tx'
 import type { UseAddLiquidityFormReturns } from 'hooks/pancakeswap/useAddLiquidityForm'
 
-import { StyledPoolMobileForm } from './styled'
+import { StyledPancakeSwapPoolMobileForm } from './styled'
 import Button from 'components/Button'
-import Icon from 'components/Icon'
-import {
-  Fieldset,
-  ProportionalGuideBanner,
-  UnoptimizableAlert,
-} from 'components/BalancerPool/shared'
+import { Fieldset, UnoptimizableAlert } from 'components/PancakeSwapPool/shared'
 import SlippageControl from 'components/SlippageControl'
 
-type PoolMobileFormProps = UseAddLiquidityFormReturns
+type PancakeSwapPoolMobileFormProps = UseAddLiquidityFormReturns
 
-export default function PoolMobileForm(props: PoolMobileFormProps) {
+export default function PancakeSwapPoolMobileForm(
+  props: PancakeSwapPoolMobileFormProps
+) {
   const {
     assets,
-    formState,
-    amountsIn,
+    activeField,
     maxBalances,
-    setValue,
     optimizeDisabled,
     optimized,
     optimize,
     resetFields,
-    resetDisabled,
+    setActiveField,
+    setFocusedElement,
     focusedElement,
   } = props
 
-  const tx = useAtomValue(joinTxAtom)
+  const tx = useAtomValue(addLiquidityAtom)
+
+  useUnmount(() => {
+    resetFields()
+    setFocusedElement(null)
+    setActiveField(null)
+  })
 
   return (
-    <StyledPoolMobileForm>
+    <StyledPancakeSwapPoolMobileForm>
       <header className="formHeader">
         <SlippageControl disabled={!!tx.hash} />
 
@@ -47,24 +50,12 @@ export default function PoolMobileForm(props: PoolMobileFormProps) {
           >
             Optimize{optimized ? 'd' : ''}
           </Button>
-
-          <button
-            className="resetButton"
-            type="reset"
-            onClick={resetFields}
-            disabled={resetDisabled}
-            aria-label="Reset"
-          >
-            <Icon
-              icon={resetDisabled ? 'refreshOff' : 'refreshOn'}
-              $size={32}
-            />
-          </button>
         </div>
       </header>
 
       <div>
         <UnoptimizableAlert
+          activeField={activeField as 'TokenA' | 'TokenB' | null}
           assets={assets}
           maxBalances={maxBalances}
           focusedElement={focusedElement}
@@ -72,15 +63,7 @@ export default function PoolMobileForm(props: PoolMobileFormProps) {
         />
 
         <Fieldset {...props} />
-
-        <ProportionalGuideBanner
-          amountsIn={amountsIn}
-          assets={assets}
-          maxBalances={maxBalances}
-          formState={formState}
-          setValue={setValue}
-        />
       </div>
-    </StyledPoolMobileForm>
+    </StyledPancakeSwapPoolMobileForm>
   )
 }

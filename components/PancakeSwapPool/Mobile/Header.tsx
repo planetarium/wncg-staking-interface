@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { dexPoolUrlFor } from 'utils/dexPoolUrlFor'
 import { useChain, useStaking } from 'hooks'
 
-import { StyledPoolMobileHeader } from './styled'
+import { StyledPancakeSwapPoolMobileHeader } from './styled'
 import { StyledCloseButton } from 'components/Modals/shared/styled'
 import Icon from 'components/Icon'
 
@@ -17,7 +17,7 @@ function PoolMobileHeader({ closePool }: PoolMobileHeaderProps) {
   const { lpToken } = useStaking()
 
   return (
-    <StyledPoolMobileHeader className="modalHeader">
+    <StyledPancakeSwapPoolMobileHeader className="modalHeader">
       <strong className="poolName">{lpToken.name}</strong>
 
       <div className="titleGroup">
@@ -41,7 +41,7 @@ function PoolMobileHeader({ closePool }: PoolMobileHeaderProps) {
       >
         <Icon icon="close" $size={24} />
       </StyledCloseButton>
-    </StyledPoolMobileHeader>
+    </StyledPancakeSwapPoolMobileHeader>
   )
 }
 

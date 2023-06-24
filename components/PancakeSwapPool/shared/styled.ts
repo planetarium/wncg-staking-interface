@@ -1,7 +1,14 @@
 import { motion } from 'framer-motion'
 import styled, { css } from 'styled-components'
 
-import { flexbox, gradient, media, textStyle } from 'styles/utils'
+import {
+  flexbox,
+  gradient,
+  media,
+  posCenterX,
+  posCenterY,
+  textStyle,
+} from 'styles/utils'
 import {
   buttonStyle,
   lgButtonStyle,
@@ -9,6 +16,62 @@ import {
 } from 'components/Button/styled'
 
 const INPUT_FIELD_GAP = 24
+
+const ARROW_SIZE = 32
+const DASH_HEIGHT = 24
+const STROKE_WIDTH = 2
+
+export const StyledAddLiquidityFormArrow = styled.span<{ $disabled: boolean }>`
+  ${flexbox()}
+  position: relative;
+  width: ${ARROW_SIZE}px;
+  height: ${ARROW_SIZE}px;
+  margin: 12px auto;
+  transition: 200ms;
+  color: var(--white);
+
+  .icon {
+    ${posCenterX()}
+    top: 12px;
+  }
+
+  .dashed {
+    display: block;
+    width: ${STROKE_WIDTH}px;
+    height: ${DASH_HEIGHT}px;
+    border-radius: 100px;
+    animation: dash 1.5s linear infinite;
+    background-image: linear-gradient(
+      to bottom,
+      transparent,
+      transparent 50%,
+      var(--white) 50%,
+      var(--white) 100%
+    );
+    background-repeat: repeat-y;
+    background-size: 100% ${DASH_HEIGHT / 3}px;
+  }
+
+  ${({ $disabled }) =>
+    $disabled &&
+    css`
+      opacity: 0.5;
+
+      .dashed {
+        animation: none;
+      }
+    `}
+
+  @keyframes dash {
+    0% {
+      background-position: 100% 0, 0 100%;
+    }
+
+    100% {
+      background-position: 100% 100%, 100% 0;
+    }
+  }
+`
 
 export const StyledAddLiquidityFormInputField = styled(motion.div)`
   width: 100%;
@@ -38,188 +101,179 @@ export const StyledAddLiquidityFormInputField = styled(motion.div)`
   )}
 `
 
-export const StyledAddLiquidityFormProportionalGuideBanner = styled(
-  motion.aside
-)`
+export const StyledAddLiquidityFormSummary = styled(motion.footer)<{
+  $active: boolean
+  $disabled: boolean
+}>`
   width: 100%;
-  padding: 10px 12px;
-  margin-top: 24px;
-  border-radius: 6px;
-  background-color: var(--primary-500);
+  padding: 24px;
+  margin-top: 16px;
+  border: 1px solid rgba(var(--white-rgb), 0.4);
+  border-radius: 8px;
+  transition: border-color 200ms;
 
   .title {
-    ${flexbox('start')}
-    ${textStyle('body', 4, 700)}
+    ${textStyle('body', 1)}
+    font-weight: 700;
+    text-align: center;
   }
 
-  .desc {
-    flex-grow: 1;
-  }
-
-  .addButton {
-    ${buttonStyle}
-    ${textStyle('button', 3)}
-    position: relative;
-    flex-shrink: 0;
-    padding: 4px 12px;
-    margin-top: 10px;
-    color: rgba(var(--gray-100-rgb), 0.9);
-    background-color: rgba(var(--white-rgb), 0.1);
-    border-radius: 50px;
-
-    &::before {
-      width: 100%;
-      height: 100%;
-      background-image: ${gradient(6)};
-      content: '';
-      transition: 200ms;
-      opacity: 0;
-    }
-
-    span {
-      margin-right: 0.2em;
-      margin-left: 0.25em;
-      font-weight: 700;
-    }
-  }
-
-  .desc {
-    font-weight: 500;
-
-    .number {
-      margin: 0 0.2em;
-
-      .symbol {
-        margin-left: 0.2em;
-      }
-    }
-  }
-
-  ${media(
-    'minSmLaptop',
-    css`
-      ${flexbox('start')}
-      padding: 10px 12px;
-      margin-top: 24px;
-      margin-bottom: 0;
-
-      .title {
-        ${textStyle('body', 4, 700)}
-
-        &::after {
-          display: block;
-          width: 2px;
-          height: 10px;
-          margin: 0 10px;
-          border-radius: 40px;
-          background-color: var(--primary-400);
-          content: '';
-        }
-
-        .icon {
-          margin-right: 8px;
-        }
-      }
-
-      .desc {
-        ${textStyle('body', 4)}
-        color: rgba(var(--gray-100-rgb), 0.8);
-      }
-
-      .addButton {
-        margin-top: 0;
-        margin-left: 10px;
-
-        &:hover {
-          &::before {
-            opacity: 1;
-          }
-        }
-      }
-    `
-  )}
-`
-
-export const StyledAddLiquidityFormSummary = styled.dl<{ $disabled: boolean }>`
-  width: 100%;
-  margin-top: 24px;
-  border-top: 2px solid rgba(var(--white-rgb), 0.1);
-  padding-top: 24px;
-
-  .text,
-  .value {
-    width: calc(50% - 4px);
-  }
-
-  .text {
-    ${textStyle('body', 3)}
-    text-align: right;
-  }
-
-  .value {
-    ${flexbox('start')}
-    ${textStyle('body', 1, 700)}
-      transition: 150ms;
-
-    &.enabled {
-      color: var(--primary-300);
-    }
+  .summaryList {
+    margin-top: 24px;
   }
 
   .summaryItem {
-    ${flexbox('between')}
-    width: 100%;
-    margin-top: 12px;
+    position: relative;
+    padding: 8px 0;
+    color: var(--gray-25);
 
-    &:first-child {
-      margin-top: 0;
+    .number {
+      ${textStyle('body', 2, 700)}
+
+      &::before {
+        margin-left: 0;
+      }
+
+      span:not(.symbol) {
+        margin-right: 0.25em;
+      }
+    }
+
+    .symbol {
+      ${textStyle('body', 4)}
     }
 
     dt {
-      ${textStyle('body', 1, 700)}
-      white-space: nowrap;
-      margin-right: 12px;
+      ${textStyle('body', 2)}
+      margin-bottom: 4px;
+      font-weight: 700;
+
+      .number {
+        font-weight: 700;
+      }
+
+      .symbol {
+        font-weight: 700;
+      }
     }
 
     dd {
-      flex-grow: 1;
-      color: rgba(var(--white-rgb), 0.8);
-      text-align: right;
-
-      &.alert {
-        color: rgba(var(--error-400-rgb), 0.8) !important;
+      .percent {
+        font-weight: 500;
       }
 
-      .number {
-        ${textStyle('body', 1, 700)}
+      .tokenPrice,
+      .fiatPrice {
+        ${flexbox('start')}
+        flex-wrap: wrap;
+        font-weight: 500;
+      }
+
+      .fiatPrice {
+        ${textStyle('body', 4)}
+        margin-top: 2px;
+        color: var(--gray-500);
       }
     }
   }
 
-  .priceImpactAlert {
-    margin-top: 12px;
-  }
-
   ${media(
-    'minSmLaptop',
+    'minTablet',
     css`
-      .value {
-        ${textStyle('title')}
+      margin-top: 0;
+
+      .summaryList {
+        ${flexbox('between', 'stretch')}
+        margin-top: 24px;
       }
 
       .summaryItem {
+        position: relative;
+        flex-grow: 1;
+        flex-shrink: 0;
+        width: 33%;
+        color: var(--gray-25);
+        padding: 0 32px;
+
+        &:first-child {
+          padding-left: 0;
+
+          &::after {
+            display: none;
+          }
+        }
+
+        &:last-child {
+          padding-right: 0;
+        }
+
+        &::after {
+          ${posCenterY()}
+          content: '';
+          left: 0;
+          width: 1px;
+          height: 56px;
+          background-color: var(--white);
+          border-radius: 50px;
+        }
+
+        .number {
+          ${textStyle('body', 2, 700)}
+
+          &::before {
+            margin-left: 0;
+          }
+
+          span:not(.symbol) {
+            margin-right: 0.25em;
+          }
+        }
+
+        .symbol {
+          ${textStyle('body', 4)}
+        }
+
         dt {
-          ${textStyle('subtitle', 1)}
+          ${textStyle('body', 2)}
+          margin-bottom: 4px;
+          font-weight: 700;
+
+          .number {
+            font-weight: 700;
+          }
+
+          .symbol {
+            font-weight: 700;
+          }
         }
 
         dd {
-          .number {
-            ${textStyle('title')}
+          .percent {
+            font-weight: 500;
+          }
+
+          .tokenPrice,
+          .fiatPrice {
+            ${flexbox('start')}
+            flex-wrap: wrap;
+            font-weight: 500;
+          }
+
+          .fiatPrice {
+            ${textStyle('body', 4)}
+            margin-top: 2px;
+            color: var(--gray-500);
           }
         }
       }
     `
   )}
+
+  ${({ $active }) =>
+    $active &&
+    css`
+      border-color: var(--white);
+    `}
 
   ${({ $disabled }) =>
     $disabled &&
@@ -247,61 +301,6 @@ export const StyledAddLiquidityFormUnoptimizableAlert = styled(motion.aside)`
     css`
       padding: 8px 12px;
       margin-top: 32px;
-    `
-  )}
-`
-
-export const StyledAddLiquidityFormOptimizedBanner = styled(motion.aside)`
-  ${textStyle('body', 4)}
-  width: 100%;
-  padding: 12px;
-  margin-top: 24px;
-  background-color: var(--primary-500);
-  border-radius: 8px;
-
-  .title {
-    ${flexbox('start')}
-    ${textStyle('body', 4, 700)}
-
-    .icon {
-      margin-left: 4px;
-    }
-  }
-
-  .desc {
-    margin-top: 4px;
-    color: rgba(var(--white-rgb), 0.8);
-  }
-
-  ${media(
-    'minSmLaptop',
-    css`
-      ${flexbox('start')}
-      padding: 8px 12px;
-      margin-top: 32px;
-
-      .title {
-        margin-right: 8px;
-
-        &::after {
-          display: block;
-          width: 2px;
-          height: 10px;
-          margin-left: 10px;
-          content: '';
-          border-radius: 10px;
-          background-color: var(--primary-400);
-        }
-
-        .icon {
-          margin-left: 2px;
-        }
-      }
-
-      .desc {
-        margin-top: 0;
-        color: var(--white);
-      }
     `
   )}
 `

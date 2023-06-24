@@ -1,75 +1,56 @@
-import { AddLiquidityField } from 'config/constants'
-import { useAuth, useChain, useStaking } from 'hooks'
-import { UseAddLiquidityFormReturns } from 'hooks/pancakeswap/useAddLiquidityForm'
+import { useChain, useStaking } from 'hooks'
+import {
+  FIELDS,
+  UseAddLiquidityFormReturns,
+} from 'hooks/pancakeswap/useAddLiquidityForm'
 
-import { StyledAddLiquidityFieldset } from './styled'
+import { StyledAddLiquidityFormFieldset } from './styled'
 import InputField from './InputField'
 
-type AddLiquidityFieldsetProps = UseAddLiquidityFormReturns
+type AddLiquidityFormFieldsetProps = UseAddLiquidityFormReturns
 
-export default function AddLiquidityFieldset({
-  activeField,
-  clearErrors,
-  amountsIn,
-  maxBalances,
-  maxSafeBalances,
-  watch,
-  control,
-  fields,
-  formState,
-  optimizeDisabled,
-  setValue,
-  trigger,
-  setFocusedElement,
-  setActiveField,
-  resetFields,
-  focusedElement,
-}: AddLiquidityFieldsetProps) {
-  const { poolTokens, shouldReversePoolTokenOrderOnDisplay } = useStaking()
+export default function AddLiquidityFormFieldset(
+  props: AddLiquidityFormFieldsetProps
+) {
+  const { amountsIn, isNative } = props
+  const { nativeCurrency } = useChain()
+  const { poolTokenAddresses, shouldReversePoolTokenOrderOnDisplay, tokens } =
+    useStaking()
 
-  const isNative = watch(AddLiquidityField.UseNative)
+  const ethIndex = shouldReversePoolTokenOrderOnDisplay ? 0 : 1
 
   return (
-    <StyledAddLiquidityFieldset
+    <StyledAddLiquidityFormFieldset
       layoutRoot
       $reverse={shouldReversePoolTokenOrderOnDisplay}
     >
-      {poolTokens.map((t, i) => {
-        const field = fields[i] as 'TokenA' | 'TokenB'
-        const address = t.address
+      {poolTokenAddresses.map((addr, i) => {
+        const field = FIELDS[i] as 'TokenA' | 'TokenB'
 
-        const maxBalance = maxBalances[i]
-        const maxSafeBalance = maxSafeBalances[i]
+        const token =
+          ethIndex !== i || !isNative
+            ? tokens?.[addr] ?? {}
+            : {
+                address: nativeCurrency.address,
+                decimals: nativeCurrency.decimals,
+                symbol: nativeCurrency.symbol,
+                name: nativeCurrency.name,
+              }
 
-        const subjectFieldName = fields[1 - i] as 'TokenA' | 'TokenB'
         const value = amountsIn[i]
 
         return (
           <InputField
             className="joinInputField"
-            key={`addLiquidityForm:inputField:${address}`}
-            token={t}
+            key={`addLiquidityForm:inputField:${addr}`}
+            token={token}
             name={field}
             index={i}
-            activeField={activeField}
-            clearErrors={clearErrors}
-            control={control}
-            focusedElement={focusedElement}
-            formState={formState}
-            maxBalance={maxBalance}
-            maxSafeBalance={maxSafeBalance}
-            resetFields={resetFields}
-            setActiveField={setActiveField}
-            setFocusedElement={setFocusedElement}
-            setValue={setValue}
-            subjectFieldName={subjectFieldName}
-            trigger={trigger}
             value={value}
-            watch={watch}
-            optimizeDisabled={optimizeDisabled}
+            {...props}
           />
         )
       })}
-    </StyledAddLiquidityFieldset>
+    </StyledAddLiquidityFormFieldset>
   )
 }

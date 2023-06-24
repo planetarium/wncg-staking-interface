@@ -6,7 +6,7 @@ import { Checkout } from 'components/Modals/shared'
 
 type AddLiquidityFormFooterProps = {
   amountsInFiatValueSum: string
-  openJoin(): Promise<void>
+  openAddLiquidity(): Promise<void>
   submitDisabled: boolean
   className?: string
 }
@@ -14,7 +14,7 @@ type AddLiquidityFormFooterProps = {
 export default function AddLiquidityFormFooter({
   className,
   amountsInFiatValueSum,
-  openJoin,
+  openAddLiquidity,
   submitDisabled,
 }: AddLiquidityFormFooterProps) {
   const { isConnected } = useAuth()
@@ -31,7 +31,7 @@ export default function AddLiquidityFormFooter({
       />
       <Button
         className="submitButton"
-        onClick={openJoin}
+        onClick={openAddLiquidity}
         disabled={submitDisabled}
         $size="lg"
       >

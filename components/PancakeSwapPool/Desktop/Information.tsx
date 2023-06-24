@@ -1,20 +1,34 @@
-import { memo } from 'react'
+import { memo, useMemo } from 'react'
 
+import { bnum } from 'utils/bnum'
 import { dexPoolUrlFor } from 'utils/dexPoolUrlFor'
-import { useChain } from 'hooks'
-import { usePoolSnapshot } from 'hooks/usePoolSnapshot'
+import { useChain, useFiat, useStaking } from 'hooks'
+import { useFetchPool } from 'hooks/queries'
 
-import { StyledPoolInformation } from './styled'
+import { StyledPancakeSwapPoolInformation } from './styled'
 import Icon from 'components/Icon'
 import NumberFormat from 'components/NumberFormat'
 
-function PoolInformation() {
-  const { poolValueIn24Hr, totalSwapVolumeIn24Hr, totalSwapFeesIn24Hr } =
-    usePoolSnapshot()
+function PancakeSwapPoolInformation() {
   const { chainId } = useChain()
+  const toFiat = useFiat()
+  const { poolTokenAddresses, poolReserves: initPoolReserves } = useStaking()
+
+  const { poolReserves = initPoolReserves } = useFetchPool().data ?? {}
+
+  const totalPoolValue = useMemo(
+    () =>
+      poolReserves
+        .reduce(
+          (acc, amt, i) => acc.plus(toFiat(amt, poolTokenAddresses[i])),
+          bnum(0)
+        )
+        .toString(),
+    [poolReserves, poolTokenAddresses, toFiat]
+  )
 
   return (
-    <StyledPoolInformation className="poolInformation">
+    <StyledPancakeSwapPoolInformation className="poolInformation">
       <header className="header">
         <h3 className="title">Pool information</h3>
         <a
@@ -32,24 +46,12 @@ function PoolInformation() {
         <div className="detailItem">
           <dt>Pool value</dt>
           <dd>
-            <NumberFormat value={poolValueIn24Hr} type="fiat" />
-          </dd>
-        </div>
-        <div className="detailItem">
-          <dt>Volume (24h)</dt>
-          <dd>
-            <NumberFormat value={totalSwapVolumeIn24Hr} type="fiat" />
-          </dd>
-        </div>
-        <div className="detailItem">
-          <dt>Fees (24h)</dt>
-          <dd>
-            <NumberFormat value={totalSwapFeesIn24Hr} type="fiat" />
+            <NumberFormat value={totalPoolValue} type="fiat" />
           </dd>
         </div>
       </dl>
-    </StyledPoolInformation>
+    </StyledPancakeSwapPoolInformation>
   )
 }
 
-export default memo(PoolInformation)
+export default memo(PancakeSwapPoolInformation)

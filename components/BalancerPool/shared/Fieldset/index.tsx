@@ -6,9 +6,9 @@ import { UseJoinFormReturns } from 'hooks/balancer/useJoinForm'
 import { StyledJoinFormFieldset } from './styled'
 import InputField from './InputField'
 
-type JoinPoolFormetProps = UseJoinFormReturns
+type JoinPoolFormFieldsetProps = UseJoinFormReturns
 
-export default function JoinPoolFormet({
+export default function JoinPoolFormFieldset({
   activeField,
   clearErrors,
   joinAmounts,
@@ -24,12 +24,12 @@ export default function JoinPoolFormet({
   setFocusedElement,
   setActiveField,
   focusedElement,
-}: JoinPoolFormetProps) {
+}: JoinPoolFormFieldsetProps) {
   const { isConnected } = useAuth()
   const { nativeCurrency } = useChain()
   const { poolTokens, shouldReversePoolTokenOrderOnDisplay } = useStaking()
 
-  const isNativeCurrency = watch(LiquidityFieldType.UseNative)
+  const isNative = watch(LiquidityFieldType.UseNative)
 
   return (
     <StyledJoinFormFieldset
@@ -40,7 +40,7 @@ export default function JoinPoolFormet({
         const field = fields[i] as 'TokenA' | 'TokenB'
         let address = t.address
         const { coingeckoId, wrappedTokenAddress, ...rest } = nativeCurrency
-        if (t.address === wrappedTokenAddress && isNativeCurrency) {
+        if (t.address === wrappedTokenAddress && isNative) {
           t = {
             ...t,
             ...rest,
