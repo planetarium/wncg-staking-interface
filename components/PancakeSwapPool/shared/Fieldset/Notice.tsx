@@ -2,23 +2,25 @@ import { useMemo } from 'react'
 import { UseFormStateReturn } from 'react-hook-form'
 import { AnimatePresence } from 'framer-motion'
 
-import { LiquidityFieldType } from 'config/constants'
+import { AddLiquidityField } from 'config/constants'
 import { BASE_GAS_FEE } from 'config/constants/liquidityPool'
 import { ANIMATION_MAP, EXIT_MOTION } from 'config/constants/motions'
 import { bnum } from 'utils/bnum'
 import { useBalances, useChain } from 'hooks'
-import { useJoinMath } from 'hooks/balancer'
-import { JoinPoolFormElement, JoinPoolForm } from 'hooks/balancer/useJoinForm'
+import type {
+  AddLiquidityFormElement,
+  AddLiquidityForm,
+} from 'hooks/pancakeswap/useAddLiquidityForm'
 
-import { StyledJoinFormNotice } from './styled'
+import { StyledAddLiquidityFormNotice } from './styled'
 import Icon from 'components/Icon'
 import Lottie from 'components/Lottie'
 
-type JoinFormNoticeProps = {
-  activeField: LiquidityFieldType | null
-  currentField: LiquidityFieldType
-  formState: UseFormStateReturn<JoinPoolForm>
-  focusedElement: JoinPoolFormElement | null
+type AddLiquidityFormNoticeProps = {
+  activeField: AddLiquidityField | null
+  currentField: AddLiquidityField
+  formState: UseFormStateReturn<AddLiquidityForm>
+  focusedElement: AddLiquidityFormElement
   optimizeDisabled: boolean
   joinAmount: string
 }
@@ -35,7 +37,7 @@ function SubtractionNotice() {
   const { nativeCurrency } = useChain()
 
   return (
-    <StyledJoinFormNotice {...motionVariants}>
+    <StyledAddLiquidityFormNotice {...motionVariants}>
       <strong className="badge">
         <Lottie className="lottie" animationData="bell" />
         Notification
@@ -48,7 +50,7 @@ function SubtractionNotice() {
       <p className="desc">
         You can change the amount manually and proceed to joining the pool.
       </p>
-    </StyledJoinFormNotice>
+    </StyledAddLiquidityFormNotice>
   )
 }
 
@@ -56,7 +58,7 @@ function ZeroAmountNotice() {
   const { nativeCurrency } = useChain()
 
   return (
-    <StyledJoinFormNotice {...motionVariants}>
+    <StyledAddLiquidityFormNotice {...motionVariants}>
       <strong className="badge">
         <Lottie className="lottie" animationData="bell" />
         Notification
@@ -67,7 +69,7 @@ function ZeroAmountNotice() {
         pay the gas fee. You can change the amount manually and proceed to
         joining the pool.
       </p>
-    </StyledJoinFormNotice>
+    </StyledAddLiquidityFormNotice>
   )
 }
 
@@ -75,7 +77,7 @@ function SuggestionNotice() {
   const { nativeCurrency } = useChain()
 
   return (
-    <StyledJoinFormNotice {...motionVariants} $suggestion>
+    <StyledAddLiquidityFormNotice {...motionVariants} $suggestion>
       <strong className="badge">
         <Icon icon="star" />
         Recommendation
@@ -85,20 +87,20 @@ function SuggestionNotice() {
         To ensure a smooth transaction, we recommend leaving at least{' '}
         {BASE_GAS_FEE} {nativeCurrency.symbol}.
       </h5>
-    </StyledJoinFormNotice>
+    </StyledAddLiquidityFormNotice>
   )
 }
 
-export default function JoinFormNotice({
+export default function AddLiquidityFormNotice({
   activeField,
   currentField,
   formState,
   focusedElement,
   joinAmount,
   optimizeDisabled,
-}: JoinFormNoticeProps) {
-  const { nativeCurrency } = useChain()
+}: AddLiquidityFormNoticeProps) {
   const balanceOf = useBalances()
+  const { nativeCurrency } = useChain()
   const maxBalance = balanceOf(nativeCurrency.address)
 
   const maxSafeBalance = bnum(maxBalance).minus(BASE_GAS_FEE)

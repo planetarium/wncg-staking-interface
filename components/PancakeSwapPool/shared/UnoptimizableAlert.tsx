@@ -4,24 +4,24 @@ import { AnimatePresence } from 'framer-motion'
 import { ANIMATION_MAP, EXIT_MOTION } from 'config/constants/motions'
 import { bnum } from 'utils/bnum'
 import { useAuth, useStaking } from 'hooks'
-import type { JoinPoolFormElement } from 'hooks/balancer/useJoinForm'
+import type { AddLiquidityFormElement } from 'hooks/pancakeswap/useAddLiquidityForm'
 
-import { StyledJoinFormUnoptimizableAlert } from './styled'
+import { StyledAddLiquidityFormUnoptimizableAlert } from './styled'
 import Icon from 'components/Icon'
 
-type JoinFormUnoptimizableProps = {
+type AddLiquidityFormUnoptimizableProps = {
   assets: Hash[]
-  focusedElement: JoinPoolFormElement
+  focusedElement: AddLiquidityFormElement
   maxBalances: string[]
   optimizeDisabled: boolean
 }
 
-function JoinFormUnoptimizableAlert({
+function AddLiquidityFormUnoptimizableAlert({
   assets,
   focusedElement,
   maxBalances,
   optimizeDisabled,
-}: JoinFormUnoptimizableProps) {
+}: AddLiquidityFormUnoptimizableProps) {
   const { isConnected } = useAuth()
   const { tokens } = useStaking()
 
@@ -38,7 +38,7 @@ function JoinFormUnoptimizableAlert({
   return (
     <AnimatePresence>
       {showAlert && (
-        <StyledJoinFormUnoptimizableAlert
+        <StyledAddLiquidityFormUnoptimizableAlert
           {...EXIT_MOTION}
           className="joinFormAlert"
           variants={ANIMATION_MAP.slideInDown}
@@ -46,10 +46,10 @@ function JoinFormUnoptimizableAlert({
         >
           <Icon icon="warning" />
           <p className="desc">{message}</p>
-        </StyledJoinFormUnoptimizableAlert>
+        </StyledAddLiquidityFormUnoptimizableAlert>
       )}
     </AnimatePresence>
   )
 }
 
-export default memo(JoinFormUnoptimizableAlert)
+export default memo(AddLiquidityFormUnoptimizableAlert)

@@ -26,7 +26,7 @@ export default function ImportToken({
   $contain = false,
 }: ImportTokenProps) {
   const { connector, isConnected } = useAuth()
-  const { chainId } = useChain()
+  const { chainId, nativeCurrency } = useChain()
   const { lpToken, tokens } = useStaking()
 
   const importOptions = useMemo(() => {
@@ -57,7 +57,7 @@ export default function ImportToken({
 
   const importDisabled = useMemo(() => {
     if (typeof window === 'undefined') return false
-    if (address.toLowerCase() === config.nativeCurrency.address) return false
+    if (address.toLowerCase() === nativeCurrency.address) return false
     if (!isConnected) return false
 
     switch (true) {
@@ -71,7 +71,7 @@ export default function ImportToken({
       default:
         return false
     }
-  }, [address, connector?.id, isConnected])
+  }, [address, connector?.id, isConnected, nativeCurrency.address])
 
   const onImportToken = useCallback(
     async (e: MouseEvent<HTMLButtonElement>) => {

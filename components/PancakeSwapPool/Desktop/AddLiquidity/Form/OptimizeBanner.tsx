@@ -1,29 +1,30 @@
 import { AnimatePresence } from 'framer-motion'
 
 import { ANIMATION_MAP, EXIT_MOTION } from 'config/constants/motions'
-import type { JoinPoolFormElement } from 'hooks/balancer/useJoinForm'
+import { AddLiquidityFormElement } from 'hooks/pancakeswap/useAddLiquidityForm'
 
-import { StyledJoinFormOptimizedBanner } from './styled'
+import { StyledAddLiquidityFormAlert } from './styled'
 import Icon from 'components/Icon'
 
-type JoinFormOptimizeBannerProps = {
-  focusedElement: JoinPoolFormElement
+type AddLiquidityFormOptimizeBannerProps = {
+  focusedElement: AddLiquidityFormElement
   optimized: boolean
 }
 
-export default function JoinFormOptimizedBanner({
+export default function AddLiquidityFormOptimizeBanner({
   focusedElement,
   optimized,
-}: JoinFormOptimizeBannerProps) {
+}: AddLiquidityFormOptimizeBannerProps) {
   const showBanner = focusedElement === 'Optimize' && optimized
 
   return (
     <AnimatePresence>
       {showBanner && (
-        <StyledJoinFormOptimizedBanner
+        <StyledAddLiquidityFormAlert
           {...EXIT_MOTION}
           layout
           variants={ANIMATION_MAP.slideInDown}
+          $optimized
         >
           <span className="title">
             Optimized
@@ -31,10 +32,10 @@ export default function JoinFormOptimizedBanner({
           </span>
 
           <p className="desc">
-            The maximum amount is entered while maintaining a pool ratio within
+            The maximum amount is entered while maintaining a 5:5 ratio within
             the balance.
           </p>
-        </StyledJoinFormOptimizedBanner>
+        </StyledAddLiquidityFormAlert>
       )}
     </AnimatePresence>
   )

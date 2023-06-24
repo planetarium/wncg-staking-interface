@@ -1,33 +1,31 @@
 import { MouseEvent, useMemo } from 'react'
 import { UseFormSetValue, UseFormTrigger } from 'react-hook-form'
 
-import { LiquidityFieldType } from 'config/constants'
+import { AddLiquidityField } from 'config/constants'
 import { useChain, useStaking } from 'hooks'
-import { JoinPoolForm } from 'hooks/balancer/useJoinForm'
+import { AddLiquidityForm } from 'hooks/pancakeswap/useAddLiquidityForm'
 
-import { StyledJoinFormJoinFormEtherSelect } from './styled'
+import { StyledAddLiquidityFormAddLiquidityFormEtherSelect } from './styled'
 import Dropdown from 'components/Dropdown'
 
-type JoinFormEtherSelectProps = {
-  name: LiquidityFieldType
-  isNativeCurrency: boolean
-  setValue: UseFormSetValue<JoinPoolForm>
-  trigger: UseFormTrigger<JoinPoolForm>
+type AddLiquidityFormEtherSelectProps = {
+  name: AddLiquidityField
+  isNative: boolean
+  setValue: UseFormSetValue<AddLiquidityForm>
+  trigger: UseFormTrigger<AddLiquidityForm>
 }
 
-export default function JoinFormEtherSelect({
+export default function AddLiquidityFormEtherSelect({
   name,
-  isNativeCurrency,
+  isNative,
   setValue,
   trigger,
-}: JoinFormEtherSelectProps) {
+}: AddLiquidityFormEtherSelectProps) {
   const { nativeCurrency } = useChain()
   const { tokens } = useStaking()
 
   const wrappedToken = tokens[nativeCurrency.wrappedTokenAddress]
-  const selectedToken = isNativeCurrency
-    ? nativeCurrency.symbol
-    : wrappedToken.symbol
+  const selectedToken = isNative ? nativeCurrency.symbol : wrappedToken.symbol
 
   const list = useMemo(
     () => [nativeCurrency.symbol, wrappedToken.symbol],
@@ -38,7 +36,7 @@ export default function JoinFormEtherSelect({
     const { value: symbol } = e.currentTarget as HTMLButtonElement
 
     setValue(
-      LiquidityFieldType.UseNative,
+      AddLiquidityField.UseNative,
       symbol === nativeCurrency.symbol ? true : false
     )
     setValue(name as 'TokenA' | 'TokenB', '')
@@ -46,13 +44,13 @@ export default function JoinFormEtherSelect({
   }
 
   return (
-    <StyledJoinFormJoinFormEtherSelect>
+    <StyledAddLiquidityFormAddLiquidityFormEtherSelect>
       <Dropdown
-        id="joinForm:etherSelect"
+        id="addLiquidityForm:etherSelect"
         onChange={onSelectEtherType}
         value={selectedToken}
         list={list}
       />
-    </StyledJoinFormJoinFormEtherSelect>
+    </StyledAddLiquidityFormAddLiquidityFormEtherSelect>
   )
 }

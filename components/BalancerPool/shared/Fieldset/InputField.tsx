@@ -13,9 +13,9 @@ import { LiquidityFieldType } from 'config/constants'
 import { useChain, useFiat } from 'hooks'
 import { bnum } from 'utils/bnum'
 import {
-  JoinFormFields,
-  JoinFormFocusedElement,
-  joinFormFields,
+  JoinPoolForm,
+  JoinPoolFormElement,
+  FIELDS,
 } from 'hooks/balancer/useJoinForm'
 
 import { StyledJoinFormInputField } from './styled'
@@ -28,19 +28,19 @@ type JoinInputFieldProps = {
   activeField: LiquidityFieldType | null
   index: number
   token: TokenInfo
-  clearErrors: UseFormClearErrors<JoinFormFields>
-  control: ReactHookFormControl<JoinFormFields>
+  clearErrors: UseFormClearErrors<JoinPoolForm>
+  control: ReactHookFormControl<JoinPoolForm>
   maxBalance: string
   maxSafeBalance: string
   name: 'TokenA' | 'TokenB'
-  focusedElement: JoinFormFocusedElement
-  setValue: UseFormSetValue<JoinFormFields>
-  formState: UseFormStateReturn<JoinFormFields>
-  trigger: UseFormTrigger<JoinFormFields>
+  focusedElement: JoinPoolFormElement
+  setValue: UseFormSetValue<JoinPoolForm>
+  formState: UseFormStateReturn<JoinPoolForm>
+  trigger: UseFormTrigger<JoinPoolForm>
   value: string
   weight: number
-  watch: UseFormWatch<JoinFormFields>
-  setFocusedElement(value: JoinFormFocusedElement): void
+  watch: UseFormWatch<JoinPoolForm>
+  setFocusedElement(value: JoinPoolFormElement): void
   optimizeDisabled: boolean
   setActiveField(field: LiquidityFieldType | null): void
   className?: string
@@ -133,7 +133,7 @@ function JoinInputField({
       <div className="labelGroup">
         {isEther ? (
           <EtherSelect
-            name={joinFormFields[index]}
+            name={FIELDS[index]}
             isNativeCurrency={isNativeCurrency}
             setValue={setValue}
             trigger={trigger}

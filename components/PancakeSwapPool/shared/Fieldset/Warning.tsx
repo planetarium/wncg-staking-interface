@@ -1,14 +1,13 @@
 import { ANIMATION_MAP, EXIT_MOTION } from 'config/constants/motions'
 import { useChain } from 'hooks'
 
-import { StyledJoinFormWarning } from './styled'
+import { StyledAddLiquidityFormWarning } from './styled'
 import Icon from 'components/Icon'
 
-export default function JoinFormWarning() {
+export default function AddLiquidityFormWarning() {
   const { nativeCurrency } = useChain()
-
   return (
-    <StyledJoinFormWarning
+    <StyledAddLiquidityFormWarning
       {...EXIT_MOTION}
       variants={ANIMATION_MAP.slideInDown}
     >
@@ -18,6 +17,6 @@ export default function JoinFormWarning() {
         <strong>at least 0.05 {nativeCurrency.symbol}</strong> must be left in
         your wallet to pay for gas fees.
       </p>
-    </StyledJoinFormWarning>
+    </StyledAddLiquidityFormWarning>
   )
 }
