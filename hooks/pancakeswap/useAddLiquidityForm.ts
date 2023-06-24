@@ -15,6 +15,7 @@ import { QUERY_KEYS } from 'config/constants/queryKeys'
 import { bnum } from 'utils/bnum'
 import { useAuth, useChain, useFiat, useStaking } from 'hooks'
 import { useAddLiquidityMath } from './useAddLiquidityMath'
+import { useAddLiquidity } from './useAddLiquidity'
 
 export type AddLiquidityFormElement = 'Optimize' | 'Max' | 'Input' | null
 
@@ -40,7 +41,6 @@ export type UseAddLiquidityFormReturns = {
   amountsInFiatValueSum: string
   clearErrors: UseFormClearErrors<AddLiquidityForm>
   control: Control<AddLiquidityForm>
-  fields: AddLiquidityField[]
   focusedElement: AddLiquidityFormElement
   formState: UseFormStateReturn<AddLiquidityForm>
   isNative: boolean
@@ -77,19 +77,12 @@ export function useAddLiquidityForm(): UseAddLiquidityFormReturns {
   const amountsIn = FIELDS.map((f) => bnum(watch(f)).toString())
   const isNative = watch(AddLiquidityField.UseNative)
 
-  const {
-    assets,
-    maxBalances,
-    maxSafeBalances,
-    calcPropAmountIn,
-    calcOptimizedAmounts,
-  } = useAddLiquidityMath(isNative)
+  const { assets, maxBalances, maxSafeBalances, calcOptimizedAmounts } =
+    useAddLiquidityMath(isNative)
 
-  const optimizeDisabled = useMemo(() => {
-    return maxBalances.some((amt) => bnum(amt).isZero())
-  }, [maxBalances])
+  const validate = useAddLiquidity(assets, amountsIn)
 
-  const { data: optAmountsIn = ['0', '0'] } = useQuery(
+  const { data: optAmountsIn = null } = useQuery(
     [
       QUERY_KEYS.Liquidity.AddLiquidity.OptimizedAmounts,
       chainId,
@@ -103,6 +96,10 @@ export function useAddLiquidityForm(): UseAddLiquidityFormReturns {
     }
   )
 
+  const optimizeDisabled = useMemo(() => {
+    return optAmountsIn == null || maxBalances.some((amt) => bnum(amt).isZero())
+  }, [optAmountsIn, maxBalances])
+
   const resetFields = useCallback(() => {
     reset(DEFAULT_VALUES)
   }, [reset])
@@ -112,12 +109,15 @@ export function useAddLiquidityForm(): UseAddLiquidityFormReturns {
   )
 
   const optimized = useMemo(() => {
-    return amountsIn.every((amount, i) => bnum(amount).eq(optAmountsIn[i]))
-  }, [amountsIn, optAmountsIn])
+    if (optimizeDisabled) return false
+    return amountsIn.every(
+      (amt, i) => bnum(amt).eq(optAmountsIn![i]) && bnum(amt).gt(0)
+    )
+  }, [amountsIn, optAmountsIn, optimizeDisabled])
 
   const optimize = useCallback(() => {
     FIELDS.forEach((f, i) => {
-      let value = optAmountsIn[i]
+      let value = optAmountsIn?.[i] ?? '0'
       if (value === '') value = '0'
       setValue(f, value)
     })
@@ -136,9 +136,10 @@ export function useAddLiquidityForm(): UseAddLiquidityFormReturns {
 
   const submitDisabled = useMemo(
     () =>
-      amountsIn.every((amount) => bnum(amount).isZero()) ||
-      Object.values(formState.errors).length > 0,
-    [formState, amountsIn]
+      amountsIn.some((amt) => bnum(amt).isZero()) ||
+      Object.values(formState.errors).length > 0 ||
+      !validate,
+    [amountsIn, formState, validate]
   )
 
   return {
@@ -151,7 +152,6 @@ export function useAddLiquidityForm(): UseAddLiquidityFormReturns {
     control,
     focusedElement,
     formState,
-    fields: FIELDS,
     isNative,
     optimized,
     optimizeDisabled,

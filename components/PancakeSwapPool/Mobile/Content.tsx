@@ -1,10 +1,11 @@
+import { bnum } from 'utils/bnum'
 import { wait } from 'utils/wait'
 import { useBalances, useStaking } from 'hooks'
 import { useAddLiquidityModal } from 'hooks/pancakeswap'
 import { UseAddLiquidityFormReturns } from 'hooks/pancakeswap/useAddLiquidityForm'
 import { useFetchUserAllowances } from 'hooks/queries'
 
-import { Footer, Summary } from 'components/PancakeSwapPool/shared'
+import { Arrow, Footer, Summary } from 'components/PancakeSwapPool/shared'
 import Form from './Form'
 
 type PancakeSwapPoolMobileContentProps = UseAddLiquidityFormReturns
@@ -23,18 +24,16 @@ export default function PancakeSwapPoolMobileContent(
     resetFields,
     amountsInFiatValueSum,
     submitDisabled,
-    setValue,
-    watch,
-    formState,
   } = props
 
-  const _openJoin = useAddLiquidityModal(assets, amountsIn)
+  const addLiquidity = useAddLiquidityModal(assets, amountsIn)
+  const isEmpty = amountsIn.every((amt) => bnum(amt).isZero())
 
   async function openAddLiquidity() {
     refetch()
     await wait(50)
 
-    _openJoin({
+    addLiquidity({
       assets,
       amountsIn,
       amountsInFiatValueSum,
@@ -48,12 +47,10 @@ export default function PancakeSwapPoolMobileContent(
       <div className="container">
         <div className="modalContent">
           <Form {...props} />
-
+          <Arrow />
           <Summary
+            active={!isEmpty}
             amountsInFiatValueSum={amountsInFiatValueSum}
-            setValue={setValue}
-            watch={watch}
-            formState={formState}
           />
         </div>
       </div>
@@ -61,7 +58,7 @@ export default function PancakeSwapPoolMobileContent(
       <Footer
         className="modalFooter"
         amountsInFiatValueSum={amountsInFiatValueSum}
-        openJoin={openAddLiquidity}
+        openAddLiquidity={openAddLiquidity}
         submitDisabled={submitDisabled}
       />
     </>

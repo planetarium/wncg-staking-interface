@@ -9,10 +9,10 @@ import {
 
 import { StyledPoolDesktop, StyledPoolModalOverlay } from './styled'
 import Icon from 'components/Icon'
+import AddLiquidity from './AddLiquidity'
 import Balances from './Balances'
 import Header from './Header'
 import Information from './Information'
-import Join from './AddLiquidity'
 
 type PancakeSwapPoolDesktopProps = {
   show: boolean
@@ -54,7 +54,7 @@ function PancakeSwapPoolDesktop({
               <div className="left">
                 <Header />
                 <Information />
-                <Join />
+                <AddLiquidity />
               </div>
 
               <div className="right">

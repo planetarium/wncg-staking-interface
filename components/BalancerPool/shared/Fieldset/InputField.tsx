@@ -83,9 +83,9 @@ function JoinInputField({
     nativeCurrency.wrappedTokenAddress,
     nativeCurrency.address,
   ].includes(address)
-  const isNativeCurrency = watch(LiquidityFieldType.UseNative)
+  const isNative = watch(LiquidityFieldType.UseNative)
 
-  const maxBalanceInFiatValue = useMemo(
+  const maxBalanceFiatValue = useMemo(
     () => toFiat(maxBalance, address),
     [address, maxBalance, toFiat]
   )
@@ -134,7 +134,7 @@ function JoinInputField({
         {isEther ? (
           <EtherSelect
             name={FIELDS[index]}
-            isNativeCurrency={isNativeCurrency}
+            isNative={isNative}
             setValue={setValue}
             trigger={trigger}
           />
@@ -171,7 +171,7 @@ function JoinInputField({
         label={availableBalanceLabel}
         maxAmount={maxBalance}
         decimals={4}
-        fiatValue={maxBalanceInFiatValue}
+        fiatValue={maxBalanceFiatValue}
       />
 
       {isEther && (

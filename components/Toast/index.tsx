@@ -2,6 +2,7 @@ import { ToastType } from 'config/constants'
 import { assertUnreachable } from 'utils/assertUnreachable'
 
 import ApproveToast from './ApproveToast'
+import AddLiquidityToast from './AddLiquidityToast'
 import ClaimToast from './ClaimToast'
 import CooldownToast from './CooldownToast'
 import ExitToast from './ExitToast'
@@ -16,6 +17,8 @@ export default function Toast(toast: Toast<any>) {
 
 function renderToast({ type, props }: Toast<any>) {
   switch (type) {
+    case ToastType.AddLiquidity:
+      return <AddLiquidityToast {...props} />
     case ToastType.Approve:
       return <ApproveToast {...props} />
     case ToastType.Claim:

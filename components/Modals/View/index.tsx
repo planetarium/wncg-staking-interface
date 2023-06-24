@@ -6,6 +6,9 @@ import { assertUnreachable } from 'utils/assertUnreachable'
 const ApproveModal = dynamic(() => import('./ApproveModal'), {
   suspense: true,
 })
+const AddLiquidityModal = dynamic(() => import('./AddLiquidityModal'), {
+  suspense: true,
+})
 const ClaimModal = dynamic(() => import('./ClaimModal'), {
   suspense: true,
 })
@@ -46,6 +49,8 @@ function renderModal(modal: Modal) {
   const { type, props } = modal
 
   switch (type) {
+    case ModalType.AddLiquidity:
+      return <AddLiquidityModal {...props} />
     case ModalType.Approve:
       return <ApproveModal {...props} />
     case ModalType.Claim:

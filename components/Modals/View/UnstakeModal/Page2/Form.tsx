@@ -34,7 +34,6 @@ export default function UnstakeModalPage2Form({
     maxBalance,
     rules,
     setMaxValue,
-    inputDisabled,
     placeholder,
     toggleCheck,
   } = props

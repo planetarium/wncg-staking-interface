@@ -6,13 +6,9 @@ import { DEX_PROTOCOL_ADDRESS } from 'config/constants/addresses'
 import { BASE_GAS_FEE } from 'config/constants/liquidityPool'
 import { MINUTE_MS } from 'config/misc'
 import { bnum } from 'utils/bnum'
-
 import { formatUnits } from 'utils/formatUnits'
 import { parseUnits } from 'utils/parseUnits'
-import { useFiat } from 'hooks/useFiat'
-import { useBalances } from 'hooks/useBalances'
-import { useChain } from 'hooks/useChain'
-import { useStaking } from 'hooks/useStaking'
+import { useBalances, useChain, useFiat, useStaking } from 'hooks'
 import { useFetchPool } from 'hooks/queries'
 
 export function useAddLiquidityMath(isNative?: boolean) {
@@ -45,7 +41,7 @@ export function useAddLiquidityMath(isNative?: boolean) {
   ])
 
   const maxBalances = useMemo(
-    () => assets.map((addr, i) => balanceOf(addr)),
+    () => assets.map((addr) => balanceOf(addr)),
     [assets, balanceOf]
   )
 
@@ -67,8 +63,14 @@ export function useAddLiquidityMath(isNative?: boolean) {
           functionName: 'quote',
           args: [
             parseUnits(amountIn, poolTokenDecimals[amountInIndex]).toString(),
-            poolReserves[amountInIndex],
-            poolReserves[1 - amountInIndex],
+            parseUnits(
+              poolReserves[amountInIndex],
+              poolTokenDecimals[amountInIndex]
+            ).toString(),
+            parseUnits(
+              poolReserves[1 - amountInIndex],
+              poolTokenDecimals[1 - amountInIndex]
+            ).toString(),
           ],
         })) as BigNumber
 
@@ -81,14 +83,12 @@ export function useAddLiquidityMath(isNative?: boolean) {
         optAmountsIn[amountInIndex] = amountIn
         optAmountsIn[1 - amountInIndex] = dependentAmountIn
 
-        return bnum(dependentAmountIn).lte(maxBalances[1 - amountInIndex])
-          ? dependentAmountIn
-          : '0'
+        return dependentAmountIn
       } catch (error: any) {
         return '0'
       }
     },
-    [chainId, maxBalances, poolReserves, poolTokenDecimals]
+    [chainId, poolReserves, poolTokenDecimals]
   )
 
   const calcOptimizedAmounts = useCallback(async () => {
@@ -96,12 +96,20 @@ export function useAddLiquidityMath(isNative?: boolean) {
 
     try {
       const responses = (await Promise.all(promises)) as string[]
-      const amountsInPairs = maxSafeBalances.map((amt, i) => [
-        amt,
-        responses[i],
-      ])
+      const amountsInPairs = maxSafeBalances.map((amt, i) => {
+        return i === 0 ? [amt, responses[i]] : [responses[i], amt]
+      })
 
-      const pairSumValues = amountsInPairs.map((pair) => {
+      const feasibleAmountsInPairs = amountsInPairs.filter((pair) =>
+        maxBalances.every(
+          (amt, i) => bnum(pair[i]).gt(0) && bnum(pair[i]).lte(amt)
+        )
+      )
+
+      if (!feasibleAmountsInPairs.length) return null
+      if (feasibleAmountsInPairs.length === 1) return feasibleAmountsInPairs[0]
+
+      const pairSumValues = feasibleAmountsInPairs.map((pair) => {
         return pair.reduce((acc, amt, i) => {
           return acc.plus(toFiat(amt, assets[i]))
         }, bnum(0))
@@ -110,9 +118,9 @@ export function useAddLiquidityMath(isNative?: boolean) {
       pairSumValues.sort((a, b) => b.minus(a.toString()).toNumber())
       return amountsInPairs[0]
     } catch (error: any) {
-      return ['0', '0']
+      return null
     }
-  }, [assets, calcPropAmountIn, maxSafeBalances, toFiat])
+  }, [assets, calcPropAmountIn, maxBalances, maxSafeBalances, toFiat])
 
   return {
     assets,

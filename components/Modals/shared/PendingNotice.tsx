@@ -1,8 +1,8 @@
 import { memo } from 'react'
 import { AnimatePresence } from 'framer-motion'
 
-import config from 'config'
 import { ANIMATION_MAP } from 'config/constants/motions'
+import { isEthereum } from 'utils/isEthereum'
 import { txUrlFor } from 'utils/txUrlFor'
 import { useChain, useResponsive } from 'hooks'
 
@@ -46,7 +46,7 @@ function PendingNotice({ hash }: PendingNoticeProps) {
 
           <button className="extLink" type="button" onClick={openBscScan}>
             <span className="explorer">
-              {config.assetPlatform === 'ethereum' ? 'Etherscan' : 'BscScan'}
+              {isEthereum(chainId) ? 'Etherscan' : 'BscScan'}
             </span>
             <Icon icon={isHandheld ? 'link' : 'outlink'} />
           </button>

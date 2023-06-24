@@ -5,19 +5,19 @@ import { LiquidityFieldType } from 'config/constants'
 import { useChain, useStaking } from 'hooks'
 import { JoinPoolForm } from 'hooks/balancer/useJoinForm'
 
-import { StyledJoinFormJoinFormEtherSelect } from './styled'
+import { StyledJoinFormEtherSelect } from './styled'
 import Dropdown from 'components/Dropdown'
 
 type JoinFormEtherSelectProps = {
   name: LiquidityFieldType
-  isNativeCurrency: boolean
+  isNative: boolean
   setValue: UseFormSetValue<JoinPoolForm>
   trigger: UseFormTrigger<JoinPoolForm>
 }
 
 export default function JoinFormEtherSelect({
   name,
-  isNativeCurrency,
+  isNative,
   setValue,
   trigger,
 }: JoinFormEtherSelectProps) {
@@ -25,9 +25,7 @@ export default function JoinFormEtherSelect({
   const { tokens } = useStaking()
 
   const wrappedToken = tokens[nativeCurrency.wrappedTokenAddress]
-  const selectedToken = isNativeCurrency
-    ? nativeCurrency.symbol
-    : wrappedToken.symbol
+  const selectedToken = isNative ? nativeCurrency.symbol : wrappedToken.symbol
 
   const list = useMemo(
     () => [nativeCurrency.symbol, wrappedToken.symbol],
@@ -46,13 +44,13 @@ export default function JoinFormEtherSelect({
   }
 
   return (
-    <StyledJoinFormJoinFormEtherSelect>
+    <StyledJoinFormEtherSelect>
       <Dropdown
         id="joinForm:etherSelect"
         onChange={onSelectEtherType}
         value={selectedToken}
         list={list}
       />
-    </StyledJoinFormJoinFormEtherSelect>
+    </StyledJoinFormEtherSelect>
   )
 }

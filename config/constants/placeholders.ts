@@ -18,6 +18,8 @@ export const LIQUIDITY_POOL_PLACEHOLDER = {
   poolTokenWeightsInPcnt: [],
   poolTokenSymbols: [],
 
+  poolReserves: [],
+
   totalSwapFee: '0',
   shouldReversePoolTokenOrderOnDisplay: true,
 } satisfies LiquidityPool
@@ -28,7 +30,7 @@ const BSC_STAKING_PLACEHOLDER = {
   rewardTokenAddresses: [],
   totalStaked: '0',
   withdrawSeconds: 0,
-} satisfies Staking
+} satisfies BscStaking
 
 const ETHEREUM_STAKING_PLACEHOLDER = {
   ...BSC_STAKING_PLACEHOLDER,
@@ -37,7 +39,7 @@ const ETHEREUM_STAKING_PLACEHOLDER = {
   earmarkIncentivePcnt: 0.01,
 } satisfies EthereumStaking
 
-export const STAKING_PLACEHOLDER: ChainMap<Staking | EthereumStaking> = {
+export const STAKING_PLACEHOLDER: ChainMap<BscStaking | EthereumStaking> = {
   [ChainId.ETHEREUM]: ETHEREUM_STAKING_PLACEHOLDER,
   [ChainId.GOERLI]: ETHEREUM_STAKING_PLACEHOLDER,
   [ChainId.BSC]: BSC_STAKING_PLACEHOLDER,

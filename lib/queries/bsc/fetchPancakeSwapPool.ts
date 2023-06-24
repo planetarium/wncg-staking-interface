@@ -70,7 +70,7 @@ export async function fetchPancakeSwapPool(
 
   const poolReserves = _reserves.flatMap((amt, i) => {
     if (i === 2) return []
-    return amt.toString()
+    return [formatUnits(amt.toString(), poolTokenDecimals[i])]
   })
 
   const shouldReversePoolTokenOrderOnDisplay =

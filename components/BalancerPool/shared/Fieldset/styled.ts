@@ -90,7 +90,7 @@ export const StyledJoinFormFieldset = styled(motion.fieldset)<{
     `}
 `
 
-export const StyledJoinFormJoinFormEtherSelect = styled.div`
+export const StyledJoinFormEtherSelect = styled.div`
   .dropdownToggle {
     ${textStyle('body', 4, 700)}
 

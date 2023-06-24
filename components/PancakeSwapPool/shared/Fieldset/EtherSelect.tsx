@@ -3,14 +3,18 @@ import { UseFormSetValue, UseFormTrigger } from 'react-hook-form'
 
 import { AddLiquidityField } from 'config/constants'
 import { useChain, useStaking } from 'hooks'
-import { AddLiquidityForm } from 'hooks/pancakeswap/useAddLiquidityForm'
+import {
+  AddLiquidityForm,
+  AddLiquidityFormElement,
+} from 'hooks/pancakeswap/useAddLiquidityForm'
 
-import { StyledAddLiquidityFormAddLiquidityFormEtherSelect } from './styled'
+import { StyledAddLiquidityFormEtherSelect } from './styled'
 import Dropdown from 'components/Dropdown'
 
 type AddLiquidityFormEtherSelectProps = {
   name: AddLiquidityField
   isNative: boolean
+  setFocusedElement(value: AddLiquidityFormElement): void
   setValue: UseFormSetValue<AddLiquidityForm>
   trigger: UseFormTrigger<AddLiquidityForm>
 }
@@ -18,6 +22,7 @@ type AddLiquidityFormEtherSelectProps = {
 export default function AddLiquidityFormEtherSelect({
   name,
   isNative,
+  setFocusedElement,
   setValue,
   trigger,
 }: AddLiquidityFormEtherSelectProps) {
@@ -41,16 +46,17 @@ export default function AddLiquidityFormEtherSelect({
     )
     setValue(name as 'TokenA' | 'TokenB', '')
     trigger()
+    setFocusedElement(null)
   }
 
   return (
-    <StyledAddLiquidityFormAddLiquidityFormEtherSelect>
+    <StyledAddLiquidityFormEtherSelect>
       <Dropdown
         id="addLiquidityForm:etherSelect"
         onChange={onSelectEtherType}
         value={selectedToken}
         list={list}
       />
-    </StyledAddLiquidityFormAddLiquidityFormEtherSelect>
+    </StyledAddLiquidityFormEtherSelect>
   )
 }

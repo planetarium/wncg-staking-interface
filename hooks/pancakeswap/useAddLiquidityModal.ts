@@ -5,7 +5,6 @@ import { showPoolAtom } from 'states/ui'
 import { ModalType } from 'config/constants'
 import { DEX_PROTOCOL_ADDRESS } from 'config/constants/addresses'
 import { bnum } from 'utils/bnum'
-import { isEthereum } from 'utils/isEthereum'
 import {
   useAllowances,
   useChain,
@@ -46,7 +45,7 @@ export function useAddLiquidityModal(assets: Hash[], amountsIn: string[]) {
     if (isMobile) setShowPool(false)
 
     const addLiqConfig = {
-      type: ModalType.Join,
+      type: ModalType.AddLiquidity,
       props: params,
     }
 

@@ -360,7 +360,7 @@ export const StyledPoolHeader = styled.header<{ $reverse: boolean }>`
   )}
 `
 
-export const StyledPoolInformation = styled.section`
+export const StyledBalancerPoolInformation = styled.section`
   .header {
     ${flexbox('start')}
     width: 100%;
