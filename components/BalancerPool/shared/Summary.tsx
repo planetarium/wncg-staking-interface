@@ -10,7 +10,7 @@ import { LiquidityFieldType } from 'config/constants'
 import { REKT_PRICE_IMPACT } from 'config/constants/liquidityPool'
 import { bnum } from 'utils/bnum'
 import { useAuth } from 'hooks'
-import { JoinFormFields } from 'hooks/balancer/useJoinForm'
+import { JoinPoolForm } from 'hooks/balancer/useJoinForm'
 
 import { StyledJoinFormSummary } from './styled'
 import HighPriceImpact from 'components/HighPriceImpact'
@@ -20,9 +20,9 @@ import RektPriceImpact from 'components/RektPriceImpact'
 type JoinFormSummaryProps = {
   priceImpact: number
   totalJoinFiatValue: string
-  setValue: UseFormSetValue<JoinFormFields>
-  formState: UseFormStateReturn<JoinFormFields>
-  watch: UseFormWatch<JoinFormFields>
+  setValue: UseFormSetValue<JoinPoolForm>
+  formState: UseFormStateReturn<JoinPoolForm>
+  watch: UseFormWatch<JoinPoolForm>
   disabled?: boolean
 }
 

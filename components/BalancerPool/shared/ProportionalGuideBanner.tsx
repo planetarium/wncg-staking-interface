@@ -7,7 +7,7 @@ import { ANIMATION_MAP, EXIT_MOTION } from 'config/constants/motions'
 import { bnum } from 'utils/bnum'
 import { useStaking } from 'hooks'
 import { useJoinMath } from 'hooks/balancer'
-import { JoinFormFields } from 'hooks/balancer/useJoinForm'
+import type { JoinPoolForm } from 'hooks/balancer/useJoinForm'
 
 import { StyledJoinFormProportionalGuideBanner } from './styled'
 import Icon from 'components/Icon'
@@ -17,8 +17,8 @@ type JoinFormProportionalGuideBannerProps = {
   joinAmounts: string[]
   assets: Hash[]
   maxBalances: string[]
-  formState: UseFormStateReturn<JoinFormFields>
-  setValue: UseFormSetValue<JoinFormFields>
+  formState: UseFormStateReturn<JoinPoolForm>
+  setValue: UseFormSetValue<JoinPoolForm>
 }
 
 function JoinFormProportionalGuideBanner({

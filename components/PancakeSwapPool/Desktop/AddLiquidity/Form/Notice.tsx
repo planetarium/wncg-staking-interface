@@ -7,20 +7,22 @@ import { BASE_GAS_FEE } from 'config/constants/liquidityPool'
 import { ANIMATION_MAP, EXIT_MOTION } from 'config/constants/motions'
 import { bnum } from 'utils/bnum'
 import { useBalances, useChain } from 'hooks'
-import { useJoinMath } from 'hooks/balancer'
-import { JoinPoolFormElement, JoinPoolForm } from 'hooks/balancer/useJoinForm'
+import { useJoinMath } from './useJoinMath'
+import {
+  AddLiquidityFormElement,
+  AddLiquidityForm,
+} from 'hooks/pancakeswap/useAddLiquidityForm'
 
-import { StyledJoinFormNotice } from './styled'
+import { StyledAddLiquidityFormNoticeContent } from './styled'
 import Icon from 'components/Icon'
 import Lottie from 'components/Lottie'
 
-type JoinFormNoticeProps = {
+type AddLiquidityFormNoticeProps = {
   activeField: LiquidityFieldType | null
   currentField: LiquidityFieldType
-  formState: UseFormStateReturn<JoinPoolForm>
-  focusedElement: JoinPoolFormElement | null
-  optimizeDisabled: boolean
-  joinAmount: string
+  formState: UseFormStateReturn<AddLiquidityForm>
+  focusedElement: AddLiquidityFormElement
+  amountIn: string
 }
 
 const motionVariants = {
@@ -35,7 +37,7 @@ function SubtractionNotice() {
   const { nativeCurrency } = useChain()
 
   return (
-    <StyledJoinFormNotice {...motionVariants}>
+    <StyledAddLiquidityFormNoticeContent {...motionVariants}>
       <strong className="badge">
         <Lottie className="lottie" animationData="bell" />
         Notification
@@ -48,7 +50,7 @@ function SubtractionNotice() {
       <p className="desc">
         You can change the amount manually and proceed to joining the pool.
       </p>
-    </StyledJoinFormNotice>
+    </StyledAddLiquidityFormNoticeContent>
   )
 }
 
@@ -56,18 +58,19 @@ function ZeroAmountNotice() {
   const { nativeCurrency } = useChain()
 
   return (
-    <StyledJoinFormNotice {...motionVariants}>
+    <StyledAddLiquidityFormNoticeContent {...motionVariants}>
       <strong className="badge">
         <Lottie className="lottie" animationData="bell" />
         Notification
       </strong>
+
       <h5 className="title">0 is entered.</h5>
       <p className="desc">
         It is because to keep at least {BASE_GAS_FEE} {nativeCurrency.symbol} to
         pay the gas fee. You can change the amount manually and proceed to
         joining the pool.
       </p>
-    </StyledJoinFormNotice>
+    </StyledAddLiquidityFormNoticeContent>
   )
 }
 
@@ -75,7 +78,7 @@ function SuggestionNotice() {
   const { nativeCurrency } = useChain()
 
   return (
-    <StyledJoinFormNotice {...motionVariants} $suggestion>
+    <StyledAddLiquidityFormNoticeContent {...motionVariants} $suggestion>
       <strong className="badge">
         <Icon icon="star" />
         Recommendation
@@ -85,38 +88,38 @@ function SuggestionNotice() {
         To ensure a smooth transaction, we recommend leaving at least{' '}
         {BASE_GAS_FEE} {nativeCurrency.symbol}.
       </h5>
-    </StyledJoinFormNotice>
+    </StyledAddLiquidityFormNoticeContent>
   )
 }
 
-export default function JoinFormNotice({
+export default function AddLiquidityFormNotice({
   activeField,
   currentField,
   formState,
   focusedElement,
-  joinAmount,
-  optimizeDisabled,
-}: JoinFormNoticeProps) {
-  const { nativeCurrency } = useChain()
+  amountIn,
+}: AddLiquidityFormNoticeProps) {
   const balanceOf = useBalances()
+  const { nativeCurrency } = useChain()
+  const { optimizeUnavailable } = useJoinMath()
   const maxBalance = balanceOf(nativeCurrency.address)
 
   const maxSafeBalance = bnum(maxBalance).minus(BASE_GAS_FEE)
 
   const element = useMemo(() => {
-    if (bnum(maxSafeBalance).gt(joinAmount)) return null
+    if (bnum(maxSafeBalance).gt(amountIn)) return null
 
     switch (focusedElement) {
       case 'Input':
-        if (bnum(joinAmount).isZero()) return null
-        if (bnum(maxSafeBalance).eq(joinAmount)) return
+        if (bnum(amountIn).isZero()) return null
+        if (bnum(maxSafeBalance).eq(amountIn)) return
         null
 
         return <SuggestionNotice />
 
       case 'Max':
         if (activeField === currentField) {
-          return bnum(joinAmount).gt(0) ? (
+          return bnum(amountIn).gt(0) ? (
             <SubtractionNotice />
           ) : (
             <ZeroAmountNotice />
@@ -126,9 +129,9 @@ export default function JoinFormNotice({
         return <SuggestionNotice />
 
       case 'Optimize':
-        if (bnum(joinAmount).isZero()) return <ZeroAmountNotice />
+        if (bnum(amountIn).isZero()) return <ZeroAmountNotice />
 
-        return bnum(joinAmount).gt(maxSafeBalance) ? (
+        return bnum(amountIn).gt(maxSafeBalance) ? (
           <SuggestionNotice />
         ) : (
           <SubtractionNotice />
@@ -137,12 +140,12 @@ export default function JoinFormNotice({
       default:
         return null
     }
-  }, [activeField, currentField, focusedElement, joinAmount, maxSafeBalance])
+  }, [activeField, currentField, focusedElement, amountIn, maxSafeBalance])
 
   const shouldValidate =
+    !optimizeUnavailable &&
     Object.keys(formState.errors)?.length === 0 &&
-    element != null &&
-    ((optimizeDisabled && focusedElement !== 'Optimize') || !optimizeDisabled)
+    element != null
 
   return <AnimatePresence>{shouldValidate && element}</AnimatePresence>
 }

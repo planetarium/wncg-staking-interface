@@ -3,7 +3,7 @@ import { useAtomValue } from 'jotai'
 
 import { joinTxAtom } from 'states/tx'
 import { useAuth, useStaking } from 'hooks'
-import { JoinFormFocusedElement } from 'hooks/balancer/useJoinForm'
+import { JoinPoolFormElement } from 'hooks/balancer/useJoinForm'
 
 import { StyledJoinFormHeader } from './styled'
 import Button from 'components/Button'
@@ -17,7 +17,7 @@ type JoinFormHeaderProps = {
   optimized: boolean
   reset(): void
   resetDisabled: boolean
-  setFocusedElement(value: JoinFormFocusedElement): void
+  setFocusedElement(value: JoinPoolFormElement): void
 }
 
 function JoinFormHeader({

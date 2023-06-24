@@ -6,9 +6,9 @@ import { UseJoinFormReturns } from 'hooks/balancer/useJoinForm'
 import { StyledJoinFormFieldset } from './styled'
 import InputField from './InputField'
 
-type JoinFormFieldsetProps = UseJoinFormReturns
+type JoinPoolFormetProps = UseJoinFormReturns
 
-export default function JoinFormFieldset({
+export default function JoinPoolFormet({
   activeField,
   clearErrors,
   joinAmounts,
@@ -17,7 +17,6 @@ export default function JoinFormFieldset({
   watch,
   control,
   fields,
-  resetFields,
   formState,
   optimizeDisabled,
   setValue,
@@ -25,7 +24,7 @@ export default function JoinFormFieldset({
   setFocusedElement,
   setActiveField,
   focusedElement,
-}: JoinFormFieldsetProps) {
+}: JoinPoolFormetProps) {
   const { isConnected } = useAuth()
   const { nativeCurrency } = useChain()
   const { poolTokens, shouldReversePoolTokenOrderOnDisplay } = useStaking()

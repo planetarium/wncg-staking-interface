@@ -1,4 +1,5 @@
 import { useCallback, useMemo, useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import {
   Control,
   useForm,
@@ -10,11 +11,10 @@ import {
 } from 'react-hook-form'
 
 import { AddLiquidityField } from 'config/constants'
+import { QUERY_KEYS } from 'config/constants/queryKeys'
 import { bnum } from 'utils/bnum'
 import { useAuth, useChain, useFiat, useStaking } from 'hooks'
 import { useAddLiquidityMath } from './useAddLiquidityMath'
-import { useQuery } from '@tanstack/react-query'
-import { QUERY_KEYS } from 'config/constants/queryKeys'
 
 export type AddLiquidityFormElement = 'Optimize' | 'Max' | 'Input' | null
 
@@ -24,7 +24,7 @@ export type AddLiquidityForm = {
   [AddLiquidityField.UseNative]: boolean
 }
 
-const FIELDS = [AddLiquidityField.TokenA, AddLiquidityField.TokenB]
+export const FIELDS = [AddLiquidityField.TokenA, AddLiquidityField.TokenB]
 
 const DEFAULT_VALUES: AddLiquidityForm = {
   [AddLiquidityField.TokenA]: '',
@@ -51,7 +51,7 @@ export type UseAddLiquidityFormReturns = {
   optimize(): void
   resetFields(): void
   setActiveField(field: AddLiquidityField | null): void
-  setFocusedElement(value: AddLiquidityFormElement | null): void
+  setFocusedElement(value: AddLiquidityFormElement): void
   setValue: UseFormSetValue<AddLiquidityForm>
   submitDisabled: boolean
   trigger: UseFormTrigger<AddLiquidityForm>
@@ -60,7 +60,7 @@ export type UseAddLiquidityFormReturns = {
 
 export function useAddLiquidityForm(): UseAddLiquidityFormReturns {
   const [focusedElement, setFocusedElement] =
-    useState<AddLiquidityFormElement | null>(null)
+    useState<AddLiquidityFormElement>(null)
   const [activeField, setActiveField] = useState<AddLiquidityField | null>(null)
 
   const { account, isConnected } = useAuth()

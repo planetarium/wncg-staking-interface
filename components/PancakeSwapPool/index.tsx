@@ -1,0 +1,23 @@
+import { useAtom } from 'jotai'
+
+import { showPoolAtom } from 'states/ui'
+import { useResponsive } from 'hooks'
+
+import PancakeSwapPoolDesktop from './Desktop'
+import PancakeSwapPoolMobile from './Mobile'
+
+export default function PancakeSwapPool() {
+  const { isMobile } = useResponsive()
+
+  const [showPool, setShowPool] = useAtom(showPoolAtom)
+
+  function closePool() {
+    setShowPool(false)
+  }
+
+  if (isMobile) {
+    return <PancakeSwapPoolMobile show={showPool} closePool={closePool} />
+  }
+
+  return <PancakeSwapPoolDesktop show={showPool} closePool={closePool} />
+}

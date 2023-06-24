@@ -3,10 +3,13 @@ import dynamic from 'next/dynamic'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 
-import { useMediaQuery } from 'hooks'
+import { isBsc } from 'utils/isBsc'
+import { isEthereum } from 'utils/isEthereum'
+import { useChain, useMediaQuery } from 'hooks'
 
 import { StyledLayout, StyledMain } from './styled'
 import Favicon from 'components/Favicon'
+import PancakeSwapPool from 'components/PancakeSwapPool'
 import RootFavicon from 'components/RootFavicon'
 import Suspense from 'components/Suspense'
 import Gnb from './Gnb'
@@ -26,6 +29,7 @@ const Modals = dynamic(() => import('components/Modals'), {
 function Layout({ children }: PropsWithChildren) {
   const mainRef = useRef<HTMLDivElement>(null)
 
+  const { chainId } = useChain()
   const { route, pathname } = useRouter()
 
   useMediaQuery()
@@ -62,7 +66,8 @@ function Layout({ children }: PropsWithChildren) {
         <>
           <Modals />
           <Suspense>
-            <BalancerPool />
+            {isEthereum(chainId) && <BalancerPool />}
+            {isBsc(chainId) && <PancakeSwapPool />}
           </Suspense>
         </>
       )}

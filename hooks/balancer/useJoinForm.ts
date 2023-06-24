@@ -19,23 +19,23 @@ import { isEthereum } from 'utils/isEthereum'
 import { useBalances, useChain, useFiat, useStaking } from 'hooks'
 import { useJoinMath } from './useJoinMath'
 
-export const joinFormFields: LiquidityFieldType[] = [
+export const FIELDS: LiquidityFieldType[] = [
   LiquidityFieldType.TokenA,
   LiquidityFieldType.TokenB,
 ]
 
-const defaultValues = {
-  [LiquidityFieldType.TokenA]: '',
-  [LiquidityFieldType.TokenB]: '',
-  [LiquidityFieldType.UseNative]: true,
-  [LiquidityFieldType.HighPriceImpact]: false,
-}
-
-export type JoinFormFields = {
+export type JoinPoolForm = {
   [LiquidityFieldType.TokenA]: string
   [LiquidityFieldType.TokenB]: string
   [LiquidityFieldType.UseNative]: boolean
   [LiquidityFieldType.HighPriceImpact]: boolean
+}
+
+const DEFAULT_VALUES = {
+  [LiquidityFieldType.TokenA]: '',
+  [LiquidityFieldType.TokenB]: '',
+  [LiquidityFieldType.UseNative]: true,
+  [LiquidityFieldType.HighPriceImpact]: false,
 }
 
 export type UseJoinFormReturns = {
@@ -45,35 +45,35 @@ export type UseJoinFormReturns = {
   isNative: boolean
   maxBalances: string[]
   maxSafeBalances: string[]
-  formState: UseFormStateReturn<JoinFormFields>
-  clearErrors: UseFormClearErrors<JoinFormFields>
-  control: Control<JoinFormFields>
+  formState: UseFormStateReturn<JoinPoolForm>
+  clearErrors: UseFormClearErrors<JoinPoolForm>
+  control: Control<JoinPoolForm>
   fields: LiquidityFieldType[]
   optimized: boolean
   optimize(): void
   resetFields(): void
-  setValue: UseFormSetValue<JoinFormFields>
+  setValue: UseFormSetValue<JoinPoolForm>
   priceImpact: number
-  trigger: UseFormTrigger<JoinFormFields>
-  watch: UseFormWatch<JoinFormFields>
+  trigger: UseFormTrigger<JoinPoolForm>
+  watch: UseFormWatch<JoinPoolForm>
   joinAmounts: string[]
   joinAmountsFiatValue: string[]
   totalJoinFiatValue: string
   submitDisabled: boolean
   resetDisabled: boolean
   optimizeDisabled: boolean
-  setFocusedElement(value: JoinFormFocusedElement): void
-  focusedElement: JoinFormFocusedElement
+  setFocusedElement(value: JoinPoolFormElement): void
+  focusedElement: JoinPoolFormElement
 }
 
-export type JoinFormFocusedElement = 'Input' | 'Max' | 'Optimize' | null
+export type JoinPoolFormElement = 'Input' | 'Max' | 'Optimize' | null
 
 export function useJoinForm(): UseJoinFormReturns {
   const [activeField, setActiveField] = useState<LiquidityFieldType | null>(
     null
   )
   const [focusedElement, setFocusedElement] =
-    useState<JoinFormFocusedElement>(null)
+    useState<JoinPoolFormElement>(null)
 
   const balanceOf = useBalances()
   const { chainId, nativeCurrency } = useChain()
@@ -82,13 +82,13 @@ export function useJoinForm(): UseJoinFormReturns {
   const { calcPriceImpact, calcOptimizedAmounts } = useJoinMath()
 
   const { clearErrors, control, formState, reset, trigger, setValue, watch } =
-    useForm<JoinFormFields>({
+    useForm<JoinPoolForm>({
       mode: 'onChange',
-      defaultValues,
+      defaultValues: DEFAULT_VALUES,
     })
 
   const resetFields = useCallback(() => {
-    reset(defaultValues)
+    reset(DEFAULT_VALUES)
     setFocusedElement(null)
   }, [reset])
 
@@ -108,7 +108,7 @@ export function useJoinForm(): UseJoinFormReturns {
     poolTokenAddresses,
   ])
 
-  const unsanitizedJoinAmounts = joinFormFields.map((field) =>
+  const unsanitizedJoinAmounts = FIELDS.map((field) =>
     watch(field as any)
   ) as string[]
 
@@ -183,7 +183,7 @@ export function useJoinForm(): UseJoinFormReturns {
   const optimize = useCallback(() => {
     setFocusedElement('Optimize')
 
-    joinFormFields.forEach((field, i) => {
+    FIELDS.forEach((field, i) => {
       setValue(field as 'TokenA' | 'TokenB', optimizedAmounts[i])
     })
 
@@ -196,7 +196,7 @@ export function useJoinForm(): UseJoinFormReturns {
     setActiveField,
     clearErrors,
     control,
-    fields: joinFormFields,
+    fields: FIELDS,
     formState,
     isNative,
     maxBalances,
