@@ -7,7 +7,7 @@ import { isUnstakeWindowAtom } from 'states/account'
 import { ModalType } from 'config/constants'
 import { ANIMATION_MAP, EXIT_MOTION } from 'config/constants/motions'
 import { bnum } from 'utils/bnum'
-import { useBalances, useFiat, useModal, useStaking } from 'hooks'
+import { useBalances, useChain, useFiat, useModal, useStaking } from 'hooks'
 import { useFetchUserData } from 'hooks/queries'
 
 import { StyledSidebarStaking } from './styled'
@@ -25,6 +25,7 @@ export default function SidebarStaking({ closeSidebar }: SidebarStakingProps) {
   const [show, setShow] = useState(false)
 
   const balanceOf = useBalances()
+  const { chainId } = useChain()
   const toFiat = useFiat()
   const { addModal } = useModal()
   const { lpToken } = useStaking()
@@ -63,7 +64,7 @@ export default function SidebarStaking({ closeSidebar }: SidebarStakingProps) {
 
   function openExitModal(e: MouseEvent) {
     addModal({
-      type: ModalType.Exit,
+      type: chainId ? ModalType.RemoveLiquidity : ModalType.Exit,
     })
     closeSidebar(e)
   }

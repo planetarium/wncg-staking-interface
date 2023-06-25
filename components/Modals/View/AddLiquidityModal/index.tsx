@@ -3,7 +3,7 @@ import { useUnmount } from 'react-use'
 import { useMachine } from '@xstate/react'
 import { useAtomValue } from 'jotai'
 
-import { addLiquidityAtom } from 'states/tx'
+import { addLiquidityTxAtom } from 'states/tx'
 import { ToastType } from 'config/constants'
 import { useToast } from 'hooks'
 import { addLiquidityMachine, pageFor } from './stateMachine'
@@ -25,7 +25,7 @@ function AddLiquidityModal({
   resetForm,
 }: AddLiquidityModalProps) {
   const toast = useToast()
-  const tx = useAtomValue(addLiquidityAtom)
+  const tx = useAtomValue(addLiquidityTxAtom)
 
   const hash = tx.hash
   const assets = tx.assets ?? _assets

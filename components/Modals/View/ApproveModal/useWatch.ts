@@ -3,15 +3,12 @@ import { useAtomValue } from 'jotai'
 import { useWaitForTransaction } from 'wagmi'
 
 import { approveTxAtom } from 'states/tx'
-
-import { useFetchUserAllowances } from 'hooks/queries'
-import { useChain } from 'hooks'
+import { useRefetch } from 'hooks'
 
 export function useWatch(send: (event: string) => void) {
-  const { refetch: refetchAllowances } = useFetchUserAllowances({
-    suspense: false,
+  const refetch = useRefetch({
+    userAllowances: true,
   })
-  const { chainId } = useChain()
 
   const tx = useAtomValue(approveTxAtom)
 
@@ -21,7 +18,7 @@ export function useWatch(send: (event: string) => void) {
 
     suspense: false,
     async onSuccess() {
-      await refetchAllowances()
+      await refetch()
       send('SUCCESS')
     },
     onError() {
@@ -30,10 +27,10 @@ export function useWatch(send: (event: string) => void) {
   })
 
   useMount(() => {
-    refetchAllowances()
+    refetch()
   })
 
   useUnmount(() => {
-    refetchAllowances()
+    refetch()
   })
 }

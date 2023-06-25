@@ -3,9 +3,7 @@ import { BigNumber } from 'ethers'
 import { PancakeRouterAbi } from 'config/abi'
 import { CHAINS } from 'config/chains'
 import { DEX_PROTOCOL_ADDRESS } from 'config/constants/addresses'
-import { MINUTE } from 'config/misc'
 import { calcSlippageAmount } from 'utils/calcSlippageAmount'
-import { now } from 'utils/now'
 import { parseUnits } from 'utils/parseUnits'
 
 export function prepareAddLiquidity(

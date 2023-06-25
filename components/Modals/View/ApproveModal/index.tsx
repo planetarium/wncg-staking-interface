@@ -7,7 +7,7 @@ import { useAtom, useAtomValue } from 'jotai'
 import { approveTxAtom } from 'states/tx'
 import { hasModalInViewAtom } from 'states/ui'
 import { ToastType } from 'config/constants'
-import { useToast } from 'hooks'
+import { useRefetch, useToast } from 'hooks'
 import { approveMachine, pageFor } from './stateMachine'
 import { useApprove } from './useApprove'
 import { useWatch } from './useWatch'
@@ -46,6 +46,7 @@ export default function ApproveModal({
   tokenName: _tokenName,
 }: ApproveModalProps) {
   const stateMachine = useRef(approveMachine)
+  const refetch = useRefetch({ userAllowances: true, userBalances: true })
 
   const toast = useToast()
   const [tx, setTx] = useAtom(approveTxAtom)

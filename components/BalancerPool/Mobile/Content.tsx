@@ -7,9 +7,11 @@ import { useFetchUserAllowances } from 'hooks/queries'
 import { Footer, Summary } from 'components/BalancerPool/shared'
 import Form from './Form'
 
-type PoolMobileContentProps = UseJoinFormReturns
+type BalancerPoolMobileContentProps = UseJoinFormReturns
 
-export default function PoolMobileContent(props: PoolMobileContentProps) {
+export default function BalancerPoolMobileContent(
+  props: BalancerPoolMobileContentProps
+) {
   const balanceOf = useBalances()
   const { lpToken } = useStaking()
 

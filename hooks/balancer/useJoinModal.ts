@@ -7,7 +7,7 @@ import { bnum } from 'utils/bnum'
 import { useAllowances, useModal, useResponsive, useStaking } from 'hooks'
 
 export function useJoinModal(assets: Hash[], joinAmounts: string[]) {
-  const allowanceFor = useAllowances()
+  const allowanceOf = useAllowances()
   const { addModal } = useModal()
   const { isMobile } = useResponsive()
   const { tokens, balancerGaugeAddress } = useStaking<'ethereum'>()
@@ -17,9 +17,9 @@ export function useJoinModal(assets: Hash[], joinAmounts: string[]) {
   const shouldApprove = useMemo(
     () =>
       assets.filter((addr, i) => {
-        return bnum(allowanceFor(addr, balancerGaugeAddress)).lt(joinAmounts[i])
+        return bnum(allowanceOf(addr, balancerGaugeAddress)).lt(joinAmounts[i])
       }),
-    [allowanceFor, assets, balancerGaugeAddress, joinAmounts]
+    [allowanceOf, assets, balancerGaugeAddress, joinAmounts]
   )
 
   const tokensToApprove = useMemo(

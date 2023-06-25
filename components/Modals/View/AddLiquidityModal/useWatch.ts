@@ -2,7 +2,7 @@ import { useMount, useUnmount } from 'react-use'
 import { useAtomValue } from 'jotai'
 import { useWaitForTransaction } from 'wagmi'
 
-import { addLiquidityAtom } from 'states/tx'
+import { addLiquidityTxAtom } from 'states/tx'
 import { useChain, useRefetch } from 'hooks'
 
 export function useWatch(send: (event: string) => void) {
@@ -14,7 +14,7 @@ export function useWatch(send: (event: string) => void) {
     userData: true,
   })
 
-  const tx = useAtomValue(addLiquidityAtom)
+  const tx = useAtomValue(addLiquidityTxAtom)
 
   useWaitForTransaction({
     hash: tx.hash!,

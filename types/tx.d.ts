@@ -100,12 +100,9 @@ type RemoveLiquidityTx = {
   hash?: Hash
   amountsOut?: string[]
   amountsOutFiatValueSum?: string
-  isPropExit?: boolean
-  isExactOut?: boolean
-  exitType?: Hash | null
+  isNative?: boolean
   pcntOut?: string
-  lpAmountToBurn?: string
-  tokenOutIndex?: number
+  lpAmountOut?: string
 }
 
 type HarvestTx = {

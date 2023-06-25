@@ -40,7 +40,7 @@ export default function AddLiquidityFormSummary({
   const share = useMemo(() => {
     const currentPoolValue = poolReserves
       .reduce(
-        (acc, amt, i) => acc.plus(toFiat(amt, poolTokens[i].address)),
+        (acc, amt, i) => acc.plus(toFiat(amt, poolTokens[i]?.address)),
         bnum(0)
       )
       .toString()

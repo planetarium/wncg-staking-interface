@@ -24,7 +24,7 @@ const RevenuePopup = dynamic(() => import('./RevenuePopup'), {
 
 export default function StakeForm() {
   const { account, prevAccount } = useAuth()
-  const allowanceFor = useAllowances()
+  const allowanceOf = useAllowances()
   const { stakingAddress } = useChain()
   const { addModal } = useModal()
   const { lpToken } = useStaking()
@@ -45,7 +45,7 @@ export default function StakeForm() {
 
   const [debouncedStakeAmount] = useDebounce(stakeAmount, 500)
 
-  const isApproved = bnum(allowanceFor(lpToken.address, stakingAddress)).gte(
+  const isApproved = bnum(allowanceOf(lpToken.address, stakingAddress)).gte(
     stakeAmount
   )
 

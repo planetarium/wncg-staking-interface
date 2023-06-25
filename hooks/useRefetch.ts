@@ -53,7 +53,7 @@ export function useRefetch(options: RefetchOptions = {}) {
     suspense: false,
   })
 
-  const refetch = useCallback(() => {
+  const refetch = useCallback(async () => {
     if (userBalances) refetchBalances()
     if (userAllowances) refetchAllowances()
     if (staking) refetchStaking()

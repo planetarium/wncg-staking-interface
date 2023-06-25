@@ -1,3 +1,6 @@
+import { useAtomValue } from 'jotai'
+
+import { addLiquidityTxAtom } from 'states/tx'
 import { useAuth, useStaking } from 'hooks'
 import { AddLiquidityFormElement } from 'hooks/pancakeswap/useAddLiquidityForm'
 
@@ -21,7 +24,11 @@ export default function PancakeSwapAddLiquidityHeader({
   const { isConnected } = useAuth()
   const { lpToken } = useStaking()
 
-  const disabled = !isConnected || (optimized && focusedElement === 'Optimize')
+  const tx = useAtomValue(addLiquidityTxAtom)
+
+  const optimizeDisabled = optimized && focusedElement === 'Optimize'
+
+  const disabled = !isConnected || !!tx.hash
 
   return (
     <StyledPancakeSwapPoolHeader className="header" $disabled={disabled}>
@@ -40,7 +47,7 @@ export default function PancakeSwapAddLiquidityHeader({
           onClick={optimize}
           $size="sm"
           $contain
-          disabled={disabled}
+          disabled={disabled || optimizeDisabled}
         >
           {optimized && focusedElement === 'Optimize'
             ? 'Optimized'

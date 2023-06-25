@@ -89,6 +89,7 @@ export type AddLiquidityField =
 export const RemoveLiquidityField = {
   Percent: 'Percent',
   UseNative: 'UseNative',
+  Signature: 'Signature',
 } as const
 
 export type RemoveLiquidityField =

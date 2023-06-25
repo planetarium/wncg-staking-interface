@@ -12,9 +12,11 @@ import { useAuth, useChain } from 'hooks'
 import { useAddLiquidityMath } from './useAddLiquidityMath'
 
 export function useAddLiquidity(assets: Hash[], amountsIn: string[]) {
+  const [error, setError] = useState<string | null>(null)
   const [deadline, setDeadline] = useState(
     `0x${(now() + 5 * MINUTE).toString(16)}`
   )
+
   const { account, isConnected } = useAuth()
   const { chainId, nativeCurrency } = useChain()
   const hasNativeCurrency = assets.includes(nativeCurrency.address)
@@ -65,6 +67,11 @@ export function useAddLiquidity(assets: Hash[], amountsIn: string[]) {
     ...data?.contract,
     overrides: data?.overrides,
     enabled: !!data,
+    onError(err: any) {
+      if (err?.reason?.includes('TRANSFER_FROM_FAILED')) {
+        setError('INSUFFICIENT_ALLOWANCE')
+      }
+    },
   })
 
   const { writeAsync } = useContractWrite(_config as any)
@@ -78,5 +85,8 @@ export function useAddLiquidity(assets: Hash[], amountsIn: string[]) {
     }
   }
 
-  return writeAsync ? addLiquidity : undefined
+  return {
+    addLiquidity: writeAsync ? addLiquidity : undefined,
+    error,
+  }
 }

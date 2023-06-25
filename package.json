@@ -16,6 +16,8 @@
     "@ethersproject/abi": "^5.7.0",
     "@ethersproject/abstract-provider": "^5.7.0",
     "@georgeroman/balancer-v2-pools": "^0.0.14",
+    "@pancakeswap/aptos-swap-sdk": "^1.0.0",
+    "@pancakeswap/sdk": "^5.0.0",
     "@svgr/webpack": "^7.0.0",
     "@tanstack/react-query": "^4.29.3",
     "@xstate/fsm": "^2.0.0",
