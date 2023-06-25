@@ -3,7 +3,7 @@ import { useMount } from 'react-use'
 import { useSetAtom } from 'jotai'
 import { RESET } from 'jotai/utils'
 
-import { addLiquidityTxAtom } from 'states/tx'
+import { removeLiquidityTxAtom } from 'states/tx'
 import { txUrlFor } from 'utils/txUrlFor'
 import { useChain, useFiat, useStaking } from 'hooks'
 import { useWatch } from './useWatch'
@@ -15,18 +15,18 @@ import NumberFormat from 'components/NumberFormat'
 import TokenIcon from 'components/TokenIcon'
 import Status from './Status'
 
-type AddLiquidityToastProps = Required<AddLiquidityTx>
+type RemoveLiquidityToastProps = Required<RemoveLiquidityTx>
 
-export default function AddLiquidityToast({
+export default function RemoveLiquidityToast({
   hash,
   assets,
-  amountsIn,
-}: AddLiquidityToastProps) {
+  amountsOut,
+}: RemoveLiquidityToastProps) {
   const { chainId } = useChain()
   const toFiat = useFiat()
   const { lpToken, tokens } = useStaking()
 
-  const setTx = useSetAtom(addLiquidityTxAtom)
+  const setTx = useSetAtom(removeLiquidityTxAtom)
 
   const status = useWatch(hash)
 
@@ -37,7 +37,7 @@ export default function AddLiquidityToast({
       <header className="toastHeader">
         <Link href={txUrlFor(chainId, hash)!} target="_blank" rel="noopener">
           <h3 className="title">
-            Join pool
+            Exit pool
             <Icon icon="outlink" />
           </h3>
           <Status status={status} />
@@ -46,24 +46,22 @@ export default function AddLiquidityToast({
 
       <div className="toastContent">
         <dl className="detailList">
-          {amountsIn.map((amt, i) => {
+          {amountsOut.map((amt, i) => {
             const addr = assets[i]
+            const symbol = tokens[addr]?.symbol ?? ''
             const fiatValue = toFiat(amt, addr)
-            const { address, symbol } = tokens?.[addr]
 
             return (
-              <div
-                className="detailItem"
-                key={`addLiquidityToast:${address}:${amt}`}
-              >
+              <div className="detailItem" key={`exitToast:${addr}:${amt}`}>
                 <dt>
                   <div className="token">
-                    <TokenIcon address={address} $size={20} />
+                    <TokenIcon address={addr} $size={20} />
                   </div>
                   {symbol}
                 </dt>
+
                 <dd>
-                  <NumberFormat value={amt} decimals={8} />
+                  <NumberFormat value={amt} />
                   <NumberFormat
                     className="usd"
                     value={fiatValue}

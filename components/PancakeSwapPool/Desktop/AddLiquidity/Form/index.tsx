@@ -1,4 +1,5 @@
 import { memo, useEffect } from 'react'
+import { useUnmount } from 'react-use'
 
 import { bnum } from 'utils/bnum'
 import { wait } from 'utils/wait'
@@ -15,7 +16,6 @@ import {
   UnoptimizableAlert,
 } from 'components/PancakeSwapPool/shared'
 import Header from './Header'
-import { useUnmount } from 'react-use'
 
 function AddLiquidityForm() {
   const { account, prevAccount } = useAuth()

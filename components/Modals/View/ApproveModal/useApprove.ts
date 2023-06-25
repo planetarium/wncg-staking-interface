@@ -2,7 +2,6 @@ import { useCallback } from 'react'
 import { useContractWrite, usePrepareContractWrite } from 'wagmi'
 import { constants } from 'ethers'
 
-import config from 'config'
 import { Erc20Abi } from 'config/abi'
 import { useChain, useSwitchNetwork } from 'hooks'
 

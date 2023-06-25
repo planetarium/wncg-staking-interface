@@ -1,7 +1,7 @@
 import { useAtomValue } from 'jotai'
 import { useUnmount } from 'react-use'
 
-import { addLiquidityAtom } from 'states/tx'
+import { addLiquidityTxAtom } from 'states/tx'
 import type { UseAddLiquidityFormReturns } from 'hooks/pancakeswap/useAddLiquidityForm'
 
 import { StyledPancakeSwapPoolMobileForm } from './styled'
@@ -27,7 +27,7 @@ export default function PancakeSwapPoolMobileForm(
     focusedElement,
   } = props
 
-  const tx = useAtomValue(addLiquidityAtom)
+  const tx = useAtomValue(addLiquidityTxAtom)
 
   useUnmount(() => {
     resetFields()

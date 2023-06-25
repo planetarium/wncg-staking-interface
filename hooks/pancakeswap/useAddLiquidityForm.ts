@@ -80,7 +80,7 @@ export function useAddLiquidityForm(): UseAddLiquidityFormReturns {
   const { assets, maxBalances, maxSafeBalances, calcOptimizedAmounts } =
     useAddLiquidityMath(isNative)
 
-  const validate = useAddLiquidity(assets, amountsIn)
+  const { addLiquidity, error } = useAddLiquidity(assets, amountsIn)
 
   const { data: optAmountsIn = null } = useQuery(
     [
@@ -138,8 +138,8 @@ export function useAddLiquidityForm(): UseAddLiquidityFormReturns {
     () =>
       amountsIn.some((amt) => bnum(amt).isZero()) ||
       Object.values(formState.errors).length > 0 ||
-      !validate,
-    [amountsIn, formState, validate]
+      (!addLiquidity && error !== 'INSUFFICIENT_ALLOWANCE'),
+    [addLiquidity, amountsIn, error, formState]
   )
 
   return {

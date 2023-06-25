@@ -1,9 +1,8 @@
 import { memo, useEffect } from 'react'
 
 import { wait } from 'utils/wait'
-import { useAuth, useBalances, useStaking } from 'hooks'
+import { useAuth, useBalances, useRefetch, useStaking } from 'hooks'
 import { useJoinForm, useJoinModal } from 'hooks/balancer'
-import { useFetchUserAllowances } from 'hooks/queries'
 
 import { StyledJoinForm } from './styled'
 import {
@@ -21,7 +20,9 @@ function JoinForm() {
   const balanceOf = useBalances()
   const { lpToken } = useStaking()
 
-  const { refetch } = useFetchUserAllowances()
+  const refetch = useRefetch({
+    userAllowances: true,
+  })
 
   const joinFormReturns = useJoinForm()
   const {

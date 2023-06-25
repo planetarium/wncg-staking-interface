@@ -24,6 +24,9 @@ const JoinModal = dynamic(() => import('./JoinModal'), {
 const ExitModal = dynamic(() => import('./ExitModal'), {
   suspense: true,
 })
+const RemoveLiquidityModal = dynamic(() => import('./RemoveLiquidityModal'), {
+  suspense: true,
+})
 const RevenueModal = dynamic(() => import('./RevenueModal'), {
   suspense: true,
 })
@@ -63,6 +66,8 @@ function renderModal(modal: Modal) {
       return <JoinModal {...props} />
     case ModalType.Exit:
       return <ExitModal {...props} />
+    case ModalType.RemoveLiquidity:
+      return <RemoveLiquidityModal />
     case ModalType.Revenue:
       return <RevenueModal />
     case ModalType.Stake:

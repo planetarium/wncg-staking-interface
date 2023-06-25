@@ -3,7 +3,7 @@ import { useAtomValue, useSetAtom } from 'jotai'
 import { useTransaction } from 'wagmi'
 import { motion } from 'framer-motion'
 
-import { addLiquidityAtom } from 'states/tx'
+import { addLiquidityTxAtom } from 'states/tx'
 import { showPoolAtom } from 'states/ui'
 import { ANIMATION_MAP, MOTION } from 'config/constants/motions'
 import { bnum } from 'utils/bnum'
@@ -26,7 +26,7 @@ function AddLiquidityModalPage2() {
   const { removeModal } = useModal()
   const { lpToken } = useStaking()
 
-  const { hash, userLpAmount = '0' } = useAtomValue(addLiquidityAtom)
+  const { hash, userLpAmount = '0' } = useAtomValue(addLiquidityTxAtom)
   const setShowPool = useSetAtom(showPoolAtom)
 
   const amountInFiatValue = toFiat(amount ?? 0, lpToken.address)

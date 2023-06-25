@@ -1,9 +1,8 @@
 import { bnum } from 'utils/bnum'
 import { wait } from 'utils/wait'
-import { useBalances, useStaking } from 'hooks'
+import { useBalances, useRefetch, useStaking } from 'hooks'
 import { useAddLiquidityModal } from 'hooks/pancakeswap'
 import { UseAddLiquidityFormReturns } from 'hooks/pancakeswap/useAddLiquidityForm'
-import { useFetchUserAllowances } from 'hooks/queries'
 
 import { Arrow, Footer, Summary } from 'components/PancakeSwapPool/shared'
 import Form from './Form'
@@ -16,7 +15,9 @@ export default function PancakeSwapPoolMobileContent(
   const balanceOf = useBalances()
   const { lpToken } = useStaking()
 
-  const { refetch } = useFetchUserAllowances()
+  const refetch = useRefetch({
+    userAllowances: true,
+  })
 
   const {
     assets,

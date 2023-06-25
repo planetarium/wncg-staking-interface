@@ -2,7 +2,7 @@ import { memo } from 'react'
 import { useAtom } from 'jotai'
 import clsx from 'clsx'
 
-import { addLiquidityAtom } from 'states/tx'
+import { addLiquidityTxAtom } from 'states/tx'
 import { useStaking } from 'hooks'
 import { useAddLiquidity } from 'hooks/pancakeswap'
 
@@ -28,9 +28,9 @@ function AddLiquidityModalPage1({
 }: AddLiquidityModalPage1Props) {
   const { shouldReversePoolTokenOrderOnDisplay, tokens } = useStaking()
 
-  const [tx, setTx] = useAtom(addLiquidityAtom)
+  const [tx, setTx] = useAtom(addLiquidityTxAtom)
 
-  const addLiquidity = useAddLiquidity(assets, amountsIn)
+  const { addLiquidity, error } = useAddLiquidity(assets, amountsIn)
 
   async function onClickAddLiquidity() {
     if (!addLiquidity) {

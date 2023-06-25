@@ -152,6 +152,7 @@ function AddLiquidityFormInputField({
   const showMisc =
     activeField &&
     activeField !== name &&
+    value !== '' &&
     ((focusedElement === 'Input' && bnum(watch(name)).gt(0)) ||
       focusedElement === 'Max')
 
