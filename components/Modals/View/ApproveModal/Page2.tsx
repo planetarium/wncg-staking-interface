@@ -26,13 +26,12 @@ export default function ApproveModalPage2({
   nextAction,
   send,
 }: ApproveModalPage2Props) {
-  const { addModal, updateModal, removeModal } = useModal()
+  const { addModal, updateModal } = useModal()
 
   const setTx = useSetAtom(approveTxAtom)
 
   const onNext = useCallback(async () => {
     if (nextAction.type !== ModalType.Approve) {
-      removeModal()
       setTx(RESET)
       await wait(0)
       addModal(nextAction)
@@ -43,7 +42,7 @@ export default function ApproveModalPage2({
     setTx(RESET)
     await wait(0)
     updateModal(nextAction)
-  }, [addModal, nextAction, removeModal, send, setTx, updateModal])
+  }, [addModal, nextAction, send, setTx, updateModal])
 
   return (
     <StyledApprovalModalPage2>

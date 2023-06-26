@@ -9,7 +9,7 @@ import {
 import { LiquidityFieldType } from 'config/constants'
 import { bnum } from 'utils/bnum'
 import { useBalances, useResponsive, useStaking } from 'hooks'
-import { ExitFormFields } from 'hooks/useExitForm'
+import { ExitFormFields } from 'hooks/balancer/useExitForm'
 
 import { StyledExitModalPage1Step2 } from './styled'
 import NumberFormat from 'components/NumberFormat'
@@ -54,7 +54,7 @@ function ExitModalPage1Step2PropExit({
   const disabled = !!hash
 
   return (
-    <StyledExitModalPage1Step2 $isProportional $disabled={disabled}>
+    <StyledExitModalPage1Step2 $isPropExit $disabled={disabled}>
       <header className="header">
         <span className="count">2</span>
         <h4 className="title">Proportional withdraw</h4>

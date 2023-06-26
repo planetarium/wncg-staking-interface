@@ -128,3 +128,10 @@ type RawBalanceMap = {
 type BalanceMap = {
   [address: Hash]: string
 }
+
+type Signature = {
+  deadline: number
+  v: number
+  r: string
+  s: string
+}

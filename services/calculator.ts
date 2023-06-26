@@ -19,7 +19,7 @@ import { parseUnits } from 'utils/parseUnits'
 const POOL_DECIMALS = 18
 
 type PriceImpactOption = {
-  exactOut?: boolean
+  isExactOut?: boolean
   tokenIndex?: number | null
   queryBpt?: BigNumber
 }
@@ -147,12 +147,12 @@ export default class CalculatorService {
       return bnum(1).minus(bptAmount.div(bptZeroPriceImpact))
     }
 
-    const { exactOut, tokenIndex } = option || {
-      exactOut: false,
+    const { isExactOut, tokenIndex } = option || {
+      isExactOut: false,
       tokenIndex: 0,
     }
 
-    if (exactOut) {
+    if (isExactOut) {
       bptAmount = this.bptInForExactTokensOut(tokenAmounts)
       bptZeroPriceImpact = this.bptForTokensZeroPriceImpact(tokenAmounts)
     } else {

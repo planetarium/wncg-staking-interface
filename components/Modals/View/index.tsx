@@ -6,6 +6,9 @@ import { assertUnreachable } from 'utils/assertUnreachable'
 const ApproveModal = dynamic(() => import('./ApproveModal'), {
   suspense: true,
 })
+const AddLiquidityModal = dynamic(() => import('./AddLiquidityModal'), {
+  suspense: true,
+})
 const ClaimModal = dynamic(() => import('./ClaimModal'), {
   suspense: true,
 })
@@ -19,6 +22,9 @@ const JoinModal = dynamic(() => import('./JoinModal'), {
   suspense: true,
 })
 const ExitModal = dynamic(() => import('./ExitModal'), {
+  suspense: true,
+})
+const RemoveLiquidityModal = dynamic(() => import('./RemoveLiquidityModal'), {
   suspense: true,
 })
 const RevenueModal = dynamic(() => import('./RevenueModal'), {
@@ -46,6 +52,8 @@ function renderModal(modal: Modal) {
   const { type, props } = modal
 
   switch (type) {
+    case ModalType.AddLiquidity:
+      return <AddLiquidityModal {...props} />
     case ModalType.Approve:
       return <ApproveModal {...props} />
     case ModalType.Claim:
@@ -58,6 +66,8 @@ function renderModal(modal: Modal) {
       return <JoinModal {...props} />
     case ModalType.Exit:
       return <ExitModal {...props} />
+    case ModalType.RemoveLiquidity:
+      return <RemoveLiquidityModal />
     case ModalType.Revenue:
       return <RevenueModal />
     case ModalType.Stake:

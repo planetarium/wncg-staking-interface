@@ -7,7 +7,15 @@ import { bnum } from 'utils/bnum'
 import { formatUnits } from 'utils/formatUnits'
 import { fetchPoolTokens } from './fetchPoolTokens'
 
-const FNS = ['decimals', 'name', 'symbol', 'totalSupply', 'token0', 'token1']
+const FNS = [
+  'decimals',
+  'name',
+  'symbol',
+  'totalSupply',
+  'token0',
+  'token1',
+  'getReserves',
+]
 
 export async function fetchPancakeSwapPool(
   chainId: ChainId
@@ -27,8 +35,23 @@ export async function fetchPancakeSwapPool(
     contracts,
   })
 
-  const [_decimals, _name = '', _symbol = '', _totalSupply, _token0, _token1] =
-    data as [number, string, string, BigNumber, Hash, Hash]
+  const [
+    _decimals,
+    _name = '',
+    _symbol = '',
+    _totalSupply,
+    _token0,
+    _token1,
+    _reserves = [],
+  ] = data as [
+    number,
+    string,
+    string,
+    BigNumber,
+    Hash,
+    Hash,
+    [BigNumber, BigNumber, BigNumber]
+  ]
 
   const poolTokens = await fetchPoolTokens(
     chainId,
@@ -44,6 +67,11 @@ export async function fetchPancakeSwapPool(
     bnum(weight).times(100).toNumber()
   )
   const poolTokenSymbols = poolTokens.map((t) => t.symbol)
+
+  const poolReserves = _reserves.flatMap((amt, i) => {
+    if (i === 2) return []
+    return [formatUnits(amt.toString(), poolTokenDecimals[i])]
+  })
 
   const shouldReversePoolTokenOrderOnDisplay =
     poolTokenAddresses.findIndex(
@@ -66,6 +94,7 @@ export async function fetchPancakeSwapPool(
     poolTokenWeights,
     poolTokenWeightsInPcnt,
     poolTokenSymbols,
+    poolReserves,
 
     totalSwapFee: '0',
     shouldReversePoolTokenOrderOnDisplay,

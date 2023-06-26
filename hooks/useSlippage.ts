@@ -9,7 +9,7 @@ import { parseUnits } from 'utils/parseUnits'
 import { formatUnits } from 'utils/formatUnits'
 
 export function useSlippage() {
-  const slippage = useAtomValue(slippageAtom)
+  const slippage = useAtomValue(slippageAtom) ?? 0.5
   const slippageBasisPoints = bnum(slippage ?? 0)
     .div(100)
     .toNumber()

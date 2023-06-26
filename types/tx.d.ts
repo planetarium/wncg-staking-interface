@@ -74,17 +74,35 @@ type JoinTx = {
   totalJoinFiatValue?: string
 }
 
+type AddLiquidityTx = {
+  hash?: Hash
+  assets?: Hash[]
+  amountsIn?: string[]
+  userLpAmount?: string
+  amountsInFiatValueSum?: string
+}
+
 type ExitTx = {
   assets?: Hash[]
   hash?: Hash
   exitAmounts?: string[]
   totalExitFiatValue?: string
-  isProportional?: boolean
-  exactOut?: boolean
+  isPropExit?: boolean
+  isExactOut?: boolean
   exitType?: Hash | null
   bptOutPcnt?: string
   bptIn?: string
   tokenOutIndex?: number
+}
+
+type RemoveLiquidityTx = {
+  assets?: Hash[]
+  hash?: Hash
+  amountsOut?: string[]
+  amountsOutFiatValueSum?: string
+  isNative?: boolean
+  pcntOut?: string
+  lpAmountOut?: string
 }
 
 type HarvestTx = {

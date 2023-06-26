@@ -4,7 +4,8 @@ import { useSetAtom } from 'jotai'
 import { showMyStakingAtom } from 'states/ui'
 import { ModalType } from 'config/constants'
 import { bnum } from 'utils/bnum'
-import { useBalances, useFiat, useModal, useStaking } from 'hooks'
+import { isEthereum } from 'utils/isEthereum'
+import { useBalances, useChain, useFiat, useModal, useStaking } from 'hooks'
 
 import { StyledMyStakingWalletSection } from './styled'
 import Button from 'components/Button'
@@ -13,6 +14,7 @@ import NumberFormat from 'components/NumberFormat'
 import PoolTokens from 'components/PoolTokens'
 
 function WalletBalance() {
+  const { chainId } = useChain()
   const toFiat = useFiat()
   const { addModal } = useModal()
   const { lpToken } = useStaking()
@@ -32,7 +34,7 @@ function WalletBalance() {
 
     setShowMyStaking(false)
     addModal({
-      type: ModalType.Exit,
+      type: isEthereum(chainId) ? ModalType.Exit : ModalType.RemoveLiquidity,
     })
   }
 

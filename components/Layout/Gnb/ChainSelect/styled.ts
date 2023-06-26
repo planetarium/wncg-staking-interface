@@ -71,9 +71,9 @@ export const StyledGnbChainSelectMenu = styled(motion.div)`
 
 export const StyledGnbChainSelectToggle = styled.button`
   ${flexbox('start')}
-  width: 104px;
+  width: 120px;
   height: 40px;
-  padding: 0 12px;
+  padding: 0 8px;
   border: 1px solid rgba(var(--white-rgb), 0.2);
   border-radius: 4px;
 
@@ -92,6 +92,7 @@ export const StyledGnbChainSelectToggle = styled.button`
     'minTablet',
     css`
       width: 144px;
+      padding: 0 12px;
 
       .text {
         ${textStyle('body', 3)}

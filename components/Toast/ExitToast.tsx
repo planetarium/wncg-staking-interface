@@ -25,7 +25,7 @@ export default function ExitToast({
   totalExitFiatValue,
   bptIn,
   exitAmounts,
-  isProportional,
+  isPropExit,
   tokenOutIndex,
 }: ExitToast) {
   const { chainId } = useChain()
@@ -36,7 +36,7 @@ export default function ExitToast({
 
   const status = useWatch(hash)
 
-  const importTokenAddress = isProportional
+  const importTokenAddress = isPropExit
     ? lpToken.address
     : tokens[assets[tokenOutIndex]].address !== NATIVE_CURRENCY_ADDRESS
     ? tokens[assets[tokenOutIndex]].address
@@ -58,7 +58,7 @@ export default function ExitToast({
 
       <div className="toastContent">
         <dl className="detailList">
-          {isProportional ? (
+          {isPropExit ? (
             <div className="detailItem">
               <dt>
                 <div className="token">

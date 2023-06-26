@@ -10,8 +10,8 @@ export function useFetchUserAllowances(options: UseFetchOptions = {}) {
   const {
     enabled = true,
     refetchInterval,
-    refetchOnWindowFocus,
-    suspense,
+    refetchOnWindowFocus = 'always',
+    suspense = false,
   } = options
 
   const { account } = useAuth()
@@ -21,7 +21,10 @@ export function useFetchUserAllowances(options: UseFetchOptions = {}) {
   const pairAddressList: Hash[][] = useMemo(
     () => [
       [lpToken.address, stakingAddress],
-      ...poolTokenAddresses?.map((a) => [a, DEX_PROTOCOL_ADDRESS[chainId]]),
+      ...poolTokenAddresses?.map((addr) => [
+        addr,
+        DEX_PROTOCOL_ADDRESS[chainId],
+      ]),
     ],
     [chainId, lpToken.address, poolTokenAddresses, stakingAddress]
   )
@@ -42,7 +45,7 @@ export function useFetchUserAllowances(options: UseFetchOptions = {}) {
       staleTime: Infinity,
       refetchInterval,
       refetchOnWindowFocus,
-      suspense: true,
+      suspense,
       useErrorBoundary: false,
     }
   )

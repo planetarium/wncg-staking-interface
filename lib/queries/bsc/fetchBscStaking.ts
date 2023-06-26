@@ -35,7 +35,6 @@ export async function fetchBscStaking(chainId: ChainId) {
     ] = data
 
     const rewardTokenAddress = _rewardToken.toLowerCase() as Hash
-
     const emissionPerSec = formatUnits(_emissionPerSec)
     const cooldownSeconds = _cooldownSeconds?.toNumber() ?? 0
     const withdrawSeconds = _unstakeWindow?.toNumber() ?? 0

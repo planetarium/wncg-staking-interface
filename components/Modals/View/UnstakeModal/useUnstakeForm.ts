@@ -75,7 +75,6 @@ export function useUnstakeForm(): UseUnstakeFormReturns {
   )
 
   const inputDisabled = useMemo(() => {
-    console.log(stakedTokenBalance, bnum(stakedTokenBalance).isZero())
     return bnum(stakedTokenBalance).isZero()
   }, [stakedTokenBalance])
 

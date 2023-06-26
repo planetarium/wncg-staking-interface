@@ -477,7 +477,15 @@ export const StyledTokenFragment = styled.div<StyledIconProps>`
   height: ${({ $size }) => $size}px;
   border-radius: 50%;
 
+  .mainToken {
+    display: block;
+    width: ${({ $size }) => $size}px;
+    height: ${({ $size }) => $size}px;
+    background-color: var(--primary-50);
+  }
+
   .icon {
+    display: block;
     width: ${({ $size }) => $size}px;
     height: ${({ $size }) => $size}px;
 

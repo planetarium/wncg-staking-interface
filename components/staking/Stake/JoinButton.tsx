@@ -29,7 +29,6 @@ export default function MainStakeJoinButton() {
   function openModal(e: MouseEvent) {
     e.preventDefault()
     e.stopPropagation()
-
     setShowPool(true)
     setSlippage(null)
   }
