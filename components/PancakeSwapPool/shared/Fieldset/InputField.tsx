@@ -14,8 +14,8 @@ import {
 
 import { StyledAddLiquidityFormInputField } from './styled'
 import { AvailableBalance, Control } from 'components/Form'
-import Notice from './Notice'
 import EtherSelect from './EtherSelect'
+import Notice from './Notice'
 
 type AddLiquidityFormInputFieldProps = {
   index: number
@@ -74,6 +74,7 @@ function AddLiquidityFormInputField({
       validate: {
         maxAmount: (v: string) => {
           if (bnum(v).lte(maxBalance)) return true
+
           return activeField === name
             ? `Exceeds wallet balance`
             : `Not enough ${symbol} to match the pool ratio`
@@ -120,12 +121,13 @@ function AddLiquidityFormInputField({
   )
 
   const setMaxValue = useCallback(async () => {
+    setActiveField(name)
+
     const subjectAmount = await calcPropAmountIn(
       bnum(maxSafeBalance).toString(),
       index
     )
 
-    setActiveField(name)
     setFocusedElement('Max')
     setValue(name, maxSafeBalance)
     setValue(subjectFieldName, bnum(subjectAmount).toString()!)
@@ -213,7 +215,6 @@ function AddLiquidityFormInputField({
       />
 
       <AvailableBalance
-        layout
         label={availableBalanceLabel}
         maxAmount={maxBalance}
         fiatValue={maxBalanceFiatValue}

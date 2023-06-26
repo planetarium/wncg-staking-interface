@@ -6,7 +6,6 @@ import { RESET } from 'jotai/utils'
 import { useTransaction } from 'wagmi'
 
 import { claimTxAtom } from 'states/tx'
-import config from 'config'
 import { formatUnits } from 'utils/formatUnits'
 import { parseTransferLogs } from 'utils/parseTransferLogs'
 import { txUrlFor } from 'utils/txUrlFor'

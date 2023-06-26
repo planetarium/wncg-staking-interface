@@ -33,3 +33,5 @@ type UnstakeTimestamps = {
   withdrawEndsAt: number
   cooldowns: number
 }
+
+type RadioSize = CheckboxSize

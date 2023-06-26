@@ -11,7 +11,6 @@ type AvailableBalanceProps = {
   label: string
   maxAmount: string | number
   decimals?: number
-  layout?: boolean
   fiatValue?: number | string
   disabled?: boolean
   symbol?: string
@@ -22,7 +21,6 @@ function AvailableBalance({
   label,
   maxAmount,
   decimals = 8,
-  layout = false,
   fiatValue,
   disabled,
   symbol,
@@ -40,7 +38,6 @@ function AvailableBalance({
     <StyledAvailableBalance
       {...MOTION}
       className="availableTokenAmount"
-      layout={layout}
       variants={ANIMATION_MAP.slideInDown}
       transition={{ easing: 'linear' }}
       $disabled={disabled}

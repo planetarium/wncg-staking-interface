@@ -73,34 +73,6 @@ export const StyledAddLiquidityFormArrow = styled.span<{ $disabled: boolean }>`
   }
 `
 
-export const StyledAddLiquidityFormInputField = styled(motion.div)`
-  width: 100%;
-
-  .labelGroup {
-    ${flexbox('between')}
-    margin-bottom: 8px;
-    white-space: nowrap;
-
-    .label {
-      ${textStyle('body', 2)}
-      font-weight: 700;
-      color: var(--white);
-    }
-
-    .weight {
-      ${textStyle('body', 3)}
-      color: rgba(var(--white-rgb), 0.5);
-    }
-  }
-
-  ${media(
-    'minTablet',
-    css`
-      width: calc(50% - ${INPUT_FIELD_GAP / 2}px);
-    `
-  )}
-`
-
 export const StyledAddLiquidityFormSummary = styled(motion.footer)<{
   $active: boolean
   $disabled: boolean

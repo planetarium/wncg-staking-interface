@@ -1,16 +1,14 @@
-import { memo, useState } from 'react'
+import { memo } from 'react'
 import { useAtomValue, useSetAtom } from 'jotai'
-import { useTransaction } from 'wagmi'
 import { motion } from 'framer-motion'
 
 import { addLiquidityTxAtom } from 'states/tx'
 import { showPoolAtom } from 'states/ui'
 import { ANIMATION_MAP, MOTION } from 'config/constants/motions'
 import { bnum } from 'utils/bnum'
-import { formatUnits } from 'utils/formatUnits'
-import { parseTransferLogs } from 'utils/parseTransferLogs'
 
-import { useChain, useFiat, useModal, useStaking } from 'hooks'
+import { useFiat, useModal, useStaking } from 'hooks'
+import { receivedLpAmountAtom } from './useWatch'
 
 import { StyledAddLiquidityModalPage2 } from './styled'
 import Button from 'components/Button'
@@ -19,24 +17,25 @@ import Lottie from 'components/Lottie'
 import NumberFormat from 'components/NumberFormat'
 
 function AddLiquidityModalPage2() {
-  const [amount, setAmount] = useState<string | null>(null)
-
-  const { chainId } = useChain()
   const toFiat = useFiat()
   const { removeModal } = useModal()
   const { lpToken } = useStaking()
 
-  const { hash, userLpAmount = '0' } = useAtomValue(addLiquidityTxAtom)
+  const { userLpAmount = '0' } = useAtomValue(addLiquidityTxAtom)
   const setShowPool = useSetAtom(showPoolAtom)
+  const receivedLpAmount = useAtomValue(receivedLpAmountAtom)
 
-  const amountInFiatValue = toFiat(amount ?? 0, lpToken.address)
+  const receivedLpAmountFiatValue = toFiat(
+    receivedLpAmount ?? 0,
+    lpToken.address
+  )
   const hadLpBalanceBefore = bnum(userLpAmount).gt(0)
   const lpTokenBalanceInFiatValue = toFiat(userLpAmount, lpToken.address)
 
-  const totalUserLpAmount = bnum(amount ?? 0)
+  const userLpAmountSum = bnum(receivedLpAmount ?? 0)
     .plus(userLpAmount)
     .toString()
-  const totalUserLpAmountFiatValue = toFiat(totalUserLpAmount, lpToken.address)
+  const userLpAmountSumFiatValue = toFiat(userLpAmountSum, lpToken.address)
 
   function closeModal() {
     removeModal()
@@ -46,22 +45,6 @@ function AddLiquidityModalPage2() {
     setShowPool(false)
     removeModal()
   }
-
-  useTransaction({
-    chainId,
-    hash,
-    enabled: !!hash,
-    async onSuccess(tx) {
-      const { logs } = await tx.wait()
-
-      const parsedLogs = parseTransferLogs(logs)
-      const claimed = parsedLogs?.[lpToken.address]
-
-      if (claimed) {
-        setAmount(formatUnits(claimed, lpToken.decimals))
-      }
-    },
-  })
 
   return (
     <StyledAddLiquidityModalPage2>
@@ -91,34 +74,32 @@ function AddLiquidityModalPage2() {
               </div>
             )}
 
-            {amount && (
-              <motion.div
-                {...MOTION}
-                className="detailItem accent"
-                variants={ANIMATION_MAP.fadeIn}
-              >
-                <dt>Received Cake-LP</dt>
+            <motion.div
+              {...MOTION}
+              className="detailItem accent"
+              variants={ANIMATION_MAP.fadeIn}
+            >
+              <dt>Received Cake-LP</dt>
 
-                <dd>
-                  <NumberFormat value={amount} plus decimals={8} />
-                  <span className="fiatValue">
-                    <NumberFormat
-                      value={amountInFiatValue}
-                      type="fiat"
-                      prefix="$"
-                    />
-                  </span>
-                </dd>
-              </motion.div>
-            )}
+              <dd>
+                <NumberFormat value={receivedLpAmount} plus decimals={8} />
+                <span className="fiatValue">
+                  <NumberFormat
+                    value={receivedLpAmountFiatValue}
+                    type="fiat"
+                    prefix="$"
+                  />
+                </span>
+              </dd>
+            </motion.div>
 
             <div className="detailItem total">
               <dt>My Total Cake-LP</dt>
               <dd>
-                <CountUp value={totalUserLpAmount} decimals={8} />
+                <CountUp value={userLpAmountSum} decimals={8} />
                 <strong className="fiatValue">
                   <NumberFormat
-                    value={totalUserLpAmountFiatValue}
+                    value={userLpAmountSumFiatValue}
                     type="fiat"
                     prefix="$"
                   />

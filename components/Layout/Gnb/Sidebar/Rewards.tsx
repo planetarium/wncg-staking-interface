@@ -12,7 +12,6 @@ import Button from 'components/Button'
 import CountUp from 'components/CountUp'
 import Icon from 'components/Icon'
 import NumberFormat from 'components/NumberFormat'
-import TokenIcon from 'components/TokenIcon'
 
 type SidebarRewardsProps = {
   closeSidebar(e: MouseEvent): void
@@ -74,10 +73,7 @@ export default function SidebarRewards({ closeSidebar }: SidebarRewardsProps) {
                     className="detailItem"
                     key={`gnb:sidebar:rewards:${address}`}
                   >
-                    <dt>
-                      <TokenIcon address={address} $size={16} />
-                      {symbol}
-                    </dt>
+                    <dt>{symbol}</dt>
 
                     <dd className="amount">
                       <CountUp value={reward} plus />

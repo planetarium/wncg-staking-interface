@@ -16,7 +16,7 @@ import {
 const POOL_BALANCES_HEIGHT = 236
 const POOL_BALANCES_COLLAPSE_BUTTON_HEIGHT = 50
 
-export const StyledPoolDesktop = styled(motion.section)`
+export const StyledPancakeSwapPoolDesktop = styled(motion.section)`
   ${flexbox('start', 'start')}
   ${backdropFilter(80, 'rgba(var(--black-rgb), 0.6)', 'var(--black)')}
   position: fixed;

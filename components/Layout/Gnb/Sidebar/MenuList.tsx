@@ -2,11 +2,11 @@ import { memo } from 'react'
 import Link from 'next/link'
 
 import config from 'config'
+import { STAKING_ADDRESS } from 'config/constants/addresses'
 import { explorerUrlFor } from 'utils/explorerUrlFor'
 import { useChain } from 'hooks'
 
 import { StyledSidebarMenuList } from './styled'
-import { STAKING_ADDRESS } from 'config/constants/addresses'
 
 function MenuList() {
   const { chainId } = useChain()

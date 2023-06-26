@@ -6,6 +6,7 @@ import { useTransaction } from 'wagmi'
 import { useSetAtom } from 'jotai'
 
 import { harvestTxAtom } from 'states/tx'
+import { BAL_ADDRESS } from 'config/constants/addresses'
 import { parseTransferLogs } from 'utils/parseTransferLogs'
 import { txUrlFor } from 'utils/txUrlFor'
 import { useChain } from 'hooks'
@@ -16,7 +17,6 @@ import Icon from 'components/Icon'
 import ImportToken from 'components/ImportToken'
 import TokenIcon from 'components/TokenIcon'
 import Status from './Status'
-import { BAL_ADDRESS } from 'config/constants/addresses'
 
 type HarvestToastProps = Required<HarvestTx>
 

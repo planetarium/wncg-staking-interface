@@ -7,7 +7,7 @@ import {
   TRANSITION_MAP,
 } from 'config/constants/motions'
 
-import { StyledPoolDesktop, StyledPoolModalOverlay } from './styled'
+import { StyledPancakeSwapPoolDesktop, StyledPoolModalOverlay } from './styled'
 import Icon from 'components/Icon'
 import AddLiquidity from './AddLiquidity'
 import Balances from './Balances'
@@ -39,7 +39,7 @@ function PancakeSwapPoolDesktop({
 
       <AnimatePresence>
         {show && (
-          <StyledPoolDesktop
+          <StyledPancakeSwapPoolDesktop
             {...EXIT_MOTION}
             variants={ANIMATION_MAP.appearInUp}
             transition={TRANSITION_MAP.modal}
@@ -61,7 +61,7 @@ function PancakeSwapPoolDesktop({
                 <Balances />
               </div>
             </div>
-          </StyledPoolDesktop>
+          </StyledPancakeSwapPoolDesktop>
         )}
       </AnimatePresence>
     </>

@@ -75,7 +75,6 @@ function AddLiquidityForm() {
         optimized={optimized}
         focusedElement={focusedElement}
       />
-
       <UnoptimizableAlert
         activeField={activeField as 'TokenA' | 'TokenB' | null}
         assets={assets}
@@ -83,16 +82,12 @@ function AddLiquidityForm() {
         maxBalances={maxBalances}
         optimizeDisabled={optimizeDisabled}
       />
-
       <Fieldset {...addLiquidityReturns} />
-
       <Arrow />
-
       <Summary
         active={!isEmpty}
         amountsInFiatValueSum={amountsInFiatValueSum}
       />
-
       <footer className="joinFormFooter">
         <Checkout
           amount={amountsInFiatValueSum}

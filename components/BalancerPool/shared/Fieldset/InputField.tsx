@@ -167,7 +167,6 @@ function JoinInputField({
       />
 
       <AvailableBalance
-        layout
         label={availableBalanceLabel}
         maxAmount={maxBalance}
         decimals={4}

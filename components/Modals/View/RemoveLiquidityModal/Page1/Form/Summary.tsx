@@ -1,16 +1,16 @@
 import { useMemo } from 'react'
+import { UseFormSetValue } from 'react-hook-form'
 
+import { RemoveLiquidityField } from 'config/constants'
 import { bnum } from 'utils/bnum'
 import { useChain, useFiat, useStaking } from 'hooks'
+import type { RemoveLiquidityForm } from 'hooks/pancakeswap/useRemoveLiquidityForm'
 
 import { StyledRemoveLiquidityModalPageFormSummary } from './styled'
 import CountUp from 'components/CountUp'
 import NumberFormat from 'components/NumberFormat'
+import Radio from 'components/Radio'
 import TokenIcon from 'components/TokenIcon'
-import { UseFormSetValue } from 'react-hook-form'
-import { RemoveLiquidityForm } from 'hooks/pancakeswap/useRemoveLiquidityForm'
-import Checkbox from 'components/Checkbox'
-import { RemoveLiquidityField } from 'config/constants'
 
 type RemoveLiquidityModalPageFormSummaryProps = {
   assets: Hash[]
@@ -41,17 +41,39 @@ export default function RemoveLiquidityModalPageFormSummary({
     })
   }, [poolTokens, toFiat])
 
-  function onClickCheckbox(checked: boolean) {
-    setValue(RemoveLiquidityField.UseNative, checked)
+  function onClickCheckbox(value: string) {
+    setValue(RemoveLiquidityField.UseNative, value === '0' ? false : true)
   }
 
   return (
     <StyledRemoveLiquidityModalPageFormSummary>
       <h5 className="title">
         You will receive
-        <div className="checkGroup">
-          <Checkbox checked={isNative} onChange={onClickCheckbox} />
-          <label className="text">Receive {nativeCurrency.symbol}</label>
+        <div className="radioGroup">
+          <div className="radioItem">
+            <Radio
+              id="isNativeTrue"
+              selected={isNative}
+              name={RemoveLiquidityField.UseNative}
+              onChange={onClickCheckbox}
+              value={1}
+            />
+            <label className="text" htmlFor="isNativeTrue">
+              {nativeCurrency.symbol}
+            </label>
+          </div>
+          <div className="radioItem">
+            <Radio
+              id="isNativeFalse"
+              selected={!isNative}
+              name={RemoveLiquidityField.UseNative}
+              onChange={onClickCheckbox}
+              value={0}
+            />
+            <label className="text" htmlFor="isNativeFalse">
+              {tokens?.[nativeCurrency.wrappedTokenAddress]?.symbol}
+            </label>
+          </div>
         </div>
       </h5>
 

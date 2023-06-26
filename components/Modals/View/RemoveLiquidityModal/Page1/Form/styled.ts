@@ -73,22 +73,30 @@ export const StyledRemoveLiquidityModalPageFormSummary = styled.div`
 
   .content {
     padding: 20px 24px;
-    margin-top: 4px;
+    margin-top: 8px;
     background-color: rgba(var(--white-rgb), 0.1);
     border-radius: 8px;
   }
 
-  .checkGroup {
-    ${flexbox('start')}
-    margin: 8px 0;
-    color: var(--primary-200);
+  .radioGroup {
+    ${flexbox('end')}
+  }
 
-    .checkbox {
+  .radioItem {
+    ${flexbox('start')}
+    margin-left: 8px;
+
+    &:first-child {
+      margin-left: 0;
+    }
+
+    .radio {
       margin-right: 8px;
     }
 
     .text {
       ${textStyle('body', 3, 700)}
+      color: rgba(var(--white-rgb), 0.9);
     }
   }
 

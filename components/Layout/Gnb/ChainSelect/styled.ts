@@ -56,7 +56,7 @@ export const StyledGnbChainSelectMenu = styled(motion.div)`
     width: 100%;
     padding: 8px;
     color: var(--gray-500);
-    border-radius: 4px;
+    border-radius: 8px;
     transition: 200ms;
 
     &:hover {
@@ -76,6 +76,7 @@ export const StyledGnbChainSelectToggle = styled.button`
   padding: 0 8px;
   border: 1px solid rgba(var(--white-rgb), 0.2);
   border-radius: 4px;
+  transition: 200ms;
 
   .cryptoIcon {
     flex-shrink: 0;
@@ -93,6 +94,10 @@ export const StyledGnbChainSelectToggle = styled.button`
     css`
       width: 144px;
       padding: 0 12px;
+
+      &:hover {
+        background-color: rgba(var(--white-rgb), 0.1);
+      }
 
       .text {
         ${textStyle('body', 3)}

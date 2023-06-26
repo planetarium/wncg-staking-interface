@@ -51,6 +51,8 @@ export default function ApproveToast({
           .map((l) => parseLog(l))
           .find((l) => l?.name === 'Approval')
 
+        console.log('approvalLog', approvalLog)
+
         const allowance = approvalLog?.args?.value?.toString() ?? '0'
 
         if (allowance != null) {

@@ -19,14 +19,10 @@ export default function AddLiquidityFormSummary({
 }: AddLiquidityFormSummaryProps) {
   const { isConnected } = useAuth()
   const toFiat = useFiat()
-  const {
-    lpToken: initLpToken,
-    poolTokens,
-    poolReserves: initPoolReserves,
-  } = useStaking()
+  const { poolTokens, poolReserves: initPoolReserves } = useStaking()
 
-  const { lpToken = initLpToken, poolReserves = initPoolReserves } =
-    useFetchPool().data ?? {}
+  const { poolReserves = initPoolReserves } =
+    useFetchPool({ refetchInterval: 30 * 1_000 }).data ?? {}
 
   const relativePrice = useMemo(() => {
     return poolTokens.map((t, i) => {
@@ -38,15 +34,14 @@ export default function AddLiquidityFormSummary({
   }, [poolTokens, toFiat])
 
   const share = useMemo(() => {
-    const currentPoolValue = poolReserves
-      .reduce(
-        (acc, amt, i) => acc.plus(toFiat(amt, poolTokens[i]?.address)),
-        bnum(0)
-      )
-      .toString()
+    const currentPoolValue = poolReserves.reduce(
+      (acc, amt, i) => acc.plus(toFiat(amt, poolTokens[i].address)),
+      bnum(0)
+    )
+    const expectedPoolValue = currentPoolValue.plus(amountsInFiatValueSum)
 
     return bnum(amountsInFiatValueSum)
-      .div(bnum(currentPoolValue).plus(amountsInFiatValueSum))
+      .div(expectedPoolValue.toString())
       .times(100)
       .toString()
   }, [amountsInFiatValueSum, poolReserves, poolTokens, toFiat])

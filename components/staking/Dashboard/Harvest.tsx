@@ -2,17 +2,16 @@ import { useAtomValue } from 'jotai'
 import { AnimatePresence } from 'framer-motion'
 
 import { isHarvestableAtom } from 'states/system'
+import { BAL_ADDRESS } from 'config/constants/addresses'
 import { ANIMATION_MAP, EXIT_MOTION } from 'config/constants/motions'
 import { bnum } from 'utils/bnum'
 import { useChain, useFiat, useHarvest, useStaking } from 'hooks'
-import { useFetchStaking } from 'hooks/queries'
 
 import { StyledStakingDashboardHarvest } from './styled'
 import Button from 'components/Button'
 import CountUp from 'components/CountUp'
 import Icon from 'components/Icon'
 import Tooltip from 'components/Tooltip'
-import { BAL_ADDRESS } from 'config/constants/addresses'
 
 type StakingDashboardHarvestProps = {
   show: boolean

@@ -1,9 +1,13 @@
-import Link from 'next/link'
+import { useState } from 'react'
 import { useMount } from 'react-use'
+import Link from 'next/link'
 import { useSetAtom } from 'jotai'
 import { RESET } from 'jotai/utils'
+import { useWaitForTransaction } from 'wagmi'
 
 import { removeLiquidityTxAtom } from 'states/tx'
+import { formatUnits } from 'utils/formatUnits'
+import { parseLog } from 'utils/parseLog'
 import { txUrlFor } from 'utils/txUrlFor'
 import { useChain, useFiat, useStaking } from 'hooks'
 import { useWatch } from './useWatch'
@@ -22,15 +26,40 @@ export default function RemoveLiquidityToast({
   assets,
   amountsOut,
 }: RemoveLiquidityToastProps) {
+  const [actualAmountsOut, setActualAmountsOut] = useState(amountsOut)
+
   const { chainId } = useChain()
   const toFiat = useFiat()
-  const { lpToken, tokens } = useStaking()
+  const { lpToken, poolTokenDecimals, tokens } = useStaking()
 
   const setTx = useSetAtom(removeLiquidityTxAtom)
 
   const status = useWatch(hash)
 
   useMount(() => setTx(RESET))
+
+  useWaitForTransaction({
+    hash,
+    enabled: !!hash,
+    chainId,
+    suspense: false,
+    async onSuccess(tx) {
+      const burnedLog = tx.logs
+        .map((l) => parseLog(l))
+        .find((l) => l?.name === 'Burn')
+
+      if (!burnedLog) return
+
+      const _amountsOut = burnedLog.args?.flatMap((arg, i) => {
+        if (typeof arg === 'string') return []
+        return [formatUnits(arg, poolTokenDecimals[i - 1])]
+      })
+
+      console.log(_amountsOut)
+
+      setActualAmountsOut(_amountsOut)
+    },
+  })
 
   return (
     <StyledToast>
@@ -46,7 +75,7 @@ export default function RemoveLiquidityToast({
 
       <div className="toastContent">
         <dl className="detailList">
-          {amountsOut.map((amt, i) => {
+          {actualAmountsOut.map((amt, i) => {
             const addr = assets[i]
             const symbol = tokens[addr]?.symbol ?? ''
             const fiatValue = toFiat(amt, addr)

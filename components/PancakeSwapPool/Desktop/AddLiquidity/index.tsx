@@ -1,7 +1,7 @@
 import { memo } from 'react'
 import dynamic from 'next/dynamic'
 
-import { StyledPoolJoin } from './styled'
+import { StyledPancakeSwapAddLiquidity } from './styled'
 import Suspense from 'components/Suspense'
 
 const Form = dynamic(() => import('./Form'), {
@@ -10,11 +10,11 @@ const Form = dynamic(() => import('./Form'), {
 
 function PancakeSwapAddLiquidity() {
   return (
-    <StyledPoolJoin>
+    <StyledPancakeSwapAddLiquidity>
       <Suspense>
         <Form />
       </Suspense>
-    </StyledPoolJoin>
+    </StyledPancakeSwapAddLiquidity>
   )
 }
 

@@ -3,7 +3,7 @@ import { AnimatePresence } from 'framer-motion'
 import { ANIMATION_MAP } from 'config/constants/motions'
 import { useAuth, useConnect } from 'hooks'
 
-import { StyledJoinConnect } from './styled'
+import { StyledPancakeSwapAddLiquidityConnect } from './styled'
 import Button from 'components/Button'
 
 function JoinConnect() {
@@ -13,7 +13,7 @@ function JoinConnect() {
   return (
     <AnimatePresence>
       {!isConnected && (
-        <StyledJoinConnect
+        <StyledPancakeSwapAddLiquidityConnect
           className="poolJoinConnect"
           initial="initial"
           animate="animate"
@@ -27,7 +27,7 @@ function JoinConnect() {
           >
             Connect wallet
           </Button>
-        </StyledJoinConnect>
+        </StyledPancakeSwapAddLiquidityConnect>
       )}
     </AnimatePresence>
   )

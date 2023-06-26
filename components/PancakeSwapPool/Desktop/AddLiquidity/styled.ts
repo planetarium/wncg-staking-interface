@@ -3,7 +3,7 @@ import styled, { css } from 'styled-components'
 
 import { flexbox, media, textStyle } from 'styles/utils'
 
-export const StyledPoolJoin = styled.section`
+export const StyledPancakeSwapAddLiquidity = styled.section`
   padding: 32px;
   border-radius: 12px;
   background-color: rgba(var(--white-rgb), 0.05);
@@ -16,7 +16,7 @@ export const StyledPoolJoin = styled.section`
   )}
 `
 
-export const StyledJoinConnect = styled(motion.section)`
+export const StyledPancakeSwapAddLiquidityConnect = styled(motion.section)`
   ${flexbox()}
   flex-direction: column;
   min-height: 480px;

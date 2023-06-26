@@ -21,12 +21,10 @@ export async function fetchUserAllowances(
       contracts,
     })) as BigNumber[]
 
-    const entries = pairs.map(([t, spender], i) => {
-      console.log(t.symbol, t.decimals, data[i], 'hi', spender)
-      return [t.address, { [spender]: formatUnits(data[i], t.decimals) }]
-    })
-
-    // console.log(333, entries)
+    const entries = pairs.map(([t, spender], i) => [
+      t.address,
+      { [spender]: formatUnits(data[i], t.decimals) },
+    ])
 
     return Object.fromEntries(entries)
   } catch (error) {

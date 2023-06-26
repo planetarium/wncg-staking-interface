@@ -1,25 +1,44 @@
 import { useMount, useUnmount } from 'react-use'
-import { useAtomValue } from 'jotai'
+import { atom, useAtomValue, useSetAtom } from 'jotai'
 import { useWaitForTransaction } from 'wagmi'
 
 import { claimTxAtom } from 'states/tx'
+import { formatUnits } from 'utils/formatUnits'
+import { parseTransferLogs } from 'utils/parseTransferLogs'
+import { useChain, useRefetch, useStaking } from 'hooks'
 
-import { useFetchUserBalances, useFetchUserData } from 'hooks/queries'
-import { useChain } from 'hooks'
+export const claimedAmountsAtom = atom<string[]>([])
 
 export function useWatch(send: (event: string) => void) {
   const { chainId } = useChain()
+  const { rewardTokenAddresses, tokens } = useStaking()
 
-  const tx = useAtomValue(claimTxAtom)
-  const { refetch: refetchUserData } = useFetchUserData()
-  const { refetch: refetchBalances } = useFetchUserBalances()
+  const transaction = useAtomValue(claimTxAtom)
+  const setClaimedAmounts = useSetAtom(claimedAmountsAtom)
+
+  const refetch = useRefetch({
+    userData: true,
+    userBalances: true,
+  })
 
   useWaitForTransaction({
-    hash: tx.hash!,
-    enabled: !!tx.hash,
+    hash: transaction.hash!,
+    enabled: !!transaction.hash,
     suspense: false,
     chainId,
-    onSuccess() {
+    async onSuccess(tx) {
+      await refetch()
+      const parsedLogs = parseTransferLogs(tx.logs)
+
+      const claimedAmounts =
+        transaction.rewardList?.map((check, i) => {
+          if (!check) return '0'
+          const addr = rewardTokenAddresses[i]
+
+          return formatUnits(parsedLogs?.[addr], tokens?.[addr]?.decimals ?? 18)
+        }) ?? []
+
+      setClaimedAmounts(claimedAmounts)
       send('SUCCESS')
     },
     onError() {
@@ -28,11 +47,10 @@ export function useWatch(send: (event: string) => void) {
   })
 
   useMount(() => {
-    refetchUserData()
+    refetch()
   })
 
   useUnmount(() => {
-    refetchUserData()
-    refetchBalances()
+    refetch()
   })
 }

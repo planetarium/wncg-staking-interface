@@ -17,11 +17,9 @@ import CountUp from 'components/CountUp'
 import Icon from 'components/Icon'
 import Suspense from 'components/Suspense'
 import Harvest from './Harvest'
-import { useRouter } from 'next/router'
 
 function StakingDashboardApr() {
   const [show, setShow] = useAtom(showHarvestTooltipAtom)
-  const { query } = useRouter()
 
   const { chainId } = useChain()
   const toFiat = useFiat()

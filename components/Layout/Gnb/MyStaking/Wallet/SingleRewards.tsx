@@ -6,7 +6,6 @@ import { StyledWalletSingleRewards } from './styled'
 import Button from 'components/Button'
 import CountUp from 'components/CountUp'
 import NumberFormat from 'components/NumberFormat'
-import TokenIcon from 'components/TokenIcon'
 
 type WalletSingleRewardsProps = {
   closeWallet(): void
@@ -31,24 +30,20 @@ export default function WalletSingleRewards({
   }
 
   const rewardsAmount = earnedTokenRewards[0] ?? '0'
-  const rewardsInFiatValue = toFiat(rewardsAmount, rewardToken?.address)
+  const rewardsFiatValue = toFiat(rewardsAmount, rewardToken?.address)
 
   return (
     <StyledWalletSingleRewards>
-      <div className="rewardItem">
-        <dt>
-          <TokenIcon
-            address={rewardToken?.address}
-            ariaLabel={rewardToken?.symbol}
-            $size={24}
-          />
-        </dt>
+      <div
+        className="rewardItem"
+        key={`gnb:myStaking:walletStaking:${rewardToken?.address}`}
+      >
+        <dt>{rewardToken?.symbol}</dt>
         <dd>
           <CountUp value={rewardsAmount} symbol={rewardToken.symbol} />
-
           {hasRewards && (
             <span className="parenthesis">
-              <NumberFormat value={rewardsInFiatValue} type="fiat" />
+              <NumberFormat value={rewardsFiatValue} type="fiat" abbr />
             </span>
           )}
         </dd>

@@ -132,6 +132,10 @@ export const StyledModalPage = styled(motion.div)<{ $disabled?: boolean }>`
   }
 
   .modalFooter {
+    &:has(.checkout) {
+      padding-top: 24px;
+    }
+
     .checkout {
       & + a,
       & + button {
@@ -167,6 +171,12 @@ export const StyledModalPage = styled(motion.div)<{ $disabled?: boolean }>`
 
       &::before {
         display: none;
+      }
+
+      .modalFooter {
+        &:has(.checkout) {
+          padding-top: 0;
+        }
       }
     `
   )}

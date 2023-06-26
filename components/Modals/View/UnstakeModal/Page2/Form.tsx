@@ -75,7 +75,7 @@ export default function UnstakeModalPage2Form({
           id="checked"
           checked={!hasRewards ? false : checked}
           onChange={toggleCheck}
-          disabled={hasRewards}
+          disabled={claimDisabled}
           $size={24}
         />
       </div>

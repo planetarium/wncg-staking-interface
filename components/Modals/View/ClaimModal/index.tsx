@@ -69,12 +69,7 @@ function ClaimModal() {
         />
       )}
 
-      {currentPage === 2 && (
-        <Page2
-          rewardList={rewardList}
-          earnedTokenRewards={earnedTokenRewards}
-        />
-      )}
+      {currentPage === 2 && <Page2 rewardList={rewardList} />}
 
       {currentPage === 3 && <Page3 />}
     </>

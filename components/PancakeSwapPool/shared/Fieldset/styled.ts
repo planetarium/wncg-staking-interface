@@ -202,6 +202,7 @@ export const StyledAddLiquidityFormFieldset = styled(motion.fieldset)<{
     'minTablet',
     css`
       ${flexbox('between', 'start')}
+      flex-direction: row;
       margin-top: 32px;
 
       .joinInputField {
@@ -271,11 +272,11 @@ export const StyledAddLiquidityFormInputField = styled(motion.div)<{
       &.active {
         opacity: 1;
       }
+    }
 
-      .weight {
-        ${textStyle('body', 3)}
-        color: rgba(var(--white-rgb), 0.9);
-      }
+    .weight {
+      ${textStyle('body', 3)}
+      color: rgba(var(--white-rgb), 0.9);
     }
 
     .selectGroup {
@@ -314,22 +315,19 @@ export const StyledAddLiquidityFormInputField = styled(motion.div)<{
   }
 
   ${media(
-    'minTablet',
-    css`
-      .labelGroup {
-        .misc {
-          ${textStyle('body', 3)}
-        }
-      }
-    `
-  )}
-
-  ${media(
     'minLaptop',
     css`
       .labelGroup {
         .label {
           ${textStyle('body', 2, 700)}
+        }
+
+        .misc {
+          ${textStyle('body', 3)}
+        }
+
+        .weight {
+          ${textStyle('body', 3)}
         }
       }
     `

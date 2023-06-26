@@ -7,6 +7,7 @@ import { isUnstakeWindowAtom } from 'states/account'
 import { ModalType } from 'config/constants'
 import { ANIMATION_MAP, EXIT_MOTION } from 'config/constants/motions'
 import { bnum } from 'utils/bnum'
+import { isEthereum } from 'utils/isEthereum'
 import { useBalances, useChain, useFiat, useModal, useStaking } from 'hooks'
 import { useFetchUserData } from 'hooks/queries'
 
@@ -72,7 +73,9 @@ export default function SidebarStaking({ closeSidebar }: SidebarStakingProps) {
   return (
     <StyledSidebarStaking $expanded={show} $unstakeWindow={isUnstakeWindow}>
       <header className="header">
-        <h3 className="title">My staked LP tokens</h3>
+        <h3 className="title">
+          My staked {isEthereum(chainId) ? 'LP tokens' : 'Cake-LP'}
+        </h3>
 
         <button className="toggleButton" type="button" onClick={toggle}>
           <CountUp value={stakedTokenBalance} />
