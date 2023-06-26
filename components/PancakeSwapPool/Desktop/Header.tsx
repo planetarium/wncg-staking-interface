@@ -28,7 +28,7 @@ function PoolHeader() {
     >
       <strong className="poolName">{lpToken.name}</strong>
       <div className="titleGroup">
-        <h2 className="title">Join pool, Get LP Tokens!</h2>
+        <h2 className="title">Join pool, Get Cake-LP!</h2>
 
         <div className="tokenList">
           {poolTokenAddresses?.map((addr, i) => (

@@ -1,7 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { useSetAtom } from 'jotai'
 
-import { priceMapAtom } from 'states/system'
 import { QUERY_KEYS } from 'config/constants/queryKeys'
 import { fetchPrices } from 'lib/queries/fetchPrices'
 import { calcLpTokenPrice } from 'utils/calcLpTokenPrice'
@@ -26,8 +24,6 @@ export function useFetchPrices(options: UseFetchOptions = {}) {
 
   const { lpToken = initLpToken, poolTokens = initPoolTokens } =
     useFetchPool().data ?? {}
-
-  const setPriceMap = useSetAtom(priceMapAtom)
 
   const list = [...poolTokenAddresses, ...rewardTokenAddresses]
 
@@ -55,12 +51,6 @@ export function useFetchPrices(options: UseFetchOptions = {}) {
           ...data,
           ...lpTokenPrice,
         }
-      },
-      onSuccess(data) {
-        setPriceMap((prev) => ({
-          ...prev,
-          ...data,
-        }))
       },
     }
   )

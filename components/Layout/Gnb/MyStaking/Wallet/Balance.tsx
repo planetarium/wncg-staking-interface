@@ -41,7 +41,9 @@ function WalletBalance() {
   return (
     <StyledMyStakingWalletSection>
       <header className="header">
-        <h3 className="title">Stakable LP tokens</h3>
+        <h3 className="title">
+          Stakable {isEthereum(chainId) ? 'LP tokens' : 'Cake-LP'}
+        </h3>
         <div className="amount">
           <CountUp value={lpBalance} />
           {hasLpToken && <NumberFormat value={fiatValue} type="fiat" />}

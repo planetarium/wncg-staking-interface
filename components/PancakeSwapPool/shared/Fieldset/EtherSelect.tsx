@@ -44,7 +44,8 @@ export default function AddLiquidityFormEtherSelect({
       AddLiquidityField.UseNative,
       symbol === nativeCurrency.symbol ? true : false
     )
-    setValue(name as 'TokenA' | 'TokenB', '')
+    setValue(AddLiquidityField.TokenA, '')
+    setValue(AddLiquidityField.TokenB, '')
     trigger()
     setFocusedElement(null)
   }

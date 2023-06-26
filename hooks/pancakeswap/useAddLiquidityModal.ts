@@ -18,22 +18,30 @@ export function useAddLiquidityModal(assets: Hash[], amountsIn: string[]) {
   const { chainId, nativeCurrency } = useChain()
   const { addModal } = useModal()
   const { isMobile } = useResponsive()
-  const { tokens } = useStaking()
+  const { tokens, shouldReversePoolTokenOrderOnDisplay } = useStaking()
 
   const setShowPool = useSetAtom(showPoolAtom)
 
   const spender = DEX_PROTOCOL_ADDRESS[chainId]!
 
-  const tokensToApprove = useMemo(
-    () =>
-      assets
-        .filter((addr, i) => {
-          if (addr === nativeCurrency.address) return false
-          return bnum(allowanceOf(addr, spender)).lt(amountsIn[i])
-        })
-        .map((addr) => tokens[addr]),
-    [assets, nativeCurrency.address, allowanceOf, spender, amountsIn, tokens]
-  )
+  const tokensToApprove = useMemo(() => {
+    const list = assets
+      .filter((addr, i) => {
+        if (addr === nativeCurrency.address) return false
+        return bnum(allowanceOf(addr, spender)).lt(amountsIn[i])
+      })
+      .map((addr) => tokens[addr])
+
+    return shouldReversePoolTokenOrderOnDisplay ? list.reverse() : list
+  }, [
+    assets,
+    shouldReversePoolTokenOrderOnDisplay,
+    nativeCurrency.address,
+    allowanceOf,
+    spender,
+    amountsIn,
+    tokens,
+  ])
 
   function openAddLiquidityModal(params: {
     assets: Hash[]

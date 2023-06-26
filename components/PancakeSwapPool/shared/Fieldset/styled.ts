@@ -13,7 +13,6 @@ const STROKE_WIDTH = 2
 export const StyledAddLiquidityForm = styled(motion.form)`
   ${flexbox('start')}
   flex-direction: column;
-  margin-top: 32px;
 
   .dashedArrow {
     margin: 20px 0;
@@ -173,10 +172,6 @@ export const StyledAddLiquidityFormEtherSelect = styled.div`
   ${media(
     'minLaptop',
     css`
-      + .misc {
-        margin-left: -84px !important;
-      }
-
       .dropdownToggle {
         ${textStyle('body', 2, 700)}
       }
@@ -276,11 +271,15 @@ export const StyledAddLiquidityFormInputField = styled(motion.div)<{
       &.active {
         opacity: 1;
       }
+
+      .weight {
+        ${textStyle('body', 3)}
+        color: rgba(var(--white-rgb), 0.9);
+      }
     }
 
-    .weight {
-      ${textStyle('body', 3)}
-      color: rgba(var(--white-rgb), 0.9);
+    .selectGroup {
+      ${flexbox('start')}
     }
   }
 

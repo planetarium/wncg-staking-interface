@@ -1,5 +1,3 @@
-import Link from 'next/link'
-
 import config from 'config'
 import { ChainId } from 'config/chains'
 import { BAL_ADDRESS, WNCG_ADDRESS } from 'config/constants/addresses'
@@ -32,16 +30,10 @@ export default function MainWncgCard() {
         <div className="linkGroup">
           {supportedChains.map((c) => {
             return (
-              <Link
-                className="chainButton"
-                key={`wncgCard:links:${c}`}
-                href={`/wncg/${c}`}
-                target="_blank"
-                rel="noopener"
-              >
+              <span className="chainButton" key={`wncgCard:links:${c}`}>
                 <CryptoIcon icon={isEthereum(c) ? 'ether' : 'bnb'} $size={24} />
                 {chainNameFor(c)}
-              </Link>
+              </span>
             )
           })}
         </div>

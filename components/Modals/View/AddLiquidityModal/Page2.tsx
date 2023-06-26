@@ -97,7 +97,7 @@ function AddLiquidityModalPage2() {
                 className="detailItem accent"
                 variants={ANIMATION_MAP.fadeIn}
               >
-                <dt>Received LP tokens</dt>
+                <dt>Received Cake-LP</dt>
 
                 <dd>
                   <NumberFormat value={amount} plus decimals={8} />
@@ -113,7 +113,7 @@ function AddLiquidityModalPage2() {
             )}
 
             <div className="detailItem total">
-              <dt>My Total LP tokens</dt>
+              <dt>My Total Cake-LP</dt>
               <dd>
                 <CountUp value={totalUserLpAmount} decimals={8} />
                 <strong className="fiatValue">

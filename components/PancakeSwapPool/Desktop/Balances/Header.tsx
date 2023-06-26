@@ -27,7 +27,7 @@ export default function AddLiquidityPoolBalancesHeader() {
   return (
     <StyledAddLiquidityPoolBalancesHeader className="poolBalancesHeader">
       <dl className="totalBalance">
-        <dt>My total LP tokens</dt>
+        <dt>My total Cake-LP</dt>
         <dd>
           {isConnected ? (
             <>

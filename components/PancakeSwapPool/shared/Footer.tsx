@@ -35,7 +35,7 @@ export default function AddLiquidityFormFooter({
         disabled={submitDisabled}
         $size="lg"
       >
-        Join pool, get LP tokens
+        Join pool, get Cake-LP
       </Button>
     </StyledAddLiquidityFormFooter>
   )

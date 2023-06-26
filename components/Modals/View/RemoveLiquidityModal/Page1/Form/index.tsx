@@ -2,7 +2,7 @@ import { Control as ReactHookFormControl, FieldValues } from 'react-hook-form'
 import { useAtomValue } from 'jotai'
 
 import { exitTxAtom } from 'states/tx'
-import { LiquidityFieldType, RemoveLiquidityField } from 'config/constants'
+import { RemoveLiquidityField } from 'config/constants'
 import { useBalances, useStaking } from 'hooks'
 import { UseRemoveLiquidityFormReturns } from 'hooks/pancakeswap/useRemoveLiquidityForm'
 
@@ -46,7 +46,7 @@ export default function RemoveLiquidityModalPage1Form(
         <div className="formLabel">
           <span className="count">1</span>
           <label className="label" htmlFor="exitPcnt">
-            Amount you want to withdraw
+            Amount to withdraw
           </label>
         </div>
 

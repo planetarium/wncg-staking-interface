@@ -10,7 +10,6 @@ export const StyledJoinForm = styled(motion.form)`
   width: 100%;
   flex-direction: column;
   padding: 32px;
-  margin-top: 32px;
   background-color: rgba(var(--white-rgb), 0.05);
   border-radius: 12px;
 

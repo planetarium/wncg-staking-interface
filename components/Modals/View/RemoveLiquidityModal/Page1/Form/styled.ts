@@ -67,16 +67,8 @@ export const StyledRemoveLiquidityModalPageFormSummary = styled.div`
 
   .title {
     ${textStyle('body', 3)}
+    ${flexbox('between')}
     font-weight: 700;
-  }
-
-  .checkGroup {
-    ${flexbox('start')}
-    margin: 8px 0;
-
-    .checkbox {
-      margin-right: 8px;
-    }
   }
 
   .content {
@@ -84,6 +76,20 @@ export const StyledRemoveLiquidityModalPageFormSummary = styled.div`
     margin-top: 4px;
     background-color: rgba(var(--white-rgb), 0.1);
     border-radius: 8px;
+  }
+
+  .checkGroup {
+    ${flexbox('start')}
+    margin: 8px 0;
+    color: var(--primary-200);
+
+    .checkbox {
+      margin-right: 8px;
+    }
+
+    .text {
+      ${textStyle('body', 3, 700)}
+    }
   }
 
   .formSummaryItem {

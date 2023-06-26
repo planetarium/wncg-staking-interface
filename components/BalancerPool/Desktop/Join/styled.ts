@@ -1,9 +1,20 @@
 import { motion } from 'framer-motion'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
-import { flexbox, textStyle } from 'styles/utils'
+import { flexbox, media, textStyle } from 'styles/utils'
 
-export const StyledPoolJoin = styled.section``
+export const StyledPoolJoin = styled.section`
+  padding: 32px;
+  border-radius: 12px;
+  background-color: rgba(var(--white-rgb), 0.05);
+
+  ${media(
+    'minTablet',
+    css`
+      margin-top: 24px;
+    `
+  )}
+`
 
 export const StyledJoinConnect = styled(motion.section)`
   ${flexbox()}

@@ -5,7 +5,7 @@ import { isUnstakeWindowAtom } from 'states/account'
 import { ModalType } from 'config/constants'
 import { ANIMATION_MAP, MOTION } from 'config/constants/motions'
 import { bnum } from 'utils/bnum'
-import { useFiat, useModal, useStaking } from 'hooks'
+import { useChain, useFiat, useModal, useStaking } from 'hooks'
 import { useFetchUserData } from 'hooks/queries'
 
 import { StyledWalletStaking } from './styled'
@@ -16,12 +16,14 @@ import NumberFormat from 'components/NumberFormat'
 import Suspense from 'components/Suspense'
 import BonusRewards from './BonusRewards'
 import SingleRewards from './SingleRewards'
+import { isEthereum } from 'utils/isEthereum'
 
 type WalletStakingProps = {
   closeWallet(): void
 }
 
 export default function WalletStaking({ closeWallet }: WalletStakingProps) {
+  const { chainId } = useChain()
   const toFiat = useFiat()
   const { addModal } = useModal()
   const { lpToken, rewardTokenAddresses } = useStaking()
@@ -52,7 +54,9 @@ export default function WalletStaking({ closeWallet }: WalletStakingProps) {
   return (
     <StyledWalletStaking>
       <header className="header">
-        <h3 className="title">My staked LP tokens</h3>
+        <h3 className="title">
+          My staked {isEthereum(chainId) ? 'LP tokens' : 'Cake-LP'}
+        </h3>
         <div className="amount">
           <CountUp value={stakedTokenBalance} />
           {hasStakedToken && (

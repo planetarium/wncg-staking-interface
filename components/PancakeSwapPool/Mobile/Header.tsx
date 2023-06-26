@@ -21,7 +21,7 @@ function PoolMobileHeader({ closePool }: PoolMobileHeaderProps) {
       <strong className="poolName">{lpToken.name}</strong>
 
       <div className="titleGroup">
-        <h2 className="title poolTitle">Join pool, Get LP Tokens!</h2>
+        <h2 className="title poolTitle">Join pool, Get Cake-LP!</h2>
       </div>
 
       <Link

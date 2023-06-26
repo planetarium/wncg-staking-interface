@@ -3,7 +3,6 @@ import { atom } from 'jotai'
 import { atomWithStorage, selectAtom } from 'jotai/utils'
 
 export const currentTimestampAtom = atom(0)
-export const priceMapAtom = atom<PriceMap>({})
 export const totalStakedAtom = atom<string | null>(null)
 
 export type AssetPlatform = 'ethereum' | 'bsc'

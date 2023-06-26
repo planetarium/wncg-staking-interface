@@ -18,19 +18,25 @@ export function useJoinModal(assets: Hash[], joinAmounts: string[]) {
   const { chainId } = useChain()
   const { addModal } = useModal()
   const { isMobile } = useResponsive()
-  const { tokens } = useStaking<'ethereum'>()
+  const { tokens, shouldReversePoolTokenOrderOnDisplay } =
+    useStaking<'ethereum'>()
 
   const vaultAddress = DEX_PROTOCOL_ADDRESS[chainId]
 
   const setShowPool = useSetAtom(showPoolAtom)
 
-  const shouldApprove = useMemo(
-    () =>
-      assets.filter((addr, i) => {
-        return bnum(allowanceOf(addr, vaultAddress)).lt(joinAmounts[i])
-      }),
-    [allowanceOf, assets, joinAmounts, vaultAddress]
-  )
+  const shouldApprove = useMemo(() => {
+    const list = assets.filter((addr, i) => {
+      return bnum(allowanceOf(addr, vaultAddress)).lt(joinAmounts[i])
+    })
+    return shouldReversePoolTokenOrderOnDisplay ? list.reverse() : list
+  }, [
+    allowanceOf,
+    assets,
+    joinAmounts,
+    shouldReversePoolTokenOrderOnDisplay,
+    vaultAddress,
+  ])
 
   const tokensToApprove = useMemo(
     () => shouldApprove.map((addr) => tokens[addr]),

@@ -25,7 +25,7 @@ export default function AddLiquidityPoolBalancesContent() {
   return (
     <StyledAddLiquidityPoolBalancesContent>
       <header className="header">
-        <h3 className="title">My staked LP tokens</h3>
+        <h3 className="title">My staked Cake-LP</h3>
 
         {!!isConnected ? (
           <div className="amount">
@@ -42,7 +42,7 @@ export default function AddLiquidityPoolBalancesContent() {
       <span className="divider" />
 
       <header className="header">
-        <h3 className="title">Stakable LP tokens</h3>
+        <h3 className="title">Stakable Cake-LP</h3>
 
         {!!isConnected ? (
           <div className="amount">

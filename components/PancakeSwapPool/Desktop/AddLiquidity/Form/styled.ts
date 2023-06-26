@@ -8,7 +8,6 @@ export const StyledAddLiquidityForm = styled(motion.form)`
   ${flexbox('start')}
   position: relative;
   flex-direction: column;
-  margin-top: 32px;
 
   .dashedArrow {
     margin: 20px 0;

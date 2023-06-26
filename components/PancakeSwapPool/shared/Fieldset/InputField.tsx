@@ -164,7 +164,7 @@ function AddLiquidityFormInputField({
     >
       <div className="labelGroup">
         {isEther ? (
-          <>
+          <div className="selectGroup">
             <EtherSelect
               name={FIELDS[index]}
               isNative={isNative}
@@ -179,7 +179,7 @@ function AddLiquidityFormInputField({
             >
               updated to match the pool ratio
             </span>
-          </>
+          </div>
         ) : (
           <label className="label" htmlFor={id}>
             {symbol}

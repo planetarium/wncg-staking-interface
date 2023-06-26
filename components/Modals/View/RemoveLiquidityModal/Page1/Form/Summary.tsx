@@ -1,9 +1,7 @@
-import { ChangeEvent, useMemo } from 'react'
-import { useAtomValue } from 'jotai'
+import { useMemo } from 'react'
 
-import { priceMapAtom } from 'states/system'
 import { bnum } from 'utils/bnum'
-import { useFiat, useStaking } from 'hooks'
+import { useChain, useFiat, useStaking } from 'hooks'
 
 import { StyledRemoveLiquidityModalPageFormSummary } from './styled'
 import CountUp from 'components/CountUp'
@@ -29,6 +27,7 @@ export default function RemoveLiquidityModalPageFormSummary({
   isNative,
   setValue,
 }: RemoveLiquidityModalPageFormSummaryProps) {
+  const { nativeCurrency } = useChain()
   const toFiat = useFiat()
   const { tokens } = useStaking()
 
@@ -48,11 +47,13 @@ export default function RemoveLiquidityModalPageFormSummary({
 
   return (
     <StyledRemoveLiquidityModalPageFormSummary>
-      <h5 className="title">You will receive</h5>
-      <div className="checkGroup">
-        <Checkbox checked={isNative} onChange={onClickCheckbox} />
-        <label>Receive {isNative ? 'BNB' : 'WBNB'}</label>
-      </div>
+      <h5 className="title">
+        You will receive
+        <div className="checkGroup">
+          <Checkbox checked={isNative} onChange={onClickCheckbox} />
+          <label className="text">Receive {nativeCurrency.symbol}</label>
+        </div>
+      </h5>
 
       <div className="content">
         <dl className="formSummaryList">

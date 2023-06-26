@@ -320,7 +320,7 @@ export const StyledBalancerPoolHeader = styled.header<{ $reverse: boolean }>`
               margin-left: 0;
             }
           `}
-          
+
     color: var(--gray-400);
     white-space: nowrap;
 
