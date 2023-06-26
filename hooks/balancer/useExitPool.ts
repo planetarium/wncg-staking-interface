@@ -2,8 +2,9 @@ import { useContractWrite, usePrepareContractWrite } from 'wagmi'
 
 import config from 'config'
 import { BalancerVaultAbi } from 'config/abi'
+import { DEX_PROTOCOL_ADDRESS } from 'config/constants/addresses'
 import { bnum } from 'utils/bnum'
-import { useAuth, useChain, useStaking, useSwitchNetwork } from 'hooks'
+import { useAuth, useChain, useSwitchNetwork } from 'hooks'
 import { useExitBuildRequest } from './useExitBuildRequest'
 
 type UseExitPoolParams = {
@@ -24,7 +25,8 @@ export function useExitPool({
   const { account } = useAuth()
   const { chainId } = useChain()
   const { switchBeforeSend } = useSwitchNetwork()
-  const { balancerGaugeAddress } = useStaking<'ethereum'>()
+
+  const vaultAddress = DEX_PROTOCOL_ADDRESS[chainId]
 
   const request = useExitBuildRequest({
     assets,
@@ -35,7 +37,7 @@ export function useExitPool({
   })
 
   const { config: writeConfig } = usePrepareContractWrite({
-    address: balancerGaugeAddress,
+    address: vaultAddress,
     abi: BalancerVaultAbi,
     chainId,
     args: [config.poolId, account, account, request],

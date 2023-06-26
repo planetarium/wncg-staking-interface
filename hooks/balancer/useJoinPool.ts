@@ -3,6 +3,7 @@ import { parseUnits } from 'ethers/lib/utils.js'
 
 import config from 'config'
 import { BalancerVaultAbi } from 'config/abi'
+import { DEX_PROTOCOL_ADDRESS } from 'config/constants/addresses'
 import { useAuth, useChain, useStaking, useSwitchNetwork } from 'hooks'
 import { useJoinBuildRequest } from './useJoinBuildRequest'
 
@@ -13,12 +14,11 @@ export function useJoinPool(
 ) {
   const { account } = useAuth()
   const { chainId } = useChain()
-  const {
-    balancerGaugeAddress,
-    poolTokenDecimals,
-    shouldReversePoolTokenOrderOnDisplay,
-  } = useStaking<'ethereum'>()
+  const { poolTokenDecimals, shouldReversePoolTokenOrderOnDisplay } =
+    useStaking<'ethereum'>()
   const { switchBeforeSend } = useSwitchNetwork()
+
+  const vaultAddress = DEX_PROTOCOL_ADDRESS[chainId]
 
   const request = useJoinBuildRequest({
     assets,
@@ -31,7 +31,7 @@ export function useJoinPool(
 
   // FIXME: network에 따라 달라짐
   const { config: writeConfig } = usePrepareContractWrite({
-    address: balancerGaugeAddress,
+    address: vaultAddress,
     abi: BalancerVaultAbi,
     args,
     chainId,

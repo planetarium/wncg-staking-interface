@@ -50,6 +50,7 @@ function BalancerPoolDesktop({ show, closePool }: BalancerPoolDesktopProps) {
             <div className="container">
               <div className="left">
                 <Header />
+                dklfasjkdlfajsdl
                 <Information />
                 <Join />
               </div>

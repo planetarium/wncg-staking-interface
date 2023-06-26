@@ -6,7 +6,7 @@ import { useAuth, useConnect } from 'hooks'
 import { StyledJoinConnect } from './styled'
 import Button from 'components/Button'
 
-function JoinConnect() {
+function BalancerJoinConnect() {
   const { isConnected } = useAuth()
   const { openConnectModal } = useConnect()
 
@@ -33,4 +33,4 @@ function JoinConnect() {
   )
 }
 
-export default JoinConnect
+export default BalancerJoinConnect

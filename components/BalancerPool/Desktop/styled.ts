@@ -149,14 +149,14 @@ export const StyledPoolDesktop = styled(motion.section)`
   )}
 `
 
-type StyledPoolBalancesProps = {
+type StyledBalancerPoolBalancesProps = {
   $show: boolean
   $overflow: 'hidden' | 'visible'
 }
 
-export const StyledPoolBalances = styled(
+export const StyledBalancerPoolBalances = styled(
   motion.section
-)<StyledPoolBalancesProps>`
+)<StyledBalancerPoolBalancesProps>`
   position: relative;
   max-height: ${POOL_BALANCES_HEIGHT + POOL_BALANCES_COLLAPSE_BUTTON_HEIGHT}px;
   overflow: ${({ $overflow }) => $overflow};
@@ -267,7 +267,7 @@ export const StyledPoolBalances = styled(
     `}
 `
 
-export const StyledPoolHeader = styled.header<{ $reverse: boolean }>`
+export const StyledBalancerPoolHeader = styled.header<{ $reverse: boolean }>`
   .poolName {
     ${textStyle('body', 3)}
     display: inline-block;
@@ -320,6 +320,7 @@ export const StyledPoolHeader = styled.header<{ $reverse: boolean }>`
               margin-left: 0;
             }
           `}
+          
     color: var(--gray-400);
     white-space: nowrap;
 

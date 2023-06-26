@@ -15,7 +15,6 @@ export function useWatch(send: (event: string) => void) {
   useWaitForTransaction({
     hash: tx.hash!,
     enabled: !!tx.hash,
-
     suspense: false,
     async onSuccess() {
       await refetch()

@@ -12,7 +12,7 @@ import SlippageControl from 'components/SlippageControl'
 import TokenIcon from 'components/TokenIcon'
 import Tooltip from 'components/Tooltip'
 
-type JoinFormHeaderProps = {
+type BalancerJoinFormHeaderProps = {
   optimize(): void
   optimized: boolean
   reset(): void
@@ -20,13 +20,13 @@ type JoinFormHeaderProps = {
   setFocusedElement(value: JoinPoolFormElement): void
 }
 
-function JoinFormHeader({
+function BalancerJoinFormHeader({
   optimize,
   optimized,
   reset,
   resetDisabled,
   setFocusedElement,
-}: JoinFormHeaderProps) {
+}: BalancerJoinFormHeaderProps) {
   const { isConnected } = useAuth()
   const { lpToken } = useStaking()
 
@@ -78,4 +78,4 @@ function JoinFormHeader({
   )
 }
 
-export default memo(JoinFormHeader)
+export default memo(BalancerJoinFormHeader)

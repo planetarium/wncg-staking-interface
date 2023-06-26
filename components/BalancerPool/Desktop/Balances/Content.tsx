@@ -2,12 +2,12 @@ import { bnum } from 'utils/bnum'
 import { useAuth, useBalances, useFiat, useStaking } from 'hooks'
 import { useFetchUserData } from 'hooks/queries'
 
-import { StyledPoolBalancesContent } from './styled'
+import { StyledBalancerPoolBalancesContent } from './styled'
 import CountUp from 'components/CountUp'
 import NumberFormat from 'components/NumberFormat'
 import PoolTokens from 'components/PoolTokens'
 
-export default function PoolBalancesContent() {
+export default function BalancerPoolBalancesContent() {
   const { isConnected } = useAuth()
   const toFiat = useFiat()
   const { lpToken } = useStaking()
@@ -23,7 +23,7 @@ export default function PoolBalancesContent() {
   const hasStakedToken = !!isConnected && bnum(stakedTokenBalance).gt(0)
 
   return (
-    <StyledPoolBalancesContent>
+    <StyledBalancerPoolBalancesContent>
       <header className="header">
         <h3 className="title">My staked LP tokens</h3>
 
@@ -57,6 +57,6 @@ export default function PoolBalancesContent() {
       {hasLpToken && (
         <PoolTokens className="poolTokens" lpBalance={lpBalance} />
       )}
-    </StyledPoolBalancesContent>
+    </StyledBalancerPoolBalancesContent>
   )
 }

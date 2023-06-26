@@ -49,10 +49,10 @@ export default function RemoveLiquidityModalPageFormSummary({
   return (
     <StyledRemoveLiquidityModalPageFormSummary>
       <h5 className="title">You will receive</h5>
-      <p>
+      <div className="checkGroup">
         <Checkbox checked={isNative} onChange={onClickCheckbox} />
         <label>Receive {isNative ? 'BNB' : 'WBNB'}</label>
-      </p>
+      </div>
 
       <div className="content">
         <dl className="formSummaryList">

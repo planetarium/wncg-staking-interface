@@ -6,7 +6,7 @@ import { flexbox, textStyle } from 'styles/utils'
 const POOL_BALANCES_HEIGHT = 236
 const POOL_BALANCES_COLLAPSE_BUTTON_HEIGHT = 50
 
-export const StyledPoolBalances = styled(motion.section)`
+export const StyledBalancerPoolBalances = styled(motion.section)`
   position: sticky;
   top: 0;
   border-radius: 12px;
@@ -23,10 +23,10 @@ export const StyledPoolBalances = styled(motion.section)`
     );
     background-color: var(--gray-900);
 
-    .tokenIconGroup {
+    .tokenIcon {
       ${flexbox()}
 
-      .tokenIcon {
+      .tokenFragment {
         margin-left: -20px;
 
         &:first-child {
@@ -73,11 +73,11 @@ export const StyledPoolBalances = styled(motion.section)`
   }
 `
 
-export const StyledPoolBalancesHeader = styled.header`
+export const StyledBalancerPoolBalancesHeader = styled.header`
   min-height: ${POOL_BALANCES_HEIGHT}px;
 `
 
-export const StyledPoolBalancesContent = styled.div`
+export const StyledBalancerPoolBalancesContent = styled.div`
   padding: 32px;
   padding-bottom: ${POOL_BALANCES_COLLAPSE_BUTTON_HEIGHT}px;
   background-color: var(--white);

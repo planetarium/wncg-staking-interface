@@ -4,11 +4,11 @@ import { bnum } from 'utils/bnum'
 import { useAuth, useBalances, useFiat, useStaking } from 'hooks'
 import { useFetchUserData } from 'hooks/queries'
 
-import { StyledPoolBalancesHeader } from './styled'
+import { StyledBalancerPoolBalancesHeader } from './styled'
 import CountUp from 'components/CountUp'
 import NumberFormat from 'components/NumberFormat'
 
-export default function PoolBalancesHeader() {
+export default function BalancerPoolBalancesHeader() {
   const { isConnected } = useAuth()
   const balanceOf = useBalances()
   const toFiat = useFiat()
@@ -25,7 +25,7 @@ export default function PoolBalancesHeader() {
   const totalBalanceInFiatValue = toFiat(totalBpt, lpToken.address)
 
   return (
-    <StyledPoolBalancesHeader className="poolBalancesHeader">
+    <StyledBalancerPoolBalancesHeader className="poolBalancesHeader">
       <dl className="totalBalance">
         <dt>My total LP tokens</dt>
         <dd>
@@ -46,6 +46,6 @@ export default function PoolBalancesHeader() {
           )}
         </dd>
       </dl>
-    </StyledPoolBalancesHeader>
+    </StyledBalancerPoolBalancesHeader>
   )
 }

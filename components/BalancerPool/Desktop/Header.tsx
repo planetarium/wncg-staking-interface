@@ -3,12 +3,12 @@ import { memo } from 'react'
 import { explorerUrlFor } from 'utils/explorerUrlFor'
 import { useAuth, useChain, useConnect, useStaking } from 'hooks'
 
-import { StyledPoolHeader } from './styled'
+import { StyledBalancerPoolHeader } from './styled'
 import Button from 'components/Button'
 import Icon from 'components/Icon'
 import TokenIcon from 'components/TokenIcon'
 
-function PoolHeader() {
+function BalancerPoolHeader() {
   const { isConnected } = useAuth()
   const { chainId } = useChain()
   const { openConnectModal } = useConnect()
@@ -22,7 +22,7 @@ function PoolHeader() {
   } = useStaking()
 
   return (
-    <StyledPoolHeader
+    <StyledBalancerPoolHeader
       className="poolHeader"
       $reverse={shouldReversePoolTokenOrderOnDisplay}
     >
@@ -55,8 +55,8 @@ function PoolHeader() {
           Connect wallet
         </Button>
       )}
-    </StyledPoolHeader>
+    </StyledBalancerPoolHeader>
   )
 }
 
-export default memo(PoolHeader)
+export default memo(BalancerPoolHeader)

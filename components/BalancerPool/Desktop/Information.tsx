@@ -8,7 +8,7 @@ import { StyledBalancerPoolInformation } from './styled'
 import Icon from 'components/Icon'
 import NumberFormat from 'components/NumberFormat'
 
-function PoolInformation() {
+function BalancerPoolInformation() {
   const { poolValueIn24Hr, totalSwapVolumeIn24Hr, totalSwapFeesIn24Hr } =
     usePoolSnapshot()
   const { chainId } = useChain()
@@ -52,4 +52,4 @@ function PoolInformation() {
   )
 }
 
-export default memo(PoolInformation)
+export default memo(BalancerPoolInformation)

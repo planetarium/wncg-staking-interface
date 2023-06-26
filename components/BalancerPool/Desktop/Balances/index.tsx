@@ -2,19 +2,19 @@ import { memo } from 'react'
 
 import { useAuth, useConnect, useStaking } from 'hooks'
 
-import { StyledPoolBalances } from './styled'
+import { StyledBalancerPoolBalances } from './styled'
 import Button from 'components/Button'
 import Suspense from 'components/Suspense'
 import TokenIcon from 'components/TokenIcon'
 import Content from './Content'
 
-function PoolBalances() {
+function BalancerPoolBalances() {
   const { isConnected } = useAuth()
   const { openConnectModal } = useConnect()
   const { lpToken } = useStaking()
 
   return (
-    <StyledPoolBalances layout>
+    <StyledBalancerPoolBalances layout>
       <div className="balancesHeader">
         <TokenIcon address={lpToken.address} $size={48} />
 
@@ -37,8 +37,8 @@ function PoolBalances() {
           <Content />
         </Suspense>
       )}
-    </StyledPoolBalances>
+    </StyledBalancerPoolBalances>
   )
 }
 
-export default memo(PoolBalances)
+export default memo(BalancerPoolBalances)

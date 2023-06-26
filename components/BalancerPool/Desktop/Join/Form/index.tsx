@@ -15,7 +15,7 @@ import {
 } from 'components/BalancerPool/shared'
 import Header from './Header'
 
-function JoinForm() {
+function BalancerJoinForm() {
   const { account, prevAccount } = useAuth()
   const balanceOf = useBalances()
   const { lpToken } = useStaking()
@@ -83,9 +83,7 @@ function JoinForm() {
           optimizeDisabled={optimizeDisabled}
         />
       )}
-
       <OptimizedBanner optimized={optimized} focusedElement={focusedElement} />
-
       <ProportionalGuideBanner
         joinAmounts={joinAmounts}
         assets={assets}
@@ -93,9 +91,7 @@ function JoinForm() {
         formState={formState}
         setValue={setValue}
       />
-
       <Fieldset {...joinFormReturns} />
-
       <Summary
         priceImpact={priceImpact}
         totalJoinFiatValue={totalJoinFiatValue}
@@ -103,7 +99,6 @@ function JoinForm() {
         watch={watch}
         formState={formState}
       />
-
       <Footer
         className="joinFormFooter"
         totalJoinFiatValue={totalJoinFiatValue}
@@ -114,4 +109,4 @@ function JoinForm() {
   )
 }
 
-export default memo(JoinForm)
+export default memo(BalancerJoinForm)

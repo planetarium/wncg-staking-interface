@@ -83,9 +83,8 @@ function RemoveLiquidityModalPage1({
     setTx,
   ])
 
-  const showTimer = (signature?.deadline ?? 0) > 0
-
   const disabled = !!tx.hash
+  const showTimer = (signature?.deadline ?? 0) > 0 && !disabled
 
   return (
     <StyledRemoveLiquidityModalPage1 $disabled={disabled}>

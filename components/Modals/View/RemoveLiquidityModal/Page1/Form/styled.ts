@@ -70,6 +70,15 @@ export const StyledRemoveLiquidityModalPageFormSummary = styled.div`
     font-weight: 700;
   }
 
+  .checkGroup {
+    ${flexbox('start')}
+    margin: 8px 0;
+
+    .checkbox {
+      margin-right: 8px;
+    }
+  }
+
   .content {
     padding: 20px 24px;
     margin-top: 4px;

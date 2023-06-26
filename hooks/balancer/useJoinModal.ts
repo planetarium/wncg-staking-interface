@@ -4,22 +4,32 @@ import { useSetAtom } from 'jotai'
 import { showPoolAtom } from 'states/ui'
 import { ModalType } from 'config/constants'
 import { bnum } from 'utils/bnum'
-import { useAllowances, useModal, useResponsive, useStaking } from 'hooks'
+import {
+  useAllowances,
+  useChain,
+  useModal,
+  useResponsive,
+  useStaking,
+} from 'hooks'
+import { DEX_PROTOCOL_ADDRESS } from 'config/constants/addresses'
 
 export function useJoinModal(assets: Hash[], joinAmounts: string[]) {
   const allowanceOf = useAllowances()
+  const { chainId } = useChain()
   const { addModal } = useModal()
   const { isMobile } = useResponsive()
-  const { tokens, balancerGaugeAddress } = useStaking<'ethereum'>()
+  const { tokens } = useStaking<'ethereum'>()
+
+  const vaultAddress = DEX_PROTOCOL_ADDRESS[chainId]
 
   const setShowPool = useSetAtom(showPoolAtom)
 
   const shouldApprove = useMemo(
     () =>
       assets.filter((addr, i) => {
-        return bnum(allowanceOf(addr, balancerGaugeAddress)).lt(joinAmounts[i])
+        return bnum(allowanceOf(addr, vaultAddress)).lt(joinAmounts[i])
       }),
-    [allowanceOf, assets, balancerGaugeAddress, joinAmounts]
+    [allowanceOf, assets, joinAmounts, vaultAddress]
   )
 
   const tokensToApprove = useMemo(
@@ -36,7 +46,7 @@ export function useJoinModal(assets: Hash[], joinAmounts: string[]) {
   }) {
     if (isMobile) setShowPool(false)
 
-    const spender = balancerGaugeAddress
+    const spender = vaultAddress
 
     const joinModalConfig = {
       type: ModalType.Join,
@@ -70,7 +80,7 @@ export function useJoinModal(assets: Hash[], joinAmounts: string[]) {
           ? {
               type: ModalType.Approve,
               props: {
-                spender: balancerGaugeAddress,
+                spender,
                 spenderName,
                 buttonLabel,
                 toastLabel,
