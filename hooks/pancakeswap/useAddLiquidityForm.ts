@@ -14,8 +14,8 @@ import { AddLiquidityField } from 'config/constants'
 import { QUERY_KEYS } from 'config/constants/queryKeys'
 import { bnum } from 'utils/bnum'
 import { useAuth, useChain, useFiat, useStaking } from 'hooks'
-import { useAddLiquidityMath } from './useAddLiquidityMath'
 import { useAddLiquidity } from './useAddLiquidity'
+import { useAddLiquidityMath } from './useAddLiquidityMath'
 
 export type AddLiquidityFormElement = 'Optimize' | 'Max' | 'Input' | null
 

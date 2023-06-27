@@ -36,7 +36,7 @@ const types = {
 
 export function useSignature() {
   const { account } = useAuth()
-  const { chainId } = useChain()
+  const { chainId, dexProtocolAddress } = useChain()
   const { lpToken } = useStaking()
 
   const [currentTimestamp, setCurrentTimestamp] = useAtom(currentTimestampAtom)
@@ -72,7 +72,7 @@ export function useSignature() {
 
       const message = {
         owner: account!,
-        spender: DEX_PROTOCOL_ADDRESS[chainId],
+        spender: dexProtocolAddress,
         value: scaledLpAmountOut,
         nonce: nonce.toHexString(),
         deadline,
@@ -93,7 +93,14 @@ export function useSignature() {
         s: signature.s,
       }
     },
-    [lpTokenContract, account, lpToken.decimals, chainId, deadline, domain]
+    [
+      lpTokenContract,
+      account,
+      lpToken.decimals,
+      dexProtocolAddress,
+      deadline,
+      domain,
+    ]
   )
 
   useMount(() => {

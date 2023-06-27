@@ -6,7 +6,6 @@ import { useTransaction } from 'wagmi'
 import { useSetAtom } from 'jotai'
 
 import { harvestTxAtom } from 'states/tx'
-import { BAL_ADDRESS } from 'config/constants/addresses'
 import { parseTransferLogs } from 'utils/parseTransferLogs'
 import { txUrlFor } from 'utils/txUrlFor'
 import { useChain } from 'hooks'
@@ -22,8 +21,7 @@ type HarvestToastProps = Required<HarvestTx>
 
 export default function HarvestToast({ hash }: HarvestToastProps) {
   const [confirmed, setConfirmed] = useState(false)
-  const { chainId } = useChain()
-  const bal = BAL_ADDRESS[chainId] as Hash
+  const { balAddress, chainId } = useChain()
 
   const status = useWatch(hash)
 
@@ -39,7 +37,7 @@ export default function HarvestToast({ hash }: HarvestToastProps) {
         const { logs = [] } = (await tx?.wait()) ?? {}
 
         const parsedLogs = parseTransferLogs(logs)
-        const actualHarvestedAmount = parsedLogs?.[bal]
+        const actualHarvestedAmount = parsedLogs?.[balAddress!]
 
         if (actualHarvestedAmount) {
           setConfirmed(true)
@@ -68,7 +66,7 @@ export default function HarvestToast({ hash }: HarvestToastProps) {
           <div className="detailItem">
             <dt>
               <div className="token">
-                <TokenIcon address={bal} $dark $size={20} />
+                <TokenIcon address={balAddress!} $dark $size={20} />
               </div>
               BAL
             </dt>
@@ -81,7 +79,7 @@ export default function HarvestToast({ hash }: HarvestToastProps) {
       </div>
 
       <footer className="toastFooter">
-        <ImportToken address={bal} $size="sm" $variant="primary" />
+        <ImportToken address={balAddress!} $size="sm" $variant="primary" />
       </footer>
     </StyledToast>
   )

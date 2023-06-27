@@ -18,10 +18,6 @@ export default function Error({ code }: ErrorProps) {
   const router = useRouter()
   const { isHandheld } = useResponsive()
 
-  function goBack() {
-    router.back()
-  }
-
   const subtitle = useMemo(
     () => (code === 404 ? 'Page not found' : 'Internal server error'),
     [code]
@@ -60,12 +56,7 @@ export default function Error({ code }: ErrorProps) {
             }}
           />
 
-          <Button
-            className="mainButton"
-            onClick={goBack}
-            $contain
-            $size={$size}
-          >
+          <Button className="mainButton" href="/" $contain $size={$size}>
             Go to main
           </Button>
         </motion.div>

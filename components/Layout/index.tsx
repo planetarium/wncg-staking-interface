@@ -53,9 +53,9 @@ function Layout({ children }: PropsWithChildren) {
     <>
       <Head>{isRootPage ? <RootFavicon /> : <Favicon />}</Head>
       <StyledLayout layoutRoot $root={isRootPage}>
-        <Alerts />
+        {!isRootPage && <Alerts />}
 
-        <Gnb />
+        <Gnb isRootPage={isRootPage} />
 
         <StyledMain ref={mainRef} layout>
           {children}

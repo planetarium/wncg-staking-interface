@@ -9,6 +9,7 @@ import { ToastType } from 'config/constants'
 import { useChain } from './useChain'
 import { useSwitchNetwork } from './useSwitchNetwork'
 import { useToast } from './useToast'
+import { isEthereum } from 'utils/isEthereum'
 
 export function useHarvest() {
   const { chainId, stakingAddress } = useChain()
@@ -24,6 +25,7 @@ export function useHarvest() {
     chainId,
     functionName: 'earmarkRewards',
     onError: switchBeforeSend,
+    enabled: isEthereum(chainId),
   })
 
   const { writeAsync } = useContractWrite(writeConfig)

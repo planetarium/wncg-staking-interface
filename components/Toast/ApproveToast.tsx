@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useTransaction } from 'wagmi'
 import { useMount } from 'react-use'
 import Link from 'next/link'
@@ -6,7 +6,6 @@ import { useSetAtom } from 'jotai'
 import { RESET } from 'jotai/utils'
 
 import { approveTxAtom } from 'states/tx'
-import { parseLog } from 'utils/parseLog'
 import { txUrlFor } from 'utils/txUrlFor'
 import { useChain, useStaking } from 'hooks'
 import { useWatch } from './useWatch'
@@ -15,6 +14,7 @@ import { StyledToast } from './styled'
 import Icon from 'components/Icon'
 import TokenIcon from 'components/TokenIcon'
 import ToastStatus from './Status'
+import { isEthereum } from 'utils/isEthereum'
 
 type ApproveToastProps = {
   hash: Hash
@@ -31,7 +31,7 @@ export default function ApproveToast({
   const [pending, setPending] = useState<boolean | null>(null)
 
   const { chainId } = useChain()
-  const { tokens } = useStaking()
+  const { lpToken, tokens } = useStaking()
 
   const setTx = useSetAtom(approveTxAtom)
 
@@ -44,25 +44,18 @@ export default function ApproveToast({
     chainId,
     enabled: !!hash,
     suspense: false,
-    async onSuccess(tx) {
-      try {
-        const { logs = [] } = (await tx?.wait()) ?? {}
-        const approvalLog = logs
-          .map((l) => parseLog(l))
-          .find((l) => l?.name === 'Approval')
-
-        console.log('approvalLog', approvalLog)
-
-        const allowance = approvalLog?.args?.value?.toString() ?? '0'
-
-        if (allowance != null) {
-          setPending(true)
-        }
-      } catch {}
+    async onSuccess() {
+      setPending(true)
     },
   })
 
-  const symbol = tokens[tokenAddress]?.symbol ?? ''
+  const symbol = useMemo(
+    () =>
+      tokenAddress === lpToken.address && isEthereum(chainId)
+        ? lpToken.name
+        : tokens[tokenAddress]?.symbol,
+    [chainId, lpToken.address, lpToken.name, tokenAddress, tokens]
+  )
 
   return (
     <StyledToast>

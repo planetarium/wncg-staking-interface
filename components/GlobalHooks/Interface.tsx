@@ -1,6 +1,6 @@
-import { memo, useEffect } from 'react'
+import { memo } from 'react'
 import { useInterval, useMount } from 'react-use'
-import { useAtom, useSetAtom } from 'jotai'
+import { useSetAtom } from 'jotai'
 
 import { currentTimestampAtom } from 'states/system'
 

@@ -11,6 +11,8 @@ const GAP_DESKTOP = 160
 const ERROR_CONTAINER_MAX_WIDTH_TABLET = 560
 
 export const StyledErrorPage = styled(motion.main)`
+  background-color: var(--primary-900);
+
   .container {
     max-width: ${ERROR_CONTAINER_MAX_WIDTH_TABLET + GUTTER_TABLET * 2}px;
   }

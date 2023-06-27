@@ -1,11 +1,11 @@
-import config from 'config'
-import { useModal, useSwitchNetwork } from 'hooks'
+import { useChain, useModal, useSwitchNetwork } from 'hooks'
 
 import { StyledSwitchNetworkModal } from './styled'
 import Button from 'components/Button'
 
 function SwitchNetworkModal() {
   const { removeModal } = useModal()
+  const { name: networkName } = useChain()
   const { switchNetwork: initSwitchNetwork } = useSwitchNetwork()
 
   function switchNetwork() {
@@ -19,7 +19,7 @@ function SwitchNetworkModal() {
         <h1 className="title">
           You must switch to
           <br />
-          {config.network.name} to use <br />
+          {networkName} to use <br />
           this protocol.
         </h1>
       </header>

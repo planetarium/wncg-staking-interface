@@ -1,11 +1,9 @@
 import { MouseEvent, useState } from 'react'
 import CopyToClipboard from 'react-copy-to-clipboard'
 import Link from 'next/link'
-import { useAtomValue } from 'jotai'
 import { AnimatePresence, motion } from 'framer-motion'
 import clsx from 'clsx'
 
-import { currentChainAtom } from 'states/system'
 import { ANIMATION_MAP, EXIT_MOTION } from 'config/constants/motions'
 import { explorerUrlFor } from 'utils/explorerUrlFor'
 import { truncateAddress } from 'utils/truncateAddress'
@@ -24,15 +22,13 @@ export default function SidebarAccount({ closeSidebar }: SidebarAccountProps) {
   const [show, setShow] = useState(false)
 
   const { account, connector, isConnected } = useAuth()
-  const { chainId } = useChain()
+  const { chainId, shortName } = useChain()
 
   const { openConnectModal } = useConnect()
   const { onCopy, copied } = useCopy()
   const disconnect = useDisconnect({
     onSuccess: closeSidebar,
   })
-
-  const chain = useAtomValue(currentChainAtom)
 
   function toggle() {
     setShow((prev) => !prev)
@@ -102,7 +98,7 @@ export default function SidebarAccount({ closeSidebar }: SidebarAccountProps) {
                 <dt>Network</dt>
                 <dd>
                   <span className="dot" aria-hidden />
-                  {chain?.name}
+                  {shortName}
                 </dd>
               </div>
 

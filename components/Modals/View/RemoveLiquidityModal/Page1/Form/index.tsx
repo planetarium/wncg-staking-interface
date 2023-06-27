@@ -1,7 +1,7 @@
 import { Control as ReactHookFormControl, FieldValues } from 'react-hook-form'
 import { useAtomValue } from 'jotai'
 
-import { exitTxAtom } from 'states/tx'
+import { removeLiquidityTxAtom } from 'states/tx'
 import { RemoveLiquidityField } from 'config/constants'
 import { useBalances, useStaking } from 'hooks'
 import { UseRemoveLiquidityFormReturns } from 'hooks/pancakeswap/useRemoveLiquidityForm'
@@ -36,7 +36,7 @@ export default function RemoveLiquidityModalPage1Form(
   const { lpToken } = useStaking()
 
   const lpBalance = balanceOf(lpToken?.address)
-  const tx = useAtomValue(exitTxAtom)
+  const tx = useAtomValue(removeLiquidityTxAtom)
 
   const disabled = !!tx?.hash
 
@@ -89,6 +89,7 @@ export default function RemoveLiquidityModalPage1Form(
         amountsOutFiatValue={amountsOutFiatValue}
         isNative={isNative}
         setValue={setValue}
+        disabled={disabled}
       />
     </StyledRemoveLiquidityModalPage1Form>
   )

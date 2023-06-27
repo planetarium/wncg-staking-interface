@@ -8,6 +8,7 @@ export { getStaticProps } from 'lib/getStaticProps'
 
 import { StyledDocsPage } from 'styles/pages/docs'
 import Favicon from 'components/Favicon'
+import GlobalHooks from 'components/GlobalHooks'
 
 const Terms: NextPage = () => {
   return (
@@ -231,8 +232,8 @@ const Terms: NextPage = () => {
             Agreement from time to time. If we make any modifications, we will
             notify you by updating the date at the top of the Agreement and by
             maintaining a current version of the Agreement at 
-            <Link href="/wncg/terms">
-              https://stake.nine-chronicles.com/wncg/terms
+            <Link href="/docs/terms">
+              https://stake.nine-chronicles.com/docs/terms
             </Link>
             . All modifications will be effective when they are posted, and your
             continued use of the Interface will serve as confirmation of your
@@ -742,6 +743,8 @@ const Terms: NextPage = () => {
           </p>
         </section>
       </div>
+
+      <GlobalHooks />
     </StyledDocsPage>
   )
 }

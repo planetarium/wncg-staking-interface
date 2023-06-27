@@ -1,5 +1,3 @@
-import { CHAINS } from 'config/chains'
-
 class ConfigService {
   get assetPlatform() {
     return process.env.NEXT_PUBLIC_ASSET_PLATFORM ?? 'ethereum'
@@ -13,24 +11,6 @@ class ConfigService {
     return process.env.NEXT_PUBLIC_BASE_URL ?? 'http://localhost:3000'
   }
 
-  get blockExplorerName() {
-    return this.network.explorerName
-  }
-
-  get blockExplorerUrl() {
-    return this.network.explorer
-  }
-
-  get chainId() {
-    return (Number(process.env.NEXT_PUBLIC_CHAIN_ID) ?? 1) as ChainId
-  }
-
-  get dexPlatformName() {
-    return this.network.nativeCurrency.symbol === 'ETH'
-      ? 'Balancer'
-      : 'PancakeSwap'
-  }
-
   get domain() {
     return 'stake.nine-chronicles.com'
   }
@@ -39,8 +19,8 @@ class ConfigService {
     return {
       notion:
         'https://planetarium.notion.site/WNCG-Staking-Docs-04317420d2d647ee82f2f1364358c5a9',
-      terms: 'https://stake.nine-chronicles.com/wncg/terms',
-      privacy: 'https://stake.nine-chronicles.com/wncg/privacy',
+      terms: 'https://stake.nine-chronicles.com/docs/terms',
+      privacy: 'https://stake.nine-chronicles.com/docs/privacy',
       auditReport:
         'https://github.com/planetarium/staking_contract_wncg_eth/blob/main/audit/%5BTheori%5D%20Planetarium%20WNCG%20Staking%20Protocol%20Security%20Audit%20Final%20Report.pdf',
     }
@@ -86,46 +66,8 @@ class ConfigService {
     }
   }
 
-  get nativeCurrency() {
-    return {
-      ...this.network.nativeCurrency,
-      address: this.network.nativeCurrency.address?.toLowerCase() as Hash,
-    }
-  }
-
-  get network() {
-    return CHAINS[this.chainId]
-  }
-
-  get poolId() {
-    return (
-      process.env.NEXT_PUBLIC_BALANCER_POOL_ID ||
-      '0xe8cc7e765647625b95f59c15848379d10b9ab4af0002000000000000000001de'
-    )
-  }
-
   get siteUrl() {
     return 'https://stake.nine-chronicles.com'
-  }
-
-  get stakingAddress() {
-    return (
-      process.env.NEXT_PUBLIC_STAKING_ADDRESS ??
-      '0xc53b567A70dB04E928FB96D6A417971aa88fdA38'
-    ) // Mainnet
-      .toLowerCase() as Hash
-  }
-
-  get subgraph() {
-    return this.network.subgraph
-  }
-
-  get wrapped() {
-    return '0x'
-  }
-
-  get version() {
-    return process.env.NEXT_PUBLIC_VERSION ?? 'v2.0.0'
   }
 
   get walletConnectProjectId() {

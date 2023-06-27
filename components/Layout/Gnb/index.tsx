@@ -1,12 +1,11 @@
-import { useRouter } from 'next/router'
-
 import RootGnb from './Root'
 import MainGnb from './Main'
 
-export default function Gnb() {
-  const { pathname } = useRouter()
-  const isRootPage = pathname === '/'
+type GnbProps = {
+  isRootPage: boolean
+}
 
+export default function Gnb({ isRootPage }: GnbProps) {
   if (isRootPage) return <RootGnb />
   return <MainGnb />
 }

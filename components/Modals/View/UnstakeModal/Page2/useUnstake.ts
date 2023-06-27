@@ -4,24 +4,27 @@ import { useContractWrite, usePrepareContractWrite } from 'wagmi'
 
 import { StakingEthereumAbi } from 'config/abi'
 import { bnum } from 'utils/bnum'
-import { safeBigNumber } from 'utils/safeBigNumber'
 import { useAuth, useChain, useStaking, useSwitchNetwork } from 'hooks'
 
 export function useUnstake(unstakeAmount: string, checked: boolean) {
-  const { account } = useAuth()
+  const { account, isConnected } = useAuth()
   const { chainId, stakingAddress } = useChain()
   const { lpToken } = useStaking()
 
   const { switchBeforeSend } = useSwitchNetwork()
 
-  const scaledUnstakeAmount = safeBigNumber(
-    parseUnits(bnum(unstakeAmount).toString(), lpToken.decimals).toString()
+  const scaledUnstakeAmount = parseUnits(
+    bnum(unstakeAmount).toString(),
+    lpToken.decimals
   ).toString()
 
   const enabled =
-    !!account && bnum(unstakeAmount).gt(0) && !bnum(unstakeAmount).isNaN()
+    !!account &&
+    !!isConnected &&
+    bnum(unstakeAmount).gt(0) &&
+    !bnum(unstakeAmount).isNaN()
 
-  const { config: writeConfig } = usePrepareContractWrite({
+  const { config } = usePrepareContractWrite({
     address: stakingAddress,
     chainId,
     abi: StakingEthereumAbi,
@@ -33,7 +36,7 @@ export function useUnstake(unstakeAmount: string, checked: boolean) {
       if (error.reason === 'execution reverted: NOT_ENOUGH_BALANCE') return
     },
   })
-  const { writeAsync } = useContractWrite(writeConfig)
+  const { writeAsync } = useContractWrite(config)
 
   const unstake = useCallback(async () => {
     try {

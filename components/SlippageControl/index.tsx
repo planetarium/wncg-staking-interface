@@ -44,7 +44,7 @@ function SlippageControl({ className, disabled }: SlippageControlProps) {
         show={show}
         toggle={toggle}
         value={slippage}
-        disabled={!isConnected}
+        disabled={disabled || !isConnected}
       />
 
       <AnimatePresence>

@@ -60,9 +60,27 @@ export const StyledToast = styled.aside`
     }
   }
 
+  .detailList {
+    ${flexbox('start', 'start')}
+    flex-direction: column;
+
+    &.reverse {
+      flex-direction: column-reverse;
+
+      .detailItem {
+        margin-top: 8px;
+
+        &:last-child {
+          margin-top: 0;
+        }
+      }
+    }
+  }
+
   .detailItem {
     ${flexbox('between', 'start')}
     ${textStyle('body', 3, 700)}
+    width: 100%;
     margin-top: 8px;
     color: var(--gray-600);
     white-space: nowrap;

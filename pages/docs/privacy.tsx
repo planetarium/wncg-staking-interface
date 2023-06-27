@@ -7,6 +7,7 @@ export { getStaticProps } from 'lib/getStaticProps'
 
 import { StyledDocsPage } from 'styles/pages/docs'
 import Favicon from 'components/Favicon'
+import GlobalHooks from 'components/GlobalHooks'
 
 const Privacy: NextPage = () => {
   return (
@@ -805,6 +806,8 @@ const Privacy: NextPage = () => {
           The latest update date: <time dateTime="2022-06">June, 2022.</time>
         </p>
       </div>
+
+      <GlobalHooks />
     </StyledDocsPage>
   )
 }

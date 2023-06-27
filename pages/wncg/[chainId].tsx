@@ -1,9 +1,7 @@
-import { startTransition } from 'react'
+import { useMount } from 'react-use'
 import type { NextPage } from 'next'
-import { useRouter } from 'next/router'
 import dynamic from 'next/dynamic'
 import { useSetAtom } from 'jotai'
-import { useMount } from 'react-use'
 import Head from 'next/head'
 import { NextSeo } from 'next-seo'
 
@@ -18,27 +16,15 @@ import GlobalHooks from 'components/GlobalHooks'
 import Suspense from 'components/Suspense'
 import Stake from 'components/staking/Stake'
 
-import { chainIdAtom } from 'states/system'
-
 const Dashboard = dynamic(() => import('components/staking/Dashboard'), {
   suspense: true,
 })
 
-const WncgStaking: NextPage = () => {
-  const router = useRouter()
-  const setChainId = useSetAtom(chainIdAtom)
+type WncgStakingProps = {
+  chainId: ChainId
+}
 
-  useMount(() => {
-    const pathArr = router.asPath.split('/')
-    const chainId = Number(pathArr[pathArr.length - 1])
-
-    if (chainId > 0) {
-      startTransition(() => {
-        setChainId(chainId as ChainId)
-      })
-    }
-  })
-
+const WncgStaking: NextPage<WncgStakingProps> = ({ chainId }) => {
   return (
     <>
       <NextSeo {...STAKING_SEO} />

@@ -1,21 +1,29 @@
-import { useRouter } from 'next/router'
-
 import { CHAINS, ChainId } from 'config/chains'
+import {
+  BAL_ADDRESS,
+  DEX_PROTOCOL_ADDRESS,
+  STAKING_ADDRESS,
+} from 'config/constants/addresses'
 import { DEX } from 'config/constants/dex'
-import { STAKING_ADDRESS } from 'config/constants/addresses'
-import { useAtomValue } from 'jotai'
-import { chainIdAtom } from 'states/system'
+
+import { useChainContext } from 'components/ChainProvider'
 
 export function useChain() {
-  const chainId = useAtomValue(chainIdAtom)
+  const { chainId, setChainId } = useChainContext()
 
-  const chain = CHAINS[chainId]
-  const dex = DEX[chainId]
-  const stakingAddress = STAKING_ADDRESS[chainId]
+  const chain = CHAINS[chainId ?? ChainId.ETHEREUM]
+  const dex = DEX[chainId ?? ChainId.ETHEREUM]
+  const stakingAddress = STAKING_ADDRESS[chainId ?? ChainId.ETHEREUM]
+  const dexProtocolAddress = DEX_PROTOCOL_ADDRESS[chainId ?? ChainId.ETHEREUM]
+
+  const balAddress = BAL_ADDRESS[chainId ?? ChainId.ETHEREUM]
 
   return {
     ...chain,
     ...dex,
+    setChainId,
+    balAddress,
     stakingAddress,
+    dexProtocolAddress,
   }
 }

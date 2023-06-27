@@ -1,17 +1,19 @@
 import { memo } from 'react'
+import dynamic from 'next/dynamic'
+
+import { useChain } from 'hooks'
 
 import { StyledStakingDashboard } from './styled'
 import Image from 'components/Image'
 import Suspense from 'components/Suspense'
-// import Apr from './Apr'
 import Fallback from './Fallback'
-import dynamic from 'next/dynamic'
 
 const Apr = dynamic(() => import('./Apr'), {
   ssr: false,
 })
 
 function StakingDashboard() {
+  const { chainId } = useChain()
   return (
     <StyledStakingDashboard>
       <div className="imageContainer">

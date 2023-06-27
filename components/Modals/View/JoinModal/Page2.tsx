@@ -1,16 +1,13 @@
-import { memo, useState } from 'react'
+import { memo } from 'react'
 import { useAtomValue, useSetAtom } from 'jotai'
-import { useTransaction } from 'wagmi'
 import { motion } from 'framer-motion'
 
 import { joinTxAtom } from 'states/tx'
 import { showPoolAtom } from 'states/ui'
 import { ANIMATION_MAP, MOTION } from 'config/constants/motions'
 import { bnum } from 'utils/bnum'
-import { formatUnits } from 'utils/formatUnits'
-import { parseTransferLogs } from 'utils/parseTransferLogs'
-
-import { useChain, useFiat, useModal, useStaking } from 'hooks'
+import { useFiat, useModal, useStaking } from 'hooks'
+import { receivedLpAmountAtom } from './useWatch'
 
 import { StyledJoinModalPage2 } from './styled'
 import Button from 'components/Button'
@@ -19,21 +16,20 @@ import Lottie from 'components/Lottie'
 import NumberFormat from 'components/NumberFormat'
 
 function JoinModalPage2() {
-  const [amount, setAmount] = useState<string | null>(null)
+  const receivedLpAmount = useAtomValue(receivedLpAmountAtom)
 
-  const { chainId } = useChain()
   const toFiat = useFiat()
   const { removeModal } = useModal()
   const { lpToken } = useStaking()
 
-  const { hash, lpBalance = '0' } = useAtomValue(joinTxAtom)
+  const { lpBalance = '0' } = useAtomValue(joinTxAtom)
   const setShowPool = useSetAtom(showPoolAtom)
 
-  const amountInFiatValue = toFiat(amount ?? 0, lpToken.address)
+  const amountInFiatValue = toFiat(receivedLpAmount ?? 0, lpToken.address)
   const hadLpBalanceBefore = bnum(lpBalance).gt(0)
   const lpTokenBalanceInFiatValue = toFiat(lpBalance, lpToken.address)
 
-  const totalLpTokenBalance = bnum(amount ?? 0)
+  const totalLpTokenBalance = bnum(receivedLpAmount ?? 0)
     .plus(lpBalance)
     .toString()
   const totalLpTokenBalanceInFiatValue = toFiat(
@@ -49,22 +45,6 @@ function JoinModalPage2() {
     setShowPool(false)
     removeModal()
   }
-
-  useTransaction({
-    chainId,
-    hash,
-    enabled: !!hash,
-    async onSuccess(tx) {
-      const { logs } = await tx.wait()
-
-      const parsedLogs = parseTransferLogs(logs)
-      const claimed = parsedLogs?.[lpToken.address]
-
-      if (claimed) {
-        setAmount(formatUnits(claimed, lpToken.decimals))
-      }
-    },
-  })
 
   return (
     <StyledJoinModalPage2>
@@ -94,7 +74,7 @@ function JoinModalPage2() {
               </div>
             )}
 
-            {amount && (
+            {receivedLpAmount && (
               <motion.div
                 {...MOTION}
                 className="detailItem accent"
@@ -103,7 +83,7 @@ function JoinModalPage2() {
                 <dt>Received LP tokens</dt>
 
                 <dd>
-                  <NumberFormat value={amount} plus decimals={8} />
+                  <NumberFormat value={receivedLpAmount} plus decimals={8} />
                   <span className="fiatValue">
                     <NumberFormat
                       value={amountInFiatValue}

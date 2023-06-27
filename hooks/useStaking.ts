@@ -1,8 +1,9 @@
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useAtomValue } from 'jotai'
 
 import { QUERY_KEYS } from 'config/constants/queryKeys'
-import { useChain } from './useChain'
 import { build } from 'lib/queries/build'
+import { useChain } from './useChain'
 
 type UseStakingReturnBsc = LiquidityPool &
   BscStaking & {
@@ -23,10 +24,21 @@ type UseStakingReturn<T extends 'ethereum'> = T extends 'ethereum'
 export function useStaking<T extends 'ethereum'>() {
   const { chainId } = useChain()
 
-  const { data } = useQuery([QUERY_KEYS.Build, chainId], () => build(chainId), {
-    staleTime: Infinity,
-    cacheTime: Infinity,
-  })
+  const initialData = useQueryClient().getQueryData<any>([
+    QUERY_KEYS.Build,
+    chainId,
+  ])
+
+  const { data } = useQuery(
+    [QUERY_KEYS.Build, chainId],
+    () => build(chainId!),
+    {
+      staleTime: Infinity,
+      cacheTime: Infinity,
+      enabled: !!chainId,
+      initialData,
+    }
+  )
 
   return {
     ...data?.pool,

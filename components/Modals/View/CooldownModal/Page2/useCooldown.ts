@@ -1,23 +1,30 @@
 import { useCallback } from 'react'
 import { useContractWrite, usePrepareContractWrite } from 'wagmi'
 
-import { StakingEthereumAbi } from 'config/abi'
+import { StakingBscAbi, StakingEthereumAbi } from 'config/abi'
+import { bnum } from 'utils/bnum'
+import { isEthereum } from 'utils/isEthereum'
 import { useAuth, useChain, useSwitchNetwork } from 'hooks'
+import { useFetchUserData } from 'hooks/queries'
 
 export function useCooldown() {
-  const { account } = useAuth()
+  const { account, isConnected } = useAuth()
   const { chainId, stakingAddress } = useChain()
   const { switchBeforeSend } = useSwitchNetwork()
 
-  const { config: writeConfig } = usePrepareContractWrite({
+  const { stakedTokenBalance = '0' } = useFetchUserData().data ?? {}
+
+  const enabled = !!account && !!isConnected && bnum(stakedTokenBalance).gt(0)
+
+  const { config } = usePrepareContractWrite({
     address: stakingAddress,
-    abi: StakingEthereumAbi,
+    abi: isEthereum(chainId) ? StakingEthereumAbi : StakingBscAbi,
     chainId,
     functionName: 'cooldown',
-    enabled: !!account,
+    enabled,
     onError: switchBeforeSend,
   })
-  const { writeAsync } = useContractWrite(writeConfig)
+  const { writeAsync } = useContractWrite(config)
 
   const cooldown = useCallback(async () => {
     try {

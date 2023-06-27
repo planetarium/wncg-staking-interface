@@ -15,14 +15,13 @@ import {
 
 export function useAddLiquidityModal(assets: Hash[], amountsIn: string[]) {
   const allowanceOf = useAllowances()
-  const { chainId, nativeCurrency } = useChain()
+  const { dexProtocolAddress, nativeCurrency } = useChain()
   const { addModal } = useModal()
   const { isMobile } = useResponsive()
   const { tokens, shouldReversePoolTokenOrderOnDisplay } = useStaking()
 
   const setShowPool = useSetAtom(showPoolAtom)
-
-  const spender = DEX_PROTOCOL_ADDRESS[chainId]!
+  const spender = dexProtocolAddress
 
   const tokensToApprove = useMemo(() => {
     const list = assets

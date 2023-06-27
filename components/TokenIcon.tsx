@@ -2,7 +2,6 @@ import { memo, useMemo } from 'react'
 import { nanoid } from 'nanoid'
 import clsx from 'clsx'
 
-import { BAL_ADDRESS } from 'config/constants/addresses'
 import { useChain, useStaking } from 'hooks'
 import { isEthereum } from 'utils/isEthereum'
 
@@ -20,7 +19,7 @@ type TokenIconProps = {
 }
 
 function TokenFragment({ address, $size = 24, $dark }: TokenIconProps) {
-  const { chainId, nativeCurrency } = useChain()
+  const { balAddress, chainId, nativeCurrency } = useChain()
   const { rewardTokenAddresses, tokens } = useStaking()
 
   const token = useMemo(() => tokens?.[address] ?? {}, [address, tokens])
@@ -38,7 +37,7 @@ function TokenFragment({ address, $size = 24, $dark }: TokenIconProps) {
       case token.symbol === 'WNCG':
         return <CryptoIcon icon="wncg" $size={$size} />
 
-      case address === BAL_ADDRESS[chainId]:
+      case address === balAddress:
         return (
           <CryptoIcon
             icon={$dark ? 'balancerDark' : 'balancer'}
@@ -60,9 +59,10 @@ function TokenFragment({ address, $size = 24, $dark }: TokenIconProps) {
     $dark,
     $size,
     address,
+    balAddress,
     chainId,
-    nativeCurrency?.address,
-    nativeCurrency?.wrappedTokenAddress,
+    nativeCurrency.address,
+    nativeCurrency.wrappedTokenAddress,
     rewardTokenAddresses,
     token,
   ])

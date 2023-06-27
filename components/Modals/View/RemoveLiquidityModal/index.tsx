@@ -35,6 +35,7 @@ function RemoveLiquidityModal() {
   const setSlippage = useSetAtom(slippageAtom)
   const tx = useAtomValue(removeLiquidityTxAtom)
 
+  const hash = tx.hash
   const assets = tx.assets ?? _assets
   const amountsOut = tx.amountsOut ?? _amountsOut
   const amountsOutFiatValueSum =
@@ -58,12 +59,12 @@ function RemoveLiquidityModal() {
     refetch()
     setSlippage(null)
 
-    if (tx.hash) {
+    if (hash) {
       toast<RemoveLiquidityTx>({
         type: ToastType.RemoveLiquidity,
         props: {
           assets,
-          hash: tx.hash,
+          hash,
           amountsOut,
           amountsOutFiatValueSum,
           isNative,

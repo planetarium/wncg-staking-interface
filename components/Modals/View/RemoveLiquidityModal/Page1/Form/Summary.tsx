@@ -18,6 +18,7 @@ type RemoveLiquidityModalPageFormSummaryProps = {
   amountsOutFiatValue: string[]
   isNative: boolean
   setValue: UseFormSetValue<RemoveLiquidityForm>
+  disabled: boolean
 }
 
 export default function RemoveLiquidityModalPageFormSummary({
@@ -26,6 +27,7 @@ export default function RemoveLiquidityModalPageFormSummary({
   amountsOutFiatValue,
   isNative,
   setValue,
+  disabled,
 }: RemoveLiquidityModalPageFormSummaryProps) {
   const { nativeCurrency } = useChain()
   const toFiat = useFiat()
@@ -57,6 +59,7 @@ export default function RemoveLiquidityModalPageFormSummary({
               name={RemoveLiquidityField.UseNative}
               onChange={onClickCheckbox}
               value={1}
+              disabled={disabled}
             />
             <label className="text" htmlFor="isNativeTrue">
               {nativeCurrency.symbol}
@@ -69,6 +72,7 @@ export default function RemoveLiquidityModalPageFormSummary({
               name={RemoveLiquidityField.UseNative}
               onChange={onClickCheckbox}
               value={0}
+              disabled={disabled}
             />
             <label className="text" htmlFor="isNativeFalse">
               {tokens?.[nativeCurrency.wrappedTokenAddress]?.symbol}

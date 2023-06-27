@@ -249,7 +249,6 @@ export const StyledWalletSingleRewards = styled.dl`
       }
 
       .symbol {
-        margin-right: 8px;
         font-weight: 700;
         color: rgba(var(--white-rgb), 0.6);
       }

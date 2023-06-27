@@ -6,77 +6,84 @@ import { LIQUIDITY_POOL_PLACEHOLDER } from 'config/constants/placeholders'
 import { QUERY_KEYS } from 'config/constants/queryKeys'
 import { getQueryString } from 'utils/getQueryString'
 import { build } from 'lib/queries/build'
-import { fetchPrices } from 'lib/queries/fetchPrices'
 import { fetchPool } from 'lib/queries/fetchPool'
 import { fetchPoolSnapshot } from 'lib/queries/fetchPoolSnapshot'
+import { fetchPrices } from 'lib/queries/fetchPrices'
 import { fetchStaking } from 'lib/queries/fetchStaking'
 
-export async function getStaticProps({ params }: GetStaticPropsContext) {
+export async function getStaticProps(ctx: GetStaticPropsContext) {
   const queryClient = new QueryClient()
 
-  const _chainId = getQueryString(params?.chainId)
+  const _chainId = getQueryString(ctx?.params?.chainId)
   const chainId = Math.max(Number(_chainId), ChainId.ETHEREUM) as ChainId
 
-  const {
-    pool = LIQUIDITY_POOL_PLACEHOLDER,
-    staking = {
-      rewardTokenAddresses: [],
-    },
-  } = (await build(chainId)) ?? {}
+  try {
+    const {
+      pool = LIQUIDITY_POOL_PLACEHOLDER,
+      staking = {
+        rewardTokenAddresses: [],
+      },
+    } = (await build(chainId)) ?? {}
 
-  await queryClient.prefetchQuery(
-    [QUERY_KEYS.Build, chainId],
-    () => build(chainId),
-    {
-      staleTime: Infinity,
-      cacheTime: Infinity,
+    await queryClient.prefetchQuery(
+      [QUERY_KEYS.Build, chainId],
+      () => build(chainId),
+      {
+        staleTime: Infinity,
+        cacheTime: Infinity,
+      }
+    )
+
+    await queryClient.prefetchQuery(
+      [QUERY_KEYS.Pool.Data, chainId],
+      () => fetchPool(chainId),
+      {
+        staleTime: Infinity,
+        cacheTime: Infinity,
+      }
+    )
+
+    await queryClient.prefetchQuery(
+      [QUERY_KEYS.Staking.Data, chainId],
+      () => fetchStaking(chainId),
+      {
+        staleTime: Infinity,
+        cacheTime: Infinity,
+      }
+    )
+
+    await queryClient.prefetchQuery(
+      [QUERY_KEYS.Staking.Prices, chainId],
+      () =>
+        fetchPrices(chainId, [
+          ...pool?.poolTokenAddresses,
+          ...staking?.rewardTokenAddresses,
+        ]),
+      {
+        staleTime: Infinity,
+        cacheTime: Infinity,
+      }
+    )
+
+    await queryClient.prefetchQuery<PoolSnapshotResponse>(
+      [QUERY_KEYS.Pool.Snapshot, chainId],
+      () => fetchPoolSnapshot(chainId),
+      {
+        staleTime: Infinity,
+        cacheTime: Infinity,
+      }
+    )
+
+    return {
+      props: {
+        dehydratedState: dehydrate(queryClient),
+        chainId,
+      },
+      revalidate: 60 * 60 * 24, // 1 day
     }
-  )
-
-  await queryClient.prefetchQuery(
-    [QUERY_KEYS.Pool.Data, chainId],
-    () => fetchPool(chainId),
-    {
-      staleTime: Infinity,
-      cacheTime: Infinity,
+  } catch (error) {
+    return {
+      notFound: true,
     }
-  )
-
-  await queryClient.prefetchQuery(
-    [QUERY_KEYS.Staking.Data, chainId],
-    () => fetchStaking(chainId),
-    {
-      staleTime: Infinity,
-      cacheTime: Infinity,
-    }
-  )
-
-  await queryClient.prefetchQuery(
-    [QUERY_KEYS.Staking.Prices, chainId],
-    () =>
-      fetchPrices(chainId, [
-        ...pool?.poolTokenAddresses,
-        ...staking?.rewardTokenAddresses,
-      ]),
-    {
-      staleTime: Infinity,
-      cacheTime: Infinity,
-    }
-  )
-
-  await queryClient.prefetchQuery<PoolSnapshotResponse>(
-    [QUERY_KEYS.Pool.Snapshot, chainId],
-    () => fetchPoolSnapshot(chainId),
-    {
-      staleTime: Infinity,
-      cacheTime: Infinity,
-    }
-  )
-
-  return {
-    props: {
-      dehydratedState: dehydrate(queryClient),
-    },
-    revalidate: 60 * 60 * 24, // 1 day
   }
 }

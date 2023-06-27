@@ -22,6 +22,7 @@ import wagmiClient from 'lib/wagmi/client'
 import GlobalStyle from 'styles/GlobalStyle'
 import ToastStyle from 'styles/ToastStyle'
 
+import { ChainContextProvider } from 'components/ChainProvider'
 import ErrorBoundary from 'components/ErrorBoundary'
 import Layout from 'components/Layout'
 import ToastContainer from 'components/ToastContainer'
@@ -93,11 +94,13 @@ function MyApp({ Component, pageProps }: MyAppProps) {
                   <GlobalStyle />
                   <ToastStyle />
 
-                  <Layout>
-                    <Component {...pageProps} />
-                  </Layout>
+                  <ChainContextProvider pageProps={pageProps}>
+                    <Layout>
+                      <Component {...pageProps} />
+                    </Layout>
 
-                  <ToastContainer />
+                    <ToastContainer />
+                  </ChainContextProvider>
 
                   <ReactQueryDevtools />
                 </WagmiConfig>

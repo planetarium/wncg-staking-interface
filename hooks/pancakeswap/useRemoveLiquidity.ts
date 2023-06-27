@@ -4,7 +4,6 @@ import { useAtomValue } from 'jotai'
 
 import { slippageAtom } from 'states/system'
 import { PancakeRouterAbi } from 'config/abi'
-import { DEX_PROTOCOL_ADDRESS } from 'config/constants/addresses'
 import { bnum } from 'utils/bnum'
 import { calcSlippageAmount } from 'utils/calcSlippageAmount'
 import { parseUnits } from 'utils/parseUnits'
@@ -17,7 +16,7 @@ export function useRemoveLiquidity(
   signature?: Signature
 ) {
   const { account } = useAuth()
-  const { chainId } = useChain()
+  const { chainId, dexProtocolAddress } = useChain()
   const {
     lpToken,
     poolTokenAddresses,
@@ -76,7 +75,7 @@ export function useRemoveLiquidity(
   const enabled = bnum(lpAmountOut).gt(0) && !!signature
 
   const { config } = usePrepareContractWrite({
-    address: DEX_PROTOCOL_ADDRESS[chainId] as Hash,
+    address: dexProtocolAddress,
     abi: PancakeRouterAbi as any as NonPayableAbi[],
     args,
     chainId,

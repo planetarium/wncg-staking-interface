@@ -1,10 +1,9 @@
 import { memo } from 'react'
 
-import { useAccount, useNetwork } from 'hooks'
+import { useAccount } from 'hooks'
 
 function Web3Hook() {
   useAccount()
-  useNetwork()
 
   return null
 }

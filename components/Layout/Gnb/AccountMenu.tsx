@@ -1,10 +1,8 @@
 import { memo, useRef } from 'react'
 import CopyToClipboard from 'react-copy-to-clipboard'
 import Link from 'next/link'
-import { useAtomValue } from 'jotai'
 import clsx from 'clsx'
 
-import { currentChainAtom } from 'states/system'
 import {
   ANIMATION_MAP,
   EXIT_MOTION,
@@ -33,14 +31,12 @@ function AccountMenu({ closeMenu }: AccountMenuProps) {
   const menuRef = useRef<HTMLDivElement>(null)
 
   const { account, connector } = useAuth()
-  const { chainId } = useChain()
+  const { chainId, shortName } = useChain()
   const { onCopy, copied } = useCopy()
 
   const disconnect = useDisconnect({
     onSuccess: closeMenu,
   })
-
-  const chain = useAtomValue(currentChainAtom)
 
   useCloseOnBlur(menuRef, closeMenu)
 
@@ -85,7 +81,7 @@ function AccountMenu({ closeMenu }: AccountMenuProps) {
           <dt>Network</dt>
           <dd>
             <span className="dot" aria-hidden />
-            {chain?.name}
+            {shortName}
           </dd>
         </div>
         <div className="detailItem">

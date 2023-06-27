@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { useWaitForTransaction } from 'wagmi'
 import { useSetAtom } from 'jotai'
 import { RESET } from 'jotai/utils'
+import clsx from 'clsx'
 
 import { addLiquidityTxAtom } from 'states/tx'
 import { formatUnits } from 'utils/formatUnits'
@@ -30,7 +31,12 @@ export default function AddLiquidityToast({
 
   const { chainId } = useChain()
   const toFiat = useFiat()
-  const { lpToken, poolTokenDecimals, tokens } = useStaking()
+  const {
+    lpToken,
+    poolTokenDecimals,
+    shouldReversePoolTokenOrderOnDisplay,
+    tokens,
+  } = useStaking()
 
   const setTx = useSetAtom(addLiquidityTxAtom)
 
@@ -72,7 +78,11 @@ export default function AddLiquidityToast({
       </header>
 
       <div className="toastContent">
-        <dl className="detailList">
+        <dl
+          className={clsx('detailList', {
+            reverse: shouldReversePoolTokenOrderOnDisplay,
+          })}
+        >
           {actualAmountsIn.map((amt, i) => {
             const addr = assets[i]
             const fiatValue = toFiat(amt, addr)

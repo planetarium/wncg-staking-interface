@@ -86,6 +86,7 @@ function AddLiquidityForm() {
       <Arrow />
       <Summary
         active={!isEmpty}
+        assets={assets}
         amountsInFiatValueSum={amountsInFiatValueSum}
       />
       <footer className="joinFormFooter">

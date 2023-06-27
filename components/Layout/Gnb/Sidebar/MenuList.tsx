@@ -2,14 +2,13 @@ import { memo } from 'react'
 import Link from 'next/link'
 
 import config from 'config'
-import { STAKING_ADDRESS } from 'config/constants/addresses'
 import { explorerUrlFor } from 'utils/explorerUrlFor'
 import { useChain } from 'hooks'
 
 import { StyledSidebarMenuList } from './styled'
 
 function MenuList() {
-  const { chainId } = useChain()
+  const { chainId, stakingAddress } = useChain()
 
   return (
     <StyledSidebarMenuList>
@@ -27,7 +26,7 @@ function MenuList() {
 
       <li className="navItem">
         <Link
-          href={explorerUrlFor(chainId, STAKING_ADDRESS[chainId])}
+          href={explorerUrlFor(chainId, stakingAddress)}
           target="_blank"
           rel="noopener"
         >

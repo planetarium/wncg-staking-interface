@@ -1,9 +1,7 @@
 import { MouseEvent, useRef } from 'react'
-import { useAtom } from 'jotai'
 import { useRouter } from 'next/router'
 import clsx from 'clsx'
 
-import { chainIdAtom } from 'states/system'
 import { isEthereum } from 'utils/isEthereum'
 import {
   ANIMATION_MAP,
@@ -11,7 +9,7 @@ import {
   TRANSITION_MAP,
 } from 'config/constants/motions'
 import { getNetworkLabel } from 'utils/getNetworkLabel'
-import { useCloseOnBlur } from 'hooks'
+import { useChain, useCloseOnBlur } from 'hooks'
 
 import { StyledGnbChainSelectMenu } from './styled'
 import CryptoIcon from 'components/CryptoIcon'
@@ -25,10 +23,9 @@ export default function GnbChainSelectMenu({
   list,
   closeMenu,
 }: GnbChainSelectMenuProps) {
+  const { chainId, setChainId } = useChain()
   const menuRef = useRef<HTMLDivElement>(null)
   const router = useRouter()
-
-  const [chainId, setChainId] = useAtom(chainIdAtom)
 
   function onSelectChain(e: MouseEvent<HTMLButtonElement>) {
     const { value } = e.currentTarget
@@ -36,7 +33,9 @@ export default function GnbChainSelectMenu({
 
     if (newPathname !== router.pathname) {
       router.replace(router.pathname, `/wncg/${value}`, { shallow: true })
-      setChainId(Number(value) as ChainId)
+
+      const newChainId = Number(value) as ChainId
+      setChainId?.(newChainId)
     }
 
     closeMenu()

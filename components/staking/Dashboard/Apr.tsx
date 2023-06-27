@@ -4,7 +4,6 @@ import { useAtom, useAtomValue } from 'jotai'
 import clsx from 'clsx'
 
 import { isHarvestableAtom, showHarvestTooltipAtom } from 'states/system'
-import { BAL_ADDRESS } from 'config/constants/addresses'
 import { ANIMATION_MAP, EXIT_MOTION } from 'config/constants/motions'
 import { isEthereum } from 'utils/isEthereum'
 import { calcApr } from 'utils/calcApr'
@@ -21,7 +20,7 @@ import Harvest from './Harvest'
 function StakingDashboardApr() {
   const [show, setShow] = useAtom(showHarvestTooltipAtom)
 
-  const { chainId } = useChain()
+  const { balAddress, chainId } = useChain()
   const toFiat = useFiat()
   const harvest = useHarvest()
   const {
@@ -72,7 +71,7 @@ function StakingDashboardApr() {
 
         const { symbol } = tokens[addr]
 
-        const showShowHarvest = !!isHarvestable && addr === BAL_ADDRESS[chainId]
+        const showShowHarvest = !!isHarvestable && addr === balAddress
 
         return (
           <div

@@ -38,7 +38,6 @@ export function useWatch(send: (event: string) => void) {
           (arg, i) => formatUnits(arg, poolTokenDecimals[i])
         )
 
-        console.log(11111, actualAmountsOut)
         setActualAmountsOut(actualAmountsOut)
       }
 

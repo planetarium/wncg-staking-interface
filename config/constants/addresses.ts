@@ -26,7 +26,7 @@ export const WETH_ADDRESS: ChainMap<Hash> = {
 export const WNCG_ADDRESS: ChainMap<Hash> = {
   [ChainId.ETHEREUM]: '0xf203ca1769ca8e9e8fe1da9d147db68b6c919817',
   [ChainId.GOERLI]: '0xa488533be3018a0720c4c0647f407f3b41e6cb82',
-  [ChainId.BSC]: '0x',
+  [ChainId.BSC]: '0x52242cbab41e290e9e17ccc50cc437bb60020a9d',
   [ChainId.BSC_TESTNET]: '0x',
 }
 
@@ -35,13 +35,6 @@ export const BAL_ADDRESS: ChainMap<Hash | null> = {
   [ChainId.GOERLI]: '0xfa8449189744799ad2ace7e0ebac8bb7575eff47',
   [ChainId.BSC]: null,
   [ChainId.BSC_TESTNET]: null,
-}
-
-export const ZAP_ADDRESS: ChainMap<Hash | null> = {
-  [ChainId.ETHEREUM]: null,
-  [ChainId.GOERLI]: null,
-  [ChainId.BSC]: '0xd4c4a7c55c9f7b3c48bafb6e8643ba79f42418df',
-  [ChainId.BSC_TESTNET]: '0xd85835207054f25620109bdc745ec1d1f84f04e1',
 }
 
 export const NATIVE_CURRENCY_ADDRESS: Hash =

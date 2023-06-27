@@ -1,6 +1,5 @@
 import { MouseEvent, useCallback, useMemo } from 'react'
 
-import config from 'config'
 import { ConnectorId } from 'config/constants'
 import { isEthereum } from 'utils/isEthereum'
 import { useAuth, useChain, useStaking } from 'hooks'
@@ -11,7 +10,6 @@ import ConnectorIcon from './ConnectorIcon'
 type ImportTokenProps = {
   address: Hash
   className?: string
-  name?: string
   $variant?: ButtonVariant
   $size?: ButtonSize
   $contain?: boolean
@@ -19,7 +17,6 @@ type ImportTokenProps = {
 
 export default function ImportToken({
   address,
-  name,
   className,
   $variant = 'tertiary',
   $size = 'md',

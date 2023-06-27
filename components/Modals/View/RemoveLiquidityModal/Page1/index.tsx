@@ -48,10 +48,11 @@ function RemoveLiquidityModalPage1({
     if (!removeLiquidity) return
 
     try {
-      const txHash = await removeLiquidity()
-      if (txHash) {
+      const hash = await removeLiquidity?.()
+
+      if (hash) {
         setTx({
-          hash: txHash,
+          hash,
           amountsOut,
           amountsOutFiatValueSum,
           pcntOut,

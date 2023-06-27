@@ -50,6 +50,7 @@ export default function PancakeSwapPoolMobileContent(
           <Form {...props} />
           <Arrow />
           <Summary
+            assets={assets}
             active={!isEmpty}
             amountsInFiatValueSum={amountsInFiatValueSum}
           />

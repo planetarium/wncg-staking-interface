@@ -8,8 +8,8 @@ import { StyledAlertContent } from './styled'
 import Icon from 'components/Icon'
 
 function NetworkAlert() {
-  const { switchNetwork } = useSwitchNetwork()
   const { chainId } = useChain()
+  const { switchNetwork } = useSwitchNetwork()
 
   return (
     <StyledAlertContent {...EXIT_MOTION} variants={ANIMATION_MAP.slideInDown}>

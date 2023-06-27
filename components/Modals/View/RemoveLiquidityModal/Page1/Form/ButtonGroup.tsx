@@ -13,7 +13,7 @@ const RATIO_LIST = [25, 50, 75, 100]
 type RemoveLiquidityModalPage1FormButtonGroupProps = {
   exitPcnt: string
   setValue: UseFormSetValue<RemoveLiquidityForm>
-  disabled?: boolean
+  disabled: boolean
 }
 
 export default function RemoveLiquidityModalPage1FormButtonGroup({

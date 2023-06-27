@@ -7,7 +7,7 @@ import { parseUnits } from 'utils/parseUnits'
 import { useAuth, useChain, useStaking, useSwitchNetwork } from 'hooks'
 
 export function useClaim(rewardList: boolean[], earnedTokenRewards: string[]) {
-  const { account } = useAuth()
+  const { account, isConnected } = useAuth()
   const { chainId, stakingAddress } = useChain()
   const { switchBeforeSend } = useSwitchNetwork()
   const { rewardTokenAddresses, tokens } = useStaking()
@@ -39,16 +39,19 @@ export function useClaim(rewardList: boolean[], earnedTokenRewards: string[]) {
     ]
   }, [earnedTokenRewards, functionName, rewardTokenAddresses, tokens])
 
-  const { config: writeConfig } = usePrepareContractWrite({
+  const enabled =
+    !!account && !!isConnected && rewardList.some((r) => !!r) && !!functionName
+
+  const { config } = usePrepareContractWrite({
     address: stakingAddress,
     abi: StakingEthereumAbi,
     chainId,
     functionName,
     args,
-    enabled: !!account && rewardList.some((r) => !!r) && !!functionName,
+    enabled,
     onError: switchBeforeSend,
   })
-  const { writeAsync } = useContractWrite(writeConfig)
+  const { writeAsync } = useContractWrite(config)
 
   const claim = useCallback(async () => {
     try {

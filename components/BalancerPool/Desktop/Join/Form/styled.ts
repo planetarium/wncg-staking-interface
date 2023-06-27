@@ -9,9 +9,6 @@ export const StyledJoinForm = styled(motion.form)`
   ${flexbox('start')}
   width: 100%;
   flex-direction: column;
-  padding: 32px;
-  background-color: rgba(var(--white-rgb), 0.05);
-  border-radius: 12px;
 
   .arrow {
     margin: 20px 0;

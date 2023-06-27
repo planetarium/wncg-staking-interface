@@ -3,7 +3,6 @@ import { useAtomValue } from 'jotai'
 
 import { isHarvestableAtom } from 'states/system'
 import { ModalType } from 'config/constants'
-import { BAL_ADDRESS } from 'config/constants/addresses'
 import { ANIMATION_MAP, MOTION } from 'config/constants/motions'
 import { bnum } from 'utils/bnum'
 import { useChain, useFiat, useModal, useResponsive, useStaking } from 'hooks'
@@ -17,7 +16,7 @@ import NumberFormat from 'components/NumberFormat'
 import Tooltip from 'components/Tooltip'
 
 function ClaimableRewards() {
-  const { chainId } = useChain()
+  const { balAddress } = useChain()
   const toFiat = useFiat()
   const { addModal } = useModal()
   const { isLaptop } = useResponsive()
@@ -51,7 +50,7 @@ function ClaimableRewards() {
 
         const hasAmount = bnum(amount).gt(0)
 
-        const showHarvest = isHarvestable && addr === BAL_ADDRESS[chainId]
+        const showHarvest = isHarvestable && addr === balAddress
 
         return (
           <div className="reward" key={`gnb:claimableRewards:${addr}`}>

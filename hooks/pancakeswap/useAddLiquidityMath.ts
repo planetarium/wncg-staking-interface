@@ -2,7 +2,6 @@ import { useCallback, useMemo } from 'react'
 import { readContract } from '@wagmi/core'
 
 import { PancakeRouterAbi } from 'config/abi'
-import { DEX_PROTOCOL_ADDRESS } from 'config/constants/addresses'
 import { BASE_GAS_FEE } from 'config/constants/liquidityPool'
 import { MINUTE_MS } from 'config/misc'
 import { bnum } from 'utils/bnum'
@@ -13,7 +12,7 @@ import { useFetchPool } from 'hooks/queries'
 
 export function useAddLiquidityMath(isNative?: boolean) {
   const balanceOf = useBalances()
-  const { chainId, nativeCurrency } = useChain()
+  const { dexProtocolAddress, nativeCurrency } = useChain()
   const toFiat = useFiat()
   const {
     poolTokenAddresses,
@@ -58,7 +57,7 @@ export function useAddLiquidityMath(isNative?: boolean) {
     async (amountIn: string, amountInIndex: number) => {
       try {
         const data = (await readContract({
-          address: DEX_PROTOCOL_ADDRESS[chainId] as Hash,
+          address: dexProtocolAddress,
           abi: PancakeRouterAbi as Abi,
           functionName: 'quote',
           args: [
@@ -88,7 +87,7 @@ export function useAddLiquidityMath(isNative?: boolean) {
         return '0'
       }
     },
-    [chainId, poolReserves, poolTokenDecimals]
+    [dexProtocolAddress, poolReserves, poolTokenDecimals]
   )
 
   const calcOptimizedAmounts = useCallback(async () => {

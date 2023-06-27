@@ -2,7 +2,7 @@ import { useAtomValue } from 'jotai'
 import { AnimatePresence } from 'framer-motion'
 
 import { isHarvestableAtom } from 'states/system'
-import { BAL_ADDRESS } from 'config/constants/addresses'
+
 import { ANIMATION_MAP, EXIT_MOTION } from 'config/constants/motions'
 import { bnum } from 'utils/bnum'
 import { useChain, useFiat, useHarvest, useStaking } from 'hooks'
@@ -22,7 +22,7 @@ export default function StakingDashboardHarvest({
   show,
   closeTooltip,
 }: StakingDashboardHarvestProps) {
-  const { chainId } = useChain()
+  const { balAddress } = useChain()
   const toFiat = useFiat()
   const { earmarkIncentivePcnt } = useStaking<'ethereum'>()
 
@@ -42,10 +42,7 @@ export default function StakingDashboardHarvest({
   const harvestRewardAmount = bnum(claimableTokens)
     .times(earmarkIncentivePcnt)
     .toString()
-  const harvestRewardInFiatValue = toFiat(
-    harvestRewardAmount,
-    BAL_ADDRESS[chainId] as Hash
-  )
+  const harvestRewardInFiatValue = toFiat(harvestRewardAmount, balAddress!)
 
   return (
     <AnimatePresence>

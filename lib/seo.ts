@@ -69,10 +69,10 @@ export const STAKING_SEO = {
 export const TERMS_SEO = {
   title: `Terms of Service / ${config.stakingAppName}`,
   description: 'Stake Balancer LP token and earn rewards!',
-  canonical: `${config.siteUrl}/wncg/terms`,
+  canonical: `${config.siteUrl}/docs/terms`,
   openGraph: {
     type: 'website',
-    url: `${config.siteUrl}/wncg/terms`,
+    url: `${config.siteUrl}/docs/terms`,
     title: `Terms of Service / ${config.stakingAppName}`,
     site_name: config.stakingAppName,
     images: [
@@ -100,10 +100,10 @@ export const TERMS_SEO = {
 export const PRIVACY_SEO = {
   title: `Privacy Policy / ${config.stakingAppName}`,
   description: 'Stake Balancer LP token and earn rewards!',
-  canonical: `${config.siteUrl}/wncg/privacy`,
+  canonical: `${config.siteUrl}/docs/privacy`,
   openGraph: {
     type: 'website',
-    url: `${config.siteUrl}/wncg/privacy`,
+    url: `${config.siteUrl}/docs/privacy`,
     title: `Privacy Policy / ${config.stakingAppName}`,
     site_name: config.stakingAppName,
     images: [

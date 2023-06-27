@@ -26,11 +26,11 @@ export default function ConnectModal() {
 
         <p className="desc">
           By connecting a wallet, you agree to Nine Chronicles Ltd&apos;s{' '}
-          <Link href="/wncg/terms" target="_blank" rel="noopener">
+          <Link href="/docs/terms" target="_blank" rel="noopener">
             Terms of Service
           </Link>{' '}
           and{' '}
-          <Link href="/wncg/privacy" target="_blank" rel="noopener">
+          <Link href="/docs/privacy" target="_blank" rel="noopener">
             Privacy Policy
           </Link>
           .

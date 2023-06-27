@@ -38,9 +38,9 @@ export default function WalletSingleRewards({
         className="rewardItem"
         key={`gnb:myStaking:walletStaking:${rewardToken?.address}`}
       >
-        <dt>{rewardToken?.symbol}</dt>
+        <dt className="a11y">{rewardToken?.symbol}</dt>
         <dd>
-          <CountUp value={rewardsAmount} symbol={rewardToken.symbol} />
+          <CountUp value={rewardsAmount} plus symbol={rewardToken.symbol} />
           {hasRewards && (
             <span className="parenthesis">
               <NumberFormat value={rewardsFiatValue} type="fiat" abbr />

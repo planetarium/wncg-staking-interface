@@ -5,7 +5,6 @@ import { isEthereum } from 'utils/isEthereum'
 import { StyledClaimModalPage1Summary } from './styled'
 import CountUp from 'components/CountUp'
 import NumberFormat from 'components/NumberFormat'
-import TokenIcon from 'components/TokenIcon'
 
 type ClaimModalPage1SummaryProps = {
   earnedTokenRewards: string[]
@@ -27,10 +26,7 @@ export default function ClaimModalPage1Summary({
 
   return (
     <StyledClaimModalPage1Summary className="reward">
-      <dt>
-        <TokenIcon address={address} />
-        {tokens[address].symbol}
-      </dt>
+      <dt>{tokens[address].symbol}</dt>
       <dd>
         <CountUp value={rewardAmount} decimals={8} />
         {hasRewards && <NumberFormat value={fiatValue} type="fiat" />}

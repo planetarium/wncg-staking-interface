@@ -1,42 +1,37 @@
 import { useContractWrite, usePrepareContractWrite } from 'wagmi'
 import { parseUnits } from 'ethers/lib/utils.js'
 
-import config from 'config'
 import { BalancerVaultAbi } from 'config/abi'
-import { DEX_PROTOCOL_ADDRESS } from 'config/constants/addresses'
 import { useAuth, useChain, useStaking, useSwitchNetwork } from 'hooks'
 import { useJoinBuildRequest } from './useJoinBuildRequest'
 
 export function useJoinPool(
   assets: Hash[],
   joinAmounts: string[],
-  hasNativeCurrency: boolean
+  isNative: boolean
 ) {
   const { account } = useAuth()
-  const { chainId } = useChain()
+  const { chainId, dexProtocolAddress, dexPoolId } = useChain()
   const { poolTokenDecimals, shouldReversePoolTokenOrderOnDisplay } =
     useStaking<'ethereum'>()
   const { switchBeforeSend } = useSwitchNetwork()
-
-  const vaultAddress = DEX_PROTOCOL_ADDRESS[chainId]
 
   const request = useJoinBuildRequest({
     assets,
     amounts: joinAmounts,
   })
 
-  const args = [config.poolId, account, account, request]
+  const args = [dexPoolId, account, account, request]
 
   const baseTokenIndex = shouldReversePoolTokenOrderOnDisplay ? 0 : 1
 
-  // FIXME: network에 따라 달라짐
   const { config: writeConfig } = usePrepareContractWrite({
-    address: vaultAddress,
+    address: dexProtocolAddress,
     abi: BalancerVaultAbi,
     args,
     chainId,
     functionName: 'joinPool',
-    overrides: hasNativeCurrency
+    overrides: isNative
       ? {
           value: parseUnits(
             joinAmounts[baseTokenIndex],

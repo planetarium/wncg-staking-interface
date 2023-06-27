@@ -1,12 +1,18 @@
 import { useMount, useUnmount } from 'react-use'
-import { useAtomValue } from 'jotai'
+import { atom, useAtomValue, useSetAtom } from 'jotai'
 import { useWaitForTransaction } from 'wagmi'
 
 import { joinTxAtom } from 'states/tx'
-import { useChain, useRefetch } from 'hooks'
+import { formatUnits } from 'utils/formatUnits'
+import { parseTransferLogs } from 'utils/parseTransferLogs'
+import { useChain, useRefetch, useStaking } from 'hooks'
+
+export const receivedLpAmountAtom = atom('')
 
 export function useWatch(send: (event: string) => void) {
   const { chainId } = useChain()
+  const { lpToken } = useStaking()
+
   const refetch = useRefetch({
     userBalances: true,
     pool: true,
@@ -15,13 +21,23 @@ export function useWatch(send: (event: string) => void) {
   })
 
   const tx = useAtomValue(joinTxAtom)
+  const setReceivedLpAmount = useSetAtom(receivedLpAmountAtom)
 
   useWaitForTransaction({
     hash: tx.hash!,
     enabled: !!tx.hash,
     chainId,
     suspense: false,
-    async onSuccess() {
+    async onSuccess(tx) {
+      const parsedLogs = parseTransferLogs(tx.logs)
+
+      const joinLog = parsedLogs?.[lpToken.address]
+
+      if (joinLog) {
+        const lpAmount = formatUnits(joinLog.args?.[2], lpToken.decimals)
+        setReceivedLpAmount(lpAmount)
+      }
+
       await refetch()
 
       send('SUCCESS')

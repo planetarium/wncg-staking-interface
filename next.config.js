@@ -22,13 +22,41 @@ const nextConfig = {
     })
     return config
   },
-  exportPathMap: async function (defaultPathMap) {
+  async redirects() {
+    return [
+      {
+        source: '/wncg',
+        destination: '/wncg/1',
+        permanent: true,
+      },
+    ]
+  },
+
+  exportPathMap: async function () {
     return {
-      ...defaultPathMap,
       '/': { page: '/', __nextDefaultLocale: 'en' },
-      '/wncg': { page: '/wncg', __nextDefaultLocale: 'en' },
-      '/wncg/terms': { page: '/wncg/terms', __nextDefaultLocale: 'en' },
-      '/wncg/privacy': { page: '/wncg/privacy', __nextDefaultLocale: 'en' },
+      '/wncg/1': {
+        page: '/wncg/1',
+        query: { chainId: '1' },
+        __nextDefaultLocale: 'en',
+      },
+      '/wncg/5': {
+        page: '/wncg/5',
+        query: { chainId: '5' },
+        __nextDefaultLocale: 'en',
+      },
+      '/wncg/56': {
+        page: '/wncg/56',
+        query: { chainId: '56' },
+        __nextDefaultLocale: 'en',
+      },
+      '/wncg/97': {
+        page: '/wncg/97',
+        query: { chainId: '97' },
+        __nextDefaultLocale: 'en',
+      },
+      '/docs/terms': { page: '/docs/terms', __nextDefaultLocale: 'en' },
+      '/docs/privacy': { page: '/docs/privacy', __nextDefaultLocale: 'en' },
       '/404': { page: '/404', __nextDefaultLocale: 'en' },
       '/500': { page: '/500', __nextDefaultLocale: 'en' },
     }

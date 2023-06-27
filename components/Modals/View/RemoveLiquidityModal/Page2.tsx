@@ -24,7 +24,7 @@ export default function RemoveLiquidityModalPage2({
   const toFiat = useFiat()
   const { removeModal } = useModal()
   const { rewardTokenAddresses } = useStaking()
-  const { poolTokenAddresses, poolTokenSymbols, tokens } = useStaking()
+  const { tokens } = useStaking()
 
   const showResult = actualTokenAmountsOut.some((amt) => bnum(amt).gt(0))
   const amountsOutFiatValue = actualTokenAmountsOut.map((amt, i) =>
@@ -92,7 +92,7 @@ export default function RemoveLiquidityModalPage2({
             )}
           </motion.dl>
 
-          <ImportToken address={rewardToken.address} name={rewardToken.name} />
+          <ImportToken address={rewardToken.address} />
         </div>
       </div>
 

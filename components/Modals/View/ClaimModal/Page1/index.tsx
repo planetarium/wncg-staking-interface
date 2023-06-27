@@ -3,6 +3,7 @@ import { useAtom } from 'jotai'
 
 import { claimTxAtom } from 'states/tx'
 import { isEthereum } from 'utils/isEthereum'
+import { useChain } from 'hooks'
 import { useClaim } from '../useClaim'
 import { ClaimFormFields } from '../useClaimForm'
 
@@ -11,8 +12,6 @@ import { Checkout, CloseButton, PendingNotice } from 'components/Modals/shared'
 import TxButton from 'components/TxButton'
 import Form from './Form'
 import Summary from './Summary'
-import { useChain } from 'hooks'
-import { useMemo } from 'react'
 
 type ClaimModalPage1Props = {
   rewardList: boolean[]

@@ -10,32 +10,34 @@ import NumberFormat from 'components/NumberFormat'
 
 type AddLiquidityFormSummaryProps = {
   active: boolean
+  assets: Hash[]
   amountsInFiatValueSum: string
 }
 
 export default function AddLiquidityFormSummary({
   active,
+  assets,
   amountsInFiatValueSum,
 }: AddLiquidityFormSummaryProps) {
   const { isConnected } = useAuth()
   const toFiat = useFiat()
-  const { poolTokens, poolReserves: initPoolReserves } = useStaking()
+  const { tokens, poolReserves: initPoolReserves } = useStaking()
 
   const { poolReserves = initPoolReserves } =
     useFetchPool({ refetchInterval: 30 * 1_000 }).data ?? {}
 
   const relativePrice = useMemo(() => {
-    return poolTokens.map((t, i) => {
-      const currentTokenPrice = toFiat(1, t.address)
-      const subjectTokenPrice = toFiat(1, poolTokens[1 - i].address)
+    return assets.map((addr, i) => {
+      const currentTokenPrice = toFiat(1, addr)
+      const subjectTokenPrice = toFiat(1, assets[1 - i])
 
       return bnum(currentTokenPrice).div(subjectTokenPrice).toString()
     })
-  }, [poolTokens, toFiat])
+  }, [assets, toFiat])
 
   const share = useMemo(() => {
     const currentPoolValue = poolReserves.reduce(
-      (acc, amt, i) => acc.plus(toFiat(amt, poolTokens[i].address)),
+      (acc, amt, i) => acc.plus(toFiat(amt, assets[i])),
       bnum(0)
     )
     const expectedPoolValue = currentPoolValue.plus(amountsInFiatValueSum)
@@ -44,7 +46,7 @@ export default function AddLiquidityFormSummary({
       .div(expectedPoolValue.toString())
       .times(100)
       .toString()
-  }, [amountsInFiatValueSum, poolReserves, poolTokens, toFiat])
+  }, [amountsInFiatValueSum, assets, poolReserves, toFiat])
 
   const [debouncedShare] = useDebounce(share, 500)
 
@@ -55,8 +57,10 @@ export default function AddLiquidityFormSummary({
       <h4 className="title">Prices and pool share</h4>
 
       <dl className="summaryList">
-        {poolTokens.map((t, i) => {
-          const { address, symbol } = t
+        {assets.map((addr, i) => {
+          const token = tokens?.[addr] ?? {}
+          const subjectToken = tokens?.[assets[1 - i]] ?? {}
+          const { address, symbol } = token
 
           return (
             <div className="summaryItem" key={`joinFormSummary:${address}`}>
@@ -70,7 +74,7 @@ export default function AddLiquidityFormSummary({
                   equals
                   value={relativePrice[i]}
                   decimals={8}
-                  symbol={poolTokens[1 - i].symbol}
+                  symbol={subjectToken.symbol}
                 />
                 <NumberFormat
                   className="fiatPrice"
