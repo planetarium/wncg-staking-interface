@@ -8,7 +8,7 @@ import { MINUTE } from 'config/misc'
 import { bnum } from 'utils/bnum'
 import { now } from 'utils/now'
 import { prepareAddLiquidity } from 'lib/queries/bsc/prepareAddLiquidity'
-import { useAuth, useChain } from 'hooks'
+import { useAuth, useChain, useSwitchNetwork } from 'hooks'
 import { useAddLiquidityMath } from './useAddLiquidityMath'
 
 export function useAddLiquidity(assets: Hash[], amountsIn: string[]) {
@@ -18,13 +18,14 @@ export function useAddLiquidity(assets: Hash[], amountsIn: string[]) {
   )
 
   const { account, isConnected } = useAuth()
-  const { chainId, nativeCurrency } = useChain()
+  const { chainId, nativeCurrency, networkMismatch } = useChain()
   const hasNativeCurrency = assets.includes(nativeCurrency.address)
   const { maxBalances } = useAddLiquidityMath(hasNativeCurrency)
 
   const slippage = useAtomValue(slippageAtom) ?? '0.5'
 
   const enabled =
+    !networkMismatch &&
     !!isConnected &&
     amountsIn.every(
       (amt, i) => bnum(amt).gt(0) && bnum(amt).lte(maxBalances[i])

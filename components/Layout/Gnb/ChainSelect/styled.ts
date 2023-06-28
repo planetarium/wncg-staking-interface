@@ -78,6 +78,11 @@ export const StyledGnbChainSelectToggle = styled.button`
   border-radius: 4px;
   transition: 200ms;
 
+  &:disabled {
+    border: 1px solid rgba(var(--white-rgb), 0);
+    background-color: rgba(var(--white-rgb), 0.1);
+  }
+
   .cryptoIcon {
     flex-shrink: 0;
   }
@@ -95,7 +100,7 @@ export const StyledGnbChainSelectToggle = styled.button`
       width: 144px;
       padding: 0 12px;
 
-      &:hover {
+      &:not(:disabled):hover {
         background-color: rgba(var(--white-rgb), 0.1);
       }
 

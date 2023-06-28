@@ -1,14 +1,15 @@
-import { useConnect } from 'hooks'
+import { useChain, useConnect, useStaking } from 'hooks'
 
 import { StyledApproveModalPage1 } from './styled'
 import ConnectorIcon from 'components/ConnectorIcon'
 import { CloseButton, PendingNotice } from 'components/Modals/shared'
 import TxButton from 'components/TxButton'
+import { useMemo } from 'react'
+import { isBsc } from 'utils/isBsc'
 
 type ApproveModalPage1Props = {
   address: Hash
   approve(): Promise<void>
-  buttonLabel: string
   toastLabel: string
   spenderName: string
   symbol: string
@@ -17,15 +18,25 @@ type ApproveModalPage1Props = {
 }
 
 function ApproveModalPage1({
+  address,
   spenderName,
   symbol,
-  buttonLabel,
   toastLabel,
   className,
   hash,
   approve,
 }: ApproveModalPage1Props) {
+  const { chainId } = useChain()
   const { wallets } = useConnect()
+  const { lpToken, tokens } = useStaking()
+  const token = tokens?.[address] ?? {}
+
+  const labelSymbol = useMemo(() => {
+    if (isBsc(chainId) && address === lpToken.address)
+      return token?.name ?? symbol
+    return token?.symbol ?? symbol
+  }, [address, chainId, lpToken.address, symbol, token.name, token?.symbol])
+
   return (
     <StyledApproveModalPage1 className={className}>
       <header className="modalHeader">
@@ -86,7 +97,7 @@ function ApproveModalPage1({
 
       <footer className="modalFooter">
         <TxButton onClick={approve} hash={hash}>
-          Approve & {buttonLabel}
+          Approve {labelSymbol}
         </TxButton>
       </footer>
 

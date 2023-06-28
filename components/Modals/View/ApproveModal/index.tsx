@@ -117,6 +117,8 @@ export default function ApproveModal({
   useWatch(send)
 
   useUnmount(() => {
+    refetch()
+
     if (tx.hash && !hasModalInView) {
       toast<ApproveTx>({
         type: ToastType.Approve,
@@ -139,7 +141,6 @@ export default function ApproveModal({
           symbol={tokenSymbol}
           hash={tx.hash}
           approve={approve}
-          buttonLabel={buttonLabel}
           toastLabel={toastLabel}
         />
       )}

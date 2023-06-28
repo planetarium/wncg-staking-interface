@@ -1,5 +1,6 @@
-import { MouseEvent, useRef } from 'react'
+import { MouseEvent, useCallback, useRef } from 'react'
 import { useRouter } from 'next/router'
+import { switchNetwork } from '@wagmi/core'
 import clsx from 'clsx'
 
 import { isEthereum } from 'utils/isEthereum'
@@ -20,26 +21,38 @@ type GnbChainSelectMenuProps = {
 }
 
 export default function GnbChainSelectMenu({
-  list,
   closeMenu,
+  list,
 }: GnbChainSelectMenuProps) {
-  const { chainId, setChainId } = useChain()
   const menuRef = useRef<HTMLDivElement>(null)
   const router = useRouter()
+  const routerChainId = Number(router.asPath.replace('/wncg/', '')) as ChainId
 
-  function onSelectChain(e: MouseEvent<HTMLButtonElement>) {
-    const { value } = e.currentTarget
-    const newPathname = `/wncg/${value}`
+  const { chainId: currentChainId, setChainId } = useChain()
 
-    if (newPathname !== router.pathname) {
-      router.replace(router.pathname, `/wncg/${value}`, { shallow: true })
-
+  const onSelectChain = useCallback(
+    async (e: MouseEvent<HTMLButtonElement>) => {
+      const { value } = e.currentTarget
       const newChainId = Number(value) as ChainId
-      setChainId?.(newChainId)
-    }
+      const newPathname = `/wncg/${newChainId}`
 
-    closeMenu()
-  }
+      if (routerChainId === newChainId) return
+      if (currentChainId === newChainId) return
+
+      try {
+        await switchNetwork({
+          chainId: newChainId,
+        })
+        router.replace(router.pathname, newPathname, { shallow: true })
+        setChainId?.(newChainId)
+      } catch (error) {
+        console.log(error)
+      }
+
+      closeMenu()
+    },
+    [closeMenu, currentChainId, router, routerChainId, setChainId]
+  )
 
   useCloseOnBlur(menuRef, closeMenu)
 
@@ -54,7 +67,7 @@ export default function GnbChainSelectMenu({
         {list.map((item) => {
           return (
             <li
-              className={clsx({ selected: item === chainId })}
+              className={clsx({ selected: item === currentChainId })}
               key={`gnbChainSelectMenu:${item}`}
             >
               <button

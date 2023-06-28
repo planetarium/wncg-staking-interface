@@ -30,17 +30,6 @@ class ConfigService {
     return process.env.NODE_ENV ?? 'development'
   }
 
-  get github() {
-    const repositoryName =
-      process.env.NEXT_PUBLIC_GITHUB_REPO ??
-      'planetarium/staking_contract_wncg_eth'
-
-    return {
-      repositoryName,
-      repositoryUrl: `https://github.com/${repositoryName}`,
-    }
-  }
-
   get googleTagManager() {
     return process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER ?? ''
   }

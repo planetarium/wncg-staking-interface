@@ -35,8 +35,8 @@ export async function getStaticProps(ctx: GetStaticPropsContext) {
     )
 
     await queryClient.prefetchQuery(
-      [QUERY_KEYS.Pool.Data, chainId],
-      () => fetchPool(chainId),
+      [QUERY_KEYS.Pool.Data, chainId, pool.lpToken.address],
+      () => fetchPool(chainId, pool.lpToken.address),
       {
         staleTime: Infinity,
         cacheTime: Infinity,
@@ -79,7 +79,6 @@ export async function getStaticProps(ctx: GetStaticPropsContext) {
         dehydratedState: dehydrate(queryClient),
         chainId,
       },
-      revalidate: 60 * 60 * 24, // 1 day
     }
   } catch (error) {
     return {

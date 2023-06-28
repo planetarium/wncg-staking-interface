@@ -55,8 +55,6 @@ export default function RemoveLiquidityToast({
         return [formatUnits(arg, poolTokenDecimals[i - 1])]
       })
 
-      console.log(_amountsOut)
-
       setActualAmountsOut(_amountsOut)
     },
   })

@@ -1,8 +1,6 @@
-import { useMount } from 'react-use'
 import type { NextPage } from 'next'
-import dynamic from 'next/dynamic'
-import { useSetAtom } from 'jotai'
 import Head from 'next/head'
+import dynamic from 'next/dynamic'
 import { NextSeo } from 'next-seo'
 
 import { STAKING_SEO } from 'lib/seo'
@@ -24,10 +22,11 @@ type WncgStakingProps = {
   chainId: ChainId
 }
 
-const WncgStaking: NextPage<WncgStakingProps> = ({ chainId }) => {
+const WncgStaking: NextPage<WncgStakingProps> = () => {
   return (
     <>
       <NextSeo {...STAKING_SEO} />
+
       <Head>
         <title>WNCG Staking</title>
         <meta

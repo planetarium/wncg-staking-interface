@@ -2,7 +2,6 @@ import { readContracts } from 'wagmi'
 
 import { PancakePairAbi } from 'config/abi'
 import { ChainId, CHAINS } from 'config/chains'
-import { DEX } from 'config/constants/dex'
 import { bnum } from 'utils/bnum'
 import { formatUnits } from 'utils/formatUnits'
 import { fetchPoolTokens } from './fetchPoolTokens'
@@ -18,9 +17,9 @@ const FNS = [
 ]
 
 export async function fetchPancakeSwapPool(
-  chainId: ChainId
+  chainId: ChainId,
+  stakedTokenAddress: Hash
 ): Promise<LiquidityPool> {
-  const { dexPoolId: stakedTokenAddress } = DEX[chainId]
   const { nativeCurrency } = CHAINS[chainId]
 
   const contracts = FNS.map((fn) => ({

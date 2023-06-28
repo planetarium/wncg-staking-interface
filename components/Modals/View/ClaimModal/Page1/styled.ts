@@ -78,6 +78,15 @@ export const StyledClaimModalPage1Form = styled.form`
     transition: 200ms;
     cursor: pointer;
 
+    &.presentation {
+      width: 100%;
+      cursor: default;
+
+      &::before {
+        display: none;
+      }
+    }
+
     &.selected {
       border-color: var(--primary-400);
     }
@@ -88,9 +97,13 @@ export const StyledClaimModalPage1Form = styled.form`
 
     &.disabled {
       opacity: 0.5 !important;
+
+      &::before {
+        display: none;
+      }
     }
 
-    &:not(.disabled):hover {
+    &:hover {
       &::before {
         opacity: 1;
       }

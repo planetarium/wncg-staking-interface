@@ -8,7 +8,7 @@ import { useChain } from 'hooks'
 import { StyledSidebarMenuList } from './styled'
 
 function MenuList() {
-  const { chainId, stakingAddress } = useChain()
+  const { chainId, stakingAddress, explorerName } = useChain()
 
   return (
     <StyledSidebarMenuList>
@@ -30,7 +30,7 @@ function MenuList() {
           target="_blank"
           rel="noopener"
         >
-          Etherscan
+          {explorerName}
         </Link>
       </li>
     </StyledSidebarMenuList>

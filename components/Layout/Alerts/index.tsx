@@ -10,7 +10,7 @@ export default function Alerts() {
   const { chainId } = useChain()
   const { chain } = useNetwork()
 
-  const showAlert = chain?.id !== chainId
+  const showAlert = !!chain?.id && chain?.id !== chainId
 
   return (
     <StyledAlerts role="alert" layout $enabled={showAlert}>

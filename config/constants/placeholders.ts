@@ -29,6 +29,7 @@ const BSC_STAKING_PLACEHOLDER = {
   rewardEmissionsPerSec: [],
   rewardTokenAddresses: [],
   totalStaked: '0',
+  stakedTokenAddress: '0x',
   withdrawSeconds: 0,
 } satisfies BscStaking
 

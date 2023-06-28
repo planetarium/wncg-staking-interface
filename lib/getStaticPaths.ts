@@ -17,7 +17,7 @@ export async function getStaticPaths(): Promise<GetStaticPathsResult> {
   }))
 
   return {
-    fallback: 'blocking',
+    fallback: false,
     paths,
   }
 }

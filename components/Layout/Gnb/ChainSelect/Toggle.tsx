@@ -2,7 +2,7 @@ import { memo, MouseEvent } from 'react'
 
 import { getNetworkLabel } from 'utils/getNetworkLabel'
 import { isEthereum } from 'utils/isEthereum'
-import { useChain } from 'hooks'
+import { useAuth, useChain } from 'hooks'
 
 import { StyledGnbChainSelectToggle } from './styled'
 import CryptoIcon from 'components/CryptoIcon'
@@ -12,6 +12,7 @@ type GnbChainSelectToggleProps = {
 }
 
 function GnbChainSelectToggle({ toggle }: GnbChainSelectToggleProps) {
+  const { isConnected } = useAuth()
   const { chainId } = useChain()
 
   return (
@@ -19,6 +20,7 @@ function GnbChainSelectToggle({ toggle }: GnbChainSelectToggleProps) {
       className="dropdownToggle"
       type="button"
       onClick={toggle}
+      disabled={!isConnected}
       aria-controls="menu"
       aria-haspopup
     >

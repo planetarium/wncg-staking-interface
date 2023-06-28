@@ -4,14 +4,15 @@ import { parseUnits } from 'ethers/lib/utils.js'
 import { BalancerVaultAbi } from 'config/abi'
 import { useAuth, useChain, useStaking, useSwitchNetwork } from 'hooks'
 import { useJoinBuildRequest } from './useJoinBuildRequest'
+import { bnum } from 'utils/bnum'
 
 export function useJoinPool(
   assets: Hash[],
   joinAmounts: string[],
   isNative: boolean
 ) {
-  const { account } = useAuth()
-  const { chainId, dexProtocolAddress, dexPoolId } = useChain()
+  const { account, isConnected } = useAuth()
+  const { chainId, dexProtocolAddress, dexPoolId, networkMismatch } = useChain()
   const { poolTokenDecimals, shouldReversePoolTokenOrderOnDisplay } =
     useStaking<'ethereum'>()
   const { switchBeforeSend } = useSwitchNetwork()
@@ -22,6 +23,11 @@ export function useJoinPool(
   })
 
   const args = [dexPoolId, account, account, request]
+
+  const enabled =
+    !networkMismatch &&
+    !!isConnected &&
+    joinAmounts.some((amt) => bnum(amt).gt(0))
 
   const baseTokenIndex = shouldReversePoolTokenOrderOnDisplay ? 0 : 1
 
@@ -39,6 +45,7 @@ export function useJoinPool(
           ),
         }
       : undefined,
+    enabled,
     onError: switchBeforeSend,
   })
 

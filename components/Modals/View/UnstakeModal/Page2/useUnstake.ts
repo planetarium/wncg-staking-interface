@@ -8,7 +8,7 @@ import { useAuth, useChain, useStaking, useSwitchNetwork } from 'hooks'
 
 export function useUnstake(unstakeAmount: string, checked: boolean) {
   const { account, isConnected } = useAuth()
-  const { chainId, stakingAddress } = useChain()
+  const { chainId, networkMismatch, stakingAddress } = useChain()
   const { lpToken } = useStaking()
 
   const { switchBeforeSend } = useSwitchNetwork()

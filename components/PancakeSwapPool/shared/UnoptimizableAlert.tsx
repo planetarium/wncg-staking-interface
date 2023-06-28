@@ -28,9 +28,7 @@ export default function AddLiquidityFormUnoptimizableAlert({
   optimizeDisabled,
 }: AddLiquidityFormUnoptimizableAlertProps) {
   const { isConnected } = useAuth()
-  const { poolTokenSymbols, tokens } = useStaking()
-
-  const activeFieldIndex = FIELDS.findIndex((f) => f === activeField)
+  const { tokens } = useStaking()
 
   const message = useMemo(() => {
     if (maxBalances.every((b) => bnum(b).isZero())) return `Balance is empty.`
@@ -41,8 +39,7 @@ export default function AddLiquidityFormUnoptimizableAlert({
       return `Optimization is not possible because ${symbol} is 0.`
     }
 
-    // FIXME: 문구
-    return `Insufficient balances (한쪽이 0이 나옴)`
+    return `Insufficient pool balances`
   }, [assets, maxBalances, tokens])
 
   const showAlert =

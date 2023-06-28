@@ -6,6 +6,7 @@ import { formatUnits } from 'utils/formatUnits'
 
 const FNS = [
   'REWARD_TOKEN',
+  'STAKED_TOKEN',
   'getEmissionPerSec',
   'COOLDOWN_SECONDS',
   'UNSTAKE_WINDOW',
@@ -24,10 +25,11 @@ export async function fetchBscStaking(chainId: ChainId) {
     const data = (await readContracts({
       contracts,
       allowFailure: true,
-    })) as [Hash, BigNumber, BigNumber, BigNumber, BigNumber]
+    })) as [Hash, Hash, BigNumber, BigNumber, BigNumber, BigNumber]
 
     const [
       _rewardToken,
+      _stakedToken,
       _emissionPerSec,
       _cooldownSeconds,
       _unstakeWindow,
@@ -35,6 +37,7 @@ export async function fetchBscStaking(chainId: ChainId) {
     ] = data
 
     const rewardTokenAddress = _rewardToken.toLowerCase() as Hash
+    const stakedTokenAddress = _stakedToken.toLowerCase() as Hash
     const emissionPerSec = formatUnits(_emissionPerSec)
     const cooldownSeconds = _cooldownSeconds?.toNumber() ?? 0
     const withdrawSeconds = _unstakeWindow?.toNumber() ?? 0
@@ -42,6 +45,7 @@ export async function fetchBscStaking(chainId: ChainId) {
 
     return {
       cooldownSeconds,
+      stakedTokenAddress,
       rewardEmissionsPerSec: [emissionPerSec],
       rewardTokenAddresses: [rewardTokenAddress],
       totalStaked,

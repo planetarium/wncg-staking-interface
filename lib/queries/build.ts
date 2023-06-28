@@ -12,8 +12,8 @@ export async function build(chainId: ChainId) {
   chainId = Math.max(Number(chainId), ChainId.ETHEREUM) as ChainId
 
   try {
-    const pool = await prefetchPool(chainId)
     const staking = await prefetchStaking(chainId)
+    const pool = await prefetchPool(chainId, staking.stakedTokenAddress)
 
     const tokenList = uniqAddress([
       ...pool.poolTokenAddresses,

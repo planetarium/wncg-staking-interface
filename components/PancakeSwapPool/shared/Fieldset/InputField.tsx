@@ -93,7 +93,6 @@ function AddLiquidityFormInputField({
         const bNewAmount = bnum(event.target.value)
         if (bNewAmount.isNaN()) return
 
-        console.log(bNewAmount.toString(), index)
         const subjectAmount = await calcPropAmountIn(
           bNewAmount.toString(),
           index

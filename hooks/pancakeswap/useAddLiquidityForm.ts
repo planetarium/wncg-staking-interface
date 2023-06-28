@@ -87,6 +87,7 @@ export function useAddLiquidityForm(): UseAddLiquidityFormReturns {
       QUERY_KEYS.Liquidity.AddLiquidity.OptimizedAmounts,
       chainId,
       account,
+      ...assets,
       ...maxBalances,
     ],
     calcOptimizedAmounts,

@@ -101,7 +101,7 @@ function AddLiquidityForm() {
           disabled={submitDisabled}
           $size="lg"
         >
-          Join pool, get {lpToken?.symbol}
+          Join pool, get {lpToken?.name}
         </Button>
       </footer>
     </StyledAddLiquidityForm>

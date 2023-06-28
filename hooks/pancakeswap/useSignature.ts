@@ -7,7 +7,6 @@ import { signTypedData } from '@wagmi/core'
 
 import { currentTimestampAtom } from 'states/system'
 import { PancakePairAbi } from 'config/abi'
-import { DEX_PROTOCOL_ADDRESS } from 'config/constants/addresses'
 import { SECOND } from 'config/misc'
 import { provider } from 'lib/wagmi/chains'
 import { now } from 'utils/now'
@@ -41,7 +40,7 @@ export function useSignature() {
 
   const [currentTimestamp, setCurrentTimestamp] = useAtom(currentTimestampAtom)
 
-  const deadline = currentTimestamp + SECOND * 60 * 1
+  const deadline = currentTimestamp + SECOND * (60 + 10) * 1
 
   const lpTokenContract = useContract({
     address: lpToken.address,

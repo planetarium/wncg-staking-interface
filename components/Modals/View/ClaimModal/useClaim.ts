@@ -8,7 +8,7 @@ import { useAuth, useChain, useStaking, useSwitchNetwork } from 'hooks'
 
 export function useClaim(rewardList: boolean[], earnedTokenRewards: string[]) {
   const { account, isConnected } = useAuth()
-  const { chainId, stakingAddress } = useChain()
+  const { chainId, networkMismatch, stakingAddress } = useChain()
   const { switchBeforeSend } = useSwitchNetwork()
   const { rewardTokenAddresses, tokens } = useStaking()
 
@@ -40,7 +40,11 @@ export function useClaim(rewardList: boolean[], earnedTokenRewards: string[]) {
   }, [earnedTokenRewards, functionName, rewardTokenAddresses, tokens])
 
   const enabled =
-    !!account && !!isConnected && rewardList.some((r) => !!r) && !!functionName
+    !networkMismatch &&
+    !!account &&
+    !!isConnected &&
+    rewardList.some((r) => !!r) &&
+    !!functionName
 
   const { config } = usePrepareContractWrite({
     address: stakingAddress,

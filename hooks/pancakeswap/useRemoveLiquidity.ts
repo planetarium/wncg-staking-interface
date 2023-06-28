@@ -15,8 +15,8 @@ export function useRemoveLiquidity(
   isNative: boolean,
   signature?: Signature
 ) {
-  const { account } = useAuth()
-  const { chainId, dexProtocolAddress } = useChain()
+  const { account, isConnected } = useAuth()
+  const { chainId, dexProtocolAddress, networkMismatch } = useChain()
   const {
     lpToken,
     poolTokenAddresses,
@@ -72,7 +72,8 @@ export function useRemoveLiquidity(
         signature?.s,
       ]
 
-  const enabled = bnum(lpAmountOut).gt(0) && !!signature
+  const enabled =
+    !networkMismatch && !!isConnected && bnum(lpAmountOut).gt(0) && !!signature
 
   const { config } = usePrepareContractWrite({
     address: dexProtocolAddress,

@@ -3,7 +3,7 @@ import { useContractWrite, usePrepareContractWrite } from 'wagmi'
 import { constants } from 'ethers'
 
 import { Erc20Abi } from 'config/abi'
-import { useChain, useSwitchNetwork } from 'hooks'
+import { useAuth, useChain, useSwitchNetwork } from 'hooks'
 
 const approveConfig = Object.freeze({
   abi: Erc20Abi,
@@ -11,15 +11,16 @@ const approveConfig = Object.freeze({
 })
 
 export function useApprove(tokenAddress: Hash, spender: string) {
+  const { isConnected } = useAuth()
   const { switchBeforeSend } = useSwitchNetwork()
-  const { chainId } = useChain()
+  const { chainId, networkMismatch } = useChain()
 
   const { config } = usePrepareContractWrite({
     ...approveConfig,
     address: tokenAddress as Hash,
     chainId,
     args: [spender, constants.MaxUint256],
-    enabled: !!tokenAddress && !!spender,
+    enabled: !!isConnected && !!tokenAddress && !!spender && !networkMismatch,
     onError: switchBeforeSend,
   })
 

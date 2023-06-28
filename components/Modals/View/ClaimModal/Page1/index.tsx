@@ -83,16 +83,12 @@ export default function ClaimModalPage1({
 
       <div className="container">
         <div className="modalContent">
-          {isEthereum(chainId) ? (
-            <Form
-              rewardList={rewardList}
-              setValue={setValue}
-              earnedTokenRewards={earnedTokenRewards}
-              disabled={disabled}
-            />
-          ) : (
-            <Summary earnedTokenRewards={earnedTokenRewards} />
-          )}
+          <Form
+            rewardList={rewardList}
+            setValue={setValue}
+            earnedTokenRewards={earnedTokenRewards}
+            disabled={disabled}
+          />
         </div>
       </div>
 

@@ -72,8 +72,9 @@ type BscStaking = {
   cooldownSeconds: number
   rewardEmissionsPerSec: string[]
   rewardTokenAddresses: Hash[]
-  withdrawSeconds: number
+  stakedTokenAddress: Hash
   totalStaked: string
+  withdrawSeconds: number
 }
 
 type EthereumStaking = BscStaking & {

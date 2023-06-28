@@ -7,9 +7,17 @@ import {
 import { DEX } from 'config/constants/dex'
 
 import { useChainContext } from 'components/ChainProvider'
+import { useNetwork } from 'wagmi'
+import { useMemo } from 'react'
 
 export function useChain() {
   const { chainId, setChainId } = useChainContext()
+  const { chain: currentChain } = useNetwork()
+
+  const networkMismatch = useMemo(
+    () => chainId !== currentChain?.id,
+    [chainId, currentChain?.id]
+  )
 
   const chain = CHAINS[chainId ?? ChainId.ETHEREUM]
   const dex = DEX[chainId ?? ChainId.ETHEREUM]
@@ -25,5 +33,6 @@ export function useChain() {
     balAddress,
     stakingAddress,
     dexProtocolAddress,
+    networkMismatch,
   }
 }

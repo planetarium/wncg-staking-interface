@@ -5,7 +5,8 @@ import clsx from 'clsx'
 
 import { ANIMATION_MAP, EXIT_MOTION } from 'config/constants/motions'
 import { bnum } from 'utils/bnum'
-import { useFiat, useStaking } from 'hooks'
+import { isEthereum } from 'utils/isEthereum'
+import { useChain, useFiat, useStaking } from 'hooks'
 import { ClaimFormFields } from '../useClaimForm'
 
 import { StyledClaimModalPage1Form } from './styled'
@@ -26,6 +27,7 @@ export default function ClaimModalPage1Form({
   setValue,
   disabled: _disabled,
 }: ClaimModalPage1FormProps) {
+  const { chainId } = useChain()
   const toFiat = useFiat()
   const { rewardTokenAddresses, tokens } = useStaking()
 
@@ -56,6 +58,7 @@ export default function ClaimModalPage1Form({
             <label
               className={clsx('rewardCard', {
                 selected: checked,
+                presentation: rewardTokenAddresses.length === 1,
                 disabled,
               })}
               key={id}
@@ -91,14 +94,16 @@ export default function ClaimModalPage1Form({
                 abbr
               />
 
-              <input
-                id={id}
-                type="checkbox"
-                value={i}
-                onChange={onCheckboxChange}
-                defaultChecked={checked}
-                disabled={disabled}
-              />
+              {isEthereum(chainId) && (
+                <input
+                  id={id}
+                  type="checkbox"
+                  value={i}
+                  onChange={onCheckboxChange}
+                  defaultChecked={checked}
+                  disabled={disabled}
+                />
+              )}
             </label>
           )
         })}

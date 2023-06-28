@@ -8,7 +8,7 @@ import { useAuth, useChain, useStaking, useSwitchNetwork } from 'hooks'
 
 export function useStake(stakeAmount: string) {
   const { isConnected } = useAuth()
-  const { chainId, stakingAddress } = useChain()
+  const { chainId, networkMismatch, stakingAddress } = useChain()
   const { lpToken, tokens } = useStaking()
   const { switchBeforeSend } = useSwitchNetwork()
 
@@ -18,7 +18,10 @@ export function useStake(stakeAmount: string) {
   ).toString()
 
   const enabled =
-    !!isConnected && bnum(stakeAmount).gt(0) && !bnum(stakeAmount).isNaN()
+    !networkMismatch &&
+    !!isConnected &&
+    bnum(stakeAmount).gt(0) &&
+    !bnum(stakeAmount).isNaN()
 
   const { config: writeConfig } = usePrepareContractWrite({
     address: stakingAddress,

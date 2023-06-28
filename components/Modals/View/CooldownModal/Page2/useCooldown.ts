@@ -9,12 +9,16 @@ import { useFetchUserData } from 'hooks/queries'
 
 export function useCooldown() {
   const { account, isConnected } = useAuth()
-  const { chainId, stakingAddress } = useChain()
+  const { chainId, networkMismatch, stakingAddress } = useChain()
   const { switchBeforeSend } = useSwitchNetwork()
 
   const { stakedTokenBalance = '0' } = useFetchUserData().data ?? {}
 
-  const enabled = !!account && !!isConnected && bnum(stakedTokenBalance).gt(0)
+  const enabled =
+    !networkMismatch &&
+    !!account &&
+    !!isConnected &&
+    bnum(stakedTokenBalance).gt(0)
 
   const { config } = usePrepareContractWrite({
     address: stakingAddress,

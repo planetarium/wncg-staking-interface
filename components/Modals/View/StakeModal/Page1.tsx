@@ -2,7 +2,8 @@ import { memo } from 'react'
 import { useAtom } from 'jotai'
 
 import { stakeTxAtom } from 'states/tx'
-import { useFiat, useStaking } from 'hooks'
+import { isEthereum } from 'utils/isEthereum'
+import { useChain, useFiat, useStaking } from 'hooks'
 import { useStake } from './useStake'
 
 import { StyledStakeModalPage1 } from './styled'
@@ -21,6 +22,7 @@ function StakeModalPage1({
   stakedTokenBalance,
   send,
 }: StakeModalPage1Props) {
+  const { chainId } = useChain()
   const toFiat = useFiat()
   const { lpToken } = useStaking()
   const _stake = useStake(stakeAmount)
@@ -68,7 +70,11 @@ function StakeModalPage1({
           <h3 className="subtitle">
             Do you want to stake?
             <strong className="amount">
-              <NumberFormat value={stakeAmount} decimals={8} symbol="LP" />
+              <NumberFormat
+                value={stakeAmount}
+                decimals={8}
+                symbol={isEthereum(chainId) ? 'LP' : 'Cake-LP'}
+              />
               <strong className="parenthesis">
                 <NumberFormat
                   className="usdValue"

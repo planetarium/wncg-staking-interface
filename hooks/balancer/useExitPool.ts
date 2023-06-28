@@ -21,7 +21,7 @@ export function useExitPool({
   isExactOut,
 }: UseExitPoolParams) {
   const { account } = useAuth()
-  const { chainId, dexProtocolAddress, dexPoolId } = useChain()
+  const { chainId, dexProtocolAddress, dexPoolId, networkMismatch } = useChain()
   const { switchBeforeSend } = useSwitchNetwork()
 
   const request = useExitBuildRequest({
@@ -32,13 +32,15 @@ export function useExitPool({
     bptOutPcnt,
   })
 
+  const enabled = !networkMismatch && exitAmounts.some((amt) => bnum(amt).gt(0))
+
   const { config: writeConfig } = usePrepareContractWrite({
     address: dexProtocolAddress,
     abi: BalancerVaultAbi,
     chainId,
     args: [dexPoolId, account, account, request],
     functionName: 'exitPool',
-    enabled: exitAmounts.some((amt) => bnum(amt).gt(0)),
+    enabled,
     onError: switchBeforeSend,
   })
 
