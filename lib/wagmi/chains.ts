@@ -10,7 +10,7 @@ import { CHAINS } from 'config/chains'
 export const { chains, provider, webSocketProvider } = configureChains(
   Object.values(CHAINS),
   [
-    publicProvider(),
+    publicProvider({ priority: 3 }),
     infuraProvider({ apiKey: apiKeys.infura }),
     jsonRpcProvider({
       rpc(chain) {
