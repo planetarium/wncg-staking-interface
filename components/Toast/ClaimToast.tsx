@@ -9,7 +9,7 @@ import { claimTxAtom } from 'states/tx'
 import { formatUnits } from 'utils/formatUnits'
 import { parseTransferLogs } from 'utils/parseTransferLogs'
 import { txUrlFor } from 'utils/txUrlFor'
-import { useChain, useFiat, useStaking } from 'hooks'
+import { useChain, useFiat, useStaking, useViemClient } from 'hooks'
 import { useWatch } from './useWatch'
 
 import { StyledToast } from './styled'
@@ -26,6 +26,7 @@ export default function ClaimToast({
   hash,
   rewardList,
 }: ClaimToastProps) {
+  const client = useViemClient()
   const { chainId } = useChain()
   const toFiat = useFiat()
   const { rewardTokenAddresses, tokens } = useStaking()
@@ -47,7 +48,8 @@ export default function ClaimToast({
     suspense: false,
     async onSuccess(tx) {
       try {
-        const { logs = [] } = (await tx?.wait()) ?? {}
+        const { logs = [] } =
+          (await client.waitForTransactionReceipt({ hash: tx.hash })) ?? {}
 
         const parsedLogs = parseTransferLogs(logs)
         const actualClaimedRewards = rewardTokenAddresses.map(

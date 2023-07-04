@@ -1,9 +1,10 @@
 import { useCallback } from 'react'
-import { parseUnits } from 'ethers/lib/utils.js'
+
 import { useContractWrite, usePrepareContractWrite } from 'wagmi'
 
 import { StakingEthereumAbi } from 'config/abi'
 import { bnum } from 'utils/bnum'
+import { parseUnits } from 'utils/parseUnits'
 import { useAuth, useChain, useStaking, useSwitchNetwork } from 'hooks'
 
 export function useUnstake(unstakeAmount: string, checked: boolean) {
@@ -19,6 +20,7 @@ export function useUnstake(unstakeAmount: string, checked: boolean) {
   ).toString()
 
   const enabled =
+    !networkMismatch &&
     !!account &&
     !!isConnected &&
     bnum(unstakeAmount).gt(0) &&

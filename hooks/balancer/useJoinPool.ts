@@ -1,7 +1,7 @@
 import { useContractWrite, usePrepareContractWrite } from 'wagmi'
-import { parseUnits } from 'ethers/lib/utils.js'
 
 import { BalancerVaultAbi } from 'config/abi'
+import { parseUnits } from 'utils/parseUnits'
 import { useAuth, useChain, useStaking, useSwitchNetwork } from 'hooks'
 import { useJoinBuildRequest } from './useJoinBuildRequest'
 import { bnum } from 'utils/bnum'
@@ -37,16 +37,16 @@ export function useJoinPool(
     args,
     chainId,
     functionName: 'joinPool',
-    overrides: isNative
-      ? {
-          value: parseUnits(
+    onError: switchBeforeSend,
+    account: isNative ? (account as Hash) : undefined,
+    value: isNative
+      ? BigInt(
+          parseUnits(
             joinAmounts[baseTokenIndex],
             poolTokenDecimals[baseTokenIndex]
-          ),
-        }
+          ).toString()
+        )
       : undefined,
-    enabled,
-    onError: switchBeforeSend,
   })
 
   const { writeAsync } = useContractWrite(writeConfig)

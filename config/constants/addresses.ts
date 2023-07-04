@@ -15,6 +15,13 @@ export const STAKING_ADDRESS: ChainMap<Hash> = {
   [ChainId.BSC_TESTNET]: '0x846f38e0c7b3cc72a9545e4c249c5becb33df054',
 }
 
+export const STAKED_TOKEN_ADDRESS: ChainMap<Hash> = {
+  [ChainId.ETHEREUM]: '0xe8cc7e765647625b95f59c15848379d10b9ab4af',
+  [ChainId.GOERLI]: '0x16faf9f73748013155b7bc116a3008b57332d1e6',
+  [ChainId.BSC]: '0xd38fc981f7cbfb63585b375fc93d46056774344c',
+  [ChainId.BSC_TESTNET]: '0xacf4fcab4b08c9452cb7fd9f8a5bbd6e8f40b52e',
+}
+
 export const WETH_ADDRESS: ChainMap<Hash> = {
   [ChainId.ETHEREUM]: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
   [ChainId.GOERLI]: '0xdfcea9088c8a88a76ff74892c1457c17dfeef9c1',

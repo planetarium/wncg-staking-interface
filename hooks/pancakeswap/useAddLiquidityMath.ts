@@ -22,7 +22,6 @@ export function useAddLiquidityMath(isNative?: boolean) {
 
   const { poolReserves = initPoolTokenBalances } =
     useFetchPool({
-      refetchInterval: 1 * MINUTE_MS,
       refetchOnWindowFocus: 'always',
     }).data ?? {}
 

@@ -1,6 +1,7 @@
 import { Erc20Abi } from 'config/abi'
 import { readContractsPool } from 'lib/readContractsPool'
 import { formatUnits } from 'utils/formatUnits'
+import { resolveReadContractsResult } from 'utils/resolveReadContractsResult'
 
 export async function fetchUserAllowances(
   chainId: ChainId,
@@ -16,14 +17,16 @@ export async function fetchUserAllowances(
   }))
 
   try {
-    const data = (await readContractsPool.call({
+    const _data = await readContractsPool.call({
       allowFailure: true,
       contracts,
-    })) as BigNumber[]
+    })
+
+    const data = resolveReadContractsResult(_data) as BigInt[]
 
     const entries = pairs.map(([t, spender], i) => [
       t.address,
-      { [spender]: formatUnits(data[i], t.decimals) },
+      { [spender]: formatUnits(data[i].toString(), t.decimals) },
     ])
 
     return Object.fromEntries(entries)

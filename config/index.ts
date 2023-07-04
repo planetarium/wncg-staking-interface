@@ -7,6 +7,10 @@ class ConfigService {
     return `Nine Chronicles Staking`
   }
 
+  get appDescription() {
+    return `Stake Balancer & PancakeSwap LP token and earn rewards!`
+  }
+
   get baseUrl() {
     return process.env.NEXT_PUBLIC_BASE_URL ?? 'http://localhost:3000'
   }

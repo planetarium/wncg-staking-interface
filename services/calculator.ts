@@ -1,5 +1,5 @@
 // https://github.com/balancer-labs/frontend-v2
-import { getAddress } from 'ethers/lib/utils.js'
+import { getAddress } from 'viem'
 import {
   isSameAddress,
   weightedBPTForTokensZeroPriceImpact as _bptForTokensZeroPriceImpact,

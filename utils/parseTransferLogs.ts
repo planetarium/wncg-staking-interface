@@ -1,4 +1,4 @@
-import type { Log } from '@ethersproject/abstract-provider'
+import type { Log } from 'viem'
 import { decodeLogData } from './decodeLogData'
 
 import { parseLog } from './parseLog'

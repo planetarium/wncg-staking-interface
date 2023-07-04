@@ -1,14 +1,14 @@
 import { useCallback, useMemo } from 'react'
+import { getContract } from 'viem'
+import { getPublicClient, getWalletClient } from '@wagmi/core'
 import { useMount } from 'react-use'
 import { useAtom } from 'jotai'
 import { splitSignature } from '@ethersproject/bytes'
-import { useContract } from 'wagmi'
 import { signTypedData } from '@wagmi/core'
 
 import { currentTimestampAtom } from 'states/system'
 import { PancakePairAbi } from 'config/abi'
 import { SECOND } from 'config/misc'
-import { provider } from 'lib/wagmi/chains'
 import { now } from 'utils/now'
 import { parseUnits } from 'utils/parseUnits'
 import { useAuth, useChain, useStaking } from 'hooks'
@@ -28,11 +28,6 @@ const Permit = [
   { name: 'deadline', type: 'uint256' },
 ]
 
-const types = {
-  EIP712Domain,
-  Permit,
-}
-
 export function useSignature() {
   const { account } = useAuth()
   const { chainId, dexProtocolAddress } = useChain()
@@ -42,11 +37,17 @@ export function useSignature() {
 
   const deadline = currentTimestamp + SECOND * (60 + 10) * 1
 
-  const lpTokenContract = useContract({
-    address: lpToken.address,
-    abi: PancakePairAbi,
-    signerOrProvider: provider({ chainId }),
-  })
+  const publicClient = getPublicClient({ chainId })
+
+  const lpTokenContract = useMemo(
+    () =>
+      getContract({
+        address: lpToken.address,
+        abi: PancakePairAbi,
+        publicClient,
+      }),
+    [lpToken.address, publicClient]
+  )
 
   const domain = useMemo(
     () => ({
@@ -62,7 +63,7 @@ export function useSignature() {
     async (lpAmountOut: string) => {
       if (!lpTokenContract) return
 
-      const nonce = await lpTokenContract.nonces(account)
+      const nonce = await lpTokenContract.read.nonce([account])
 
       const scaledLpAmountOut = parseUnits(
         lpAmountOut,
@@ -73,13 +74,14 @@ export function useSignature() {
         owner: account!,
         spender: dexProtocolAddress,
         value: scaledLpAmountOut,
-        nonce: nonce.toHexString(),
+        nonce,
         deadline,
       }
 
       const rawSig = await signTypedData({
+        // @ts-ignore
         domain,
-        types,
+        types: { EIP712Domain, Permit },
         value: message,
       })
 

@@ -47,16 +47,8 @@ export function prepareAddLiquidity(
     chainId,
     functionName: hasNativeCurrency ? 'addLiquidityETH' : 'addLiquidity',
     args,
+    value: hasNativeCurrency ? BigInt(scaledAmountsIn[ethIndex]) : undefined,
   }
 
-  const overrides = hasNativeCurrency
-    ? {
-        value: BigNumber.from(scaledAmountsIn[ethIndex]),
-      }
-    : undefined
-
-  return {
-    contract,
-    overrides,
-  }
+  return contract
 }

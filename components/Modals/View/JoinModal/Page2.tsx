@@ -6,8 +6,9 @@ import { joinTxAtom } from 'states/tx'
 import { showPoolAtom } from 'states/ui'
 import { ANIMATION_MAP, MOTION } from 'config/constants/motions'
 import { bnum } from 'utils/bnum'
-import { useFiat, useModal, useStaking } from 'hooks'
 import { receivedLpAmountAtom } from './useWatch'
+
+import { useFiat, useModal, useStaking, useViemClient } from 'hooks'
 
 import { StyledJoinModalPage2 } from './styled'
 import Button from 'components/Button'
@@ -16,13 +17,12 @@ import Lottie from 'components/Lottie'
 import NumberFormat from 'components/NumberFormat'
 
 function JoinModalPage2() {
-  const receivedLpAmount = useAtomValue(receivedLpAmountAtom)
-
   const toFiat = useFiat()
   const { removeModal } = useModal()
   const { lpToken } = useStaking()
 
   const { lpBalance = '0' } = useAtomValue(joinTxAtom)
+  const receivedLpAmount = useAtomValue(receivedLpAmountAtom)
   const setShowPool = useSetAtom(showPoolAtom)
 
   const amountInFiatValue = toFiat(receivedLpAmount ?? 0, lpToken.address)

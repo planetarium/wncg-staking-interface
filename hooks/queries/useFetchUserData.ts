@@ -7,7 +7,12 @@ import { fetchUserData } from 'lib/queries/fetchUserData'
 import { useAuth, useChain } from 'hooks'
 
 export function useFetchUserData(options: UseFetchOptions = {}) {
-  const { enabled: _enabled = true, refetchInterval, suspense } = options
+  const {
+    enabled: _enabled = true,
+    refetchInterval,
+    refetchOnWindowFocus,
+    suspense,
+  } = options
 
   const { account, isConnected } = useAuth()
   const { chainId } = useChain()
@@ -24,7 +29,7 @@ export function useFetchUserData(options: UseFetchOptions = {}) {
       staleTime: Infinity,
       cacheTime: Infinity,
       refetchInterval,
-      refetchOnWindowFocus: 'always',
+      refetchOnWindowFocus,
       suspense,
       useErrorBoundary: false,
       onSuccess(data) {

@@ -10,7 +10,7 @@ export const metamaskWalletConfig = {
   title: 'Metamask',
   installed:
     typeof window !== 'undefined' &&
-    Boolean(window.ethereum?.isMetaMask) &&
+    Boolean((window?.ethereum as WindowProvider)?.isMetaMask) &&
     metaMaskConnector.ready,
   connectorId: ConnectorId.MetaMask,
   deepLink: `https://metamask.app.link/dapp/${config.siteUrl}`,

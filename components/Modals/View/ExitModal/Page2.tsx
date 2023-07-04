@@ -7,7 +7,7 @@ import { bnum } from 'utils/bnum'
 import { formatUnits } from 'utils/formatUnits'
 import { parseLog } from 'utils/parseLog'
 import { parseTransferLogs } from 'utils/parseTransferLogs'
-import { useChain, useFiat, useModal, useStaking } from 'hooks'
+import { useChain, useFiat, useModal, useStaking, useViemClient } from 'hooks'
 
 import { StyledExitModalPage2 } from './styled'
 import Button from 'components/Button'
@@ -30,6 +30,7 @@ export default function ExitModalPage2({
 }: ExitModalPage2Props) {
   const [exitAmounts, setExitAmounts] = useState<string[]>([])
 
+  const client = useViemClient()
   const { chainId, nativeCurrency } = useChain()
   const toFiat = useFiat()
   const { removeModal } = useModal()
@@ -41,7 +42,8 @@ export default function ExitModalPage2({
     enabled: !!hash,
     hash,
     async onSuccess(tx) {
-      const { logs } = await tx.wait()
+      const { logs = [] } =
+        (await client.waitForTransactionReceipt({ hash: tx.hash })) ?? {}
 
       const tokenOut = isPropExit ? null : assets[tokenOutIndex]
 

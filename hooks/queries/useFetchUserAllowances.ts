@@ -9,7 +9,7 @@ export function useFetchUserAllowances(options: UseFetchOptions = {}) {
   const {
     enabled = true,
     refetchInterval,
-    refetchOnWindowFocus = 'always',
+    refetchOnWindowFocus,
     suspense = false,
   } = options
 

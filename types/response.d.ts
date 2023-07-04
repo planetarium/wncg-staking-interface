@@ -72,7 +72,6 @@ type BscStaking = {
   cooldownSeconds: number
   rewardEmissionsPerSec: string[]
   rewardTokenAddresses: Hash[]
-  stakedTokenAddress: Hash
   totalStaked: string
   withdrawSeconds: number
 }
@@ -87,7 +86,6 @@ type UserDataResponse = {
   cooldownEndsAt: number
   cooldowns: number
   earnedTokenRewards: string[]
-  stakedTokenBalance: string
   withdrawEndsAt: number
   hasRewards: boolena
 }

@@ -1,13 +1,11 @@
 import { request } from 'graphql-request'
 import { jsonToGraphQLQuery } from 'json-to-graphql-query'
 
-import config from 'config'
 import { CHAINS } from 'config/chains'
+import { DEX } from 'config/constants/dex'
 import { DAY } from 'config/constants/time'
 import { bnum } from 'utils/bnum'
 import { now } from 'utils/now'
-import { balancerPoolIdFor } from 'utils/balancerPoolIdFor'
-import { DEX } from 'config/constants/dex'
 
 type FetchPoolSnapshotResponse = {
   pool: {

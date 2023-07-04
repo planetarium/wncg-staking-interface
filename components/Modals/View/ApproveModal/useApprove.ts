@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 import { useContractWrite, usePrepareContractWrite } from 'wagmi'
-import { constants } from 'ethers'
+import { MaxUint256 } from '@ethersproject/constants'
 
 import { Erc20Abi } from 'config/abi'
 import { useAuth, useChain, useSwitchNetwork } from 'hooks'
@@ -19,8 +19,8 @@ export function useApprove(tokenAddress: Hash, spender: string) {
     ...approveConfig,
     address: tokenAddress as Hash,
     chainId,
-    args: [spender, constants.MaxUint256],
     enabled: !!isConnected && !!tokenAddress && !!spender && !networkMismatch,
+    args: [spender, MaxUint256],
     onError: switchBeforeSend,
   })
 

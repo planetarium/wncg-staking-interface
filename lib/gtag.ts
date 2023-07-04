@@ -4,5 +4,5 @@ type GaEventParams = {
 }
 
 export const gaEvent = ({ name, params = {} }: GaEventParams) => {
-  window?.gtag?.('event', name, params)
+  // window?.gtag?.('event', name, params)
 }

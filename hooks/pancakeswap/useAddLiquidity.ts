@@ -65,8 +65,7 @@ export function useAddLiquidity(assets: Hash[], amountsIn: string[]) {
   )
 
   const { config: _config } = usePrepareContractWrite({
-    ...data?.contract,
-    overrides: data?.overrides,
+    ...data,
     enabled: !!data,
     onError(err: any) {
       if (err?.reason?.includes('TRANSFER_FROM_FAILED')) {
@@ -87,7 +86,7 @@ export function useAddLiquidity(assets: Hash[], amountsIn: string[]) {
   }
 
   return {
-    addLiquidity: writeAsync ? addLiquidity : undefined,
+    addLiquidity,
     error,
   }
 }

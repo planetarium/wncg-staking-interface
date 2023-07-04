@@ -7,10 +7,11 @@ import { Abi } from 'abitype'
 import { nanoid } from 'nanoid'
 
 class ReadContractsPool<
-  TAbi extends Abi | readonly unknown[],
+  TAbi extends Abi,
   TFunctionName extends string,
   TContracts extends {
-    abi: TAbi
+    address: Hash
+    abi: Narrow<TAbi>
     functionName: TFunctionName
   }[]
 > {

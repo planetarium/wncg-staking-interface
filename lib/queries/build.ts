@@ -2,9 +2,9 @@ import { CHAINS, ChainId } from 'config/chains'
 import { calcBalancerLpTokenPrice } from 'utils/calcBalancerLpTokenPrice'
 import { calcPancakeSwapLpTokenPrice } from 'utils/calcPancakeSwapLpTokenPrice'
 import { uniqAddress } from 'utils/uniqAddress'
+import { fetchPrices } from './fetchPrices'
 import { prefetchPool } from './prefetchPool'
 import { prefetchStaking } from './prefetchStaking'
-import { fetchPrices } from './fetchPrices'
 import { prefetchTokens } from './prefetchTokens'
 
 export async function build(chainId: ChainId) {
@@ -13,7 +13,7 @@ export async function build(chainId: ChainId) {
 
   try {
     const staking = await prefetchStaking(chainId)
-    const pool = await prefetchPool(chainId, staking.stakedTokenAddress)
+    const pool = await prefetchPool(chainId)
 
     const tokenList = uniqAddress([
       ...pool.poolTokenAddresses,

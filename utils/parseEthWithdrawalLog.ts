@@ -1,6 +1,6 @@
-import type { Log } from '@ethersproject/abstract-provider'
-import { decodeLogData } from './decodeLogData'
+import type { Log } from 'viem'
 
+import { decodeLogData } from './decodeLogData'
 import { parseLog } from './parseLog'
 
 export function parseEthWithdrawalLog(logs: Log[]) {

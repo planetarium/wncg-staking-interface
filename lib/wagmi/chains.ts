@@ -1,22 +1,21 @@
 import { configureChains } from 'wagmi'
-
+import { mainnet, goerli, bsc, bscTestnet } from 'wagmi/chains'
 import { infuraProvider } from 'wagmi/providers/infura'
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc'
 import { publicProvider } from 'wagmi/providers/public'
 
 import { apiKeys } from 'config/api'
-import { CHAINS } from 'config/chains'
 
-export const { chains, provider, webSocketProvider } = configureChains(
-  Object.values(CHAINS),
+export const { chains, publicClient, webSocketPublicClient } = configureChains(
+  [mainnet, goerli, bsc, bscTestnet],
   [
-    publicProvider({ priority: 3 }),
-    infuraProvider({ apiKey: apiKeys.infura }),
     jsonRpcProvider({
       rpc(chain) {
         return nodeRealUrlFor(chain.network)
       },
     }),
+    infuraProvider({ apiKey: apiKeys.infura }),
+    publicProvider(),
   ]
 )
 

@@ -37,7 +37,7 @@ export const MAIN_SEO = {
 
 export const STAKING_SEO = {
   title: config.stakingAppName,
-  description: 'Stake Balancer LP token and earn rewards!',
+  description: 'Stake Balancer & PancakeSwap LP token and earn rewards!',
   canonical: `${config.siteUrl}/wncg`,
   openGraph: {
     type: 'website',

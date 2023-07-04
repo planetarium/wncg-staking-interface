@@ -1,13 +1,13 @@
-import type { Log } from '@ethersproject/abstract-provider'
+import { Log } from 'viem'
 
 import {
   balRewardPoolIface,
   ercTokenIface,
-  stakingBscIface,
   liquidityGaugeIface,
-  stakingEthereumIface,
   pancakePairIface,
   pancakeRouterIface,
+  stakingBscIface,
+  stakingEthereumIface,
   vaultIface,
   wethIface,
 } from 'lib/interface'

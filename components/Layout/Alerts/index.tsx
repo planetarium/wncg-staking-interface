@@ -2,9 +2,9 @@ import { useNetwork } from 'wagmi'
 import { AnimatePresence } from 'framer-motion'
 
 import { useChain } from 'hooks'
+import NetworkAlert from './NetworkAlert'
 
 import { StyledAlerts } from './styled'
-import NetworkAlert from './NetworkAlert'
 
 export default function Alerts() {
   const { chainId } = useChain()

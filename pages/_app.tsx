@@ -89,7 +89,7 @@ function MyApp({ Component, pageProps }: MyAppProps) {
           <Hydrate state={pageProps.dehydratedState}>
             <Provider>
               <HydrateAtoms queryClient={queryClient.current}>
-                <WagmiConfig client={wagmiClient}>
+                <WagmiConfig config={wagmiClient}>
                   <DefaultSeo />
                   <GlobalStyle />
                   <ToastStyle />
@@ -118,10 +118,10 @@ export default MyApp
 export function reportWebVitals({ id, name, value }: NextWebVitalsMetric) {
   if (name === 'Next.js-hydration') return
 
-  window?.gtag?.('event', name, {
-    event_category: 'Web Vitals',
-    value: Math.round(name === 'CLS' ? value * 1_000 : value),
-    event_label: id, // id unique to current page load
-    non_interaction: true, // avoids affecting bounce rate.
-  })
+  // window?.gtag?.('event', name, {
+  //   event_category: 'Web Vitals',
+  //   value: Math.round(name === 'CLS' ? value * 1_000 : value),
+  //   event_label: id, // id unique to current page load
+  //   non_interaction: true, // avoids affecting bounce rate.
+  // })
 }

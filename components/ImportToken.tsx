@@ -57,12 +57,12 @@ export default function ImportToken({
     if (address.toLowerCase() === nativeCurrency.address) return false
     if (!isConnected) return false
 
+    const ethereum = window?.ethereum as ExtendedEthereum
+
     switch (true) {
-      case window?.ethereum?.isMetaMask &&
-        connector?.id === ConnectorId.MetaMask:
-      case window?.ethereum?.isTrust &&
-        connector?.id === ConnectorId.TrustWallet:
-      case window?.ethereum?.isCoinbaseWallet &&
+      case ethereum?.isMetaMask && connector?.id === ConnectorId.MetaMask:
+      case ethereum?.isTrust && connector?.id === ConnectorId.TrustWallet:
+      case ethereum?.isCoinbaseWallet &&
         connector?.id === ConnectorId.CoinbaseWallet:
         return true
       default:
@@ -76,7 +76,7 @@ export default function ImportToken({
       if (!importDisabled) return
 
       try {
-        await (window.ethereum as Ethereum).request({
+        await (window?.ethereum as ExtendedEthereum)?.request({
           method: 'wallet_watchAsset' as any,
           params: {
             type: 'ERC20',

@@ -1,10 +1,10 @@
-import { readContracts } from 'wagmi'
-
 import { StakingEthereumAbi } from 'config/abi'
 import { STAKING_ADDRESS } from 'config/constants/addresses'
-// import { readContractsPool } from 'lib/readContractsPool'
+import { readContractsPool } from 'lib/readContractsPool'
+import { bnum } from 'utils/bnum'
 import { formatUnits } from 'utils/formatUnits'
 import { now } from 'utils/now'
+import { resolveReadContractsResult } from 'utils/resolveReadContractsResult'
 
 const FNS = [
   'stakedTokenBalance',
@@ -16,7 +16,7 @@ const FNS = [
 export async function fetchUserData(chainId: ChainId, account: Hash) {
   const contracts = FNS.map((fn) => ({
     address: STAKING_ADDRESS[chainId],
-    abi: StakingEthereumAbi,
+    abi: StakingEthereumAbi as Abi,
     chainId,
     functionName: fn,
     args: [account],
@@ -24,7 +24,7 @@ export async function fetchUserData(chainId: ChainId, account: Hash) {
 
   try {
     const data =
-      (await readContracts({
+      (await readContractsPool.call({
         contracts,
         allowFailure: true,
       })) ?? []
@@ -34,13 +34,17 @@ export async function fetchUserData(chainId: ChainId, account: Hash) {
       _getCooldownEndTimestamp,
       _getWithdrawEndTimestamp,
       _cooldowns,
-    ] = data as unknown as BigNumber[]
+    ] = resolveReadContractsResult(data) as BigInt[]
 
-    const stakedTokenBalance = formatUnits(_stakedTokenBalance)
+    const stakedTokenBalance = formatUnits(_stakedTokenBalance.toString())
 
-    const _cooldownEndsAt = _getCooldownEndTimestamp?.toNumber() ?? 0
-    const _withdrawEndsAt = _getWithdrawEndTimestamp?.toNumber() ?? 0
-    const cooldowns = _cooldowns?.toNumber() ?? 0
+    const _cooldownEndsAt = bnum(
+      _getCooldownEndTimestamp?.toString() ?? '0'
+    ).toNumber()
+    const _withdrawEndsAt = bnum(
+      _getWithdrawEndTimestamp?.toString() ?? '0'
+    ).toNumber()
+    const cooldowns = bnum(_cooldowns?.toString() ?? '0').toNumber()
 
     const currentTimestamp = now()
 

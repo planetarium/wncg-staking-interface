@@ -5,6 +5,7 @@ import { ChainId, CHAINS } from 'config/chains'
 import { bnum } from 'utils/bnum'
 import { formatUnits } from 'utils/formatUnits'
 import { fetchPoolTokens } from './fetchPoolTokens'
+import { resolveReadContractsResult } from 'utils/resolveReadContractsResult'
 
 const FNS = [
   'decimals',
@@ -24,7 +25,7 @@ export async function fetchPancakeSwapPool(
 
   const contracts = FNS.map((fn) => ({
     address: stakedTokenAddress as Hash,
-    abi: PancakePairAbi,
+    abi: PancakePairAbi as Abi,
     chainId,
     functionName: fn,
   }))
@@ -41,15 +42,15 @@ export async function fetchPancakeSwapPool(
     _totalSupply,
     _token0,
     _token1,
-    _reserves = [],
-  ] = data as [
+    _reserves,
+  ] = resolveReadContractsResult(data) as [
     number,
     string,
     string,
-    BigNumber,
+    BigInt,
     Hash,
     Hash,
-    [BigNumber, BigNumber, BigNumber]
+    [BigInt, BigInt, BigInt]
   ]
 
   const poolTokens = await fetchPoolTokens(
@@ -83,7 +84,7 @@ export async function fetchPancakeSwapPool(
       decimals: 18,
       name: 'Cake-LP',
       symbol: poolTokenSymbols.join('-'),
-      totalSupply: formatUnits(_totalSupply, _decimals),
+      totalSupply: formatUnits(_totalSupply.toString(), _decimals),
     },
 
     poolTokens,

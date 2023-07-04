@@ -1,8 +1,10 @@
+import { readContracts } from 'wagmi'
+
 import { StakingEthereumAbi } from 'config/abi'
 import { BAL_ADDRESS, STAKING_ADDRESS } from 'config/constants/addresses'
-import { readContractsPool } from 'lib/readContractsPool'
 import { bnum } from 'utils/bnum'
 import { formatUnits } from 'utils/formatUnits'
+import { resolveReadContractsResult } from 'utils/resolveReadContractsResult'
 
 const FNS = [
   'earmarkIncentive',
@@ -10,7 +12,6 @@ const FNS = [
   'balancerGauge',
   'BAL_REWARD_POOL',
   'REWARD_TOKEN',
-  'STAKED_TOKEN',
   'getBALRewardRate',
   'getWNCGEmissionPerSec',
   'COOLDOWN_SECONDS',
@@ -27,23 +28,10 @@ export async function fetchEthereumStaking(chainId: ChainId) {
   }))
 
   try {
-    const data = (await readContractsPool.call({
+    const data = await readContracts({
       allowFailure: true,
       contracts,
-    })) as [
-      BigNumber,
-      BigNumber,
-      Hash,
-      Hash,
-      Hash,
-      Hash,
-      Hash,
-      BigNumber,
-      BigNumber,
-      BigNumber,
-      BigNumber,
-      BigNumber
-    ]
+    })
 
     const [
       _earmarkIncentiveFee,
@@ -51,17 +39,27 @@ export async function fetchEthereumStaking(chainId: ChainId) {
       _balancerGauge,
       _balRewardPool,
       _rewardToken,
-      _stakedToken,
       _balRewardRate,
       _wncgEmissionPerSec,
       _cooldownSeconds,
       _unstakeWindow,
       _totalStaked,
-    ] = data
+    ] = resolveReadContractsResult(data) as [
+      BigInt,
+      BigInt,
+      Hash,
+      Hash,
+      Hash,
+      BigInt,
+      BigInt,
+      BigInt,
+      BigInt,
+      BigInt
+    ]
 
     const earmarkIncentivePcnt = Math.min(
-      bnum(_earmarkIncentiveFee?.toNumber() ?? 0)
-        .div(_feeDenominator?.toNumber() ?? 0)
+      bnum(_earmarkIncentiveFee?.toString() ?? 0)
+        .div(_feeDenominator?.toString() ?? 0)
         .toNumber() ?? 0.01,
       1
     )
@@ -69,28 +67,25 @@ export async function fetchEthereumStaking(chainId: ChainId) {
     const balancerGaugeAddress = (_balancerGauge?.toLowerCase() ?? '') as Hash
     const balRewardPoolAddress = (_balRewardPool?.toLowerCase() ?? '') as Hash
     const rewardTokenAddress = (_rewardToken?.toLowerCase() ?? '') as Hash
-    const stakedTokenAddress = (_stakedToken?.toLowerCase() ?? '') as Hash
 
     const rewardTokenAddresses = [rewardTokenAddress, BAL_ADDRESS[chainId]].map(
       (a) => a?.toLowerCase() as Hash
     )
 
     const rewardEmissionsPerSec = [_wncgEmissionPerSec, _balRewardRate].map(
-      (e) => formatUnits(e)
+      (e) => formatUnits(e.toString())
     )
 
-    const cooldownSeconds = _cooldownSeconds?.toNumber() ?? 0
-    const withdrawSeconds = _unstakeWindow?.toNumber() ?? 0
-    const totalStaked = formatUnits(_totalStaked)
+    const cooldownSeconds = bnum(_cooldownSeconds?.toString() ?? 0).toNumber()
+    const withdrawSeconds = bnum(_unstakeWindow?.toString() ?? 0).toNumber()
+    const totalStaked = formatUnits(_totalStaked.toString())
 
     return {
       cooldownSeconds,
       rewardEmissionsPerSec,
       rewardTokenAddresses,
-      stakedTokenAddress,
       totalStaked,
       withdrawSeconds,
-
       balancerGaugeAddress,
       balRewardPoolAddress,
       earmarkIncentivePcnt,

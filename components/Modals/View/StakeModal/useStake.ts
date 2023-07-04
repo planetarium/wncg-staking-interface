@@ -1,9 +1,9 @@
 import { useCallback } from 'react'
-import { parseUnits } from 'ethers/lib/utils'
 import { useContractWrite, usePrepareContractWrite } from 'wagmi'
 
 import { StakingEthereumAbi } from 'config/abi'
 import { bnum } from 'utils/bnum'
+import { parseUnits } from 'utils/parseUnits'
 import { useAuth, useChain, useStaking, useSwitchNetwork } from 'hooks'
 
 export function useStake(stakeAmount: string) {

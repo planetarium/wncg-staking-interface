@@ -9,12 +9,12 @@ export function useImportToken() {
   const canImportToken = useMemo(() => {
     if (typeof window === 'undefined') return false
 
+    const ethereum = window?.ethereum as ExtendedEthereum
+
     switch (true) {
-      case window?.ethereum?.isMetaMask &&
-        connector?.id === ConnectorId.MetaMask:
-      case window?.ethereum?.isTrust &&
-        connector?.id === ConnectorId.TrustWallet:
-      case window?.ethereum?.isCoinbaseWallet &&
+      case ethereum?.isMetaMask && connector?.id === ConnectorId.MetaMask:
+      case ethereum?.isTrust && connector?.id === ConnectorId.TrustWallet:
+      case ethereum?.isCoinbaseWallet &&
         connector?.id === ConnectorId.CoinbaseWallet:
         return true
       default:

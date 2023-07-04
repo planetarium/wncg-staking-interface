@@ -3,10 +3,10 @@ import { readContracts } from 'wagmi'
 import { StakingBscAbi } from 'config/abi'
 import { STAKING_ADDRESS } from 'config/constants/addresses'
 import { formatUnits } from 'utils/formatUnits'
+import { bnum } from 'utils/bnum'
 
 const FNS = [
   'REWARD_TOKEN',
-  'STAKED_TOKEN',
   'getEmissionPerSec',
   'COOLDOWN_SECONDS',
   'UNSTAKE_WINDOW',
@@ -16,36 +16,41 @@ const FNS = [
 export async function fetchBscStaking(chainId: ChainId) {
   const contracts = FNS.map((fn) => ({
     address: STAKING_ADDRESS[chainId],
-    abi: StakingBscAbi,
+    abi: StakingBscAbi as Abi,
     chainId,
     functionName: fn,
   }))
 
   try {
-    const data = (await readContracts({
+    const data = await readContracts({
       contracts,
       allowFailure: true,
-    })) as [Hash, Hash, BigNumber, BigNumber, BigNumber, BigNumber]
+    })
 
     const [
       _rewardToken,
-      _stakedToken,
       _emissionPerSec,
       _cooldownSeconds,
       _unstakeWindow,
       _totalStaked,
-    ] = data
+    ] = data.map((i) => (i.status === 'success' ? i.result : null)) as [
+      Hash,
+      BigInt,
+      BigInt,
+      BigInt,
+      BigInt,
+      BigInt
+    ]
 
     const rewardTokenAddress = _rewardToken.toLowerCase() as Hash
-    const stakedTokenAddress = _stakedToken.toLowerCase() as Hash
-    const emissionPerSec = formatUnits(_emissionPerSec)
-    const cooldownSeconds = _cooldownSeconds?.toNumber() ?? 0
-    const withdrawSeconds = _unstakeWindow?.toNumber() ?? 0
-    const totalStaked = formatUnits(_totalStaked)
+
+    const emissionPerSec = formatUnits(_emissionPerSec?.toString())
+    const cooldownSeconds = bnum(_cooldownSeconds?.toString() ?? '0').toNumber()
+    const withdrawSeconds = bnum(_unstakeWindow?.toString() ?? '0').toNumber()
+    const totalStaked = formatUnits(_totalStaked?.toString() ?? '0')
 
     return {
       cooldownSeconds,
-      stakedTokenAddress,
       rewardEmissionsPerSec: [emissionPerSec],
       rewardTokenAddresses: [rewardTokenAddress],
       totalStaked,

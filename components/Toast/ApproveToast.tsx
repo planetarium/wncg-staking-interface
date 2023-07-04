@@ -7,14 +7,15 @@ import { RESET } from 'jotai/utils'
 
 import { approveTxAtom } from 'states/tx'
 import { txUrlFor } from 'utils/txUrlFor'
-import { useChain, useStaking } from 'hooks'
+import { isEthereum } from 'utils/isEthereum'
+import { parseLog } from 'utils/parseLog'
+import { useChain, useStaking, useViemClient } from 'hooks'
 import { useWatch } from './useWatch'
 
 import { StyledToast } from './styled'
 import Icon from 'components/Icon'
 import TokenIcon from 'components/TokenIcon'
 import ToastStatus from './Status'
-import { isEthereum } from 'utils/isEthereum'
 
 type ApproveToastProps = {
   hash: Hash
@@ -30,6 +31,7 @@ export default function ApproveToast({
 }: ApproveToastProps) {
   const [pending, setPending] = useState<boolean | null>(null)
 
+  const client = useViemClient()
   const { chainId } = useChain()
   const { lpToken, tokens } = useStaking()
 
@@ -44,8 +46,21 @@ export default function ApproveToast({
     chainId,
     enabled: !!hash,
     suspense: false,
-    async onSuccess() {
-      setPending(true)
+    async onSuccess(tx) {
+      try {
+        const { logs = [] } =
+          (await client.waitForTransactionReceipt({ hash: tx.hash })) ?? {}
+
+        const approvalLog = logs
+          .map((l) => parseLog(l))
+          .find((l) => l?.name === 'Approval')
+
+        const allowance = approvalLog?.args?.value?.toString() ?? '0'
+
+        if (allowance != null) {
+          setPending(true)
+        }
+      } catch {}
     },
   })
 
