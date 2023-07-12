@@ -77,3 +77,34 @@ type RpcUrls = {
   http: readonly string[]
   webSocket?: readonly string[]
 }
+
+type PoolActionType = 'Join' | 'Exit'
+
+type JoinExit = {
+  id: string
+  type: PoolActionType
+  sender: string
+  amounts: string[]
+  timestamp: number
+  tx: string
+}
+
+type JoinPoolRequest = {
+  assets: string[]
+  maxAmountsIn: string[]
+  userData: string
+  fromInternalBalance: boolean
+}
+
+type Swap = {
+  tokenIn: string
+  tokenOut: string
+  tokenAmountIn: string
+  tokenAmountOut: string
+  valueUSD: string
+  userAddress: {
+    id: string
+  }
+  timestamp: number
+  tx: string
+}
