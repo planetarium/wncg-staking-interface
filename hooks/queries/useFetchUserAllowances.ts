@@ -7,13 +7,13 @@ import { useAuth, useChain, useStaking } from 'hooks'
 
 export function useFetchUserAllowances(options: UseFetchOptions = {}) {
   const {
-    enabled = true,
+    enabled: _enabled = true,
     refetchInterval,
     refetchOnWindowFocus,
     suspense = false,
   } = options
 
-  const { account } = useAuth()
+  const { account, isConnected } = useAuth()
   const { chainId, dexProtocolAddress, stakingAddress } = useChain()
   const { lpToken, poolTokenAddresses, tokens } = useStaking()
 
@@ -32,6 +32,8 @@ export function useFetchUserAllowances(options: UseFetchOptions = {}) {
       ),
     [pairAddressList, tokens]
   )
+
+  const enabled = _enabled && !!isConnected
 
   return useQuery<AllowanceMap>(
     [QUERY_KEYS.User.Allowances, account!, chainId, ...pairAddressList],

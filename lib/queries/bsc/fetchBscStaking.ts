@@ -2,8 +2,8 @@ import { readContracts } from 'wagmi'
 
 import { StakingBscAbi } from 'config/abi'
 import { STAKING_ADDRESS } from 'config/constants/addresses'
-import { formatUnits } from 'utils/formatUnits'
 import { bnum } from 'utils/bnum'
+import { formatUnits } from 'utils/formatUnits'
 
 const FNS = [
   'REWARD_TOKEN',

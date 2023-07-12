@@ -1,4 +1,4 @@
-import { PropsWithChildren, useEffect, useRef } from 'react'
+import { PropsWithChildren, useRef } from 'react'
 import {
   Hydrate,
   QueryClient,
@@ -23,10 +23,10 @@ import GlobalStyle from 'styles/GlobalStyle'
 import ToastStyle from 'styles/ToastStyle'
 
 import { ChainContextProvider } from 'components/ChainProvider'
+import DefaultSeo from 'components/DefaultSeo'
 import ErrorBoundary from 'components/ErrorBoundary'
 import Layout from 'components/Layout'
 import ToastContainer from 'components/ToastContainer'
-import DefaultSeo from 'components/DefaultSeo'
 
 type MyAppProps = AppProps & {
   pageProps: {
@@ -114,14 +114,3 @@ function MyApp({ Component, pageProps }: MyAppProps) {
 }
 
 export default MyApp
-
-export function reportWebVitals({ id, name, value }: NextWebVitalsMetric) {
-  if (name === 'Next.js-hydration') return
-
-  // window?.gtag?.('event', name, {
-  //   event_category: 'Web Vitals',
-  //   value: Math.round(name === 'CLS' ? value * 1_000 : value),
-  //   event_label: id, // id unique to current page load
-  //   non_interaction: true, // avoids affecting bounce rate.
-  // })
-}

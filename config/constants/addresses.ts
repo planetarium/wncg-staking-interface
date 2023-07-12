@@ -33,7 +33,7 @@ export const WNCG_ADDRESS: ChainMap<Hash> = {
   [ChainId.ETHEREUM]: '0xf203ca1769ca8e9e8fe1da9d147db68b6c919817',
   [ChainId.GOERLI]: '0xa488533be3018a0720c4c0647f407f3b41e6cb82',
   [ChainId.BSC]: '0x52242cbab41e290e9e17ccc50cc437bb60020a9d',
-  [ChainId.BSC_TESTNET]: '0x',
+  [ChainId.BSC_TESTNET]: '0xb43475a1faecc6c578df69fb8703d0ac1531df48',
 }
 
 export const BAL_ADDRESS: ChainMap<Hash | null> = {

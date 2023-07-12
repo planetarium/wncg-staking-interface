@@ -5,7 +5,7 @@ import clsx from 'clsx'
 
 import { slippageAtom } from 'states/system'
 import { hideJoinTooltipAtom, showPoolAtom } from 'states/ui'
-import { ANIMATION_MAP, EXIT_MOTION, MOTION } from 'config/constants/motions'
+import { ANIMATION_MAP, MOTION } from 'config/constants/motions'
 import { bnum } from 'utils/bnum'
 import { useAuth, useBalances, useStaking, useResponsive } from 'hooks'
 

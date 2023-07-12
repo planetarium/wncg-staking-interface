@@ -4,8 +4,8 @@ import { PancakePairAbi } from 'config/abi'
 import { ChainId, CHAINS } from 'config/chains'
 import { bnum } from 'utils/bnum'
 import { formatUnits } from 'utils/formatUnits'
-import { fetchPoolTokens } from './fetchPoolTokens'
 import { resolveReadContractsResult } from 'utils/resolveReadContractsResult'
+import { fetchPoolTokens } from './fetchPoolTokens'
 
 const FNS = [
   'decimals',
