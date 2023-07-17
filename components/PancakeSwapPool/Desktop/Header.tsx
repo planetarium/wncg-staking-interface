@@ -26,7 +26,7 @@ function PoolHeader() {
       className="poolHeader"
       $reverse={shouldReversePoolTokenOrderOnDisplay}
     >
-      <strong className="poolName">{lpToken.name}</strong>
+      <strong className="poolName">{lpToken?.name}</strong>
       <div className="titleGroup">
         <h2 className="title">Join pool, Get Cake-LP!</h2>
 

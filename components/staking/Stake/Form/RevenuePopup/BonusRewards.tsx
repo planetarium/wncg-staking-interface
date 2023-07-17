@@ -30,7 +30,7 @@ export default function StakeFormRevenuePopupBonusRewards({
   const toFiat = useFiat()
   const { rewardEmissionsPerSec, rewardTokenAddresses, lpToken } = useStaking()
 
-  const stakedTokenPrice = toFiat(1, lpToken.address)
+  const stakedTokenPrice = toFiat(1, lpToken?.address)
 
   const expectedTotalStakedValue = toFiat(expectedTotalStaked, lpToken?.address)
 

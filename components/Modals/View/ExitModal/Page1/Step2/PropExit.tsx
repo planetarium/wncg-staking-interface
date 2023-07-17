@@ -48,7 +48,7 @@ function ExitModalPage1Step2PropExit({
 
   const bptOutPcnt = watch(LiquidityFieldType.LiquidityPercent)
 
-  const lpBalance = balanceOf(lpToken.address)
+  const lpBalance = balanceOf(lpToken?.address)
   const bptOutAmount = bnum(lpBalance).times(bptOutPcnt).div(100).toString()
 
   const disabled = !!hash

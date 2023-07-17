@@ -16,7 +16,7 @@ export function useUnstake(unstakeAmount: string, checked: boolean) {
 
   const scaledUnstakeAmount = parseUnits(
     bnum(unstakeAmount).toString(),
-    lpToken.decimals
+    lpToken?.decimals
   ).toString()
 
   const enabled =

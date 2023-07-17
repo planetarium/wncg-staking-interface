@@ -16,9 +16,9 @@ function BalancerPoolBalances() {
   return (
     <StyledBalancerPoolBalances layout>
       <div className="balancesHeader">
-        <TokenIcon address={lpToken.address} $size={48} />
+        <TokenIcon address={lpToken?.address} $size={48} />
 
-        <h2 className="title">{lpToken.name}</h2>
+        <h2 className="title">{lpToken?.name}</h2>
 
         {!isConnected && (
           <Button

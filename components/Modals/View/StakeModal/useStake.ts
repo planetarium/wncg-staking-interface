@@ -14,7 +14,7 @@ export function useStake(stakeAmount: string) {
 
   const scaledStakeAmount = parseUnits(
     bnum(stakeAmount).toString(),
-    tokens[lpToken.address]?.decimals ?? 18
+    tokens[lpToken?.address]?.decimals ?? 18
   ).toString()
 
   const enabled =

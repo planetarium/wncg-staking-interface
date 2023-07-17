@@ -88,8 +88,8 @@ function ExitModalPage1Step1({
                   >
                     <label className="fakeInput" htmlFor={key}>
                       <TokenIcon
-                        key={`exitForm:tokenGroup:${addr ?? lpToken.address}`}
-                        address={addr ?? lpToken.address}
+                        key={`exitForm:tokenGroup:${addr ?? lpToken?.address}`}
+                        address={addr ?? lpToken?.address}
                         $size={24}
                       />
 

@@ -60,7 +60,7 @@ export function useRemoveLiquidityForm(): UseRemoveLiquidityFormReturns {
     useStaking()
   const calcPropAmountsOut = useRemoveLiquidityMath()
 
-  const userLpAmount = balanceOf(lpToken.address)
+  const userLpAmount = balanceOf(lpToken?.address)
 
   const {
     clearErrors,
@@ -95,8 +95,8 @@ export function useRemoveLiquidityForm(): UseRemoveLiquidityFormReturns {
   )
 
   const lpAmountOutFiatValue = useMemo(
-    () => toFiat(lpAmountOut, lpToken.address),
-    [lpAmountOut, lpToken.address, toFiat]
+    () => toFiat(lpAmountOut, lpToken?.address),
+    [lpAmountOut, lpToken?.address, toFiat]
   )
 
   const debouncedPcnt = useDebouncedValue(pcntOut, 500)

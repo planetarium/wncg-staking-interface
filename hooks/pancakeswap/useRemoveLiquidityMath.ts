@@ -13,18 +13,18 @@ export function useRemoveLiquidityMath() {
     useFetchPool({ refetchOnWindowFocus: 'always' }).data ?? {}
 
   const userLpAmount = useMemo(
-    () => balanceOf(lpToken.address),
-    [balanceOf, lpToken.address]
+    () => balanceOf(lpToken?.address),
+    [balanceOf, lpToken?.address]
   )
 
   const calcPropAmountsOut = useCallback(
     (pcnt: number | string) => {
       const lpAmountOut = bnum(userLpAmount).times(pcnt).div(100)
 
-      const share = lpAmountOut.div(lpToken.totalSupply)
+      const share = lpAmountOut.div(lpToken?.totalSupply)
       return poolReserves.map((amt) => share.times(amt).toFixed(0, 3))
     },
-    [userLpAmount, lpToken.totalSupply, poolReserves]
+    [userLpAmount, lpToken?.totalSupply, poolReserves]
   )
 
   return calcPropAmountsOut

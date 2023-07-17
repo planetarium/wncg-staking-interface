@@ -42,11 +42,11 @@ export function useSignature() {
   const lpTokenContract = useMemo(
     () =>
       getContract({
-        address: lpToken.address,
+        address: lpToken?.address,
         abi: PancakePairAbi,
         publicClient,
       }),
-    [lpToken.address, publicClient]
+    [lpToken?.address, publicClient]
   )
 
   const domain = useMemo(
@@ -54,9 +54,9 @@ export function useSignature() {
       name: `Pancake LPs`,
       version: '1',
       chainId,
-      verifyingContract: lpToken.address,
+      verifyingContract: lpToken?.address,
     }),
-    [chainId, lpToken.address]
+    [chainId, lpToken?.address]
   )
 
   const sign = useCallback(
@@ -67,7 +67,7 @@ export function useSignature() {
 
       const scaledLpAmountOut = parseUnits(
         lpAmountOut,
-        lpToken.decimals
+        lpToken?.decimals
       ).toString()
 
       const message = {
@@ -97,7 +97,7 @@ export function useSignature() {
     [
       lpTokenContract,
       account,
-      lpToken.decimals,
+      lpToken?.decimals,
       dexProtocolAddress,
       deadline,
       domain,

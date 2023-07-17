@@ -25,16 +25,16 @@ function JoinModalPage2() {
   const receivedLpAmount = useAtomValue(receivedLpAmountAtom)
   const setShowPool = useSetAtom(showPoolAtom)
 
-  const amountInFiatValue = toFiat(receivedLpAmount ?? 0, lpToken.address)
+  const amountInFiatValue = toFiat(receivedLpAmount ?? 0, lpToken?.address)
   const hadLpBalanceBefore = bnum(lpBalance).gt(0)
-  const lpTokenBalanceInFiatValue = toFiat(lpBalance, lpToken.address)
+  const lpTokenBalanceInFiatValue = toFiat(lpBalance, lpToken?.address)
 
   const totalLpTokenBalance = bnum(receivedLpAmount ?? 0)
     .plus(lpBalance)
     .toString()
   const totalLpTokenBalanceInFiatValue = toFiat(
     totalLpTokenBalance,
-    lpToken.address
+    lpToken?.address
   )
 
   function closeModal() {

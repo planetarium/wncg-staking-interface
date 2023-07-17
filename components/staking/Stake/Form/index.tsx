@@ -45,7 +45,7 @@ export default function StakeForm() {
 
   const [debouncedStakeAmount] = useDebounce(stakeAmount, 500)
 
-  const isApproved = bnum(allowanceOf(lpToken.address, stakingAddress)).gte(
+  const isApproved = bnum(allowanceOf(lpToken?.address, stakingAddress)).gte(
     stakeAmount
   )
 
@@ -64,10 +64,10 @@ export default function StakeForm() {
         : {
             spender: stakingAddress,
             spenderName: 'staking',
-            tokenAddress: lpToken.address,
-            tokenName: lpToken.name,
-            tokenSymbol: `LP token(${lpToken.name})`,
-            tokenDecimals: lpToken.decimals,
+            tokenAddress: lpToken?.address,
+            tokenName: lpToken?.name,
+            tokenSymbol: `LP token(${lpToken?.name})`,
+            tokenDecimals: lpToken?.decimals,
             approvePurpose: '',
             buttonLabel: 'Go to stake',
             toastLabel: 'stake',
@@ -85,9 +85,9 @@ export default function StakeForm() {
     [
       addModal,
       isApproved,
-      lpToken.address,
-      lpToken.decimals,
-      lpToken.name,
+      lpToken?.address,
+      lpToken?.decimals,
+      lpToken?.name,
       resetForm,
       stakeAmount,
       stakingAddress,
@@ -114,9 +114,9 @@ export default function StakeForm() {
               control as unknown as ReactHookFormControl<FieldValues, 'any'>
             }
             name="stakeAmount"
-            address={lpToken.address}
+            address={lpToken?.address}
             rules={rules}
-            decimals={lpToken.decimals}
+            decimals={lpToken?.decimals}
             maxAmount={maxBalance}
             setMaxValue={setMaxValue}
             showFiatValue

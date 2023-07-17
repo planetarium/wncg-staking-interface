@@ -29,7 +29,7 @@ function StakeModalPage1({
 
   const [tx, setTx] = useAtom(stakeTxAtom)
 
-  const fiatValue = toFiat(stakeAmount, lpToken.address)
+  const fiatValue = toFiat(stakeAmount, lpToken?.address)
 
   async function stake() {
     if (!_stake) {
@@ -66,7 +66,7 @@ function StakeModalPage1({
     <StyledStakeModalPage1 $disabled={!!tx.hash}>
       <header className="modalHeader">
         <div className="titleGroup">
-          <h2 className="title accent">LP token({lpToken.name}) staking</h2>
+          <h2 className="title accent">LP token({lpToken?.name}) staking</h2>
           <h3 className="subtitle">
             Do you want to stake?
             <strong className="amount">

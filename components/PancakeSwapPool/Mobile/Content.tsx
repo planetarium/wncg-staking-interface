@@ -38,7 +38,7 @@ export default function PancakeSwapPoolMobileContent(
       assets,
       amountsIn,
       amountsInFiatValueSum,
-      userLpAmount: balanceOf(lpToken.address),
+      userLpAmount: balanceOf(lpToken?.address),
       resetForm: resetFields,
     })
   }

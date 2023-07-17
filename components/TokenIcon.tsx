@@ -33,7 +33,7 @@ function TokenFragment({ address, $size = 24, $dark }: TokenIconProps) {
         const icon = isEthereum(chainId) ? 'ether' : 'bnb'
         return <CryptoIcon icon={icon} $size={$size} />
 
-      case address === rewardTokenAddresses[0]:
+      case address === rewardTokenAddresses?.[0]:
       case token.symbol === 'WNCG':
         return <CryptoIcon icon="wncg" $size={$size} />
 

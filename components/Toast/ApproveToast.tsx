@@ -66,10 +66,10 @@ export default function ApproveToast({
 
   const symbol = useMemo(
     () =>
-      tokenAddress === lpToken.address && isEthereum(chainId)
-        ? lpToken.name
+      tokenAddress === lpToken?.address && isEthereum(chainId)
+        ? lpToken?.name
         : tokens[tokenAddress]?.symbol,
-    [chainId, lpToken.address, lpToken.name, tokenAddress, tokens]
+    [chainId, lpToken?.address, lpToken?.name, tokenAddress, tokens]
   )
 
   return (

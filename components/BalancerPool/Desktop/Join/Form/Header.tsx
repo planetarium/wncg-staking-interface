@@ -40,7 +40,7 @@ function BalancerJoinFormHeader({
   return (
     <StyledJoinFormHeader className="joinFormHeader" $disabled={!isConnected}>
       <h3 className="title">
-        <TokenIcon address={lpToken.address} $size={24} />
+        <TokenIcon address={lpToken?.address} $size={24} />
         Join pool
       </h3>
 
@@ -56,7 +56,7 @@ function BalancerJoinFormHeader({
             Optimize{optimized ? 'd' : ''}
           </Button>
           <Tooltip
-            message={`Join ${lpToken.name} pool with the optimized ratio`}
+            message={`Join ${lpToken?.name} pool with the optimized ratio`}
             $noWrap
             $direction="bottom"
           />

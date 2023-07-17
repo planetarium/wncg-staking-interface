@@ -28,12 +28,12 @@ function AvailableBalance({ children, className }: AvailableBalanceProps) {
   const toFiat = useFiat()
   const { lpToken, poolTokenAddresses, poolTokenWeights, tokens } = useStaking()
 
-  const lpBalance = balancesFor(lpToken.address)
+  const lpBalance = balancesFor(lpToken?.address)
   const hasBptBalance = bnum(lpBalance).gt(0)
 
   const { propAmounts, propAmountsInFiatValue } = usePropAmounts(lpBalance)
 
-  const fiatValue = toFiat(lpBalance, lpToken.address)
+  const fiatValue = toFiat(lpBalance, lpToken?.address)
 
   return (
     <StyledAvailableBalance className={clsx('availableBalance', className)}>

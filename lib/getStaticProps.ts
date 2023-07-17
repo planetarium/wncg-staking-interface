@@ -2,14 +2,12 @@ import { dehydrate, QueryClient } from '@tanstack/react-query'
 import type { GetStaticPropsContext } from 'next'
 
 import { ChainId } from 'config/chains'
-import { LIQUIDITY_POOL_PLACEHOLDER } from 'config/constants/placeholders'
+
 import { QUERY_KEYS } from 'config/constants/queryKeys'
 import { getQueryString } from 'utils/getQueryString'
-import { build } from 'lib/queries/build'
-import { fetchPool } from 'lib/queries/fetchPool'
 import { fetchPoolSnapshot } from 'lib/queries/fetchPoolSnapshot'
-import { fetchPrices } from 'lib/queries/fetchPrices'
-import { fetchStaking } from 'lib/queries/fetchStaking'
+import { fetchProject } from './queries/fetchProject'
+import { fetchPrice } from './queries/fetchPrice'
 
 export async function getStaticProps(ctx: GetStaticPropsContext) {
   const queryClient = new QueryClient()
@@ -17,35 +15,13 @@ export async function getStaticProps(ctx: GetStaticPropsContext) {
   const _chainId = getQueryString(ctx?.params?.chainId)
   const chainId = Math.max(Number(_chainId), ChainId.ETHEREUM) as ChainId
 
-  try {
-    const {
-      pool = LIQUIDITY_POOL_PLACEHOLDER,
-      staking = {
-        rewardTokenAddresses: [],
-      },
-    } = (await build(chainId)) ?? {}
+  const project = await fetchProject(chainId)
+  const prices = await fetchPrice(chainId)
 
+  try {
     await queryClient.prefetchQuery(
       [QUERY_KEYS.Build, chainId],
-      () => build(chainId),
-      {
-        staleTime: Infinity,
-        cacheTime: Infinity,
-      }
-    )
-
-    await queryClient.prefetchQuery(
-      [QUERY_KEYS.Pool.Data, chainId, pool.lpToken.address],
-      () => fetchPool(chainId, pool.lpToken.address),
-      {
-        staleTime: Infinity,
-        cacheTime: Infinity,
-      }
-    )
-
-    await queryClient.prefetchQuery(
-      [QUERY_KEYS.Staking.Data, chainId],
-      () => fetchStaking(chainId),
+      () => fetchProject(chainId),
       {
         staleTime: Infinity,
         cacheTime: Infinity,
@@ -54,11 +30,7 @@ export async function getStaticProps(ctx: GetStaticPropsContext) {
 
     await queryClient.prefetchQuery(
       [QUERY_KEYS.Staking.Prices, chainId],
-      () =>
-        fetchPrices(chainId, [
-          ...pool?.poolTokenAddresses,
-          ...staking?.rewardTokenAddresses,
-        ]),
+      () => fetchPrice(chainId),
       {
         staleTime: Infinity,
         cacheTime: Infinity,
@@ -78,6 +50,8 @@ export async function getStaticProps(ctx: GetStaticPropsContext) {
       props: {
         dehydratedState: dehydrate(queryClient),
         chainId,
+        project,
+        prices,
       },
     }
   } catch (error) {

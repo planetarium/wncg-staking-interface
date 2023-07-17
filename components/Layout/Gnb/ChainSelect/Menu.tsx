@@ -10,7 +10,7 @@ import {
   TRANSITION_MAP,
 } from 'config/constants/motions'
 import { getNetworkLabel } from 'utils/getNetworkLabel'
-import { useChain, useCloseOnBlur } from 'hooks'
+import { useChain, useCloseOnBlur, useRefetch } from 'hooks'
 
 import { StyledGnbChainSelectMenu } from './styled'
 import CryptoIcon from 'components/CryptoIcon'
@@ -29,6 +29,15 @@ export default function GnbChainSelectMenu({
   const routerChainId = Number(router.asPath.replace('/wncg/', '')) as ChainId
 
   const { chainId: currentChainId, setChainId } = useChain()
+  const refetch = useRefetch({
+    userData: true,
+    userAllowances: true,
+    userBalances: true,
+    staking: true,
+    pool: true,
+    poolSnapshot: true,
+    prices: true,
+  })
 
   const onSelectChain = useCallback(
     async (e: MouseEvent<HTMLButtonElement>) => {
@@ -45,13 +54,14 @@ export default function GnbChainSelectMenu({
         })
         router.replace(router.pathname, newPathname, { shallow: true })
         setChainId?.(newChainId)
+        refetch()
       } catch (error) {
         console.log(error)
       }
 
       closeMenu()
     },
-    [closeMenu, currentChainId, router, routerChainId, setChainId]
+    [closeMenu, currentChainId, refetch, router, routerChainId, setChainId]
   )
 
   useCloseOnBlur(menuRef, closeMenu)

@@ -27,7 +27,7 @@ export default function ImportToken({
   const { lpToken, tokens } = useStaking()
 
   const importOptions = useMemo(() => {
-    if (address === lpToken.address) {
+    if (address === lpToken?.address) {
       const { totalSupply, ...rest } = lpToken
       return rest
     }
@@ -40,7 +40,7 @@ export default function ImportToken({
 
   const labelSymbol = useMemo(
     () =>
-      address === lpToken.address && isEthereum(chainId)
+      address === lpToken?.address && isEthereum(chainId)
         ? importOptions.name
         : importOptions.symbol,
     [
@@ -48,7 +48,7 @@ export default function ImportToken({
       chainId,
       importOptions.name,
       importOptions.symbol,
-      lpToken.address,
+      lpToken?.address,
     ]
   )
 

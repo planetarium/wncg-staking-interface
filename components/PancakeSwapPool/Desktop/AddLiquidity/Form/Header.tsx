@@ -34,7 +34,7 @@ export default function PancakeSwapAddLiquidityHeader({
     <StyledPancakeSwapPoolHeader className="header" $disabled={disabled}>
       <h2 className="title">
         <div className="token">
-          <TokenIcon address={lpToken.address} $size={28} />
+          <TokenIcon address={lpToken?.address} $size={28} />
         </div>
         Join pool
       </h2>
@@ -58,7 +58,7 @@ export default function PancakeSwapAddLiquidityHeader({
           $align="right"
           $direction="bottom"
           $noWrap
-          message={`Join ${lpToken.name} pool with the optimized ratio`}
+          message={`Join ${lpToken?.name} pool with the optimized ratio`}
         />
       </div>
     </StyledPancakeSwapPoolHeader>

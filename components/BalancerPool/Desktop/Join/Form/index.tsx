@@ -54,7 +54,7 @@ function BalancerJoinForm() {
       assets,
       joinAmounts,
       totalJoinFiatValue,
-      lpBalance: balanceOf(lpToken.address),
+      lpBalance: balanceOf(lpToken?.address),
       resetForm: resetFields,
     })
   }

@@ -27,15 +27,15 @@ function AddLiquidityModalPage2() {
 
   const receivedLpAmountFiatValue = toFiat(
     receivedLpAmount ?? 0,
-    lpToken.address
+    lpToken?.address
   )
   const hadLpBalanceBefore = bnum(userLpAmount).gt(0)
-  const lpTokenBalanceInFiatValue = toFiat(userLpAmount, lpToken.address)
+  const lpTokenBalanceInFiatValue = toFiat(userLpAmount, lpToken?.address)
 
   const userLpAmountSum = bnum(receivedLpAmount ?? 0)
     .plus(userLpAmount)
     .toString()
-  const userLpAmountSumFiatValue = toFiat(userLpAmountSum, lpToken.address)
+  const userLpAmountSumFiatValue = toFiat(userLpAmountSum, lpToken?.address)
 
   function closeModal() {
     removeModal()

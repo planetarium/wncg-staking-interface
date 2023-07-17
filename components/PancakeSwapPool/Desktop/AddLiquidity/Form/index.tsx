@@ -50,7 +50,7 @@ function AddLiquidityForm() {
       assets,
       amountsIn,
       amountsInFiatValueSum,
-      userLpAmount: balanceOf(lpToken.address),
+      userLpAmount: balanceOf(lpToken?.address),
       resetForm: resetFields,
     })
   }

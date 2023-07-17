@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 
 import { QUERY_KEYS } from 'config/constants/queryKeys'
-import { fetchPrices } from 'lib/queries/fetchPrices'
+import { fetchPrice } from 'lib/queries/fetchPrice'
 import { calcLpTokenPrice } from 'utils/calcLpTokenPrice'
 import { useChain, useStaking } from 'hooks'
 import { useFetchPool } from './useFetchPool'
@@ -15,21 +15,14 @@ export function useFetchPrices(options: UseFetchOptions = {}) {
   } = options
 
   const { chainId } = useChain()
-  const {
-    lpToken: initLpToken,
-    rewardTokenAddresses,
-    poolTokenAddresses,
-    poolTokens: initPoolTokens,
-  } = useStaking()
+  const { lpToken: initLpToken, poolTokens: initPoolTokens } = useStaking()
 
   const { lpToken = initLpToken, poolTokens = initPoolTokens } =
     useFetchPool().data ?? {}
 
-  const list = [...poolTokenAddresses, ...rewardTokenAddresses]
-
   return useQuery<PriceMap>(
-    [QUERY_KEYS.Staking.Prices, chainId, ...list],
-    () => fetchPrices(chainId, list),
+    [QUERY_KEYS.Staking.Prices, chainId],
+    () => fetchPrice(chainId),
     {
       enabled,
       staleTime: Infinity,

@@ -31,10 +31,10 @@ export function useWatch(send: (event: string) => void) {
     async onSuccess(tx) {
       await refetch()
       const parsedLogs = parseTransferLogs(tx.logs)
-      const received = parsedLogs?.[lpToken.address]
+      const received = parsedLogs?.[lpToken?.address]
 
       if (received) {
-        setReceivedLpAmount(formatUnits(received, lpToken.decimals))
+        setReceivedLpAmount(formatUnits(received, lpToken?.decimals))
       }
       send('SUCCESS')
     },

@@ -8,4 +8,5 @@ export const baseUrls = {
   coingecko: 'https://api.coingecko.com/api/v3',
   coingeckoPro: 'https://pro-api.coingecko.com/api/v3',
   imgix: process.env.NEXT_PUBLIC_IMGIX_HOSTNAME,
+  server: process.env.NEXT_PUBLIC_API_SERVER_BASE_URL,
 }

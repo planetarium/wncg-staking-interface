@@ -35,10 +35,10 @@ function StakingDashboardApr() {
 
   const totalStakedInFiatValue = toFiat(
     totalStaked ?? initTotalStaked,
-    lpToken.address
+    lpToken?.address
   )
 
-  const aprs = rewardEmissionsPerSec.map((e, i) =>
+  const aprs = rewardEmissionsPerSec?.map((e, i) =>
     calcApr(
       e,
       toFiat(1, rewardTokenAddresses[i]) ?? '0',
@@ -59,15 +59,19 @@ function StakingDashboardApr() {
   return (
     <StyledStakingDashboardApr className="aprList">
       <div className="aprItem">
+        {JSON.stringify(rewardTokenAddresses)}
+        {JSON.stringify(aprs)}
+        <br />
+        <pre>{JSON.stringify(tokens, null, 2)}</pre>
         <dt>Total Staked</dt>
         <dd className="colon">
           <CountUp value={totalStakedInFiatValue} type="fiat" abbr />
         </dd>
       </div>
 
-      {aprs.map((apr, i) => {
+      {aprs?.map((apr, i) => {
         const addr = rewardTokenAddresses[i]
-        if (!addr) return null
+        if (!addr || !tokens[addr]) return null
 
         const { symbol } = tokens[addr]
 

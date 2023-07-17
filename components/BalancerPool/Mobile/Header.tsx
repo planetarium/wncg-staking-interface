@@ -18,7 +18,7 @@ function PoolMobileHeader({ closePool }: PoolMobileHeaderProps) {
 
   return (
     <StyledPoolMobileHeader className="modalHeader">
-      <strong className="poolName">{lpToken.name}</strong>
+      <strong className="poolName">{lpToken?.name}</strong>
 
       <div className="titleGroup">
         <h2 className="title poolTitle">Join pool, Get LP Tokens!</h2>

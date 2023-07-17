@@ -37,7 +37,7 @@ export default function ExitToast({
   const status = useWatch(hash)
 
   const importTokenAddress = isPropExit
-    ? lpToken.address
+    ? lpToken?.address
     : tokens[assets[tokenOutIndex]].address !== NATIVE_CURRENCY_ADDRESS
     ? tokens[assets[tokenOutIndex]].address
     : null
@@ -62,13 +62,13 @@ export default function ExitToast({
             <div className="detailItem">
               <dt>
                 <div className="token">
-                  <TokenIcon address={lpToken.address} $size={20} />
+                  <TokenIcon address={lpToken?.address} $size={20} />
                 </div>
-                {lpToken.name}
+                {lpToken?.name}
               </dt>
 
               <dd>
-                <NumberFormat value={formatUnits(bptIn, lpToken.decimals)} />
+                <NumberFormat value={formatUnits(bptIn, lpToken?.decimals)} />
                 <NumberFormat
                   className="usd"
                   value={totalExitFiatValue}

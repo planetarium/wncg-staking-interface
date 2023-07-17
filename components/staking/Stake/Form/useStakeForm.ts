@@ -14,9 +14,9 @@ export function useStakeForm() {
   const { lpToken } = useStaking()
 
   const balanceOf = useBalances()
-  const lpBalance = balanceOf(lpToken.address)
+  const lpBalance = balanceOf(lpToken?.address)
   const fromLaptop = useAtomValue(fromLaptopAtom)
-  const lpBalanceInFiatValue = toFiat(lpBalance, lpToken.address)
+  const lpBalanceInFiatValue = toFiat(lpBalance, lpToken?.address)
 
   const { clearErrors, control, formState, setValue, watch } = useForm<{
     stakeAmount: string

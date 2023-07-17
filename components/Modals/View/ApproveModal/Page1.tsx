@@ -32,10 +32,10 @@ function ApproveModalPage1({
   const token = tokens?.[address] ?? {}
 
   const labelSymbol = useMemo(() => {
-    if (isBsc(chainId) && address === lpToken.address)
+    if (isBsc(chainId) && address === lpToken?.address)
       return token?.name ?? symbol
     return token?.symbol ?? symbol
-  }, [address, chainId, lpToken.address, symbol, token.name, token?.symbol])
+  }, [address, chainId, lpToken?.address, symbol, token.name, token?.symbol])
 
   return (
     <StyledApproveModalPage1 className={className}>

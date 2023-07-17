@@ -33,7 +33,7 @@ export default function UnstakeModalPage2Footer({
 
   const _unstake = useUnstake(unstakeAmount, checked)
 
-  const lpFiatValue = toFiat(unstakeAmount, lpToken.address)
+  const lpFiatValue = toFiat(unstakeAmount, lpToken?.address)
   const fiatValue = checked
     ? bnum(lpFiatValue).plus(rewardFiatValue).toString()
     : lpFiatValue

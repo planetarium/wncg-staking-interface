@@ -15,11 +15,11 @@ export default function BalancerPoolBalancesContent() {
   const balanceOf = useBalances()
   const { stakedTokenBalance = '0' } = useFetchUserData().data ?? {}
 
-  const stakedTokenFiatValue = toFiat(stakedTokenBalance, lpToken.address)
+  const stakedTokenFiatValue = toFiat(stakedTokenBalance, lpToken?.address)
 
-  const lpBalance = balanceOf(lpToken.address)
+  const lpBalance = balanceOf(lpToken?.address)
   const hasLpToken = !!isConnected && bnum(lpBalance).gt(0)
-  const fiatValue = toFiat(lpBalance, lpToken.address)
+  const fiatValue = toFiat(lpBalance, lpToken?.address)
   const hasStakedToken = !!isConnected && bnum(stakedTokenBalance).gt(0)
 
   return (

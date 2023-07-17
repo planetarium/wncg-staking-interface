@@ -21,7 +21,7 @@ export default function UnstakeModalPage3() {
 
   const stakedTokenBalanceInFiatValue = toFiat(
     stakedTokenBalance,
-    lpToken.address
+    lpToken?.address
   )
 
   const totalStakedTokenBalance = bnum(stakedTokenBalance)
@@ -30,10 +30,10 @@ export default function UnstakeModalPage3() {
 
   const totalStakedTokenBalanceInFiatValue = toFiat(
     totalStakedTokenBalance,
-    lpToken.address
+    lpToken?.address
   )
 
-  const unstakeAmountInFiatValue = toFiat(unstakeAmount, lpToken.address)
+  const unstakeAmountInFiatValue = toFiat(unstakeAmount, lpToken?.address)
 
   function closeModal() {
     removeModal()

@@ -27,19 +27,34 @@ import DefaultSeo from 'components/DefaultSeo'
 import ErrorBoundary from 'components/ErrorBoundary'
 import Layout from 'components/Layout'
 import ToastContainer from 'components/ToastContainer'
+import { priceAtom, projectAtom } from './wncg/[chainId]'
 
 type MyAppProps = AppProps & {
   pageProps: {
     dehydratedState: DehydratedState
+    chainId: ChainId
+    project: any
+    prices: PriceMap
   }
 }
 
 type HydrateAtomsProps = {
   queryClient: QueryClient
+  project: any
+  prices: PriceMap
 } & PropsWithChildren
 
-function HydrateAtoms({ queryClient, children }: HydrateAtomsProps) {
-  useHydrateAtoms([[queryClientAtom, queryClient]])
+function HydrateAtoms({
+  queryClient,
+  children,
+  project,
+  prices,
+}: HydrateAtomsProps) {
+  useHydrateAtoms([
+    [queryClientAtom, queryClient],
+    [projectAtom, project],
+    [priceAtom, prices],
+  ])
   return <>{children}</>
 }
 
@@ -47,6 +62,8 @@ function MyApp({ Component, pageProps }: MyAppProps) {
   useMount(() => {
     wagmiClient.autoConnect()
   })
+
+  console.log(3333, pageProps)
 
   const queryClient = useRef(
     new QueryClient({
@@ -88,7 +105,11 @@ function MyApp({ Component, pageProps }: MyAppProps) {
         <QueryClientProvider client={queryClient.current}>
           <Hydrate state={pageProps.dehydratedState}>
             <Provider>
-              <HydrateAtoms queryClient={queryClient.current}>
+              <HydrateAtoms
+                queryClient={queryClient.current}
+                project={pageProps.project}
+                prices={pageProps.prices}
+              >
                 <WagmiConfig config={wagmiClient}>
                   <DefaultSeo />
                   <GlobalStyle />

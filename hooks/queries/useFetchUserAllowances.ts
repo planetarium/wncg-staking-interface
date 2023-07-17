@@ -19,16 +19,16 @@ export function useFetchUserAllowances(options: UseFetchOptions = {}) {
 
   const pairAddressList: Hash[][] = useMemo(
     () => [
-      [lpToken.address, stakingAddress],
+      [lpToken?.address, stakingAddress],
       ...poolTokenAddresses?.map((addr) => [addr, dexProtocolAddress]),
     ],
-    [dexProtocolAddress, lpToken.address, poolTokenAddresses, stakingAddress]
+    [dexProtocolAddress, lpToken?.address, poolTokenAddresses, stakingAddress]
   )
 
   const pairs = useMemo(
     () =>
       pairAddressList.map(
-        ([addr, spender]) => [tokens[addr], spender] as AllowancePair
+        ([addr, spender]) => [tokens?.[addr], spender] as AllowancePair
       ),
     [pairAddressList, tokens]
   )

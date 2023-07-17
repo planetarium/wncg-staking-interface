@@ -27,7 +27,7 @@ export default function UnstakeToast({
   const { chainId } = useChain()
   const toFiat = useFiat()
   const { lpToken } = useStaking()
-  const fiatValue = toFiat(unstakeAmount, lpToken.address)
+  const fiatValue = toFiat(unstakeAmount, lpToken?.address)
 
   const setTx = useSetAtom(unstakeTxAtom)
 
@@ -52,9 +52,9 @@ export default function UnstakeToast({
           <div className="detailItem">
             <dt>
               <div className="token">
-                <TokenIcon address={lpToken.address} $size={20} />
+                <TokenIcon address={lpToken?.address} $size={20} />
               </div>
-              {lpToken.name}
+              {lpToken?.name}
             </dt>
             <dd>
               <NumberFormat value={unstakeAmount} decimals={8} />
@@ -70,7 +70,7 @@ export default function UnstakeToast({
       </div>
 
       <footer className="toastFooter">
-        <ImportToken address={lpToken.address} $size="sm" $variant="primary" />
+        <ImportToken address={lpToken?.address} $size="sm" $variant="primary" />
       </footer>
     </StyledToast>
   )

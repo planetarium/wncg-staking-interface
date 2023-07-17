@@ -35,10 +35,10 @@ export default function SidebarStaking({ closeSidebar }: SidebarStakingProps) {
 
   const isUnstakeWindow = useAtomValue(isUnstakeWindowAtom)
 
-  const stakedTokenFiatValue = toFiat(stakedTokenBalance, lpToken.address)
+  const stakedTokenFiatValue = toFiat(stakedTokenBalance, lpToken?.address)
 
-  const lpBalance = balanceOf(lpToken.address)
-  const lpBalanceInFiatValue = toFiat(lpBalance, lpToken.address)
+  const lpBalance = balanceOf(lpToken?.address)
+  const lpBalanceInFiatValue = toFiat(lpBalance, lpToken?.address)
 
   const hasLpToken = bnum(lpBalance).gt(0)
   const hasStakedToken = bnum(stakedTokenBalance).gt(0)

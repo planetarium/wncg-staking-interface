@@ -103,7 +103,7 @@ export default function RemoveLiquidityToast({
       </div>
 
       <footer className="toastFooter">
-        <ImportToken address={lpToken.address} $size="sm" $variant="primary" />
+        <ImportToken address={lpToken?.address} $size="sm" $variant="primary" />
       </footer>
     </StyledToast>
   )

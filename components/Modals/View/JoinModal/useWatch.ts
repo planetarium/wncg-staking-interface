@@ -31,10 +31,10 @@ export function useWatch(send: (event: string) => void) {
     async onSuccess(tx) {
       const parsedLogs = parseTransferLogs(tx.logs)
 
-      const joinLog = parsedLogs?.[lpToken.address]
+      const joinLog = parsedLogs?.[lpToken?.address]
 
       if (joinLog) {
-        const lpAmount = formatUnits(joinLog.args?.[2], lpToken.decimals)
+        const lpAmount = formatUnits(joinLog.args?.[2], lpToken?.decimals)
         setReceivedLpAmount(lpAmount)
       }
 

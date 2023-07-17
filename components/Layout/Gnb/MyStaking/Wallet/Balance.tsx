@@ -22,12 +22,12 @@ function WalletBalance() {
   const setShowMyStaking = useSetAtom(showMyStakingAtom)
 
   const balanceOf = useBalances()
-  const lpBalance = balanceOf(lpToken.address)
+  const lpBalance = balanceOf(lpToken?.address)
 
   const hasLpToken = bnum(lpBalance).gt(0)
   const exitDisabled = !hasLpToken
 
-  const fiatValue = toFiat(lpBalance, lpToken.address)
+  const fiatValue = toFiat(lpBalance, lpToken?.address)
 
   function onClickExit(e: MouseEvent) {
     e.stopPropagation()

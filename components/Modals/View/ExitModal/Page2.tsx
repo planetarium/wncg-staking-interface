@@ -88,11 +88,11 @@ export default function ExitModalPage2({
 
   const importTokenAddress = useMemo(() => {
     if (isPropExit) {
-      return lpToken.address
+      return lpToken?.address
     }
 
     return tokens?.[assets[tokenOutIndex]]?.address
-  }, [assets, isPropExit, lpToken.address, tokens, tokenOutIndex])
+  }, [assets, isPropExit, lpToken?.address, tokens, tokenOutIndex])
 
   return (
     <StyledExitModalPage2>

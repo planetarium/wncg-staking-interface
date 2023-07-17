@@ -27,7 +27,7 @@ export default function StakeToast({ hash, stakeAmount }: StakeToastProps) {
 
   const setTx = useSetAtom(stakeTxAtom)
 
-  const fiatValue = toFiat(stakeAmount!, lpToken.address)
+  const fiatValue = toFiat(stakeAmount!, lpToken?.address)
 
   const status = useWatch(hash)
 
@@ -50,9 +50,9 @@ export default function StakeToast({ hash, stakeAmount }: StakeToastProps) {
           <div className="detailItem">
             <dt>
               <div className="token">
-                <TokenIcon address={lpToken.address} $size={20} />
+                <TokenIcon address={lpToken?.address} $size={20} />
               </div>
-              {lpToken.name}
+              {lpToken?.name}
             </dt>
             <dd>
               <NumberFormat value={stakeAmount} decimals={8} />
@@ -68,7 +68,7 @@ export default function StakeToast({ hash, stakeAmount }: StakeToastProps) {
       </div>
 
       <footer className="toastFooter">
-        <ImportToken address={lpToken.address} $size="sm" $variant="primary" />
+        <ImportToken address={lpToken?.address} $size="sm" $variant="primary" />
       </footer>
     </StyledToast>
   )

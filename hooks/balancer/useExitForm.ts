@@ -68,7 +68,7 @@ export function useExitForm(): UseExitFormReturns {
     useExitMath()
   const { lpToken, poolTokenAddresses } = useStaking()
 
-  const lpBalance = balanceOf(lpToken.address)
+  const lpBalance = balanceOf(lpToken?.address)
 
   const {
     clearErrors,
@@ -156,7 +156,7 @@ export function useExitForm(): UseExitFormReturns {
   )
 
   const exitAmount = bnum(lpBalance).times(bptOutPcnt).div(100).toFixed(18, 3)
-  const exitAmountInFiatValue = toFiat(exitAmount, lpToken.address)
+  const exitAmountInFiatValue = toFiat(exitAmount, lpToken?.address)
 
   const priceImpact = useMemo(
     () =>

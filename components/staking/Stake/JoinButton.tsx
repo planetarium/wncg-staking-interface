@@ -20,7 +20,7 @@ export default function MainStakeJoinButton() {
   const { isMobile } = useResponsive()
   const { lpToken } = useStaking()
 
-  const hasLpBalance = bnum(balanceOf(lpToken.address)).gt(0)
+  const hasLpBalance = bnum(balanceOf(lpToken?.address)).gt(0)
 
   const [hideJoinTooltip, setHideJoinTooltip] = useAtom(hideJoinTooltipAtom)
   const setShowPool = useSetAtom(showPoolAtom)

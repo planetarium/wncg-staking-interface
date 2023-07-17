@@ -20,8 +20,8 @@ export function useFetchUserBalances(options: UseFetchOptions = {}) {
   const enabled = _enabled && !!isConnected
 
   const list = useMemo(
-    () => [lpToken.address, ...poolTokenAddresses],
-    [lpToken.address, poolTokenAddresses]
+    () => [lpToken?.address, ...poolTokenAddresses],
+    [lpToken?.address, poolTokenAddresses]
   )
 
   return useQuery<RawBalanceMap>(

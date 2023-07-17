@@ -15,11 +15,11 @@ export function useFetchPool(options: UseFetchOptions = {}) {
   const { chainId } = useChain()
   const { lpToken } = useStaking()
 
-  const enabled = _enabled && !!lpToken.address
+  const enabled = _enabled && !!lpToken?.address
 
   return useQuery(
-    [QUERY_KEYS.Pool.Data, chainId, lpToken.address],
-    () => fetchPool(chainId, lpToken.address),
+    [QUERY_KEYS.Pool.Data, chainId, lpToken?.address],
+    () => fetchPool(chainId, lpToken?.address),
     {
       enabled,
       staleTime: Infinity,

@@ -22,7 +22,7 @@ export function useExitMath() {
     useStaking()
   const { addSlippageScaled, minusSlippage } = useSlippage()
 
-  const lpBalance = balancesFor(lpToken.address)
+  const lpBalance = balancesFor(lpToken?.address)
 
   const amountsOutPlaceholder = useMemo(
     () => poolTokenAddresses.map((_) => '0') ?? [],
@@ -55,11 +55,11 @@ export function useExitMath() {
 
   // NOTE: Maximum BPT allowed: 30%
   const _absMaxBpt = useMemo(() => {
-    const poolMax = bnum(lpToken.totalSupply)
+    const poolMax = bnum(lpToken?.totalSupply)
       .times(0.3)
       .toFixed(18, BigNumber.ROUND_DOWN)
     return BigNumber.min(lpBalance, poolMax).toString()
-  }, [lpBalance, lpToken.totalSupply])
+  }, [lpBalance, lpToken?.totalSupply])
 
   const _propBptIn = useCallback(
     (pcnt: string) => bnum(lpBalance).times(pcnt).div(100).toString(),

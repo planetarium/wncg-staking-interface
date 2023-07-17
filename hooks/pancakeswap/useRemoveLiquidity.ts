@@ -29,7 +29,10 @@ export function useRemoveLiquidity(
 
   const slippage = useAtomValue(slippageAtom) ?? '0.5'
 
-  const scaledLpAmountOut = parseUnits(lpAmountOut, lpToken.decimals).toString()
+  const scaledLpAmountOut = parseUnits(
+    lpAmountOut,
+    lpToken?.decimals
+  ).toString()
 
   const scaledMinAmountsOut = useMemo(
     () =>

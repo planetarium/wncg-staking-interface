@@ -32,7 +32,7 @@ export default function WalletStaking({ closeWallet }: WalletStakingProps) {
 
   const isUnstakeWindow = useAtomValue(isUnstakeWindowAtom)
 
-  const stakedTokenFiatValue = toFiat(stakedTokenBalance, lpToken.address)
+  const stakedTokenFiatValue = toFiat(stakedTokenBalance, lpToken?.address)
 
   function openCooldown() {
     addModal({

@@ -27,7 +27,7 @@ export default function GnbMyStaking() {
 
   const stakedTokenBalanceInFiatValue = toFiat(
     stakedTokenBalance,
-    lpToken.address
+    lpToken?.address
   )
 
   const cooldownWindow = useAtomValue(cooldownWindowAtom)

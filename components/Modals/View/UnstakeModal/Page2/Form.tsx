@@ -26,7 +26,7 @@ export default function UnstakeModalPage2Form({
   const { lpToken, tokens } = useStaking()
   const hasRewards = bnum(totalClaimFiatValue).gt(0)
 
-  const decimals = tokens[lpToken.address]?.decimals ?? 18
+  const decimals = tokens[lpToken?.address]?.decimals ?? 18
 
   const {
     checked,
@@ -37,7 +37,7 @@ export default function UnstakeModalPage2Form({
     placeholder,
     toggleCheck,
   } = props
-  const maxBalanceInFiatValue = toFiat(maxBalance, lpToken.address)
+  const maxBalanceInFiatValue = toFiat(maxBalance, lpToken?.address)
 
   const claimDisabled = !hasRewards
 
@@ -47,7 +47,7 @@ export default function UnstakeModalPage2Form({
         id="unstakeAmount"
         control={control as unknown as ReactHookFormControl<FieldValues, 'any'>}
         name="unstakeAmount"
-        address={lpToken.address}
+        address={lpToken?.address}
         rules={rules}
         maxAmount={maxBalance}
         decimals={decimals}

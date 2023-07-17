@@ -33,8 +33,8 @@ export default function GlobalFooterImportTokenDropdownMenu({
   useCloseOnBlur(menuRef, closeDropdown)
 
   const list = useMemo(
-    () => [...rewardTokenAddresses, lpToken.address],
-    [lpToken.address, rewardTokenAddresses]
+    () => [...rewardTokenAddresses, lpToken?.address],
+    [lpToken?.address, rewardTokenAddresses]
   )
 
   function onImportToken(e: MouseEvent<HTMLButtonElement>) {
@@ -43,7 +43,7 @@ export default function GlobalFooterImportTokenDropdownMenu({
 
     _importToken({
       ...tokenInfo,
-      name: addr === lpToken.address ? tokenInfo.name : tokenInfo.symbol,
+      name: addr === lpToken?.address ? tokenInfo.name : tokenInfo.symbol,
     })
     closeDropdown()
   }

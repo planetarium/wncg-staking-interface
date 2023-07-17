@@ -15,14 +15,14 @@ export default function BalancerPoolBalancesHeader() {
   const { lpToken } = useStaking()
 
   const { stakedTokenBalance = '0' } = useFetchUserData().data ?? {}
-  const availableBpt = balanceOf(lpToken.address)
+  const availableBpt = balanceOf(lpToken?.address)
 
   const totalBpt = useMemo(
     () => bnum(availableBpt).plus(stakedTokenBalance).toString(),
     [stakedTokenBalance, availableBpt]
   )
 
-  const totalBalanceInFiatValue = toFiat(totalBpt, lpToken.address)
+  const totalBalanceInFiatValue = toFiat(totalBpt, lpToken?.address)
 
   return (
     <StyledBalancerPoolBalancesHeader className="poolBalancesHeader">

@@ -41,7 +41,7 @@ function ExpectedRevenueBonusRewards({
       return calcExpectedRevenue(
         stakedTokenBalance,
         aprs[i],
-        toFiat(1, lpToken.address) ?? '0',
+        toFiat(1, lpToken?.address) ?? '0',
         tokenPrice
       )
     })
@@ -50,7 +50,7 @@ function ExpectedRevenueBonusRewards({
       const revenues = list.map((data) => data[key as keyof ExpectedRevenueMap])
       return [key, revenues]
     })
-  }, [aprs, lpToken.address, rewardTokenAddresses, stakedTokenBalance, toFiat])
+  }, [aprs, lpToken?.address, rewardTokenAddresses, stakedTokenBalance, toFiat])
 
   return (
     <StyledExpectedRevenueBonusRewards className="revenueList">

@@ -21,8 +21,8 @@ function StakedBalance({ children, className }: StakedBalanceProps) {
   const { stakedTokenBalance = '0' } = useFetchUserData().data ?? {}
 
   const fiatValue = useMemo(
-    () => toFiat(stakedTokenBalance, lpToken.address),
-    [lpToken.address, stakedTokenBalance, toFiat]
+    () => toFiat(stakedTokenBalance, lpToken?.address),
+    [lpToken?.address, stakedTokenBalance, toFiat]
   )
 
   const hasStakedTokenBalance = bnum(stakedTokenBalance).gt(0)

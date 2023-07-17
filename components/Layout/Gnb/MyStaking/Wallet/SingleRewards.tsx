@@ -17,7 +17,7 @@ export default function WalletSingleRewards({
   const toFiat = useFiat()
   const { addModal } = useModal()
   const { rewardTokenAddresses, tokens } = useStaking()
-  const rewardToken = tokens[rewardTokenAddresses[0]]
+  const rewardToken = tokens?.[rewardTokenAddresses[0]]
 
   const { earnedTokenRewards = [], hasRewards } =
     useFetchUserRewards().data ?? {}

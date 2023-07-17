@@ -13,6 +13,8 @@ import GlobalFooter from 'components/GlobalFooter'
 import GlobalHooks from 'components/GlobalHooks'
 import Suspense from 'components/Suspense'
 import Stake from 'components/staking/Stake'
+import { atom, useAtom } from 'jotai'
+import { useHydrateAtoms } from 'jotai/utils'
 
 const Dashboard = dynamic(() => import('components/staking/Dashboard'), {
   suspense: true,
@@ -20,7 +22,12 @@ const Dashboard = dynamic(() => import('components/staking/Dashboard'), {
 
 type WncgStakingProps = {
   chainId: ChainId
+  project: any
+  prices: any
 }
+
+export const projectAtom = atom<any>({})
+export const priceAtom = atom<PriceMap>({})
 
 const WncgStaking: NextPage<WncgStakingProps> = () => {
   return (

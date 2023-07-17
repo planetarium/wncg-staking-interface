@@ -23,7 +23,7 @@ export async function build(chainId: ChainId) {
     const _tokens = await prefetchTokens(chainId, tokenList)
     const tokens = {
       ..._tokens,
-      [pool.lpToken.address]: pool.lpToken,
+      [pool.lpToken?.address]: pool.lpToken,
     }
     const basePriceMap = await fetchPrices(chainId, tokenList)
 
@@ -34,8 +34,8 @@ export async function build(chainId: ChainId) {
         ...basePriceMap,
         ...calcBalancerLpTokenPrice(
           pool.poolTokens,
-          pool.lpToken.address,
-          pool.lpToken.totalSupply,
+          pool.lpToken?.address,
+          pool.lpToken?.totalSupply,
           basePriceMap
         ),
       }
@@ -47,8 +47,8 @@ export async function build(chainId: ChainId) {
         ...calcPancakeSwapLpTokenPrice(
           chainId,
           pool.poolTokens,
-          pool.lpToken.address,
-          pool.lpToken.totalSupply,
+          pool.lpToken?.address,
+          pool.lpToken?.totalSupply,
           basePriceMap
         ),
       }
