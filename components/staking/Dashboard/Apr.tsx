@@ -31,7 +31,7 @@ function StakingDashboardApr() {
     totalStaked: initTotalStaked,
   } = useStaking()
 
-  const { totalStaked } = useFetchStaking().data ?? {}
+  const { totalStaked = initTotalStaked } = useFetchStaking().data ?? {}
 
   const totalStakedInFiatValue = toFiat(
     totalStaked ?? initTotalStaked,
@@ -59,10 +59,6 @@ function StakingDashboardApr() {
   return (
     <StyledStakingDashboardApr className="aprList">
       <div className="aprItem">
-        {JSON.stringify(rewardTokenAddresses)}
-        {JSON.stringify(aprs)}
-        <br />
-        <pre>{JSON.stringify(tokens, null, 2)}</pre>
         <dt>Total Staked</dt>
         <dd className="colon">
           <CountUp value={totalStakedInFiatValue} type="fiat" abbr />

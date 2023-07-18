@@ -1,19 +1,18 @@
 import { useCallback, useMemo } from 'react'
 import { bnum } from 'utils/bnum'
 
-import { formatUnits } from 'utils/formatUnits'
 import { useBalances, useStaking } from 'hooks'
-import { useFetchPool } from 'hooks/queries'
+import { useFetchStaking } from 'hooks/queries'
 
 export function useRemoveLiquidityMath() {
   const balanceOf = useBalances()
-  const { lpToken: initLpToken, poolReserves: initPoolReserves } = useStaking()
+  const { lpToken, poolTokenBalances: initPoolTokenBalances } = useStaking()
 
-  const { lpToken = initLpToken, poolReserves = initPoolReserves } =
-    useFetchPool({ refetchOnWindowFocus: 'always' }).data ?? {}
+  const { poolTokenBalances = initPoolTokenBalances } =
+    useFetchStaking().data ?? {}
 
   const userLpAmount = useMemo(
-    () => balanceOf(lpToken?.address),
+    () => balanceOf(lpToken.address),
     [balanceOf, lpToken?.address]
   )
 
@@ -22,9 +21,9 @@ export function useRemoveLiquidityMath() {
       const lpAmountOut = bnum(userLpAmount).times(pcnt).div(100)
 
       const share = lpAmountOut.div(lpToken?.totalSupply)
-      return poolReserves.map((amt) => share.times(amt).toFixed(0, 3))
+      return poolTokenBalances.map((amt) => share.times(amt).toFixed(0, 3))
     },
-    [userLpAmount, lpToken?.totalSupply, poolReserves]
+    [userLpAmount, lpToken?.totalSupply, poolTokenBalances]
   )
 
   return calcPropAmountsOut

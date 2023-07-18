@@ -1,10 +1,12 @@
-import { useQuery } from '@tanstack/react-query'
+import { useMemo } from 'react'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 
 import { QUERY_KEYS } from 'config/constants/queryKeys'
-import { fetchPool } from 'lib/queries/fetchPool'
 import { useChain, useStaking } from 'hooks'
+import { fetchProject } from 'lib/queries/fetchProject'
 
 export function useFetchPool(options: UseFetchOptions = {}) {
+  const queryClient = useQueryClient()
   const {
     enabled: _enabled = true,
     refetchInterval,
@@ -17,9 +19,14 @@ export function useFetchPool(options: UseFetchOptions = {}) {
 
   const enabled = _enabled && !!lpToken?.address
 
+  const initialData = useMemo(
+    () => queryClient.getQueryData([QUERY_KEYS.Build, chainId]),
+    [chainId, queryClient]
+  )
+
   return useQuery(
     [QUERY_KEYS.Pool.Data, chainId, lpToken?.address],
-    () => fetchPool(chainId, lpToken?.address),
+    () => fetchProject(chainId),
     {
       enabled,
       staleTime: Infinity,
@@ -27,6 +34,7 @@ export function useFetchPool(options: UseFetchOptions = {}) {
       refetchOnWindowFocus,
       suspense,
       useErrorBoundary: false,
+      initialData,
     }
   )
 }

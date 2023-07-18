@@ -3,7 +3,7 @@ import { memo, useMemo } from 'react'
 import { bnum } from 'utils/bnum'
 import { dexPoolUrlFor } from 'utils/dexPoolUrlFor'
 import { useChain, useFiat, useStaking } from 'hooks'
-import { useFetchPool } from 'hooks/queries'
+import { useFetchStaking } from 'hooks/queries'
 
 import { StyledPancakeSwapPoolInformation } from './styled'
 import Icon from 'components/Icon'
@@ -12,19 +12,21 @@ import NumberFormat from 'components/NumberFormat'
 function PancakeSwapPoolInformation() {
   const { chainId } = useChain()
   const toFiat = useFiat()
-  const { poolTokenAddresses, poolReserves: initPoolReserves } = useStaking()
+  const { poolTokenAddresses, poolTokenBalances: initPoolTokenBalances } =
+    useStaking()
 
-  const { poolReserves = initPoolReserves } = useFetchPool().data ?? {}
+  const { poolTokenBalances = initPoolTokenBalances } =
+    useFetchStaking().data ?? {}
 
   const totalPoolValue = useMemo(
     () =>
-      poolReserves
+      poolTokenBalances
         .reduce(
           (acc, amt, i) => acc.plus(toFiat(amt, poolTokenAddresses[i])),
           bnum(0)
         )
         .toString(),
-    [poolReserves, poolTokenAddresses, toFiat]
+    [poolTokenBalances, poolTokenAddresses, toFiat]
   )
 
   return (

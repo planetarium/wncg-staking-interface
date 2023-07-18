@@ -20,7 +20,7 @@ export function useApprove(tokenAddress: Hash, spender: string) {
     address: tokenAddress as Hash,
     chainId,
     enabled: !!isConnected && !!tokenAddress && !!spender && !networkMismatch,
-    args: [spender, MaxUint256],
+    args: [spender, MaxUint256.toBigInt()],
     onError: switchBeforeSend,
   })
 

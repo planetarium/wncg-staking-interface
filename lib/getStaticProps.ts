@@ -20,8 +20,8 @@ export async function getStaticProps(ctx: GetStaticPropsContext) {
 
   try {
     await queryClient.prefetchQuery(
-      [QUERY_KEYS.Build, chainId],
-      () => fetchProject(chainId),
+      [QUERY_KEYS.Build, 1],
+      () => fetchProject(1),
       {
         staleTime: Infinity,
         cacheTime: Infinity,
@@ -29,8 +29,62 @@ export async function getStaticProps(ctx: GetStaticPropsContext) {
     )
 
     await queryClient.prefetchQuery(
-      [QUERY_KEYS.Staking.Prices, chainId],
-      () => fetchPrice(chainId),
+      [QUERY_KEYS.Build, 5],
+      () => fetchProject(5),
+      {
+        staleTime: Infinity,
+        cacheTime: Infinity,
+      }
+    )
+
+    await queryClient.prefetchQuery(
+      [QUERY_KEYS.Build, 56],
+      () => fetchProject(56),
+      {
+        staleTime: Infinity,
+        cacheTime: Infinity,
+      }
+    )
+
+    await queryClient.prefetchQuery(
+      [QUERY_KEYS.Build, 97],
+      () => fetchProject(97),
+      {
+        staleTime: Infinity,
+        cacheTime: Infinity,
+      }
+    )
+
+    await queryClient.prefetchQuery(
+      [QUERY_KEYS.Staking.Prices, 1],
+      () => fetchPrice(1),
+      {
+        staleTime: Infinity,
+        cacheTime: Infinity,
+      }
+    )
+
+    await queryClient.prefetchQuery(
+      [QUERY_KEYS.Staking.Prices, 5],
+      () => fetchPrice(5),
+      {
+        staleTime: Infinity,
+        cacheTime: Infinity,
+      }
+    )
+
+    await queryClient.prefetchQuery(
+      [QUERY_KEYS.Staking.Prices, 56],
+      () => fetchPrice(56),
+      {
+        staleTime: Infinity,
+        cacheTime: Infinity,
+      }
+    )
+
+    await queryClient.prefetchQuery(
+      [QUERY_KEYS.Staking.Prices, 97],
+      () => fetchPrice(97),
       {
         staleTime: Infinity,
         cacheTime: Infinity,

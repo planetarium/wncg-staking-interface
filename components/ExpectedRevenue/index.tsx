@@ -13,19 +13,13 @@ type ExpectedRevenueProps = {
 
 function ExpectedRevenue({ amount = '0' }: ExpectedRevenueProps) {
   const toFiat = useFiat()
-  const {
-    lpToken,
-    rewardTokenAddresses,
-    totalStaked: initTotalStaked,
-  } = useStaking()
-  const { totalStaked } = useFetchStaking().data ?? {}
+  const { lpToken, rewardTokenAddresses, totalStaked } = useStaking()
+  // const { totalStaked } = useFetchStaking().data ?? {}
   const { stakedTokenBalance = '0' } = useFetchUserData().data ?? {}
 
   const hasBonusRewards = rewardTokenAddresses.length > 1
 
-  const expectedTotalStaked = bnum(totalStaked ?? initTotalStaked)
-    .plus(amount)
-    .toString()
+  const expectedTotalStaked = bnum(totalStaked).plus(amount).toString()
   const expectedTotalStakedValue = toFiat(expectedTotalStaked, lpToken?.address)
   const expectedStakedTokenBalance = bnum(stakedTokenBalance)
     .plus(amount)

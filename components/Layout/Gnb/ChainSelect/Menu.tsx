@@ -10,7 +10,9 @@ import {
   TRANSITION_MAP,
 } from 'config/constants/motions'
 import { getNetworkLabel } from 'utils/getNetworkLabel'
-import { useChain, useCloseOnBlur, useRefetch } from 'hooks'
+import { wait } from 'utils/wait'
+import { useChain, useCloseOnBlur } from 'hooks'
+import { useFetchStaking } from 'hooks/queries'
 
 import { StyledGnbChainSelectMenu } from './styled'
 import CryptoIcon from 'components/CryptoIcon'
@@ -28,16 +30,8 @@ export default function GnbChainSelectMenu({
   const router = useRouter()
   const routerChainId = Number(router.asPath.replace('/wncg/', '')) as ChainId
 
-  const { chainId: currentChainId, setChainId } = useChain()
-  const refetch = useRefetch({
-    userData: true,
-    userAllowances: true,
-    userBalances: true,
-    staking: true,
-    pool: true,
-    poolSnapshot: true,
-    prices: true,
-  })
+  const { chainId: expectedChainId, currentChain, setChainId } = useChain()
+  const { refetch: refetchStaking } = useFetchStaking({ suspense: false })
 
   const onSelectChain = useCallback(
     async (e: MouseEvent<HTMLButtonElement>) => {
@@ -46,22 +40,31 @@ export default function GnbChainSelectMenu({
       const newPathname = `/wncg/${newChainId}`
 
       if (routerChainId === newChainId) return
-      if (currentChainId === newChainId) return
+      if (expectedChainId === newChainId) return
 
       try {
         await switchNetwork({
           chainId: newChainId,
         })
-        router.replace(router.pathname, newPathname, { shallow: true })
         setChainId?.(newChainId)
-        refetch()
+        await refetchStaking()
+        await wait(100)
+        router.replace(router.pathname, newPathname, { shallow: true })
       } catch (error) {
         console.log(error)
       }
 
       closeMenu()
     },
-    [closeMenu, currentChainId, refetch, router, routerChainId, setChainId]
+    [
+      closeMenu,
+      currentChain?.id,
+      expectedChainId,
+      refetchStaking,
+      router,
+      routerChainId,
+      setChainId,
+    ]
   )
 
   useCloseOnBlur(menuRef, closeMenu)
@@ -77,7 +80,7 @@ export default function GnbChainSelectMenu({
         {list.map((item) => {
           return (
             <li
-              className={clsx({ selected: item === currentChainId })}
+              className={clsx({ selected: item === expectedChainId })}
               key={`gnbChainSelectMenu:${item}`}
             >
               <button

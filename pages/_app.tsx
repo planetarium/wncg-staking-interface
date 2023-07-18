@@ -27,7 +27,6 @@ import DefaultSeo from 'components/DefaultSeo'
 import ErrorBoundary from 'components/ErrorBoundary'
 import Layout from 'components/Layout'
 import ToastContainer from 'components/ToastContainer'
-import { priceAtom, projectAtom } from './wncg/[chainId]'
 
 type MyAppProps = AppProps & {
   pageProps: {
@@ -44,17 +43,8 @@ type HydrateAtomsProps = {
   prices: PriceMap
 } & PropsWithChildren
 
-function HydrateAtoms({
-  queryClient,
-  children,
-  project,
-  prices,
-}: HydrateAtomsProps) {
-  useHydrateAtoms([
-    [queryClientAtom, queryClient],
-    [projectAtom, project],
-    [priceAtom, prices],
-  ])
+function HydrateAtoms({ queryClient, children }: HydrateAtomsProps) {
+  useHydrateAtoms([[queryClientAtom, queryClient]])
   return <>{children}</>
 }
 
@@ -62,8 +52,6 @@ function MyApp({ Component, pageProps }: MyAppProps) {
   useMount(() => {
     wagmiClient.autoConnect()
   })
-
-  console.log(3333, pageProps)
 
   const queryClient = useRef(
     new QueryClient({

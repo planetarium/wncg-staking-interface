@@ -1,13 +1,9 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { useAtomValue } from 'jotai'
+import { useMemo } from 'react'
+import { useQueryClient } from '@tanstack/react-query'
 
 import { QUERY_KEYS } from 'config/constants/queryKeys'
-import { build } from 'lib/queries/build'
+import { bnum } from 'utils/bnum'
 import { useChain } from './useChain'
-import { fetchStaking } from 'lib/queries/fetchStaking'
-import { fetchProject } from 'lib/queries/fetchProject'
-import { priceAtom, projectAtom } from 'pages/wncg/[chainId]'
-import { TOKENS } from 'config/constants/tokens'
 
 type UseStakingReturnBsc = LiquidityPool &
   BscStaking & {
@@ -27,32 +23,26 @@ type UseStakingReturn<T extends 'ethereum'> = T extends 'ethereum'
 
 export function useStaking<T extends 'ethereum'>() {
   const { chainId } = useChain()
+  const queryClient = useQueryClient()
 
-  // const initialData = useQueryClient().getQueryData<any>([
-  //   QUERY_KEYS.Build,
-  //   chainId,
-  // ])
+  const project = useMemo(
+    () => queryClient.getQueryData<any>([QUERY_KEYS.Build, chainId]),
+    [chainId, queryClient]
+  )
 
-  // console.log(333, initialData)
-
-  // const { data } = useQuery(
-  //   [QUERY_KEYS.Build, chainId],
-  //   () => fetchProject(chainId!),
-  //   {
-  //     staleTime: Infinity,
-  //     cacheTime: Infinity,
-  //     enabled: !!chainId,
-  //     initialData,
-  //   }
-  // )
-
-  // const poolTokenAddresses = data.poolTokens.map((t) => t.address)
-
-  const project = useAtomValue(projectAtom)
-  const prices = useAtomValue(priceAtom)
+  const prices = useMemo(
+    () =>
+      queryClient.getQueryData<PriceMap>([QUERY_KEYS.Staking.Prices, chainId], {
+        exact: false,
+      }),
+    [chainId, queryClient]
+  )
 
   const poolTokenAddresses = project.poolTokens.map((t: any) => t.address)
   const poolTokenWeights = project.poolTokens.map((t: any) => t.weight)
+  const poolTokenWeightsInPcnt = poolTokenWeights.map((w: string) =>
+    bnum(w).times(100).toNumber()
+  )
   const poolTokenDecimals = project.poolTokens.map((t: any) => t.decimals)
   const poolTokenSymbols = project.poolTokens.map((t: any) => t.symbol)
   const poolTokenNames = project.poolTokens.map((t: any) => t.name)
@@ -63,10 +53,10 @@ export function useStaking<T extends 'ethereum'>() {
     priceMap: prices,
     poolTokenAddresses,
     poolTokenWeights,
+    poolTokenWeightsInPcnt,
     poolTokenDecimals,
     poolTokenSymbols,
     poolTokenNames,
     poolTokenBalances,
-    tokens: TOKENS[chainId],
   } as UseStakingReturn<T>
 }

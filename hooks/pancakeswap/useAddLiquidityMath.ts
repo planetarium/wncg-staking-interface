@@ -3,12 +3,11 @@ import { readContract } from '@wagmi/core'
 
 import { PancakeRouterAbi } from 'config/abi'
 import { BASE_GAS_FEE } from 'config/constants/liquidityPool'
-import { MINUTE_MS } from 'config/misc'
 import { bnum } from 'utils/bnum'
 import { formatUnits } from 'utils/formatUnits'
 import { parseUnits } from 'utils/parseUnits'
 import { useBalances, useChain, useFiat, useStaking } from 'hooks'
-import { useFetchPool } from 'hooks/queries'
+import { useFetchStaking } from 'hooks/queries'
 
 export function useAddLiquidityMath(isNative?: boolean) {
   const balanceOf = useBalances()
@@ -20,8 +19,8 @@ export function useAddLiquidityMath(isNative?: boolean) {
     poolTokenBalances: initPoolTokenBalances,
   } = useStaking()
 
-  const { poolReserves = initPoolTokenBalances } =
-    useFetchPool({
+  const { poolTokenBalances = initPoolTokenBalances } =
+    useFetchStaking({
       refetchOnWindowFocus: 'always',
     }).data ?? {}
 
@@ -62,11 +61,11 @@ export function useAddLiquidityMath(isNative?: boolean) {
           args: [
             parseUnits(amountIn, poolTokenDecimals[amountInIndex]).toString(),
             parseUnits(
-              poolReserves[amountInIndex],
+              poolTokenBalances[amountInIndex],
               poolTokenDecimals[amountInIndex]
             ).toString(),
             parseUnits(
-              poolReserves[1 - amountInIndex],
+              poolTokenBalances[1 - amountInIndex],
               poolTokenDecimals[1 - amountInIndex]
             ).toString(),
           ],
@@ -86,7 +85,7 @@ export function useAddLiquidityMath(isNative?: boolean) {
         return '0'
       }
     },
-    [dexProtocolAddress, poolReserves, poolTokenDecimals]
+    [dexProtocolAddress, poolTokenBalances, poolTokenDecimals]
   )
 
   const calcOptimizedAmounts = useCallback(async () => {

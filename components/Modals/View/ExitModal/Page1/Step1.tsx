@@ -42,7 +42,7 @@ function ExitModalPage1Step1({
 
   const exitTypeList = useMemo(() => {
     if (shouldReversePoolTokenOrderOnDisplay) {
-      return [null, ...poolTokenAddresses, NATIVE_CURRENCY_ADDRESS]
+      return [null, ...poolTokenAddresses.reverse(), NATIVE_CURRENCY_ADDRESS]
     }
 
     return [null, ...poolTokenAddresses, NATIVE_CURRENCY_ADDRESS]
@@ -76,7 +76,7 @@ function ExitModalPage1Step1({
             <>
               {exitTypeList.map((addr) => {
                 const key = `exitForm:exitType:${addr}`
-                const label = addr === null ? 'All' : tokens[addr].symbol
+                const label = addr === null ? 'All' : tokens?.[addr]?.symbol
 
                 return (
                   <div

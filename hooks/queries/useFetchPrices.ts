@@ -1,12 +1,12 @@
-import { useQuery } from '@tanstack/react-query'
+import { useMemo } from 'react'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 
 import { QUERY_KEYS } from 'config/constants/queryKeys'
 import { fetchPrice } from 'lib/queries/fetchPrice'
-import { calcLpTokenPrice } from 'utils/calcLpTokenPrice'
-import { useChain, useStaking } from 'hooks'
-import { useFetchPool } from './useFetchPool'
+import { useChain } from 'hooks'
 
 export function useFetchPrices(options: UseFetchOptions = {}) {
+  const queryClient = useQueryClient()
   const {
     enabled = true,
     refetchInterval,
@@ -15,10 +15,14 @@ export function useFetchPrices(options: UseFetchOptions = {}) {
   } = options
 
   const { chainId } = useChain()
-  const { lpToken: initLpToken, poolTokens: initPoolTokens } = useStaking()
 
-  const { lpToken = initLpToken, poolTokens = initPoolTokens } =
-    useFetchPool().data ?? {}
+  const initialData = useMemo(
+    () =>
+      queryClient.getQueryData([QUERY_KEYS.Prices, chainId]) as
+        | PriceMap
+        | undefined,
+    [chainId, queryClient]
+  )
 
   return useQuery<PriceMap>(
     [QUERY_KEYS.Staking.Prices, chainId],
@@ -31,20 +35,7 @@ export function useFetchPrices(options: UseFetchOptions = {}) {
       refetchOnWindowFocus,
       useErrorBoundary: false,
       suspense,
-      select(data) {
-        const lpTokenPrice = calcLpTokenPrice(
-          chainId,
-          poolTokens,
-          lpToken?.address,
-          lpToken?.totalSupply ?? '0',
-          data
-        )
-
-        return {
-          ...data,
-          ...lpTokenPrice,
-        }
-      },
+      initialData,
     }
   )
 }

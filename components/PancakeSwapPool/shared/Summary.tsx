@@ -3,7 +3,7 @@ import { useDebounce } from 'use-debounce'
 
 import { bnum } from 'utils/bnum'
 import { useAuth, useFiat, useStaking } from 'hooks'
-import { useFetchPool } from 'hooks/queries'
+import { useFetchStaking } from 'hooks/queries'
 
 import { StyledAddLiquidityFormSummary } from './styled'
 import NumberFormat from 'components/NumberFormat'
@@ -21,10 +21,10 @@ export default function AddLiquidityFormSummary({
 }: AddLiquidityFormSummaryProps) {
   const { isConnected } = useAuth()
   const toFiat = useFiat()
-  const { tokens, poolReserves: initPoolReserves } = useStaking()
+  const { tokens, poolTokenBalances: initPoolTokenBalances } = useStaking()
 
-  const { poolReserves = initPoolReserves } =
-    useFetchPool({ refetchInterval: 30 * 1_000 }).data ?? {}
+  const { poolTokenBalances = initPoolTokenBalances } =
+    useFetchStaking({ refetchInterval: 30 * 1_000 }).data ?? {}
 
   const relativePrice = useMemo(() => {
     return assets.map((addr, i) => {
@@ -36,7 +36,7 @@ export default function AddLiquidityFormSummary({
   }, [assets, toFiat])
 
   const share = useMemo(() => {
-    const currentPoolValue = poolReserves.reduce(
+    const currentPoolValue = poolTokenBalances.reduce(
       (acc, amt, i) => acc.plus(toFiat(amt, assets[i])),
       bnum(0)
     )
@@ -46,7 +46,7 @@ export default function AddLiquidityFormSummary({
       .div(expectedPoolValue.toString())
       .times(100)
       .toString()
-  }, [amountsInFiatValueSum, assets, poolReserves, toFiat])
+  }, [amountsInFiatValueSum, assets, poolTokenBalances, toFiat])
 
   const [debouncedShare] = useDebounce(share, 500)
 

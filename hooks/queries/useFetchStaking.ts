@@ -1,22 +1,37 @@
-import { useQuery } from '@tanstack/react-query'
+import { useMemo } from 'react'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 
 import { QUERY_KEYS } from 'config/constants/queryKeys'
-import { fetchStaking } from 'lib/queries/fetchStaking'
+import { fetchProject } from 'lib/queries/fetchProject'
 import { useChain } from 'hooks'
 
+type FetchStakingReturn = {
+  totalStaked: string
+  poolTokenBalances: string[]
+}
+
 export function useFetchStaking(options: UseFetchOptions = {}) {
+  const queryClient = useQueryClient()
   const {
     enabled = true,
     refetchInterval,
     refetchOnWindowFocus,
-    suspense = true,
+    suspense,
   } = options
 
   const { chainId, stakingAddress } = useChain()
 
-  return useQuery(
+  const initialData = useMemo(
+    () =>
+      queryClient.getQueryData([QUERY_KEYS.Build, chainId]) as
+        | FetchStakingReturn
+        | undefined,
+    [chainId, queryClient]
+  )
+
+  return useQuery<FetchStakingReturn>(
     [QUERY_KEYS.Staking.Data, stakingAddress, chainId],
-    () => fetchStaking(chainId),
+    () => fetchProject(chainId),
     {
       enabled,
       staleTime: Infinity,
@@ -24,6 +39,7 @@ export function useFetchStaking(options: UseFetchOptions = {}) {
       refetchOnWindowFocus,
       suspense,
       useErrorBoundary: false,
+      initialData,
     }
   )
 }

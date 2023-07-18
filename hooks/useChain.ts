@@ -1,3 +1,6 @@
+import { useMemo } from 'react'
+import { useNetwork } from 'wagmi'
+
 import { CHAINS, ChainId } from 'config/chains'
 import {
   BAL_ADDRESS,
@@ -7,8 +10,6 @@ import {
 import { DEX } from 'config/constants/dex'
 
 import { useChainContext } from 'components/ChainProvider'
-import { useNetwork } from 'wagmi'
-import { useMemo } from 'react'
 
 export function useChain() {
   const { chainId, setChainId } = useChainContext()
@@ -29,6 +30,7 @@ export function useChain() {
   return {
     ...chain,
     ...dex,
+    currentChain,
     setChainId,
     balAddress,
     stakingAddress,

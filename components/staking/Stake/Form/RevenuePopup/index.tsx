@@ -14,9 +14,9 @@ export default function StakeFormRevenuePopup({
   amount,
   className,
 }: StakeFormRevenueProps) {
-  const { rewardTokenAddresses } = useStaking()
+  const { rewardTokenAddresses, totalStaked } = useStaking()
 
-  const { totalStaked = '0' } = useFetchStaking().data ?? {}
+  // const { totalStaked = '0' } = useFetchStaking().data ?? {}
 
   const expectedTotalStaked = bnum(totalStaked)
     .plus(bnum(amount).toString())

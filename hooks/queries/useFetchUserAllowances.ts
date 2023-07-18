@@ -14,7 +14,8 @@ export function useFetchUserAllowances(options: UseFetchOptions = {}) {
   } = options
 
   const { account, isConnected } = useAuth()
-  const { chainId, dexProtocolAddress, stakingAddress } = useChain()
+  const { chainId, dexProtocolAddress, stakingAddress, networkMismatch } =
+    useChain()
   const { lpToken, poolTokenAddresses, tokens } = useStaking()
 
   const pairAddressList: Hash[][] = useMemo(
@@ -33,7 +34,7 @@ export function useFetchUserAllowances(options: UseFetchOptions = {}) {
     [pairAddressList, tokens]
   )
 
-  const enabled = _enabled && !!isConnected
+  const enabled = _enabled && !!isConnected && !networkMismatch
 
   return useQuery<AllowanceMap>(
     [QUERY_KEYS.User.Allowances, account!, chainId, ...pairAddressList],

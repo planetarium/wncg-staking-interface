@@ -94,7 +94,6 @@ export async function fetchPancakeSwapPool(
     poolTokenWeights,
     poolTokenWeightsInPcnt,
     poolTokenSymbols,
-    poolReserves,
 
     totalSwapFee: '0',
     shouldReversePoolTokenOrderOnDisplay,

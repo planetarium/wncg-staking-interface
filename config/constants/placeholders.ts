@@ -18,8 +18,6 @@ export const LIQUIDITY_POOL_PLACEHOLDER = {
   poolTokenWeightsInPcnt: [],
   poolTokenSymbols: [],
 
-  poolReserves: [],
-
   totalSwapFee: '0',
   shouldReversePoolTokenOrderOnDisplay: true,
 } satisfies LiquidityPool

@@ -62,8 +62,6 @@ type LiquidityPool = {
   poolTokenWeights: string[]
   poolTokenWeightsInPcnt: number[]
 
-  poolReserves: string[]
-
   totalSwapFee: string
   shouldReversePoolTokenOrderOnDisplay: stboodlring
 }
