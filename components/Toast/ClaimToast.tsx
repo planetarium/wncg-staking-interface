@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { useMount } from 'react-use'
 import Link from 'next/link'
 import { useSetAtom } from 'jotai'
 import { RESET } from 'jotai/utils'
@@ -9,7 +8,13 @@ import { claimTxAtom } from 'states/tx'
 import { formatUnits } from 'utils/formatUnits'
 import { parseTransferLogs } from 'utils/parseTransferLogs'
 import { txUrlFor } from 'utils/txUrlFor'
-import { useChain, useFiat, useStaking, useViemClient } from 'hooks'
+import {
+  useClientMount,
+  useChain,
+  useFiat,
+  useStaking,
+  useViemClient,
+} from 'hooks'
 import { useWatch } from './useWatch'
 
 import { StyledToast } from './styled'
@@ -64,7 +69,7 @@ export default function ClaimToast({
     },
   })
 
-  useMount(() => setTx(RESET))
+  useClientMount(() => setTx(RESET))
 
   return (
     <StyledToast>

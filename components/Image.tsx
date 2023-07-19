@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import NextImage, { ImageProps as NextImageProps } from 'next/image'
 
 import { baseUrls } from 'config/api'
@@ -14,12 +14,6 @@ export default function Image({
   src,
   ...props
 }: ImageProps) {
-  const [loaded, setLoaded] = useState(false)
-
-  function handleLoad() {
-    setLoaded(true)
-  }
-
   const filePath = useMemo(() => {
     if (!src) return null
     if ((src as string).startsWith('http')) return src
@@ -29,14 +23,8 @@ export default function Image({
   if (!filePath) return null
 
   return (
-    <StyledImage className={className} $objectFit={objectFit} $loaded={loaded}>
-      <NextImage
-        {...props}
-        src={filePath}
-        fill
-        unoptimized
-        onLoadingComplete={handleLoad}
-      />
+    <StyledImage className={className} $objectFit={objectFit}>
+      <NextImage {...props} src={filePath} fill unoptimized />
     </StyledImage>
   )
 }

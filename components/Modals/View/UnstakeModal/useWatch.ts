@@ -1,9 +1,9 @@
-import { useMount, useUnmount } from 'react-use'
+import { useUnmount } from 'react-use'
 import { useAtomValue } from 'jotai'
 import { useWaitForTransaction } from 'wagmi'
 
 import { unstakeTxAtom } from 'states/tx'
-import { useChain, useRefetch } from 'hooks'
+import { useClientMount, useChain, useRefetch } from 'hooks'
 
 export function useWatch(send: (event: string) => void) {
   const { chainId } = useChain()
@@ -31,7 +31,7 @@ export function useWatch(send: (event: string) => void) {
     },
   })
 
-  useMount(() => {
+  useClientMount(() => {
     refetch()
   })
 

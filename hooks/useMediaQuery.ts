@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useMemo } from 'react'
-import { useMount } from 'react-use'
+
 import { useSetAtom } from 'jotai'
 
 import { breakpointAtom } from 'states/screen'
 import { Breakpoint } from 'config/constants'
+import { useClientMount } from './useClientMount'
 
 const bpEntries = Object.entries(Breakpoint)
 const bpLength = bpEntries.length
@@ -36,7 +37,7 @@ export function useMediaQuery() {
     setBreakpoint(newBp)
   }, [mql, setBreakpoint])
 
-  useMount(update)
+  useClientMount(update)
 
   useEffect(() => {
     mql.forEach((mq) => mq?.addEventListener('change', update))

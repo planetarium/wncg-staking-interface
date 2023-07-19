@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import { useMount } from 'react-use'
 import { useSetAtom } from 'jotai'
 import { RESET } from 'jotai/utils'
 
@@ -7,7 +6,7 @@ import { exitTxAtom } from 'states/tx'
 import { NATIVE_CURRENCY_ADDRESS } from 'config/constants/addresses'
 import { formatUnits } from 'utils/formatUnits'
 import { txUrlFor } from 'utils/txUrlFor'
-import { useChain, useFiat, useStaking } from 'hooks'
+import { useClientMount, useChain, useFiat, useStaking } from 'hooks'
 import { useWatch } from './useWatch'
 
 import { StyledToast } from './styled'
@@ -42,7 +41,7 @@ export default function ExitToast({
     ? tokens[assets[tokenOutIndex]].address
     : null
 
-  useMount(() => setTx(RESET))
+  useClientMount(() => setTx(RESET))
 
   return (
     <StyledToast>

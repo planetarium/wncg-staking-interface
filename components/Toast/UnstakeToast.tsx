@@ -1,11 +1,10 @@
-import { useMount } from 'react-use'
 import Link from 'next/link'
 import { useSetAtom } from 'jotai'
 import { RESET } from 'jotai/utils'
 
 import { unstakeTxAtom } from 'states/tx'
 import { txUrlFor } from 'utils/txUrlFor'
-import { useChain, useFiat, useStaking } from 'hooks'
+import { useChain, useClientMount, useFiat, useStaking } from 'hooks'
 import { useWatch } from './useWatch'
 
 import { StyledToast } from './styled'
@@ -33,7 +32,7 @@ export default function UnstakeToast({
 
   const status = useWatch(hash)
 
-  useMount(() => setTx(RESET))
+  useClientMount(() => setTx(RESET))
 
   return (
     <StyledToast>

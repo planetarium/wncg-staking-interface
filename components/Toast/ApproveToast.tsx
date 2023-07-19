@@ -1,6 +1,5 @@
 import { useMemo, useState } from 'react'
 import { useTransaction } from 'wagmi'
-import { useMount } from 'react-use'
 import Link from 'next/link'
 import { useSetAtom } from 'jotai'
 import { RESET } from 'jotai/utils'
@@ -9,7 +8,7 @@ import { approveTxAtom } from 'states/tx'
 import { txUrlFor } from 'utils/txUrlFor'
 import { isEthereum } from 'utils/isEthereum'
 import { parseLog } from 'utils/parseLog'
-import { useChain, useStaking, useViemClient } from 'hooks'
+import { useChain, useClientMount, useStaking, useViemClient } from 'hooks'
 import { useWatch } from './useWatch'
 
 import { StyledToast } from './styled'
@@ -39,7 +38,7 @@ export default function ApproveToast({
 
   const status = useWatch(hash)
 
-  useMount(() => setTx(RESET))
+  useClientMount(() => setTx(RESET))
 
   useTransaction({
     hash,

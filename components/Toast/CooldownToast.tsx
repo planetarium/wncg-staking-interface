@@ -1,5 +1,4 @@
 import { useMemo } from 'react'
-import { useMount } from 'react-use'
 import Link from 'next/link'
 import { useAtom, useSetAtom } from 'jotai'
 import { RESET } from 'jotai/utils'
@@ -11,7 +10,7 @@ import { format } from 'utils/format'
 import { formatISO } from 'utils/formatISO'
 import { now } from 'utils/now'
 import { txUrlFor } from 'utils/txUrlFor'
-import { useChain, useStaking } from 'hooks'
+import { useClientMount, useChain, useStaking } from 'hooks'
 import { useWatch } from './useWatch'
 
 import { StyledToast } from './styled'
@@ -45,7 +44,7 @@ export default function CooldownToast({ hash }: CooldownToastProps) {
 
   const status = useWatch(hash)
 
-  useMount(() => {
+  useClientMount(() => {
     setCurrentTimestamp(now())
     setTx(RESET)
   })

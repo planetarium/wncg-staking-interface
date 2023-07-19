@@ -1,17 +1,15 @@
 import { useCallback, useMemo } from 'react'
 import { getContract } from 'viem'
-import { getPublicClient, getWalletClient } from '@wagmi/core'
-import { useMount } from 'react-use'
+import { getPublicClient, signTypedData } from '@wagmi/core'
 import { useAtom } from 'jotai'
 import { splitSignature } from '@ethersproject/bytes'
-import { signTypedData } from '@wagmi/core'
 
 import { currentTimestampAtom } from 'states/system'
 import { PancakePairAbi } from 'config/abi'
 import { SECOND } from 'config/misc'
 import { now } from 'utils/now'
 import { parseUnits } from 'utils/parseUnits'
-import { useAuth, useChain, useStaking } from 'hooks'
+import { useAuth, useChain, useClientMount, useStaking } from 'hooks'
 
 const EIP712Domain = [
   { name: 'name', type: 'string' },
@@ -104,7 +102,7 @@ export function useSignature() {
     ]
   )
 
-  useMount(() => {
+  useClientMount(() => {
     setCurrentTimestamp(now())
   })
 

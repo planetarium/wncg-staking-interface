@@ -1,11 +1,10 @@
 import Link from 'next/link'
-import { useMount } from 'react-use'
 import { useSetAtom } from 'jotai'
 import { RESET } from 'jotai/utils'
 
 import { joinTxAtom } from 'states/tx'
 import { txUrlFor } from 'utils/txUrlFor'
-import { useChain, useFiat, useStaking } from 'hooks'
+import { useClientMount, useChain, useFiat, useStaking } from 'hooks'
 import { useWatch } from './useWatch'
 
 import { StyledToast } from './styled'
@@ -29,7 +28,7 @@ export default function JoinToast({ hash, joinAmounts }: JoinToastProps) {
 
   const status = useWatch(hash)
 
-  useMount(() => setTx(RESET))
+  useClientMount(() => setTx(RESET))
 
   return (
     <StyledToast>

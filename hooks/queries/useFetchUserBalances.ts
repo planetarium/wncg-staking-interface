@@ -17,7 +17,7 @@ export function useFetchUserBalances(options: UseFetchOptions = {}) {
   const { chainId } = useChain()
   const { lpToken, poolTokenAddresses } = useStaking()
 
-  const enabled = _enabled && !!isConnected
+  const enabled = _enabled && !!isConnected && !!account
 
   const list = useMemo(
     () => [lpToken?.address, ...poolTokenAddresses],

@@ -1,10 +1,10 @@
 import { memo } from 'react'
-import { useInterval, useMount } from 'react-use'
+import { useInterval } from 'react-use'
 import { useSetAtom } from 'jotai'
 
 import { currentTimestampAtom } from 'states/system'
-
 import { now } from 'utils/now'
+import { useClientMount } from 'hooks'
 import { useFetchPrices } from 'hooks/queries'
 
 function InterfaceHook() {
@@ -18,7 +18,7 @@ function InterfaceHook() {
     setCurrentTimestamp(now())
   }, 10 * 1_000)
 
-  useMount(() => {
+  useClientMount(() => {
     setCurrentTimestamp(now())
   })
 

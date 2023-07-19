@@ -1,10 +1,10 @@
 import { useState } from 'react'
-import { useMount } from 'react-use'
+import { useClientMount } from './useClientMount'
 
 export function useIsMounted() {
   const [mounted, setIsMounted] = useState(false)
 
-  useMount(() => setIsMounted(true))
+  useClientMount(() => setIsMounted(true))
 
   return mounted
 }

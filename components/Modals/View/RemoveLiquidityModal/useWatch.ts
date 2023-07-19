@@ -1,11 +1,11 @@
-import { useMount, useUnmount } from 'react-use'
+import { useUnmount } from 'react-use'
 import { atom, useAtomValue, useSetAtom } from 'jotai'
 import { useWaitForTransaction } from 'wagmi'
 
 import { removeLiquidityTxAtom } from 'states/tx'
 import { formatUnits } from 'utils/formatUnits'
 import { parseLog } from 'utils/parseLog'
-import { useChain, useRefetch, useStaking } from 'hooks'
+import { useClientMount, useChain, useRefetch, useStaking } from 'hooks'
 
 export const actualAmountsOutAtom = atom(['0', '0'])
 
@@ -48,7 +48,7 @@ export function useWatch(send: (event: string) => void) {
     },
   })
 
-  useMount(refetch)
+  useClientMount(refetch)
 
   useUnmount(refetch)
 }

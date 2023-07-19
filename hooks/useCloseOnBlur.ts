@@ -1,5 +1,6 @@
 import { RefObject, useCallback } from 'react'
-import { useMount, useUnmount } from 'react-use'
+import { useUnmount } from 'react-use'
+import { useClientMount } from './useClientMount'
 
 type CloseOnBlurOptions = {
   capture?: boolean
@@ -25,7 +26,7 @@ export function useCloseOnBlur(
     [capture, onClose, ref]
   )
 
-  useMount(() => {
+  useClientMount(() => {
     window.addEventListener('click', closeOnBlur, {
       capture,
       passive,

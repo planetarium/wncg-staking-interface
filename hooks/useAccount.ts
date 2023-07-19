@@ -4,11 +4,18 @@ import { useAccount as _useAccount } from 'wagmi'
 import { useSetAtom } from 'jotai'
 
 import { accountAtom, connectorAtom, statusAtom } from 'states/account'
+import { useRefetch } from './useRefetch'
 import { useUserSettings } from './useUserSettings'
 
 export function useAccount() {
-  const resetSettings = useUserSettings()
   const queryClient = useQueryClient()
+
+  const resetSettings = useUserSettings()
+  const refetch = useRefetch({
+    userData: true,
+    userAllowances: true,
+    userBalances: true,
+  })
 
   const setAccount = useSetAtom(accountAtom)
   const setConnector = useSetAtom(connectorAtom)
@@ -33,12 +40,17 @@ export function useAccount() {
     setConnector(_connector ?? null)
     setStatus(_status)
 
+    if (address) {
+      refetch()
+    }
+
     queryClient.invalidateQueries([address], { exact: false })
   }, [
     _connector,
     _status,
     address,
     queryClient,
+    refetch,
     resetSettings,
     setAccount,
     setConnector,

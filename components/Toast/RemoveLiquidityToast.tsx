@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useMount } from 'react-use'
+
 import Link from 'next/link'
 import { useSetAtom } from 'jotai'
 import { RESET } from 'jotai/utils'
@@ -9,7 +9,7 @@ import { removeLiquidityTxAtom } from 'states/tx'
 import { formatUnits } from 'utils/formatUnits'
 import { parseLog } from 'utils/parseLog'
 import { txUrlFor } from 'utils/txUrlFor'
-import { useChain, useFiat, useStaking } from 'hooks'
+import { useChain, useClientMount, useFiat, useStaking } from 'hooks'
 import { useWatch } from './useWatch'
 
 import { StyledToast } from './styled'
@@ -36,7 +36,7 @@ export default function RemoveLiquidityToast({
 
   const status = useWatch(hash)
 
-  useMount(() => setTx(RESET))
+  useClientMount(() => setTx(RESET))
 
   useWaitForTransaction({
     hash,

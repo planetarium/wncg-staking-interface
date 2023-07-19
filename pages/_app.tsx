@@ -7,9 +7,9 @@ import {
 import { isFirefox } from 'react-device-detect'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import type { DehydratedState } from '@tanstack/react-query'
-import { useMount } from 'react-use'
+
 import { Provider } from 'jotai'
-import type { AppProps, NextWebVitalsMetric } from 'next/app'
+import type { AppProps } from 'next/app'
 import Script from 'next/script'
 import { WagmiConfig } from 'wagmi'
 import { queryClientAtom } from 'jotai-tanstack-query'
@@ -18,6 +18,7 @@ import 'react-toastify/dist/ReactToastify.css'
 
 import config from 'config'
 import wagmiClient from 'lib/wagmi/client'
+import { useClientMount } from 'hooks'
 
 import GlobalStyle from 'styles/GlobalStyle'
 import ToastStyle from 'styles/ToastStyle'
@@ -49,7 +50,7 @@ function HydrateAtoms({ queryClient, children }: HydrateAtomsProps) {
 }
 
 function MyApp({ Component, pageProps }: MyAppProps) {
-  useMount(() => {
+  useClientMount(() => {
     wagmiClient.autoConnect()
   })
 
@@ -70,7 +71,7 @@ function MyApp({ Component, pageProps }: MyAppProps) {
     })
   )
 
-  useMount(() => {
+  useClientMount(() => {
     if (isFirefox) return document.body.classList.add('firefox')
     else {
       document.body.classList.add('notFirefox')

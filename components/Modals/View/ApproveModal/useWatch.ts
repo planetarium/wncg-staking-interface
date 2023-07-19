@@ -1,9 +1,9 @@
-import { useMount, useUnmount } from 'react-use'
+import { useUnmount } from 'react-use'
 import { useAtomValue } from 'jotai'
 import { useWaitForTransaction } from 'wagmi'
 
 import { approveTxAtom } from 'states/tx'
-import { useRefetch } from 'hooks'
+import { useClientMount, useRefetch } from 'hooks'
 
 export function useWatch(send: (event: string) => void) {
   const refetch = useRefetch({
@@ -25,7 +25,7 @@ export function useWatch(send: (event: string) => void) {
     },
   })
 
-  useMount(() => {
+  useClientMount(() => {
     refetch()
   })
 

@@ -1,11 +1,11 @@
-import { useMount, useUnmount } from 'react-use'
+import { useUnmount } from 'react-use'
 import { atom, useAtomValue, useSetAtom } from 'jotai'
 import { useWaitForTransaction } from 'wagmi'
 
 import { claimTxAtom } from 'states/tx'
 import { formatUnits } from 'utils/formatUnits'
 import { parseTransferLogs } from 'utils/parseTransferLogs'
-import { useChain, useRefetch, useStaking } from 'hooks'
+import { useChain, useClientMount, useRefetch, useStaking } from 'hooks'
 
 export const claimedAmountsAtom = atom<string[]>([])
 
@@ -46,7 +46,7 @@ export function useWatch(send: (event: string) => void) {
     },
   })
 
-  useMount(() => {
+  useClientMount(() => {
     refetch()
   })
 

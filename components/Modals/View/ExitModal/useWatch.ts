@@ -1,11 +1,10 @@
-import { useMount, useUnmount } from 'react-use'
+import { useUnmount } from 'react-use'
 import { atom, useAtomValue } from 'jotai'
 import { useWaitForTransaction } from 'wagmi'
 
 import { exitTxAtom } from 'states/tx'
 import { wait } from 'utils/wait'
-import { useChain, useRefetch } from 'hooks'
-import { parseTransferLogs } from 'utils/parseTransferLogs'
+import { useClientMount, useChain, useRefetch } from 'hooks'
 
 export const exitAmountsAtom = atom<string[]>([])
 
@@ -25,10 +24,8 @@ export function useWatch(send: (event: string) => void) {
     enabled: !!tx.hash,
     chainId,
     suspense: false,
-    async onSuccess(tx) {
+    async onSuccess() {
       await wait(100)
-      // const transferLogs = parseTransferLogs(tx.logs)
-      // console.log(transferLog)
       send('SUCCESS')
     },
     onError() {
@@ -36,7 +33,7 @@ export function useWatch(send: (event: string) => void) {
     },
   })
 
-  useMount(() => {
+  useClientMount(() => {
     refetch()
   })
 

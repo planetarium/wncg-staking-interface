@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { useMount } from 'react-use'
 import Link from 'next/link'
 import { RESET } from 'jotai/utils'
 import { useTransaction } from 'wagmi'
@@ -9,7 +8,7 @@ import { harvestTxAtom } from 'states/tx'
 import { BAL_ADDRESS } from 'config/constants/addresses'
 import { parseTransferLogs } from 'utils/parseTransferLogs'
 import { txUrlFor } from 'utils/txUrlFor'
-import { useChain, useViemClient } from 'hooks'
+import { useClientMount, useChain, useViemClient } from 'hooks'
 import { useWatch } from './useWatch'
 
 import { StyledToast } from './styled'
@@ -51,7 +50,7 @@ export default function HarvestToast({ hash }: HarvestToastProps) {
     },
   })
 
-  useMount(() => setTx(RESET))
+  useClientMount(() => setTx(RESET))
 
   return (
     <StyledToast>
