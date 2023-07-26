@@ -58,7 +58,6 @@ export default function GnbChainSelectMenu({
     },
     [
       closeMenu,
-      currentChain?.id,
       expectedChainId,
       refetchStaking,
       router,

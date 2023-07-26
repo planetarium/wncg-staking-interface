@@ -165,7 +165,6 @@ export const StyledHighPriceImpact = styled(motion.div)`
 type StyledImageProps = {
   $objectFit: 'contain' | 'cover'
   $bg?: boolean
-  $loaded?: boolean
 }
 
 export const StyledImage = styled.div<StyledImageProps>`
@@ -178,7 +177,6 @@ export const StyledImage = styled.div<StyledImageProps>`
     height: unset !important;
     object-fit: ${({ $objectFit }) => $objectFit};
     transition: 300ms;
-    opacity: 0;
   }
 
   ${({ $bg }) =>
@@ -186,14 +184,6 @@ export const StyledImage = styled.div<StyledImageProps>`
     css`
       pointer-events: none;
       user-select: none;
-    `}
-
-  ${({ $loaded: $loadComplete }) =>
-    $loadComplete &&
-    css`
-      img {
-        opacity: 1;
-      }
     `}
 `
 

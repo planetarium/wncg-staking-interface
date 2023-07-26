@@ -1,0 +1,58 @@
+<svg
+  viewBox="0 0 32 32"
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+>
+  <defs>
+    <clipPath id="ether_clip">
+      <rect
+        width="20"
+        height="20"
+        fill="#fff"
+        transform="translate(6 5.99976)"
+      />
+    </clipPath>
+  </defs>
+
+  <rect width="32" height="32" rx="16" fill="#6F97F8" />
+  <g clip-path="url(#ether_clip)">
+    <path
+      fill-rule="evenodd"
+      clip-rule="evenodd"
+      d="M16.1331 13.3945L10 16.1868L16.1331 19.8141L16.1331 13.3945Z"
+      fill="#fff"
+      fillOpacity="0.85"
+    />
+    <path
+      fill-rule="evenodd"
+      clip-rule="evenodd"
+      d="M16.1332 19.8142L10 16.1868L16.1332 5.99976V19.8142ZM10.0001 16.1867L16.1332 13.3944L16.1332 19.814L10.0001 16.1867Z"
+      fill="#fff"
+      fillOpacity="0.95"
+    />
+    <path
+      fill-rule="evenodd"
+      clip-rule="evenodd"
+      d="M22.2635 16.1868L16.1329 13.3945L16.1328 13.3946V19.8141L22.2635 16.1868Z"
+      fill="#fff"
+      fillOpacity="0.7"
+    />
+    <path
+      fill-rule="evenodd"
+      clip-rule="evenodd"
+      d="M16.133 13.3945V5.99976L22.2638 16.1868L16.133 19.8142V19.8139L22.2635 16.1867L16.133 13.3945ZM16.133 13.3945L16.1329 13.3944L16.1328 13.3945V19.814L16.133 19.8139V13.3945Z"
+      fill="#fff"
+      fillOpacity="0.75"
+    />
+    <path
+      d="M10 17.3501L16.1332 25.9998V20.9775L10 17.3501Z"
+      fill="#fff"
+      fillOpacity="0.75"
+    />
+    <path
+      d="M16.1333 20.9775V25.9998L22.2689 17.3501L16.1333 20.9775Z"
+      fill="#fff"
+      fillOpacity="0.65"
+    />
+  </g>
+</svg>

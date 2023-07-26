@@ -23,7 +23,6 @@ export type IconType =
   | 'discord'
   | 'docs'
   | 'done'
-  | 'fail' // 32 only
   | 'github'
   | 'globe'
   | 'hamburger'
@@ -87,7 +86,7 @@ function Icon({
       aria-hidden={ariaHidden}
       $size={$size}
     >
-      <use href={`/icons/sprites.svg#${icon}-${$size}`} />
+      <use href={`/icons/ic-${icon}.svg#size-${$size}`} />
     </StyledIcon>
   )
 }

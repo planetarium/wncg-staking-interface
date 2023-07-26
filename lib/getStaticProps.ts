@@ -107,6 +107,7 @@ export async function getStaticProps(ctx: GetStaticPropsContext) {
         project,
         prices,
       },
+      revalidate: 60,
     }
   } catch (error) {
     return {
