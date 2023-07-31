@@ -49,7 +49,7 @@ export function useSignature() {
 
   const domain = useMemo(
     () => ({
-      name: `Pancake LPs`,
+      name: 'Pancake LPs',
       version: '1',
       chainId,
       verifyingContract: lpToken?.address,
@@ -61,7 +61,7 @@ export function useSignature() {
     async (lpAmountOut: string) => {
       if (!lpTokenContract) return
 
-      const nonce = await lpTokenContract.read.nonce([account])
+      const nonce = await lpTokenContract.read.nonces([account])
 
       const scaledLpAmountOut = parseUnits(
         lpAmountOut,
@@ -76,11 +76,28 @@ export function useSignature() {
         deadline,
       }
 
+      const params = {
+        domain,
+        primaryType: 'Permit',
+        types: {
+          EIP712Domain,
+          Permit,
+        },
+        message,
+        // value: message,
+      }
+
+      console.log(params)
+
       const rawSig = await signTypedData({
         // @ts-ignore
         domain,
-        types: { EIP712Domain, Permit },
-        value: message,
+        primaryType: 'Permit',
+        types: {
+          EIP712Domain,
+          Permit,
+        },
+        message,
       })
 
       const signature = splitSignature(rawSig)

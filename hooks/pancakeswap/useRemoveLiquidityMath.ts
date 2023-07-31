@@ -21,7 +21,7 @@ export function useRemoveLiquidityMath() {
       const lpAmountOut = bnum(userLpAmount).times(pcnt).div(100)
 
       const share = lpAmountOut.div(lpToken?.totalSupply)
-      return poolTokenBalances.map((amt) => share.times(amt).toFixed(0, 3))
+      return poolTokenBalances.map((amt) => share.times(amt).toFixed(18, 3))
     },
     [userLpAmount, lpToken?.totalSupply, poolTokenBalances]
   )

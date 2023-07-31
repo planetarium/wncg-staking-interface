@@ -1,19 +1,19 @@
-import { useCallback } from 'react'
+import { useCallback, useEffect } from 'react'
 import type { UseFormSetValue } from 'react-hook-form'
 import { useAtomValue } from 'jotai'
 import { AnimatePresence, motion } from 'framer-motion'
 
 import { removeLiquidityTxAtom } from 'states/tx'
+import { slippageAtom } from 'states/system'
+import { RemoveLiquidityField } from 'config/constants'
 import { ANIMATION_MAP, EXIT_MOTION } from 'config/constants/motions'
 import { bnum } from 'utils/bnum'
 import { useSignature } from 'hooks/pancakeswap'
+import type { RemoveLiquidityForm } from 'hooks/pancakeswap/useRemoveLiquidityForm'
 
 import { StyledRemoveLiquidityModalPage1Signature } from './styled'
 import Button from 'components/Button'
 import Icon from 'components/Icon'
-
-import type { RemoveLiquidityForm } from 'hooks/pancakeswap/useRemoveLiquidityForm'
-import { RemoveLiquidityField } from 'config/constants'
 
 type RemoveLiquidityModalPage1SignatureProps = {
   lpAmountOut: string
@@ -28,6 +28,7 @@ export default function RemoveLiquidityModalPage1Signature({
 }: RemoveLiquidityModalPage1SignatureProps) {
   const sign = useSignature()
   const tx = useAtomValue(removeLiquidityTxAtom)
+  const slippage = useAtomValue(slippageAtom) ?? '0.5'
 
   const onClickSign = useCallback(async () => {
     try {
@@ -50,6 +51,10 @@ export default function RemoveLiquidityModalPage1Signature({
 
   const removeLiquidityDisabled = bnum(lpAmountOut).isZero()
   const disabled = !!signature || !!tx.hash
+
+  useEffect(() => {
+    setValue(RemoveLiquidityField.Signature, undefined)
+  }, [setValue, lpAmountOut, slippage])
 
   return (
     <StyledRemoveLiquidityModalPage1Signature>
