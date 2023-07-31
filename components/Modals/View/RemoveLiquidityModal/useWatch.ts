@@ -48,7 +48,13 @@ export function useWatch(send: (event: string) => void) {
     },
   })
 
-  useClientMount(refetch)
+  useClientMount(() => {
+    refetch()
+    return
+  })
 
-  useUnmount(refetch)
+  useUnmount(() => {
+    refetch()
+    return
+  })
 }
