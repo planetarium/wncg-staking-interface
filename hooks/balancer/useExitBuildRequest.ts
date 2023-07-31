@@ -80,11 +80,14 @@ export function useExitBuildRequest({
   const minAmountsOut = useMemo(() => {
     if (isPropExit) return ['0', '0']
     return amounts.map((a, i) =>
-      safeBigNumber(
-        parseUnits(a, tokens[_assets[i]]?.decimals ?? 18).toString()
-      )
+      parseUnits(a, tokens[_assets[i]]?.decimals ?? 18).toString()
     )
   }, [_assets, amounts, isPropExit, tokens])
+
+  const bminAmountsOut = useMemo(
+    () => minAmountsOut.map((amt) => BigInt(amt)),
+    [minAmountsOut]
+  )
 
   const userData = useMemo(() => {
     switch (true) {

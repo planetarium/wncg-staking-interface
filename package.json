@@ -17,6 +17,8 @@
     "@ethersproject/abstract-provider": "^5.7.0",
     "@ethersproject/constants": "^5.7.0",
     "@georgeroman/balancer-v2-pools": "^0.0.14",
+    "@sentry/nextjs": "^7.60.1",
+    "@sentry/react": "^7.60.1",
     "@svgr/webpack": "^8.0.1",
     "@tanstack/react-query": "^4.29.13",
     "@xstate/fsm": "^2.0.1",

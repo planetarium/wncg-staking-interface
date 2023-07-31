@@ -30,8 +30,9 @@ export function useWatch(send: (event: string) => void) {
     suspense: false,
     async onSuccess(tx) {
       const parsedLogs = parseTransferLogs(tx.logs)
-
       const joinLog = parsedLogs?.[lpToken?.address]
+
+      console.log(333, joinLog)
 
       if (joinLog) {
         const lpAmount = formatUnits(joinLog.args?.[2], lpToken?.decimals)
@@ -39,7 +40,6 @@ export function useWatch(send: (event: string) => void) {
       }
 
       await refetch()
-
       send('SUCCESS')
     },
     onError() {

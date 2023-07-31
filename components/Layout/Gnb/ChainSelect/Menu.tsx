@@ -1,4 +1,4 @@
-import { MouseEvent, useCallback, useRef } from 'react'
+import { MouseEvent, startTransition, useCallback, useRef } from 'react'
 import { useRouter } from 'next/router'
 import { switchNetwork } from '@wagmi/core'
 import clsx from 'clsx'
@@ -46,10 +46,12 @@ export default function GnbChainSelectMenu({
         await switchNetwork({
           chainId: newChainId,
         })
-        setChainId?.(newChainId)
-        await refetchStaking()
-        await wait(100)
-        router.replace(router.pathname, newPathname, { shallow: true })
+        startTransition(() => {
+          setChainId?.(newChainId)
+          refetchStaking()
+          wait(100)
+          router.replace(router.pathname, newPathname, { shallow: true })
+        })
       } catch (error) {
         console.log(error)
       }
