@@ -5,9 +5,11 @@ import { resolveReadContractsResult } from 'utils/resolveReadContractsResult'
 
 export async function fetchUserAllowances(
   chainId: ChainId,
-  account: Hash,
+  account: Hash | null,
   pairs: AllowancePair[]
 ) {
+  if (account == null) return {}
+
   const contracts = pairs.map(([t, spender]) => ({
     address: t.address,
     abi: Erc20Abi as Abi,

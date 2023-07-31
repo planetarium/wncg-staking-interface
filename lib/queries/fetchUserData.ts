@@ -13,7 +13,9 @@ const FNS = [
   'cooldowns',
 ]
 
-export async function fetchUserData(chainId: ChainId, account: Hash) {
+export async function fetchUserData(chainId: ChainId, account: Hash | null) {
+  if (account == null) return {}
+
   const contracts = FNS.map((fn) => ({
     address: STAKING_ADDRESS[chainId],
     abi: StakingEthereumAbi as Abi,
