@@ -1,12 +1,10 @@
-import JSBI from 'jsbi'
-
 import { bnum } from './bnum'
 
 const MULTIPLE = 10000
-const BIPS_BASE = JSBI.BigInt(MULTIPLE)
+const BIPS_BASE = BigInt(MULTIPLE)
 
 export function calcSlippageAmount(value: string, slippage: string) {
-  const scaledSlippage = bnum(slippage).div(100).times(MULTIPLE).toString()
+  const scaledSlippage = bnum(slippage).div(100).times(MULTIPLE).toNumber()
   const bSlippage = bnum(scaledSlippage)
 
   if (bSlippage.lt(0) || bSlippage.gt(MULTIPLE)) {
@@ -14,19 +12,7 @@ export function calcSlippageAmount(value: string, slippage: string) {
   }
 
   return [
-    JSBI.divide(
-      JSBI.multiply(
-        JSBI.BigInt(value),
-        JSBI.BigInt(bnum(10000).minus(scaledSlippage).toString())
-      ),
-      BIPS_BASE
-    ).toString(),
-    JSBI.divide(
-      JSBI.multiply(
-        JSBI.BigInt(value),
-        JSBI.BigInt(bnum(10000).plus(scaledSlippage).toString())
-      ),
-      BIPS_BASE
-    ).toString(),
+    (BigInt(10000 - scaledSlippage).valueOf() * BigInt(value)) / BIPS_BASE,
+    (BigInt(10000 + scaledSlippage).valueOf() * BigInt(value)) / BIPS_BASE,
   ]
 }
