@@ -5,7 +5,7 @@ import { useWaitForTransaction } from 'wagmi'
 import { approveTxAtom } from 'states/tx'
 import { useClientMount, useRefetch } from 'hooks'
 
-export function useWatch(send: (event: string) => void) {
+export function useWatch(send: XstateSend) {
   const refetch = useRefetch({
     userAllowances: true,
   })

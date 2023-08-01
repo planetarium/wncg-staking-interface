@@ -5,7 +5,7 @@ import { useWaitForTransaction } from 'wagmi'
 import { stakeTxAtom } from 'states/tx'
 import { useClientMount, useChain, useRefetch } from 'hooks'
 
-export function useWatch(send: (event: string) => void) {
+export function useWatch(send: XstateSend) {
   const { chainId } = useChain()
   const tx = useAtomValue(stakeTxAtom)
 

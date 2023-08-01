@@ -15,7 +15,7 @@ export function useFetchUserBalances(options: UseFetchOptions = {}) {
 
   const { account, isConnected } = useAuth()
   const { chainId } = useChain()
-  const { lpToken, poolTokenAddresses } = useStaking()
+  const { lpToken, poolTokenAddresses, tokens } = useStaking()
 
   const enabled = _enabled && !!isConnected && !!account
 
@@ -24,9 +24,14 @@ export function useFetchUserBalances(options: UseFetchOptions = {}) {
     [lpToken?.address, poolTokenAddresses]
   )
 
+  const decimals = useMemo(
+    () => list.map((addr) => tokens[addr]?.decimals ?? 18),
+    [list, tokens]
+  )
+
   return useQuery<RawBalanceMap>(
     [QUERY_KEYS.User.Balances, account, chainId, ...list],
-    () => fetchUserBalances(chainId, account!, list),
+    () => fetchUserBalances(chainId, account!, list, decimals),
     {
       enabled,
       staleTime: Infinity,

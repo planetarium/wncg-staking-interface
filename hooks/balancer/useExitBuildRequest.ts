@@ -1,17 +1,18 @@
-import { useMemo } from 'react'
-import { WeightedPoolEncoder } from '@balancer-labs/sdk'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { isSameAddress } from '@balancer-labs/sdk'
+import { useAtomValue } from 'jotai'
 
+import { slippageAtom } from 'states/system'
 import {
   NATIVE_CURRENCY_ADDRESS,
   ZERO_ADDRESS,
 } from 'config/constants/addresses'
 import { bnum } from 'utils/bnum'
-import { parseUnits } from 'utils/parseUnits'
-import { safeBigNumber } from 'utils/safeBigNumber'
-import { useChain, useStaking } from 'hooks'
+import { useBalancerSdk, useChain, useStaking } from 'hooks'
 import { useExitMath } from './useExitMath'
 
 type UseExitPoolRequestParams = {
+  account: Hash | null
   assets: Hash[]
   amounts: string[]
   exitType: Hash | null
@@ -20,26 +21,25 @@ type UseExitPoolRequestParams = {
 }
 
 export function useExitBuildRequest({
+  account,
   assets: _assets,
   amounts,
   isExactOut,
   exitType,
   bptOutPcnt,
 }: UseExitPoolRequestParams) {
+  const [exitPoolRequest, setExitPoolRequest] =
+    useState<ExitExactBPTInAttributes | null>(null)
+
+  const sdkPool = useBalancerSdk()
   const { nativeCurrency } = useChain()
   const { calcBptIn } = useExitMath()
-  const { poolTokenAddresses, tokens } = useStaking()
+  const { poolTokenAddresses } = useStaking()
+
+  const slippage = useAtomValue(slippageAtom) ?? '0.5'
+  const slippageBsp = bnum(slippage).times(10000).toString()
 
   const isPropExit = exitType === null
-
-  const assets = useMemo(
-    () =>
-      _assets.map((addr) => {
-        if (addr !== NATIVE_CURRENCY_ADDRESS) return addr
-        return ZERO_ADDRESS
-      }),
-    [_assets]
-  )
 
   const singleExitTokenOutIndex = useMemo(() => {
     if (isPropExit) return -1
@@ -77,45 +77,38 @@ export function useExitBuildRequest({
     bptOutPcnt,
   ])
 
-  const minAmountsOut = useMemo(() => {
-    if (isPropExit) return ['0', '0']
-    return amounts.map((a, i) =>
-      parseUnits(a, tokens[_assets[i]]?.decimals ?? 18).toString()
-    )
-  }, [_assets, amounts, isPropExit, tokens])
+  const updateUserData = useCallback(() => {
+    if (!sdkPool || !account) return
 
-  const bminAmountsOut = useMemo(
-    () => minAmountsOut.map((amt) => BigInt(amt)),
-    [minAmountsOut]
-  )
+    const singleTokenMaxOutAddress = isPropExit
+      ? undefined
+      : exitType === NATIVE_CURRENCY_ADDRESS
+      ? ZERO_ADDRESS
+      : exitType
 
-  const userData = useMemo(() => {
-    switch (true) {
-      case isPropExit:
-        return WeightedPoolEncoder.exitExactBPTInForTokensOut(bptIn)
+    const shouldUnwrapNativeAsset =
+      !!exitType && isSameAddress(exitType, NATIVE_CURRENCY_ADDRESS)
 
-      case isExactOut:
-        return WeightedPoolEncoder.exitBPTInForExactTokensOut(
-          minAmountsOut,
-          bptIn
-        )
+    try {
+      const data = sdkPool.buildExitExactBPTIn(
+        account!,
+        bptIn!,
+        slippageBsp,
+        shouldUnwrapNativeAsset,
+        singleTokenMaxOutAddress?.toLowerCase()
+      ) as ExitExactBPTInAttributes
 
-      default:
-        const tokenOutIndex = minAmountsOut.findIndex((amt) => bnum(amt).gt(0))
-
-        if (tokenOutIndex < 0) return {}
-
-        return WeightedPoolEncoder.exitExactBPTInForOneTokenOut(
-          bptIn,
-          tokenOutIndex
-        )
+      setExitPoolRequest(data)
+    } catch (error) {
+      throw error
     }
-  }, [bptIn, isExactOut, isPropExit, minAmountsOut])
+  }, [account, bptIn, exitType, isPropExit, sdkPool, slippageBsp])
 
-  return {
-    assets,
-    minAmountsOut,
-    userData,
-    fromInternalBalance: false,
-  }
+  useEffect(() => {
+    updateUserData()
+  }, [updateUserData])
+
+  if (!exitPoolRequest) return null
+
+  return exitPoolRequest?.attributes?.exitPoolRequest
 }

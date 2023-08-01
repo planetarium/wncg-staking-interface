@@ -9,7 +9,8 @@ import { resolveReadContractsResult } from 'utils/resolveReadContractsResult'
 export async function fetchUserBalances(
   chainId: ChainId,
   account: Hash | null,
-  addresses: Hash[]
+  addresses: Hash[],
+  decimals: number[]
 ): Promise<RawBalanceMap> {
   if (account == null) return {}
 
@@ -35,7 +36,10 @@ export async function fetchUserBalances(
   try {
     const entries = [
       [NATIVE_CURRENCY_ADDRESS, nativeAssetBalance.formatted],
-      ...data.map((amt, i) => [addresses[i], formatUnits(amt.toString())]),
+      ...data.map((amt, i) => [
+        addresses[i],
+        formatUnits(amt.toString(), decimals[i]),
+      ]),
     ]
 
     return Object.fromEntries(entries)

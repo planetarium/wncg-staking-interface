@@ -71,13 +71,21 @@ export default function WalletUnstakeWindow({
     closeSidebar(e)
   }
 
-  const startsAt = cooldownWindow
-    ? unstakeTimestamps.cooldownEndsAt - cooldownSeconds
-    : unstakeTimestamps.cooldownEndsAt
+  const startsAt = Math.max(
+    0,
+    cooldownWindow && unstakeTimestamps.cooldownEndsAt
+      ? unstakeTimestamps.cooldownEndsAt - cooldownSeconds
+      : unstakeTimestamps.cooldownEndsAt ?? 0
+  )
 
-  const endsAt = cooldownWindow
-    ? unstakeTimestamps.cooldownEndsAt
-    : unstakeTimestamps.withdrawEndsAt
+  const endsAt = Math.max(
+    0,
+    cooldownWindow &&
+      unstakeTimestamps.cooldownEndsAt &&
+      unstakeTimestamps.withdrawEndsAt
+      ? unstakeTimestamps.cooldownEndsAt - cooldownSeconds
+      : unstakeTimestamps.cooldownEndsAt ?? 0
+  )
 
   return (
     <StyledWalletUnstakeWindow

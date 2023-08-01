@@ -9,7 +9,7 @@ import { useClientMount, useChain, useRefetch, useStaking } from 'hooks'
 
 export const receivedLpAmountAtom = atom('')
 
-export function useWatch(send: (event: string) => void) {
+export function useWatch(send: XstateSend) {
   const { chainId } = useChain()
   const { lpToken } = useStaking()
 
@@ -35,7 +35,8 @@ export function useWatch(send: (event: string) => void) {
       console.log(333, joinLog)
 
       if (joinLog) {
-        const lpAmount = formatUnits(joinLog.args?.[2], lpToken?.decimals)
+        const lpAmount = formatUnits(joinLog, lpToken?.decimals)
+
         setReceivedLpAmount(lpAmount)
       }
 

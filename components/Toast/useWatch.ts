@@ -11,12 +11,12 @@ export function useWatch(hash: Hash) {
   const { chainId } = useChain()
 
   const refetch = useRefetch({
-    userData: true,
     staking: true,
     pool: true,
     poolSnapshot: true,
-    userBalances: true,
     userAllowances: true,
+    userBalances: true,
+    userData: true,
   })
 
   useWaitForTransaction({
@@ -26,9 +26,9 @@ export function useWatch(hash: Hash) {
     suspense: false,
     async onSuccess() {
       setStatus(1)
-      refetch()
+      await refetch()
     },
-    async onError() {
+    onError() {
       setStatus(0)
     },
   })

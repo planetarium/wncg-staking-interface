@@ -9,7 +9,7 @@ import Step2 from './Step2'
 import Step3 from './Step3'
 
 type ExitModalPage1Props = {
-  send(event: string): void
+  send: XstateSend
   hash?: Hash
 } & UseExitFormReturns
 

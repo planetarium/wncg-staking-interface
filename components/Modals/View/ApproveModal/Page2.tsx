@@ -16,7 +16,7 @@ type ApproveModalPage2Props = {
   tokenAddress: Hash
   tokenSymbol: string
   nextAction: ApproveNextAction
-  send(event: string): void
+  send: XstateSend
 }
 
 export default function ApproveModalPage2({

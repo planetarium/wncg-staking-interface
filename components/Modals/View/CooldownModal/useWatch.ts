@@ -8,7 +8,7 @@ import { useClientMount, useChain, useRefetch } from 'hooks'
 export const cooldownTimestampAtom = atom(0)
 export const unstakeTimestampAtom = atom(0)
 
-export function useWatch(send: (event: string) => void) {
+export function useWatch(send: XstateSend) {
   const { chainId } = useChain()
   const refetch = useRefetch({
     staking: true,

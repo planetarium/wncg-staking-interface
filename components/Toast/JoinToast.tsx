@@ -15,14 +15,19 @@ import TokenIcon from 'components/TokenIcon'
 import Status from './Status'
 
 type JoinToastProps = {
+  assets: Hash[]
   hash: Hash
   joinAmounts: string[]
 }
 
-export default function JoinToast({ hash, joinAmounts }: JoinToastProps) {
+export default function JoinToast({
+  assets,
+  hash,
+  joinAmounts,
+}: JoinToastProps) {
   const { chainId } = useChain()
   const toFiat = useFiat()
-  const { lpToken, poolTokens } = useStaking()
+  const { lpToken, tokens } = useStaking()
 
   const setTx = useSetAtom(joinTxAtom)
 
@@ -45,7 +50,7 @@ export default function JoinToast({ hash, joinAmounts }: JoinToastProps) {
       <div className="toastContent">
         <dl className="detailList">
           {joinAmounts.map((amt, i) => {
-            const token = poolTokens[i]
+            const token = tokens[assets[i]]
             const fiatValue = toFiat(amt, token.address)
             const { address, symbol } = token
 

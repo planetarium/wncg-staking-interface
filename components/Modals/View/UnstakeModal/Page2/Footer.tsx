@@ -10,7 +10,7 @@ import TxButton from 'components/TxButton'
 
 type UnstakeModalPage2FooterProps = {
   disabled: boolean
-  send(event: string): void
+  send: XstateSend
   unstakeAmount: string
   rewardFiatValue: string
   stakedTokenBalance: string

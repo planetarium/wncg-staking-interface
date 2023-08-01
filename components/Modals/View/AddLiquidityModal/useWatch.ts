@@ -9,7 +9,7 @@ import { formatUnits } from 'utils/formatUnits'
 
 export const receivedLpAmountAtom = atom('')
 
-export function useWatch(send: (event: string) => void) {
+export function useWatch(send: XstateSend) {
   const { chainId } = useChain()
   const { lpToken } = useStaking()
 

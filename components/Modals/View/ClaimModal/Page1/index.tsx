@@ -16,7 +16,7 @@ import Summary from './Summary'
 type ClaimModalPage1Props = {
   rewardList: boolean[]
   earnedTokenRewards: string[]
-  send(event: string): void
+  send: XstateSend
   setValue: UseFormSetValue<ClaimFormFields>
   submitDisabled: boolean
   totalClaimFiatValue: string

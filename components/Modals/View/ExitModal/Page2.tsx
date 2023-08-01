@@ -1,13 +1,11 @@
 import { useMemo, useState } from 'react'
-import { useTransaction } from 'wagmi'
+import { useAtomValue } from 'jotai'
 import { motion } from 'framer-motion'
 
 import { ANIMATION_MAP, MOTION } from 'config/constants/motions'
 import { bnum } from 'utils/bnum'
-import { formatUnits } from 'utils/formatUnits'
-import { parseLog } from 'utils/parseLog'
-import { parseTransferLogs } from 'utils/parseTransferLogs'
-import { useChain, useFiat, useModal, useStaking, useViemClient } from 'hooks'
+import { useFiat, useModal, useStaking } from 'hooks'
+import { exitAmountsAtom } from './useWatch'
 
 import { StyledExitModalPage2 } from './styled'
 import Button from 'components/Button'
@@ -19,64 +17,19 @@ type ExitModalPage2Props = {
   assets: Hash[]
   isPropExit: boolean
   tokenOutIndex: number
-  hash?: Hash
 }
 
 export default function ExitModalPage2({
   assets,
   isPropExit,
-  hash,
+
   tokenOutIndex,
 }: ExitModalPage2Props) {
-  const [exitAmounts, setExitAmounts] = useState<string[]>([])
-
-  const client = useViemClient()
-  const { chainId, nativeCurrency } = useChain()
   const toFiat = useFiat()
   const { removeModal } = useModal()
-  const { lpToken, poolTokenAddresses, poolTokenDecimals, tokens } =
-    useStaking()
+  const { lpToken, tokens } = useStaking()
 
-  useTransaction({
-    chainId,
-    enabled: !!hash,
-    hash,
-    async onSuccess(tx) {
-      const { logs = [] } =
-        (await client.waitForTransactionReceipt({ hash: tx.hash })) ?? {}
-
-      const tokenOut = isPropExit ? null : assets[tokenOutIndex]
-
-      if (isPropExit || tokenOut !== nativeCurrency.address) {
-        const parsedLogs = parseTransferLogs(logs)
-        const receivedTokens = assets.map((addr) => parsedLogs?.[addr])
-
-        if (receivedTokens.length === poolTokenAddresses.length) {
-          setExitAmounts(
-            receivedTokens.map((amount, i) =>
-              formatUnits(amount, poolTokenDecimals[i])
-            )
-          )
-        }
-
-        return
-      }
-
-      const parsedLogs = logs.map((l) => parseLog(l))
-      const withdrawalLog = parsedLogs.find((l) => {
-        return l?.name === 'Withdrawal'
-      })
-
-      if (withdrawalLog) {
-        setExitAmounts(
-          assets.map((addr) => {
-            if (addr !== nativeCurrency.address) return '0'
-            return formatUnits(withdrawalLog.args[1])
-          })
-        )
-      }
-    },
-  })
+  const exitAmounts = useAtomValue(exitAmountsAtom)
 
   const showExitResult = exitAmounts.length > 0
   const exitAmountsInFiatValue = exitAmounts.map((amt, i) =>

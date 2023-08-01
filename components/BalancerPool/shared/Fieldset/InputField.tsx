@@ -169,7 +169,6 @@ function JoinInputField({
       <AvailableBalance
         label={availableBalanceLabel}
         maxAmount={maxBalance}
-        decimals={4}
         fiatValue={maxBalanceFiatValue}
       />
 

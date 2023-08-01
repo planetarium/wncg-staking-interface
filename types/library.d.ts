@@ -108,3 +108,18 @@ type Swap = {
   timestamp: number
   tx: string
 }
+
+interface ExitPoolAttributes {
+  to: string
+  functionName: string
+  attributes: ExitPool
+  data: string
+}
+
+interface ExitExactBPTInAttributes extends ExitPoolAttributes {
+  expectedAmountsOut: string[]
+  minAmountsOut: string[]
+  priceImpact: string
+}
+
+type XstateSend = (event: string) => void

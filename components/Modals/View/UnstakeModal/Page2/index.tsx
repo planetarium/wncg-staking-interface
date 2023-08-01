@@ -10,7 +10,7 @@ import Footer from './Footer'
 import Form from './Form'
 
 type UnstakeModalPage2Props = {
-  send(event: string): void
+  send: XstateSend
 } & UseUnstakeFormReturns
 
 function UnstakeModalPage2({ send, ...props }: UnstakeModalPage2Props) {

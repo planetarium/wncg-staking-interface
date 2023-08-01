@@ -9,7 +9,7 @@ import { useChain, useClientMount, useRefetch, useStaking } from 'hooks'
 
 export const claimedAmountsAtom = atom<string[]>([])
 
-export function useWatch(send: (event: string) => void) {
+export function useWatch(send: XstateSend) {
   const { chainId } = useChain()
   const { rewardTokenAddresses, tokens } = useStaking()
 

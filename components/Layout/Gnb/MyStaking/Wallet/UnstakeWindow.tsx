@@ -72,12 +72,12 @@ export default function WalletUnstakeWindow({
   }
 
   const startsAt = cooldownWindow
-    ? unstakeTimestamps.cooldownEndsAt - cooldownSeconds
+    ? unstakeTimestamps.cooldownEndsAt ?? 0 - cooldownSeconds
     : unstakeTimestamps.cooldownEndsAt
 
   const endsAt = cooldownWindow
-    ? unstakeTimestamps.cooldownEndsAt
-    : unstakeTimestamps.withdrawEndsAt
+    ? unstakeTimestamps.cooldownEndsAt ?? 0
+    : unstakeTimestamps.withdrawEndsAt ?? 0
 
   return (
     <StyledWalletUnstakeWindow

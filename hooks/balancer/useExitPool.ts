@@ -2,8 +2,9 @@ import { useContractWrite, usePrepareContractWrite } from 'wagmi'
 
 import { BalancerVaultAbi } from 'config/abi'
 import { bnum } from 'utils/bnum'
-import { useAuth, useChain, useSwitchNetwork } from 'hooks'
+import { useAuth, useBalancerSdk, useChain, useSwitchNetwork } from 'hooks'
 import { useExitBuildRequest } from './useExitBuildRequest'
+import { useCallback, useState } from 'react'
 
 type UseExitPoolParams = {
   assets: Hash[]
@@ -25,6 +26,7 @@ export function useExitPool({
   const { switchBeforeSend } = useSwitchNetwork()
 
   const request = useExitBuildRequest({
+    account,
     assets,
     amounts: exitAmounts,
     exitType,
@@ -32,9 +34,10 @@ export function useExitPool({
     bptOutPcnt,
   })
 
-  console.log(3, [dexPoolId, account, account, request])
+  console.log(3, [dexPoolId, account, account, request?.userData])
 
-  const enabled = !networkMismatch && exitAmounts.some((amt) => bnum(amt).gt(0))
+  const enabled =
+    !networkMismatch && exitAmounts.some((amt) => bnum(amt).gt(0)) && !!request
 
   const { config: writeConfig } = usePrepareContractWrite({
     address: dexProtocolAddress,

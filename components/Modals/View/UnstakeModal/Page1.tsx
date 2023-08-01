@@ -16,7 +16,7 @@ const ExpectedRevenue = dynamic(() => import('components/ExpectedRevenue'), {
 })
 
 type UnstakeModalPage1Props = {
-  send(event: string): void
+  send: XstateSend
 }
 
 function UnstakeModalPage1({ send }: UnstakeModalPage1Props) {

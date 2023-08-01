@@ -9,7 +9,7 @@ import { useClientMount, useChain, useRefetch, useStaking } from 'hooks'
 
 export const actualAmountsOutAtom = atom(['0', '0'])
 
-export function useWatch(send: (event: string) => void) {
+export function useWatch(send: XstateSend) {
   const { chainId } = useChain()
   const { poolTokenDecimals } = useStaking()
 

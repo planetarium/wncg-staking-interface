@@ -17,7 +17,7 @@ import Signature from './Signature'
 const Timer = dynamic(() => import('./Timer'), { ssr: false })
 
 type RemoveLiquidityModalPage1Props = {
-  send(event: string): void
+  send: XstateSend
 } & UseRemoveLiquidityFormReturns
 
 function RemoveLiquidityModalPage1({

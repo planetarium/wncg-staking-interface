@@ -12,7 +12,7 @@ import Guide from './Guide'
 import Summary from './Summary'
 
 type CooldownModalPage2Props = {
-  send(event: string): void
+  send: XstateSend
 }
 
 function CooldownModalPage2({ send }: CooldownModalPage2Props) {

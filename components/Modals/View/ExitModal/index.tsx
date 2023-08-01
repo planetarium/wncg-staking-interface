@@ -74,7 +74,6 @@ function ExitModal() {
           isPropExit={isPropExit}
           assets={assets}
           tokenOutIndex={tokenOutIndex}
-          hash={tx.hash}
         />
       )}
       {currentPage === 3 && <Page3 />}
