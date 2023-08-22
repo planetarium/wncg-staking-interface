@@ -12,14 +12,14 @@ export const STAKING_ADDRESS: ChainMap<Hash> = {
   [ChainId.ETHEREUM]: '0xc53b567a70db04e928fb96d6a417971aa88fda38',
   [ChainId.GOERLI]: '0x4faf546608e61269e7d361be45990daceb4a0ff1',
   [ChainId.BSC]: '0x3874d012886c601bc413c1d487bc9033c4b82301',
-  [ChainId.BSC_TESTNET]: '0x846f38e0c7b3cc72a9545e4c249c5becb33df054',
+  [ChainId.BSC_TESTNET]: '0x7f8ca7167bc2a3befb8c328bfed7cb2119084c61',
 }
 
 export const STAKED_TOKEN_ADDRESS: ChainMap<Hash> = {
   [ChainId.ETHEREUM]: '0xe8cc7e765647625b95f59c15848379d10b9ab4af',
   [ChainId.GOERLI]: '0x16faf9f73748013155b7bc116a3008b57332d1e6',
   [ChainId.BSC]: '0xd38fc981f7cbfb63585b375fc93d46056774344c',
-  [ChainId.BSC_TESTNET]: '0xacf4fcab4b08c9452cb7fd9f8a5bbd6e8f40b52e',
+  [ChainId.BSC_TESTNET]: '0xe6e50e33a590218095c4c414d96adfaee12dbde2',
 }
 
 export const WETH_ADDRESS: ChainMap<Hash> = {
@@ -33,7 +33,7 @@ export const WNCG_ADDRESS: ChainMap<Hash> = {
   [ChainId.ETHEREUM]: '0xf203ca1769ca8e9e8fe1da9d147db68b6c919817',
   [ChainId.GOERLI]: '0xa488533be3018a0720c4c0647f407f3b41e6cb82',
   [ChainId.BSC]: '0x52242cbab41e290e9e17ccc50cc437bb60020a9d',
-  [ChainId.BSC_TESTNET]: '0xb43475a1faecc6c578df69fb8703d0ac1531df48',
+  [ChainId.BSC_TESTNET]: '0x02fb46e27f54624eee9264214f3de741cd9bf212',
 }
 
 export const BAL_ADDRESS: ChainMap<Hash | null> = {
