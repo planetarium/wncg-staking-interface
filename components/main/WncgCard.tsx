@@ -1,35 +1,31 @@
 import config from 'config'
-import { ChainId } from 'config/chains'
+import { ChainId, SUPPORTED_CHAINS, defaultChainId } from 'config/chains'
 import { BAL_ADDRESS, WNCG_ADDRESS } from 'config/constants/addresses'
 import { chainNameFor } from 'utils/chainNameFor'
 import { isEthereum } from 'utils/isEthereum'
 
 import { StyledMainCard } from './styled'
 import Button from 'components/Button'
+import CryptoIcon from 'components/CryptoIcon'
 import Icon from 'components/Icon'
 import Image from 'components/Image'
 import TokenIcon from 'components/TokenIcon'
-import CryptoIcon from 'components/CryptoIcon'
 
 export default function MainWncgCard() {
-  // const supportedChains = [ChainId.ETHEREUM, ChainId.BSC]
-  const supportedChains = [ChainId.GOERLI, ChainId.BSC_TESTNET]
-
   return (
     <StyledMainCard>
       <header className="header">
         <h2 className="title">
           <TokenIcon
             className="logoIcon"
-            // address={WNCG_ADDRESS[ChainId.ETHEREUM]}
-            address={WNCG_ADDRESS[ChainId.GOERLI]}
+            address={WNCG_ADDRESS[defaultChainId]}
             $size={24}
           />
           Staking Wrapped Nine Chronicles Gold
         </h2>
 
         <div className="linkGroup">
-          {supportedChains.map((c) => {
+          {SUPPORTED_CHAINS.map((c) => {
             return (
               <span className="chainButton" key={`wncgCard:links:${c}`}>
                 <CryptoIcon icon={isEthereum(c) ? 'ether' : 'bnb'} $size={24} />
@@ -63,11 +59,7 @@ export default function MainWncgCard() {
           <dl className="rewardList">
             <div className="rewardItem">
               <dt>
-                <TokenIcon
-                  // address={WNCG_ADDRESS[ChainId.ETHEREUM]}
-                  address={WNCG_ADDRESS[ChainId.GOERLI]}
-                  $size={16}
-                />
+                <TokenIcon address={WNCG_ADDRESS[ChainId.GOERLI]} $size={16} />
                 <strong>WNCG(Wrapped NCG)</strong>
               </dt>
               <dd>1:1 NCG backed ERC-20 token</dd>
@@ -76,8 +68,7 @@ export default function MainWncgCard() {
             <div className="rewardItem">
               <dt>
                 <TokenIcon
-                  // address={BAL_ADDRESS[ChainId.ETHEREUM] as Hash}
-                  address={BAL_ADDRESS[ChainId.GOERLI] as Hash}
+                  address={BAL_ADDRESS[defaultChainId] as Hash}
                   $size={16}
                 />
                 <strong>BAL</strong>

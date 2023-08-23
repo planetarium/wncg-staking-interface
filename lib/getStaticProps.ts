@@ -1,7 +1,7 @@
 import { dehydrate, QueryClient } from '@tanstack/react-query'
 import type { GetStaticPropsContext } from 'next'
 
-import { ChainId } from 'config/chains'
+import { ChainId, defaultChainId } from 'config/chains'
 
 import { QUERY_KEYS } from 'config/constants/queryKeys'
 import { getQueryString } from 'utils/getQueryString'
@@ -14,7 +14,7 @@ export async function getStaticProps(ctx: GetStaticPropsContext) {
 
   const _chainId = getQueryString(ctx?.params?.chainId)
   // const chainId = Math.max(Number(_chainId), ChainId.ETHEREUM) as ChainId
-  const chainId = Math.max(Number(_chainId), ChainId.GOERLI) as ChainId
+  const chainId = Math.max(Number(_chainId), defaultChainId) as ChainId
 
   const project = await fetchProject(chainId)
   const prices = await fetchPrice(chainId)

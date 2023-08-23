@@ -1,17 +1,11 @@
-import { ChainId } from 'config/chains'
-import { GetStaticPathsResult } from 'next'
+import type { GetStaticPathsResult } from 'next'
 
-const supportedNetworks = [
-  // ChainId.ETHEREUM,
-  ChainId.GOERLI,
-  // ChainId.BSC,
-  ChainId.BSC_TESTNET,
-]
+import { SUPPORTED_CHAINS } from 'config/chains'
 
 export async function getStaticPaths(): Promise<GetStaticPathsResult> {
-  const paths = supportedNetworks.map((chainId) => ({
+  const paths = SUPPORTED_CHAINS.map((id) => ({
     params: {
-      chainId: String(chainId),
+      chainId: String(id),
       locale: 'en',
     },
   }))

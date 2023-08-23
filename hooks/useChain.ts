@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { useNetwork } from 'wagmi'
 
-import { CHAINS, ChainId } from 'config/chains'
+import { CHAINS, defaultChainId } from 'config/chains'
 import {
   BAL_ADDRESS,
   DEX_PROTOCOL_ADDRESS,
@@ -20,15 +20,12 @@ export function useChain() {
     [chainId, currentChain?.id]
   )
 
-  // const defaultChain = ChainId.ETHEREUM
-  const defaultChain = ChainId.GOERLI
+  const chain = CHAINS[chainId ?? defaultChainId]
+  const dex = DEX[chainId ?? defaultChainId]
+  const stakingAddress = STAKING_ADDRESS[chainId ?? defaultChainId]
+  const dexProtocolAddress = DEX_PROTOCOL_ADDRESS[chainId ?? defaultChainId]
 
-  const chain = CHAINS[chainId ?? defaultChain]
-  const dex = DEX[chainId ?? defaultChain]
-  const stakingAddress = STAKING_ADDRESS[chainId ?? defaultChain]
-  const dexProtocolAddress = DEX_PROTOCOL_ADDRESS[chainId ?? defaultChain]
-
-  const balAddress = BAL_ADDRESS[chainId ?? defaultChain]
+  const balAddress = BAL_ADDRESS[chainId ?? defaultChainId]
 
   return {
     ...chain,

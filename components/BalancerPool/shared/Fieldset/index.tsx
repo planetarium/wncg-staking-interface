@@ -39,7 +39,7 @@ export default function JoinPoolFormFieldset({
       {poolTokens.map((t, i) => {
         const field = fields[i] as 'TokenA' | 'TokenB'
         let address = t.address
-        const { coingeckoId, wrappedTokenAddress, ...rest } = nativeCurrency
+        const { wrappedTokenAddress, ...rest } = nativeCurrency
         if (t.address === wrappedTokenAddress && isNative) {
           t = {
             ...t,

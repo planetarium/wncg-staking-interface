@@ -1,3 +1,5 @@
+import { ChainId, defaultChainId } from './chains'
+
 class ConfigService {
   get assetPlatform() {
     return process.env.NEXT_PUBLIC_ASSET_PLATFORM ?? 'ethereum'
@@ -36,6 +38,10 @@ class ConfigService {
 
   get googleTagManager() {
     return process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER ?? ''
+  }
+
+  get isTestnet() {
+    return defaultChainId === ChainId.GOERLI
   }
 
   get links() {

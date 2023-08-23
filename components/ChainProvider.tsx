@@ -1,4 +1,4 @@
-import { ChainId } from 'config/chains'
+import { ChainId, defaultChainId } from 'config/chains'
 import { SetStateAction } from 'jotai'
 import { AppProps } from 'next/app'
 import {
@@ -27,7 +27,7 @@ export function ChainContextProvider({
   pageProps,
   children,
 }: ChainContextProvider) {
-  const [chainId, setChainId] = useState(pageProps.chainId ?? ChainId.GOERLI)
+  const [chainId, setChainId] = useState(pageProps.chainId ?? defaultChainId)
 
   return (
     <ChainContext.Provider value={{ chainId, setChainId }}>

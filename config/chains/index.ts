@@ -25,3 +25,13 @@ export const CHAINS: ChainMap<ChainConfig> = {
   [ChainId.BSC]: bsc,
   [ChainId.BSC_TESTNET]: bscTestnet,
 }
+
+// NOTE: Change default chainId depending on environment
+export const defaultChainId = ChainId.GOERLI
+
+export const isTestnet =
+  defaultChainId === ChainId.GOERLI || defaultChainId === ChainId.BSC_TESTNET
+
+export const SUPPORTED_CHAINS: ChainId[] = isTestnet
+  ? [ChainId.GOERLI, ChainId.BSC_TESTNET]
+  : [ChainId.ETHEREUM, ChainId.BSC]
