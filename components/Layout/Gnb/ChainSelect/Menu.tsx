@@ -30,7 +30,7 @@ export default function GnbChainSelectMenu({
   const router = useRouter()
   const routerChainId = Number(router.asPath.replace('/wncg/', '')) as ChainId
 
-  const { chainId: expectedChainId, currentChain, setChainId } = useChain()
+  const { chainId: expectedChainId, setChainId } = useChain()
   const { refetch: refetchStaking } = useFetchStaking({ suspense: false })
 
   const onSelectChain = useCallback(

@@ -2,9 +2,9 @@ import { ChainId } from 'config/chains'
 import { GetStaticPathsResult } from 'next'
 
 const supportedNetworks = [
-  ChainId.ETHEREUM,
+  // ChainId.ETHEREUM,
   ChainId.GOERLI,
-  ChainId.BSC,
+  // ChainId.BSC,
   ChainId.BSC_TESTNET,
 ]
 
@@ -17,7 +17,7 @@ export async function getStaticPaths(): Promise<GetStaticPathsResult> {
   }))
 
   return {
-    fallback: "blocking",
+    fallback: 'blocking',
     paths,
   }
 }
