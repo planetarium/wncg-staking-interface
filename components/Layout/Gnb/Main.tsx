@@ -92,7 +92,9 @@ export default function MainGnb() {
           <ChainSelect />
 
           <div className="account">
-            <ConnectButton toggle={toggle} />
+            <Suspense>
+              <ConnectButton toggle={toggle} />
+            </Suspense>
 
             <AnimatePresence>
               {show && <AccountMenu closeMenu={closeMenu} />}

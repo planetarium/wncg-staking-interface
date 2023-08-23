@@ -10,6 +10,7 @@ import { useModal, useResponsive } from 'hooks'
 import { StyledModalContainer, StyledModalOverlay } from './styled'
 import Portal from './Portal'
 import View from './View'
+import Suspense from 'components/Suspense'
 
 function Modals() {
   const { removeModal } = useModal()
@@ -44,17 +45,19 @@ function Modals() {
         )}
       </AnimatePresence>
 
-      <AnimatePresence>
-        {modal && (
-          <StyledModalContainer
-            {...EXIT_MOTION}
-            variants={motionVariants}
-            transition={{ duration: 0.4 }}
-          >
-            <View modal={modal} />
-          </StyledModalContainer>
-        )}
-      </AnimatePresence>
+      <Suspense>
+        <AnimatePresence>
+          {modal && (
+            <StyledModalContainer
+              {...EXIT_MOTION}
+              variants={motionVariants}
+              transition={{ duration: 0.4 }}
+            >
+              <View modal={modal} />
+            </StyledModalContainer>
+          )}
+        </AnimatePresence>
+      </Suspense>
     </Portal>
   )
 }

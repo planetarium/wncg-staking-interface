@@ -3,6 +3,7 @@ import { useAtom } from 'jotai'
 import { showPoolAtom } from 'states/ui'
 import { useResponsive } from 'hooks'
 
+import Suspense from 'components/Suspense'
 import BalancerPoolDesktop from './Desktop'
 import BalancerPoolMobile from './Mobile'
 
@@ -16,8 +17,16 @@ export default function BalancerPool() {
   }
 
   if (isMobile) {
-    return <BalancerPoolMobile show={showPool} closePool={closePool} />
+    return (
+      <Suspense>
+        <BalancerPoolMobile show={showPool} closePool={closePool} />
+      </Suspense>
+    )
   }
 
-  return <BalancerPoolDesktop show={showPool} closePool={closePool} />
+  return (
+    <Suspense>
+      <BalancerPoolDesktop show={showPool} closePool={closePool} />
+    </Suspense>
+  )
 }

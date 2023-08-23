@@ -53,7 +53,11 @@ function Layout({ children }: PropsWithChildren) {
     <>
       <Head>{isRootPage ? <RootFavicon /> : <Favicon />}</Head>
       <StyledLayout layoutRoot $root={isRootPage}>
-        {!isRootPage && <Alerts />}
+        {!isRootPage && (
+          <Suspense>
+            <Alerts />
+          </Suspense>
+        )}
 
         <Gnb isRootPage={isRootPage} />
 
@@ -66,7 +70,11 @@ function Layout({ children }: PropsWithChildren) {
         <>
           <Modals />
           <Suspense>
-            {isEthereum(chainId) && <BalancerPool />}
+            {isEthereum(chainId) && (
+              <Suspense>
+                <BalancerPool />
+              </Suspense>
+            )}
             {isBsc(chainId) && <PancakeSwapPool />}
           </Suspense>
         </>

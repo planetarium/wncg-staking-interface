@@ -34,7 +34,9 @@ function StakingStake() {
 
         {isConnected === false && <Connect />}
 
-        <JoinButton />
+        <Suspense>
+          <JoinButton />
+        </Suspense>
       </motion.div>
     </StyledStakingStake>
   )

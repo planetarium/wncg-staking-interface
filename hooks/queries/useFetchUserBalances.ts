@@ -24,6 +24,8 @@ export function useFetchUserBalances(options: UseFetchOptions = {}) {
     [lpToken?.address, poolTokenAddresses]
   )
 
+  console.log(list)
+
   const decimals = useMemo(
     () => list.map((addr) => tokens[addr]?.decimals ?? 18),
     [list, tokens]

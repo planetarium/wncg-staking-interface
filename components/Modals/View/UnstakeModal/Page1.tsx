@@ -6,10 +6,10 @@ import { useFetchUserData } from 'hooks/queries'
 
 import { StyledUnstakeModalPage1 } from './styled'
 import Button from 'components/Button'
+import Fallback from 'components/ExpectedRevenue/Fallback'
+import Icon from 'components/Icon'
 import { CloseButton } from 'components/Modals/shared'
 import Suspense from 'components/Suspense'
-import Icon from 'components/Icon'
-import Fallback from 'components/ExpectedRevenue/Fallback'
 
 const ExpectedRevenue = dynamic(() => import('components/ExpectedRevenue'), {
   ssr: false,
