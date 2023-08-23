@@ -4,7 +4,7 @@ import { useFetchStaking, useFetchUserData } from 'hooks/queries'
 
 function ContractHook() {
   useFetchStaking({
-    refetchInterval: 30 * 1_000,
+    refetchInterval: 10 * 1_000,
   })
 
   useFetchUserData({

@@ -27,7 +27,7 @@ export function ChainContextProvider({
   pageProps,
   children,
 }: ChainContextProvider) {
-  const [chainId, setChainId] = useState(pageProps.chainId ?? ChainId.ETHEREUM)
+  const [chainId, setChainId] = useState(pageProps.chainId ?? ChainId.GOERLI)
 
   return (
     <ChainContext.Provider value={{ chainId, setChainId }}>

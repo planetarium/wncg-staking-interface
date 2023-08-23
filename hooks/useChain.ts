@@ -20,12 +20,15 @@ export function useChain() {
     [chainId, currentChain?.id]
   )
 
-  const chain = CHAINS[chainId ?? ChainId.ETHEREUM]
-  const dex = DEX[chainId ?? ChainId.ETHEREUM]
-  const stakingAddress = STAKING_ADDRESS[chainId ?? ChainId.ETHEREUM]
-  const dexProtocolAddress = DEX_PROTOCOL_ADDRESS[chainId ?? ChainId.ETHEREUM]
+  // const defaultChain = ChainId.ETHEREUM
+  const defaultChain = ChainId.GOERLI
 
-  const balAddress = BAL_ADDRESS[chainId ?? ChainId.ETHEREUM]
+  const chain = CHAINS[chainId ?? defaultChain]
+  const dex = DEX[chainId ?? defaultChain]
+  const stakingAddress = STAKING_ADDRESS[chainId ?? defaultChain]
+  const dexProtocolAddress = DEX_PROTOCOL_ADDRESS[chainId ?? defaultChain]
+
+  const balAddress = BAL_ADDRESS[chainId ?? defaultChain]
 
   return {
     ...chain,

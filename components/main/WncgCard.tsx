@@ -12,7 +12,8 @@ import TokenIcon from 'components/TokenIcon'
 import CryptoIcon from 'components/CryptoIcon'
 
 export default function MainWncgCard() {
-  const supportedChains = [ChainId.ETHEREUM, ChainId.BSC]
+  // const supportedChains = [ChainId.ETHEREUM, ChainId.BSC]
+  const supportedChains = [ChainId.GOERLI, ChainId.BSC_TESTNET]
 
   return (
     <StyledMainCard>
@@ -20,7 +21,8 @@ export default function MainWncgCard() {
         <h2 className="title">
           <TokenIcon
             className="logoIcon"
-            address={WNCG_ADDRESS[ChainId.ETHEREUM]}
+            // address={WNCG_ADDRESS[ChainId.ETHEREUM]}
+            address={WNCG_ADDRESS[ChainId.GOERLI]}
             $size={24}
           />
           Staking Wrapped Nine Chronicles Gold
@@ -62,7 +64,8 @@ export default function MainWncgCard() {
             <div className="rewardItem">
               <dt>
                 <TokenIcon
-                  address={WNCG_ADDRESS[ChainId.ETHEREUM]}
+                  // address={WNCG_ADDRESS[ChainId.ETHEREUM]}
+                  address={WNCG_ADDRESS[ChainId.GOERLI]}
                   $size={16}
                 />
                 <strong>WNCG(Wrapped NCG)</strong>
@@ -73,7 +76,8 @@ export default function MainWncgCard() {
             <div className="rewardItem">
               <dt>
                 <TokenIcon
-                  address={BAL_ADDRESS[ChainId.ETHEREUM] as Hash}
+                  // address={BAL_ADDRESS[ChainId.ETHEREUM] as Hash}
+                  address={BAL_ADDRESS[ChainId.GOERLI] as Hash}
                   $size={16}
                 />
                 <strong>BAL</strong>

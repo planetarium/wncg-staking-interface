@@ -13,7 +13,8 @@ export async function getStaticProps(ctx: GetStaticPropsContext) {
   const queryClient = new QueryClient()
 
   const _chainId = getQueryString(ctx?.params?.chainId)
-  const chainId = Math.max(Number(_chainId), ChainId.ETHEREUM) as ChainId
+  // const chainId = Math.max(Number(_chainId), ChainId.ETHEREUM) as ChainId
+  const chainId = Math.max(Number(_chainId), ChainId.GOERLI) as ChainId
 
   const project = await fetchProject(chainId)
   const prices = await fetchPrice(chainId)
