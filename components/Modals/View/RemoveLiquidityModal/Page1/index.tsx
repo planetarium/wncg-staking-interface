@@ -14,7 +14,9 @@ import TxButton from 'components/TxButton'
 import Form from './Form'
 import Signature from './Signature'
 
-const Timer = dynamic(() => import('./Timer'), { ssr: false })
+const Timer = dynamic(() => import('./Timer'), {
+  ssr: false,
+})
 
 type RemoveLiquidityModalPage1Props = {
   send: XstateSend

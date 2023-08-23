@@ -1,5 +1,5 @@
 import { configureChains } from 'wagmi'
-import { mainnet, bscTestnet } from 'wagmi/chains'
+import { goerli, bscTestnet } from 'wagmi/chains'
 import { infuraProvider } from 'wagmi/providers/infura'
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc'
 import { publicProvider } from 'wagmi/providers/public'
@@ -7,7 +7,7 @@ import { publicProvider } from 'wagmi/providers/public'
 import { apiKeys } from 'config/api'
 
 export const { chains, publicClient, webSocketPublicClient } = configureChains(
-  [mainnet, bscTestnet],
+  [goerli, bscTestnet],
   [
     jsonRpcProvider({
       rpc(chain) {

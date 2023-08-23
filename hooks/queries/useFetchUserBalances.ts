@@ -24,12 +24,12 @@ export function useFetchUserBalances(options: UseFetchOptions = {}) {
     [lpToken?.address, poolTokenAddresses]
   )
 
-  console.log(list)
-
   const decimals = useMemo(
     () => list.map((addr) => tokens[addr]?.decimals ?? 18),
     [list, tokens]
   )
+
+  // console.log(list.map((l, i) => `${l.slice(-4)}: ${decimals[i]}`))
 
   return useQuery<RawBalanceMap>(
     [QUERY_KEYS.User.Balances, account, chainId, ...list],

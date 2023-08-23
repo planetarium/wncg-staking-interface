@@ -3,7 +3,11 @@ import { memo } from 'react'
 import Suspense from 'components/Suspense'
 import Web3 from './Web3'
 import Contract from './Contract'
-import Interface from './Interface'
+import dynamic from 'next/dynamic'
+
+const Interface = dynamic(() => import('./Interface'), {
+  ssr: false,
+})
 
 function GlobalHooks() {
   return (

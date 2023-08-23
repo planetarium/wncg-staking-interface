@@ -8,9 +8,9 @@ import { ANIMATION_MAP, EXIT_MOTION } from 'config/constants/motions'
 import { useModal, useResponsive } from 'hooks'
 
 import { StyledModalContainer, StyledModalOverlay } from './styled'
+import Suspense from 'components/Suspense'
 import Portal from './Portal'
 import View from './View'
-import Suspense from 'components/Suspense'
 
 function Modals() {
   const { removeModal } = useModal()

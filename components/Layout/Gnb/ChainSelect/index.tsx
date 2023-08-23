@@ -8,8 +8,8 @@ import Menu from './Menu'
 import Toggle from './Toggle'
 
 const SUPPORTED_CHAINS = [
-  ChainId.ETHEREUM,
-  // ChainId.GOERLI,
+  // ChainId.ETHEREUM,
+  ChainId.GOERLI,
   // ChainId.BSC,
   ChainId.BSC_TESTNET,
 ]

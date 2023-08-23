@@ -23,7 +23,9 @@ const ClaimableRewards = dynamic(() => import('./ClaimableRewards'), {
   ssr: false,
 })
 
-const MyStaking = dynamic(() => import('./MyStaking'), { ssr: false })
+const MyStaking = dynamic(() => import('./MyStaking'), {
+  ssr: false,
+})
 
 export default function MainGnb() {
   const [show, setShow] = useState(false)

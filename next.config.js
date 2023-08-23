@@ -15,15 +15,6 @@ const nextConfig = {
       },
     ],
   },
-  async redirects() {
-    return [
-      {
-        source: '/wncg',
-        destination: '/wncg/1',
-        permanent: true,
-      },
-    ]
-  },
   webpack(config) {
     config.module.rules.push({
       test: /\.svg$/,
@@ -35,7 +26,7 @@ const nextConfig = {
     return [
       {
         source: '/wncg',
-        destination: '/wncg/1',
+        destination: '/wncg/5',
         permanent: true,
       },
     ]
@@ -44,9 +35,9 @@ const nextConfig = {
   exportPathMap: async function () {
     return {
       '/': { page: '/', __nextDefaultLocale: 'en' },
-      '/wncg/1': {
-        page: '/wncg/1',
-        query: { chainId: '1' },
+      '/wncg/5': {
+        page: '/wncg/5',
+        query: { chainId: '5' },
         __nextDefaultLocale: 'en',
       },
       '/wncg/97': {

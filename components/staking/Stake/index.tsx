@@ -11,8 +11,12 @@ import Connect from './Connect'
 import Fallback from './Fallback'
 import Header from './Header'
 
-const Form = dynamic(() => import('./Form'), { ssr: false })
-const JoinButton = dynamic(() => import('./JoinButton'), { ssr: false })
+const Form = dynamic(() => import('./Form'), {
+  ssr: false,
+})
+const JoinButton = dynamic(() => import('./JoinButton'), {
+  ssr: false,
+})
 
 function StakingStake() {
   const { isConnected } = useAuth()
