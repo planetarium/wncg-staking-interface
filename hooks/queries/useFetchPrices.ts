@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 
 import { QUERY_KEYS } from 'config/constants/queryKeys'
-import { fetchPrice } from 'lib/queries/fetchPrice'
+import { fetchPrices } from 'lib/queries/fetchPrices'
 import { useChain } from 'hooks'
 
 export function useFetchPrices(options: UseFetchOptions = {}) {
@@ -26,7 +26,7 @@ export function useFetchPrices(options: UseFetchOptions = {}) {
 
   return useQuery<PriceMap>(
     [QUERY_KEYS.Staking.Prices, chainId],
-    () => fetchPrice(chainId),
+    () => fetchPrices(chainId),
     {
       enabled,
       staleTime: Infinity,
@@ -37,7 +37,7 @@ export function useFetchPrices(options: UseFetchOptions = {}) {
       suspense,
       initialData,
       onSuccess() {
-        console.log('💛')
+        console.log('💛 PRICES')
       },
     }
   )

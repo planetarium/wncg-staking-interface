@@ -41,7 +41,7 @@ export function useFetchStaking(options: UseFetchOptions = {}) {
       useErrorBoundary: false,
       initialData,
       onSuccess() {
-        console.log('💖')
+        console.log('💖 STAKING CONTRACT')
       },
     }
   )

@@ -5,11 +5,6 @@ import { useConnect } from './useConnect'
 import { useChain } from './useChain'
 import { useRefetch } from './useRefetch'
 
-type UseSwitchNetworkOptions = {
-  onSuccess?(): void
-  onError?(): void
-}
-
 export function useSwitchNetwork() {
   const { chainId } = useChain()
   const { openConnectModal } = useConnect()

@@ -30,7 +30,7 @@ function AddLiquidityModalPage1({
 
   const [tx, setTx] = useAtom(addLiquidityTxAtom)
 
-  const { addLiquidity, error } = useAddLiquidity(assets, amountsIn)
+  const { addLiquidity } = useAddLiquidity(assets, amountsIn)
 
   async function onClickAddLiquidity() {
     if (!addLiquidity) {

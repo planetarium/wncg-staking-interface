@@ -9,7 +9,6 @@ import { useChain, useMediaQuery } from 'hooks'
 
 import { StyledLayout, StyledMain } from './styled'
 import Favicon from 'components/Favicon'
-import PancakeSwapPool from 'components/PancakeSwapPool'
 import RootFavicon from 'components/RootFavicon'
 import Suspense from 'components/Suspense'
 
@@ -26,6 +25,10 @@ const Gnb = dynamic(() => import('./Gnb'), {
 })
 
 const Modals = dynamic(() => import('components/Modals'), {
+  ssr: false,
+})
+
+const PancakeSwapPool = dynamic(() => import('components/PancakeSwapPool'), {
   ssr: false,
 })
 

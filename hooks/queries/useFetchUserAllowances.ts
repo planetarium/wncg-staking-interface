@@ -47,7 +47,7 @@ export function useFetchUserAllowances(options: UseFetchOptions = {}) {
       suspense,
       useErrorBoundary: false,
       onSuccess() {
-        console.log('💙')
+        console.log('💙 ALLOWANCES')
       },
     }
   )

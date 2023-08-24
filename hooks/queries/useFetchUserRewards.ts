@@ -24,7 +24,7 @@ export function useFetchUserRewards(options: UseFetchOptions = {}) {
       suspense,
       useErrorBoundary: false,
       onSuccess() {
-        console.log('🖤')
+        console.log('🖤 REWARDS')
       },
     }
   )
