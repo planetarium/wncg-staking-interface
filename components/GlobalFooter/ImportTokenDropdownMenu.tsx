@@ -1,5 +1,5 @@
-// FIXME: 버튼 라벨, 심볼, name 통일
 import { MouseEvent, useMemo, useRef } from 'react'
+import { uniq } from 'lodash-es'
 
 import { ConnectorId } from 'config/constants'
 import { ANIMATION_MAP, EXIT_MOTION } from 'config/constants/motions'
@@ -28,13 +28,15 @@ export default function GlobalFooterImportTokenDropdownMenu({
   const { connector } = useAuth()
   const { importToken: _importToken } = useImportToken()
   const { isHandheld } = useResponsive()
-  const { lpToken, rewardTokenAddresses, tokens } = useStaking()
+  const { lpToken, poolTokenAddresses, rewardTokenAddresses, tokens } =
+    useStaking()
 
   useCloseOnBlur(menuRef, closeDropdown)
 
   const list = useMemo(
-    () => [...rewardTokenAddresses, lpToken?.address],
-    [lpToken?.address, rewardTokenAddresses]
+    () =>
+      uniq([...poolTokenAddresses, ...rewardTokenAddresses, lpToken?.address]),
+    [lpToken?.address, poolTokenAddresses, rewardTokenAddresses]
   )
 
   function onImportToken(e: MouseEvent<HTMLButtonElement>) {

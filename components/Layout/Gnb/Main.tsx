@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { AnimatePresence } from 'framer-motion'
 
-import { useAuth, useResponsive } from 'hooks'
+import { useAuth, useChain, useResponsive } from 'hooks'
 
 import { StyledGnb } from './styled'
 import Image from 'components/Image'
@@ -32,6 +32,7 @@ export default function MainGnb() {
   const [showSidebar, setShowSidebar] = useState(false)
 
   const { isConnected } = useAuth()
+  const { chainId } = useChain()
   const { bp, isBrowser } = useResponsive()
   const { reload, pathname } = useRouter()
 
@@ -60,7 +61,7 @@ export default function MainGnb() {
   }
 
   function onLogoClick() {
-    if (pathname === '/wncg') reload()
+    reload()
   }
 
   const showStaking = !!isConnected && isBrowser
@@ -69,7 +70,7 @@ export default function MainGnb() {
     <StyledGnb>
       <div className="left">
         <h1 className="logo">
-          <Link href="/wncg" onClick={onLogoClick}>
+          <Link href={`/wncg/${chainId}`} onClick={onLogoClick}>
             <Image src={logoSrc} alt="WNCG Staking" />
           </Link>
         </h1>
