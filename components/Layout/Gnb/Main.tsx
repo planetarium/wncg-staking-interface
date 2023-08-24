@@ -34,7 +34,7 @@ export default function MainGnb() {
   const { isConnected } = useAuth()
   const { chainId } = useChain()
   const { bp, isBrowser } = useResponsive()
-  const { reload, pathname } = useRouter()
+  const { reload, isReady } = useRouter()
 
   const logoSrc = useMemo(() => {
     const breakpoint =

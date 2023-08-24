@@ -1,14 +1,12 @@
-import { memo } from 'react'
 import dynamic from 'next/dynamic'
 
 import { StyledStakingDashboard } from './styled'
 import Image from 'components/Image'
-import Suspense from 'components/Suspense'
-import Fallback from './Fallback'
+import Apr from './Apr'
 
-const Apr = dynamic(() => import('./Apr'), {
-  ssr: false,
-})
+// const Apr = dynamic(() => import('./Apr'), {
+//   ssr: false,
+// })
 
 function StakingDashboard() {
   return (
@@ -22,11 +20,9 @@ function StakingDashboard() {
         />
       </div>
 
-      <Suspense fallback={<Fallback />}>
-        <Apr />
-      </Suspense>
+      <Apr />
     </StyledStakingDashboard>
   )
 }
 
-export default memo(StakingDashboard)
+export default dynamic(() => Promise.resolve(StakingDashboard), { ssr: false })

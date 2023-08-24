@@ -1,4 +1,4 @@
-import { memo, useRef } from 'react'
+import { useRef } from 'react'
 import CopyToClipboard from 'react-copy-to-clipboard'
 import Link from 'next/link'
 import clsx from 'clsx'
@@ -99,4 +99,4 @@ function AccountMenu({ closeMenu }: AccountMenuProps) {
   )
 }
 
-export default memo(AccountMenu)
+export default AccountMenu

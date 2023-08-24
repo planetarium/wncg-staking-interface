@@ -1,5 +1,3 @@
-import { memo } from 'react'
-
 import { ANIMATION_MAP, MOTION } from 'config/constants/motions'
 import { bnum } from 'utils/bnum'
 import { useAuth } from 'hooks'
@@ -57,4 +55,4 @@ function AvailableBalance({
   )
 }
 
-export default memo(AvailableBalance)
+export default AvailableBalance

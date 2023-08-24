@@ -1,4 +1,4 @@
-import { memo, useEffect } from 'react'
+import { useEffect } from 'react'
 import { AnimatePresence } from 'framer-motion'
 
 import {
@@ -66,4 +66,4 @@ function BalancerPoolMobile({ show, closePool }: BalancerPoolMobileProps) {
   )
 }
 
-export default memo(BalancerPoolMobile)
+export default BalancerPoolMobile

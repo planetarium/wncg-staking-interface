@@ -8,6 +8,7 @@ import { bnum } from 'utils/bnum'
 import { calcSlippageAmount } from 'utils/calcSlippageAmount'
 import { parseUnits } from 'utils/parseUnits'
 import { useAuth, useChain, useStaking } from 'hooks'
+import { WRITE_OPTIONS } from 'config/misc'
 
 export function useRemoveLiquidity(
   amountsOut: string[],
@@ -85,6 +86,7 @@ export function useRemoveLiquidity(
     chainId,
     functionName,
     enabled,
+    ...WRITE_OPTIONS,
   })
 
   const { writeAsync } = useContractWrite(config)

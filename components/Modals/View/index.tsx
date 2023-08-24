@@ -4,40 +4,40 @@ import { ModalType } from 'config/constants'
 import { assertUnreachable } from 'utils/assertUnreachable'
 
 const ApproveModal = dynamic(() => import('./ApproveModal'), {
-  suspense: true,
+  ssr: false,
 })
 const AddLiquidityModal = dynamic(() => import('./AddLiquidityModal'), {
-  suspense: true,
+  ssr: false,
 })
 const ClaimModal = dynamic(() => import('./ClaimModal'), {
-  suspense: true,
+  ssr: false,
 })
 const ConnectModal = dynamic(() => import('./ConnectModal'), {
-  suspense: true,
+  ssr: false,
 })
 const CooldownModal = dynamic(() => import('./CooldownModal'), {
-  suspense: true,
+  ssr: false,
 })
 const JoinModal = dynamic(() => import('./JoinModal'), {
-  suspense: true,
+  ssr: false,
 })
 const ExitModal = dynamic(() => import('./ExitModal'), {
-  suspense: true,
+  ssr: false,
 })
 const RemoveLiquidityModal = dynamic(() => import('./RemoveLiquidityModal'), {
-  suspense: true,
+  ssr: false,
 })
 const RevenueModal = dynamic(() => import('./RevenueModal'), {
-  suspense: true,
+  ssr: false,
 })
 const StakeModal = dynamic(() => import('./StakeModal'), {
-  suspense: true,
+  ssr: false,
 })
 const SwitchNetworkModal = dynamic(() => import('./SwitchNetworkModal'), {
-  suspense: true,
+  ssr: false,
 })
 const UnstakeModal = dynamic(() => import('./UnstakeModal'), {
-  suspense: true,
+  ssr: false,
 })
 
 type ModalViewProps = {

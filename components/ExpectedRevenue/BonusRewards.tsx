@@ -1,4 +1,4 @@
-import { memo, useMemo } from 'react'
+import { useMemo } from 'react'
 import { add } from 'date-fns'
 
 import { calcApr } from 'utils/calcApr'
@@ -99,4 +99,4 @@ function ExpectedRevenueBonusRewards({
   )
 }
 
-export default memo(ExpectedRevenueBonusRewards)
+export default ExpectedRevenueBonusRewards

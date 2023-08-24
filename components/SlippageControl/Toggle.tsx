@@ -1,4 +1,4 @@
-import { memo, MouseEvent } from 'react'
+import { MouseEvent } from 'react'
 
 import { useResponsive } from 'hooks'
 import { SLIPPAGE_TOLERANCES } from './useSlippageForm'
@@ -32,6 +32,7 @@ function SlippageControlToggle({
         Slippage tolerance
         <Icon className="toggler" icon="info" />
         <Tooltip
+          as="div"
           $gap={8}
           $direction={isMobile ? 'bottom' : 'top'}
           $align="center"
@@ -72,4 +73,4 @@ function SlippageControlToggle({
   )
 }
 
-export default memo(SlippageControlToggle)
+export default SlippageControlToggle

@@ -1,4 +1,3 @@
-import { memo } from 'react'
 import { useAtomValue } from 'jotai'
 
 import { unstakeTxAtom } from 'states/tx'
@@ -62,4 +61,4 @@ function UnstakeModalPage2({ send, ...props }: UnstakeModalPage2Props) {
   )
 }
 
-export default memo(UnstakeModalPage2)
+export default UnstakeModalPage2

@@ -1,4 +1,4 @@
-import { memo, MouseEvent } from 'react'
+import { MouseEvent } from 'react'
 import { StyledDropdownToggle } from './styled'
 import Icon from 'components/Icon'
 
@@ -32,4 +32,4 @@ function DropdownToggle({
   )
 }
 
-export default memo(DropdownToggle)
+export default DropdownToggle

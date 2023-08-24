@@ -1,4 +1,3 @@
-import { memo } from 'react'
 import { useAtom } from 'jotai'
 import clsx from 'clsx'
 
@@ -113,4 +112,4 @@ function AddLiquidityModalPage1({
   )
 }
 
-export default memo(AddLiquidityModalPage1)
+export default AddLiquidityModalPage1

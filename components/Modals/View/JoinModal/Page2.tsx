@@ -1,4 +1,3 @@
-import { memo } from 'react'
 import { useAtomValue, useSetAtom } from 'jotai'
 import { motion } from 'framer-motion'
 
@@ -124,4 +123,4 @@ function JoinModalPage2() {
   )
 }
 
-export default memo(JoinModalPage2)
+export default JoinModalPage2

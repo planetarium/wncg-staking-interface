@@ -1,4 +1,4 @@
-import { memo, useEffect } from 'react'
+import { useEffect } from 'react'
 import { AnimatePresence } from 'framer-motion'
 
 import {
@@ -77,4 +77,4 @@ function PancakeSwapPoolMobile({
   )
 }
 
-export default memo(PancakeSwapPoolMobile)
+export default PancakeSwapPoolMobile

@@ -47,7 +47,7 @@ function RemoveLiquidityModalPage1({
   )
 
   const onClickRemoveLiquidity = useCallback(async () => {
-    if (!removeLiquidity) return
+    if (!removeLiquidity) throw Error()
 
     try {
       const hash = await removeLiquidity?.()
@@ -64,6 +64,7 @@ function RemoveLiquidityModalPage1({
       }
       send('NEXT')
     } catch (error: any) {
+      console.log(error)
       if (
         error.code === 'ACTION_REJECTED' ||
         error.code === 4001 ||

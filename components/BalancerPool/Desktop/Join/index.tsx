@@ -1,5 +1,3 @@
-import { memo } from 'react'
-
 import { StyledPoolJoin } from './styled'
 import Form from './Form'
 
@@ -11,4 +9,4 @@ function BalancerPoolJoin() {
   )
 }
 
-export default memo(BalancerPoolJoin)
+export default BalancerPoolJoin

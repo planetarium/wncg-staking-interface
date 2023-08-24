@@ -1,4 +1,3 @@
-import { memo } from 'react'
 import { useAtom } from 'jotai'
 
 import { stakeTxAtom } from 'states/tx'
@@ -105,4 +104,4 @@ function StakeModalPage1({
   )
 }
 
-export default memo(StakeModalPage1)
+export default StakeModalPage1

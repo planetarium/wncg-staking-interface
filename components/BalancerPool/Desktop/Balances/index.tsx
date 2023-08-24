@@ -1,5 +1,3 @@
-import { memo } from 'react'
-
 import { useAuth, useConnect, useStaking } from 'hooks'
 
 import { StyledBalancerPoolBalances } from './styled'
@@ -41,4 +39,4 @@ function BalancerPoolBalances() {
   )
 }
 
-export default memo(BalancerPoolBalances)
+export default BalancerPoolBalances

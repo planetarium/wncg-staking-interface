@@ -1,4 +1,3 @@
-import { memo } from 'react'
 import Link from 'next/link'
 
 import { dexPoolUrlFor } from 'utils/dexPoolUrlFor'
@@ -45,4 +44,4 @@ function PoolMobileHeader({ closePool }: PoolMobileHeaderProps) {
   )
 }
 
-export default memo(PoolMobileHeader)
+export default PoolMobileHeader

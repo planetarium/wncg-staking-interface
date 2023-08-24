@@ -1,4 +1,3 @@
-import { memo } from 'react'
 import type { UseFormSetValue, UseFormStateReturn } from 'react-hook-form'
 import { AnimatePresence } from 'framer-motion'
 
@@ -96,4 +95,4 @@ function JoinFormProportionalGuideBanner({
   )
 }
 
-export default memo(JoinFormProportionalGuideBanner)
+export default JoinFormProportionalGuideBanner

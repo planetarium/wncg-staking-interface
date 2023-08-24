@@ -1,4 +1,4 @@
-import { memo, useEffect } from 'react'
+import { useEffect } from 'react'
 import { useUnmount } from 'react-use'
 
 import { bnum } from 'utils/bnum'
@@ -108,4 +108,4 @@ function AddLiquidityForm() {
   )
 }
 
-export default memo(AddLiquidityForm)
+export default AddLiquidityForm

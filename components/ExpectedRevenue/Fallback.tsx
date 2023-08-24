@@ -1,5 +1,3 @@
-import { memo } from 'react'
-
 import { useResponsive } from 'hooks'
 
 import { StyledExpectedRevenueBonusRewards } from './styled'
@@ -77,4 +75,4 @@ function ExpectedRevenueFallback() {
   )
 }
 
-export default memo(ExpectedRevenueFallback)
+export default ExpectedRevenueFallback

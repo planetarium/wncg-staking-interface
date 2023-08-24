@@ -1,4 +1,3 @@
-import { memo } from 'react'
 import { useAtom } from 'jotai'
 import clsx from 'clsx'
 
@@ -121,4 +120,4 @@ function JoinModalPage1({
   )
 }
 
-export default memo(JoinModalPage1)
+export default JoinModalPage1

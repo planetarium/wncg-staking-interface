@@ -1,5 +1,3 @@
-import { memo } from 'react'
-
 import { dexPoolUrlFor } from 'utils/dexPoolUrlFor'
 import { useChain } from 'hooks'
 import { usePoolSnapshot } from 'hooks/usePoolSnapshot'
@@ -52,4 +50,4 @@ function BalancerPoolInformation() {
   )
 }
 
-export default memo(BalancerPoolInformation)
+export default BalancerPoolInformation

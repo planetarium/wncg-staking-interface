@@ -1,4 +1,4 @@
-import { memo, useRef } from 'react'
+import { useRef } from 'react'
 import { useUnmount } from 'react-use'
 import { useMachine } from '@xstate/react'
 import { useAtomValue } from 'jotai'
@@ -79,4 +79,4 @@ function AddLiquidityModal({
   )
 }
 
-export default memo(AddLiquidityModal)
+export default AddLiquidityModal

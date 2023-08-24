@@ -5,10 +5,10 @@ import { useContractWrite, usePrepareContractWrite, useQuery } from 'wagmi'
 import { slippageAtom } from 'states/system'
 import { QUERY_KEYS } from 'config/constants/queryKeys'
 import { MINUTE } from 'config/misc'
+import { prepareAddLiquidity } from 'lib/queries/bsc/prepareAddLiquidity'
 import { bnum } from 'utils/bnum'
 import { now } from 'utils/now'
-import { prepareAddLiquidity } from 'lib/queries/bsc/prepareAddLiquidity'
-import { useAuth, useChain, useSwitchNetwork } from 'hooks'
+import { useAuth, useChain } from 'hooks'
 import { useAddLiquidityMath } from './useAddLiquidityMath'
 
 export function useAddLiquidity(assets: Hash[], amountsIn: string[]) {
@@ -54,6 +54,7 @@ export function useAddLiquidity(assets: Hash[], amountsIn: string[]) {
       enabled,
       useErrorBoundary: false,
       onError(err: any) {
+        console.log(11111, err)
         if (
           err?.code?.includes('EXPIRED') ||
           err?.reason?.includes('EXPIRED')
@@ -68,6 +69,7 @@ export function useAddLiquidity(assets: Hash[], amountsIn: string[]) {
     ...data,
     enabled: !!data,
     onError(err: any) {
+      console.log(2222, Object.keys(err), err?.formattedArgs)
       if (err?.reason?.includes('TRANSFER_FROM_FAILED')) {
         setError('INSUFFICIENT_ALLOWANCE')
       }

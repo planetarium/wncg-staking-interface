@@ -1,4 +1,4 @@
-import { memo, PropsWithChildren } from 'react'
+import { PropsWithChildren } from 'react'
 
 import { ANIMATION_MAP, MOTION } from 'config/constants/motions'
 
@@ -22,4 +22,4 @@ function ModalPage({ children, className, $disabled }: ModalPageProps) {
   )
 }
 
-export default memo(ModalPage)
+export default ModalPage

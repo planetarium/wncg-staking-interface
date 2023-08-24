@@ -1,4 +1,4 @@
-import { memo, useCallback, useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { Control as ReactHookFormControl, FieldValues } from 'react-hook-form'
 import clsx from 'clsx'
 
@@ -234,4 +234,4 @@ function AddLiquidityFormInputField({
   )
 }
 
-export default memo(AddLiquidityFormInputField)
+export default AddLiquidityFormInputField

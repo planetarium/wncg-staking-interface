@@ -1,4 +1,3 @@
-import { memo } from 'react'
 import {
   UseFormSetValue,
   UseFormStateReturn,
@@ -70,4 +69,4 @@ function ExitModalPage1Step3({
   )
 }
 
-export default memo(ExitModalPage1Step3)
+export default ExitModalPage1Step3

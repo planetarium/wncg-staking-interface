@@ -1,5 +1,3 @@
-import { memo } from 'react'
-
 import { explorerUrlFor } from 'utils/explorerUrlFor'
 import { useAuth, useChain, useConnect, useStaking } from 'hooks'
 
@@ -59,4 +57,4 @@ function BalancerPoolHeader() {
   )
 }
 
-export default memo(BalancerPoolHeader)
+export default BalancerPoolHeader

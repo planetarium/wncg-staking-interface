@@ -1,4 +1,3 @@
-import { memo } from 'react'
 import { useAtomValue, useSetAtom } from 'jotai'
 import { motion } from 'framer-motion'
 
@@ -122,4 +121,4 @@ function AddLiquidityModalPage2() {
   )
 }
 
-export default memo(AddLiquidityModalPage2)
+export default AddLiquidityModalPage2

@@ -1,4 +1,4 @@
-import { memo, ReactNode } from 'react'
+import { ReactNode } from 'react'
 import clsx from 'clsx'
 
 import { bnum } from 'utils/bnum'
@@ -138,4 +138,4 @@ function AvailableBalance({ children, className }: AvailableBalanceProps) {
   )
 }
 
-export default memo(AvailableBalance)
+export default AvailableBalance

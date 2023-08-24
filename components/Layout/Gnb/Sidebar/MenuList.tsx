@@ -1,4 +1,3 @@
-import { memo } from 'react'
 import Link from 'next/link'
 
 import config from 'config'
@@ -37,4 +36,4 @@ function MenuList() {
   )
 }
 
-export default memo(MenuList)
+export default MenuList

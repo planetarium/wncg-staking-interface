@@ -1,4 +1,3 @@
-import { memo } from 'react'
 import { AnimatePresence } from 'framer-motion'
 
 import { ANIMATION_MAP, EXIT_MOTION } from 'config/constants/motions'
@@ -32,4 +31,4 @@ function ErrorMessage({ disabled, error, icon = false }: ErrorMessageProps) {
   )
 }
 
-export default memo(ErrorMessage)
+export default ErrorMessage

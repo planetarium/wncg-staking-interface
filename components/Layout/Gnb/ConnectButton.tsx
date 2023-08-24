@@ -1,5 +1,6 @@
 import { MouseEvent } from 'react'
 import dynamic from 'next/dynamic'
+import { useRouter } from 'next/router'
 
 import { ANIMATION_MAP, MOTION } from 'config/constants/motions'
 import { truncateAddress } from 'utils/truncateAddress'
@@ -16,10 +17,11 @@ type GnbConnectProps = {
 function GnbConnectButton({ toggle }: GnbConnectProps) {
   const { account, isConnected } = useAuth()
   const { openConnectModal } = useConnect()
+  const { isReady } = useRouter()
 
   const disabled = !!isConnected
 
-  if (isConnected == null) {
+  if (isConnected == null || !isReady) {
     return null
   }
 

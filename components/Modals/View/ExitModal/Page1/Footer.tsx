@@ -1,4 +1,3 @@
-import { memo } from 'react'
 import { UseFormWatch } from 'react-hook-form'
 import { useAtom } from 'jotai'
 
@@ -88,4 +87,4 @@ function ExitModalPage1Footer({
   )
 }
 
-export default memo(ExitModalPage1Footer)
+export default ExitModalPage1Footer

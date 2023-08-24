@@ -1,4 +1,3 @@
-import { memo } from 'react'
 import { useAtom } from 'jotai'
 
 import { cooldownTxAtom } from 'states/tx'
@@ -78,4 +77,4 @@ function CooldownModalPage2({ send }: CooldownModalPage2Props) {
   )
 }
 
-export default memo(CooldownModalPage2)
+export default CooldownModalPage2

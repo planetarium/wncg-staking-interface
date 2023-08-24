@@ -1,4 +1,4 @@
-import { memo, useState } from 'react'
+import { useState } from 'react'
 import { useHotkeys } from 'react-hotkeys-hook'
 import Link from 'next/link'
 
@@ -107,4 +107,4 @@ function GlobalFooter() {
   )
 }
 
-export default memo(GlobalFooter)
+export default GlobalFooter

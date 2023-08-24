@@ -1,4 +1,4 @@
-import { memo, ReactNode } from 'react'
+import { ReactNode } from 'react'
 
 import { ANIMATION_MAP, MOTION } from 'config/constants/motions'
 
@@ -24,4 +24,4 @@ function ModalCompletePage({ children, className }: ModalCompletePageProps) {
   )
 }
 
-export default memo(ModalCompletePage)
+export default ModalCompletePage

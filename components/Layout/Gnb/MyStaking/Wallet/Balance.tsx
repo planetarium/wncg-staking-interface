@@ -1,4 +1,4 @@
-import { MouseEvent, memo } from 'react'
+import { MouseEvent } from 'react'
 import { useSetAtom } from 'jotai'
 
 import { showMyStakingAtom } from 'states/ui'
@@ -68,4 +68,4 @@ function WalletBalance() {
   )
 }
 
-export default memo(WalletBalance)
+export default WalletBalance

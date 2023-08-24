@@ -1,4 +1,3 @@
-import { memo } from 'react'
 import dynamic from 'next/dynamic'
 
 import { useModal } from 'hooks'
@@ -67,4 +66,4 @@ function CooldownModalPage1({ send }: CooldownModalPage1Props) {
   )
 }
 
-export default memo(CooldownModalPage1)
+export default CooldownModalPage1

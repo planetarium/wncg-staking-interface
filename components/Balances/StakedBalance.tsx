@@ -1,4 +1,4 @@
-import { memo, ReactNode, useMemo } from 'react'
+import { ReactNode, useMemo } from 'react'
 import clsx from 'clsx'
 
 import { useAuth, useConnect, useFiat, useStaking } from 'hooks'
@@ -66,4 +66,4 @@ function StakedBalance({ children, className }: StakedBalanceProps) {
   )
 }
 
-export default memo(StakedBalance)
+export default StakedBalance

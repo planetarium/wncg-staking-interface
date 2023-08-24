@@ -1,5 +1,3 @@
-import { memo } from 'react'
-
 import { ANIMATION_MAP, MOTION } from 'config/constants/motions'
 import { capitalize } from 'utils/capitalize'
 import { useModal } from 'hooks'
@@ -47,4 +45,4 @@ function ModalFailPage({
   )
 }
 
-export default memo(ModalFailPage)
+export default ModalFailPage

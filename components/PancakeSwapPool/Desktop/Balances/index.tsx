@@ -1,5 +1,3 @@
-import { memo } from 'react'
-
 import { useAuth, useConnect, useStaking } from 'hooks'
 
 import { StyledAddLiquidityPoolBalances } from './styled'
@@ -41,4 +39,4 @@ function AddLiquidityPoolBalances() {
   )
 }
 
-export default memo(AddLiquidityPoolBalances)
+export default AddLiquidityPoolBalances

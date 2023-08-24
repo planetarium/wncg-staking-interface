@@ -1,11 +1,10 @@
-import { memo } from 'react'
 import dynamic from 'next/dynamic'
 
 import { StyledPancakeSwapAddLiquidity } from './styled'
 import Suspense from 'components/Suspense'
 
 const Form = dynamic(() => import('./Form'), {
-  suspense: true,
+  ssr: false,
 })
 
 function PancakeSwapAddLiquidity() {
@@ -18,4 +17,4 @@ function PancakeSwapAddLiquidity() {
   )
 }
 
-export default memo(PancakeSwapAddLiquidity)
+export default PancakeSwapAddLiquidity

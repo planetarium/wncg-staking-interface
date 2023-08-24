@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect, useMemo } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import { usePrevious } from 'react-use'
 import {
   Control as ReactHookFormControl,
@@ -186,4 +186,4 @@ function JoinInputField({
   )
 }
 
-export default memo(JoinInputField)
+export default JoinInputField

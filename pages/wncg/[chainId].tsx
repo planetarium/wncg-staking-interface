@@ -15,7 +15,7 @@ import Suspense from 'components/Suspense'
 import Stake from 'components/staking/Stake'
 
 const Dashboard = dynamic(() => import('components/staking/Dashboard'), {
-  suspense: true,
+  ssr: false,
 })
 
 const WncgStaking: NextPage = () => {
@@ -39,9 +39,7 @@ const WncgStaking: NextPage = () => {
           </div>
 
           <div className="right">
-            <Suspense>
-              <Dashboard />
-            </Suspense>
+            <Dashboard />
           </div>
         </div>
       </StyledStakingPage>

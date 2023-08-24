@@ -1,4 +1,3 @@
-import { memo } from 'react'
 import clsx from 'clsx'
 
 import { StyledIcon } from './styled'
@@ -91,4 +90,4 @@ function Icon({
   )
 }
 
-export default memo(Icon)
+export default Icon

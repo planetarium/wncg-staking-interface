@@ -1,4 +1,3 @@
-import { memo } from 'react'
 import { AnimatePresence } from 'framer-motion'
 
 import { ANIMATION_MAP } from 'config/constants/motions'
@@ -56,4 +55,4 @@ function PendingNotice({ hash }: PendingNoticeProps) {
   )
 }
 
-export default memo(PendingNotice)
+export default PendingNotice

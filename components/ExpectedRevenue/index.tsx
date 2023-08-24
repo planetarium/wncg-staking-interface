@@ -1,4 +1,3 @@
-import { memo } from 'react'
 import dynamic from 'next/dynamic'
 
 import { bnum } from 'utils/bnum'
@@ -15,7 +14,6 @@ type ExpectedRevenueProps = {
 function ExpectedRevenue({ amount = '0' }: ExpectedRevenueProps) {
   const toFiat = useFiat()
   const { lpToken, rewardTokenAddresses, totalStaked } = useStaking()
-  // const { totalStaked } = useFetchStaking().data ?? {}
   const { stakedTokenBalance = '0' } = useFetchUserData().data ?? {}
 
   const hasBonusRewards = rewardTokenAddresses.length > 1
@@ -41,6 +39,6 @@ function ExpectedRevenue({ amount = '0' }: ExpectedRevenueProps) {
   )
 }
 
-export default dynamic(() => Promise.resolve(memo(ExpectedRevenue)), {
+export default dynamic(() => Promise.resolve(ExpectedRevenue), {
   ssr: false,
 })

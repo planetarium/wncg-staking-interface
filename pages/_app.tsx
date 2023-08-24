@@ -1,4 +1,4 @@
-import { PropsWithChildren, useRef } from 'react'
+import { PropsWithChildren, useEffect, useRef } from 'react'
 import {
   Hydrate,
   QueryClient,
@@ -28,6 +28,8 @@ import DefaultSeo from 'components/DefaultSeo'
 import ErrorBoundary from 'components/ErrorBoundary'
 import Layout from 'components/Layout'
 import ToastContainer from 'components/ToastContainer'
+import { useMount } from 'react-use'
+import { useRouter } from 'next/router'
 
 type MyAppProps = AppProps & {
   pageProps: {
@@ -50,9 +52,14 @@ function HydrateAtoms({ queryClient, children }: HydrateAtomsProps) {
 }
 
 function MyApp({ Component, pageProps }: MyAppProps) {
-  useClientMount(() => {
-    wagmiClient.autoConnect()
-  })
+  const router = useRouter()
+
+  useEffect(() => {
+    if (router.isReady) {
+      console.log('autoconnect')
+      wagmiClient.autoConnect()
+    }
+  }, [router.isReady])
 
   const queryClient = useRef(
     new QueryClient({

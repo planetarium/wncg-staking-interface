@@ -1,4 +1,3 @@
-import { memo } from 'react'
 import Link from 'next/link'
 
 import config from 'config'
@@ -51,4 +50,4 @@ function GnbMenuList() {
   )
 }
 
-export default memo(GnbMenuList)
+export default GnbMenuList

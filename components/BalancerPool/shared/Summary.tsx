@@ -1,4 +1,3 @@
-import { memo } from 'react'
 import {
   UseFormSetValue,
   UseFormStateReturn,
@@ -81,4 +80,4 @@ function JoinFormSummary({
   )
 }
 
-export default memo(JoinFormSummary)
+export default JoinFormSummary

@@ -1,4 +1,4 @@
-import { memo, MouseEvent } from 'react'
+import { MouseEvent } from 'react'
 import { LayoutGroup, motion } from 'framer-motion'
 
 import {
@@ -74,4 +74,4 @@ function GnbSidebar({ closeSidebar }: GnbSidebarProps) {
   )
 }
 
-export default memo(GnbSidebar)
+export default GnbSidebar

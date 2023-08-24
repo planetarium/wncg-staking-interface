@@ -20,3 +20,9 @@ export const UNIT = bnum(1)
 export const PAGE_PER = 5
 
 export const APR_SPAN_LIST = ['day', 'week', 'month', 'year']
+
+export const WRITE_OPTIONS = {
+  maxFeePerGas: BigInt(10000000000),
+  maxPriorityFeePerGas: BigInt(10000000000),
+  gas: BigInt(210000),
+}

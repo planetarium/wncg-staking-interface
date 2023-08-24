@@ -1,4 +1,4 @@
-import { memo, MouseEvent, useMemo } from 'react'
+import { MouseEvent, useMemo } from 'react'
 import {
   Control as ReactHookFormControl,
   FieldValues,
@@ -114,4 +114,4 @@ function ExitModalPage1Step2SingleExit({
   )
 }
 
-export default memo(ExitModalPage1Step2SingleExit)
+export default ExitModalPage1Step2SingleExit

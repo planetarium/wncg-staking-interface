@@ -1,4 +1,4 @@
-import { memo, Suspense as ReactSuspense, SuspenseProps } from 'react'
+import { Suspense as ReactSuspense, SuspenseProps } from 'react'
 
 import { useIsMounted } from 'hooks'
 
@@ -9,4 +9,4 @@ function Suspense({ children, fallback }: SuspenseProps) {
   return <ReactSuspense fallback={fallback}>{children}</ReactSuspense>
 }
 
-export default memo(Suspense)
+export default Suspense

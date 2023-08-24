@@ -1,4 +1,3 @@
-import { memo } from 'react'
 import { useAtomValue, useSetAtom } from 'jotai'
 
 import { stakeTxAtom } from 'states/tx'
@@ -120,4 +119,4 @@ function StakeModalPage2({ resetForm }: StakeModalPage2Props) {
   )
 }
 
-export default memo(StakeModalPage2)
+export default StakeModalPage2

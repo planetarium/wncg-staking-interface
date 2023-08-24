@@ -1,4 +1,3 @@
-import { memo } from 'react'
 import dynamic from 'next/dynamic'
 import { motion } from 'framer-motion'
 
@@ -46,4 +45,4 @@ function StakingStake() {
   )
 }
 
-export default memo(StakingStake)
+export default StakingStake

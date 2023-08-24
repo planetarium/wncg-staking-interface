@@ -1,4 +1,4 @@
-import { memo, useEffect } from 'react'
+import { useEffect } from 'react'
 
 import { wait } from 'utils/wait'
 import { useAuth, useBalances, useRefetch, useStaking } from 'hooks'
@@ -113,4 +113,4 @@ function BalancerJoinForm() {
   )
 }
 
-export default memo(BalancerJoinForm)
+export default BalancerJoinForm

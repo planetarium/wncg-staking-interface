@@ -1,4 +1,4 @@
-import { memo, useMemo } from 'react'
+import { useMemo } from 'react'
 import { nanoid } from 'nanoid'
 import clsx from 'clsx'
 
@@ -122,4 +122,4 @@ function TokenIcon({
   )
 }
 
-export default memo(TokenIcon)
+export default TokenIcon

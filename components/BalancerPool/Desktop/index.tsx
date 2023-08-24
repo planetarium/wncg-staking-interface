@@ -1,4 +1,3 @@
-import { memo } from 'react'
 import { AnimatePresence } from 'framer-motion'
 
 import {
@@ -65,4 +64,4 @@ function BalancerPoolDesktop({ show, closePool }: BalancerPoolDesktopProps) {
   )
 }
 
-export default memo(BalancerPoolDesktop)
+export default BalancerPoolDesktop

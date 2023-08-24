@@ -1,4 +1,4 @@
-import { memo, useMemo } from 'react'
+import { useMemo } from 'react'
 import { AnimatePresence } from 'framer-motion'
 
 import { ANIMATION_MAP, EXIT_MOTION } from 'config/constants/motions'
@@ -52,4 +52,4 @@ function JoinFormUnoptimizableAlert({
   )
 }
 
-export default memo(JoinFormUnoptimizableAlert)
+export default JoinFormUnoptimizableAlert

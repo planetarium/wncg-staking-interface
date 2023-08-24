@@ -1,4 +1,4 @@
-import { memo, useRef } from 'react'
+import { useRef } from 'react'
 import { useUnmount } from 'react-use'
 import { useMachine } from '@xstate/react'
 import { useAtomValue } from 'jotai'
@@ -50,4 +50,4 @@ function CooldownModal() {
   )
 }
 
-export default memo(CooldownModal)
+export default CooldownModal

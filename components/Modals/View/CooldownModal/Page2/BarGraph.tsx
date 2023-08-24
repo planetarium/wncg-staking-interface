@@ -1,4 +1,3 @@
-import { memo } from 'react'
 import { motion } from 'framer-motion'
 import { secondsInDay } from 'date-fns'
 
@@ -61,4 +60,4 @@ function CooldownModalPage2BarGraph() {
   )
 }
 
-export default memo(CooldownModalPage2BarGraph)
+export default CooldownModalPage2BarGraph

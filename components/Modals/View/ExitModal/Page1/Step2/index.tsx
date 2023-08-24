@@ -1,4 +1,4 @@
-import { memo, MouseEvent } from 'react'
+import { MouseEvent } from 'react'
 import {
   Control as ReactHookFormControl,
   UseFormClearErrors,
@@ -72,4 +72,4 @@ function ExitModalPage1Step2({
   )
 }
 
-export default memo(ExitModalPage1Step2)
+export default ExitModalPage1Step2

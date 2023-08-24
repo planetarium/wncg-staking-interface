@@ -1,4 +1,4 @@
-import { memo, MouseEvent } from 'react'
+import { MouseEvent } from 'react'
 
 import { getNetworkLabel } from 'utils/getNetworkLabel'
 import { isEthereum } from 'utils/isEthereum'
@@ -30,4 +30,4 @@ function GnbChainSelectToggle({ toggle }: GnbChainSelectToggleProps) {
   )
 }
 
-export default memo(GnbChainSelectToggle)
+export default GnbChainSelectToggle

@@ -1,4 +1,3 @@
-import { memo } from 'react'
 import { AnimatePresence } from 'framer-motion'
 
 import {
@@ -68,4 +67,4 @@ function PancakeSwapPoolDesktop({
   )
 }
 
-export default memo(PancakeSwapPoolDesktop)
+export default PancakeSwapPoolDesktop

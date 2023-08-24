@@ -1,4 +1,3 @@
-import { memo } from 'react'
 import dynamic from 'next/dynamic'
 
 import { useModal } from 'hooks'
@@ -67,4 +66,4 @@ function UnstakeModalPage1({ send }: UnstakeModalPage1Props) {
   )
 }
 
-export default memo(UnstakeModalPage1)
+export default UnstakeModalPage1

@@ -1,4 +1,4 @@
-import { memo, useMemo } from 'react'
+import { useMemo } from 'react'
 
 import { bnum } from 'utils/bnum'
 import { useFiat, useStaking } from 'hooks'
@@ -71,4 +71,4 @@ function ExitModalPage1Step2PropAmounts({
   )
 }
 
-export default memo(ExitModalPage1Step2PropAmounts)
+export default ExitModalPage1Step2PropAmounts

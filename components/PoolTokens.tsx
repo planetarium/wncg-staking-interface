@@ -1,4 +1,3 @@
-import { memo } from 'react'
 import Link from 'next/link'
 import clsx from 'clsx'
 
@@ -68,4 +67,4 @@ function PoolTokens({ lpBalance, className }: PoolTokensProps) {
   )
 }
 
-export default memo(PoolTokens)
+export default PoolTokens

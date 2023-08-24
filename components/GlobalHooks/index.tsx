@@ -1,5 +1,3 @@
-import { memo } from 'react'
-
 import Suspense from 'components/Suspense'
 import Web3 from './Web3'
 import Contract from './Contract'
@@ -25,4 +23,4 @@ function GlobalHooks() {
   )
 }
 
-export default memo(GlobalHooks)
+export default GlobalHooks

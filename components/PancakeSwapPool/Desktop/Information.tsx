@@ -1,4 +1,4 @@
-import { memo, useMemo } from 'react'
+import { useMemo } from 'react'
 
 import { bnum } from 'utils/bnum'
 import { dexPoolUrlFor } from 'utils/dexPoolUrlFor'
@@ -56,4 +56,4 @@ function PancakeSwapPoolInformation() {
   )
 }
 
-export default memo(PancakeSwapPoolInformation)
+export default PancakeSwapPoolInformation

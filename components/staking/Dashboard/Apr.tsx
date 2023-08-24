@@ -1,5 +1,4 @@
 import dynamic from 'next/dynamic'
-import { memo } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useAtom, useAtomValue } from 'jotai'
 import clsx from 'clsx'
@@ -32,7 +31,8 @@ function StakingDashboardApr() {
     totalStaked: initTotalStaked,
   } = useStaking()
 
-  const { totalStaked = initTotalStaked } = useFetchStaking().data ?? {}
+  const { totalStaked = initTotalStaked } =
+    useFetchStaking({ suspense: false }).data ?? {}
 
   const totalStakedInFiatValue = toFiat(
     totalStaked ?? initTotalStaked,
@@ -57,8 +57,10 @@ function StakingDashboardApr() {
     setShow(false)
   }
 
+  console.log(aprs)
+
   return (
-    <StyledStakingDashboardApr className="aprList">
+    <StyledStakingDashboardApr className="aprList" suppressHydrationWarning>
       <div className="aprItem">
         <dt>Total Staked</dt>
         <dd className="colon">
@@ -124,6 +126,8 @@ function StakingDashboardApr() {
   )
 }
 
-export default dynamic(() => Promise.resolve(memo(StakingDashboardApr)), {
-  ssr: false,
-})
+// export default dynamic(() => Promise.resolve(StakingDashboardApr), {
+//   ssr: false,
+// })
+
+export default StakingDashboardApr

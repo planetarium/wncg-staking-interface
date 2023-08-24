@@ -1,4 +1,3 @@
-import { memo } from 'react'
 import {
   Control as ReactHookFormControl,
   FieldValues,
@@ -113,4 +112,4 @@ function ExitModalPage1Step2PropExit({
   )
 }
 
-export default memo(ExitModalPage1Step2PropExit)
+export default ExitModalPage1Step2PropExit

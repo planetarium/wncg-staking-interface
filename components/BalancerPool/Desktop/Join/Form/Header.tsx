@@ -1,4 +1,3 @@
-import { memo } from 'react'
 import { useAtomValue } from 'jotai'
 
 import { joinTxAtom } from 'states/tx'
@@ -78,4 +77,4 @@ function BalancerJoinFormHeader({
   )
 }
 
-export default memo(BalancerJoinFormHeader)
+export default BalancerJoinFormHeader

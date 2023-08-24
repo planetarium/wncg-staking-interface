@@ -1,4 +1,3 @@
-import { memo } from 'react'
 import dynamic from 'next/dynamic'
 import { useAtomValue } from 'jotai'
 
@@ -105,6 +104,6 @@ function ClaimableRewards() {
   )
 }
 
-export default dynamic(() => Promise.resolve(memo(ClaimableRewards)), {
+export default dynamic(() => Promise.resolve(ClaimableRewards), {
   ssr: false,
 })

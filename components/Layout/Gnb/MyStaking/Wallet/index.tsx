@@ -1,4 +1,4 @@
-import { memo, useRef } from 'react'
+import { useRef } from 'react'
 import { useAtomValue } from 'jotai'
 
 import { isUnstakeWindowAtom } from 'states/account'
@@ -50,4 +50,4 @@ function MyStakingWallet({ closeWallet }: MyStakingWalletProp) {
   )
 }
 
-export default memo(MyStakingWallet)
+export default MyStakingWallet

@@ -1,5 +1,3 @@
-import { memo } from 'react'
-
 import { ANIMATION_MAP, EXIT_MOTION } from 'config/constants/motions'
 import { getNetworkLabel } from 'utils/getNetworkLabel'
 import { useChain, useSwitchNetwork } from 'hooks'
@@ -23,4 +21,4 @@ function NetworkAlert() {
   )
 }
 
-export default memo(NetworkAlert)
+export default NetworkAlert

@@ -1,4 +1,4 @@
-import { memo, useRef } from 'react'
+import { useRef } from 'react'
 import { useUnmount } from 'react-use'
 import { useMachine } from '@xstate/react'
 import { useAtomValue } from 'jotai'
@@ -74,4 +74,4 @@ function UnstakeModal() {
   )
 }
 
-export default memo(UnstakeModal)
+export default UnstakeModal
