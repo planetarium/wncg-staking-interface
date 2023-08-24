@@ -20,9 +20,7 @@ export function useAddLiquidityMath(isNative?: boolean) {
   } = useStaking()
 
   const { poolTokenBalances = initPoolTokenBalances } =
-    useFetchStaking({
-      refetchOnWindowFocus: 'always',
-    }).data ?? {}
+    useFetchStaking().data ?? {}
 
   const assets = useMemo(() => {
     return poolTokenAddresses.map((addr) => {
@@ -70,6 +68,8 @@ export function useAddLiquidityMath(isNative?: boolean) {
             ).toString(),
           ],
         })) as BigNumber
+
+        console.log(3333, data)
 
         const dependentAmountIn = formatUnits(
           data,

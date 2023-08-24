@@ -29,8 +29,6 @@ export function useFetchUserBalances(options: UseFetchOptions = {}) {
     [list, tokens]
   )
 
-  // console.log(list.map((l, i) => `${l.slice(-4)}: ${decimals[i]}`))
-
   return useQuery<RawBalanceMap>(
     [QUERY_KEYS.User.Balances, account, chainId, ...list],
     () => fetchUserBalances(chainId, account!, list, decimals),
