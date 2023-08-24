@@ -4,7 +4,6 @@ import { QUERY_KEYS } from 'config/constants/queryKeys'
 import { useChain } from 'hooks/useChain'
 import { fetchPoolSnapshot } from 'lib/queries/fetchPoolSnapshot'
 
-// FIXME: Pool은 발란서에만 존재하나?
 export function useFetchPoolSnapshot(options: UseFetchOptions = {}) {
   const { chainId } = useChain()
 
@@ -12,7 +11,7 @@ export function useFetchPoolSnapshot(options: UseFetchOptions = {}) {
     enabled = true,
     refetchInterval,
     refetchOnWindowFocus = 'always',
-    suspense,
+    suspense = true,
   } = options
 
   return useQuery(

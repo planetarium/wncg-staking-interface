@@ -1,6 +1,7 @@
 import { useRef } from 'react'
 import { useUnmount } from 'react-use'
 import { useMachine } from '@xstate/react'
+import dynamic from 'next/dynamic'
 import { useAtomValue } from 'jotai'
 
 import { exitTxAtom } from 'states/tx'
@@ -81,4 +82,6 @@ function ExitModal() {
   )
 }
 
-export default ExitModal
+export default dynamic(() => Promise.resolve(ExitModal), {
+  ssr: false,
+})

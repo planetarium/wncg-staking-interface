@@ -1,5 +1,6 @@
 import { useRef } from 'react'
 import { useUnmount } from 'react-use'
+import dynamic from 'next/dynamic'
 import { useMachine } from '@xstate/react'
 import { useAtomValue } from 'jotai'
 
@@ -78,4 +79,6 @@ function JoinModal({
   )
 }
 
-export default JoinModal
+export default dynamic(() => Promise.resolve(JoinModal), {
+  ssr: false,
+})

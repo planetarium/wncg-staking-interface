@@ -1,5 +1,6 @@
 import { useRef } from 'react'
 import { useUnmount } from 'react-use'
+import dynamic from 'next/dynamic'
 import { useMachine } from '@xstate/react'
 import { useAtomValue } from 'jotai'
 
@@ -79,4 +80,4 @@ function AddLiquidityModal({
   )
 }
 
-export default AddLiquidityModal
+export default dynamic(() => Promise.resolve(AddLiquidityModal), { ssr: false })

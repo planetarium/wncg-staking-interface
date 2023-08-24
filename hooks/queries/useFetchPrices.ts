@@ -11,7 +11,7 @@ export function useFetchPrices(options: UseFetchOptions = {}) {
     enabled = true,
     refetchInterval,
     refetchOnWindowFocus,
-    suspense,
+    suspense = true,
   } = options
 
   const { chainId } = useChain()

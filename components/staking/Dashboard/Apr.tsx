@@ -1,4 +1,3 @@
-import dynamic from 'next/dynamic'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useAtom, useAtomValue } from 'jotai'
 import clsx from 'clsx'
@@ -31,8 +30,7 @@ function StakingDashboardApr() {
     totalStaked: initTotalStaked,
   } = useStaking()
 
-  const { totalStaked = initTotalStaked } =
-    useFetchStaking({ suspense: false }).data ?? {}
+  const { totalStaked = initTotalStaked } = useFetchStaking().data ?? {}
 
   const totalStakedInFiatValue = toFiat(
     totalStaked ?? initTotalStaked,
@@ -56,8 +54,6 @@ function StakingDashboardApr() {
   function closeTooltip() {
     setShow(false)
   }
-
-  console.log(aprs)
 
   return (
     <StyledStakingDashboardApr className="aprList" suppressHydrationWarning>
@@ -125,9 +121,5 @@ function StakingDashboardApr() {
     </StyledStakingDashboardApr>
   )
 }
-
-// export default dynamic(() => Promise.resolve(StakingDashboardApr), {
-//   ssr: false,
-// })
 
 export default StakingDashboardApr

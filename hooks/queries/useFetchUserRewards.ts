@@ -5,7 +5,7 @@ import { fetchUserRewards } from 'lib/queries/fetchUserRewards'
 import { useAuth, useChain } from 'hooks'
 
 export function useFetchUserRewards(options: UseFetchOptions = {}) {
-  const { enabled: _enabled = true, refetchInterval, suspense } = options
+  const { enabled: _enabled = true, refetchInterval, suspense = true } = options
 
   const { account, isConnected } = useAuth()
   const { chainId } = useChain()

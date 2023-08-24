@@ -16,7 +16,7 @@ export function useFetchStaking(options: UseFetchOptions = {}) {
     enabled = true,
     refetchInterval,
     refetchOnWindowFocus,
-    suspense,
+    suspense = true,
   } = options
 
   const { chainId, stakingAddress } = useChain()

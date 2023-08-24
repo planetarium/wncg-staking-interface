@@ -1,6 +1,6 @@
 import { useRef } from 'react'
 import { useUnmount } from 'react-use'
-
+import dynamic from 'next/dynamic'
 import { useMachine } from '@xstate/react'
 import { useAtom, useAtomValue } from 'jotai'
 
@@ -31,7 +31,7 @@ type ApproveModalProps = {
   tokenName?: string
 }
 
-export default function ApproveModal({
+function ApproveModal({
   spender: _spender,
   spenderName: _spenderName,
   tokenAddress: _tokenAddress,
@@ -159,3 +159,5 @@ export default function ApproveModal({
     </>
   )
 }
+
+export default dynamic(() => Promise.resolve(ApproveModal), { ssr: false })

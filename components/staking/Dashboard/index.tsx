@@ -1,12 +1,10 @@
+import { Suspense } from 'react'
 import dynamic from 'next/dynamic'
 
 import { StyledStakingDashboard } from './styled'
 import Image from 'components/Image'
 import Apr from './Apr'
-
-// const Apr = dynamic(() => import('./Apr'), {
-//   ssr: false,
-// })
+import Fallback from './Fallback'
 
 function StakingDashboard() {
   return (
@@ -20,7 +18,9 @@ function StakingDashboard() {
         />
       </div>
 
-      <Apr />
+      <Suspense fallback={<Fallback />}>
+        <Apr />
+      </Suspense>
     </StyledStakingDashboard>
   )
 }

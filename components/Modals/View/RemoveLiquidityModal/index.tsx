@@ -1,6 +1,7 @@
 import { useRef } from 'react'
 import { useUnmount } from 'react-use'
 import { useMachine } from '@xstate/react'
+import dynamic from 'next/dynamic'
 import { useAtomValue, useSetAtom } from 'jotai'
 
 import { slippageAtom } from 'states/system'
@@ -95,4 +96,6 @@ function RemoveLiquidityModal() {
   )
 }
 
-export default RemoveLiquidityModal
+export default dynamic(() => Promise.resolve(RemoveLiquidityModal), {
+  ssr: false,
+})

@@ -1,3 +1,5 @@
+import dynamic from 'next/dynamic'
+
 import { useChain, useModal, useSwitchNetwork } from 'hooks'
 
 import { StyledSwitchNetworkModal } from './styled'
@@ -36,4 +38,6 @@ function SwitchNetworkModal() {
   )
 }
 
-export default SwitchNetworkModal
+export default dynamic(() => Promise.resolve(SwitchNetworkModal), {
+  ssr: false,
+})

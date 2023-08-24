@@ -1,5 +1,6 @@
 import { useRef } from 'react'
 import CopyToClipboard from 'react-copy-to-clipboard'
+import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import clsx from 'clsx'
 
@@ -99,4 +100,4 @@ function AccountMenu({ closeMenu }: AccountMenuProps) {
   )
 }
 
-export default AccountMenu
+export default dynamic(() => Promise.resolve(AccountMenu), { ssr: false })

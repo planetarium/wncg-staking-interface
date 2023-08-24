@@ -1,4 +1,5 @@
 import { MouseEvent } from 'react'
+import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import clsx from 'clsx'
 
@@ -9,7 +10,7 @@ import { StyledConnectModal } from './styled'
 import CryptoIcon, { CryptoIconType } from 'components/CryptoIcon'
 import { CloseButton } from 'components/Modals/shared'
 
-export default function ConnectModal() {
+function ConnectModal() {
   const { connect: _connect, wallets } = useConnect()
   const {} = useStaking()
 
@@ -78,3 +79,5 @@ function renderLabel(name?: string) {
       return name
   }
 }
+
+export default dynamic(() => Promise.resolve(ConnectModal), { ssr: false })

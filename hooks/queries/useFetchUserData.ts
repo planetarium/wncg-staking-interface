@@ -11,7 +11,7 @@ export function useFetchUserData(options: UseFetchOptions = {}) {
     enabled: _enabled = true,
     refetchInterval,
     refetchOnWindowFocus,
-    suspense,
+    suspense = true,
   } = options
 
   const { account, isConnected } = useAuth()

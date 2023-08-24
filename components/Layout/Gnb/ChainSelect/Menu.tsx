@@ -11,8 +11,7 @@ import {
 } from 'config/constants/motions'
 import { getNetworkLabel } from 'utils/getNetworkLabel'
 import { wait } from 'utils/wait'
-import { useChain, useCloseOnBlur } from 'hooks'
-import { useFetchStaking } from 'hooks/queries'
+import { useChain, useCloseOnBlur, useRefetch } from 'hooks'
 
 import { StyledGnbChainSelectMenu } from './styled'
 import CryptoIcon from 'components/CryptoIcon'
@@ -31,7 +30,10 @@ export default function GnbChainSelectMenu({
   const routerChainId = Number(router.asPath.replace('/wncg/', '')) as ChainId
 
   const { chainId: expectedChainId, setChainId } = useChain()
-  const { refetch: refetchStaking } = useFetchStaking({ suspense: false })
+  const refetch = useRefetch({
+    staking: true,
+    poolSnapshot: true,
+  })
 
   const onSelectChain = useCallback(
     async (e: MouseEvent<HTMLButtonElement>) => {
@@ -49,7 +51,7 @@ export default function GnbChainSelectMenu({
         })
 
         setChainId?.(newChainId)
-        refetchStaking()
+        refetch()
         wait(100)
         router.replace(router.pathname, newPathname, { shallow: true })
       } catch (error) {
@@ -58,14 +60,7 @@ export default function GnbChainSelectMenu({
 
       closeMenu()
     },
-    [
-      closeMenu,
-      expectedChainId,
-      refetchStaking,
-      router,
-      routerChainId,
-      setChainId,
-    ]
+    [closeMenu, expectedChainId, refetch, router, routerChainId, setChainId]
   )
 
   useCloseOnBlur(menuRef, closeMenu)

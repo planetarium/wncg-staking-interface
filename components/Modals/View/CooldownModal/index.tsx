@@ -13,6 +13,7 @@ import Page1 from './Page1'
 import Page2 from './Page2'
 import Page3 from './Page3'
 import Page4 from './Page4'
+import dynamic from 'next/dynamic'
 
 function CooldownModal() {
   const toast = useToast()
@@ -50,4 +51,4 @@ function CooldownModal() {
   )
 }
 
-export default CooldownModal
+export default dynamic(() => Promise.resolve(CooldownModal), { ssr: false })

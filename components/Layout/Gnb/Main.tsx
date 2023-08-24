@@ -9,11 +9,14 @@ import { useAuth, useChain, useResponsive } from 'hooks'
 import { StyledGnb } from './styled'
 import Image from 'components/Image'
 import Suspense from 'components/Suspense'
-import AccountMenu from './AccountMenu'
 import ChainSelect from './ChainSelect'
 import MenuButton from './MenuButton'
 import MenuList from './MenuList'
 import Sidebar from './Sidebar'
+
+const AccountMenu = dynamic(() => import('./AccountMenu'), {
+  ssr: false,
+})
 
 const ConnectButton = dynamic(() => import('./ConnectButton'), {
   ssr: false,
@@ -34,7 +37,7 @@ export default function MainGnb() {
   const { isConnected } = useAuth()
   const { chainId } = useChain()
   const { bp, isBrowser } = useResponsive()
-  const { reload, isReady } = useRouter()
+  const { reload } = useRouter()
 
   const logoSrc = useMemo(() => {
     const breakpoint =

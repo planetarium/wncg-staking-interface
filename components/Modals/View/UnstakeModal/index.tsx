@@ -1,6 +1,7 @@
 import { useRef } from 'react'
 import { useUnmount } from 'react-use'
 import { useMachine } from '@xstate/react'
+import dynamic from 'next/dynamic'
 import { useAtomValue } from 'jotai'
 
 import { unstakeTxAtom } from 'states/tx'
@@ -74,4 +75,6 @@ function UnstakeModal() {
   )
 }
 
-export default UnstakeModal
+export default dynamic(() => Promise.resolve(UnstakeModal), {
+  ssr: false,
+})
