@@ -7,6 +7,7 @@ import { useAtom, useAtomValue } from 'jotai'
 import { approveTxAtom } from 'states/tx'
 import { hasModalInViewAtom } from 'states/ui'
 import { ToastType } from 'config/constants'
+import { walletErrorHandler } from 'utils/walletErrorHandler'
 import { useRefetch, useToast } from 'hooks'
 import { approveMachine, pageFor } from './stateMachine'
 import { useApprove } from './useApprove'
@@ -75,14 +76,13 @@ function ApproveModal({
   const _approve = useApprove(tokenAddress, spender)
 
   async function approve() {
-    if (!_approve) {
-      send('FAIL')
-      return
-    }
-
     try {
+      if (!_approve) {
+        throw Error('No writeAsync')
+      }
+
       const txHash = await _approve()
-      if (!txHash) return
+      if (!txHash) throw Error('No txHash')
 
       setTx({
         hash: txHash,
@@ -101,16 +101,8 @@ function ApproveModal({
       })
       send('NEXT')
     } catch (error: any) {
-      if (
-        error.code === 'ACTION_REJECTED' ||
-        error.code === 4001 ||
-        error.error === 'Rejected by user'
-      ) {
-        send('ROLLBACK')
-        return
-      }
-
-      send('FAIL')
+      walletErrorHandler(error, () => send('FAIL'))
+      send('ROLLBACK')
     }
   }
 

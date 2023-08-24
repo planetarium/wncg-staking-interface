@@ -1,14 +1,14 @@
-import { useCallback, useMemo } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { useContractWrite, usePrepareContractWrite } from 'wagmi'
 import { useAtomValue } from 'jotai'
 
 import { slippageAtom } from 'states/system'
 import { PancakeRouterAbi } from 'config/abi'
+import { WRITE_OPTIONS } from 'config/misc'
 import { bnum } from 'utils/bnum'
 import { calcSlippageAmount } from 'utils/calcSlippageAmount'
 import { parseUnits } from 'utils/parseUnits'
 import { useAuth, useChain, useStaking } from 'hooks'
-import { WRITE_OPTIONS } from 'config/misc'
 
 export function useRemoveLiquidity(
   amountsOut: string[],
@@ -16,6 +16,8 @@ export function useRemoveLiquidity(
   isNative: boolean,
   signature?: Signature
 ) {
+  const [error, setError] = useState<string | null>(null)
+
   const { account, isConnected } = useAuth()
   const { chainId, dexProtocolAddress, networkMismatch } = useChain()
   const {
@@ -55,8 +57,8 @@ export function useRemoveLiquidity(
     ? [
         poolTokenAddresses[tokenIndex],
         scaledLpAmountOut,
-        scaledMinAmountsOut[tokenIndex],
-        scaledMinAmountsOut[ethIndex],
+        scaledMinAmountsOut[tokenIndex].toString(),
+        scaledMinAmountsOut[ethIndex].toString(),
         account,
         signature?.deadline,
         false,
@@ -76,17 +78,21 @@ export function useRemoveLiquidity(
         signature?.s,
       ]
 
+  console.log(11111, args)
+
   const enabled =
     !networkMismatch && !!isConnected && bnum(lpAmountOut).gt(0) && !!signature
 
   const { config } = usePrepareContractWrite({
     address: dexProtocolAddress,
-    abi: PancakeRouterAbi as any as NonPayableAbi[],
+    abi: PancakeRouterAbi as any,
     args,
     chainId,
     functionName,
     enabled,
-    ...WRITE_OPTIONS,
+    onError(err: any) {
+      console.log(Object.keys(err))
+    },
   })
 
   const { writeAsync } = useContractWrite(config)

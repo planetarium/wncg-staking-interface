@@ -1,6 +1,7 @@
 import { useAtom } from 'jotai'
 
 import { cooldownTxAtom } from 'states/tx'
+import { walletErrorHandler } from 'utils/walletErrorHandler'
 import { useCooldown } from './useCooldown'
 
 import { StyledCooldownModalPage2 } from './styled'
@@ -20,26 +21,19 @@ function CooldownModalPage2({ send }: CooldownModalPage2Props) {
   const [tx, setTx] = useAtom(cooldownTxAtom)
 
   async function cooldown() {
-    if (!_cooldown) {
-      send('FAIL')
-      return
-    }
-
     try {
+      if (!_cooldown) {
+        throw Error('No writeAsync')
+      }
+
       const txHash = await _cooldown()
-      if (!txHash) return
+      if (!txHash) throw Error('No txHash')
+
       setTx({ hash: txHash })
       send('NEXT')
     } catch (error: any) {
-      if (
-        error.code === 'ACTION_REJECTED' ||
-        error.code === 4001 ||
-        error.error === 'Rejected by user'
-      ) {
-        return
-      }
-
-      send('FAIL')
+      walletErrorHandler(error, () => send('FAIL'))
+      send('ROLLBACK')
     }
   }
 

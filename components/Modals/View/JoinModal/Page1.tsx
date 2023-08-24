@@ -5,6 +5,7 @@ import { joinTxAtom } from 'states/tx'
 import config from 'config'
 import { NATIVE_CURRENCY_ADDRESS } from 'config/constants/addresses'
 import { bnum } from 'utils/bnum'
+import { walletErrorHandler } from 'utils/walletErrorHandler'
 import { useStaking } from 'hooks'
 import { useJoinPool } from 'hooks/balancer'
 
@@ -40,14 +41,13 @@ function JoinModalPage1({
   const _join = useJoinPool(assets, joinAmounts, hasNativeAsset)
 
   async function join() {
-    if (!_join) {
-      send('FAIL')
-      return
-    }
-
     try {
+      if (!_join) {
+        throw Error('No writeAsync')
+      }
+
       const txHash = await _join()
-      if (!txHash) return
+      if (!txHash) throw Error('No txHash')
 
       setTx({
         hash: txHash,
@@ -58,16 +58,8 @@ function JoinModalPage1({
 
       send('NEXT')
     } catch (error: any) {
-      if (
-        error.code === 'ACTION_REJECTED' ||
-        error.code === 4001 ||
-        error.error === 'Rejected by user'
-      ) {
-        send('ROLLBACK')
-        return
-      }
-
-      send('FAIL')
+      walletErrorHandler(error, () => send('FAIL'))
+      send('ROLLBACK')
     }
   }
 

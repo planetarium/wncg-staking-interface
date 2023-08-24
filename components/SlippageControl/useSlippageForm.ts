@@ -68,7 +68,7 @@ export function useSlippageForm(onCloseMenu: () => void) {
         if (bnum(newSlippage).isZero()) newSlippage = null
 
         if (bnum(newSlippage).gte(MAX_SLIPPAGE)) newSlippage = null
-        if (bnum(newSlippage).lte(MIN_SLIPPAGE)) newSlippage = null
+        if (bnum(newSlippage).lt(MIN_SLIPPAGE)) newSlippage = null
 
         setSlippage(bnum(newSlippage).toFixed(2))
         onCloseMenu()

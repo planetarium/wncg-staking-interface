@@ -84,20 +84,10 @@ export function useSignature() {
           Permit,
         },
         message,
-        // value: message,
       }
 
-      const rawSig = await signTypedData({
-        // @ts-ignore
-        domain,
-        primaryType: 'Permit',
-        types: {
-          EIP712Domain,
-          Permit,
-        },
-        message,
-      })
-
+      // @ts-ignore
+      const rawSig = await signTypedData(params)
       const signature = splitSignature(rawSig)
 
       return {

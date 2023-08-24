@@ -69,7 +69,6 @@ export function useAddLiquidity(assets: Hash[], amountsIn: string[]) {
     ...data,
     enabled: !!data,
     onError(err: any) {
-      console.log(2222, Object.keys(err), err?.formattedArgs)
       if (err?.reason?.includes('TRANSFER_FROM_FAILED')) {
         setError('INSUFFICIENT_ALLOWANCE')
       }
@@ -83,6 +82,7 @@ export function useAddLiquidity(assets: Hash[], amountsIn: string[]) {
       const res = await writeAsync?.()
       return res?.hash
     } catch (error) {
+      console.log('ADD LIQUIDITY ERROR:', error)
       throw error
     }
   }

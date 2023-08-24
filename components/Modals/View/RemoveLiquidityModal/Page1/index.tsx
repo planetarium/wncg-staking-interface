@@ -4,6 +4,7 @@ import { useAtom } from 'jotai'
 import { AnimatePresence } from 'framer-motion'
 
 import { removeLiquidityTxAtom } from 'states/tx'
+import { walletErrorHandler } from 'utils/walletErrorHandler'
 import { useRemoveLiquidity } from 'hooks/pancakeswap'
 import type { UseRemoveLiquidityFormReturns } from 'hooks/pancakeswap/useRemoveLiquidityForm'
 
@@ -47,34 +48,25 @@ function RemoveLiquidityModalPage1({
   )
 
   const onClickRemoveLiquidity = useCallback(async () => {
-    if (!removeLiquidity) throw Error()
-
     try {
-      const hash = await removeLiquidity?.()
+      if (!removeLiquidity) throw Error('No writeAsync')
 
-      if (hash) {
-        setTx({
-          hash,
-          amountsOut,
-          amountsOutFiatValueSum,
-          pcntOut,
-          isNative,
-          lpAmountOut,
-        })
-      }
+      const txHash = await removeLiquidity?.()
+      if (!txHash) throw Error('No txHash')
+
+      setTx({
+        hash: txHash,
+        amountsOut,
+        amountsOutFiatValueSum,
+        pcntOut,
+        isNative,
+        lpAmountOut,
+      })
+
       send('NEXT')
     } catch (error: any) {
-      console.log(error)
-      if (
-        error.code === 'ACTION_REJECTED' ||
-        error.code === 4001 ||
-        error.error === 'Rejected by user'
-      ) {
-        send('ROLLBACK')
-        return
-      }
-
-      send('FAIL')
+      walletErrorHandler(error, () => send('FAIL'))
+      send('ROLLBACK')
     }
   }, [
     amountsOut,

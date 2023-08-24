@@ -2,6 +2,7 @@ import { useAtom } from 'jotai'
 import clsx from 'clsx'
 
 import { addLiquidityTxAtom } from 'states/tx'
+import { walletErrorHandler } from 'utils/walletErrorHandler'
 import { useStaking } from 'hooks'
 import { useAddLiquidity } from 'hooks/pancakeswap'
 
@@ -32,14 +33,13 @@ function AddLiquidityModalPage1({
   const { addLiquidity } = useAddLiquidity(assets, amountsIn)
 
   async function onClickAddLiquidity() {
-    if (!addLiquidity) {
-      send('FAIL')
-      return
-    }
-
     try {
+      if (!addLiquidity) {
+        throw Error('No writeAsync')
+      }
+
       const txHash = await addLiquidity?.()
-      if (!txHash) return
+      if (!txHash) throw Error('No txHash')
 
       setTx({
         hash: txHash,
@@ -50,16 +50,8 @@ function AddLiquidityModalPage1({
 
       send('NEXT')
     } catch (error: any) {
-      if (
-        error.code === 'ACTION_REJECTED' ||
-        error.code === 4001 ||
-        error.error === 'Rejected by user'
-      ) {
-        send('ROLLBACK')
-        return
-      }
-
-      send('FAIL')
+      walletErrorHandler(error, () => send('FAIL'))
+      send('ROLLBACK')
     }
   }
 

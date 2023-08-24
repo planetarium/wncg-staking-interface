@@ -2,6 +2,7 @@ import { useAtom } from 'jotai'
 
 import { unstakeTxAtom } from 'states/tx'
 import { bnum } from 'utils/bnum'
+import { walletErrorHandler } from 'utils/walletErrorHandler'
 import { useFiat, useStaking } from 'hooks'
 import { useUnstake } from './useUnstake'
 
@@ -39,26 +40,19 @@ export default function UnstakeModalPage2Footer({
     : lpFiatValue
 
   async function unstake() {
-    if (!_unstake) {
-      send('FAIL')
-      return
-    }
-
     try {
+      if (!_unstake) {
+        throw Error('No writeAsync')
+      }
+
       const txHash = await _unstake()
-      if (!txHash) return
+      if (!txHash) throw Error('No txHash')
+
       setTx({ hash: txHash, unstakeAmount, stakedTokenBalance })
       send('NEXT')
     } catch (error: any) {
-      if (
-        error.code === 'ACTION_REJECTED' ||
-        error.code === 4001 ||
-        error.error === 'Rejected by user'
-      ) {
-        return
-      }
-
-      send('FAIL')
+      walletErrorHandler(error, () => send('FAIL'))
+      send('ROLLBACK')
     }
   }
 

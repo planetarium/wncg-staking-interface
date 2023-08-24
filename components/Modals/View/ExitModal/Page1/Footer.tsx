@@ -3,6 +3,7 @@ import { useAtom } from 'jotai'
 
 import { exitTxAtom } from 'states/tx'
 import { LiquidityFieldType } from 'config/constants'
+import { walletErrorHandler } from 'utils/walletErrorHandler'
 import { useExitPool } from 'hooks/balancer'
 import { ExitFormFields } from 'hooks/balancer/useExitForm'
 
@@ -44,14 +45,13 @@ function ExitModalPage1Footer({
   })
 
   async function exitPool() {
-    if (!_exitPool) {
-      send('FAIL')
-      return
-    }
-
     try {
+      if (!_exitPool) {
+        throw Error('No writeAsync')
+      }
+
       const txHash = await _exitPool()
-      if (!txHash) return
+      if (!txHash) throw Error('No txHash')
 
       setTx({
         assets,
@@ -63,16 +63,8 @@ function ExitModalPage1Footer({
       })
       send('NEXT')
     } catch (error: any) {
-      if (
-        error.code === 'ACTION_REJECTED' ||
-        error.code === 4001 ||
-        error.error === 'Rejected by user'
-      ) {
-        send('ROLLBACK')
-        return
-      }
-
-      send('FAIL')
+      walletErrorHandler(error, () => send('FAIL'))
+      send('ROLLBACK')
     }
   }
 

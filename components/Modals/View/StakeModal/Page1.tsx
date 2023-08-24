@@ -2,6 +2,7 @@ import { useAtom } from 'jotai'
 
 import { stakeTxAtom } from 'states/tx'
 import { isEthereum } from 'utils/isEthereum'
+import { walletErrorHandler } from 'utils/walletErrorHandler'
 import { useChain, useFiat, useStaking } from 'hooks'
 import { useStake } from './useStake'
 
@@ -31,14 +32,13 @@ function StakeModalPage1({
   const fiatValue = toFiat(stakeAmount, lpToken?.address)
 
   async function stake() {
-    if (!_stake) {
-      send('FAIL')
-      return
-    }
-
     try {
+      if (!_stake) {
+        throw Error('No writeAsync')
+      }
+
       const txHash = await _stake()
-      if (!txHash) return
+      if (!txHash) throw Error('No writeAsync')
 
       setTx({
         hash: txHash,
@@ -48,16 +48,8 @@ function StakeModalPage1({
 
       send('NEXT')
     } catch (error: any) {
-      if (
-        error.code === 'ACTION_REJECTED' ||
-        error.code === 4001 ||
-        error.error === 'Rejected by user'
-      ) {
-        send('ROLLBACK')
-        return
-      }
-
-      send('FAIL')
+      walletErrorHandler(error, () => send('FAIL'))
+      send('ROLLBACK')
     }
   }
 
