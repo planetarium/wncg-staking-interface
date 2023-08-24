@@ -55,11 +55,7 @@
         "name": "amountTokenMin",
         "type": "uint256"
       },
-      {
-        "internalType": "uint256",
-        "name": "amountETHMin",
-        "type": "uint256"
-      },
+      { "internalType": "uint256", "name": "amountETHMin", "type": "uint256" },
       { "internalType": "address", "name": "to", "type": "address" },
       { "internalType": "uint256", "name": "deadline", "type": "uint256" }
     ],
@@ -169,11 +165,7 @@
         "name": "amountTokenMin",
         "type": "uint256"
       },
-      {
-        "internalType": "uint256",
-        "name": "amountETHMin",
-        "type": "uint256"
-      },
+      { "internalType": "uint256", "name": "amountETHMin", "type": "uint256" },
       { "internalType": "address", "name": "to", "type": "address" },
       { "internalType": "uint256", "name": "deadline", "type": "uint256" }
     ],
@@ -194,11 +186,7 @@
         "name": "amountTokenMin",
         "type": "uint256"
       },
-      {
-        "internalType": "uint256",
-        "name": "amountETHMin",
-        "type": "uint256"
-      },
+      { "internalType": "uint256", "name": "amountETHMin", "type": "uint256" },
       { "internalType": "address", "name": "to", "type": "address" },
       { "internalType": "uint256", "name": "deadline", "type": "uint256" }
     ],
@@ -218,11 +206,7 @@
         "name": "amountTokenMin",
         "type": "uint256"
       },
-      {
-        "internalType": "uint256",
-        "name": "amountETHMin",
-        "type": "uint256"
-      },
+      { "internalType": "uint256", "name": "amountETHMin", "type": "uint256" },
       { "internalType": "address", "name": "to", "type": "address" },
       { "internalType": "uint256", "name": "deadline", "type": "uint256" },
       { "internalType": "bool", "name": "approveMax", "type": "bool" },
@@ -247,11 +231,7 @@
         "name": "amountTokenMin",
         "type": "uint256"
       },
-      {
-        "internalType": "uint256",
-        "name": "amountETHMin",
-        "type": "uint256"
-      },
+      { "internalType": "uint256", "name": "amountETHMin", "type": "uint256" },
       { "internalType": "address", "name": "to", "type": "address" },
       { "internalType": "uint256", "name": "deadline", "type": "uint256" },
       { "internalType": "bool", "name": "approveMax", "type": "bool" },
@@ -304,11 +284,7 @@
   },
   {
     "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "amountOutMin",
-        "type": "uint256"
-      },
+      { "internalType": "uint256", "name": "amountOutMin", "type": "uint256" },
       { "internalType": "address[]", "name": "path", "type": "address[]" },
       { "internalType": "address", "name": "to", "type": "address" },
       { "internalType": "uint256", "name": "deadline", "type": "uint256" }
@@ -322,11 +298,7 @@
   },
   {
     "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "amountOutMin",
-        "type": "uint256"
-      },
+      { "internalType": "uint256", "name": "amountOutMin", "type": "uint256" },
       { "internalType": "address[]", "name": "path", "type": "address[]" },
       { "internalType": "address", "name": "to", "type": "address" },
       { "internalType": "uint256", "name": "deadline", "type": "uint256" }
@@ -339,11 +311,7 @@
   {
     "inputs": [
       { "internalType": "uint256", "name": "amountIn", "type": "uint256" },
-      {
-        "internalType": "uint256",
-        "name": "amountOutMin",
-        "type": "uint256"
-      },
+      { "internalType": "uint256", "name": "amountOutMin", "type": "uint256" },
       { "internalType": "address[]", "name": "path", "type": "address[]" },
       { "internalType": "address", "name": "to", "type": "address" },
       { "internalType": "uint256", "name": "deadline", "type": "uint256" }
@@ -358,11 +326,7 @@
   {
     "inputs": [
       { "internalType": "uint256", "name": "amountIn", "type": "uint256" },
-      {
-        "internalType": "uint256",
-        "name": "amountOutMin",
-        "type": "uint256"
-      },
+      { "internalType": "uint256", "name": "amountOutMin", "type": "uint256" },
       { "internalType": "address[]", "name": "path", "type": "address[]" },
       { "internalType": "address", "name": "to", "type": "address" },
       { "internalType": "uint256", "name": "deadline", "type": "uint256" }
@@ -375,11 +339,7 @@
   {
     "inputs": [
       { "internalType": "uint256", "name": "amountIn", "type": "uint256" },
-      {
-        "internalType": "uint256",
-        "name": "amountOutMin",
-        "type": "uint256"
-      },
+      { "internalType": "uint256", "name": "amountOutMin", "type": "uint256" },
       { "internalType": "address[]", "name": "path", "type": "address[]" },
       { "internalType": "address", "name": "to", "type": "address" },
       { "internalType": "uint256", "name": "deadline", "type": "uint256" }
@@ -394,11 +354,7 @@
   {
     "inputs": [
       { "internalType": "uint256", "name": "amountIn", "type": "uint256" },
-      {
-        "internalType": "uint256",
-        "name": "amountOutMin",
-        "type": "uint256"
-      },
+      { "internalType": "uint256", "name": "amountOutMin", "type": "uint256" },
       { "internalType": "address[]", "name": "path", "type": "address[]" },
       { "internalType": "address", "name": "to", "type": "address" },
       { "internalType": "uint256", "name": "deadline", "type": "uint256" }
