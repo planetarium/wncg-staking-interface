@@ -12,7 +12,7 @@ export const STAKING_ADDRESS: ChainMap<Hash> = {
   [ChainId.ETHEREUM]: '0xc53b567a70db04e928fb96d6a417971aa88fda38',
   [ChainId.GOERLI]: '0x4faf546608e61269e7d361be45990daceb4a0ff1',
   [ChainId.BSC]: '0x3874d012886c601bc413c1d487bc9033c4b82301',
-  [ChainId.BSC_TESTNET]: '0x7f8Ca7167bC2A3BEfB8c328bfED7CB2119084c61',
+  [ChainId.BSC_TESTNET]: '0x7f8ca7167bc2a3befb8c328bfed7cb2119084c61',
 }
 
 export const STAKED_TOKEN_ADDRESS: ChainMap<Hash> = {
@@ -29,6 +29,7 @@ export const WETH_ADDRESS: ChainMap<Hash> = {
   [ChainId.BSC_TESTNET]: '0xae13d989dac2f0debff460ac112a837c89baa7cd',
 }
 
+// NOTE: Check config/constants/dex
 export const WNCG_ADDRESS: ChainMap<Hash> = {
   [ChainId.ETHEREUM]: '0xf203ca1769ca8e9e8fe1da9d147db68b6c919817',
   [ChainId.GOERLI]: '0xa488533be3018a0720c4c0647f407f3b41e6cb82',

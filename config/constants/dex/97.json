@@ -3,6 +3,6 @@
   "network": "bscTestnet",
   "dexPlatform": "pancakeswap",
   "dexPlatformName": "PancakeSwap",
-  "dexPoolId": "0xb43475a1faecc6c578df69fb8703d0ac1531df48",
+  "dexPoolId": "0x02fb46e27f54624eee9264214f3de741cd9bf212",
   "dexPlatformUrl": "https://pancakeswap.finance"
 }
