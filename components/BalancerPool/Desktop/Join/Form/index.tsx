@@ -22,6 +22,10 @@ function BalancerJoinForm() {
 
   const refetch = useRefetch({
     userAllowances: true,
+    userBalances: true,
+    userData: true,
+    pool: true,
+    prices: true,
   })
 
   const joinFormReturns = useJoinForm()

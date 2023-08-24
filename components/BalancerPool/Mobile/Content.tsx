@@ -1,8 +1,7 @@
 import { wait } from 'utils/wait'
-import { useBalances, useStaking } from 'hooks'
+import { useBalances, useRefetch, useStaking } from 'hooks'
 import { useJoinModal } from 'hooks/balancer'
 import { UseJoinFormReturns } from 'hooks/balancer/useJoinForm'
-import { useFetchUserAllowances } from 'hooks/queries'
 
 import { Footer, Summary } from 'components/BalancerPool/shared'
 import Form from './Form'
@@ -15,7 +14,13 @@ export default function BalancerPoolMobileContent(
   const balanceOf = useBalances()
   const { lpToken } = useStaking()
 
-  const { refetch } = useFetchUserAllowances()
+  const refetch = useRefetch({
+    userAllowances: true,
+    userBalances: true,
+    userData: true,
+    pool: true,
+    prices: true,
+  })
 
   const {
     assets,
