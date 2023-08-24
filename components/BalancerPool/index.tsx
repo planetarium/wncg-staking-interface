@@ -1,3 +1,4 @@
+import dynamic from 'next/dynamic'
 import { useAtom } from 'jotai'
 
 import { showPoolAtom } from 'states/ui'
@@ -7,7 +8,7 @@ import Suspense from 'components/Suspense'
 import BalancerPoolDesktop from './Desktop'
 import BalancerPoolMobile from './Mobile'
 
-export default function BalancerPool() {
+function BalancerPool() {
   const { isMobile } = useResponsive()
 
   const [showPool, setShowPool] = useAtom(showPoolAtom)
@@ -30,3 +31,5 @@ export default function BalancerPool() {
     </Suspense>
   )
 }
+
+export default dynamic(() => Promise.resolve(BalancerPool), { ssr: false })

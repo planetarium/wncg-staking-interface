@@ -22,7 +22,7 @@ const RevenuePopup = dynamic(() => import('./RevenuePopup'), {
   ssr: false,
 })
 
-export default function StakeForm() {
+function StakeForm() {
   const { account, prevAccount } = useAuth()
   const allowanceOf = useAllowances()
   const { stakingAddress } = useChain()
@@ -151,3 +151,5 @@ export default function StakeForm() {
     </StyledStakeForm>
   )
 }
+
+export default dynamic(() => Promise.resolve(StakeForm), { ssr: false })

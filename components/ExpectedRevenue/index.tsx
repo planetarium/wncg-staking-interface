@@ -1,8 +1,9 @@
 import { memo } from 'react'
+import dynamic from 'next/dynamic'
 
 import { bnum } from 'utils/bnum'
 import { useFiat, useStaking } from 'hooks'
-import { useFetchStaking, useFetchUserData } from 'hooks/queries'
+import { useFetchUserData } from 'hooks/queries'
 
 import BonusRewards from './BonusRewards'
 import SingleRewards from './SingleRewards'
@@ -40,4 +41,6 @@ function ExpectedRevenue({ amount = '0' }: ExpectedRevenueProps) {
   )
 }
 
-export default memo(ExpectedRevenue)
+export default dynamic(() => Promise.resolve(memo(ExpectedRevenue)), {
+  ssr: false,
+})

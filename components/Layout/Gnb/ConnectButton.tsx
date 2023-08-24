@@ -1,4 +1,5 @@
 import { MouseEvent } from 'react'
+import dynamic from 'next/dynamic'
 
 import { ANIMATION_MAP, MOTION } from 'config/constants/motions'
 import { truncateAddress } from 'utils/truncateAddress'
@@ -6,7 +7,6 @@ import { useAuth, useConnect } from 'hooks'
 
 import { StyledGnbConnectButton } from './styled'
 import Button from 'components/Button'
-import Icon from 'components/Icon'
 import Jazzicon from 'components/Jazzicon'
 
 type GnbConnectProps = {
@@ -43,4 +43,4 @@ function GnbConnectButton({ toggle }: GnbConnectProps) {
   )
 }
 
-export default GnbConnectButton
+export default dynamic(() => Promise.resolve(GnbConnectButton), { ssr: false })

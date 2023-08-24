@@ -1,3 +1,4 @@
+import dynamic from 'next/dynamic'
 import { memo } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useAtom, useAtomValue } from 'jotai'
@@ -123,4 +124,6 @@ function StakingDashboardApr() {
   )
 }
 
-export default memo(StakingDashboardApr)
+export default dynamic(() => Promise.resolve(memo(StakingDashboardApr)), {
+  ssr: false,
+})

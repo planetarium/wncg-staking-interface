@@ -1,4 +1,5 @@
 import { MouseEvent } from 'react'
+import dynamic from 'next/dynamic'
 import { useAtom, useAtomValue } from 'jotai'
 import { AnimatePresence, motion } from 'framer-motion'
 import clsx from 'clsx'
@@ -17,7 +18,7 @@ import Lottie from 'components/Lottie'
 import Suspense from 'components/Suspense'
 import Wallet from './Wallet'
 
-export default function GnbMyStaking() {
+function GnbMyStaking() {
   const [show, setShow] = useAtom(showMyStakingAtom)
 
   const toFiat = useFiat()
@@ -98,3 +99,5 @@ export default function GnbMyStaking() {
     </StyledGnbMyStaking>
   )
 }
+
+export default dynamic(() => Promise.resolve(GnbMyStaking), { ssr: false })

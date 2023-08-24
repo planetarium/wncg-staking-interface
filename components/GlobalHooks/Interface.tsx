@@ -1,5 +1,6 @@
 import { memo } from 'react'
 import { useInterval } from 'react-use'
+import dynamic from 'next/dynamic'
 import { useSetAtom } from 'jotai'
 
 import { currentTimestampAtom } from 'states/system'
@@ -25,4 +26,6 @@ function InterfaceHook() {
   return null
 }
 
-export default memo(InterfaceHook)
+export default dynamic(() => Promise.resolve(memo(InterfaceHook)), {
+  ssr: false,
+})

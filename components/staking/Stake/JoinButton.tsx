@@ -1,4 +1,5 @@
 import type { MouseEvent } from 'react'
+import dynamic from 'next/dynamic'
 import { useAtom, useSetAtom } from 'jotai'
 import { AnimatePresence } from 'framer-motion'
 import clsx from 'clsx'
@@ -14,7 +15,7 @@ import Arrow from 'components/Arrow'
 import Button from 'components/Button'
 import JoinTooltip from './JoinTooltip'
 
-export default function MainStakeJoinButton() {
+function MainStakeJoinButton() {
   const { isConnected } = useAuth()
   const balanceOf = useBalances()
   const { isMobile } = useResponsive()
@@ -70,3 +71,7 @@ export default function MainStakeJoinButton() {
     </StyledStakeJoinButton>
   )
 }
+
+export default dynamic(() => Promise.resolve(MainStakeJoinButton), {
+  ssr: false,
+})

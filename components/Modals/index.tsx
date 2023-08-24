@@ -1,5 +1,6 @@
 import { MouseEvent, useMemo } from 'react'
 import { useKey } from 'react-use'
+import dynamic from 'next/dynamic'
 import { useAtomValue } from 'jotai'
 import { AnimatePresence } from 'framer-motion'
 
@@ -62,4 +63,4 @@ function Modals() {
   )
 }
 
-export default Modals
+export default dynamic(() => Promise.resolve(Modals), { ssr: false })

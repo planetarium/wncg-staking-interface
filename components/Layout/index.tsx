@@ -12,13 +12,16 @@ import Favicon from 'components/Favicon'
 import PancakeSwapPool from 'components/PancakeSwapPool'
 import RootFavicon from 'components/RootFavicon'
 import Suspense from 'components/Suspense'
-import Gnb from './Gnb'
 
 const Alerts = dynamic(() => import('./Alerts'), {
   ssr: false,
 })
 
 const BalancerPool = dynamic(() => import('components/BalancerPool'), {
+  ssr: false,
+})
+
+const Gnb = dynamic(() => import('./Gnb'), {
   ssr: false,
 })
 

@@ -1,3 +1,4 @@
+import dynamic from 'next/dynamic'
 import type { UseFormSetValue } from 'react-hook-form'
 import { motion } from 'framer-motion'
 
@@ -12,7 +13,7 @@ type RemoveLiquidityModalPage1TimerProps = {
   setValue: UseFormSetValue<RemoveLiquidityForm>
 }
 
-export default function RemoveLiquidityModalPage1Timer({
+function RemoveLiquidityModalPage1Timer({
   deadline,
   setValue,
 }: RemoveLiquidityModalPage1TimerProps) {
@@ -37,3 +38,7 @@ export default function RemoveLiquidityModalPage1Timer({
     </motion.p>
   )
 }
+
+export default dynamic(() => Promise.resolve(RemoveLiquidityModalPage1Timer), {
+  ssr: false,
+})

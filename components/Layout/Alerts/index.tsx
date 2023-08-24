@@ -1,3 +1,4 @@
+import dynamic from 'next/dynamic'
 import { useNetwork } from 'wagmi'
 import { AnimatePresence } from 'framer-motion'
 
@@ -6,7 +7,7 @@ import NetworkAlert from './NetworkAlert'
 
 import { StyledAlerts } from './styled'
 
-export default function Alerts() {
+function Alerts() {
   const { chainId } = useChain()
   const { chain } = useNetwork()
 
@@ -18,3 +19,5 @@ export default function Alerts() {
     </StyledAlerts>
   )
 }
+
+export default dynamic(() => Promise.resolve(Alerts), { ssr: false })

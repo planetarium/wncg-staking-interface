@@ -1,4 +1,5 @@
 import { memo } from 'react'
+import dynamic from 'next/dynamic'
 import { useAtomValue } from 'jotai'
 
 import { isHarvestableAtom } from 'states/system'
@@ -104,4 +105,6 @@ function ClaimableRewards() {
   )
 }
 
-export default memo(ClaimableRewards)
+export default dynamic(() => Promise.resolve(memo(ClaimableRewards)), {
+  ssr: false,
+})
