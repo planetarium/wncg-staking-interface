@@ -19,7 +19,7 @@ export function useBalancerSdk() {
 
   const getSdkPool = useCallback(async () => {
     if (!balancer) return null
-    console.log('hi')
+
     const pool = await balancer.pools.find(dexPoolId)
     if (pool) setSdkPool(pool)
   }, [balancer, dexPoolId])

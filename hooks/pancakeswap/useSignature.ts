@@ -87,8 +87,6 @@ export function useSignature() {
         // value: message,
       }
 
-      console.log(params)
-
       const rawSig = await signTypedData({
         // @ts-ignore
         domain,

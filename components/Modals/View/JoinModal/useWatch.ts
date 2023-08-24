@@ -32,8 +32,6 @@ export function useWatch(send: XstateSend) {
       const parsedLogs = parseTransferLogs(tx.logs)
       const joinLog = parsedLogs?.[lpToken?.address]
 
-      console.log(333, joinLog)
-
       if (joinLog) {
         const lpAmount = formatUnits(joinLog, lpToken?.decimals)
 

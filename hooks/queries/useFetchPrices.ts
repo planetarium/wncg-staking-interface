@@ -36,6 +36,9 @@ export function useFetchPrices(options: UseFetchOptions = {}) {
       useErrorBoundary: false,
       suspense,
       initialData,
+      onSuccess() {
+        console.log('💛')
+      },
     }
   )
 }

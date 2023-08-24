@@ -40,8 +40,8 @@ export function useFetchStaking(options: UseFetchOptions = {}) {
       suspense,
       useErrorBoundary: false,
       initialData,
-      onSuccess(data) {
-        console.log('💖💖💖💖 data', data.totalStaked)
+      onSuccess() {
+        console.log('💖')
       },
     }
   )

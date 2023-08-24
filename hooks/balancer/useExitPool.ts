@@ -34,8 +34,6 @@ export function useExitPool({
     bptOutPcnt,
   })
 
-  console.log(3, [dexPoolId, account, account, request?.userData])
-
   const enabled =
     !networkMismatch && exitAmounts.some((amt) => bnum(amt).gt(0)) && !!request
 

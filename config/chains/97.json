@@ -22,7 +22,7 @@
     "coingeckoId": "binancecoin",
     "decimals": 18,
     "name": "Binance Chain Native Token",
-    "symbol": "TBNB",
+    "symbol": "tBNB",
     "wrappedTokenAddress": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
   }
 }

@@ -23,6 +23,9 @@ export function useFetchUserRewards(options: UseFetchOptions = {}) {
       refetchOnWindowFocus: 'always',
       suspense,
       useErrorBoundary: false,
+      onSuccess() {
+        console.log('🖤')
+      },
     }
   )
 }

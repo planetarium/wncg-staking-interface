@@ -35,6 +35,7 @@ export default function GnbChainSelectMenu({
 
   const onSelectChain = useCallback(
     async (e: MouseEvent<HTMLButtonElement>) => {
+      closeMenu()
       const { value } = e.currentTarget
       const newChainId = Number(value) as ChainId
       const newPathname = `/wncg/${newChainId}`
