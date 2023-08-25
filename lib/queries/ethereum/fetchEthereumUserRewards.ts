@@ -8,7 +8,7 @@ import { STAKING_ADDRESS } from 'config/constants/addresses'
 
 export async function fetchEthereumUserRewards(
   chainId: ChainId,
-  account: Hash
+  account?: Hash
 ) {
   const provider = new providers.Web3Provider(
     window?.ethereum as any as providers.ExternalProvider,
@@ -22,6 +22,14 @@ export async function fetchEthereumUserRewards(
   )
 
   try {
+    // NOTE: account is missing
+    if (account == null) {
+      return {
+        earnedTokenRewards: [],
+        hasRewards: false,
+      }
+    }
+
     let _earnedBAL = null
     let _earnedWNCG = null
 
@@ -38,6 +46,8 @@ export async function fetchEthereumUserRewards(
     ]
 
     const hasRewards = earnedTokenRewards.some((r) => bnum(r).gt(0))
+
+    console.log('🖤 REWARDS')
 
     return {
       earnedTokenRewards,

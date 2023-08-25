@@ -1,4 +1,8 @@
-import { useFetchStaking, useFetchUserData } from 'hooks/queries'
+import {
+  useFetchStaking,
+  useFetchUserData,
+  useFetchUserRewards,
+} from 'hooks/queries'
 
 function ContractHook() {
   useFetchStaking({
@@ -6,6 +10,10 @@ function ContractHook() {
   })
 
   useFetchUserData({
+    refetchInterval: 30 * 1_000,
+  })
+
+  useFetchUserRewards({
     refetchInterval: 30 * 1_000,
   })
 

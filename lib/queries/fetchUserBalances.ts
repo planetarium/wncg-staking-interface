@@ -42,6 +42,8 @@ export async function fetchUserBalances(
       ]),
     ]
 
+    console.log('🩵 BALANCES')
+
     return Object.fromEntries(entries)
   } catch (error) {
     throw error

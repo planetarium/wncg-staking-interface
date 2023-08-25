@@ -1,19 +1,11 @@
-import { CHAINS } from 'config/chains'
-import { assertUnreachable } from 'utils/assertUnreachable'
-import { fetchBscStaking } from './bsc/fetchBscStaking'
-import { fetchEthereumStaking } from './ethereum/fetchEthereumStaking'
+import axios from 'lib/axios'
 
-export async function fetchStaking(
-  chainId: ChainId
-): Promise<EthereumStaking | BscStaking> {
-  const { assetPlatform } = CHAINS[chainId]
-
-  switch (assetPlatform) {
-    case 'ethereum':
-      return fetchEthereumStaking(chainId)
-    case 'binance-smart-chain':
-      return fetchBscStaking(chainId)
-    default:
-      assertUnreachable(chainId)
+export async function fetchStaking(chainId: ChainId) {
+  try {
+    const { data } = await axios.get(`/api/staking?chainId=${chainId}`)
+    console.log('💖 CONTRACT')
+    return data
+  } catch (error) {
+    throw error
   }
 }

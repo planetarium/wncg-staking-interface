@@ -6,7 +6,7 @@ import { ChainId, defaultChainId } from 'config/chains'
 import { QUERY_KEYS } from 'config/constants/queryKeys'
 import { getQueryString } from 'utils/getQueryString'
 import { fetchPoolSnapshot } from 'lib/queries/fetchPoolSnapshot'
-import { fetchProject } from './queries/fetchProject'
+import { fetchStaking } from './queries/fetchStaking'
 import { fetchPrices } from './queries/fetchPrices'
 
 export async function getStaticProps(ctx: GetStaticPropsContext) {
@@ -15,13 +15,13 @@ export async function getStaticProps(ctx: GetStaticPropsContext) {
   const _chainId = getQueryString(ctx?.params?.chainId)
   const chainId = Math.max(Number(_chainId), defaultChainId) as ChainId
 
-  const project = await fetchProject(chainId)
+  const project = await fetchStaking(chainId)
   const prices = await fetchPrices(chainId)
 
   try {
     await queryClient.prefetchQuery(
       [QUERY_KEYS.Build, 5],
-      () => fetchProject(5),
+      () => fetchStaking(5),
       {
         staleTime: Infinity,
         cacheTime: Infinity,
@@ -30,7 +30,7 @@ export async function getStaticProps(ctx: GetStaticPropsContext) {
 
     await queryClient.prefetchQuery(
       [QUERY_KEYS.Build, 97],
-      () => fetchProject(97),
+      () => fetchStaking(97),
       {
         staleTime: Infinity,
         cacheTime: Infinity,

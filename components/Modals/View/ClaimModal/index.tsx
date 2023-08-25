@@ -1,12 +1,12 @@
 import { useRef } from 'react'
-import { useUnmount } from 'react-use'
+import { useMount, useUnmount } from 'react-use'
 import dynamic from 'next/dynamic'
 import { useMachine } from '@xstate/react'
 import { useAtomValue } from 'jotai'
 
 import { claimTxAtom } from 'states/tx'
 import { ToastType } from 'config/constants'
-import { useToast } from 'hooks'
+import { useRefetch, useToast } from 'hooks'
 import { useClaimForm } from './useClaimForm'
 import { useWatch } from './useWatch'
 import { claimMachine, pageFor } from './stateMachine'
@@ -17,6 +17,7 @@ import Page3 from './Page3'
 
 function ClaimModal() {
   const toast = useToast()
+  const refetch = useRefetch({ userRewards: true })
 
   const tx = useAtomValue(claimTxAtom)
 
@@ -43,6 +44,10 @@ function ClaimModal() {
   const currentPage = pageFor(state.value)
 
   useWatch(send)
+
+  useMount(() => {
+    refetch()
+  })
 
   useUnmount(() => {
     if (hash) {

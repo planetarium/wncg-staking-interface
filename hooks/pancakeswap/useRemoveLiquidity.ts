@@ -77,8 +77,6 @@ export function useRemoveLiquidity(
         signature?.s,
       ]
 
-  console.log(11111, args)
-
   const enabled =
     !networkMismatch && !!isConnected && bnum(lpAmountOut).gt(0) && !!signature
 

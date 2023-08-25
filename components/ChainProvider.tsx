@@ -1,5 +1,4 @@
 import { ChainId, defaultChainId } from 'config/chains'
-import { SetStateAction } from 'jotai'
 import { AppProps } from 'next/app'
 import {
   Dispatch,
@@ -8,7 +7,6 @@ import {
   useContext,
   useState,
 } from 'react'
-import Code from './Code'
 
 const ChainContext = createContext<{
   chainId: ChainId | null

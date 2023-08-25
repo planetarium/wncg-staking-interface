@@ -26,9 +26,10 @@ export default function SidebarRewards({ closeSidebar }: SidebarRewardsProps) {
 
   const { earnedTokenRewards = [] } = useFetchUserRewards().data ?? {}
   const earnedTokenRewardsFiatValue = earnedTokenRewards
-    .reduce((acc, amt, i) => {
-      return acc.plus(toFiat(amt, rewardTokenAddresses[i]))
-    }, bnum(0))
+    .reduce(
+      (acc, amt, i) => acc.plus(toFiat(amt, rewardTokenAddresses[i])),
+      bnum(0)
+    )
     .toString()
 
   const hasClaimableRewards = earnedTokenRewards.some((r) => bnum(r).gt(0))

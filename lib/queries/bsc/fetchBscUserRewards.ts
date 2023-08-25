@@ -5,7 +5,7 @@ import { STAKING_ADDRESS } from 'config/constants/addresses'
 import { bnum } from 'utils/bnum'
 import { formatUnits } from 'utils/formatUnits'
 
-export async function fetchBscUserRewards(chainId: ChainId, account: Hash) {
+export async function fetchBscUserRewards(chainId: ChainId, account?: Hash) {
   const provider = new providers.Web3Provider(
     window?.ethereum as any as providers.ExternalProvider,
     'any'
@@ -18,6 +18,13 @@ export async function fetchBscUserRewards(chainId: ChainId, account: Hash) {
   )
 
   try {
+    if (account == null) {
+      return {
+        earnedTokenRewards: [],
+        hasRewards: false,
+      }
+    }
+
     let _earnedTokenRewards = null
 
     const currentNetwork = await provider.getNetwork()
@@ -29,6 +36,8 @@ export async function fetchBscUserRewards(chainId: ChainId, account: Hash) {
     const earnedTokenRewards = [formatUnits(_earnedTokenRewards)]
 
     const hasRewards = earnedTokenRewards.some((r) => bnum(r).gt(0))
+
+    console.log('🖤 REWARDS')
 
     return {
       earnedTokenRewards,

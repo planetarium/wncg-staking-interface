@@ -54,7 +54,6 @@ export function useAddLiquidity(assets: Hash[], amountsIn: string[]) {
       enabled,
       useErrorBoundary: false,
       onError(err: any) {
-        console.log(11111, err)
         if (
           err?.code?.includes('EXPIRED') ||
           err?.reason?.includes('EXPIRED')
@@ -85,7 +84,6 @@ export function useAddLiquidity(assets: Hash[], amountsIn: string[]) {
       const res = await writeAsync?.()
       return res?.hash
     } catch (error) {
-      console.log('ADD LIQUIDITY ERROR:', error)
       throw error
     }
   }

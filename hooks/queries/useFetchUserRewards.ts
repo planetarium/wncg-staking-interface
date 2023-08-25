@@ -5,7 +5,12 @@ import { fetchUserRewards } from 'lib/queries/fetchUserRewards'
 import { useAuth, useChain } from 'hooks'
 
 export function useFetchUserRewards(options: UseFetchOptions = {}) {
-  const { enabled: _enabled = true, refetchInterval, suspense = true } = options
+  const {
+    enabled: _enabled = true,
+    refetchInterval,
+    refetchOnWindowFocus = 'always',
+    suspense = true,
+  } = options
 
   const { account, isConnected } = useAuth()
   const { chainId } = useChain()
@@ -20,12 +25,9 @@ export function useFetchUserRewards(options: UseFetchOptions = {}) {
       staleTime: Infinity,
       cacheTime: Infinity,
       refetchInterval,
-      refetchOnWindowFocus: 'always',
+      refetchOnWindowFocus,
       suspense,
       useErrorBoundary: false,
-      onSuccess() {
-        console.log('🖤 REWARDS')
-      },
     }
   )
 }

@@ -69,8 +69,6 @@ export function useAddLiquidityMath(isNative?: boolean) {
           ],
         })) as BigNumber
 
-        console.log(3333, data)
-
         const dependentAmountIn = formatUnits(
           data,
           poolTokenDecimals[1 - amountInIndex]

@@ -1,5 +1,4 @@
 export { useFetchHarvest } from './useFetchHarvest'
-export { useFetchPool } from './useFetchPool'
 export { useFetchPoolSnapshot } from './useFetchPoolSnapshot'
 export { useFetchPrices } from './useFetchPrices'
 export { useFetchStaking } from './useFetchStaking'

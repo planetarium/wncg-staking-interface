@@ -1,17 +1,19 @@
 import { useCallback } from 'react'
+
 import {
   useFetchStaking,
   useFetchUserAllowances,
   useFetchPoolSnapshot,
   useFetchUserBalances,
   useFetchUserData,
-  useFetchPool,
+  useFetchUserRewards,
 } from 'hooks/queries'
 
 export type RefetchOptions = {
-  userData?: boolean
   userAllowances?: boolean
   userBalances?: boolean
+  userData?: boolean
+  userRewards?: boolean
   staking?: boolean
   pool?: boolean
   poolSnapshot?: boolean
@@ -23,10 +25,11 @@ export function useRefetch(options: RefetchOptions = {}) {
     userData,
     userAllowances,
     userBalances,
+    userRewards,
     staking,
+    pool,
     poolSnapshot,
     prices,
-    pool,
   } = options
 
   const { refetch: refetchAllowances } = useFetchUserAllowances({
@@ -45,36 +48,37 @@ export function useRefetch(options: RefetchOptions = {}) {
     suspense: false,
   })
 
+  const { refetch: refetchUserRewards } = useFetchUserRewards({
+    suspense: false,
+  })
+
   const { refetch: refetchPoolSnapshot } = useFetchPoolSnapshot({
     suspense: false,
   })
 
-  const { refetch: refetchPool } = useFetchPool({
-    suspense: false,
-  })
-
   const refetch = useCallback(async () => {
-    if (userBalances) refetchBalances()
-    if (userAllowances) refetchAllowances()
-    if (staking) refetchStaking()
-    if (userData) refetchUserData()
     if (poolSnapshot) refetchPoolSnapshot()
     if (prices) refetchPoolSnapshot()
-    if (pool) refetchPool()
+    if (staking || pool) refetchStaking()
+    if (userAllowances) refetchAllowances()
+    if (userBalances) refetchBalances()
+    if (userData) refetchUserData()
+    if (userRewards) refetchUserRewards()
   }, [
-    userAllowances,
-    userBalances,
     pool,
     poolSnapshot,
     prices,
     refetchAllowances,
     refetchBalances,
-    refetchPool,
     refetchPoolSnapshot,
     refetchStaking,
     refetchUserData,
+    refetchUserRewards,
     staking,
+    userAllowances,
+    userBalances,
     userData,
+    userRewards,
   ])
 
   return refetch

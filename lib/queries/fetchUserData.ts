@@ -55,6 +55,8 @@ export async function fetchUserData(chainId: ChainId, account: Hash | null) {
     const withdrawEndsAt =
       currentTimestamp > _withdrawEndsAt ? 0 : _withdrawEndsAt
 
+    console.log('💜 USER STATUS')
+
     return {
       cooldownEndsAt,
       cooldowns,

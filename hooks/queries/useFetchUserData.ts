@@ -34,7 +34,6 @@ export function useFetchUserData(options: UseFetchOptions = {}) {
       useErrorBoundary: false,
       onSuccess(data) {
         const { stakedTokenBalance, ...rest } = data
-        console.log('💜 USER STATUS')
         setUnstakeTimestamps(rest)
       },
     }

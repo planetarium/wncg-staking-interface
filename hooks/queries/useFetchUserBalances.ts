@@ -38,9 +38,6 @@ export function useFetchUserBalances(options: UseFetchOptions = {}) {
       refetchInterval,
       refetchOnWindowFocus,
       suspense,
-      onSuccess() {
-        console.log('🩵 BALANCES')
-      },
     }
   )
 }

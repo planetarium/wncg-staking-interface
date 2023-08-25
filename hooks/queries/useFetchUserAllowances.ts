@@ -46,9 +46,6 @@ export function useFetchUserAllowances(options: UseFetchOptions = {}) {
       refetchOnWindowFocus,
       suspense,
       useErrorBoundary: false,
-      onSuccess() {
-        console.log('💙 ALLOWANCES')
-      },
     }
   )
 }

@@ -1,14 +1,14 @@
 import { useRef } from 'react'
-import { useUnmount } from 'react-use'
+import { useMount, useUnmount } from 'react-use'
 import { useMachine } from '@xstate/react'
 import dynamic from 'next/dynamic'
 import { useAtomValue } from 'jotai'
 
 import { unstakeTxAtom } from 'states/tx'
 import { ToastType } from 'config/constants'
+import { useRefetch } from 'hooks'
 import { useToast } from 'hooks/useToast'
 import { pageFor, unstakeMachine } from './stateMachine'
-
 import { useUnstakeForm } from './useUnstakeForm'
 import { useWatch } from './useWatch'
 
@@ -19,6 +19,10 @@ import Page4 from './Page4'
 
 function UnstakeModal() {
   const toast = useToast()
+  const refetch = useRefetch({
+    userData: true,
+    userRewards: true,
+  })
 
   const tx = useAtomValue(unstakeTxAtom)
   const useFormReturns = useUnstakeForm()
@@ -43,6 +47,10 @@ function UnstakeModal() {
   const currentPage = pageFor(state.value)
 
   useWatch(send)
+
+  useMount(() => {
+    refetch()
+  })
 
   useUnmount(() => {
     if (tx.hash) {

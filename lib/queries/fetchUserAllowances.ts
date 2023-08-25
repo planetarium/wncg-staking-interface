@@ -31,6 +31,8 @@ export async function fetchUserAllowances(
       { [spender]: formatUnits(data[i].toString(), t.decimals) },
     ])
 
+    console.log('💙 ALLOWANCES')
+
     return Object.fromEntries(entries)
   } catch (error) {
     throw error

@@ -8,6 +8,7 @@ import { useAuth, useChain, useResponsive } from 'hooks'
 
 import { StyledGnb } from './styled'
 import Image from 'components/Image'
+import Skeleton from 'components/Skeleton'
 import Suspense from 'components/Suspense'
 import ChainSelect from './ChainSelect'
 import MenuButton from './MenuButton'
@@ -79,7 +80,7 @@ export default function MainGnb() {
         </h1>
 
         {showStaking && (
-          <Suspense>
+          <Suspense fallback={<Skeleton $width={110} $height={48} $ml={16} />}>
             <MyStaking />
           </Suspense>
         )}
