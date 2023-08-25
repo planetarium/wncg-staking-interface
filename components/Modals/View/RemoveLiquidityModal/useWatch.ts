@@ -8,6 +8,7 @@ import { parseLog } from 'utils/parseLog'
 import { useClientMount, useChain, useRefetch, useStaking } from 'hooks'
 
 export const actualAmountsOutAtom = atom(['0', '0'])
+export const removeLiquidityErrorAtom = atom<any>(null)
 
 export function useWatch(send: XstateSend) {
   const { chainId } = useChain()

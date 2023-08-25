@@ -1,12 +1,13 @@
 import { useCallback } from 'react'
 import dynamic from 'next/dynamic'
-import { useAtom } from 'jotai'
+import { useAtom, useSetAtom } from 'jotai'
 import { AnimatePresence } from 'framer-motion'
 
 import { removeLiquidityTxAtom } from 'states/tx'
 import { walletErrorHandler } from 'utils/walletErrorHandler'
 import { useRemoveLiquidity } from 'hooks/pancakeswap'
 import type { UseRemoveLiquidityFormReturns } from 'hooks/pancakeswap/useRemoveLiquidityForm'
+import { removeLiquidityErrorAtom } from '../useWatch'
 
 import { StyledRemoveLiquidityModalPage1 } from './styled'
 import { Checkout, CloseButton, PendingNotice } from 'components/Modals/shared'
@@ -28,6 +29,7 @@ function RemoveLiquidityModalPage1({
   ...props
 }: RemoveLiquidityModalPage1Props) {
   const [tx, setTx] = useAtom(removeLiquidityTxAtom)
+  const setError = useSetAtom(removeLiquidityErrorAtom)
 
   const {
     amountsOut,
@@ -40,7 +42,7 @@ function RemoveLiquidityModalPage1({
     setValue,
   } = props
 
-  const removeLiquidity = useRemoveLiquidity(
+  const { removeLiquidity, error } = useRemoveLiquidity(
     amountsOut,
     lpAmountOut,
     isNative,
@@ -49,7 +51,9 @@ function RemoveLiquidityModalPage1({
 
   const onClickRemoveLiquidity = useCallback(async () => {
     try {
-      if (!removeLiquidity) throw Error('No writeAsync')
+      if (error) {
+        throw Error(error)
+      }
 
       const txHash = await removeLiquidity?.()
       if (!txHash) throw Error('No txHash')
@@ -65,17 +69,22 @@ function RemoveLiquidityModalPage1({
 
       send('NEXT')
     } catch (error: any) {
-      walletErrorHandler(error, () => send('FAIL'))
+      walletErrorHandler(error, () => {
+        setError(error)
+        send('FAIL')
+      })
       send('ROLLBACK')
     }
   }, [
     amountsOut,
     amountsOutFiatValueSum,
+    error,
     isNative,
     lpAmountOut,
     pcntOut,
     removeLiquidity,
     send,
+    setError,
     setTx,
   ])
 

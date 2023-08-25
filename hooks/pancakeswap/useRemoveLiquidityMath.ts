@@ -1,29 +1,65 @@
 import { useCallback, useMemo } from 'react'
-import { bnum } from 'utils/bnum'
+import { CurrencyAmount } from '@pancakeswap/sdk'
 
+import { formatUnits } from 'utils/formatUnits'
+import { parseUnits } from 'utils/parseUnits'
+import { bnum } from 'utils/bnum'
 import { useBalances, useStaking } from 'hooks'
 import { useFetchStaking } from 'hooks/queries'
+import { useV2Pair } from './useV2Pair'
 
 export function useRemoveLiquidityMath() {
   const balanceOf = useBalances()
-  const { lpToken, poolTokenBalances: initPoolTokenBalances } = useStaking()
+  const { lpToken: initLpToken, poolTokenDecimals } = useStaking()
+  const pair = useV2Pair()
 
-  const { poolTokenBalances = initPoolTokenBalances } =
-    useFetchStaking().data ?? {}
+  const { lpToken = initLpToken } = useFetchStaking().data ?? {}
 
-  const userLpAmount = useMemo(
-    () => balanceOf(lpToken.address),
-    [balanceOf, lpToken?.address]
+  const totalLiquidity = useMemo(
+    () =>
+      CurrencyAmount.fromRawAmount(
+        pair.liquidityToken,
+        BigInt(parseUnits(lpToken.totalSupply, lpToken.decimals).toString())
+      ),
+    [lpToken.decimals, lpToken.totalSupply, pair.liquidityToken]
   )
+
+  const userLpAmount = balanceOf(lpToken.address)
 
   const calcPropAmountsOut = useCallback(
     (pcnt: number | string) => {
-      const lpAmountOut = bnum(userLpAmount).times(pcnt).div(100)
+      const propLpAmount = parseUnits(
+        bnum(userLpAmount).times(pcnt).div(100).toString(),
+        lpToken.decimals
+      ).toString()
 
-      const share = lpAmountOut.div(lpToken?.totalSupply)
-      return poolTokenBalances.map((amt) => share.times(amt).toFixed(18, 3))
+      const lpAmountOut = CurrencyAmount.fromRawAmount(
+        pair.liquidityToken,
+        propLpAmount
+      )
+
+      return [
+        CurrencyAmount.fromRawAmount(
+          pair.token0,
+          pair.getLiquidityValue(
+            pair.token0,
+            totalLiquidity,
+            lpAmountOut,
+            false
+          ).quotient
+        ).quotient,
+        CurrencyAmount.fromRawAmount(
+          pair.token1,
+          pair.getLiquidityValue(
+            pair.token1,
+            totalLiquidity,
+            lpAmountOut,
+            false
+          ).quotient
+        ).quotient,
+      ].map((amt, i) => formatUnits(amt.toString(), poolTokenDecimals[i]))
     },
-    [userLpAmount, lpToken?.totalSupply, poolTokenBalances]
+    [lpToken.decimals, pair, poolTokenDecimals, totalLiquidity, userLpAmount]
   )
 
   return calcPropAmountsOut

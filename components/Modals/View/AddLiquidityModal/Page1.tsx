@@ -1,10 +1,11 @@
-import { useAtom } from 'jotai'
+import { useAtom, useSetAtom } from 'jotai'
 import clsx from 'clsx'
 
 import { addLiquidityTxAtom } from 'states/tx'
 import { walletErrorHandler } from 'utils/walletErrorHandler'
 import { useStaking } from 'hooks'
 import { useAddLiquidity } from 'hooks/pancakeswap'
+import { addLiquidityErrorAtom } from './useWatch'
 
 import { StyledAddLiquidityModalPage1 } from './styled'
 import { CloseButton, PendingNotice } from 'components/Modals/shared'
@@ -29,11 +30,16 @@ function AddLiquidityModalPage1({
   const { shouldReversePoolTokenOrderOnDisplay, tokens } = useStaking()
 
   const [tx, setTx] = useAtom(addLiquidityTxAtom)
+  const setError = useSetAtom(addLiquidityErrorAtom)
 
-  const { addLiquidity } = useAddLiquidity(assets, amountsIn)
+  const { addLiquidity, error } = useAddLiquidity(assets, amountsIn)
 
   async function onClickAddLiquidity() {
     try {
+      if (error === 'INSUFFICIENT_ALLOWANCE') {
+        throw Error('INSUFFICIENT_ALLOWANCE')
+      }
+
       if (!addLiquidity) {
         throw Error('No writeAsync')
       }
@@ -50,7 +56,10 @@ function AddLiquidityModalPage1({
 
       send('NEXT')
     } catch (error: any) {
-      walletErrorHandler(error, () => send('FAIL'))
+      walletErrorHandler(error, () => {
+        setError(error)
+        send('FAIL')
+      })
       send('ROLLBACK')
     }
   }

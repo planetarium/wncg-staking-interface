@@ -4,7 +4,6 @@ import { useAtomValue } from 'jotai'
 
 import { slippageAtom } from 'states/system'
 import { PancakeRouterAbi } from 'config/abi'
-import { WRITE_OPTIONS } from 'config/misc'
 import { bnum } from 'utils/bnum'
 import { calcSlippageAmount } from 'utils/calcSlippageAmount'
 import { parseUnits } from 'utils/parseUnits'
@@ -91,7 +90,12 @@ export function useRemoveLiquidity(
     functionName,
     enabled,
     onError(err: any) {
-      console.log(Object.keys(err))
+      if (
+        err?.reason?.includes('INSUFFICIENT_') ||
+        err?.shortMessage?.includes('INSUFFICIENT_')
+      ) {
+        setError('SLIPPAGE')
+      }
     },
   })
 
@@ -106,5 +110,8 @@ export function useRemoveLiquidity(
     }
   }, [writeAsync])
 
-  return writeAsync ? removeLiquidity : undefined
+  return {
+    removeLiquidity,
+    error,
+  }
 }

@@ -69,7 +69,10 @@ export function useAddLiquidity(assets: Hash[], amountsIn: string[]) {
     ...data,
     enabled: !!data,
     onError(err: any) {
-      if (err?.reason?.includes('TRANSFER_FROM_FAILED')) {
+      if (
+        err?.reason?.includes('TRANSFER_FROM_FAILED') ||
+        err?.shortMessage?.includes('TRANSFER_FROM_FAILED')
+      ) {
         setError('INSUFFICIENT_ALLOWANCE')
       }
     },

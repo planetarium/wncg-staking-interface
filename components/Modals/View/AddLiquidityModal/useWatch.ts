@@ -8,6 +8,7 @@ import { parseTransferLogs } from 'utils/parseTransferLogs'
 import { formatUnits } from 'utils/formatUnits'
 
 export const receivedLpAmountAtom = atom('')
+export const addLiquidityErrorAtom = atom<any>(null)
 
 export function useWatch(send: XstateSend) {
   const { chainId } = useChain()
