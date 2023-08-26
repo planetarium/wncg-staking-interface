@@ -46,9 +46,8 @@ function JoinModal({
   useWatch(send)
 
   useUnmount(() => {
-    resetForm()
-
     if (hash) {
+      resetForm()
       toast<Required<JoinTx>>({
         type: ToastType.Join,
         props: {

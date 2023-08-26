@@ -19,6 +19,7 @@ export default function PoolMobileForm(props: PoolMobileFormProps) {
   const {
     assets,
     formState,
+    isNative,
     joinAmounts,
     maxBalances,
     setValue,
@@ -75,6 +76,7 @@ export default function PoolMobileForm(props: PoolMobileFormProps) {
 
         <ProportionalGuideBanner
           joinAmounts={joinAmounts}
+          isNative={isNative}
           assets={assets}
           maxBalances={maxBalances}
           formState={formState}

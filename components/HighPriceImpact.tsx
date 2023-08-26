@@ -6,13 +6,14 @@ import {
   REKT_PRICE_IMPACT,
 } from 'config/constants/liquidityPool'
 import { ANIMATION_MAP } from 'config/constants/motions'
+import { bnum } from 'utils/bnum'
 
 import { StyledHighPriceImpact } from './styled'
 import Checkbox from 'components/Checkbox'
 
 type HighPriceImpactProps = {
   checked: boolean
-  priceImpact: number
+  priceImpact: string
   toggle(value: boolean): void
   className?: string
   disabled?: boolean
@@ -27,8 +28,8 @@ function HighPriceImpact({
 }: HighPriceImpactProps) {
   const show =
     !disabled &&
-    priceImpact >= HIGH_PRICE_IMPACT &&
-    priceImpact < REKT_PRICE_IMPACT
+    bnum(priceImpact).gte(HIGH_PRICE_IMPACT) &&
+    bnum(priceImpact).lt(REKT_PRICE_IMPACT)
 
   return (
     <AnimatePresence>

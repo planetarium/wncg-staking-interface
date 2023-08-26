@@ -56,7 +56,7 @@ function MyApp({ Component, pageProps }: MyAppProps) {
 
   useEffect(() => {
     if (router.isReady) {
-      console.log('autoconnect')
+      console.log('🫡🫡🫡 AUTO-CONNECTED 🫡🫡🫡')
       wagmiClient.autoConnect()
     }
   }, [router.isReady])

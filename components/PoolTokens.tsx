@@ -1,7 +1,6 @@
 import Link from 'next/link'
 import clsx from 'clsx'
 
-import config from 'config'
 import { dexPoolUrlFor } from 'utils/dexPoolUrlFor'
 import { useChain, usePropAmounts, useStaking } from 'hooks'
 
@@ -39,7 +38,7 @@ function PoolTokens({ lpBalance, className }: PoolTokensProps) {
         })}
       >
         {poolTokens.map((token, i) => {
-          const { address, symbol } = token
+          const { address, symbol, decimals } = token
           const amount = propAmounts[i]
           const fiatValue = propAmountsInFiatValue[i]
 
@@ -52,7 +51,11 @@ function PoolTokens({ lpBalance, className }: PoolTokensProps) {
               </dt>
 
               <dd>
-                <NumberFormat className="tokenAmount" value={amount} />
+                <NumberFormat
+                  className="tokenAmount"
+                  value={amount}
+                  maxDecimals={decimals === 8 ? 6 : undefined}
+                />
                 <NumberFormat
                   className="fiatValue"
                   value={fiatValue}

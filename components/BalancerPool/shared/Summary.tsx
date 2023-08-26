@@ -17,7 +17,7 @@ import NumberFormat from 'components/NumberFormat'
 import RektPriceImpact from 'components/RektPriceImpact'
 
 type JoinFormSummaryProps = {
-  priceImpact: number
+  priceImpact: string
   totalJoinFiatValue: string
   setValue: UseFormSetValue<JoinPoolForm>
   formState: UseFormStateReturn<JoinPoolForm>
@@ -34,8 +34,8 @@ function JoinFormSummary({
   disabled = false,
 }: JoinFormSummaryProps) {
   const { isConnected } = useAuth()
-  const priceImpactInPcnt = bnum(priceImpact * 100).toFixed(4)
-  const alert = priceImpact >= REKT_PRICE_IMPACT
+  const priceImpactInPcnt = bnum(priceImpact).times(100).toFixed(4)
+  const alert = bnum(priceImpact).gte(REKT_PRICE_IMPACT)
 
   const priceImpactAgreement = watch(LiquidityFieldType.HighPriceImpact)
 

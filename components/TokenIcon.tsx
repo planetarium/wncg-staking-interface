@@ -50,7 +50,7 @@ function TokenFragment({ address, $size = 24, $dark }: TokenIconProps) {
           <Image
             className="mainToken"
             priority
-            src="./images/icon.png"
+            src="/icon.png"
             alt={token.symbol}
           />
         )

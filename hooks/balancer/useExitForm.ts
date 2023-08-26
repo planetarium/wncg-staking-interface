@@ -44,7 +44,7 @@ export type UseExitFormReturns = {
   singleExitMaxed: boolean
   singleExitTokenOutIndex: number
   singleExitMaxAmounts: string[]
-  priceImpact: number
+  priceImpact: string
   formState: UseFormStateReturn<ExitFormFields>
   resetField: UseFormResetField<ExitFormFields>
   resetFields(): void
@@ -166,7 +166,7 @@ export function useExitForm(): UseExitFormReturns {
         tokenOutIndex: singleExitTokenOutIndex,
         tokenOutAmount,
         bptOutPcnt,
-      }),
+      }).toString(),
     [
       bptOutPcnt,
       calcPriceImpact,
@@ -211,8 +211,8 @@ export function useExitForm(): UseExitFormReturns {
     () =>
       (!isPropExit && exitAmounts.every((a) => bnum(a).isZero())) ||
       Object.values(formState.errors).length > 0 ||
-      priceImpact >= REKT_PRICE_IMPACT ||
-      (priceImpact >= HIGH_PRICE_IMPACT && !priceImpactAgreement),
+      bnum(priceImpact).gt(REKT_PRICE_IMPACT) ||
+      (bnum(priceImpact).gt(HIGH_PRICE_IMPACT) && !priceImpactAgreement),
     [exitAmounts, formState, isPropExit, priceImpact, priceImpactAgreement]
   )
 

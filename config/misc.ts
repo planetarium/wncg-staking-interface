@@ -26,3 +26,5 @@ export const WRITE_OPTIONS = {
   maxPriorityFeePerGas: BigInt(10000000000),
   gas: BigInt(210000),
 }
+
+export const MIN_TRANSFER_BUFFER = 0.05

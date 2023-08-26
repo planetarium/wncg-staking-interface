@@ -12,10 +12,11 @@ import { StyledExitModalPage1Step3 } from './styled'
 import HighPriceImpact from 'components/HighPriceImpact'
 import NumberFormat from 'components/NumberFormat'
 import RektPriceImpact from 'components/RektPriceImpact'
+import { bnum } from 'utils/bnum'
 
 type ExitModalPage1Step3Props = {
   hash?: Hash
-  priceImpact: number
+  priceImpact: string
   setValue: UseFormSetValue<ExitFormFields>
   watch: UseFormWatch<ExitFormFields>
   formState: UseFormStateReturn<ExitFormFields>
@@ -28,14 +29,14 @@ function ExitModalPage1Step3({
   watch,
   formState,
 }: ExitModalPage1Step3Props) {
-  const priceImpactPcnt = (priceImpact * 100).toFixed(2)
+  const priceImpactPcnt = bnum(priceImpact).times(100).toFixed(2)
   const priceImpactAgreement = watch('priceImpactAgreement') ?? false
 
   function toggle() {
     setValue('priceImpactAgreement', !priceImpactAgreement)
   }
 
-  const showAler = priceImpact > HIGH_PRICE_IMPACT
+  const showAler = bnum(priceImpact).gt(HIGH_PRICE_IMPACT)
   const hasError = Object.keys(formState.errors).length > 0
 
   return (

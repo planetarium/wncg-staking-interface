@@ -7,8 +7,9 @@ import {
   NATIVE_CURRENCY_ADDRESS,
   ZERO_ADDRESS,
 } from 'config/constants/addresses'
-import { bnum } from 'utils/bnum'
-import { useBalancerSdk, useChain, useStaking } from 'hooks'
+import { calcSlippageBsp } from 'utils/calcSlippageBsp'
+import { useChain, useStaking } from 'hooks'
+import { useBalancerSdk } from './useBalancerSdk'
 import { useExitMath } from './useExitMath'
 
 type UseExitPoolRequestParams = {
@@ -31,13 +32,13 @@ export function useExitBuildRequest({
   const [exitPoolRequest, setExitPoolRequest] =
     useState<ExitExactBPTInAttributes | null>(null)
 
-  const sdkPool = useBalancerSdk()
+  const { sdkPool } = useBalancerSdk()
   const { nativeCurrency } = useChain()
   const { calcBptIn } = useExitMath()
   const { poolTokenAddresses } = useStaking()
 
   const slippage = useAtomValue(slippageAtom) ?? '0.5'
-  const slippageBsp = bnum(slippage).times(10000).toString()
+  const slippageBsp = calcSlippageBsp(slippage)
 
   const isPropExit = exitType === null
 

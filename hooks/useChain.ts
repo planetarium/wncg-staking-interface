@@ -19,7 +19,6 @@ export function useChain() {
     () => chainId !== currentChain?.id,
     [chainId, currentChain?.id]
   )
-
   const chain = CHAINS[chainId ?? defaultChainId]
   const dex = DEX[chainId ?? defaultChainId]
   const stakingAddress = STAKING_ADDRESS[chainId ?? defaultChainId]
@@ -30,6 +29,7 @@ export function useChain() {
   return {
     ...chain,
     ...dex,
+    chain,
     currentChain,
     setChainId,
     balAddress,

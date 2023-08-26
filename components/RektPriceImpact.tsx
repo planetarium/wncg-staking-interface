@@ -3,6 +3,7 @@ import clsx from 'clsx'
 
 import { REKT_PRICE_IMPACT } from 'config/constants/liquidityPool'
 import { ANIMATION_MAP } from 'config/constants/motions'
+import { bnum } from 'utils/bnum'
 import { isEthereum } from 'utils/isEthereum'
 import { useChain, useResponsive } from 'hooks'
 
@@ -11,7 +12,7 @@ import Icon from 'components/Icon'
 
 type RektPriceImpactProps = {
   action: 'join' | 'exit'
-  priceImpact: number
+  priceImpact: string
   className?: string
   disabled?: boolean
 }
@@ -26,7 +27,7 @@ function RektPriceImpact({
   const { isHandheld } = useResponsive()
 
   const show =
-    isEthereum(chainId) && !disabled && priceImpact >= REKT_PRICE_IMPACT
+    isEthereum(chainId) && !disabled && bnum(priceImpact).gte(REKT_PRICE_IMPACT)
 
   const message =
     action === 'join'

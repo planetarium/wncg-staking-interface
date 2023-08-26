@@ -14,6 +14,7 @@ import NumberFormat from 'components/NumberFormat'
 
 type JoinFormProportionalGuideBannerProps = {
   joinAmounts: string[]
+  isNative: boolean
   assets: Hash[]
   maxBalances: string[]
   formState: UseFormStateReturn<JoinPoolForm>
@@ -22,42 +23,46 @@ type JoinFormProportionalGuideBannerProps = {
 
 function JoinFormProportionalGuideBanner({
   joinAmounts,
+  isNative,
   assets,
   maxBalances,
   formState,
   setValue,
 }: JoinFormProportionalGuideBannerProps) {
-  const { tokens } = useStaking()
-  const { calcPropAmount } = useJoinMath()
+  const { poolTokens, tokens } = useStaking()
+  const { calcPropAmountsIn } = useJoinMath(isNative)
 
-  const singleSidedFieldIndex = joinAmounts.findIndex((amount, i) => {
-    return bnum(amount).gt(0) && bnum(joinAmounts[1 - i]).isZero()
+  const fixedTokenIndex = joinAmounts.findIndex((amt, i) => {
+    return bnum(amt).gt(0) && bnum(joinAmounts[1 - i]).isZero()
   })
-  const hasSingleSidedField = singleSidedFieldIndex > -1
+  const variantTokenIndex = 1 - fixedTokenIndex
 
-  const propAmount = hasSingleSidedField
-    ? calcPropAmount(joinAmounts[singleSidedFieldIndex], singleSidedFieldIndex)
-    : '0'
+  const hasSingleFixedField = fixedTokenIndex > -1
+  const fixedToken = poolTokens[fixedTokenIndex]
 
-  const selectedTokenAddress = assets[singleSidedFieldIndex]
+  const propAmountsIn = hasSingleFixedField
+    ? calcPropAmountsIn(joinAmounts[fixedTokenIndex], fixedToken)
+    : ['0', '0']
+
+  const selectedTokenAddress = assets[fixedTokenIndex]
   const selectedToken = tokens[selectedTokenAddress] ?? {}
-  const subjectTokenAddress = assets[1 - singleSidedFieldIndex]
-  const subjectToken = tokens[subjectTokenAddress] ?? {}
+  const variantTokenAddress = assets[variantTokenIndex]
+  const variantToken = tokens[variantTokenAddress] ?? {}
 
   function handleAdd() {
-    const fieldType =
-      singleSidedFieldIndex === 0
-        ? LiquidityFieldType.TokenB
-        : LiquidityFieldType.TokenA
-
-    setValue(fieldType, propAmount)
+    propAmountsIn.forEach((amt, i) => {
+      setValue(
+        i === 0 ? LiquidityFieldType.TokenA : LiquidityFieldType.TokenB,
+        amt
+      )
+    })
   }
 
   const show =
     Object.keys(formState?.errors).length === 0 &&
-    hasSingleSidedField &&
-    !bnum(propAmount).isZero() &&
-    bnum(propAmount).lte(maxBalances[1 - singleSidedFieldIndex])
+    hasSingleFixedField &&
+    propAmountsIn.every((amt) => bnum(amt).gt(0)) &&
+    propAmountsIn.every((amt, i) => bnum(amt).lte(maxBalances[i]))
 
   return (
     <AnimatePresence>
@@ -75,19 +80,20 @@ function JoinFormProportionalGuideBanner({
           <p className="desc">
             Add
             <NumberFormat
-              value={propAmount}
-              symbol={subjectToken.symbol}
+              value={propAmountsIn[variantTokenIndex]}
+              symbol={variantToken.symbol}
             />{' '}
             matching with{' '}
             <NumberFormat
-              value={joinAmounts[singleSidedFieldIndex]}
+              value={joinAmounts[fixedTokenIndex]}
               symbol={selectedToken.symbol}
             />{' '}
             for the minimal slippage.
           </p>
 
           <button className="addButton" type="button" onClick={handleAdd}>
-            Add <NumberFormat value={propAmount} /> {subjectToken.symbol}
+            Add <NumberFormat value={propAmountsIn[variantTokenIndex]} />{' '}
+            {variantToken.symbol}
           </button>
         </StyledJoinFormProportionalGuideBanner>
       )}

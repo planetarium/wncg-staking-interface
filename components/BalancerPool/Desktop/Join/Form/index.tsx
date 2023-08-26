@@ -44,6 +44,7 @@ function BalancerJoinForm() {
     submitDisabled,
     resetDisabled,
     watch,
+    isNative,
     focusedElement,
     setFocusedElement,
   } = joinFormReturns
@@ -87,15 +88,20 @@ function BalancerJoinForm() {
           optimizeDisabled={optimizeDisabled}
         />
       )}
+
       <OptimizedBanner optimized={optimized} focusedElement={focusedElement} />
+
       <ProportionalGuideBanner
         joinAmounts={joinAmounts}
         assets={assets}
         maxBalances={maxBalances}
+        isNative={isNative}
         formState={formState}
         setValue={setValue}
       />
+
       <Fieldset {...joinFormReturns} />
+
       <Summary
         priceImpact={priceImpact}
         totalJoinFiatValue={totalJoinFiatValue}
