@@ -1,11 +1,8 @@
 import { useAtomValue } from 'jotai'
-import { useTransaction } from 'wagmi'
 import clsx from 'clsx'
 
 import { bnum } from 'utils/bnum'
-import { formatUnits } from 'utils/formatUnits'
-import { parseTransferLogs } from 'utils/parseTransferLogs'
-import { useFiat, useModal, useStaking, useViemClient } from 'hooks'
+import { useFiat, useModal, useStaking } from 'hooks'
 import { claimedAmountsAtom } from './useWatch'
 
 import { StyledClaimModalPage2 } from './styled'
@@ -24,7 +21,6 @@ export default function ClaimModalPage2({ rewardList }: ClaimModalPage2Props) {
   const toFiat = useFiat()
   const { removeModal } = useModal()
   const { rewardTokenAddresses, tokens } = useStaking()
-  const client = useViemClient()
 
   const claimedAmounts = useAtomValue(claimedAmountsAtom)
 

@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { BalancerSDK, Network, PoolWithMethods } from '@balancer-labs/sdk'
 
 import { isEthereum } from 'utils/isEthereum'
-import { useChain } from './useChain'
+import { useChain } from '../useChain'
 
 export function useBalancerSdk() {
   const { chainId, dexPoolId, subgraph, rpcUrl } = useChain()
@@ -28,5 +28,8 @@ export function useBalancerSdk() {
     getSdkPool()
   }, [getSdkPool])
 
-  return sdkPool
+  return {
+    balancerSdk: balancer,
+    sdkPool,
+  }
 }

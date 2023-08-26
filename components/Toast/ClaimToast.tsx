@@ -13,7 +13,7 @@ import {
   useChain,
   useFiat,
   useStaking,
-  useViemClient,
+  useViemClients,
 } from 'hooks'
 import { useWatch } from './useWatch'
 
@@ -31,7 +31,7 @@ export default function ClaimToast({
   hash,
   rewardList,
 }: ClaimToastProps) {
-  const client = useViemClient()
+  const { publicClient } = useViemClients()
   const { chainId } = useChain()
   const toFiat = useFiat()
   const { rewardTokenAddresses, tokens } = useStaking()
@@ -54,7 +54,8 @@ export default function ClaimToast({
     async onSuccess(tx) {
       try {
         const { logs = [] } =
-          (await client.waitForTransactionReceipt({ hash: tx.hash })) ?? {}
+          (await publicClient.waitForTransactionReceipt({ hash: tx.hash })) ??
+          {}
 
         const parsedLogs = parseTransferLogs(logs)
         const actualClaimedRewards = rewardTokenAddresses.map(

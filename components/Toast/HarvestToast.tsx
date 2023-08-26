@@ -8,7 +8,7 @@ import { harvestTxAtom } from 'states/tx'
 import { BAL_ADDRESS } from 'config/constants/addresses'
 import { parseTransferLogs } from 'utils/parseTransferLogs'
 import { txUrlFor } from 'utils/txUrlFor'
-import { useClientMount, useChain, useViemClient } from 'hooks'
+import { useClientMount, useChain, useViemClients } from 'hooks'
 import { useWatch } from './useWatch'
 
 import { StyledToast } from './styled'
@@ -23,7 +23,7 @@ export default function HarvestToast({ hash }: HarvestToastProps) {
   const [confirmed, setConfirmed] = useState(false)
   const { balAddress, chainId } = useChain()
 
-  const client = useViemClient()
+  const { publicClient } = useViemClients()
   const bal = BAL_ADDRESS[chainId] as Hash
 
   const status = useWatch(hash)
@@ -38,7 +38,8 @@ export default function HarvestToast({ hash }: HarvestToastProps) {
     async onSuccess(tx) {
       try {
         const { logs = [] } =
-          (await client.waitForTransactionReceipt({ hash: tx.hash })) ?? {}
+          (await publicClient.waitForTransactionReceipt({ hash: tx.hash })) ??
+          {}
 
         const parsedLogs = parseTransferLogs(logs)
         const actualHarvestedAmount = parsedLogs?.[balAddress!]

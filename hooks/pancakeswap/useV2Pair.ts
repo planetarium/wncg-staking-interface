@@ -5,7 +5,7 @@ import { CurrencyAmount, Pair, Token } from '@pancakeswap/sdk'
 
 import { PancakePairAbi } from 'config/abi'
 import { parseUnits } from 'utils/parseUnits'
-import { useChain, useStaking, useViemClient } from 'hooks'
+import { useChain, useStaking, useViemClients } from 'hooks'
 
 async function fetchPairReserves(client: PublicClient, lpTokenAddress: Hash) {
   try {
@@ -24,7 +24,7 @@ async function fetchPairReserves(client: PublicClient, lpTokenAddress: Hash) {
 export function useV2Pair() {
   const { chainId } = useChain()
   const { lpToken } = useStaking()
-  const publicClient = useViemClient()
+  const { publicClient } = useViemClients()
   const {
     poolTokens,
     poolTokenBalances: initPoolTokenBalances,

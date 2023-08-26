@@ -7,7 +7,7 @@ import { ANIMATION_MAP, MOTION } from 'config/constants/motions'
 import { bnum } from 'utils/bnum'
 import { receivedLpAmountAtom } from './useWatch'
 
-import { useFiat, useModal, useStaking, useViemClient } from 'hooks'
+import { useFiat, useModal, useStaking } from 'hooks'
 
 import { StyledJoinModalPage2 } from './styled'
 import Button from 'components/Button'

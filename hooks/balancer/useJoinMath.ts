@@ -1,105 +1,109 @@
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
+import { isSameAddress } from '@balancer-labs/sdk'
 
+import { MIN_TRANSFER_BUFFER } from 'config/misc'
+import { CalcPropJoinHandler } from 'lib/balancer/calcPropJoinHandler'
+import { ExactInJoinHandler } from 'lib/balancer/joinHandler'
+import type { JoinParams } from 'lib/balancer/types'
 import { bnum } from 'utils/bnum'
-import { hasAmounts } from 'utils/hasAmounts'
-import { useCalculator, useFiat, useSlippage, useStaking } from 'hooks'
+import { useBalances, useChain, useStaking, useViemClients } from 'hooks'
+import { useBalancerSdk } from './useBalancerSdk'
 
-export function useJoinMath() {
-  const calculator = useCalculator('join')
-  const toFiat = useFiat()
-  const { poolTokenAddresses } = useStaking()
-  const { minusSlippageScaled } = useSlippage()
+export function useJoinMath(isNative: boolean) {
+  const balanceOf = useBalances()
+  const { chainId, dexPoolId, nativeCurrency } = useChain()
+  const { poolTokens, tokens } = useStaking()
+  const { balancerSdk } = useBalancerSdk()
+  const { walletClient } = useViemClients()
 
-  const calcMinBptOut = useCallback(
-    (amounts: string[]) => {
-      const minBpt =
-        calculator?.exactTokensInForBptOut(amounts).toString() || '0'
-      return minusSlippageScaled(minBpt)
-    },
-    [calculator, minusSlippageScaled]
+  const assets = useMemo(() => {
+    return poolTokens.map((t) => {
+      if (!isNative) return t.address
+      if (t.address !== nativeCurrency.wrappedTokenAddress) return t.address
+      return nativeCurrency.address
+    })
+  }, [
+    isNative,
+    nativeCurrency.address,
+    nativeCurrency.wrappedTokenAddress,
+    poolTokens,
+  ])
+
+  const maxBalances = useMemo(
+    () => assets.map((addr) => balanceOf(addr)),
+    [assets, balanceOf]
   )
 
-  const calcPriceImpact = useCallback(
-    (amounts: string[]) => {
-      if (!hasAmounts(amounts)) return 0
+  const maxSafeBalances = useMemo(
+    () =>
+      maxBalances.map((b, i) => {
+        if (!isSameAddress(assets[i], nativeCurrency.address)) {
+          return b
+        }
+
+        const safeBalance = bnum(b).minus(MIN_TRANSFER_BUFFER)
+        return safeBalance.gt(0) ? safeBalance.toString() : '0'
+      }),
+    [maxBalances, assets, nativeCurrency.address]
+  )
+
+  const calcPropJoinHandler = useMemo(() => {
+    return new CalcPropJoinHandler(
+      chainId,
+      poolTokens,
+      tokens,
+      isNative,
+      maxSafeBalances
+    )
+  }, [chainId, isNative, maxSafeBalances, poolTokens, tokens])
+
+  const optimizedAmountsIn = useMemo(
+    () => calcPropJoinHandler.propMaxAmountsIn,
+    [calcPropJoinHandler.propMaxAmountsIn]
+  )
+
+  const joinHandler = useMemo(
+    () =>
+      balancerSdk
+        ? new ExactInJoinHandler(dexPoolId, tokens, balancerSdk)
+        : null,
+    [balancerSdk, dexPoolId, tokens]
+  )
+
+  const queryJoin = useCallback(
+    async (params: JoinParams) => {
+      if (joinHandler == null) return
 
       try {
-        const fullBptOut = calculator?.exactTokensInForBptOut(amounts)
-        const impact =
-          calculator
-            ?.priceImpact(amounts, {
-              queryBpt: fullBptOut,
-            })
-            .toNumber() || 0
-        return Math.min(impact, 1)
+        return await joinHandler.queryJoin(params)
       } catch (error) {
-        return 1
+        throw error
       }
     },
-    [calculator]
+    [joinHandler]
   )
 
-  const calcPropAmount = useCallback(
-    (amount: string, fixedTokenIndex: number) => {
-      const { send } =
-        calculator?.propAmountsGiven(
-          bnum(amount).toString(),
-          fixedTokenIndex,
-          'send'
-        ) || {}
-      const propAmounts = (send ?? ['0', '0']).map((amt) =>
-        bnum(amt).toString()
-      )
+  const join = useCallback(
+    async (params: JoinParams) => {
+      if (joinHandler == null) return
 
-      return propAmounts[1 - fixedTokenIndex]
+      try {
+        const { joinRes } = await joinHandler.queryJoin(params)
+        const hash = await walletClient?.sendTransaction(joinRes)
+        return hash
+      } catch (error) {
+        throw error
+      }
     },
-    [calculator]
-  )
-
-  const calcOptimizedAmounts = useCallback(
-    (availableBalances: string[]) => {
-      const _propMinAmounts = availableBalances.map((balance, i) => {
-        return (
-          calculator?.propAmountsGiven(balance, i, 'send')?.send ?? ['0', '0']
-        ).map((amt) => bnum(amt).toString())
-      })
-
-      const length = availableBalances.length
-
-      const feasiblePropMinAmounts = _propMinAmounts.filter((amounts, i) => {
-        const counterIndexes = Array.from(Array(length).keys())
-        counterIndexes.splice(i, 1)
-
-        return counterIndexes.every((i) =>
-          bnum(amounts[i]).lte(availableBalances[i])
-        )
-      })
-
-      const propMinAmountsInFiatValue = feasiblePropMinAmounts.map(
-        (amounts) => {
-          return amounts
-            .reduce((total, amount, i) => {
-              const address = poolTokenAddresses[i]
-              if (!address) return total
-              return total.plus(toFiat(amount, address))
-            }, bnum(0))
-            .toNumber()
-        }
-      )
-
-      const minIndex = propMinAmountsInFiatValue.indexOf(
-        Math.min(...propMinAmountsInFiatValue)
-      )
-
-      return feasiblePropMinAmounts[minIndex] || ['0', '0']
-    },
-    [calculator, poolTokenAddresses, toFiat]
+    [joinHandler, walletClient]
   )
 
   return {
-    calcMinBptOut,
-    calcOptimizedAmounts,
-    calcPriceImpact,
-    calcPropAmount,
+    calcPropAmountsIn: calcPropJoinHandler.calcPropAmountsIn,
+    queryJoin,
+    optimizedAmountsIn,
+    join,
+    maxBalances,
+    maxSafeBalances,
   }
 }

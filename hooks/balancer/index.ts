@@ -1,3 +1,4 @@
+export { useBalancerSdk } from './useBalancerSdk'
 export { useExitBuildRequest } from './useExitBuildRequest'
 export { useExitForm } from './useExitForm'
 export { useExitMath } from './useExitMath'

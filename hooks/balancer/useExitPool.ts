@@ -2,9 +2,8 @@ import { useContractWrite, usePrepareContractWrite } from 'wagmi'
 
 import { BalancerVaultAbi } from 'config/abi'
 import { bnum } from 'utils/bnum'
-import { useAuth, useBalancerSdk, useChain, useSwitchNetwork } from 'hooks'
+import { useAuth, useChain, useSwitchNetwork } from 'hooks'
 import { useExitBuildRequest } from './useExitBuildRequest'
-import { useCallback, useState } from 'react'
 
 type UseExitPoolParams = {
   assets: Hash[]

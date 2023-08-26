@@ -8,7 +8,7 @@ import { approveTxAtom } from 'states/tx'
 import { txUrlFor } from 'utils/txUrlFor'
 import { isEthereum } from 'utils/isEthereum'
 import { parseLog } from 'utils/parseLog'
-import { useChain, useClientMount, useStaking, useViemClient } from 'hooks'
+import { useChain, useClientMount, useStaking, useViemClients } from 'hooks'
 import { useWatch } from './useWatch'
 
 import { StyledToast } from './styled'
@@ -30,7 +30,7 @@ export default function ApproveToast({
 }: ApproveToastProps) {
   const [pending, setPending] = useState<boolean | null>(null)
 
-  const client = useViemClient()
+  const { publicClient } = useViemClients()
   const { chainId } = useChain()
   const { lpToken, tokens } = useStaking()
 
@@ -48,7 +48,8 @@ export default function ApproveToast({
     async onSuccess(tx) {
       try {
         const { logs = [] } =
-          (await client.waitForTransactionReceipt({ hash: tx.hash })) ?? {}
+          (await publicClient.waitForTransactionReceipt({ hash: tx.hash })) ??
+          {}
 
         const approvalLog = logs
           .map((l) => parseLog(l))

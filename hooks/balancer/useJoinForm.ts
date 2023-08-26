@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import {
   Control,
   useForm,
@@ -8,15 +8,18 @@ import {
   UseFormTrigger,
   UseFormWatch,
 } from 'react-hook-form'
+import { useAtomValue } from 'jotai'
 
+import { slippageAtom } from 'states/system'
 import {
   HIGH_PRICE_IMPACT,
   REKT_PRICE_IMPACT,
 } from 'config/constants/liquidityPool'
 import { LiquidityFieldType } from 'config/constants'
 import { bnum } from 'utils/bnum'
+import { calcSlippageBsp } from 'utils/calcSlippageBsp'
 import { isEthereum } from 'utils/isEthereum'
-import { useBalances, useChain, useFiat, useStaking } from 'hooks'
+import { useAuth, useChain, useFiat, useStaking } from 'hooks'
 import { useJoinMath } from './useJoinMath'
 
 export const FIELDS: LiquidityFieldType[] = [
@@ -53,7 +56,7 @@ export type UseJoinFormReturns = {
   optimize(): void
   resetFields(): void
   setValue: UseFormSetValue<JoinPoolForm>
-  priceImpact: number
+  priceImpact: string
   trigger: UseFormTrigger<JoinPoolForm>
   watch: UseFormWatch<JoinPoolForm>
   joinAmounts: string[]
@@ -74,12 +77,15 @@ export function useJoinForm(): UseJoinFormReturns {
   )
   const [focusedElement, setFocusedElement] =
     useState<JoinPoolFormElement>(null)
+  const [priceImpact, setPriceImpact] = useState('0')
 
-  const balanceOf = useBalances()
+  const { account } = useAuth()
   const { chainId, nativeCurrency } = useChain()
   const toFiat = useFiat()
   const { poolTokenAddresses } = useStaking()
-  const { calcPriceImpact, calcOptimizedAmounts } = useJoinMath()
+
+  const slippage = useAtomValue(slippageAtom) ?? '0.5'
+  const slippageBsp = calcSlippageBsp(slippage)
 
   const { clearErrors, control, formState, reset, trigger, setValue, watch } =
     useForm<JoinPoolForm>({
@@ -108,6 +114,9 @@ export function useJoinForm(): UseJoinFormReturns {
     poolTokenAddresses,
   ])
 
+  const { maxBalances, maxSafeBalances, optimizedAmountsIn, queryJoin } =
+    useJoinMath(isNative)
+
   const unsanitizedJoinAmounts = FIELDS.map((field) =>
     watch(field as any)
   ) as string[]
@@ -128,31 +137,22 @@ export function useJoinForm(): UseJoinFormReturns {
     [joinAmountsFiatValue]
   )
 
-  const priceImpact = useMemo(
-    () => calcPriceImpact(joinAmounts),
-    [calcPriceImpact, joinAmounts]
-  )
+  const updatePriceImpact = useCallback(async () => {
+    try {
+      const res = await queryJoin({
+        assets,
+        amountsIn: joinAmounts,
+        account: account!,
+        slippageBsp,
+      })
 
-  const maxBalances = useMemo(
-    () => assets.map((a) => balanceOf(a)),
-    [assets, balanceOf]
-  )
-
-  const maxSafeBalances = useMemo(
-    () =>
-      maxBalances.map((balance, i) => {
-        const address = assets[i]
-        if (address !== nativeCurrency.address) return balance
-        const safeBalance = bnum(balance).minus(0.05)
-        return safeBalance.gt(0) ? safeBalance.toString() : '0'
-      }),
-    [maxBalances, assets, nativeCurrency.address]
-  )
-
-  const optimizedAmounts = useMemo(
-    () => calcOptimizedAmounts(maxSafeBalances),
-    [calcOptimizedAmounts, maxSafeBalances]
-  )
+      if (res) {
+        setPriceImpact(res.priceImpact)
+      }
+    } catch (error) {
+      setPriceImpact('0')
+    }
+  }, [account, assets, joinAmounts, queryJoin, slippageBsp])
 
   const optimizeDisabled = useMemo(
     () => maxBalances.some((b) => bnum(b).isZero()),
@@ -161,10 +161,12 @@ export function useJoinForm(): UseJoinFormReturns {
 
   const optimized = useMemo(() => {
     return joinAmounts.every(
-      (amount, i) => bnum(amount).eq(optimizedAmounts[i]) && bnum(amount).gt(0)
+      (amount, i) =>
+        bnum(amount).eq(optimizedAmountsIn[i]) && bnum(amount).gt(0)
     )
-  }, [joinAmounts, optimizedAmounts])
+  }, [joinAmounts, optimizedAmountsIn])
 
+  // Disabled states
   const resetDisabled = useMemo(
     () => unsanitizedJoinAmounts.every((a) => !a.trim()),
     [unsanitizedJoinAmounts]
@@ -175,8 +177,8 @@ export function useJoinForm(): UseJoinFormReturns {
       joinAmounts.every((a) => bnum(a).isZero()) ||
       Object.values(formState.errors).length > 0 ||
       (isEthereum(chainId) &&
-        (priceImpact >= REKT_PRICE_IMPACT ||
-          (priceImpact >= HIGH_PRICE_IMPACT && !priceImpactAgreement))),
+        (bnum(priceImpact).gte(REKT_PRICE_IMPACT) ||
+          (bnum(priceImpact).gte(HIGH_PRICE_IMPACT) && !priceImpactAgreement))),
     [chainId, formState, joinAmounts, priceImpact, priceImpactAgreement]
   )
 
@@ -184,11 +186,15 @@ export function useJoinForm(): UseJoinFormReturns {
     setFocusedElement('Optimize')
 
     FIELDS.forEach((field, i) => {
-      setValue(field as 'TokenA' | 'TokenB', optimizedAmounts[i])
+      setValue(field as 'TokenA' | 'TokenB', optimizedAmountsIn[i])
     })
 
     trigger()
-  }, [optimizedAmounts, setValue, trigger])
+  }, [optimizedAmountsIn, setValue, trigger])
+
+  useEffect(() => {
+    updatePriceImpact()
+  }, [updatePriceImpact])
 
   return {
     assets,
