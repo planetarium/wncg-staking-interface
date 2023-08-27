@@ -44,7 +44,10 @@ export function useExitPool({
     args: [dexPoolId, account, account, request],
     functionName: 'exitPool',
     enabled,
-    onError: switchBeforeSend,
+    onError(error) {
+      switchBeforeSend(error)
+      throw error
+    },
     ...WRITE_OPTIONS,
   })
 
