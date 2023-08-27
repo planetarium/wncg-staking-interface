@@ -1,6 +1,7 @@
 import { useContractWrite, usePrepareContractWrite } from 'wagmi'
 
 import { BalancerVaultAbi } from 'config/abi'
+import { WRITE_OPTIONS } from 'config/misc'
 import { bnum } from 'utils/bnum'
 import { useAuth, useChain, useSwitchNetwork } from 'hooks'
 import { useExitBuildRequest } from './useExitBuildRequest'
@@ -44,6 +45,7 @@ export function useExitPool({
     functionName: 'exitPool',
     enabled,
     onError: switchBeforeSend,
+    ...WRITE_OPTIONS,
   })
 
   const { writeAsync } = useContractWrite(writeConfig)

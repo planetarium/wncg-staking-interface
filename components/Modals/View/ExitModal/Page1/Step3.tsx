@@ -7,12 +7,12 @@ import clsx from 'clsx'
 
 import { HIGH_PRICE_IMPACT } from 'config/constants/liquidityPool'
 import { ExitFormFields } from 'hooks/balancer/useExitForm'
+import { bnum } from 'utils/bnum'
 
 import { StyledExitModalPage1Step3 } from './styled'
 import HighPriceImpact from 'components/HighPriceImpact'
 import NumberFormat from 'components/NumberFormat'
 import RektPriceImpact from 'components/RektPriceImpact'
-import { bnum } from 'utils/bnum'
 
 type ExitModalPage1Step3Props = {
   hash?: Hash
