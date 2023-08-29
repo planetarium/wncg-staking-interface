@@ -37,21 +37,23 @@ export type UseAddLiquidityFormReturns = {
   activeField: AddLiquidityField | null
   amountsIn: string[]
   amountsInFiatValue: string[]
-  assets: Hash[]
   amountsInFiatValueSum: string
+  assets: Hash[]
   clearErrors: UseFormClearErrors<AddLiquidityForm>
   control: Control<AddLiquidityForm>
   focusedElement: AddLiquidityFormElement
   formState: UseFormStateReturn<AddLiquidityForm>
+  independentField: 'TokenA' | 'TokenB'
   isNative: boolean
-  optimized: boolean
-  optimizeDisabled: boolean
   maxBalances: string[]
   maxSafeBalances: string[]
   optimize(): void
+  optimized: boolean
+  optimizeDisabled: boolean
   resetFields(): void
   setActiveField(field: AddLiquidityField | null): void
   setFocusedElement(value: AddLiquidityFormElement): void
+  setIndependentField(field: 'TokenA' | 'TokenB'): void
   setValue: UseFormSetValue<AddLiquidityForm>
   submitDisabled: boolean
   trigger: UseFormTrigger<AddLiquidityForm>
@@ -62,6 +64,9 @@ export function useAddLiquidityForm(): UseAddLiquidityFormReturns {
   const [focusedElement, setFocusedElement] =
     useState<AddLiquidityFormElement>(null)
   const [activeField, setActiveField] = useState<AddLiquidityField | null>(null)
+  const [independentField, setIndependentField] = useState<'TokenA' | 'TokenB'>(
+    AddLiquidityField.TokenA
+  )
 
   const { account, isConnected } = useAuth()
   const { chainId } = useChain()
@@ -166,5 +171,7 @@ export function useAddLiquidityForm(): UseAddLiquidityFormReturns {
     submitDisabled,
     trigger,
     watch,
+    independentField,
+    setIndependentField,
   }
 }

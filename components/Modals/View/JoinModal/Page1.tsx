@@ -2,7 +2,6 @@ import { useAtom } from 'jotai'
 import clsx from 'clsx'
 
 import { joinTxAtom } from 'states/tx'
-import config from 'config'
 import { NATIVE_CURRENCY_ADDRESS } from 'config/constants/addresses'
 import { bnum } from 'utils/bnum'
 import { walletErrorHandler } from 'utils/walletErrorHandler'

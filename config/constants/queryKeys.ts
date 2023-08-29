@@ -24,6 +24,7 @@ export const QUERY_KEYS = {
   Pool: {
     Data: 'pool:data',
     Snapshot: 'pool:snapshot',
+    LatestPoolStatus: 'pool:latestPoolStatus',
   },
   User: {
     Data: 'user:data',

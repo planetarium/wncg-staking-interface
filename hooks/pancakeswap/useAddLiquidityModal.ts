@@ -3,7 +3,6 @@ import { useSetAtom } from 'jotai'
 
 import { showPoolAtom } from 'states/ui'
 import { ModalType } from 'config/constants'
-import { DEX_PROTOCOL_ADDRESS } from 'config/constants/addresses'
 import { bnum } from 'utils/bnum'
 import {
   useAllowances,

@@ -14,7 +14,7 @@ import { useAddLiquidityMath } from './useAddLiquidityMath'
 export function useAddLiquidity(assets: Hash[], amountsIn: string[]) {
   const [error, setError] = useState<string | null>(null)
   const [deadline, setDeadline] = useState(
-    `0x${(now() + 20 * MINUTE).toString(16)}`
+    `0x${(now() + 5 * MINUTE).toString(16)}`
   )
 
   const { account, isConnected } = useAuth()
@@ -73,20 +73,6 @@ export function useAddLiquidity(assets: Hash[], amountsIn: string[]) {
         err?.shortMessage?.includes('TRANSFER_FROM_FAILED')
       ) {
         setError('INSUFFICIENT_ALLOWANCE')
-      }
-
-      if (
-        err?.reason?.includes('INSUFFICIENT_A_AMOUNT') ||
-        err?.shortMessage?.includes('INSUFFICIENT_A_AMOUNT')
-      ) {
-        setError('INSUFFICIENT_A_AMOUNT')
-      }
-
-      if (
-        err?.reason?.includes('INSUFFICIENT_B_AMOUNT') ||
-        err?.shortMessage?.includes('INSUFFICIENT_B_AMOUNT')
-      ) {
-        setError('INSUFFICIENT_B_AMOUNT')
       }
     },
   })

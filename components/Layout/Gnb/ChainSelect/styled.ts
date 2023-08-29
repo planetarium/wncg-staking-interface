@@ -78,7 +78,7 @@ export const StyledGnbChainSelectToggle = styled.button`
   border-radius: 4px;
   transition: 200ms;
 
-  &:disabled {
+  &.disabled {
     border: 1px solid rgba(var(--white-rgb), 0);
     background-color: rgba(var(--white-rgb), 0.1);
   }

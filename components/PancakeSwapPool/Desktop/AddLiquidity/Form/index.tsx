@@ -36,6 +36,7 @@ function AddLiquidityForm() {
     optimizeDisabled,
     resetFields,
     setFocusedElement,
+    setIndependentField,
     submitDisabled,
   } = addLiquidityReturns
 
@@ -66,6 +67,7 @@ function AddLiquidityForm() {
     resetFields()
     setFocusedElement(null)
     setActiveField(null)
+    setIndependentField('TokenA')
   })
 
   return (

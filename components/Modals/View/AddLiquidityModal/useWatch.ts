@@ -3,9 +3,9 @@ import { atom, useAtomValue, useSetAtom } from 'jotai'
 import { useWaitForTransaction } from 'wagmi'
 
 import { addLiquidityTxAtom } from 'states/tx'
-import { useChain, useClientMount, useRefetch, useStaking } from 'hooks'
-import { parseTransferLogs } from 'utils/parseTransferLogs'
 import { formatUnits } from 'utils/formatUnits'
+import { parseTransferLogs } from 'utils/parseTransferLogs'
+import { useChain, useClientMount, useRefetch, useStaking } from 'hooks'
 
 export const receivedLpAmountAtom = atom('')
 export const addLiquidityErrorAtom = atom<any>(null)

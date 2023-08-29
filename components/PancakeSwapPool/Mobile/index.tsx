@@ -31,8 +31,7 @@ function PancakeSwapPoolMobile({
   const { account, prevAccount, isConnected } = useAuth()
 
   const addLiquidityFormReturns = useAddLiquidityForm()
-  const { resetFields, setActiveField, setFocusedElement } =
-    addLiquidityFormReturns
+  const { resetFields } = addLiquidityFormReturns
 
   useEffect(() => {
     if (account !== prevAccount) {

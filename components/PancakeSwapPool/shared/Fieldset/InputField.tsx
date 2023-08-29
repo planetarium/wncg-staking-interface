@@ -6,7 +6,7 @@ import { useAuth, useChain, useFiat } from 'hooks'
 import { LiquidityFieldType } from 'config/constants'
 import { bnum } from 'utils/bnum'
 import { wait } from 'utils/wait'
-import { useAddLiquidityMath } from 'hooks/pancakeswap'
+import { useMintMath } from 'hooks/pancakeswap'
 import {
   FIELDS,
   UseAddLiquidityFormReturns,
@@ -40,6 +40,7 @@ function AddLiquidityFormInputField({
   resetFields,
   setActiveField,
   setFocusedElement,
+  setIndependentField,
   setValue,
   token,
   trigger,
@@ -49,7 +50,7 @@ function AddLiquidityFormInputField({
   const { isConnected } = useAuth()
   const { nativeCurrency } = useChain()
   const toFiat = useFiat()
-  const { calcPropAmountIn } = useAddLiquidityMath()
+  const calcPropAmountIn = useMintMath()
 
   const { address, decimals, symbol } = token
 
@@ -83,10 +84,12 @@ function AddLiquidityFormInputField({
       async onChange(event: ReactHookFormChangeEvent<LiquidityFieldType>) {
         setFocusedElement('Input')
 
-        if (activeField !== name) setActiveField(name)
+        if (activeField !== name) {
+          setActiveField(name)
+          setIndependentField(name)
+        }
 
         if (event.target.value === '') {
-          resetFields()
           return
         }
 
@@ -94,11 +97,11 @@ function AddLiquidityFormInputField({
         if (bNewAmount.isNaN()) return
 
         const subjectAmount = await calcPropAmountIn(
-          bNewAmount.toString(),
-          index
+          name,
+          bNewAmount.toString()
         )
 
-        setValue(subjectFieldName, subjectAmount!)
+        setValue(subjectFieldName, subjectAmount?.toSignificant() ?? '0')
 
         await wait(50)
         trigger(subjectFieldName)
@@ -107,12 +110,12 @@ function AddLiquidityFormInputField({
     [
       activeField,
       calcPropAmountIn,
-      index,
       maxBalance,
       name,
       resetFields,
       setActiveField,
       setFocusedElement,
+      setIndependentField,
       setValue,
       subjectFieldName,
       symbol,
@@ -123,18 +126,18 @@ function AddLiquidityFormInputField({
   const setMaxValue = useCallback(async () => {
     setActiveField(name)
 
-    const subjectAmount = await calcPropAmountIn(
-      bnum(maxSafeBalance).toString(),
-      index
-    )
+    const subjectAmount = await calcPropAmountIn(name, maxSafeBalance)
 
     setFocusedElement('Max')
     setValue(name, maxSafeBalance)
-    setValue(subjectFieldName, bnum(subjectAmount).toString()!)
+    setValue(
+      subjectFieldName,
+      bnum(subjectAmount?.toSignificant() ?? '0').toString()!
+    )
+
     trigger()
   }, [
     calcPropAmountIn,
-    index,
     maxSafeBalance,
     name,
     setActiveField,
