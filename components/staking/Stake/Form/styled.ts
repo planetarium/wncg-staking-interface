@@ -4,13 +4,7 @@ import { motion } from 'framer-motion'
 import { lgButtonStyle, mdButtonStyle } from 'components/Button/styled'
 import { mdInputStyle, smInputStyle } from 'components/Form/styled'
 
-import {
-  flexbox,
-  media,
-  scrollbar,
-  textGradient,
-  textStyle,
-} from 'styles/utils'
+import { flexbox, media, textStyle } from 'styles/utils'
 
 export const StyledStakeForm = styled(motion.form)`
   position: relative;

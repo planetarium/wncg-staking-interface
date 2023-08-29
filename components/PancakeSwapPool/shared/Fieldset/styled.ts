@@ -310,6 +310,10 @@ export const StyledAddLiquidityFormInputField = styled(motion.div)<{
 
       .parenthesis {
         margin-left: 0;
+
+        .number {
+          margin-right: 0px;
+        }
       }
     }
   }

@@ -54,7 +54,7 @@ export const StyledPancakeSwapPoolHeader = styled.header<{
 
   .tooltipGroup {
     .tooltip {
-      left: auto;
+      left: 0;
       right: 0;
       width: min-content;
       transform: none;

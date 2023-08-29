@@ -494,7 +494,7 @@ export const StyledTokenIcon = styled.span<StyledIconProps>`
   height: ${({ $size }) => $size}px;
 
   .mainToken {
-    z-index: 2;
+    z-index: 1;
   }
 
   .tokenFragment {

@@ -39,7 +39,7 @@ function PancakeSwapPoolInformation() {
           target="_blank"
           rel="noopener"
         >
-          detail
+          Detail
           <Icon icon="outlink" />
         </a>
       </header>

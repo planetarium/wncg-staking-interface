@@ -38,7 +38,7 @@ export function useStaking<T extends 'ethereum'>() {
     [chainId, queryClient]
   )
 
-  const poolTokenAddresses = project.poolTokens.map((t: any) => t.address)
+  const poolTokenAddresses = project.poolTokens?.map((t: any) => t.address)
   const poolTokenWeights = project.poolTokens.map((t: any) => t.weight)
   const poolTokenWeightsInPcnt = poolTokenWeights.map((w: string) =>
     bnum(w).times(100).toNumber()

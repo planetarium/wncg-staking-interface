@@ -101,7 +101,7 @@ export default function ImportToken({
       $contain={$contain}
     >
       <span className="label">
-        Import <strong>{labelSymbol} token</strong>
+        Add <strong>{labelSymbol}</strong> to my wallet
       </span>
 
       <span className="rightIcon">
