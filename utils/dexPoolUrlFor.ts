@@ -9,5 +9,5 @@ export function dexPoolUrlFor(chainId: ChainId) {
   // FIXME: dexPoolId (BSC) 기준 변경해야함
   return isEthereum(chainId)
     ? `${dexPlatformUrl}/#/${network}/pool/${dexPoolId}`
-    : `${dexPlatformUrl}/v2/pair/${nativeCurrency.symbol}/${dexPoolId}?chain=${chainId}`
+    : `${dexPlatformUrl}/v2/pair/${nativeCurrency.symbol}/${dexPoolId}?chain=${network}`
 }

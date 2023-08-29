@@ -30,12 +30,8 @@ export const StyledPancakeSwapPoolHeader = styled.header<{
     ${textStyle('title', 1)}
     height: 32px;
 
-    .tokenIconGroup {
+    .tokenIcon {
       margin-right: 8px;
-
-      .tokenIcon {
-        margin-left: -8px;
-      }
     }
   }
 

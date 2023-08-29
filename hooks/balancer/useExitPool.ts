@@ -48,7 +48,6 @@ export function useExitPool({
       switchBeforeSend(error)
       throw error
     },
-    ...WRITE_OPTIONS,
   })
 
   const { writeAsync } = useContractWrite(writeConfig)

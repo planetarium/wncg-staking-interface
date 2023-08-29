@@ -70,7 +70,12 @@ export function useSlippageForm(onCloseMenu: () => void) {
         if (bnum(newSlippage).gte(MAX_SLIPPAGE)) newSlippage = null
         if (bnum(newSlippage).lt(MIN_SLIPPAGE)) newSlippage = null
 
-        setSlippage(bnum(newSlippage).toFixed(2))
+        if (newSlippage) {
+          setSlippage(bnum(newSlippage).toFixed(2))
+        } else {
+          setSlippage(null)
+        }
+
         onCloseMenu()
       },
       onChange(e: ReactHookFormChangeEvent<'slippage'>) {
