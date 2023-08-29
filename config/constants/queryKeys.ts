@@ -1,5 +1,8 @@
 export const QUERY_KEYS = {
   Build: 'staking:build',
+  PancakeSwap: {
+    AddLiquidityReserves: 'staking:pancakeSwap:addLiquidityReserves',
+  },
   Harvest: 'staking:harvest',
   Liquidity: {
     AddLiquidity: {

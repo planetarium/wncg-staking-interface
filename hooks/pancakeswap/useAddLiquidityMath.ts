@@ -1,17 +1,59 @@
 import { useCallback, useMemo } from 'react'
 import { readContract } from '@wagmi/core'
 
-import { PancakeRouterAbi } from 'config/abi'
+import { PancakePairAbi, PancakeRouterAbi } from 'config/abi'
 import { BASE_GAS_FEE } from 'config/constants/liquidityPool'
 import { bnum } from 'utils/bnum'
 import { formatUnits } from 'utils/formatUnits'
 import { parseUnits } from 'utils/parseUnits'
-import { useBalances, useChain, useFiat, useStaking } from 'hooks'
+import {
+  useBalances,
+  useChain,
+  useFiat,
+  useStaking,
+  useViemClients,
+} from 'hooks'
 import { useFetchStaking } from 'hooks/queries'
+import { useQuery } from '@tanstack/react-query'
+import { QUERY_KEYS } from 'config/constants/queryKeys'
+import { createPublicClient, http } from 'viem'
+import { ChainId } from 'config/chains'
+import { bsc, bscTestnet } from 'viem/chains'
+import { DEX } from 'config/constants/dex'
+import { STAKED_TOKEN_ADDRESS } from 'config/constants/addresses'
+
+async function fetchReserves(chainId: ChainId) {
+  const publicClient = createPublicClient({
+    chain: chainId === ChainId.BSC_TESTNET ? bscTestnet : bsc,
+    transport: http(),
+  })
+
+  try {
+    const data = (await publicClient.readContract({
+      address: STAKED_TOKEN_ADDRESS[chainId],
+      abi: PancakePairAbi,
+      functionName: 'getReserves',
+    })) as BigInt[]
+
+    const [reserve0, reserve1] = data ?? []
+
+    console.log(333, 'fetchReserves', [
+      formatUnits(reserve0.toString(), 18),
+      formatUnits(reserve1.toString(), 18),
+    ])
+
+    return [
+      formatUnits(reserve0.toString(), 18),
+      formatUnits(reserve1.toString(), 18),
+    ]
+  } catch (error) {
+    throw error
+  }
+}
 
 export function useAddLiquidityMath(isNative?: boolean) {
   const balanceOf = useBalances()
-  const { dexProtocolAddress, nativeCurrency } = useChain()
+  const { chainId, dexProtocolAddress, nativeCurrency } = useChain()
   const toFiat = useFiat()
   const {
     poolTokenAddresses,
@@ -19,8 +61,18 @@ export function useAddLiquidityMath(isNative?: boolean) {
     poolTokenBalances: initPoolTokenBalances,
   } = useStaking()
 
-  const { poolTokenBalances = initPoolTokenBalances } =
-    useFetchStaking().data ?? {}
+  const { data: reserves } = useQuery(
+    [
+      QUERY_KEYS.PancakeSwap.AddLiquidityReserves,
+      ...poolTokenAddresses,
+      chainId,
+    ],
+    () => fetchReserves(chainId),
+    {
+      staleTime: 5 * 1_000,
+      initialData: initPoolTokenBalances,
+    }
+  )
 
   const assets = useMemo(() => {
     return poolTokenAddresses.map((addr) => {
@@ -59,11 +111,11 @@ export function useAddLiquidityMath(isNative?: boolean) {
           args: [
             parseUnits(amountIn, poolTokenDecimals[amountInIndex]).toString(),
             parseUnits(
-              poolTokenBalances[amountInIndex],
+              reserves?.[amountInIndex] ?? '0',
               poolTokenDecimals[amountInIndex]
             ).toString(),
             parseUnits(
-              poolTokenBalances[1 - amountInIndex],
+              reserves?.[1 - amountInIndex] ?? '0',
               poolTokenDecimals[1 - amountInIndex]
             ).toString(),
           ],
@@ -83,7 +135,7 @@ export function useAddLiquidityMath(isNative?: boolean) {
         return '0'
       }
     },
-    [dexProtocolAddress, poolTokenBalances, poolTokenDecimals]
+    [dexProtocolAddress, reserves, poolTokenDecimals]
   )
 
   const calcOptimizedAmounts = useCallback(async () => {

@@ -74,6 +74,20 @@ export function useAddLiquidity(assets: Hash[], amountsIn: string[]) {
       ) {
         setError('INSUFFICIENT_ALLOWANCE')
       }
+
+      if (
+        err?.reason?.includes('INSUFFICIENT_A_AMOUNT') ||
+        err?.shortMessage?.includes('INSUFFICIENT_A_AMOUNT')
+      ) {
+        setError('INSUFFICIENT_A_AMOUNT')
+      }
+
+      if (
+        err?.reason?.includes('INSUFFICIENT_B_AMOUNT') ||
+        err?.shortMessage?.includes('INSUFFICIENT_B_AMOUNT')
+      ) {
+        setError('INSUFFICIENT_B_AMOUNT')
+      }
     },
   })
 
