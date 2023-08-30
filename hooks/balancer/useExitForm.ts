@@ -140,13 +140,7 @@ export function useExitForm(): UseExitFormReturns {
       )
     }
     return false
-  }, [
-    exitType,
-    formState.errors,
-    priceImpact,
-    priceImpactAgreement,
-    tokenOutAmount,
-  ])
+  }, [exitType, formState, priceImpact, priceImpactAgreement, tokenOutAmount])
 
   const setMaxValue = useCallback(
     (e: MouseEvent<HTMLButtonElement>): void => {

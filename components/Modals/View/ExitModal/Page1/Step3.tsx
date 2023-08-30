@@ -77,7 +77,9 @@ function ExitModalPage1Step3({
 
   const bPriceImpact = bnum(data?.priceImpact ?? 0)
 
-  const priceImpactPcnt = bPriceImpact.times(100).toFixed(2)
+  const _priceImpactPcnt = bPriceImpact.times(100).toFixed(2)
+  const priceImpactPcnt =
+    bnum(_priceImpactPcnt).toNumber() >= 100 ? '100' : _priceImpactPcnt
   const priceImpactAgreement = watch('priceImpactAgreement') ?? false
 
   function toggle() {
@@ -93,20 +95,15 @@ function ExitModalPage1Step3({
         <span className="count">3</span>
         <h4 className="title">Check price impact</h4>
 
-        {/* {hasError ? (
-          <span className="pcnt alert">100%</span>
+        {hasError ? (
+          <span className="pcnt alert">-%</span>
         ) : (
           <NumberFormat
             className={clsx('pcnt', { alert: showAlert })}
             value={priceImpactPcnt}
             type="percent"
           />
-        )} */}
-        <NumberFormat
-          className={clsx('pcnt', { alert: showAlert })}
-          value={priceImpactPcnt}
-          type="percent"
-        />
+        )}
       </header>
 
       {!hasError && (

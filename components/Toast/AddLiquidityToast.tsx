@@ -93,9 +93,7 @@ export default function AddLiquidityToast({
                 key={`addLiquidityToast:${address}:${amt}`}
               >
                 <dt>
-                  <div className="token">
-                    <TokenIcon address={address} $size={20} />
-                  </div>
+                  <TokenIcon address={address} $size={20} />
                   {symbol}
                 </dt>
                 <dd>

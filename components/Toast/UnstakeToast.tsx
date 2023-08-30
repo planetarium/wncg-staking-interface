@@ -50,9 +50,7 @@ export default function UnstakeToast({
         <dl className="detailList">
           <div className="detailItem">
             <dt>
-              <div className="token">
-                <TokenIcon address={lpToken?.address} $size={20} />
-              </div>
+              <TokenIcon address={lpToken?.address} $size={20} />
               {lpToken?.name}
             </dt>
             <dd>

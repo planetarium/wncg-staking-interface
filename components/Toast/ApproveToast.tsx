@@ -88,9 +88,7 @@ export default function ApproveToast({
         <dl className="detailList">
           <div className="detailItem">
             <dt>
-              <div className="token">
-                <TokenIcon address={tokenAddress} $dark $size={20} />
-              </div>
+              <TokenIcon address={tokenAddress} $dark $size={20} />
               {symbol}
             </dt>
 

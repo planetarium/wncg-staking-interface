@@ -98,9 +98,7 @@ export default function ClaimToast({
             return (
               <div className="detailItem" key={`claimToast:rewards:${address}`}>
                 <dt>
-                  <div className="token">
-                    <TokenIcon address={address} $dark $size={20} />
-                  </div>
+                  <TokenIcon address={address} $dark $size={20} />
                   {symbol}
                 </dt>
 

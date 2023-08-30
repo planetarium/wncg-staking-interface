@@ -37,7 +37,6 @@ function AddLiquidityFormInputField({
   maxBalances,
   maxSafeBalances,
   name,
-  resetFields,
   setActiveField,
   setFocusedElement,
   setIndependentField,
@@ -112,7 +111,6 @@ function AddLiquidityFormInputField({
       calcPropAmountIn,
       maxBalance,
       name,
-      resetFields,
       setActiveField,
       setFocusedElement,
       setIndependentField,
@@ -178,7 +176,7 @@ function AddLiquidityFormInputField({
               trigger={trigger}
             />
             <span
-              className={clsx('misc parenthesis', {
+              className={clsx('misc', {
                 active: showMisc,
               })}
             >
@@ -190,7 +188,7 @@ function AddLiquidityFormInputField({
             {symbol}
 
             <span
-              className={clsx('misc parenthesis', {
+              className={clsx('misc', {
                 active: showMisc,
               })}
             >

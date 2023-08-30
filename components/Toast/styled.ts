@@ -147,17 +147,14 @@ export const StyledToast = styled.aside`
       }
     }
 
-    .mainToken {
-      ${flexbox('start')}
+    .tokenIcon {
       margin-right: 4px;
 
-      .tokenIcon {
-        .tokenFragment {
-          margin-left: -8px !important;
+      .tokenFragment {
+        margin-left: -8px !important;
 
-          &:first-child {
-            margin-left: 0 !important;
-          }
+        &:first-child {
+          margin-left: 0 !important;
         }
       }
     }

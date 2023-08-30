@@ -81,9 +81,8 @@ export default function RemoveLiquidityToast({
             return (
               <div className="detailItem" key={`exitToast:${addr}:${amt}`}>
                 <dt>
-                  <div className="token">
-                    <TokenIcon address={addr} $size={20} />
-                  </div>
+                  <TokenIcon address={addr} $size={20} />
+
                   {symbol}
                 </dt>
 

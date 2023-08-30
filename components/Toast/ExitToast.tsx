@@ -4,7 +4,6 @@ import { RESET } from 'jotai/utils'
 
 import { exitTxAtom } from 'states/tx'
 import { NATIVE_CURRENCY_ADDRESS } from 'config/constants/addresses'
-import { formatUnits } from 'utils/formatUnits'
 import { txUrlFor } from 'utils/txUrlFor'
 import { useClientMount, useChain, useFiat, useStaking } from 'hooks'
 import { useWatch } from './useWatch'
@@ -81,7 +80,6 @@ export default function ExitToast({
           {exitType != null && !!amountOut && (
             <div className="detailItem">
               <dt>
-                <div className="token"></div>
                 <TokenIcon address={exitType!} $size={20} />
                 {tokens[exitType!].symbol}
               </dt>
