@@ -82,7 +82,7 @@ export default function MainWncgCard() {
       <div className="content">
         <ul className="linkList">
           <li className="linkItem">
-            <Button href="/wncg" target="_blank" $contain>
+            <Button href={`/wncg/${defaultChainId}`} target="_blank" $contain>
               WNCG Staking
             </Button>
           </li>

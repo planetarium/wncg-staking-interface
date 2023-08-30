@@ -1,6 +1,6 @@
 import { fetchBalance } from '@wagmi/core'
+import { erc20ABI } from 'wagmi'
 
-import { Erc20Abi } from 'config/abi'
 import { NATIVE_CURRENCY_ADDRESS } from 'config/constants/addresses'
 import { readContractsPool } from 'lib/readContractsPool'
 import { formatUnits } from 'utils/formatUnits'
@@ -16,7 +16,7 @@ export async function fetchUserBalances(
 
   const contracts = addresses.map((addr) => ({
     address: addr,
-    abi: Erc20Abi as Abi,
+    abi: erc20ABI,
     functionName: 'balanceOf',
     chainId,
     args: [account],
@@ -42,7 +42,7 @@ export async function fetchUserBalances(
       ]),
     ]
 
-    console.log('🩵 BALANCES')
+    // console.log('🩵 BALANCES')
 
     return Object.fromEntries(entries)
   } catch (error) {

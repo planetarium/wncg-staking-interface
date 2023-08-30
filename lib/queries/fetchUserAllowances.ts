@@ -1,4 +1,5 @@
-import { Erc20Abi } from 'config/abi'
+import { erc20ABI } from 'wagmi'
+
 import { readContractsPool } from 'lib/readContractsPool'
 import { formatUnits } from 'utils/formatUnits'
 import { resolveReadContractsResult } from 'utils/resolveReadContractsResult'
@@ -12,7 +13,7 @@ export async function fetchUserAllowances(
 
   const contracts = pairs.map(([t, spender]) => ({
     address: t.address,
-    abi: Erc20Abi as Abi,
+    abi: erc20ABI,
     args: [account, spender],
     chainId,
     functionName: 'allowance',
@@ -31,7 +32,7 @@ export async function fetchUserAllowances(
       { [spender]: formatUnits(data[i].toString(), t.decimals) },
     ])
 
-    console.log('💙 ALLOWANCES')
+    // console.log('💙 ALLOWANCES')
 
     return Object.fromEntries(entries)
   } catch (error) {

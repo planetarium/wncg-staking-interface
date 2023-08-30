@@ -31,9 +31,7 @@ export const defaultChainId = process.env.NEXT_PUBLIC_DEFAULT_CHAIN_ID
   ? (Number(process.env.NEXT_PUBLIC_DEFAULT_CHAIN_ID) as ChainId)
   : ChainId.ETHEREUM
 
-export const isTestnet =
+export const SUPPORTED_CHAINS: ChainId[] =
   defaultChainId === ChainId.GOERLI || defaultChainId === ChainId.BSC_TESTNET
-
-export const SUPPORTED_CHAINS: ChainId[] = isTestnet
-  ? [ChainId.GOERLI, ChainId.BSC_TESTNET]
-  : [ChainId.ETHEREUM, ChainId.BSC]
+    ? [ChainId.GOERLI, ChainId.BSC_TESTNET]
+    : [ChainId.ETHEREUM, ChainId.BSC]

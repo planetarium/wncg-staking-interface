@@ -41,7 +41,10 @@ class ConfigService {
   }
 
   get isTestnet() {
-    return defaultChainId === ChainId.GOERLI
+    return (
+      defaultChainId === ChainId.GOERLI ||
+      defaultChainId === ChainId.BSC_TESTNET
+    )
   }
 
   get links() {

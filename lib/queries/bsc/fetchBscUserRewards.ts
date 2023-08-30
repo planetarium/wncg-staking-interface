@@ -37,7 +37,7 @@ export async function fetchBscUserRewards(chainId: ChainId, account?: Hash) {
 
     const hasRewards = earnedTokenRewards.some((r) => bnum(r).gt(0))
 
-    console.log('🖤 REWARDS')
+    // console.log('🖤 REWARDS')
 
     return {
       earnedTokenRewards,

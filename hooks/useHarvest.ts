@@ -26,6 +26,7 @@ export function useHarvest() {
     chainId,
     functionName: 'earmarkRewards',
     enabled: !networkMismatch && isEthereum(chainId) && chainId === chain?.id,
+
     onError: switchBeforeSend,
   })
 

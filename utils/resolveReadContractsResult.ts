@@ -4,5 +4,7 @@ import type { ContractFunctionConfig } from 'viem'
 export function resolveReadContractsResult(
   data: ReadContractsResult<ContractFunctionConfig[], true>
 ) {
-  return data.map((v) => (v.status === 'success' ? v.result : null))
+  return data.map((v) => {
+    return v.status === 'success' ? v.result : null
+  })
 }
