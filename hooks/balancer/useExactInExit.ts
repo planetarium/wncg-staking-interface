@@ -1,24 +1,26 @@
 import { useCallback, useMemo } from 'react'
 import { useAtomValue } from 'jotai'
 
-import { useBalances } from 'hooks/useBalances'
-import { useAuth } from 'hooks/useAuth'
-import { useChain } from 'hooks/useChain'
-import { useStaking } from 'hooks/useStaking'
-import { ExactInExitHandler } from 'lib/balancer/exactInExitHandler'
-import { useBalancerSdk } from './useBalancerSdk'
 import { slippageAtom } from 'states/system'
+import { ExactInExitHandler } from 'lib/balancer/exactInExitHandler'
 import { calcSlippageBsp } from 'utils/calcSlippageBsp'
-import { useViemClients } from 'hooks/useViemClients'
 import { bnum } from 'utils/bnum'
+import {
+  useAuth,
+  useBalances,
+  useChain,
+  useStaking,
+  useViemClients,
+} from 'hooks'
+import { useBalancerSdk } from './useBalancerSdk'
 
 export function useExactInExit() {
   const { account } = useAuth()
-  const balanceOf = useBalances()
   const { balancerSdk } = useBalancerSdk()
   const { dexPoolId } = useChain()
   const { lpToken, poolTokens, tokens } = useStaking()
   const { walletClient } = useViemClients()
+  const balanceOf = useBalances()
 
   const slippage = useAtomValue(slippageAtom) ?? '0.5'
   const slippageBsp = calcSlippageBsp(slippage)
@@ -50,28 +52,6 @@ export function useExactInExit() {
     [account, exitHandler, poolTokens, slippageBsp, userLpBalance]
   )
 
-  const queryExactOutExitMaxAmounts = useCallback(async () => {
-    try {
-      if (exitHandler == null) throw Error()
-      if (!account) throw Error()
-
-      const promises = poolTokens.map((t) =>
-        exitHandler.queryExit({
-          account,
-          bptIn: userLpBalance,
-          slippageBsp,
-          assets: [t],
-        })
-      )
-
-      const responses = await Promise.all(promises)
-
-      return responses.map((res, i) => res.amountsOut[i])
-    } catch (error) {
-      throw error
-    }
-  }, [account, exitHandler, poolTokens, slippageBsp, userLpBalance])
-
   const exactInExit = useCallback(
     async (bptPcnt: string) => {
       if (exitHandler == null) return
@@ -90,6 +70,5 @@ export function useExactInExit() {
   return {
     exactInExit,
     queryExactInExit,
-    queryExactOutExitMaxAmounts,
   }
 }

@@ -1,14 +1,12 @@
-import { ExactOutExitHandler } from 'lib/balancer/exactOutExitHandler'
-import { useBalancerSdk } from './useBalancerSdk'
-import { useChain } from 'hooks/useChain'
 import { useCallback, useMemo } from 'react'
-import { useStaking } from 'hooks/useStaking'
-import { useViemClients } from 'hooks/useViemClients'
-import { useAuth } from 'hooks/useAuth'
 import { useAtomValue } from 'jotai'
+
 import { slippageAtom } from 'states/system'
-import { calcSlippageBsp } from 'utils/calcSlippageBsp'
+import { ExactOutExitHandler } from 'lib/balancer/exactOutExitHandler'
 import { bnum } from 'utils/bnum'
+import { calcSlippageBsp } from 'utils/calcSlippageBsp'
+import { useAuth, useChain, useStaking, useViemClients } from 'hooks'
+import { useBalancerSdk } from './useBalancerSdk'
 
 export function useExactOutExit() {
   const { account } = useAuth()

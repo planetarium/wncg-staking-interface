@@ -1,4 +1,4 @@
-import { MouseEvent, useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useMemo } from 'react'
 import {
   Control,
   useForm,
@@ -9,21 +9,20 @@ import {
   UseFormTrigger,
   UseFormWatch,
 } from 'react-hook-form'
+import { isSameAddress } from '@balancer-labs/sdk'
+import { atom, useAtomValue } from 'jotai'
+import { useQuery } from 'wagmi'
 
 import { LiquidityFieldType } from 'config/constants'
+import { NATIVE_CURRENCY_ADDRESS } from 'config/constants/addresses'
 import {
   HIGH_PRICE_IMPACT,
   REKT_PRICE_IMPACT,
 } from 'config/constants/liquidityPool'
+import { QUERY_KEYS } from 'config/constants/queryKeys'
 import { bnum } from 'utils/bnum'
 import { useAuth, useBalances, useChain, useFiat, useStaking } from 'hooks'
-
-import { NATIVE_CURRENCY_ADDRESS } from 'config/constants/addresses'
-import { isSameAddress } from '@balancer-labs/sdk'
-import { useQuery } from 'wagmi'
-import { QUERY_KEYS } from 'config/constants/queryKeys'
-import { useExactInExit } from './useExactInExit'
-import { atom, useAtomValue } from 'jotai'
+import { useSingleMaxExit } from './useSingleMaxExit'
 
 export type ExitFormFields = {
   [LiquidityFieldType.LiquidityPercent]: string
@@ -39,10 +38,9 @@ export type UseExitFormReturns = {
   clearErrors: UseFormClearErrors<ExitFormFields>
   tokenOutAmount: string
   amountOut: string
-  amountsOut: string[] // 2개이거나 1개이거나
+  amountsOut: string[]
   bptOutInFiatValue: string
   exitType: Hash | null
-  // totalExitFiatValue: string
   bptOutPcnt: string
   isNative: boolean
   setValue: UseFormSetValue<ExitFormFields>
@@ -54,7 +52,6 @@ export type UseExitFormReturns = {
   formState: UseFormStateReturn<ExitFormFields>
   resetField: UseFormResetField<ExitFormFields>
   resetFields(): void
-  setMaxValue(e: MouseEvent<HTMLButtonElement>): void
   watch: UseFormWatch<ExitFormFields>
 }
 
@@ -72,7 +69,7 @@ export function useExitForm(): UseExitFormReturns {
   const balanceOf = useBalances()
   const { nativeCurrency } = useChain()
   const toFiat = useFiat()
-  const { queryExactOutExitMaxAmounts } = useExactInExit()
+  const { fetchSingleTokenExitMaxAmounts } = useSingleMaxExit()
 
   const { lpToken, poolTokenAddresses } = useStaking()
 
@@ -142,26 +139,13 @@ export function useExitForm(): UseExitFormReturns {
     return false
   }, [exitType, formState, priceImpact, priceImpactAgreement, tokenOutAmount])
 
-  const setMaxValue = useCallback(
-    (e: MouseEvent<HTMLButtonElement>): void => {
-      if (exitType == null) return
-
-      // setValue(
-      //   LiquidityFieldType.ExitAmount,
-      //   singleExitMaxAmounts[singleExitTokenOutIndex] ?? ''
-      // )
-      clearErrors(LiquidityFieldType.ExitAmount)
-    },
-    [clearErrors, exitType]
-  )
-
   const resetFields = useCallback(() => {
     reset(defaultValues)
   }, [reset])
 
   const { data: maxExitAmounts = [] } = useQuery(
     [QUERY_KEYS.Balancer.MaxExitAmounts, account, userLpBalance],
-    () => queryExactOutExitMaxAmounts(),
+    fetchSingleTokenExitMaxAmounts,
     {
       staleTime: 30 * 1_000,
       suspense: false,
@@ -189,8 +173,6 @@ export function useExitForm(): UseExitFormReturns {
     resetFields,
     priceImpact,
     trigger,
-    setMaxValue,
-    // totalExitFiatValue,
     watch,
   }
 }
