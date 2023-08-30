@@ -1,7 +1,6 @@
 import { PancakeRouterAbi } from 'config/abi'
 import { CHAINS } from 'config/chains'
 import { DEX_PROTOCOL_ADDRESS } from 'config/constants/addresses'
-import { WRITE_OPTIONS } from 'config/misc'
 import { calcSlippageAmount } from 'utils/calcSlippageAmount'
 import { parseUnits } from 'utils/parseUnits'
 
@@ -47,7 +46,6 @@ export function prepareAddLiquidity(
     functionName: hasNativeCurrency ? 'addLiquidityETH' : 'addLiquidity',
     args,
     value: hasNativeCurrency ? BigInt(scaledAmountsIn[ethIndex]) : undefined,
-    ...WRITE_OPTIONS,
   }
 
   return contract

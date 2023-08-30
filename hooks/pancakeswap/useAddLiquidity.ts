@@ -4,7 +4,7 @@ import { useContractWrite, usePrepareContractWrite, useQuery } from 'wagmi'
 
 import { slippageAtom } from 'states/system'
 import { QUERY_KEYS } from 'config/constants/queryKeys'
-import { MINUTE, WRITE_OPTIONS } from 'config/misc'
+import { MINUTE } from 'config/misc'
 import { prepareAddLiquidity } from 'lib/queries/bsc/prepareAddLiquidity'
 import { bnum } from 'utils/bnum'
 import { now } from 'utils/now'
@@ -94,10 +94,7 @@ export function useAddLiquidity(assets: Hash[], amountsIn: string[]) {
     },
   })
 
-  const { writeAsync } = useContractWrite({
-    ...(_config as any),
-    ...WRITE_OPTIONS,
-  })
+  const { writeAsync } = useContractWrite(_config)
 
   async function addLiquidity() {
     try {
