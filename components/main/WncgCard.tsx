@@ -1,5 +1,5 @@
 import config from 'config'
-import { ChainId, SUPPORTED_CHAINS, defaultChainId } from 'config/chains'
+import { SUPPORTED_CHAINS, defaultChainId } from 'config/chains'
 import { BAL_ADDRESS, WNCG_ADDRESS } from 'config/constants/addresses'
 import { chainNameFor } from 'utils/chainNameFor'
 import { isEthereum } from 'utils/isEthereum'
@@ -59,7 +59,7 @@ export default function MainWncgCard() {
           <dl className="rewardList">
             <div className="rewardItem">
               <dt>
-                <TokenIcon address={WNCG_ADDRESS[ChainId.GOERLI]} $size={16} />
+                <TokenIcon address={WNCG_ADDRESS[defaultChainId]} $size={16} />
                 <strong>WNCG(Wrapped NCG)</strong>
               </dt>
               <dd>1:1 NCG backed ERC-20 token</dd>
