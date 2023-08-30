@@ -27,7 +27,9 @@ export const CHAINS: ChainMap<ChainConfig> = {
 }
 
 // NOTE: Change default chainId depending on environment
-export const defaultChainId = ChainId.GOERLI
+export const defaultChainId = process.env.NEXT_PUBLIC_DEFAULT_CHAIN_ID
+  ? (Number(process.env.NEXT_PUBLIC_DEFAULT_CHAIN_ID) as ChainId)
+  : ChainId.ETHEREUM
 
 export const isTestnet =
   defaultChainId === ChainId.GOERLI || defaultChainId === ChainId.BSC_TESTNET

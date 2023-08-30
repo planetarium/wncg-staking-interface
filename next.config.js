@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
 
+const ethereumChainId = process.env.NEXT_PUBLIC_DEFAULT_CHAIN_ID ? 1 : 5
+const bscChainId = process.env.NEXT_PUBLIC_DEFAULT_CHAIN_ID ? 56 : 97
+
 const nextConfig = {
   compiler: {
     styledComponents: true,
@@ -26,7 +29,7 @@ const nextConfig = {
     return [
       {
         source: '/wncg',
-        destination: '/wncg/5',
+        destination: `/wncg/${ethereumChainId}`,
         permanent: true,
       },
     ]
@@ -35,14 +38,14 @@ const nextConfig = {
   exportPathMap: async function () {
     return {
       '/': { page: '/', __nextDefaultLocale: 'en' },
-      '/wncg/5': {
-        page: '/wncg/5',
-        query: { chainId: '5' },
+      [`/wncg/${ethereumChainId}`]: {
+        page: `/wncg/${ethereumChainId}`,
+        query: { chainId: ethereumChainId },
         __nextDefaultLocale: 'en',
       },
-      '/wncg/97': {
-        page: '/wncg/97',
-        query: { chainId: '97' },
+      [`/wncg/${bscChainId}`]: {
+        page: `/wncg/${bscChainId}`,
+        query: { chainId: bscChainId },
         __nextDefaultLocale: 'en',
       },
       '/docs/terms': { page: '/docs/terms', __nextDefaultLocale: 'en' },

@@ -1,8 +1,8 @@
 import { dehydrate, QueryClient } from '@tanstack/react-query'
 import type { GetStaticPropsContext } from 'next'
 
+import config from 'config'
 import { ChainId, defaultChainId } from 'config/chains'
-
 import { QUERY_KEYS } from 'config/constants/queryKeys'
 import { getQueryString } from 'utils/getQueryString'
 import { fetchPoolSnapshot } from 'lib/queries/fetchPoolSnapshot'
@@ -18,10 +18,13 @@ export async function getStaticProps(ctx: GetStaticPropsContext) {
   const project = await fetchStaking(chainId)
   const prices = await fetchPrices(chainId)
 
+  const ethereumChainId = config.isTestnet ? ChainId.ETHEREUM : ChainId.GOERLI
+  const bscChainId = config.isTestnet ? ChainId.BSC : ChainId.BSC_TESTNET
+
   try {
     await queryClient.prefetchQuery(
-      [QUERY_KEYS.Build, 5],
-      () => fetchStaking(5),
+      [QUERY_KEYS.Build, ethereumChainId],
+      () => fetchStaking(ethereumChainId),
       {
         staleTime: Infinity,
         cacheTime: Infinity,
@@ -29,8 +32,8 @@ export async function getStaticProps(ctx: GetStaticPropsContext) {
     )
 
     await queryClient.prefetchQuery(
-      [QUERY_KEYS.Build, 97],
-      () => fetchStaking(97),
+      [QUERY_KEYS.Build, bscChainId],
+      () => fetchStaking(bscChainId),
       {
         staleTime: Infinity,
         cacheTime: Infinity,
@@ -38,8 +41,8 @@ export async function getStaticProps(ctx: GetStaticPropsContext) {
     )
 
     await queryClient.prefetchQuery(
-      [QUERY_KEYS.Staking.Prices, 5],
-      () => fetchPrices(5),
+      [QUERY_KEYS.Staking.Prices, ethereumChainId],
+      () => fetchPrices(ethereumChainId),
       {
         staleTime: Infinity,
         cacheTime: Infinity,
@@ -47,8 +50,8 @@ export async function getStaticProps(ctx: GetStaticPropsContext) {
     )
 
     await queryClient.prefetchQuery(
-      [QUERY_KEYS.Staking.Prices, 97],
-      () => fetchPrices(97),
+      [QUERY_KEYS.Staking.Prices, bscChainId],
+      () => fetchPrices(bscChainId),
       {
         staleTime: Infinity,
         cacheTime: Infinity,
@@ -71,7 +74,7 @@ export async function getStaticProps(ctx: GetStaticPropsContext) {
         project,
         prices,
       },
-      revalidate: 60,
+      revalidate: 60 * 10,
     }
   } catch (error) {
     return {
