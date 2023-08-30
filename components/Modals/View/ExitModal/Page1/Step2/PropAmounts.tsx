@@ -1,5 +1,3 @@
-import { useMemo } from 'react'
-
 import { bnum } from 'utils/bnum'
 import { useFiat, useStaking } from 'hooks'
 
@@ -8,13 +6,11 @@ import CountUp from 'components/CountUp'
 import TokenIcon from 'components/TokenIcon'
 
 type ExitModalPage1Step2PropAmountsProps = {
-  assets: Hash[]
-  exitAmounts: string[]
+  expectedAmountsOut: string[]
 }
 
 function ExitModalPage1Step2PropAmounts({
-  assets,
-  exitAmounts,
+  expectedAmountsOut,
 }: ExitModalPage1Step2PropAmountsProps) {
   const toFiat = useFiat()
   const {
@@ -24,11 +20,6 @@ function ExitModalPage1Step2PropAmounts({
     tokens,
   } = useStaking()
 
-  const exitAmountsInFiatValue = useMemo(
-    () => exitAmounts.map((amt, i) => toFiat(amt, assets[i])),
-    [assets, exitAmounts, toFiat]
-  )
-
   return (
     <StyledExitModalPage1Step2PropAmounts
       $reverse={shouldReversePoolTokenOrderOnDisplay}
@@ -37,12 +28,14 @@ function ExitModalPage1Step2PropAmounts({
 
       <div className="propAmount">
         <dl className="detailList">
-          {exitAmounts.map((amt, i) => {
+          {expectedAmountsOut.map((amt, i) => {
             const address = poolTokenAddresses[i]
             const weight = bnum(poolTokenWeights[i]).times(100).toNumber()
             const symbol = tokens[address]?.symbol ?? ''
 
             if (!address || !weight) return null
+
+            const fiatValue = toFiat(amt, address)
 
             return (
               <div className="detailItem" key={`exitPropAmounts:${symbol}`}>
@@ -57,7 +50,7 @@ function ExitModalPage1Step2PropAmounts({
                   <div className="fiatValue">
                     <CountUp
                       className="fiatValue"
-                      value={exitAmountsInFiatValue[i]}
+                      value={fiatValue}
                       type="fiat"
                     />
                   </div>

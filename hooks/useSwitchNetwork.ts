@@ -40,7 +40,9 @@ export function useSwitchNetwork() {
     if (error.name === 'ChainMismatchError' || error.code === 'NETWORK_ERROR') {
       try {
         switchNetwork()
-      } catch (error: any) {}
+      } catch {
+        throw error
+      }
     }
   }
 

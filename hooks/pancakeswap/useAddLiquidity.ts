@@ -8,7 +8,7 @@ import { MINUTE, WRITE_OPTIONS } from 'config/misc'
 import { prepareAddLiquidity } from 'lib/queries/bsc/prepareAddLiquidity'
 import { bnum } from 'utils/bnum'
 import { now } from 'utils/now'
-import { useAuth, useChain } from 'hooks'
+import { useAuth, useChain, useSwitchNetwork } from 'hooks'
 import { useAddLiquidityMath } from './useAddLiquidityMath'
 
 export function useAddLiquidity(assets: Hash[], amountsIn: string[]) {
@@ -19,6 +19,7 @@ export function useAddLiquidity(assets: Hash[], amountsIn: string[]) {
 
   const { account, isConnected } = useAuth()
   const { chainId, nativeCurrency, networkMismatch } = useChain()
+  const { switchBeforeSend } = useSwitchNetwork()
   const hasNativeCurrency = assets.includes(nativeCurrency.address)
   const { maxBalances } = useAddLiquidityMath(hasNativeCurrency)
 
@@ -68,6 +69,8 @@ export function useAddLiquidity(assets: Hash[], amountsIn: string[]) {
     ...data,
     enabled: !!data,
     onError(err: any) {
+      switchBeforeSend(err)
+
       if (
         err?.reason?.includes('TRANSFER_FROM_FAILED') ||
         err?.shortMessage?.includes('TRANSFER_FROM_FAILED')

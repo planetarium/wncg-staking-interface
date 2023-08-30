@@ -182,7 +182,7 @@ function AddLiquidityFormInputField({
                 active: showMisc,
               })}
             >
-              amount updated to match the pool ratio
+              Amount updated to match the pool ratio
             </span>
           </div>
         ) : (
@@ -194,7 +194,7 @@ function AddLiquidityFormInputField({
                 active: showMisc,
               })}
             >
-              amount updated to match the pool ratio
+              Amount updated to match the pool ratio
             </span>
           </label>
         )}

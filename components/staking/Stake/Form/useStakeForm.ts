@@ -10,6 +10,7 @@ export function useStakeForm() {
   const [showPopup, setShowPopup] = useState(false)
 
   const { isConnected } = useAuth()
+
   const toFiat = useFiat()
   const { lpToken } = useStaking()
 

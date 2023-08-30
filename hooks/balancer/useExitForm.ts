@@ -1,4 +1,4 @@
-import { MouseEvent, useCallback, useMemo } from 'react'
+import { MouseEvent, useCallback, useEffect, useMemo, useState } from 'react'
 import {
   Control,
   useForm,
@@ -6,6 +6,7 @@ import {
   UseFormResetField,
   UseFormSetValue,
   UseFormStateReturn,
+  UseFormTrigger,
   UseFormWatch,
 } from 'react-hook-form'
 
@@ -15,8 +16,14 @@ import {
   REKT_PRICE_IMPACT,
 } from 'config/constants/liquidityPool'
 import { bnum } from 'utils/bnum'
-import { useBalances, useChain, useFiat, useStaking } from 'hooks'
-import { useExitMath } from './useExitMath'
+import { useAuth, useBalances, useChain, useFiat, useStaking } from 'hooks'
+
+import { NATIVE_CURRENCY_ADDRESS } from 'config/constants/addresses'
+import { isSameAddress } from '@balancer-labs/sdk'
+import { useQuery } from 'wagmi'
+import { QUERY_KEYS } from 'config/constants/queryKeys'
+import { useExactInExit } from './useExactInExit'
+import { atom, useAtomValue } from 'jotai'
 
 export type ExitFormFields = {
   [LiquidityFieldType.LiquidityPercent]: string
@@ -30,21 +37,20 @@ export type UseExitFormReturns = {
   bptIn: string
   control: Control<ExitFormFields>
   clearErrors: UseFormClearErrors<ExitFormFields>
-  isExactOut: boolean
-  exitAmount: string
-  exitAmounts: string[]
-  exitAmountInFiatValue: string
+  tokenOutAmount: string
+  amountOut: string
+  amountsOut: string[] // 2개이거나 1개이거나
+  bptOutInFiatValue: string
   exitType: Hash | null
-  totalExitFiatValue: string
-  isPropExit: boolean
+  // totalExitFiatValue: string
   bptOutPcnt: string
   isNative: boolean
   setValue: UseFormSetValue<ExitFormFields>
   submitDisabled: boolean
-  singleExitMaxed: boolean
-  singleExitTokenOutIndex: number
+  tokenOutIndex: number
   singleExitMaxAmounts: string[]
   priceImpact: string
+  trigger: UseFormTrigger<ExitFormFields>
   formState: UseFormStateReturn<ExitFormFields>
   resetField: UseFormResetField<ExitFormFields>
   resetFields(): void
@@ -59,16 +65,18 @@ const defaultValues: ExitFormFields = {
   priceImpactAgreement: false,
 }
 
+export const priceImpactAtom = atom<string>('')
+
 export function useExitForm(): UseExitFormReturns {
+  const { account } = useAuth()
   const balanceOf = useBalances()
-  const { chainId } = useChain()
   const { nativeCurrency } = useChain()
   const toFiat = useFiat()
-  const { calcBptIn, calcExitAmounts, calcPriceImpact, singleExitMaxAmounts } =
-    useExitMath()
+  const { queryExactOutExitMaxAmounts } = useExactInExit()
+
   const { lpToken, poolTokenAddresses } = useStaking()
 
-  const lpBalance = balanceOf(lpToken?.address)
+  const userLpBalance = balanceOf(lpToken?.address)
 
   const {
     clearErrors,
@@ -77,6 +85,7 @@ export function useExitForm(): UseExitFormReturns {
     reset,
     resetField,
     setValue,
+    trigger,
     watch,
   } = useForm<ExitFormFields>({
     mode: 'onChange',
@@ -89,180 +98,105 @@ export function useExitForm(): UseExitFormReturns {
   const priceImpactAgreement = watch('priceImpactAgreement')
   const isNative = exitType === nativeCurrency.address
 
-  const isPropExit = exitType === null
+  const priceImpact = useAtomValue(priceImpactAtom)
 
   const assets = useMemo(() => {
-    if (exitType !== nativeCurrency.address) return poolTokenAddresses
-
-    const _assets = [...poolTokenAddresses]
-    _assets[poolTokenAddresses.indexOf(nativeCurrency.wrappedTokenAddress)] =
-      nativeCurrency.address
-    return _assets
-  }, [
-    exitType,
-    nativeCurrency.address,
-    nativeCurrency.wrappedTokenAddress,
-    poolTokenAddresses,
-  ])
+    if (exitType == null) return poolTokenAddresses
+    return [exitType]
+  }, [exitType, poolTokenAddresses])
 
   const singleExitTokenOutIndex = useMemo(() => {
-    switch (true) {
-      case isPropExit:
-        return 0
-      case exitType === nativeCurrency.address:
-        return poolTokenAddresses.indexOf(nativeCurrency.wrappedTokenAddress)
-      case exitType && poolTokenAddresses.includes(exitType):
-        return poolTokenAddresses.indexOf(exitType!)
-      default:
-        return -1
+    if (exitType == null) return -1
+    return poolTokenAddresses.findIndex((addr) => {
+      const match =
+        exitType !== NATIVE_CURRENCY_ADDRESS
+          ? exitType
+          : nativeCurrency.wrappedTokenAddress
+      return isSameAddress(addr, match)
+    })
+  }, [exitType, nativeCurrency.wrappedTokenAddress, poolTokenAddresses])
+
+  const bptIn = useMemo(() => {
+    if (exitType == null) {
+      return bnum(userLpBalance).times(bptOutPcnt).div(100).toString()
     }
+    return '0'
+  }, [bptOutPcnt, exitType, userLpBalance])
+
+  const exitAmountInFiatValue = toFiat(bptIn, lpToken?.address)
+
+  const amountsOut = useMemo(() => {
+    if (exitType == null) return []
+    return [tokenOutAmount]
+  }, [exitType, tokenOutAmount])
+
+  const submitDisabled = useMemo(() => {
+    if (Object.values(formState.errors).length > 0) return true
+    if (exitType != null) {
+      if (bnum(tokenOutAmount).isZero()) return true
+      return (
+        bnum(priceImpact).gt(REKT_PRICE_IMPACT) ||
+        (bnum(priceImpact).gt(HIGH_PRICE_IMPACT) && !priceImpactAgreement)
+      )
+    }
+    return false
   }, [
     exitType,
-    isPropExit,
-    nativeCurrency.address,
-    nativeCurrency.wrappedTokenAddress,
-    poolTokenAddresses,
+    formState.errors,
+    priceImpact,
+    priceImpactAgreement,
+    tokenOutAmount,
   ])
-
-  const singleExitMaxed = useMemo(
-    () =>
-      !isPropExit &&
-      bnum(tokenOutAmount).eq(singleExitMaxAmounts[singleExitTokenOutIndex]),
-    [isPropExit, singleExitMaxAmounts, singleExitTokenOutIndex, tokenOutAmount]
-  )
-
-  const isExactOut = useMemo(
-    () => !isPropExit && !singleExitMaxed,
-    [isPropExit, singleExitMaxed]
-  )
-
-  const bptIn = useMemo(
-    () =>
-      calcBptIn({
-        isExactOut,
-        isPropExit,
-        tokenOutAmount,
-        tokenOutIndex: singleExitTokenOutIndex,
-        bptOutPcnt,
-      }),
-    [
-      bptOutPcnt,
-      calcBptIn,
-      isExactOut,
-      isPropExit,
-      singleExitTokenOutIndex,
-      tokenOutAmount,
-    ]
-  )
-
-  const exitAmount = bnum(lpBalance).times(bptOutPcnt).div(100).toFixed(18, 3)
-  const exitAmountInFiatValue = toFiat(exitAmount, lpToken?.address)
-
-  const priceImpact = useMemo(
-    () =>
-      calcPriceImpact({
-        isExactOut,
-        isPropExit,
-        tokenOutIndex: singleExitTokenOutIndex,
-        tokenOutAmount,
-        bptOutPcnt,
-      }).toString(),
-    [
-      bptOutPcnt,
-      calcPriceImpact,
-      isExactOut,
-      isPropExit,
-      singleExitTokenOutIndex,
-      tokenOutAmount,
-    ]
-  )
-
-  const exitAmounts = useMemo(
-    () =>
-      calcExitAmounts({
-        isPropExit,
-        tokenOutIndex: singleExitTokenOutIndex,
-        tokenOutAmount,
-        bptOutPcnt,
-      }),
-    [
-      bptOutPcnt,
-      calcExitAmounts,
-      isPropExit,
-      singleExitTokenOutIndex,
-      tokenOutAmount,
-    ]
-  )
-
-  const totalExitFiatValue = useMemo(
-    () =>
-      poolTokenAddresses
-        .reduce((acc, addr, i) => {
-          const address =
-            exitType === nativeCurrency.address ? nativeCurrency.address : addr
-
-          return acc.plus(toFiat(exitAmounts[i], address))
-        }, bnum(0))
-        .toString() ?? '0',
-    [exitAmounts, exitType, nativeCurrency.address, poolTokenAddresses, toFiat]
-  )
-
-  const submitDisabled = useMemo(
-    () =>
-      (!isPropExit && exitAmounts.every((a) => bnum(a).isZero())) ||
-      Object.values(formState.errors).length > 0 ||
-      bnum(priceImpact).gt(REKT_PRICE_IMPACT) ||
-      (bnum(priceImpact).gt(HIGH_PRICE_IMPACT) && !priceImpactAgreement),
-    [exitAmounts, formState, isPropExit, priceImpact, priceImpactAgreement]
-  )
 
   const setMaxValue = useCallback(
     (e: MouseEvent<HTMLButtonElement>): void => {
-      if (isPropExit) return
+      if (exitType == null) return
 
-      setValue(
-        LiquidityFieldType.ExitAmount,
-        singleExitMaxAmounts[singleExitTokenOutIndex] ?? ''
-      )
+      // setValue(
+      //   LiquidityFieldType.ExitAmount,
+      //   singleExitMaxAmounts[singleExitTokenOutIndex] ?? ''
+      // )
       clearErrors(LiquidityFieldType.ExitAmount)
     },
-    [
-      clearErrors,
-      isPropExit,
-      setValue,
-      singleExitMaxAmounts,
-      singleExitTokenOutIndex,
-    ]
+    [clearErrors, exitType]
   )
 
   const resetFields = useCallback(() => {
     reset(defaultValues)
   }, [reset])
 
+  const { data: maxExitAmounts = [] } = useQuery(
+    [QUERY_KEYS.Balancer.MaxExitAmounts, account, userLpBalance],
+    () => queryExactOutExitMaxAmounts(),
+    {
+      staleTime: 30 * 1_000,
+      suspense: false,
+    }
+  )
+
   return {
     assets,
     bptIn,
     clearErrors,
     control,
-    isExactOut,
     exitType,
-    exitAmount,
-    exitAmounts,
-    exitAmountInFiatValue,
+    tokenOutAmount,
+    amountOut: exitType == null ? '0' : tokenOutAmount,
+    amountsOut,
+    bptOutInFiatValue: exitAmountInFiatValue,
     bptOutPcnt,
     isNative,
     setValue,
-    isPropExit,
-    singleExitTokenOutIndex,
-    singleExitMaxAmounts,
-    singleExitMaxed,
+    tokenOutIndex: singleExitTokenOutIndex,
+    singleExitMaxAmounts: maxExitAmounts,
     submitDisabled,
     formState,
     resetField,
     resetFields,
     priceImpact,
+    trigger,
     setMaxValue,
-    totalExitFiatValue,
+    // totalExitFiatValue,
     watch,
   }
 }

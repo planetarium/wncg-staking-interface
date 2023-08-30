@@ -4,6 +4,7 @@ import type {
   FieldValues,
 } from 'react-hook-form'
 import dynamic from 'next/dynamic'
+import { usePrevious } from 'react-use'
 import { useDebounce } from 'use-debounce'
 import { AnimatePresence, motion } from 'framer-motion'
 
@@ -25,9 +26,10 @@ const RevenuePopup = dynamic(() => import('./RevenuePopup'), {
 function StakeForm() {
   const { account, prevAccount } = useAuth()
   const allowanceOf = useAllowances()
-  const { stakingAddress } = useChain()
+  const { chainId, stakingAddress } = useChain()
   const { addModal } = useModal()
   const { lpToken } = useStaking()
+  const prevChainId = usePrevious(chainId)
 
   const {
     closePopup,
@@ -99,6 +101,12 @@ function StakeForm() {
       resetForm()
     }
   }, [account, prevAccount, resetForm])
+
+  useEffect(() => {
+    if (prevChainId !== chainId) {
+      resetForm()
+    }
+  }, [chainId, prevChainId, resetForm])
 
   return (
     <StyledStakeForm

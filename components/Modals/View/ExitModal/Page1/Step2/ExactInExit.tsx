@@ -7,7 +7,7 @@ import {
 
 import { LiquidityFieldType } from 'config/constants'
 import { bnum } from 'utils/bnum'
-import { useBalances, useResponsive, useStaking } from 'hooks'
+import { useBalances, useFiat, useResponsive, useStaking } from 'hooks'
 import { ExitFormFields } from 'hooks/balancer/useExitForm'
 
 import { StyledExitModalPage1Step2 } from './styled'
@@ -15,6 +15,10 @@ import NumberFormat from 'components/NumberFormat'
 import { Control } from 'components/Form'
 import ButtonGroup from './ButtonGroup'
 import PropAmounts from './PropAmounts'
+import { useExactInExit } from 'hooks/balancer'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
+import { QUERY_KEYS } from 'config/constants/queryKeys'
 
 const rules = {
   required: true,
@@ -23,34 +27,57 @@ const rules = {
 }
 
 type ExitModalPage1Step2PropExitProps = {
-  assets: Hash[]
-  exitAmounts: string[]
   setValue: UseFormSetValue<ExitFormFields>
   control: ReactHookFormControl<ExitFormFields, 'any'>
-  totalExitFiatValue: string
   watch: UseFormWatch<ExitFormFields>
   hash?: Hash
 }
 
 function ExitModalPage1Step2PropExit({
-  assets,
-  exitAmounts,
   setValue,
   control,
-  totalExitFiatValue,
   watch,
   hash,
 }: ExitModalPage1Step2PropExitProps) {
   const balanceOf = useBalances()
+  const toFiat = useFiat()
   const { isMobile } = useResponsive()
-  const { lpToken } = useStaking()
+  const { lpToken, poolTokenAddresses } = useStaking()
 
-  const bptOutPcnt = watch(LiquidityFieldType.LiquidityPercent)
+  const { queryExactInExit } = useExactInExit()
 
-  const lpBalance = balanceOf(lpToken?.address)
-  const bptOutAmount = bnum(lpBalance).times(bptOutPcnt).div(100).toString()
+  const _pcnt = watch(LiquidityFieldType.LiquidityPercent)
+  const bptPcnt = bnum(_pcnt).toString()
+
+  const userLpBalance = balanceOf(lpToken?.address)
+  const bptOutAmount = bnum(userLpBalance).times(_pcnt).div(100).toString()
 
   const disabled = !!hash
+
+  const { data = [] } = useQuery(
+    [QUERY_KEYS.Balancer.ExactInExitAmounts, bptPcnt],
+    () => queryExactInExit(bptPcnt),
+    {
+      staleTime: 10 * 1_000,
+      useErrorBoundary: false,
+      select(data) {
+        return data.amountsOut
+      },
+    }
+  )
+
+  const totalBptOutFiatValue = useMemo(() => {
+    const bptOutAmount = bnum(_pcnt).times(userLpBalance).div(100).toString()
+    return toFiat(bptOutAmount, lpToken.address)
+  }, [_pcnt, lpToken.address, toFiat, userLpBalance])
+
+  const totalExitFiatValue = useMemo(() => {
+    return data
+      .reduce((acc, amt, i) => {
+        return acc.plus(toFiat(amt, poolTokenAddresses[i]))
+      }, bnum(0))
+      .toString()
+  }, [data, poolTokenAddresses, toFiat])
 
   return (
     <StyledExitModalPage1Step2 $isPropExit $disabled={disabled}>
@@ -66,7 +93,7 @@ function ExitModalPage1Step2PropExit({
                 value={bptOutAmount}
                 symbol="LP"
               />
-              <NumberFormat value={bptOutPcnt} type="percent" parenthesis />
+              <NumberFormat value={_pcnt} type="percent" parenthesis />
             </div>
 
             <NumberFormat
@@ -77,19 +104,19 @@ function ExitModalPage1Step2PropExit({
 
             <NumberFormat
               className="totalBalance"
-              value={lpBalance}
+              value={userLpBalance}
               prefix="My total balance : "
               symbol="LP"
               parenthesis
             />
           </output>
         ) : (
-          <NumberFormat className="percent" value={bptOutPcnt} type="percent" />
+          <NumberFormat className="percent" value={_pcnt} type="percent" />
         )}
       </header>
 
       <Control<'range'>
-        id="exitFormInputField:propExit"
+        id="exitFormInputField:exactInExit"
         className="propExit"
         type="range"
         control={control as unknown as ReactHookFormControl<FieldValues>}
@@ -101,13 +128,8 @@ function ExitModalPage1Step2PropExit({
         disabled={disabled}
       />
 
-      <ButtonGroup
-        bptOutPcnt={bptOutPcnt}
-        setValue={setValue}
-        disabled={disabled}
-      />
-
-      <PropAmounts assets={assets} exitAmounts={exitAmounts} />
+      <ButtonGroup bptOutPcnt={_pcnt} setValue={setValue} disabled={disabled} />
+      <PropAmounts expectedAmountsOut={data} />
     </StyledExitModalPage1Step2>
   )
 }

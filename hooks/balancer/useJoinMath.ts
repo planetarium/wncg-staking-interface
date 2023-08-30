@@ -3,7 +3,7 @@ import { isSameAddress } from '@balancer-labs/sdk'
 
 import { MIN_TRANSFER_BUFFER } from 'config/misc'
 import { CalcPropJoinHandler } from 'lib/balancer/calcPropJoinHandler'
-import { ExactInJoinHandler } from 'lib/balancer/joinHandler'
+import { ExactInJoinHandler } from 'lib/balancer/exactInJoinHandler'
 import type { JoinParams } from 'lib/balancer/types'
 import { bnum } from 'utils/bnum'
 import { useBalances, useChain, useStaking, useViemClients } from 'hooks'

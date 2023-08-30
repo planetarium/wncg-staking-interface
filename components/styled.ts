@@ -193,7 +193,7 @@ export const StyledImportToken = styled(StyledButton)`
 
     strong {
       font-weight: 700;
-      margin-left: 0.3em;
+      margin: 0 0.3em;
     }
   }
 `

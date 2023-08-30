@@ -1,15 +1,18 @@
-import { MouseEvent, useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import {
   Control as ReactHookFormControl,
   FieldValues,
   UseFormClearErrors,
   UseFormWatch,
+  UseFormSetValue,
+  UseFormTrigger,
 } from 'react-hook-form'
+import { isSameAddress } from '@balancer-labs/sdk'
 
 import { NATIVE_CURRENCY_ADDRESS } from 'config/constants/addresses'
 import { LiquidityFieldType } from 'config/constants'
 import { bnum } from 'utils/bnum'
-import { useFiat, useResponsive, useStaking } from 'hooks'
+import { useChain, useFiat, useResponsive, useStaking } from 'hooks'
 import { ExitFormFields } from 'hooks/balancer/useExitForm'
 
 import { StyledExitModalPage1Step2 } from './styled'
@@ -18,66 +21,72 @@ import { AvailableBalance, Control } from 'components/Form'
 type ExitModalPage1Step2SingleExitProps = {
   clearErrors: UseFormClearErrors<ExitFormFields>
   control: ReactHookFormControl<ExitFormFields, 'any'>
-  setMaxValue(e: MouseEvent<HTMLButtonElement>): void
-  singleExitMaxAmounts: string[]
-  singleExitTokenOutIndex?: number
   watch: UseFormWatch<ExitFormFields>
-  isNative: boolean
+  setValue: UseFormSetValue<ExitFormFields>
+  trigger: UseFormTrigger<ExitFormFields>
+  singleExitMaxAmounts: string[]
   hash?: Hash
 }
 
 function ExitModalPage1Step2SingleExit({
   clearErrors,
   control,
-  setMaxValue,
-  singleExitMaxAmounts,
-  singleExitTokenOutIndex = 0,
-  isNative,
   watch,
+  setValue,
+  trigger,
+  singleExitMaxAmounts,
   hash,
 }: ExitModalPage1Step2SingleExitProps) {
+  const { nativeCurrency } = useChain()
   const toFiat = useFiat()
   const { poolTokens, poolTokenBalances, tokens } = useStaking()
   const { isHandheld } = useResponsive()
 
-  const exitType = watch('exitType')
+  const exitType = watch('exitType')!
 
-  const singleExitMaxAmount = singleExitMaxAmounts[singleExitTokenOutIndex] ?? 0
+  const tokenOutIndex = poolTokens.findIndex((t) => {
+    const compare =
+      exitType === NATIVE_CURRENCY_ADDRESS
+        ? nativeCurrency.wrappedTokenAddress
+        : exitType
+    return isSameAddress(t.address, compare)
+  })
 
-  const singleExitRules = useMemo(
+  const maxExitAmount = singleExitMaxAmounts[tokenOutIndex] ?? 0
+
+  const rules = useMemo(
     () => ({
       required: true,
       validate: {
         overflow(v: string) {
           return (
-            bnum(v).lte(poolTokenBalances[singleExitTokenOutIndex]) ||
+            bnum(v).lte(poolTokenBalances[tokenOutIndex]) ||
             'Exceeds available exit balance'
           )
         },
         maxAmount(v: string) {
-          return (
-            bnum(v).lte(singleExitMaxAmount) || 'Exceeds available exit balance'
-          )
+          return bnum(v).lte(maxExitAmount) || 'Exceeds available exit balance'
         },
       },
       onChange() {
         clearErrors(LiquidityFieldType.ExitAmount)
       },
     }),
-    [
-      clearErrors,
-      poolTokenBalances,
-      singleExitMaxAmount,
-      singleExitTokenOutIndex,
-    ]
+    [clearErrors, poolTokenBalances, maxExitAmount, tokenOutIndex]
   )
 
   const singleExitToken =
     exitType === NATIVE_CURRENCY_ADDRESS
       ? tokens[NATIVE_CURRENCY_ADDRESS]
-      : poolTokens[singleExitTokenOutIndex]
+      : poolTokens[tokenOutIndex]
 
-  const fiatValue = toFiat(singleExitMaxAmount, singleExitToken?.address)
+  const fiatValue = toFiat(maxExitAmount, singleExitToken?.address)
+
+  const setMaxValue = useCallback(() => {
+    const maxExitAmount = singleExitMaxAmounts[tokenOutIndex]
+    setValue(LiquidityFieldType.ExitAmount, maxExitAmount)
+    trigger()
+  }, [singleExitMaxAmounts, setValue, tokenOutIndex, trigger])
 
   const disabled = !!hash
 
@@ -94,8 +103,8 @@ function ExitModalPage1Step2SingleExit({
         control={control as unknown as ReactHookFormControl<FieldValues>}
         name={LiquidityFieldType.ExitAmount}
         address={singleExitToken?.address}
-        maxAmount={singleExitMaxAmount}
-        rules={singleExitRules}
+        maxAmount={maxExitAmount}
+        rules={rules}
         decimals={singleExitToken.decimals ?? 18}
         setMaxValue={setMaxValue}
         placeholder="0.0"
@@ -105,7 +114,7 @@ function ExitModalPage1Step2SingleExit({
       />
       <AvailableBalance
         label="Available exit"
-        maxAmount={singleExitMaxAmount}
+        maxAmount={maxExitAmount}
         symbol={singleExitToken.symbol}
         fiatValue={fiatValue}
         $size={isHandheld ? 'sm' : 'lg'}

@@ -1,4 +1,4 @@
-import { useAtom } from 'jotai'
+import { useAtom, useSetAtom } from 'jotai'
 
 import { stakeTxAtom } from 'states/tx'
 import { isEthereum } from 'utils/isEthereum'
@@ -10,6 +10,7 @@ import { StyledStakeModalPage1 } from './styled'
 import { CloseButton, PendingNotice } from 'components/Modals/shared'
 import NumberFormat from 'components/NumberFormat'
 import TxButton from 'components/TxButton'
+import { stakingErrorAtom } from './useWatch'
 
 type StakeModalPage1Props = {
   stakeAmount: string
@@ -25,20 +26,23 @@ function StakeModalPage1({
   const { chainId } = useChain()
   const toFiat = useFiat()
   const { lpToken } = useStaking()
-  const _stake = useStake(stakeAmount)
+  const { stake: _stake, error } = useStake(stakeAmount)
 
   const [tx, setTx] = useAtom(stakeTxAtom)
+  const setError = useSetAtom(stakingErrorAtom)
 
   const fiatValue = toFiat(stakeAmount, lpToken?.address)
 
   async function stake() {
     try {
-      if (!_stake) {
-        throw Error('No writeAsync')
+      if (error === 'INSUFFICIENT_ALLOWANCE') {
+        throw Error('INSUFFICIENT_ALLOWANCE')
       }
 
+      if (!_stake) throw Error()
+
       const txHash = await _stake()
-      if (!txHash) throw Error('No writeAsync')
+      if (!txHash) throw Error()
 
       setTx({
         hash: txHash,
@@ -48,7 +52,10 @@ function StakeModalPage1({
 
       send('NEXT')
     } catch (error: any) {
-      walletErrorHandler(error, () => send('FAIL'))
+      walletErrorHandler(error, () => {
+        setError(error)
+        send('FAIL')
+      })
       send('ROLLBACK')
     }
   }

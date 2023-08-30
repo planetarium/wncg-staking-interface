@@ -1,17 +1,15 @@
-import { useContractWrite, usePrepareContractWrite } from 'wagmi'
-
-import { BalancerVaultAbi } from 'config/abi'
-import { WRITE_OPTIONS } from 'config/misc'
 import { bnum } from 'utils/bnum'
-import { useAuth, useChain, useSwitchNetwork } from 'hooks'
-import { useExitBuildRequest } from './useExitBuildRequest'
+import { useAuth, useBalances, useStaking } from 'hooks'
+import { useExitMath } from './useExitMath'
+import { useAtomValue } from 'jotai'
+import { calcSlippageBsp } from 'utils/calcSlippageBsp'
+import { slippageAtom } from 'states/system'
 
 type UseExitPoolParams = {
   assets: Hash[]
   bptOutPcnt: string
   exitAmounts: string[]
   exitType: Hash | null
-  isExactOut: boolean
 }
 
 export function useExitPool({
@@ -19,47 +17,33 @@ export function useExitPool({
   bptOutPcnt,
   exitType,
   exitAmounts,
-  isExactOut,
 }: UseExitPoolParams) {
-  const { account } = useAuth()
-  const { chainId, dexProtocolAddress, dexPoolId, networkMismatch } = useChain()
-  const { switchBeforeSend } = useSwitchNetwork()
-
-  const request = useExitBuildRequest({
-    account,
-    assets,
-    amounts: exitAmounts,
-    exitType,
-    isExactOut,
-    bptOutPcnt,
-  })
-
-  const enabled =
-    !networkMismatch && exitAmounts.some((amt) => bnum(amt).gt(0)) && !!request
-
-  const { config: writeConfig } = usePrepareContractWrite({
-    address: dexProtocolAddress,
-    abi: BalancerVaultAbi,
-    chainId,
-    args: [dexPoolId, account, account, request],
-    functionName: 'exitPool',
-    enabled,
-    onError(error) {
-      switchBeforeSend(error)
-      throw error
-    },
-  })
-
-  const { writeAsync } = useContractWrite(writeConfig)
-
-  async function exitPool() {
-    try {
-      const res = await writeAsync?.()
-      return res?.hash
-    } catch (error) {
-      throw error
-    }
-  }
-
-  return writeAsync ? exitPool : undefined
+  // const { account } = useAuth()
+  // const balanceOf = useBalances()
+  // const { tokens, lpToken } = useStaking()
+  // const { exactExitIn, exactExitOut } = useExitMath()
+  // const userLpBalance = balanceOf(lpToken.address)
+  // const slippage = useAtomValue(slippageAtom) ?? '0.5'
+  // const slippageBsp = calcSlippageBsp(slippage)
+  // async function exitPool() {
+  //   try {
+  //     if (!account) {
+  //       throw Error('No account')
+  //     }
+  //     const exit = exitType == null ? exactExitIn : exactExitOut
+  //     return await exit({
+  //       assets: assets.map((a) => tokens[a]),
+  //       bptIn:
+  //         exitType == null
+  //           ? bnum(bptOutPcnt).times(userLpBalance).toString()
+  //           : '0',
+  //       amountsOut: exitAmounts,
+  //       account,
+  //       slippageBsp,
+  //     })
+  //   } catch (error) {
+  //     throw error
+  //   }
+  // }
+  // return exitPool
 }

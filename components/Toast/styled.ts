@@ -147,12 +147,12 @@ export const StyledToast = styled.aside`
       }
     }
 
-    .token {
+    .mainToken {
       ${flexbox('start')}
       margin-right: 4px;
 
-      .tokenIconGroup {
-        .icon {
+      .tokenIcon {
+        .tokenFragment {
           margin-left: -8px !important;
 
           &:first-child {

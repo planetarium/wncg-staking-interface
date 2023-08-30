@@ -19,23 +19,20 @@ function ExitModal() {
   const toast = useToast()
   const exitFormReturns = useExitForm()
   const {
+    exitType: _exitType,
     assets: _assets,
     bptIn: _bptIn,
-    exitAmounts: _exitAmounts,
-    exitAmountInFiatValue: _exitAmountInFiatValue,
-    totalExitFiatValue: _totalExitFiatValue,
-    isPropExit: _isPropExit,
-    singleExitTokenOutIndex,
+    amountOut: _amountOut,
+    bptOutInFiatValue: _bptOutInFiatValue,
+    tokenOutIndex: _tokenOutIndex,
   } = exitFormReturns
 
   const tx = useAtomValue(exitTxAtom)
 
-  const assets = tx.assets ?? _assets
+  const exitType = tx.exitType ?? _exitType
   const bptIn = tx.bptIn ?? _bptIn
-  const exitAmounts = tx.exitAmounts ?? _exitAmounts
-  const isPropExit = tx.isPropExit ?? _isPropExit
-  const totalExitFiatValue = tx.totalExitFiatValue ?? _totalExitFiatValue
-  const tokenOutIndex = tx.tokenOutIndex ?? singleExitTokenOutIndex
+  const amountOut = tx.amountOut ?? _amountOut
+  const tokenOutIndex = tx.tokenOutIndex ?? _tokenOutIndex
 
   const stateMachine = useRef(exitMachine)
   const [state, send] = useMachine(stateMachine.current, {
@@ -54,12 +51,10 @@ function ExitModal() {
         type: ToastType.Exit,
         props: {
           hash: tx.hash,
-          assets,
-          exitAmounts,
-          totalExitFiatValue,
-          tokenOutIndex,
           bptIn,
-          isPropExit,
+          amountOut,
+          exitType,
+          tokenOutIndex,
         },
       })
     }
@@ -70,12 +65,9 @@ function ExitModal() {
       {currentPage === 1 && (
         <Page1 {...exitFormReturns} send={send} hash={tx.hash} />
       )}
+
       {currentPage === 2 && (
-        <Page2
-          isPropExit={isPropExit}
-          assets={assets}
-          tokenOutIndex={tokenOutIndex}
-        />
+        <Page2 exitType={exitType} assets={[]} tokenOutIndex={tokenOutIndex} />
       )}
       {currentPage === 3 && <Page3 />}
     </>

@@ -40,15 +40,11 @@ export async function fetchPancakeSwapPool(chainId: ChainId) {
 
     const [_reserves, _totalSupply] = data ?? []
 
-    console.log(data)
-
     const reserves = [
       formatUnits(_reserves?.[0].toString() ?? '0', 18),
       formatUnits(_reserves?.[1].toString() ?? '0', 18),
     ]
     const totalSupply = formatUnits(_totalSupply?.toString() ?? '0', 18)
-
-    console.log('>> fetchPancakeSwapPool', reserves, totalSupply)
 
     return {
       reserves,

@@ -14,10 +14,10 @@ export function useWatch(send: XstateSend) {
   const { lpToken } = useStaking()
 
   const refetch = useRefetch({
+    userAllowances: true,
     userBalances: true,
     pool: true,
     userData: true,
-    userAllowances: true,
   })
 
   const tx = useAtomValue(joinTxAtom)

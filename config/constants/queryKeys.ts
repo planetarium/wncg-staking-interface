@@ -1,4 +1,9 @@
 export const QUERY_KEYS = {
+  Balancer: {
+    MaxExitAmounts: 'staking:Balancer:maxExitAmounts',
+    ExactInExitAmounts: 'staking:Balancer:exactInExitAmounts',
+    ExactOutExitPriceImpact: 'staking:Balancer:exactOutExitPriceImpact',
+  },
   Build: 'staking:build',
   PancakeSwap: {
     AddLiquidityReserves: 'staking:pancakeSwap:addLiquidityReserves',

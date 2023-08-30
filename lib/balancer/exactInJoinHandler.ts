@@ -35,6 +35,7 @@ export class ExactInJoinHandler implements JoinPoolHandler {
     // return txBuilder.raw.sendTransaction({ to, data, value })
   }
 
+  // NOTE: bptOut, priceImpact, joinRes
   async queryJoin({
     assets,
     amountsIn,

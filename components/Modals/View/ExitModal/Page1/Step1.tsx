@@ -41,11 +41,10 @@ function ExitModalPage1Step1({
   const exitType = watch('exitType')
 
   const exitTypeList = useMemo(() => {
-    if (shouldReversePoolTokenOrderOnDisplay) {
-      return [null, ...poolTokenAddresses.reverse(), NATIVE_CURRENCY_ADDRESS]
-    }
-
-    return [null, ...poolTokenAddresses, NATIVE_CURRENCY_ADDRESS]
+    const list = shouldReversePoolTokenOrderOnDisplay
+      ? poolTokenAddresses.reverse()
+      : poolTokenAddresses
+    return [null, ...list, NATIVE_CURRENCY_ADDRESS]
   }, [poolTokenAddresses, shouldReversePoolTokenOrderOnDisplay])
 
   const disabled = !!hash

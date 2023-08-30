@@ -20,12 +20,9 @@ type ExitToast = Required<ExitTx>
 
 export default function ExitToast({
   hash,
-  assets,
-  totalExitFiatValue,
   bptIn,
-  exitAmounts,
-  isPropExit,
-  tokenOutIndex,
+  amountOut,
+  exitType,
 }: ExitToast) {
   const { chainId } = useChain()
   const toFiat = useFiat()
@@ -35,11 +32,14 @@ export default function ExitToast({
 
   const status = useWatch(hash)
 
-  const importTokenAddress = isPropExit
-    ? lpToken?.address
-    : tokens[assets[tokenOutIndex]].address !== NATIVE_CURRENCY_ADDRESS
-    ? tokens[assets[tokenOutIndex]].address
-    : null
+  const importTokenAddress =
+    exitType == null
+      ? lpToken?.address
+      : exitType !== NATIVE_CURRENCY_ADDRESS
+      ? exitType
+      : null
+
+  const bptInFiatValue = toFiat(bptIn ?? '0', lpToken.address)
 
   useClientMount(() => setTx(RESET))
 
@@ -57,7 +57,7 @@ export default function ExitToast({
 
       <div className="toastContent">
         <dl className="detailList">
-          {isPropExit ? (
+          {exitType == null && (
             <div className="detailItem">
               <dt>
                 <div className="token">
@@ -67,44 +67,35 @@ export default function ExitToast({
               </dt>
 
               <dd>
-                <NumberFormat value={formatUnits(bptIn, lpToken?.decimals)} />
+                <NumberFormat value={bptIn} />
                 <NumberFormat
                   className="usd"
-                  value={totalExitFiatValue}
+                  value={bptInFiatValue}
                   type="fiat"
                   abbr
                 />
               </dd>
             </div>
-          ) : (
-            exitAmounts.map((amt, i) => {
-              if (i !== tokenOutIndex) return null
+          )}
 
-              const addr = assets[i]
-              const symbol = tokens[addr]?.symbol ?? ''
-              const fiatValue = toFiat(amt, addr)
+          {exitType != null && !!amountOut && (
+            <div className="detailItem">
+              <dt>
+                <div className="token"></div>
+                <TokenIcon address={exitType!} $size={20} />
+                {tokens[exitType!].symbol}
+              </dt>
 
-              return (
-                <div className="detailItem" key={`exitToast:${addr}:${amt}`}>
-                  <dt>
-                    <div className="token">
-                      <TokenIcon address={addr} $size={20} />
-                    </div>
-                    {symbol}
-                  </dt>
-
-                  <dd>
-                    <NumberFormat value={amt} />
-                    <NumberFormat
-                      className="usd"
-                      value={fiatValue}
-                      type="fiat"
-                      abbr
-                    />
-                  </dd>
-                </div>
-              )
-            })
+              <dd>
+                <NumberFormat value={amountOut} />
+                <NumberFormat
+                  className="usd"
+                  value={toFiat(amountOut, exitType!)}
+                  type="fiat"
+                  abbr
+                />
+              </dd>
+            </div>
           )}
         </dl>
       </div>

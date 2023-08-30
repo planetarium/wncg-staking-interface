@@ -1,170 +1,166 @@
-import { useCallback, useMemo } from 'react'
-import BigNumber from 'bignumber.js'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 
-import { formatUnits } from 'utils/formatUnits'
-import { bnum } from 'utils/bnum'
-import { hasAmounts } from 'utils/hasAmounts'
-import { parseUnits } from 'utils/parseUnits'
-import { useBalances, useCalculator, useSlippage, useStaking } from 'hooks'
-
-type ExitMathParams = {
-  isExactOut: boolean
-  isPropExit: boolean
-  tokenOutIndex: number
-  tokenOutAmount: string
-  bptOutPcnt: string
-}
+import {
+  useAuth,
+  useBalances,
+  useChain,
+  useStaking,
+  useViemClients,
+} from 'hooks'
+import {
+  ExactInExitHandler,
+  QueryExactInExitParams,
+} from 'lib/balancer/exactInExitHandler'
+import { useBalancerSdk } from './useBalancerSdk'
+import { ExitParams } from 'lib/balancer/types'
+import { ExactOutExitHandler } from 'lib/balancer/exactOutExitHandler'
+import { useAtomValue } from 'jotai'
+import { slippageAtom } from 'states/system'
+import { calcSlippageBsp } from 'utils/calcSlippageBsp'
 
 export function useExitMath() {
+  const [singleExitMaxAmounts, setSingleExitMaxAmounts] = useState<string[]>([])
+  const { account } = useAuth()
   const balancesFor = useBalances()
-  const calculator = useCalculator('exit')
-  const { lpToken, poolTokenAddresses, poolTokenBalances, poolTokenDecimals } =
-    useStaking()
-  const { addSlippageScaled, minusSlippage } = useSlippage()
+  const { dexPoolId } = useChain()
+  const { balancerSdk } = useBalancerSdk()
+  const { lpToken, poolTokens, poolTokenAddresses, tokens } = useStaking()
+  const { walletClient } = useViemClients()
 
-  const lpBalance = balancesFor(lpToken?.address)
+  const slippage = useAtomValue(slippageAtom) ?? '0.5'
+  const slippageBsp = calcSlippageBsp(slippage)
+
+  const userLpBalance = balancesFor(lpToken?.address)
 
   const amountsOutPlaceholder = useMemo(
     () => poolTokenAddresses.map((_) => '0') ?? [],
     [poolTokenAddresses]
   )
 
-  const singleExitMaxAmounts = useMemo(() => {
-    try {
-      const _lpBalanceScaled = parseUnits(lpBalance).toString()
+  const exactInExitHandler = useMemo(() => {
+    return balancerSdk
+      ? new ExactInExitHandler(dexPoolId, poolTokens, tokens, balancerSdk)
+      : null
+  }, [balancerSdk, dexPoolId, poolTokens, tokens])
 
-      return poolTokenDecimals.map((decimals, i) => {
-        return minusSlippage(
-          formatUnits(
-            calculator?.exactBptInForTokenOut(_lpBalanceScaled, i),
-            decimals ?? 18
-          ),
-          decimals
-        )
-      })
-    } catch (error) {
-      return amountsOutPlaceholder
-    }
-  }, [
-    minusSlippage,
-    amountsOutPlaceholder,
-    lpBalance,
-    calculator,
-    poolTokenDecimals,
-  ])
-
-  // NOTE: Maximum BPT allowed: 30%
-  const _absMaxBpt = useMemo(() => {
-    const poolMax = bnum(lpToken?.totalSupply)
-      .times(0.3)
-      .toFixed(18, BigNumber.ROUND_DOWN)
-    return BigNumber.min(lpBalance, poolMax).toString()
-  }, [lpBalance, lpToken?.totalSupply])
-
-  const _propBptIn = useCallback(
-    (pcnt: string) => bnum(lpBalance).times(pcnt).div(100).toString(),
-    [lpBalance]
-  )
-
-  const _propAmounts = useCallback(
-    (pcnt: string) =>
-      calculator?.propAmountsGiven(_propBptIn(pcnt), 0, 'send')?.receive ??
-      amountsOutPlaceholder,
-    [amountsOutPlaceholder, _propBptIn, calculator]
-  )
-
-  const checkTokenOutAmountExceedsPoolBalance = useCallback(
-    (tokenOutIndex: number, tokenOutAmount: string) => {
-      return poolTokenBalances[tokenOutIndex]
-        ? bnum(tokenOutAmount).gt(poolTokenBalances[tokenOutIndex])
-        : false
-    },
-    [poolTokenBalances]
-  )
-
-  const calcBptIn = useCallback(
-    ({
-      isExactOut,
-      isPropExit,
-      tokenOutAmount,
-      tokenOutIndex,
-      bptOutPcnt,
-    }: ExitMathParams) => {
-      let _bptIn: string
-
-      if (isPropExit) {
-        _bptIn = parseUnits(_propBptIn(bptOutPcnt)).toString()
-      } else if (!isExactOut) {
-        _bptIn = parseUnits(_absMaxBpt).toString()
-      } else {
-        _bptIn =
-          calculator
-            ?.bptInForExactTokenOut(tokenOutAmount, tokenOutIndex)
-            .toString() ?? '0'
-      }
-
-      if (isExactOut) return addSlippageScaled(_bptIn)
-      return _bptIn
-    },
-    [_absMaxBpt, _propBptIn, addSlippageScaled, calculator]
-  )
-
-  const calcExitAmounts = useCallback(
-    ({
-      isPropExit,
-      tokenOutIndex,
-      tokenOutAmount,
-      bptOutPcnt,
-    }: Omit<ExitMathParams, 'isExactOut'>) => {
-      if (isPropExit) return _propAmounts(bptOutPcnt)
-
-      return poolTokenAddresses.map((_, i) => {
-        if (i !== tokenOutIndex) return '0'
-        return bnum(tokenOutAmount).toString() ?? '0'
-      })
-    },
-    [_propAmounts, poolTokenAddresses]
-  )
-
-  const calcPriceImpact = useCallback(
-    (params: ExitMathParams) => {
-      const _amountsOut = calcExitAmounts(params)
-
-      const { isExactOut, isPropExit, tokenOutAmount, tokenOutIndex } = params
-
-      if (isPropExit || !hasAmounts(_amountsOut)) return 0
-      if (checkTokenOutAmountExceedsPoolBalance(tokenOutIndex, tokenOutAmount))
-        return 1
-
-      const _bptIn = calcBptIn(params)
+  const queryExactInExit = useCallback(
+    async (params: QueryExactInExitParams) => {
+      if (exactInExitHandler == null) return
 
       try {
-        const impact =
-          calculator
-            ?.priceImpact(_amountsOut, {
-              isExactOut,
-              tokenIndex: tokenOutIndex,
-              queryBpt: bnum(_bptIn),
-            })
-            .toNumber() ?? 0
-        return Math.min(impact, 1)
+        const result = await exactInExitHandler.queryExit(params)
+        return result
       } catch (error) {
-        return 1
+        throw error
       }
     },
-    [
-      calcExitAmounts,
-      calcBptIn,
-      calculator,
-      checkTokenOutAmountExceedsPoolBalance,
-    ]
+    [exactInExitHandler]
   )
 
+  const exactOutExitHandler = useMemo(() => {
+    return balancerSdk
+      ? new ExactOutExitHandler(dexPoolId, poolTokens, tokens, balancerSdk)
+      : null
+  }, [balancerSdk, dexPoolId, poolTokens, tokens])
+
+  // const queryExactOutExit = useCallback(
+  //   async (params: ExitParams) => {
+  //     if (exactOutExitHandler == null) return
+
+  //     try {
+  //       return await exactOutExitHandler.queryExit(params)
+  //     } catch (error) {
+  //       throw error
+  //     }
+  //   },
+  //   [exactOutExitHandler]
+  // )
+
+  // const calcPriceImpact = useCallback(
+  //   async (params: ExitParams) => {
+  //     const fn = params.assets.length > 1 ? queryExactInExit : queryExactOutExit
+
+  //     try {
+  //       const res = await fn(params)
+  //       return res?.priceImpact ?? 0
+  //     } catch (error) {
+  //       throw error
+  //     }
+  //   },
+  //   [queryExactInExit, queryExactOutExit]
+  // )
+
+  // const calcExitAmounts = useCallback(
+  //   async (params: ExitParams) => {
+  //     const fn = params.assets.length > 1 ? queryExactInExit : queryExactOutExit
+
+  //     try {
+  //       const res = await fn(params)
+  //       return res?.amountsOut ?? amountsOutPlaceholder
+  //     } catch (error) {
+  //       throw error
+  //     }
+  //   },
+  //   [amountsOutPlaceholder, queryExactInExit, queryExactOutExit]
+  // )
+
+  // const calc = useCallback(
+  //   async (params: ExitParams) => {
+  //     const fn = params.assets.length > 1 ? queryExactInExit : queryExactOutExit
+
+  //     try {
+  //       const res = await queryExactInExit(params)
+  //       return {
+  //         priceImpact: res?.priceImpact,
+  //         amountsOut: res?.amountsOut ?? amountsOutPlaceholder,
+  //       }
+  //     } catch (error) {
+  //       throw error
+  //     }
+  //   },
+  //   [amountsOutPlaceholder, queryExactInExit, queryExactOutExit]
+  // )
+
+  // const exactExitOut = useCallback(
+  //   async (params: ExitParams) => {
+  //     if (!exactOutExitHandler) return
+
+  //     try {
+  //       const { exitRes } = await exactOutExitHandler.queryExit(params)
+  //       const hash = await walletClient?.sendTransaction(exitRes)
+  //       return hash
+  //     } catch (error) {
+  //       throw error
+  //     }
+  //   },
+  //   [exactOutExitHandler, walletClient]
+  // )
+
+  // const exactExitIn = useCallback(
+  //   async (params: ExitParams) => {
+  //     if (!exactInExitHandler) return
+
+  //     try {
+  //       const { exitRes } = await exactInExitHandler!.queryExit(params)
+  //       const hash = await walletClient?.sendTransaction(exitRes)
+  //       return hash
+  //     } catch (error) {
+  //       throw error
+  //     }
+  //   },
+  //   [exactInExitHandler, walletClient]
+  // )
+
   return {
-    calcExitAmounts,
-    calcBptIn,
-    calcPriceImpact,
-    checkTokenOutAmountExceedsPoolBalance,
-    singleExitMaxAmounts,
+    queryExactInExit,
+    // queryExactOutExit,
+    // calcPriceImpact,
+    // calcExitAmounts,
+    // exactExitIn,
+    // exactExitOut,
+    // calc,
+    // calcBptIn,
+    // checkTokenOutAmountExceedsPoolBalance,
+    // singleExitMaxAmounts,
   }
 }

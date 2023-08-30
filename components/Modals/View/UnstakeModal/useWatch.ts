@@ -9,6 +9,7 @@ export function useWatch(send: XstateSend) {
   const { chainId } = useChain()
 
   const refetch = useRefetch({
+    userAllowances: true,
     userData: true,
     userBalances: true,
     pool: true,

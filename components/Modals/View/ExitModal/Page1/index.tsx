@@ -15,26 +15,21 @@ type ExitModalPage1Props = {
 
 function ExitModalPage1(props: ExitModalPage1Props & UseExitFormReturns) {
   const {
-    assets,
     bptIn,
     clearErrors,
     control,
-    isExactOut,
-    exitAmounts,
-    priceImpact,
-    singleExitTokenOutIndex,
+    exitType,
     singleExitMaxAmounts,
-    totalExitFiatValue,
-    submitDisabled,
+    trigger,
     formState,
     watch,
     resetField,
     send,
     setValue,
-    setMaxValue,
     hash,
-    isPropExit,
     isNative,
+    submitDisabled,
+    tokenOutIndex,
   } = props
 
   return (
@@ -52,41 +47,34 @@ function ExitModalPage1(props: ExitModalPage1Props & UseExitFormReturns) {
           />
 
           <Step2
-            assets={assets}
+            singleExitMaxAmounts={singleExitMaxAmounts}
             clearErrors={clearErrors}
             control={control}
             watch={watch}
-            exitAmounts={exitAmounts}
             setValue={setValue}
-            setMaxValue={setMaxValue}
-            singleExitMaxAmounts={singleExitMaxAmounts}
-            singleExitTokenOutIndex={singleExitTokenOutIndex}
-            totalExitFiatValue={totalExitFiatValue}
+            trigger={trigger}
             hash={hash}
             isNative={isNative}
           />
 
-          {!isPropExit && (
+          {exitType != null && (
             <Step3
-              priceImpact={priceImpact}
               setValue={setValue}
               watch={watch}
               hash={hash}
               formState={formState}
+              singleExitMaxAmounts={singleExitMaxAmounts}
+              tokenOutIndex={tokenOutIndex}
             />
           )}
         </div>
       </div>
 
       <Footer
-        assets={assets}
-        isExactOut={isExactOut}
-        exitAmounts={exitAmounts}
+        bptIn={bptIn}
         send={send}
         watch={watch}
-        totalExitFiatValue={totalExitFiatValue}
         submitDisabled={submitDisabled}
-        bptIn={bptIn}
       />
 
       <PendingNotice hash={hash} />

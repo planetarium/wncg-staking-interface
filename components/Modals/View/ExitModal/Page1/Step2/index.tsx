@@ -1,72 +1,59 @@
-import { MouseEvent } from 'react'
 import {
   Control as ReactHookFormControl,
   UseFormClearErrors,
   UseFormSetValue,
+  UseFormTrigger,
   UseFormWatch,
 } from 'react-hook-form'
 
 import { ExitFormFields } from 'hooks/balancer/useExitForm'
 
-import PropExit from './PropExit'
-import SingleExit from './SingleExit'
+import ExactInExit from './ExactInExit'
+import ExactOutExit from './ExactOutExit'
 
 type ExitModalPage1Step2Props = {
-  assets: Hash[]
-  exitAmounts: string[]
   clearErrors: UseFormClearErrors<ExitFormFields>
   control: ReactHookFormControl<ExitFormFields, 'any'>
   setValue: UseFormSetValue<ExitFormFields>
-  setMaxValue(e: MouseEvent<HTMLButtonElement>): void
-  singleExitMaxAmounts: string[]
-  singleExitTokenOutIndex?: number
-  totalExitFiatValue: string
+  trigger: UseFormTrigger<ExitFormFields>
   watch: UseFormWatch<ExitFormFields>
+  singleExitMaxAmounts: string[]
   hash?: Hash
   isNative: boolean
 }
 
 function ExitModalPage1Step2({
-  assets,
-  exitAmounts,
   clearErrors,
   control,
-  setValue,
-  setMaxValue,
-  singleExitMaxAmounts,
-  singleExitTokenOutIndex = 0,
-  totalExitFiatValue,
   watch,
-  isNative,
+  setValue,
+  trigger,
+  singleExitMaxAmounts,
   hash,
 }: ExitModalPage1Step2Props) {
   const exitType = watch('exitType')
 
-  const isProportianl = exitType === null
+  const isGivenIn = exitType === null
 
-  if (isProportianl) {
+  if (isGivenIn) {
     return (
-      <PropExit
-        assets={assets}
-        exitAmounts={exitAmounts}
+      <ExactInExit
         control={control}
         watch={watch}
-        hash={hash}
         setValue={setValue}
-        totalExitFiatValue={totalExitFiatValue}
+        hash={hash}
       />
     )
   }
 
   return (
-    <SingleExit
-      clearErrors={clearErrors}
+    <ExactOutExit
       control={control}
-      setMaxValue={setMaxValue}
-      singleExitMaxAmounts={singleExitMaxAmounts}
-      singleExitTokenOutIndex={singleExitTokenOutIndex}
-      isNative={isNative}
       watch={watch}
+      clearErrors={clearErrors}
+      setValue={setValue}
+      trigger={trigger}
+      singleExitMaxAmounts={singleExitMaxAmounts}
       hash={hash}
     />
   )

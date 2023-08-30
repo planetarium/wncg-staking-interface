@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
 import { useContractWrite, usePrepareContractWrite } from 'wagmi'
 
 import { StakingEthereumAbi } from 'config/abi'
@@ -7,6 +7,8 @@ import { parseUnits } from 'utils/parseUnits'
 import { useAuth, useChain, useStaking, useSwitchNetwork } from 'hooks'
 
 export function useStake(stakeAmount: string) {
+  const [error, setError] = useState<string | null>(null)
+
   const { isConnected } = useAuth()
   const { chainId, networkMismatch, stakingAddress } = useChain()
   const { lpToken, tokens } = useStaking()
@@ -30,7 +32,13 @@ export function useStake(stakeAmount: string) {
     args: [scaledStakeAmount],
     functionName: 'stake',
     enabled,
-    onError: switchBeforeSend,
+    onError(err: any) {
+      switchBeforeSend(err)
+
+      if (err?.shortMessage?.includes('BAL#407')) {
+        setError('INSUFFICIENT_ALLOWANCE')
+      }
+    },
   })
 
   const { writeAsync } = useContractWrite(writeConfig)
@@ -44,5 +52,8 @@ export function useStake(stakeAmount: string) {
     }
   }, [writeAsync])
 
-  return writeAsync ? stake : null
+  return {
+    stake,
+    error,
+  }
 }

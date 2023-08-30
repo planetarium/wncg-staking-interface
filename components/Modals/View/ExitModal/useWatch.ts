@@ -1,6 +1,7 @@
 import { useUnmount } from 'react-use'
 import { atom, useAtom, useSetAtom } from 'jotai'
 import { useWaitForTransaction } from 'wagmi'
+import { isSameAddress } from '@balancer-labs/sdk'
 
 import { exitTxAtom } from 'states/tx'
 import { NATIVE_CURRENCY_ADDRESS } from 'config/constants/addresses'
@@ -12,8 +13,8 @@ import { useClientMount, useChain, useRefetch, useStaking } from 'hooks'
 export const exitAmountsAtom = atom<string[]>([])
 
 export function useWatch(send: XstateSend) {
-  const { chainId } = useChain()
-  const { poolTokenDecimals } = useStaking()
+  const { chainId, nativeCurrency } = useChain()
+  const { poolTokenAddresses, poolTokenDecimals } = useStaking()
 
   const refetch = useRefetch({
     userBalances: true,
@@ -34,19 +35,26 @@ export function useWatch(send: XstateSend) {
       const transferLogs = parseTransferLogs(_tx.logs)
       const withdrawalLog = parsedLogs.find((l) => l?.name === 'Withdrawal')
 
-      const exitAmounts = tx.assets!.map((addr, i) => {
-        if (!tx.isPropExit && addr === NATIVE_CURRENCY_ADDRESS) {
+      const exitAmounts = poolTokenAddresses.map((addr, i) => {
+        if (
+          tx.exitType === NATIVE_CURRENCY_ADDRESS &&
+          addr === nativeCurrency.wrappedTokenAddress
+        ) {
           return formatUnits(
             withdrawalLog?.args[1] ?? '0',
             poolTokenDecimals[i]
           )
         }
 
-        return formatUnits(transferLogs?.[addr] ?? '0', poolTokenDecimals[i])
+        if (tx.exitType == null || isSameAddress(addr, tx.exitType)) {
+          return formatUnits(transferLogs?.[addr] ?? '0', poolTokenDecimals[i])
+        }
+
+        return '0'
       })
 
       setExitAmounts(exitAmounts)
-      setTx((prev) => ({ ...prev, exitAmounts }))
+      setTx((prev) => ({ ...prev, amountsOut: exitAmounts }))
       send('SUCCESS')
     },
     onError() {
