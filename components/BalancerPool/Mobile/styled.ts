@@ -81,6 +81,7 @@ export const StyledPoolMobileForm = styled.form`
   .formHeader {
     ${flexbox('between')}
     position: relative;
+    z-index: 2;
     width: 100%;
 
     .buttonGroup {

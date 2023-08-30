@@ -1,13 +1,17 @@
+import { useMemo } from 'react'
 import {
   Control as ReactHookFormControl,
   FieldValues,
   UseFormWatch,
   UseFormSetValue,
 } from 'react-hook-form'
+import { useQuery } from '@tanstack/react-query'
 
 import { LiquidityFieldType } from 'config/constants'
+import { QUERY_KEYS } from 'config/constants/queryKeys'
 import { bnum } from 'utils/bnum'
 import { useBalances, useFiat, useResponsive, useStaking } from 'hooks'
+import { useExactInExit } from 'hooks/balancer'
 import { ExitFormFields } from 'hooks/balancer/useExitForm'
 
 import { StyledExitModalPage1Step2 } from './styled'
@@ -15,10 +19,6 @@ import NumberFormat from 'components/NumberFormat'
 import { Control } from 'components/Form'
 import ButtonGroup from './ButtonGroup'
 import PropAmounts from './PropAmounts'
-import { useExactInExit } from 'hooks/balancer'
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import { useQuery } from '@tanstack/react-query'
-import { QUERY_KEYS } from 'config/constants/queryKeys'
 
 const rules = {
   required: true,
@@ -65,11 +65,6 @@ function ExitModalPage1Step2PropExit({
       },
     }
   )
-
-  const totalBptOutFiatValue = useMemo(() => {
-    const bptOutAmount = bnum(_pcnt).times(userLpBalance).div(100).toString()
-    return toFiat(bptOutAmount, lpToken.address)
-  }, [_pcnt, lpToken.address, toFiat, userLpBalance])
 
   const totalExitFiatValue = useMemo(() => {
     return data

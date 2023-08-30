@@ -3,7 +3,7 @@ import { useAtomValue } from 'jotai'
 
 import { removeLiquidityTxAtom } from 'states/tx'
 import { RemoveLiquidityField } from 'config/constants'
-import { useBalances, useStaking } from 'hooks'
+import { useBalances, useResponsive, useStaking } from 'hooks'
 import { UseRemoveLiquidityFormReturns } from 'hooks/pancakeswap/useRemoveLiquidityForm'
 
 import { StyledRemoveLiquidityModalPage1Form } from './styled'
@@ -33,6 +33,7 @@ export default function RemoveLiquidityModalPage1Form(
   } = props
 
   const balanceOf = useBalances()
+  const { isMobile } = useResponsive()
   const { lpToken } = useStaking()
 
   const lpBalance = balanceOf(lpToken?.address)
@@ -55,7 +56,7 @@ export default function RemoveLiquidityModalPage1Form(
             <NumberFormat
               className="value"
               value={lpAmountOut}
-              symbol={lpToken?.name}
+              symbol={isMobile ? 'LP' : lpToken?.name}
               decimals={8}
             />
             <NumberFormat value={pcntOut} type="percent" parenthesis />

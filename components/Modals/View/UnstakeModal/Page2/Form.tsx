@@ -72,6 +72,7 @@ export default function UnstakeModalPage2Form({
         </p>
 
         <Checkbox
+          className="rewardCheckbox"
           id="checked"
           checked={!hasRewards ? false : checked}
           onChange={toggleCheck}

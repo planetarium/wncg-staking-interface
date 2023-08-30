@@ -65,7 +65,7 @@ export default function SidebarStaking({ closeSidebar }: SidebarStakingProps) {
 
   function openExitModal(e: MouseEvent) {
     addModal({
-      type: chainId ? ModalType.RemoveLiquidity : ModalType.Exit,
+      type: isEthereum(chainId) ? ModalType.Exit : ModalType.RemoveLiquidity,
     })
     closeSidebar(e)
   }

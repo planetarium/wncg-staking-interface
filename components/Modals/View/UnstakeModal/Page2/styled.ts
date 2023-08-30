@@ -53,6 +53,10 @@ export const StyledUnstakeModalPage2Form = styled.form`
     .checkbox {
       ${posCenterY()}
       right: 20px;
+
+      .icon.check {
+        color: var(--primary-400);
+      }
     }
   }
 

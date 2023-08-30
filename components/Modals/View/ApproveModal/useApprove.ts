@@ -21,7 +21,9 @@ export function useApprove(tokenAddress: Hash, spender: string) {
     chainId,
     enabled: !!isConnected && !!tokenAddress && !!spender && !networkMismatch,
     args: [spender, MaxUint256.toBigInt()],
-    onError: switchBeforeSend,
+    onError(err) {
+      switchBeforeSend(err)
+    },
   })
 
   const { writeAsync } = useContractWrite(config)

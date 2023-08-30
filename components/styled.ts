@@ -558,11 +558,11 @@ export const StyledTooltip = styled.p<{
   ${({ $clickable }) =>
     $clickable &&
     css`
+      cursor: pointer;
+
       &:hover {
         ${onArrowHover()}
       }
-
-      cursor: pointer;
     `};
 
   ${({ $direction, $gap }) => {

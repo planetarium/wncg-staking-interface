@@ -69,7 +69,6 @@ function ExitModalPage1(props: ExitModalPage1Props & UseExitFormReturns) {
           )}
         </div>
       </div>
-
       <Footer
         bptIn={bptIn}
         send={send}
@@ -78,7 +77,6 @@ function ExitModalPage1(props: ExitModalPage1Props & UseExitFormReturns) {
         tokenOutIndex={tokenOutIndex}
         watch={watch}
       />
-
       <PendingNotice hash={hash} />
     </StyledExitModalPage1>
   )

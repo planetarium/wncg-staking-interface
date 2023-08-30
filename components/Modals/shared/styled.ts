@@ -40,9 +40,8 @@ export const StyledModalPage = styled(motion.div)<{ $disabled?: boolean }>`
     content: '';
     background-image: linear-gradient(
       180deg,
-      transparent,
-      rgba(7, 3, 22, 0) 1.14%,
-      #080316 25.3%
+      rgba(18, 18, 18, 0) 0%,
+      #121212 100%
     );
     pointer-events: none;
     user-select: none;

@@ -284,7 +284,7 @@ export const StyledJoinFormNotice = styled(motion.aside)<{
   .desc {
     padding: 0 2px;
     margin-top: 2px;
-    color: var(--gray-600);
+    color: var(--gray-600) !important;
   }
 
   ${media(
