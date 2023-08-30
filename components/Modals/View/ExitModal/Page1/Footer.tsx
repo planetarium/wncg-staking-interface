@@ -3,11 +3,16 @@ import { UseFormWatch } from 'react-hook-form'
 import { useAtom } from 'jotai'
 
 import { exitTxAtom } from 'states/tx'
-import { bnum } from 'utils/bnum'
+import { NATIVE_CURRENCY_ADDRESS } from 'config/constants/addresses'
 import { LiquidityFieldType } from 'config/constants'
+import { bnum } from 'utils/bnum'
 import { walletErrorHandler } from 'utils/walletErrorHandler'
-import { useBalances, useChain, useFiat, useStaking } from 'hooks'
-import { useExactInExit, useExactOutExit } from 'hooks/balancer'
+import { useBalances, useFiat, useStaking } from 'hooks'
+import {
+  useExactInExit,
+  useExactOutExit,
+  useSingleMaxExit,
+} from 'hooks/balancer'
 import { ExitFormFields } from 'hooks/balancer/useExitForm'
 
 import { Checkout } from 'components/Modals/shared'
@@ -18,6 +23,8 @@ type ExitModalPage1FooterProps = {
   send(value: string): void
   watch: UseFormWatch<ExitFormFields>
   submitDisabled: boolean
+  singleExitMaxAmounts: string[]
+  tokenOutIndex: number
 }
 
 function ExitModalPage1Footer({
@@ -25,6 +32,8 @@ function ExitModalPage1Footer({
   send,
   watch,
   submitDisabled,
+  singleExitMaxAmounts,
+  tokenOutIndex,
 }: ExitModalPage1FooterProps) {
   const balanceOf = useBalances()
   const toFiat = useFiat()
@@ -33,8 +42,9 @@ function ExitModalPage1Footer({
   const [tx, setTx] = useAtom(exitTxAtom)
 
   const exitType = watch('exitType')
-
   const tokenOut = exitType != null ? tokens[exitType] : null
+  const maxAmountOut =
+    exitType != null ? singleExitMaxAmounts[tokenOutIndex] : '0'
 
   const amountOut = watch(LiquidityFieldType.ExitAmount)
   const pcnt = watch(LiquidityFieldType.LiquidityPercent)
@@ -42,6 +52,7 @@ function ExitModalPage1Footer({
 
   const { exactInExit } = useExactInExit()
   const { exactOutExit } = useExactOutExit()
+  const { singleMaxExit } = useSingleMaxExit()
 
   const totalExitFiatValue = useMemo(() => {
     if (exitType == null)
@@ -60,19 +71,29 @@ function ExitModalPage1Footer({
     if (submitDisabled) return
 
     try {
-      let txHash
+      let txHash: Hash | undefined
 
-      if (exitType == null) txHash = await exactInExit(bptOutPcnt)
-      else txHash = await exactOutExit(tokenOut!, amountOut)
+      switch (true) {
+        case exitType == null:
+          txHash = await exactInExit(bptOutPcnt)
+          break
+        case exitType !== NATIVE_CURRENCY_ADDRESS &&
+          bnum(amountOut).eq(maxAmountOut):
+          txHash = await singleMaxExit(exitType)
+          break
+        default:
+          txHash = await exactOutExit(tokenOut!, amountOut)
+          break
+      }
 
       if (!txHash) throw Error('No txHash')
 
       setTx({
-        bptOutPcnt,
-        exitType,
         hash: txHash,
-        bptIn,
+        bptOutPcnt,
         amountOut,
+        bptIn,
+        exitType,
       })
       send('NEXT')
     } catch (error: any) {

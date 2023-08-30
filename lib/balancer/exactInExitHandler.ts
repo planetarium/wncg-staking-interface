@@ -1,6 +1,3 @@
-// 1. queryExit -> exitRes 저장
-// 2. exitRes로 exit 하고 hash 리턴
-
 import {
   BalancerSDK,
   formatFixed,
@@ -9,7 +6,7 @@ import {
 } from '@balancer-labs/sdk'
 
 import { NATIVE_CURRENCY_ADDRESS } from 'config/constants/addresses'
-import type { ExitParams, ExitPoolHandler, ExitQueryOutput } from './types'
+import type { ExitPoolHandler, ExitQueryOutput } from './types'
 import { formatAddressForSor } from './utils'
 
 export type QueryExactInExitParams = {
@@ -33,11 +30,10 @@ export class ExactInExitHandler implements ExitPoolHandler {
     slippageBsp,
     assets,
   }: QueryExactInExitParams): Promise<ExitQueryOutput> {
-    const slippage = slippageBsp.toString()
-
     const sdkPool = await this.sdk.pools.find(this.poolId)
-
     if (!sdkPool) throw new Error('Failed to find pool: ' + this.poolId)
+
+    const slippage = slippageBsp.toString()
 
     const evmBptIn = parseFixed(bptIn, 18).toString()
 
@@ -93,18 +89,4 @@ export class ExactInExitHandler implements ExitPoolHandler {
       exitRes,
     }
   }
-
-  // private getSingleAmountOut(
-  //   amountsOut: string[],
-  //   tokenOutIndex: number,
-  //   tokenOut: TokenInfo
-  // ): string[] {
-  //   const amountOut = amountsOut[tokenOutIndex]
-  //   const normalizedAmountOut = formatFixed(
-  //     amountOut,
-  //     tokenOut.decimals
-  //   ).toString()
-
-  //   return [normalizedAmountOut]
-  // }
 }

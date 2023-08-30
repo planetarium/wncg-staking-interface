@@ -72,6 +72,13 @@ export type ExitQueryOutput = {
   // txReady: boolean
 }
 
+export type QueryExactOutExitParams = {
+  account: Hash
+  amountsOut: string[]
+  slippageBsp: string
+  assets: TokenInfo[]
+}
+
 export abstract class ExitPoolHandler {
   constructor(
     public readonly poolId: string,
@@ -89,4 +96,40 @@ export type ExitExactInResponse = ReturnType<
 
 export type ExitExactOutResponse = ReturnType<
   PoolWithMethods['buildExitExactTokensOut']
+>
+
+export type QuerySingleMaxExitParams = {
+  account: Hash
+  bptIn: string
+  slippageBsp: string
+  tokenOut: Hash
+}
+
+export type SingleMaxQueryOutput = [
+  poolId: string,
+  sender: string,
+  recipient: string,
+  request: {
+    assets: string[]
+    minAmountsOut: BigNumber[]
+    userData: string
+    toInternalBalance: boolean
+  }
+]
+
+export abstract class SingleTokenExitHandler {
+  constructor(
+    public readonly poolId: string,
+    public readonly poolTokens: PoolToken[],
+    public readonly tokens: TokenMap,
+    public readonly sdk: BalancerSDK
+  ) {}
+
+  abstract queryExit(
+    params: QuerySingleMaxExitParams
+  ): Promise<SingleMaxQueryOutput>
+}
+
+export type ExitSingleMaxOutResponse = ReturnType<
+  PoolWithMethods['buildQueryExitToSingleToken']
 >

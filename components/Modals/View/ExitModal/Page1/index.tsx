@@ -73,8 +73,10 @@ function ExitModalPage1(props: ExitModalPage1Props & UseExitFormReturns) {
       <Footer
         bptIn={bptIn}
         send={send}
-        watch={watch}
+        singleExitMaxAmounts={singleExitMaxAmounts}
         submitDisabled={submitDisabled}
+        tokenOutIndex={tokenOutIndex}
+        watch={watch}
       />
 
       <PendingNotice hash={hash} />

@@ -1,6 +1,3 @@
-// 1. queryExit -> exitRes 저장
-// 2. exitRes로 exit 하고 hash 리턴
-
 import {
   BalancerSDK,
   formatFixed,
@@ -9,17 +6,9 @@ import {
 } from '@balancer-labs/sdk'
 
 import { ZERO_ADDRESS } from 'config/constants/addresses'
-import type { ExitParams, ExitPoolHandler, ExitQueryOutput } from './types'
+import type { ExitQueryOutput, QueryExactOutExitParams } from './types'
 import { formatAddressForSor } from './utils'
 
-export type QueryExactOutExitParams = {
-  account: Hash
-  amountsOut: string[]
-  slippageBsp: string
-  assets: TokenInfo[]
-}
-
-//  implements ExitPoolHandler
 export class ExactOutExitHandler {
   constructor(
     public readonly poolId: string,
@@ -34,9 +23,10 @@ export class ExactOutExitHandler {
     slippageBsp,
     assets,
   }: QueryExactOutExitParams): Promise<ExitQueryOutput> {
-    const slippage = slippageBsp.toString()
-
     const sdkPool = await this.sdk.pools.find(this.poolId)
+    if (!sdkPool) throw new Error('Failed to find pool: ' + this.poolId)
+
+    const slippage = slippageBsp.toString()
 
     const tokenOut = assets[0]
     const tokenOutAddress = formatAddressForSor(tokenOut.address)
@@ -45,36 +35,28 @@ export class ExactOutExitHandler {
     const poolTokensList = this.poolTokens.map((t) =>
       nativeAssetExit ? ZERO_ADDRESS : t.address
     )
-
     const tokenOutIndex = poolTokensList.indexOf(tokenOutAddress)
 
     const amountOut = amountsOut[0]
-
     if (!amountOut) throw new Error('No exit amount given')
 
     const evmAmountOut = parseFixed(amountOut, tokenOut.decimals).toString()
     const fullAmountsOut = this.getFullAmounts(tokenOutIndex, evmAmountOut)
 
-    // Add native asset to the list of tokens to exit
-    // buildExitExactTokensOut: (exiter: string, tokensOut: string[], amountsOut: string[], slippage: string, toInternalBalance?: boolean) => ExitExactTokensOutAttributes;
-
-    // expectedBPTIn: string;
-    // maxBPTIn: string;
-    // priceImpact: string;
-    const exitRes = sdkPool!.buildExitExactTokensOut(
+    const response = sdkPool!.buildExitExactTokensOut(
       account,
       poolTokensList,
       fullAmountsOut,
       slippage
     )
 
-    if (!exitRes) throw new Error('Failed to construct exit.')
+    if (!response) throw new Error('Failed to construct exit.')
 
     // Because this is an exit we need to pass amountsOut as the amountsIn and
     // bptIn as the minBptOut to this calcPriceImpact function.
     const evmPriceImpact = await sdkPool!.calcPriceImpact(
       fullAmountsOut,
-      exitRes.expectedBPTIn,
+      response.expectedBPTIn,
       false
     )
 
@@ -85,7 +67,7 @@ export class ExactOutExitHandler {
         t === tokenOutAddress ? amountOut : '0'
       ),
       priceImpact,
-      exitRes,
+      exitRes: response,
     }
   }
 
