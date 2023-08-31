@@ -41,6 +41,21 @@ export const StyledPancakeSwapPoolHeader = styled.header<{
     top: 0;
     right: 0;
 
+    &.tooltipGroup {
+      .tooltip {
+        left: auto;
+        right: 0;
+        width: min-content;
+        transform: none;
+      }
+
+      &:has(.optimizeButton:disabled) {
+        .tooltip {
+          opacity: 0 !important;
+        }
+      }
+    }
+
     .optimizeButton {
       &:disabled {
         color: rgba(var(--white-rgb), 0.5);
@@ -49,21 +64,6 @@ export const StyledPancakeSwapPoolHeader = styled.header<{
 
     button {
       flex-shrink: 0;
-    }
-  }
-
-  .tooltipGroup {
-    .tooltip {
-      left: 0;
-      right: 0;
-      width: min-content;
-      transform: none;
-    }
-
-    &:has(.optimizeButton:disabled) {
-      .tooltip {
-        opacity: 0 !important;
-      }
     }
   }
 
