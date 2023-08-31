@@ -141,10 +141,6 @@ export const StyledHighPriceImpact = styled(motion.div)`
         ${textStyle('body', 3, 700)}
       }
 
-      .desc {
-        ${textStyle('body', 4)}
-      }
-
       .checkboxGroup {
         margin-top: 16px;
 

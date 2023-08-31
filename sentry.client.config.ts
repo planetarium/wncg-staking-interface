@@ -5,8 +5,7 @@
 import * as Sentry from '@sentry/nextjs'
 
 Sentry.init({
-  // FIXME:
-  // dsn: 'https://f35458861603771560f2d9f1ddf167f0@o4505621048590336.ingest.sentry.io/4505621137850368',
+  dsn: process.env.SENTRY_DSN,
 
   // Adjust this value in production, or use tracesSampler for greater control
   tracesSampleRate: 1,
@@ -23,9 +22,7 @@ Sentry.init({
   // You can remove this option if you're not planning to use the Sentry Session Replay feature:
   integrations: [
     new Sentry.BrowserTracing({
-      tracePropagationTargets: [
-        'https://features-bsc.d3pvjditvel0ar.amplifyapp.com',
-      ],
+      tracePropagationTargets: ['https://main.d3pvjditvel0ar.amplifyapp.com'],
     }),
     new Sentry.Replay({
       // Additional Replay configuration goes in here, for example:
