@@ -1,8 +1,5 @@
 /** @type {import('next').NextConfig} */
 
-const ethereumChainId = process.env.NEXT_PUBLIC_DEFAULT_CHAIN_ID ? 1 : 5
-const bscChainId = process.env.NEXT_PUBLIC_DEFAULT_CHAIN_ID ? 56 : 97
-
 const nextConfig = {
   compiler: {
     styledComponents: true,
@@ -29,7 +26,7 @@ const nextConfig = {
     return [
       {
         source: '/wncg',
-        destination: `/wncg/${ethereumChainId}`,
+        destination: `/wncg/1`,
         permanent: true,
       },
     ]

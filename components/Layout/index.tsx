@@ -12,6 +12,8 @@ import { StyledLayout, StyledMain } from './styled'
 import Favicon from 'components/Favicon'
 import RootFavicon from 'components/RootFavicon'
 import Suspense from 'components/Suspense'
+import RootGnb from './Gnb/Root'
+import MainGnb from './Gnb/Main'
 
 const Alerts = dynamic(() => import('./Alerts'), {
   ssr: false,
@@ -37,12 +39,32 @@ function Layout({ children }: PropsWithChildren) {
   const mainRef = useRef<HTMLDivElement>(null)
 
   const { chainId } = useChain()
-  const router = useRouter()
-  const { route, pathname, query } = router
+  const { route, pathname, query } = useRouter()
 
   useMediaQuery()
 
   const isRootPage = pathname === '/'
+
+  console.log(1111, pathname, isRootPage)
+
+  if (isRootPage) {
+    return (
+      <>
+        <Head>
+          <RootFavicon />
+        </Head>
+
+        <StyledLayout layoutRoot $root={isRootPage}>
+          <RootGnb />
+
+          <StyledMain ref={mainRef} layout>
+            {children}
+          </StyledMain>
+        </StyledLayout>
+      </>
+    )
+  }
+
   const isErrorPage =
     ['/404', '/500'].includes(route) ||
     (query.chainId &&
@@ -62,34 +84,32 @@ function Layout({ children }: PropsWithChildren) {
 
   return (
     <>
-      <Head>{isRootPage ? <RootFavicon /> : <Favicon />}</Head>
-      <StyledLayout layoutRoot $root={isRootPage}>
-        {!isRootPage && (
-          <Suspense>
-            <Alerts />
-          </Suspense>
-        )}
+      <Head>
+        <Favicon />
+      </Head>
 
-        <Gnb isRootPage={isRootPage} />
+      <StyledLayout layoutRoot $root={isRootPage}>
+        <Suspense>
+          <Alerts />
+        </Suspense>
+
+        <MainGnb />
 
         <StyledMain ref={mainRef} layout>
           {children}
         </StyledMain>
       </StyledLayout>
 
-      {!isRootPage && (
-        <>
-          <Modals />
+      <Modals />
+      <Suspense>
+        {isEthereum(chainId) && (
           <Suspense>
-            {isEthereum(chainId) && (
-              <Suspense>
-                <BalancerPool />
-              </Suspense>
-            )}
-            {isBsc(chainId) && <PancakeSwapPool />}
+            <BalancerPool />
           </Suspense>
-        </>
-      )}
+        )}
+
+        {isBsc(chainId) && <PancakeSwapPool />}
+      </Suspense>
     </>
   )
 }

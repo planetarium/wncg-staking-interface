@@ -19,6 +19,10 @@ export const StyledMainCard = styled(motion.div)`
       .logoIcon {
         margin-bottom: 8px;
       }
+
+      .cryptoIcon {
+        margin-right: 8px;
+      }
     }
 
     .subtitle {
@@ -75,7 +79,7 @@ export const StyledMainCard = styled(motion.div)`
         content: ':';
       }
 
-      .tokenIcon {
+      .cryptoIcon {
         margin-right: 4px;
       }
 

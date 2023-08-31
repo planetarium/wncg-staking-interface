@@ -3,13 +3,11 @@ import Head from 'next/head'
 import { NextSeo } from 'next-seo'
 
 import { MAIN_SEO } from 'lib/seo'
-export { getStaticProps } from 'lib/getStaticProps'
 
 import { StyledMainPage } from 'styles/pages'
 import RootFavicon from 'components/RootFavicon'
 import WncgCard from 'components/main/WncgCard'
 import NcgCard from 'components/main/NcgCard'
-import RootHooks from 'components/GlobalHooks/Root'
 
 const Home: NextPage = () => {
   return (
@@ -37,8 +35,6 @@ const Home: NextPage = () => {
           </ul>
         </div>
       </StyledMainPage>
-
-      <RootHooks />
     </main>
   )
 }

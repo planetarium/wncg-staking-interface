@@ -1,6 +1,5 @@
 import config from 'config'
 import { SUPPORTED_CHAINS, defaultChainId } from 'config/chains'
-import { BAL_ADDRESS, WNCG_ADDRESS } from 'config/constants/addresses'
 import { chainNameFor } from 'utils/chainNameFor'
 import { isEthereum } from 'utils/isEthereum'
 
@@ -9,18 +8,13 @@ import Button from 'components/Button'
 import CryptoIcon from 'components/CryptoIcon'
 import Icon from 'components/Icon'
 import Image from 'components/Image'
-import TokenIcon from 'components/TokenIcon'
 
 export default function MainWncgCard() {
   return (
     <StyledMainCard>
       <header className="header">
         <h2 className="title">
-          <TokenIcon
-            className="logoIcon"
-            address={WNCG_ADDRESS[defaultChainId]}
-            $size={24}
-          />
+          <CryptoIcon icon="wncg" $size={24} />
           Staking Wrapped Nine Chronicles Gold
         </h2>
 
@@ -59,7 +53,7 @@ export default function MainWncgCard() {
           <dl className="rewardList">
             <div className="rewardItem">
               <dt>
-                <TokenIcon address={WNCG_ADDRESS[defaultChainId]} $size={16} />
+                <CryptoIcon icon="wncg" $size={16} />
                 <strong>WNCG(Wrapped NCG)</strong>
               </dt>
               <dd>1:1 NCG backed ERC-20 token</dd>
@@ -67,10 +61,8 @@ export default function MainWncgCard() {
 
             <div className="rewardItem">
               <dt>
-                <TokenIcon
-                  address={BAL_ADDRESS[defaultChainId] as Hash}
-                  $size={16}
-                />
+                <CryptoIcon icon="balancer" $size={16} />
+
                 <strong>BAL</strong>
               </dt>
               <dd>Balancer Governance Token</dd>
