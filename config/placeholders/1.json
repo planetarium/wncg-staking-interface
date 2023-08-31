@@ -1,0 +1,80 @@
+{
+  "balancerGaugeAddress": "0x47c56a900295df5224ec5e6751dc31eb900321d5",
+  "lpToken": {
+    "name": "20WETH-80WNCG",
+    "symbol": "WNCG BPT",
+    "address": "0xe8cc7e765647625b95f59c15848379d10b9ab4af",
+    "totalSupply": "1686101.115568404858126438",
+    "decimals": 18
+  },
+  "rewardEmissionsPerSec": ["0.019025875", "0.000196643995484027"],
+  "earmarkIncentivePcnt": 0.01,
+  "withdrawSeconds": 259200,
+  "poolTokens": [
+    {
+      "name": "Wrapped Ether",
+      "symbol": "WETH",
+      "weight": "0.2",
+      "address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "balance": "86.546037940749827235",
+      "decimals": 18
+    },
+    {
+      "name": "Wrapped NCG",
+      "symbol": "WNCG",
+      "weight": "0.8",
+      "address": "0xf203ca1769ca8e9e8fe1da9d147db68b6c919817",
+      "balance": "8557175.615711333698290925",
+      "decimals": 18
+    }
+  ],
+  "cooldownSeconds": 1209600,
+  "balRewardPoolAddress": "0xbdc7f77449f7e509e8a671e727f2c6e7d6aed4e9",
+  "totalSwapFee": "180945052.8531992383260687046686487",
+  "chainId": 1,
+  "shouldReversePoolTokenOrderOnDisplay": true,
+  "rewardTokenAddresses": [
+    "0xf203ca1769ca8e9e8fe1da9d147db68b6c919817",
+    "0xba100000625a3754423978a60c9317c58a424e3d"
+  ],
+  "prices": {
+    "0xba100000625a3754423978a60c9317c58a424e3d": "3.55",
+    "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2": "1703",
+    "0xf203ca1769ca8e9e8fe1da9d147db68b6c919817": "0.068682",
+    "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee": "1704.28",
+    "0xe8cc7e765647625b95f59c15848379d10b9ab4af": "0.43598324647544510084"
+  },
+  "tokens": {
+    "0xba100000625a3754423978a60c9317c58a424e3d": {
+      "name": "Balancer",
+      "symbol": "BAL",
+      "address": "0xba100000625a3754423978a60c9317c58a424e3d",
+      "decimals": 18
+    },
+    "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2": {
+      "name": "Wrapped Ether",
+      "symbol": "WETH",
+      "address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "decimals": 18
+    },
+    "0xf203ca1769ca8e9e8fe1da9d147db68b6c919817": {
+      "name": "Wrapped NCG",
+      "symbol": "WNCG",
+      "address": "0xf203ca1769ca8e9e8fe1da9d147db68b6c919817",
+      "decimals": 18
+    },
+    "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee": {
+      "name": "Ether",
+      "symbol": "ETH",
+      "address": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+      "decimals": 18
+    },
+    "0xe8cc7e765647625b95f59c15848379d10b9ab4af": {
+      "name": "20WETH-80WNCG",
+      "symbol": "WNCG BPT",
+      "address": "0xe8cc7e765647625b95f59c15848379d10b9ab4af",
+      "decimals": 18
+    }
+  },
+  "totalStaked": "543678.361151304197804891"
+}

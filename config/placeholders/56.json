@@ -1,0 +1,67 @@
+{
+  "lpToken": {
+    "name": "Cake-LP",
+    "symbol": "WNCG-WBNB",
+    "address": "0xd38fc981f7cbfb63585b375fc93d46056774344c",
+    "totalSupply": "58.757023995738719271",
+    "decimals": 18
+  },
+  "rewardEmissionsPerSec": ["0.009512937595129375"],
+  "withdrawSeconds": 259200,
+  "poolTokens": [
+    {
+      "name": "WrappedNCG",
+      "symbol": "WNCG",
+      "weight": "0.5",
+      "address": "0x52242cbab41e290e9e17ccc50cc437bb60020a9d",
+      "balance": "3391.591103037870167144",
+      "decimals": 18
+    },
+    {
+      "name": "Wrapped BNB",
+      "symbol": "WBNB",
+      "weight": "0.5",
+      "address": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "balance": "1.028088617810963346",
+      "decimals": 18
+    }
+  ],
+  "cooldownSeconds": 1209600,
+  "totalSwapFee": "0",
+  "chainId": 56,
+  "shouldReversePoolTokenOrderOnDisplay": false,
+  "rewardTokenAddresses": ["0x52242cbab41e290e9e17ccc50cc437bb60020a9d"],
+  "prices": {
+    "0x52242cbab41e290e9e17ccc50cc437bb60020a9d": "0.068682",
+    "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee": "223.43",
+    "0xd38fc981f7cbfb63585b375fc93d46056774344c": "7.87512768266063707521",
+    "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c": "223.5"
+  },
+  "tokens": {
+    "0x52242cbab41e290e9e17ccc50cc437bb60020a9d": {
+      "name": "WrappedNCG",
+      "symbol": "WNCG",
+      "address": "0x52242cbab41e290e9e17ccc50cc437bb60020a9d",
+      "decimals": 18
+    },
+    "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee": {
+      "name": "BNB",
+      "symbol": "BNB",
+      "address": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+      "decimals": 18
+    },
+    "0xd38fc981f7cbfb63585b375fc93d46056774344c": {
+      "name": "Cake-LP",
+      "symbol": "WNCG-WBNB",
+      "address": "0xd38fc981f7cbfb63585b375fc93d46056774344c",
+      "decimals": 18
+    },
+    "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c": {
+      "name": "Wrapped BNB",
+      "symbol": "WBNB",
+      "address": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "decimals": 18
+    }
+  },
+  "totalStaked": "57.734818327891704765"
+}
