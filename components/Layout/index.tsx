@@ -3,6 +3,7 @@ import dynamic from 'next/dynamic'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 
+import { SUPPORTED_CHAINS } from 'config/chains'
 import { isBsc } from 'utils/isBsc'
 import { isEthereum } from 'utils/isEthereum'
 import { useChain, useMediaQuery } from 'hooks'
@@ -36,12 +37,16 @@ function Layout({ children }: PropsWithChildren) {
   const mainRef = useRef<HTMLDivElement>(null)
 
   const { chainId } = useChain()
-  const { route, pathname } = useRouter()
+  const router = useRouter()
+  const { route, pathname, query } = router
 
   useMediaQuery()
 
   const isRootPage = pathname === '/'
-  const isErrorPage = ['/404', '/500'].includes(route)
+  const isErrorPage =
+    ['/404', '/500'].includes(route) ||
+    (query.chainId &&
+      !SUPPORTED_CHAINS.includes(Number(query.chainId) as ChainId))
 
   if (isErrorPage) {
     return (

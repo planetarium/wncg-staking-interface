@@ -34,26 +34,6 @@ const nextConfig = {
       },
     ]
   },
-
-  exportPathMap: async function () {
-    return {
-      '/': { page: '/', __nextDefaultLocale: 'en' },
-      [`/wncg/${ethereumChainId}`]: {
-        page: `/wncg/${ethereumChainId}`,
-        query: { chainId: ethereumChainId },
-        __nextDefaultLocale: 'en',
-      },
-      [`/wncg/${bscChainId}`]: {
-        page: `/wncg/${bscChainId}`,
-        query: { chainId: bscChainId },
-        __nextDefaultLocale: 'en',
-      },
-      '/docs/terms': { page: '/docs/terms', __nextDefaultLocale: 'en' },
-      '/docs/privacy': { page: '/docs/privacy', __nextDefaultLocale: 'en' },
-      '/404': { page: '/404', __nextDefaultLocale: 'en' },
-      '/500': { page: '/500', __nextDefaultLocale: 'en' },
-    }
-  },
 }
 
 module.exports = nextConfig

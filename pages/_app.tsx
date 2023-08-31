@@ -8,12 +8,13 @@ import { isFirefox } from 'react-device-detect'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import type { DehydratedState } from '@tanstack/react-query'
 
-import { Provider } from 'jotai'
 import type { AppProps } from 'next/app'
 import Script from 'next/script'
-import { WagmiConfig } from 'wagmi'
+import { useRouter } from 'next/router'
+import { Provider } from 'jotai'
 import { queryClientAtom } from 'jotai-tanstack-query'
 import { useHydrateAtoms } from 'jotai/utils'
+import { WagmiConfig } from 'wagmi'
 import 'react-toastify/dist/ReactToastify.css'
 
 import config from 'config'
@@ -28,8 +29,6 @@ import DefaultSeo from 'components/DefaultSeo'
 import ErrorBoundary from 'components/ErrorBoundary'
 import Layout from 'components/Layout'
 import ToastContainer from 'components/ToastContainer'
-import { useMount } from 'react-use'
-import { useRouter } from 'next/router'
 
 type MyAppProps = AppProps & {
   pageProps: {

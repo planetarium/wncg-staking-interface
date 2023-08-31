@@ -1,5 +1,3 @@
-import { ChainId, defaultChainId } from 'config/chains'
-import { AppProps } from 'next/app'
 import {
   Dispatch,
   PropsWithChildren,
@@ -7,6 +5,9 @@ import {
   useContext,
   useState,
 } from 'react'
+import { AppProps } from 'next/app'
+
+import { ChainId } from 'config/chains'
 
 const ChainContext = createContext<{
   chainId: ChainId | null
@@ -25,7 +26,9 @@ export function ChainContextProvider({
   pageProps,
   children,
 }: ChainContextProvider) {
-  const [chainId, setChainId] = useState(pageProps.chainId ?? defaultChainId)
+  const [chainId, setChainId] = useState(pageProps.chainId)
+
+  console.log(39393, chainId)
 
   return (
     <ChainContext.Provider value={{ chainId, setChainId }}>
