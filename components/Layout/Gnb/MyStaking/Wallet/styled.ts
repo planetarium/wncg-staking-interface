@@ -324,6 +324,7 @@ export const StyledWalletUnstakeWindow = styled.div<StyledWalletUnstakeWindowPro
 
     time {
       display: block;
+      white-space: nowrap;
     }
   }
 
