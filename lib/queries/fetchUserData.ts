@@ -1,11 +1,10 @@
-import { Contract, providers } from 'ethers'
-import { readContracts } from 'wagmi'
-
-import config from 'config'
-import { StakingAbi } from 'config/abi'
+import { StakingEthereumAbi } from 'config/abi'
+import { STAKING_ADDRESS } from 'config/constants/addresses'
+import { readContractsPool } from 'lib/readContractsPool'
 import { bnum } from 'utils/bnum'
 import { formatUnits } from 'utils/formatUnits'
 import { now } from 'utils/now'
+import { resolveReadContractsResult } from 'utils/resolveReadContractsResult'
 
 const FNS = [
   'stakedTokenBalance',
@@ -14,29 +13,20 @@ const FNS = [
   'cooldowns',
 ]
 
-export async function fetchUserData(account: Hash): Promise<UserDataResponse> {
+export async function fetchUserData(chainId: ChainId, account: Hash | null) {
+  if (account == null) return {}
+
   const contracts = FNS.map((fn) => ({
-    address: config.stakingAddress,
-    abi: StakingAbi as Abi,
-    chainId: config.chainId,
+    address: STAKING_ADDRESS[chainId],
+    abi: StakingEthereumAbi as Abi,
+    chainId,
     functionName: fn,
     args: [account],
   }))
 
-  let provider = new providers.Web3Provider(
-    window?.ethereum as any as providers.ExternalProvider,
-    'any'
-  )
-
-  const contract = new Contract(
-    config.stakingAddress,
-    StakingAbi,
-    provider.getSigner(account)
-  )
-
   try {
     const data =
-      (await readContracts({
+      (await readContractsPool.call({
         contracts,
         allowFailure: true,
       })) ?? []
@@ -46,23 +36,17 @@ export async function fetchUserData(account: Hash): Promise<UserDataResponse> {
       _getCooldownEndTimestamp,
       _getWithdrawEndTimestamp,
       _cooldowns,
-    ] = data as unknown as BigNumber[]
+    ] = resolveReadContractsResult(data) as BigInt[]
 
-    let _earnedBAL = null
-    let _earnedWNCG = null
+    const stakedTokenBalance = formatUnits(_stakedTokenBalance.toString())
 
-    const currentNetwork = await provider.getNetwork()
-    if (currentNetwork.chainId === config.chainId) {
-      _earnedBAL = await contract?.earnedBAL(account)
-      _earnedWNCG = await contract?.earnedWNCG(account)
-    }
-
-    const stakedTokenBalance = formatUnits(_stakedTokenBalance)
-    const earnedRewards = [formatUnits(_earnedWNCG), formatUnits(_earnedBAL)]
-
-    const _cooldownEndsAt = _getCooldownEndTimestamp?.toNumber() ?? 0
-    const _withdrawEndsAt = _getWithdrawEndTimestamp?.toNumber() ?? 0
-    const cooldowns = _cooldowns?.toNumber() ?? 0
+    const _cooldownEndsAt = bnum(
+      _getCooldownEndTimestamp?.toString() ?? '0'
+    ).toNumber()
+    const _withdrawEndsAt = bnum(
+      _getWithdrawEndTimestamp?.toString() ?? '0'
+    ).toNumber()
+    const cooldowns = bnum(_cooldowns?.toString() ?? '0').toNumber()
 
     const currentTimestamp = now()
 
@@ -71,15 +55,13 @@ export async function fetchUserData(account: Hash): Promise<UserDataResponse> {
     const withdrawEndsAt =
       currentTimestamp > _withdrawEndsAt ? 0 : _withdrawEndsAt
 
-    const hasRewards = earnedRewards.some((r) => bnum(r).gt(0))
+    // console.log('💜 USER STATUS')
 
     return {
       cooldownEndsAt,
       cooldowns,
-      earnedRewards,
       stakedTokenBalance,
       withdrawEndsAt,
-      hasRewards,
     }
   } catch (error) {
     throw error

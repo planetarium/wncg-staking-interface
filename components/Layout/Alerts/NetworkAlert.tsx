@@ -1,23 +1,18 @@
-import { memo } from 'react'
-
-import config from 'config'
-import { EXIT_MOTION } from 'config/motions'
-import { slideInDown } from 'config/motionVariants'
-import { networkNameFor } from 'utils/networkNameFor'
-import { useSwitchNetwork } from 'hooks'
+import { ANIMATION_MAP, EXIT_MOTION } from 'config/constants/motions'
+import { getNetworkLabel } from 'utils/getNetworkLabel'
+import { useChain, useSwitchNetwork } from 'hooks'
 
 import { StyledAlertContent } from './styled'
 import Icon from 'components/Icon'
 
 function NetworkAlert() {
+  const { chainId } = useChain()
   const { switchNetwork } = useSwitchNetwork()
 
   return (
-    <StyledAlertContent {...EXIT_MOTION} variants={slideInDown}>
+    <StyledAlertContent {...EXIT_MOTION} variants={ANIMATION_MAP.slideInDown}>
       <Icon icon="warning" $size={24} />
-      <h1 className="desc">
-        Please switch to {networkNameFor(config.chainId)}
-      </h1>
+      <h1 className="desc">Please switch to {getNetworkLabel(chainId)}</h1>
 
       <button className="switchButton" type="button" onClick={switchNetwork}>
         Switch network
@@ -26,4 +21,4 @@ function NetworkAlert() {
   )
 }
 
-export default memo(NetworkAlert)
+export default NetworkAlert

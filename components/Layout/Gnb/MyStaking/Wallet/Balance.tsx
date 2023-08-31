@@ -1,10 +1,11 @@
-import { memo } from 'react'
+import { MouseEvent } from 'react'
 import { useSetAtom } from 'jotai'
 
 import { showMyStakingAtom } from 'states/ui'
 import { ModalType } from 'config/constants'
 import { bnum } from 'utils/bnum'
-import { useBalances, useFiat, useModal, useStaking } from 'hooks'
+import { isEthereum } from 'utils/isEthereum'
+import { useBalances, useChain, useFiat, useModal, useStaking } from 'hooks'
 
 import { StyledMyStakingWalletSection } from './styled'
 import Button from 'components/Button'
@@ -13,45 +14,50 @@ import NumberFormat from 'components/NumberFormat'
 import PoolTokens from 'components/PoolTokens'
 
 function WalletBalance() {
+  const { chainId } = useChain()
   const toFiat = useFiat()
   const { addModal } = useModal()
-  const { stakedTokenAddress } = useStaking()
+  const { lpToken } = useStaking()
 
   const setShowMyStaking = useSetAtom(showMyStakingAtom)
 
   const balanceOf = useBalances()
-  const bptBalance = balanceOf(stakedTokenAddress)
+  const lpBalance = balanceOf(lpToken?.address)
 
-  const hasLpToken = bnum(bptBalance).gt(0)
+  const hasLpToken = bnum(lpBalance).gt(0)
   const exitDisabled = !hasLpToken
 
-  const fiatValue = toFiat(bptBalance, stakedTokenAddress)
+  const fiatValue = toFiat(lpBalance, lpToken?.address)
 
-  function openExit() {
+  function onClickExit(e: MouseEvent) {
+    e.stopPropagation()
+
     setShowMyStaking(false)
     addModal({
-      type: ModalType.Exit,
+      type: isEthereum(chainId) ? ModalType.Exit : ModalType.RemoveLiquidity,
     })
   }
 
   return (
     <StyledMyStakingWalletSection>
       <header className="header">
-        <h3 className="title">Stakable LP tokens</h3>
+        <h3 className="title">
+          Stakable {isEthereum(chainId) ? 'LP tokens' : 'Cake-LP'}
+        </h3>
         <div className="amount">
-          <CountUp value={bptBalance} />
+          <CountUp value={lpBalance} />
           {hasLpToken && <NumberFormat value={fiatValue} type="fiat" />}
         </div>
       </header>
 
       <div className="content">
-        {hasLpToken && <PoolTokens bptBalance={bptBalance} />}
+        {hasLpToken && <PoolTokens lpBalance={lpBalance} />}
 
         <Button
           className="actionButton"
           type="button"
           disabled={exitDisabled}
-          onClick={openExit}
+          onClick={onClickExit}
           $size="md"
           $variant="secondary"
         >
@@ -62,4 +68,4 @@ function WalletBalance() {
   )
 }
 
-export default memo(WalletBalance)
+export default WalletBalance

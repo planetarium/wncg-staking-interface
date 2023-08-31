@@ -5,10 +5,10 @@ import { useAtomValue } from 'jotai'
 import { isUnstakeWindowAtom } from 'states/account'
 
 import { ModalType } from 'config/constants'
-import { EXIT_MOTION } from 'config/motions'
-import { slideInDown } from 'config/motionVariants'
+import { ANIMATION_MAP, EXIT_MOTION } from 'config/constants/motions'
 import { bnum } from 'utils/bnum'
-import { useBalances, useFiat, useModal, useStaking } from 'hooks'
+import { isEthereum } from 'utils/isEthereum'
+import { useBalances, useChain, useFiat, useModal, useStaking } from 'hooks'
 import { useFetchUserData } from 'hooks/queries'
 
 import { StyledSidebarStaking } from './styled'
@@ -26,20 +26,21 @@ export default function SidebarStaking({ closeSidebar }: SidebarStakingProps) {
   const [show, setShow] = useState(false)
 
   const balanceOf = useBalances()
+  const { chainId } = useChain()
   const toFiat = useFiat()
   const { addModal } = useModal()
-  const { stakedTokenAddress } = useStaking()
+  const { lpToken } = useStaking()
 
   const { stakedTokenBalance = '0' } = useFetchUserData().data ?? {}
 
   const isUnstakeWindow = useAtomValue(isUnstakeWindowAtom)
 
-  const stakedTokenFiatValue = toFiat(stakedTokenBalance, stakedTokenAddress)
+  const stakedTokenFiatValue = toFiat(stakedTokenBalance, lpToken?.address)
 
-  const bptBalance = balanceOf(stakedTokenAddress)
-  const bptBalanceInFiatValue = toFiat(bptBalance, stakedTokenAddress)
+  const lpBalance = balanceOf(lpToken?.address)
+  const lpBalanceInFiatValue = toFiat(lpBalance, lpToken?.address)
 
-  const hasLpToken = bnum(bptBalance).gt(0)
+  const hasLpToken = bnum(lpBalance).gt(0)
   const hasStakedToken = bnum(stakedTokenBalance).gt(0)
   const exitDisabled = !hasLpToken
   const withdrawDisabled = bnum(stakedTokenBalance).isZero()
@@ -64,7 +65,7 @@ export default function SidebarStaking({ closeSidebar }: SidebarStakingProps) {
 
   function openExitModal(e: MouseEvent) {
     addModal({
-      type: ModalType.Exit,
+      type: isEthereum(chainId) ? ModalType.Exit : ModalType.RemoveLiquidity,
     })
     closeSidebar(e)
   }
@@ -72,7 +73,9 @@ export default function SidebarStaking({ closeSidebar }: SidebarStakingProps) {
   return (
     <StyledSidebarStaking $expanded={show} $unstakeWindow={isUnstakeWindow}>
       <header className="header">
-        <h3 className="title">My staked LP tokens</h3>
+        <h3 className="title">
+          My staked {isEthereum(chainId) ? 'LP tokens' : 'Cake-LP'}
+        </h3>
 
         <button className="toggleButton" type="button" onClick={toggle}>
           <CountUp value={stakedTokenBalance} />
@@ -85,7 +88,7 @@ export default function SidebarStaking({ closeSidebar }: SidebarStakingProps) {
           <motion.div
             className="content"
             {...EXIT_MOTION}
-            variants={slideInDown}
+            variants={ANIMATION_MAP.slideInDown}
           >
             <dl className="detailList">
               <div className="detailItem">
@@ -134,9 +137,9 @@ export default function SidebarStaking({ closeSidebar }: SidebarStakingProps) {
               <div className="detailItem">
                 <dt>Stakable LP</dt>
                 <dd className="amount">
-                  <CountUp value={bptBalance} />
+                  <CountUp value={lpBalance} />
                   <NumberFormat
-                    value={bptBalanceInFiatValue}
+                    value={lpBalanceInFiatValue}
                     type="fiat"
                     prefix="$"
                   />

@@ -1,12 +1,11 @@
-import { memo, MouseEvent } from 'react'
+import { MouseEvent } from 'react'
 import { LayoutGroup, motion } from 'framer-motion'
 
-import { EXIT_MOTION } from 'config/motions'
 import {
-  fadeIn,
-  layoutTransition,
-  slideInFromRight,
-} from 'config/motionVariants'
+  ANIMATION_MAP,
+  EXIT_MOTION,
+  TRANSITION_MAP,
+} from 'config/constants/motions'
 import { useAuth } from 'hooks'
 
 import {
@@ -32,16 +31,16 @@ function GnbSidebar({ closeSidebar }: GnbSidebarProps) {
     <StyledGnbSidebar>
       <StyledGnbSidebarOverlay
         {...EXIT_MOTION}
-        variants={fadeIn}
-        transition={layoutTransition}
+        variants={ANIMATION_MAP.fadeIn}
+        transition={TRANSITION_MAP.layout}
         onClick={closeSidebar}
         role="presentation"
       />
 
       <StyledGnbSidebarContent
         {...EXIT_MOTION}
-        variants={slideInFromRight}
-        transition={layoutTransition}
+        variants={ANIMATION_MAP.slideInFromRight}
+        transition={TRANSITION_MAP.layout}
       >
         <header className="header">
           <button className="closeButton" type="button" onClick={closeSidebar}>
@@ -75,4 +74,4 @@ function GnbSidebar({ closeSidebar }: GnbSidebarProps) {
   )
 }
 
-export default memo(GnbSidebar)
+export default GnbSidebar

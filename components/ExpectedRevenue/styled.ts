@@ -2,13 +2,9 @@ import styled, { css } from 'styled-components'
 
 import { flexbox, media, textStyle } from 'styles/utils'
 
-type StyledExpectedRevenueProps = {
-  $color?: string
-}
-
 const REVENUE_ITEM_PADDING = 16
 
-export const StyledExpectedRevenue = styled.dl<StyledExpectedRevenueProps>`
+export const StyledExpectedRevenueBonusRewards = styled.dl`
   .revenueItem {
     ${textStyle('body', 3)}
     padding: 20px;
@@ -85,27 +81,16 @@ export const StyledExpectedRevenue = styled.dl<StyledExpectedRevenueProps>`
   }
 
   .label {
-    /* ${flexbox('start')} */
-
     .token,
     .countUp {
       display: inline-flex !important;
     }
   }
 
-  ${({ $color }) =>
-    $color &&
-    css`
-      .countUp {
-        color: ${$color};
-      }
-    `}
-
   ${media(
     'minSmLaptop',
     css`
       .revenueItem {
-        /* ${flexbox('start')} */
         ${textStyle('body', 3)}
         padding: ${REVENUE_ITEM_PADDING}px 0;
         margin-top: 0;
@@ -170,4 +155,65 @@ export const StyledExpectedRevenue = styled.dl<StyledExpectedRevenueProps>`
       }
     `
   )}
+`
+
+export const StyledExpectedRevenueSingleRewards = styled.dl`
+  &.fallback {
+    .revenueItem {
+      padding: 20px 0;
+    }
+  }
+
+  .revenueItem {
+    ${flexbox('start')}
+    ${textStyle('body', 2)}
+    padding: ${REVENUE_ITEM_PADDING}px 0;
+    box-shadow: 0 1px 0 rgba(var(--gray-600-rgb), 0.5);
+
+    &:last-child {
+      box-shadow: none;
+    }
+  }
+
+  dt {
+    flex-shrink: 0;
+    width: ${80 + 40}px;
+    padding-right: 40px;
+    font-weight: 700;
+    white-space: nowrap;
+    color: var(--primary-300);
+  }
+
+  .timestamp {
+    flex-shrink: 0;
+    width: ${120 + 40}px;
+    padding-right: 40px;
+    white-space: nowrap;
+    color: var(--white);
+  }
+
+  .value {
+    ${flexbox('center', 'end')}
+    flex-direction: column;
+    flex-grow: 1;
+  }
+
+  .countUp {
+    font-weight: 700;
+  }
+
+  .number {
+    ${textStyle('body', 3)}
+    margin-top: 4px;
+    font-weight: 500;
+    color: var(--gray-300);
+  }
+
+  .tokenIcon {
+    margin-right: 4px;
+  }
+
+  .label {
+    ${flexbox('start')}
+  }
 `

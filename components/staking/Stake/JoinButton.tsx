@@ -1,11 +1,12 @@
 import type { MouseEvent } from 'react'
+import dynamic from 'next/dynamic'
 import { useAtom, useSetAtom } from 'jotai'
 import { AnimatePresence } from 'framer-motion'
+import clsx from 'clsx'
 
 import { slippageAtom } from 'states/system'
 import { hideJoinTooltipAtom, showPoolAtom } from 'states/ui'
-import { EXIT_MOTION } from 'config/motions'
-import { fadeIn } from 'config/motionVariants'
+import { ANIMATION_MAP, MOTION } from 'config/constants/motions'
 import { bnum } from 'utils/bnum'
 import { useAuth, useBalances, useStaking, useResponsive } from 'hooks'
 
@@ -14,13 +15,13 @@ import Arrow from 'components/Arrow'
 import Button from 'components/Button'
 import JoinTooltip from './JoinTooltip'
 
-export default function MainStakeJoinButton() {
+function MainStakeJoinButton() {
   const { isConnected } = useAuth()
   const balanceOf = useBalances()
   const { isMobile } = useResponsive()
-  const { stakedTokenAddress } = useStaking()
+  const { lpToken } = useStaking()
 
-  const hasLpTokenBalance = bnum(balanceOf(stakedTokenAddress)).gt(0)
+  const hasLpBalance = bnum(balanceOf(lpToken?.address)).gt(0)
 
   const [hideJoinTooltip, setHideJoinTooltip] = useAtom(hideJoinTooltipAtom)
   const setShowPool = useSetAtom(showPoolAtom)
@@ -39,19 +40,18 @@ export default function MainStakeJoinButton() {
 
   return (
     <StyledStakeJoinButton
-      {...EXIT_MOTION}
-      className="tooltipGroup"
-      variants={fadeIn}
-      $hasBalance={hasLpTokenBalance}
+      {...MOTION}
+      className={clsx('tooltipGroup', { hasBalance: hasLpBalance })}
+      variants={ANIMATION_MAP.fadeIn}
     >
-      {(hasLpTokenBalance || !isConnected) && (
+      {(hasLpBalance || !isConnected) && (
         <button className="joinButton" type="button" onClick={openModal}>
           Join pool & Get LP tokens
           <Arrow $size={24} />
         </button>
       )}
 
-      {!hasLpTokenBalance && isConnected && (
+      {!hasLpBalance && isConnected && (
         <Button
           type="button"
           onClick={openModal}
@@ -61,7 +61,7 @@ export default function MainStakeJoinButton() {
         </Button>
       )}
 
-      {isConnected && !hasLpTokenBalance && (
+      {isConnected && !hasLpBalance && (
         <AnimatePresence>
           {!hideJoinTooltip && (
             <JoinTooltip closeTooltip={closeTooltip} $gap={20} />
@@ -71,3 +71,7 @@ export default function MainStakeJoinButton() {
     </StyledStakeJoinButton>
   )
 }
+
+export default dynamic(() => Promise.resolve(MainStakeJoinButton), {
+  ssr: false,
+})

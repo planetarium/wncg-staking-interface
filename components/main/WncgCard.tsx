@@ -1,26 +1,33 @@
 import config from 'config'
-import { useStaking } from 'hooks'
+import { SUPPORTED_CHAINS, defaultChainId } from 'config/chains'
+import { chainNameFor } from 'utils/chainNameFor'
+import { isEthereum } from 'utils/isEthereum'
 
 import { StyledMainCard } from './styled'
 import Button from 'components/Button'
+import CryptoIcon from 'components/CryptoIcon'
 import Icon from 'components/Icon'
 import Image from 'components/Image'
-import TokenIcon from 'components/TokenIcon'
 
 export default function MainWncgCard() {
-  const { rewardTokenAddress } = useStaking()
-
   return (
     <StyledMainCard>
       <header className="header">
         <h2 className="title">
-          <TokenIcon
-            className="logoIcon"
-            address={rewardTokenAddress}
-            $size={24}
-          />
+          <CryptoIcon icon="wncg" $size={24} />
           Staking Wrapped Nine Chronicles Gold
         </h2>
+
+        <div className="linkGroup">
+          {SUPPORTED_CHAINS.map((c) => {
+            return (
+              <span className="chainButton" key={`wncgCard:links:${c}`}>
+                <CryptoIcon icon={isEthereum(c) ? 'ether' : 'bnb'} $size={24} />
+                {chainNameFor(c)}
+              </span>
+            )
+          })}
+        </div>
 
         <div className="mobileImage">
           <Image
@@ -34,33 +41,41 @@ export default function MainWncgCard() {
         <h4 className="subtitle">
           Provide WNCG liquidity.
           <br />
-          You can earn WNCG and BAL reward.
+          Earn WNCG and BAL rewards.
         </h4>
 
-        <dl className="rewardList">
-          <div className="rewardItem">
-            <dt>
-              <TokenIcon address={rewardTokenAddress} $size={16} />
-              <strong>WNCG(Wrapped NCG)</strong>
-            </dt>
-            <dd>1:1 NCG backed ERC-20 token</dd>
-          </div>
+        <div className="group">
+          <p className="desc afterLaptop">
+            WNCG Staking is available on Ethereum and BNB Smart Chain. *BAL
+            reward is only on Ethereum.
+          </p>
 
-          <div className="rewardItem">
-            <dt>
-              <TokenIcon address={config.bal} $size={16} />
-              <strong>BAL</strong>
-            </dt>
-            <dd>Balancer Governance Token</dd>
-          </div>
-        </dl>
+          <dl className="rewardList">
+            <div className="rewardItem">
+              <dt>
+                <CryptoIcon icon="wncg" $size={16} />
+                <strong>WNCG(Wrapped NCG)</strong>
+              </dt>
+              <dd>1:1 NCG backed ERC-20 token</dd>
+            </div>
+
+            <div className="rewardItem">
+              <dt>
+                <CryptoIcon icon="balancer" $size={16} />
+
+                <strong>BAL</strong>
+              </dt>
+              <dd>Balancer Governance Token</dd>
+            </div>
+          </dl>
+        </div>
       </header>
 
       <div className="content">
         <ul className="linkList">
           <li className="linkItem">
-            <Button href="/wncg" target="_blank" $contain>
-              WNCG staking
+            <Button href={`/wncg/${defaultChainId}`} target="_blank" $contain>
+              WNCG Staking
             </Button>
           </li>
           <li className="linkItem">

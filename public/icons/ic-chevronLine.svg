@@ -1,0 +1,34 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+>
+  <symbol viewBox="0 0 16 16" id="size-16">
+    <rect width="16" height="16" fill="none" />
+    <path
+      fill-rule="evenodd"
+      clip-rule="evenodd"
+      d="M2.74023 8.00586C2.74023 7.59165 3.07602 7.25586 3.49023 7.25586H11.4902V8.75586H3.49023C3.07602 8.75586 2.74023 8.42007 2.74023 8.00586Z"
+      fill="currentColor"
+    />
+  </symbol>
+
+  <symbol viewBox="0 0 24 24" id="size-24">
+    <rect width="24" height="24" fill="none" />
+    <path
+      fill-rule="evenodd"
+      clip-rule="evenodd"
+      d="M4.39453 12C4.39453 11.4477 4.84225 11 5.39453 11H17.3945V13H5.39453C4.84225 13 4.39453 12.5523 4.39453 12Z"
+      fill="currentColor"
+    />
+  </symbol>
+
+  <symbol viewBox="0 0 32 32" id="size-32">
+    <rect width="32" height="32" fill="none" />
+    <path
+      fill-rule="evenodd"
+      clip-rule="evenodd"
+      d="M6 16C6 15.4477 6.44772 15 7 15H23V17H7C6.44772 17 6 16.5523 6 16Z"
+      fill="currentColor"
+    />
+  </symbol>
+</svg>

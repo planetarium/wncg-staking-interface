@@ -1,39 +1,43 @@
+import { useMemo } from 'react'
 import { useQuery } from '@tanstack/react-query'
 
-import { queryKeys } from 'config/queryKeys'
+import { QUERY_KEYS } from 'config/constants/queryKeys'
 import { fetchUserBalances } from 'lib/queries/fetchUserBalances'
-import { useAuth, useStaking } from 'hooks'
-import { formatUnits } from 'utils/formatUnits'
+import { useAuth, useChain, useStaking } from 'hooks'
 
 export function useFetchUserBalances(options: UseFetchOptions = {}) {
   const {
-    enabled = true,
+    enabled: _enabled = true,
     refetchInterval,
-    refetchOnWindowFocus = 'always',
+    refetchOnWindowFocus,
+    suspense = true,
   } = options
 
-  const { account } = useAuth()
-  const { stakedTokenAddress, poolTokenAddresses, tokenMap } = useStaking()
+  const { account, isConnected } = useAuth()
+  const { chainId } = useChain()
+  const { lpToken, poolTokenAddresses, tokens } = useStaking()
 
-  const shouldFetch = enabled && !!account
+  const enabled = _enabled && !!isConnected && !!account
+
+  const list = useMemo(
+    () => [lpToken?.address, ...poolTokenAddresses],
+    [lpToken?.address, poolTokenAddresses]
+  )
+
+  const decimals = useMemo(
+    () => list.map((addr) => tokens[addr]?.decimals ?? 18),
+    [list, tokens]
+  )
 
   return useQuery<RawBalanceMap>(
-    [queryKeys.User.Balances, account],
-    () =>
-      fetchUserBalances(account!, stakedTokenAddress, ...poolTokenAddresses),
+    [QUERY_KEYS.User.Balances, account, chainId, ...list],
+    () => fetchUserBalances(chainId, account!, list, decimals),
     {
-      enabled: shouldFetch,
+      enabled,
       staleTime: Infinity,
       refetchInterval,
       refetchOnWindowFocus,
-      select(data) {
-        const entries = Object.entries(data).map(([addr, balance]) => {
-          const { decimals = 18 } = tokenMap[addr as Hash] ?? {}
-          return [addr, formatUnits(balance ?? '0', decimals)]
-        })
-        return Object.fromEntries(entries)
-      },
-      suspense: false,
+      suspense,
     }
   )
 }

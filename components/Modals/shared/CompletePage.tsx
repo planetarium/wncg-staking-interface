@@ -1,7 +1,6 @@
-import { memo, ReactNode } from 'react'
+import { ReactNode } from 'react'
 
-import { MOTION } from 'config/motions'
-import { fadeIn } from 'config/motionVariants'
+import { ANIMATION_MAP, MOTION } from 'config/constants/motions'
 
 import { StyledModalCompletePage } from './styled'
 import Lottie from 'components/Lottie'
@@ -16,7 +15,7 @@ function ModalCompletePage({ children, className }: ModalCompletePageProps) {
     <StyledModalCompletePage
       {...MOTION}
       className={className}
-      variants={fadeIn}
+      variants={ANIMATION_MAP.fadeIn}
     >
       <Lottie className="lottie" animationData="completed" />
 
@@ -25,4 +24,4 @@ function ModalCompletePage({ children, className }: ModalCompletePageProps) {
   )
 }
 
-export default memo(ModalCompletePage)
+export default ModalCompletePage

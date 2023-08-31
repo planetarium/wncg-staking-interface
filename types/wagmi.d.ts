@@ -4,7 +4,8 @@ type BinanceChain = {
     message: string
   ) => Promise<{ publicKey: string; signature: string }>
   switchNetwork?: (networkId: string) => Promise<string>
-} & Ethereum
+} & Ethereum &
+  import('wagmi').WindowProvider
 
 type TrustWallet = {}
 
@@ -16,6 +17,8 @@ type ExtendedEthereum = {
   isSafePal?: boolean
   isTrustWallet?: boolean
   isTrust?: boolean
+  isMetaMask?: boolean
+  isCoinbaseWallet?: boolean
 } & Ethereum
 
 type ConnectFn = (args?: Partial<ConnectArgs>) => void
@@ -89,7 +92,8 @@ type NetworkConfig = {
   explorer: string
   explorerName: string
   rpcUrl: string
-  subgraph: string
+  subgraph?: string
+  platform: string
   nativeCurrency: {
     name: string
     address: Hash
@@ -127,3 +131,29 @@ type RawBalanceMap = {
 type BalanceMap = {
   [address: Hash]: string
 }
+
+type Signature = {
+  deadline: number
+  v: number
+  r: string
+  s: string
+}
+type Narrow<TType> =
+  | (TType extends Function ? TType : never)
+  | (TType extends string | number | boolean | bigint ? TType : never)
+  | (TType extends [] ? [] : never)
+  | {
+      [K in keyof TType]: Narrow<TType[K]>
+    }
+
+type ReadContractResult<T> =
+  | {
+      error: Error
+      result?: undefined
+      status: 'failure'
+    }
+  | {
+      error?: undefined
+      result: T
+      status: 'success'
+    }

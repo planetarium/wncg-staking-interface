@@ -2,10 +2,9 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import { NextSeo } from 'next-seo'
 
-import { StyledMainPage } from 'styles/pages'
-export { getStaticProps } from 'lib/getStaticProps'
 import { MAIN_SEO } from 'lib/seo'
 
+import { StyledMainPage } from 'styles/pages'
 import RootFavicon from 'components/RootFavicon'
 import WncgCard from 'components/main/WncgCard'
 import NcgCard from 'components/main/NcgCard'

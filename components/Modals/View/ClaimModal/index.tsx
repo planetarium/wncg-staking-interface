@@ -1,11 +1,12 @@
 import { useRef } from 'react'
-import { useUnmount } from 'react-use'
+import { useMount, useUnmount } from 'react-use'
+import dynamic from 'next/dynamic'
 import { useMachine } from '@xstate/react'
 import { useAtomValue } from 'jotai'
 
 import { claimTxAtom } from 'states/tx'
 import { ToastType } from 'config/constants'
-import { useToast } from 'hooks'
+import { useRefetch, useToast } from 'hooks'
 import { useClaimForm } from './useClaimForm'
 import { useWatch } from './useWatch'
 import { claimMachine, pageFor } from './stateMachine'
@@ -16,19 +17,20 @@ import Page3 from './Page3'
 
 function ClaimModal() {
   const toast = useToast()
+  const refetch = useRefetch({ userRewards: true })
 
   const tx = useAtomValue(claimTxAtom)
 
   const {
     rewardList: _rewardList,
-    earnedRewards: _earnedRewards,
+    earnedTokenRewards: _earnedTokenRewards,
     setValue,
     submitDisabled,
     totalClaimFiatValue: _totalClaimFiatValue,
   } = useClaimForm()
 
   const hash = tx.hash
-  const earnedRewards = tx.earnedRewards ?? _earnedRewards
+  const earnedTokenRewards = tx.earnedTokenRewards ?? _earnedTokenRewards
   const rewardList = tx.rewardList ?? _rewardList
   const totalClaimFiatValue = tx.totalClaimFiatValue ?? _totalClaimFiatValue
 
@@ -43,13 +45,17 @@ function ClaimModal() {
 
   useWatch(send)
 
+  useMount(() => {
+    refetch()
+  })
+
   useUnmount(() => {
     if (hash) {
       toast<ClaimTx>({
         type: ToastType.Claim,
         props: {
           hash,
-          earnedRewards,
+          earnedTokenRewards,
           rewardList,
         },
       })
@@ -62,20 +68,18 @@ function ClaimModal() {
         <Page1
           rewardList={rewardList}
           send={send}
-          earnedRewards={earnedRewards}
+          earnedTokenRewards={earnedTokenRewards}
           setValue={setValue}
           submitDisabled={submitDisabled}
           totalClaimFiatValue={totalClaimFiatValue}
         />
       )}
 
-      {currentPage === 2 && (
-        <Page2 rewardList={rewardList} earnedRewards={earnedRewards} />
-      )}
+      {currentPage === 2 && <Page2 rewardList={rewardList} />}
 
       {currentPage === 3 && <Page3 />}
     </>
   )
 }
 
-export default ClaimModal
+export default dynamic(() => Promise.resolve(ClaimModal), { ssr: false })

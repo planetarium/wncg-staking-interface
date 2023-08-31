@@ -1,15 +1,19 @@
 import { AnimatePresence } from 'framer-motion'
 import clsx from 'clsx'
 
-import { HIGH_PRICE_IMPACT, REKT_PRICE_IMPACT } from 'config/misc'
-import { slideInDown } from 'config/motionVariants'
+import {
+  HIGH_PRICE_IMPACT,
+  REKT_PRICE_IMPACT,
+} from 'config/constants/liquidityPool'
+import { ANIMATION_MAP } from 'config/constants/motions'
+import { bnum } from 'utils/bnum'
 
 import { StyledHighPriceImpact } from './styled'
 import Checkbox from 'components/Checkbox'
 
 type HighPriceImpactProps = {
   checked: boolean
-  priceImpact: number
+  priceImpact: string
   toggle(value: boolean): void
   className?: string
   disabled?: boolean
@@ -24,8 +28,8 @@ function HighPriceImpact({
 }: HighPriceImpactProps) {
   const show =
     !disabled &&
-    priceImpact >= HIGH_PRICE_IMPACT &&
-    priceImpact < REKT_PRICE_IMPACT
+    bnum(priceImpact).gte(HIGH_PRICE_IMPACT) &&
+    bnum(priceImpact).lt(REKT_PRICE_IMPACT)
 
   return (
     <AnimatePresence>
@@ -35,7 +39,7 @@ function HighPriceImpact({
           initial="initial"
           animate="animate"
           exit="exit"
-          variants={slideInDown}
+          variants={ANIMATION_MAP.slideInDown}
           role="alert"
         >
           <h4 className="title">

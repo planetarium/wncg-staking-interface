@@ -1,39 +1,30 @@
-import { memo } from 'react'
-import { useInterval, useMount } from 'react-use'
-import { useQueryClient } from '@tanstack/react-query'
+import { useInterval } from 'react-use'
+import dynamic from 'next/dynamic'
 import { useSetAtom } from 'jotai'
 
-import { currentTimestampAtom, priceMapAtom } from 'states/system'
-import { queryKeys } from 'config/queryKeys'
+import { currentTimestampAtom } from 'states/system'
 import { now } from 'utils/now'
+import { useClientMount } from 'hooks'
 import { useFetchPrices } from 'hooks/queries'
 
 function InterfaceHook() {
-  const queryClient = useQueryClient()
-
   const setCurrentTimestamp = useSetAtom(currentTimestampAtom)
-  const setPriceMap = useSetAtom(priceMapAtom)
 
-  useFetchPrices()
+  useFetchPrices({
+    refetchInterval: 60 * 60 * 3 * 1_000, // 3 hour
+  })
 
   useInterval(() => {
     setCurrentTimestamp(now())
   }, 10 * 1_000)
 
-  useMount(() => {
+  useClientMount(() => {
     setCurrentTimestamp(now())
-  })
-
-  useMount(() => {
-    const defaultPriceMap = (queryClient.getQueryData(
-      [queryKeys.FallbackPrices],
-      { exact: false }
-    ) ?? {}) as PriceMap
-
-    setPriceMap(defaultPriceMap)
   })
 
   return null
 }
 
-export default memo(InterfaceHook)
+export default dynamic(() => Promise.resolve(InterfaceHook), {
+  ssr: false,
+})

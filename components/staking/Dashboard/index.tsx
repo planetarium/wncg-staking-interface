@@ -1,8 +1,8 @@
-import { memo } from 'react'
+import { Suspense } from 'react'
+import dynamic from 'next/dynamic'
 
 import { StyledStakingDashboard } from './styled'
 import Image from 'components/Image'
-import Suspense from 'components/Suspense'
 import Apr from './Apr'
 import Fallback from './Fallback'
 
@@ -25,4 +25,4 @@ function StakingDashboard() {
   )
 }
 
-export default memo(StakingDashboard)
+export default dynamic(() => Promise.resolve(StakingDashboard), { ssr: false })

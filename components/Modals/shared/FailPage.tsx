@@ -1,13 +1,10 @@
-import { memo } from 'react'
-
-import { MOTION } from 'config/motions'
-import { fadeIn } from 'config/motionVariants'
+import { ANIMATION_MAP, MOTION } from 'config/constants/motions'
+import { capitalize } from 'utils/capitalize'
 import { useModal } from 'hooks'
 
 import { StyledModalFailPage } from './styled'
 import Button from 'components/Button'
 import Lottie from 'components/Lottie'
-import { capitalize } from 'utils/string'
 
 type ModalFailPageProps = {
   action: string
@@ -28,7 +25,11 @@ function ModalFailPage({
     'Something is wrong with network connection.<br/> Please try again later.'
 
   return (
-    <StyledModalFailPage {...MOTION} className={className} variants={fadeIn}>
+    <StyledModalFailPage
+      {...MOTION}
+      className={className}
+      variants={ANIMATION_MAP.fadeIn}
+    >
       <header className="modalHeader">
         <Lottie className="lottie" animationData="fail" />
         <h2 className="title">{capitalize(action)} failed</h2>
@@ -44,4 +45,4 @@ function ModalFailPage({
   )
 }
 
-export default memo(ModalFailPage)
+export default ModalFailPage

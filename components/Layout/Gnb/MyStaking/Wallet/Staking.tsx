@@ -3,10 +3,9 @@ import { motion } from 'framer-motion'
 
 import { isUnstakeWindowAtom } from 'states/account'
 import { ModalType } from 'config/constants'
-import { MOTION } from 'config/motions'
-import { fadeIn } from 'config/motionVariants'
+import { ANIMATION_MAP, MOTION } from 'config/constants/motions'
 import { bnum } from 'utils/bnum'
-import { useFiat, useModal, useStaking } from 'hooks'
+import { useChain, useFiat, useModal, useStaking } from 'hooks'
 import { useFetchUserData } from 'hooks/queries'
 
 import { StyledWalletStaking } from './styled'
@@ -15,22 +14,25 @@ import CountUp from 'components/CountUp'
 import Icon from 'components/Icon'
 import NumberFormat from 'components/NumberFormat'
 import Suspense from 'components/Suspense'
-import Rewards from './Rewards'
+import BonusRewards from './BonusRewards'
+import SingleRewards from './SingleRewards'
+import { isEthereum } from 'utils/isEthereum'
 
 type WalletStakingProps = {
   closeWallet(): void
 }
 
 export default function WalletStaking({ closeWallet }: WalletStakingProps) {
+  const { chainId } = useChain()
   const toFiat = useFiat()
   const { addModal } = useModal()
-  const { stakedTokenAddress } = useStaking()
+  const { lpToken, rewardTokenAddresses } = useStaking()
 
   const { stakedTokenBalance = '0' } = useFetchUserData().data ?? {}
 
   const isUnstakeWindow = useAtomValue(isUnstakeWindowAtom)
 
-  const stakedTokenFiatValue = toFiat(stakedTokenBalance, stakedTokenAddress)
+  const stakedTokenFiatValue = toFiat(stakedTokenBalance, lpToken?.address)
 
   function openCooldown() {
     addModal({
@@ -47,11 +49,14 @@ export default function WalletStaking({ closeWallet }: WalletStakingProps) {
   }
 
   const hasStakedToken = bnum(stakedTokenBalance).gt(0)
+  const hasBonusRewards = rewardTokenAddresses.length > 1
 
   return (
     <StyledWalletStaking>
       <header className="header">
-        <h3 className="title">My staked LP tokens</h3>
+        <h3 className="title">
+          My staked {isEthereum(chainId) ? 'LP tokens' : 'Cake-LP'}
+        </h3>
         <div className="amount">
           <CountUp value={stakedTokenBalance} />
           {hasStakedToken && (
@@ -68,11 +73,15 @@ export default function WalletStaking({ closeWallet }: WalletStakingProps) {
       )}
 
       <Suspense>
-        <Rewards closeWallet={closeWallet} />
+        {hasBonusRewards ? (
+          <BonusRewards closeWallet={closeWallet} />
+        ) : (
+          <SingleRewards closeWallet={closeWallet} />
+        )}
       </Suspense>
 
       {!isUnstakeWindow && (
-        <motion.div {...MOTION} variants={fadeIn}>
+        <motion.div {...MOTION} variants={ANIMATION_MAP.fadeIn}>
           <Button
             className="actionButton"
             onClick={openCooldown}

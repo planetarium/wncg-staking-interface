@@ -2,6 +2,9 @@ import { UseFormSetValue } from 'react-hook-form'
 import { useAtom } from 'jotai'
 
 import { claimTxAtom } from 'states/tx'
+import { isEthereum } from 'utils/isEthereum'
+import { walletErrorHandler } from 'utils/walletErrorHandler'
+import { useChain } from 'hooks'
 import { useClaim } from '../useClaim'
 import { ClaimFormFields } from '../useClaimForm'
 
@@ -12,8 +15,8 @@ import Form from './Form'
 
 type ClaimModalPage1Props = {
   rewardList: boolean[]
-  earnedRewards: string[]
-  send(event: string): void
+  earnedTokenRewards: string[]
+  send: XstateSend
   setValue: UseFormSetValue<ClaimFormFields>
   submitDisabled: boolean
   totalClaimFiatValue: string
@@ -21,7 +24,7 @@ type ClaimModalPage1Props = {
 
 export default function ClaimModalPage1({
   rewardList,
-  earnedRewards,
+  earnedTokenRewards,
   send,
   setValue,
   submitDisabled,
@@ -29,35 +32,28 @@ export default function ClaimModalPage1({
 }: ClaimModalPage1Props) {
   const [tx, setTx] = useAtom(claimTxAtom)
 
-  const _claim = useClaim(rewardList, earnedRewards)
+  const { chainId } = useChain()
+
+  const _claim = useClaim(rewardList, earnedTokenRewards)
 
   async function claim() {
-    if (!_claim) {
-      send('FAIL')
-      return
-    }
-
     try {
+      if (!_claim) {
+        throw Error('No writeAsync')
+      }
       const txHash = await _claim()
-      if (!txHash) return
+      if (!txHash) throw Error('No txHash')
+
       setTx({
         hash: txHash,
         rewardList,
-        earnedRewards,
+        earnedTokenRewards,
         totalClaimFiatValue,
       })
       send('NEXT')
     } catch (error: any) {
-      if (
-        error.code === 'ACTION_REJECTED' ||
-        error.code === 4001 ||
-        error.error === 'Rejected by user'
-      ) {
-        send('ROLLBACK')
-        return
-      }
-
-      send('FAIL')
+      walletErrorHandler(error, () => send('FAIL'))
+      send('ROLLBACK')
     }
   }
 
@@ -67,7 +63,11 @@ export default function ClaimModalPage1({
     <StyledClaimModalPage1 $disabled={disabled}>
       <header className="modalHeader">
         <strong className="title accent">Claim rewards</strong>
-        <h2 className="subtitle">Select the all coins to get rewards</h2>
+        <h2 className="subtitle">
+          {isEthereum(chainId)
+            ? 'Select the all coins to get rewards'
+            : 'Claim to get rewards'}
+        </h2>
 
         <CloseButton />
       </header>
@@ -77,7 +77,7 @@ export default function ClaimModalPage1({
           <Form
             rewardList={rewardList}
             setValue={setValue}
-            earnedRewards={earnedRewards}
+            earnedTokenRewards={earnedTokenRewards}
             disabled={disabled}
           />
         </div>

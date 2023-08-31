@@ -1,9 +1,6 @@
-import { MetaMaskInpageProvider } from '@metamask/providers'
-
 declare global {
   interface Window {
-    ethereum?: MetaMaskInpageProvider
+    ethereum?: import('wagmi').WindowProvider
     dataLayer?: Array<any>
-    gtag?: any
   }
 }

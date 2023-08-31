@@ -3,7 +3,7 @@ import Button from 'components/Button'
 import { CloseButton } from 'components/Modals/shared'
 
 type StakeModalPage0Props = {
-  send(event: string): void
+  send: XstateSend
 }
 
 export default function StakeModalPage0({ send }: StakeModalPage0Props) {

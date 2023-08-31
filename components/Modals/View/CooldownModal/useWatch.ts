@@ -1,12 +1,15 @@
-import { useMount, useUnmount } from 'react-use'
-import { useAtomValue } from 'jotai'
+import { useUnmount } from 'react-use'
+import { atom, useAtomValue } from 'jotai'
 import { useWaitForTransaction } from 'wagmi'
 
 import { cooldownTxAtom } from 'states/tx'
-import config from 'config'
-import { useRefetch } from 'hooks'
+import { useClientMount, useChain, useRefetch } from 'hooks'
 
-export function useWatch(send: (event: string) => void) {
+export const cooldownTimestampAtom = atom(0)
+export const unstakeTimestampAtom = atom(0)
+
+export function useWatch(send: XstateSend) {
+  const { chainId } = useChain()
   const refetch = useRefetch({
     staking: true,
     userData: true,
@@ -17,8 +20,7 @@ export function useWatch(send: (event: string) => void) {
   useWaitForTransaction({
     hash: tx.hash!,
     enabled: !!tx.hash,
-    suspense: false,
-    chainId: config.chainId,
+    chainId,
     async onSuccess() {
       await refetch()
       send('SUCCESS')
@@ -28,11 +30,13 @@ export function useWatch(send: (event: string) => void) {
     },
   })
 
-  useMount(() => {
+  useClientMount(() => {
     refetch()
+    return
   })
 
   useUnmount(() => {
     refetch()
+    return
   })
 }

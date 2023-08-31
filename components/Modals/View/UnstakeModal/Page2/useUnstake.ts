@@ -1,32 +1,35 @@
 import { useCallback } from 'react'
-import { parseUnits } from 'ethers/lib/utils.js'
+
 import { useContractWrite, usePrepareContractWrite } from 'wagmi'
 
-import config from 'config'
-import { StakingAbi } from 'config/abi'
+import { StakingEthereumAbi } from 'config/abi'
 import { bnum } from 'utils/bnum'
-import { safeBigNumber } from 'utils/safeBigNumber'
-import { useAuth, useStaking, useSwitchNetwork } from 'hooks'
+import { parseUnits } from 'utils/parseUnits'
+import { useAuth, useChain, useStaking, useSwitchNetwork } from 'hooks'
 
 export function useUnstake(unstakeAmount: string, checked: boolean) {
-  const { account } = useAuth()
-  const { stakedTokenAddress, tokenMap } = useStaking()
+  const { account, isConnected } = useAuth()
+  const { chainId, networkMismatch, stakingAddress } = useChain()
+  const { lpToken } = useStaking()
 
   const { switchBeforeSend } = useSwitchNetwork()
 
-  const stakedToken = tokenMap[stakedTokenAddress]
-
-  const scaledUnstakeAmount = safeBigNumber(
-    parseUnits(bnum(unstakeAmount).toString(), stakedToken.decimals).toString()
+  const scaledUnstakeAmount = parseUnits(
+    bnum(unstakeAmount).toString(),
+    lpToken?.decimals
   ).toString()
 
   const enabled =
-    !!account && bnum(unstakeAmount).gt(0) && !bnum(unstakeAmount).isNaN()
+    !networkMismatch &&
+    !!account &&
+    !!isConnected &&
+    bnum(unstakeAmount).gt(0) &&
+    !bnum(unstakeAmount).isNaN()
 
-  const { config: writeConfig } = usePrepareContractWrite({
-    address: config.stakingAddress,
-    chainId: config.chainId,
-    abi: StakingAbi,
+  const { config } = usePrepareContractWrite({
+    address: stakingAddress,
+    chainId,
+    abi: StakingEthereumAbi,
     args: [scaledUnstakeAmount, checked],
     functionName: 'withdraw',
     enabled,
@@ -35,7 +38,7 @@ export function useUnstake(unstakeAmount: string, checked: boolean) {
       if (error.reason === 'execution reverted: NOT_ENOUGH_BALANCE') return
     },
   })
-  const { writeAsync } = useContractWrite(writeConfig)
+  const { writeAsync } = useContractWrite(config)
 
   const unstake = useCallback(async () => {
     try {

@@ -1,101 +1,47 @@
-import { useMemo, useState } from 'react'
-import { useTransaction } from 'wagmi'
+import { useMemo } from 'react'
+import { useAtomValue } from 'jotai'
 import { motion } from 'framer-motion'
 
-import config from 'config'
-import { MOTION } from 'config/motions'
-import { fadeIn } from 'config/motionVariants'
+import { NATIVE_CURRENCY_ADDRESS } from 'config/constants/addresses'
+import { ANIMATION_MAP, MOTION } from 'config/constants/motions'
 import { bnum } from 'utils/bnum'
-import { formatUnits } from 'utils/formatUnits'
-import { parseLog } from 'utils/parseLog'
-import { parseTransferLogs } from 'utils/parseTransferLogs'
-import { useFiat, useModal, useStaking } from 'hooks'
+import { useChain, useFiat, useModal, useStaking } from 'hooks'
+import { exitAmountsAtom } from './useWatch'
 
 import { StyledExitModalPage2 } from './styled'
 import Button from 'components/Button'
+import ImportToken from 'components/ImportToken'
 import NumberFormat from 'components/NumberFormat'
 import TokenIcon from 'components/TokenIcon'
-import ImportToken from 'components/ImportToken'
 
 type ExitModalPage2Props = {
   assets: Hash[]
-  isProportional: boolean
-  tokenOutIndex: number
-  hash?: Hash
+  exitType: Hash | null
+  tokenOutIndex?: number
 }
 
-export default function ExitModalPage2({
-  assets,
-  isProportional,
-  hash,
-  tokenOutIndex,
-}: ExitModalPage2Props) {
-  const [exitAmounts, setExitAmounts] = useState<string[]>([])
-
+export default function ExitModalPage2({ exitType }: ExitModalPage2Props) {
+  const { nativeCurrency } = useChain()
   const toFiat = useFiat()
   const { removeModal } = useModal()
-  const {
-    poolTokenAddresses,
-    poolTokenDecimals,
-    stakedTokenAddress,
-    tokenMap,
-  } = useStaking()
+  const { lpToken, poolTokenAddresses, tokens } = useStaking()
 
-  useTransaction({
-    chainId: config.chainId,
-    enabled: !!hash,
-    hash,
-    async onSuccess(tx) {
-      const { logs } = await tx.wait()
-
-      const tokenOut = isProportional ? null : assets[tokenOutIndex]
-
-      if (isProportional || tokenOut !== config.nativeCurrency.address) {
-        const parsedLogs = parseTransferLogs(logs)
-        const receivedTokens = assets.map((addr) => parsedLogs?.[addr])
-
-        if (receivedTokens.length === poolTokenAddresses.length) {
-          setExitAmounts(
-            receivedTokens.map((amount, i) =>
-              formatUnits(amount, poolTokenDecimals[i])
-            )
-          )
-        }
-
-        return
-      }
-
-      const parsedLogs = logs.map((l) => parseLog(l))
-      const withdrawalLog = parsedLogs.find((l) => {
-        return l?.name === 'Withdrawal'
-      })
-
-      if (withdrawalLog) {
-        setExitAmounts(
-          assets.map((addr) => {
-            if (addr !== config.nativeCurrency.address) return '0'
-            return formatUnits(withdrawalLog.args[1])
-          })
-        )
-      }
-    },
-  })
+  const exitAmounts = useAtomValue(exitAmountsAtom)
 
   const showExitResult = exitAmounts.length > 0
-  const exitAmountsInFiatValue = exitAmounts.map((amt, i) =>
-    toFiat(amt, assets[i])
+
+  const amountsOutFiatValue = exitAmounts.map((amt, i) =>
+    toFiat(amt, poolTokenAddresses[i])
   )
-  const totalExitedAmountInFiatValue = exitAmountsInFiatValue
+
+  const totalAmountsOutFiatSumValue = amountsOutFiatValue
     .reduce((acc, amt) => acc.plus(amt), bnum(0))
     .toString()
 
   const importTokenAddress = useMemo(() => {
-    if (isProportional) {
-      return stakedTokenAddress
-    }
-
-    return tokenMap?.[assets[tokenOutIndex]]?.address
-  }, [assets, isProportional, stakedTokenAddress, tokenMap, tokenOutIndex])
+    if (exitType == null) return lpToken?.address
+    return tokens[exitType]!.address
+  }, [exitType, lpToken?.address, tokens])
 
   return (
     <StyledExitModalPage2>
@@ -106,20 +52,30 @@ export default function ExitModalPage2({
       <div className="container">
         <div className="modalContent">
           {showExitResult && (
-            <motion.dl {...MOTION} className="detailList" variants={fadeIn}>
-              {assets.map((addr, i) => {
-                const amt = exitAmounts[i]
-
+            <motion.dl
+              {...MOTION}
+              className="detailList"
+              variants={ANIMATION_MAP.fadeIn}
+            >
+              {exitAmounts.map((amt, i) => {
                 if (bnum(amt).isZero()) return null
 
-                const { symbol } = tokenMap[addr] ?? {}
-                const fiatValue = exitAmountsInFiatValue[i]
+                let addr = poolTokenAddresses[i]
+                if (
+                  exitType === NATIVE_CURRENCY_ADDRESS &&
+                  addr === nativeCurrency.wrappedTokenAddress
+                ) {
+                  addr = nativeCurrency.address
+                }
+
+                const { symbol } = tokens[addr] ?? {}
+                const fiatValue = amountsOutFiatValue[i]
 
                 return (
                   <div className="detailItem" key={`exitResult:${amt}:${addr}`}>
                     <dt>
                       <TokenIcon address={addr} $size={20} />
-                      {symbol ?? ''}
+                      {symbol}
                     </dt>
 
                     <dd>
@@ -142,7 +98,7 @@ export default function ExitModalPage2({
                 <dd>
                   <NumberFormat
                     className="active"
-                    value={totalExitedAmountInFiatValue}
+                    value={totalAmountsOutFiatSumValue}
                     type="fiat"
                   />
                 </dd>

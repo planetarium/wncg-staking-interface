@@ -1,15 +1,18 @@
-import { useMount, useUnmount } from 'react-use'
-import { useAtomValue } from 'jotai'
+import { useUnmount } from 'react-use'
+import { atom, useAtomValue } from 'jotai'
 import { useWaitForTransaction } from 'wagmi'
 
 import { stakeTxAtom } from 'states/tx'
-import config from 'config'
-import { useRefetch } from 'hooks'
+import { useClientMount, useChain, useRefetch } from 'hooks'
 
-export function useWatch(send: (event: string) => void) {
+export const stakingErrorAtom = atom<any>(null)
+
+export function useWatch(send: XstateSend) {
+  const { chainId } = useChain()
   const tx = useAtomValue(stakeTxAtom)
 
   const refetch = useRefetch({
+    userAllowances: true,
     userBalances: true,
     userData: true,
     staking: true,
@@ -18,7 +21,7 @@ export function useWatch(send: (event: string) => void) {
   useWaitForTransaction({
     hash: tx.hash!,
     enabled: !!tx.hash,
-    chainId: config.chainId,
+    chainId,
     suspense: false,
     async onSuccess() {
       await refetch()
@@ -29,11 +32,13 @@ export function useWatch(send: (event: string) => void) {
     },
   })
 
-  useMount(() => {
+  useClientMount(() => {
     refetch()
+    return
   })
 
   useUnmount(() => {
     refetch()
+    return
   })
 }

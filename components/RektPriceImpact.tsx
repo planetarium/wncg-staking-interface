@@ -1,16 +1,18 @@
 import { AnimatePresence } from 'framer-motion'
 import clsx from 'clsx'
 
-import { REKT_PRICE_IMPACT } from 'config/misc'
-import { slideInDown } from 'constants/motionVariants'
-import { useResponsive } from 'hooks'
+import { REKT_PRICE_IMPACT } from 'config/constants/liquidityPool'
+import { ANIMATION_MAP } from 'config/constants/motions'
+import { bnum } from 'utils/bnum'
+import { isEthereum } from 'utils/isEthereum'
+import { useChain, useResponsive } from 'hooks'
 
 import { StyledRektPriceImpact } from './styled'
 import Icon from 'components/Icon'
 
 type RektPriceImpactProps = {
   action: 'join' | 'exit'
-  priceImpact: number
+  priceImpact: string
   className?: string
   disabled?: boolean
 }
@@ -21,8 +23,11 @@ function RektPriceImpact({
   className,
   disabled = false,
 }: RektPriceImpactProps) {
-  const show = !disabled && priceImpact >= REKT_PRICE_IMPACT
+  const { chainId } = useChain()
   const { isHandheld } = useResponsive()
+
+  const show =
+    isEthereum(chainId) && !disabled && bnum(priceImpact).gte(REKT_PRICE_IMPACT)
 
   const message =
     action === 'join'
@@ -37,7 +42,7 @@ function RektPriceImpact({
           initial="initial"
           animate="animate"
           exit="exit"
-          variants={slideInDown}
+          variants={ANIMATION_MAP.slideInDown}
           role="alert"
         >
           <Icon icon="warning" $size={isHandheld ? 16 : 24} />

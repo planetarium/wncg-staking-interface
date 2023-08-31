@@ -4,14 +4,16 @@
 import {
   Chain,
   ConnectorNotFoundError,
-  Ethereum,
-  ResourceUnavailableError,
-  RpcError,
-  UserRejectedRequestError,
   SwitchChainNotSupportedError,
 } from '@wagmi/core'
+import { WindowProvider } from 'wagmi'
 import { InjectedConnector } from 'wagmi/connectors/injected'
 import { hexValue } from '@ethersproject/bytes'
+import {
+  ResourceUnavailableRpcError,
+  RpcError,
+  UserRejectedRequestError,
+} from 'viem'
 
 declare global {
   interface Window {
@@ -21,7 +23,7 @@ declare global {
         message: string
       ) => Promise<{ publicKey: string; signature: string }>
       switchNetwork?: (networkId: string) => Promise<string>
-    } & Ethereum
+    } & WindowProvider
   }
 }
 
@@ -94,11 +96,11 @@ export class BinanceWalletConnector extends InjectedConnector {
       }
 
       return { account, chain: { id, unsupported }, provider }
-    } catch (error) {
+    } catch (error: any) {
       if (this.isUserRejectedRequestError(error))
         throw new UserRejectedRequestError(error)
       if ((<RpcError>error).code === -32002)
-        throw new ResourceUnavailableError(error)
+        throw new ResourceUnavailableRpcError(error)
       throw error
     }
   }
@@ -145,7 +147,7 @@ export class BinanceWalletConnector extends InjectedConnector {
             },
           }
         )
-      } catch (error) {
+      } catch (error: any) {
         if ((error as any).error === 'user rejected') {
           throw new UserRejectedRequestError(error)
         }

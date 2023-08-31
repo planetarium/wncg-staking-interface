@@ -4,15 +4,14 @@ import type {
   FieldValues,
 } from 'react-hook-form'
 import dynamic from 'next/dynamic'
+import { usePrevious } from 'react-use'
 import { useDebounce } from 'use-debounce'
 import { AnimatePresence, motion } from 'framer-motion'
 
-import config from 'config'
 import { ModalType } from 'config/constants'
-import { EXIT_MOTION, MOTION } from 'config/motions'
-import { slideInDown } from 'config/motionVariants'
+import { ANIMATION_MAP, EXIT_MOTION, MOTION } from 'config/constants/motions'
 import { bnum } from 'utils/bnum'
-import { useAllowances, useAuth, useModal, useStaking } from 'hooks'
+import { useAllowances, useAuth, useChain, useModal, useStaking } from 'hooks'
 import { useStakeForm } from './useStakeForm'
 
 import { StyledStakeForm } from './styled'
@@ -24,11 +23,13 @@ const RevenuePopup = dynamic(() => import('./RevenuePopup'), {
   ssr: false,
 })
 
-export default function StakeForm() {
+function StakeForm() {
   const { account, prevAccount } = useAuth()
-  const allowanceFor = useAllowances()
+  const allowanceOf = useAllowances()
+  const { chainId, stakingAddress } = useChain()
   const { addModal } = useModal()
-  const { stakedTokenAddress, bptName, bptDecimals } = useStaking()
+  const { lpToken } = useStaking()
+  const prevChainId = usePrevious(chainId)
 
   const {
     closePopup,
@@ -46,9 +47,9 @@ export default function StakeForm() {
 
   const [debouncedStakeAmount] = useDebounce(stakeAmount, 500)
 
-  const isApproved = bnum(
-    allowanceFor(stakedTokenAddress, config.stakingAddress)
-  ).gte(stakeAmount)
+  const isApproved = bnum(allowanceOf(lpToken?.address, stakingAddress)).gte(
+    stakeAmount
+  )
 
   const handleSubmit = useCallback(
     (e: FormEvent) => {
@@ -63,12 +64,12 @@ export default function StakeForm() {
       const props = isApproved
         ? stakeConfig
         : {
-            spender: config.stakingAddress,
+            spender: stakingAddress,
             spenderName: 'staking',
-            tokenAddress: stakedTokenAddress,
-            tokenName: bptName,
-            tokenSymbol: `LP token(${bptName})`,
-            tokenDecimals: bptDecimals,
+            tokenAddress: lpToken?.address,
+            tokenName: lpToken?.name,
+            tokenSymbol: `LP token(${lpToken?.name})`,
+            tokenDecimals: lpToken?.decimals,
             approvePurpose: '',
             buttonLabel: 'Go to stake',
             toastLabel: 'stake',
@@ -85,12 +86,13 @@ export default function StakeForm() {
     },
     [
       addModal,
-      bptDecimals,
-      bptName,
       isApproved,
+      lpToken?.address,
+      lpToken?.decimals,
+      lpToken?.name,
       resetForm,
       stakeAmount,
-      stakedTokenAddress,
+      stakingAddress,
     ]
   )
 
@@ -100,8 +102,18 @@ export default function StakeForm() {
     }
   }, [account, prevAccount, resetForm])
 
+  useEffect(() => {
+    if (prevChainId !== chainId) {
+      resetForm()
+    }
+  }, [chainId, prevChainId, resetForm])
+
   return (
-    <StyledStakeForm {...MOTION} onSubmit={handleSubmit}>
+    <StyledStakeForm
+      {...MOTION}
+      onSubmit={handleSubmit}
+      variants={ANIMATION_MAP.fadeIn}
+    >
       <div className="field">
         <div className="inputGroup">
           <Control<'number'>
@@ -110,9 +122,9 @@ export default function StakeForm() {
               control as unknown as ReactHookFormControl<FieldValues, 'any'>
             }
             name="stakeAmount"
-            address={stakedTokenAddress}
+            address={lpToken?.address}
             rules={rules}
-            decimals={bptDecimals}
+            decimals={lpToken?.decimals}
             maxAmount={maxBalance}
             setMaxValue={setMaxValue}
             showFiatValue
@@ -135,7 +147,7 @@ export default function StakeForm() {
         {showPopup && (
           <motion.div
             {...EXIT_MOTION}
-            variants={slideInDown}
+            variants={ANIMATION_MAP.slideInDown}
             transition={{ duration: 0.2 }}
           >
             <Suspense>
@@ -147,3 +159,5 @@ export default function StakeForm() {
     </StyledStakeForm>
   )
 }
+
+export default dynamic(() => Promise.resolve(StakeForm), { ssr: false })

@@ -1,10 +1,9 @@
-import { memo } from 'react'
 import { AnimatePresence } from 'framer-motion'
 
-import config from 'config'
-import { slideInDown } from 'config/motionVariants'
+import { ANIMATION_MAP } from 'config/constants/motions'
+import { isEthereum } from 'utils/isEthereum'
 import { txUrlFor } from 'utils/txUrlFor'
-import { useResponsive } from 'hooks'
+import { useChain, useResponsive } from 'hooks'
 
 import { StyledPendingNotice } from './styled'
 import Icon from 'components/Icon'
@@ -15,8 +14,9 @@ type PendingNoticeProps = {
 }
 
 function PendingNotice({ hash }: PendingNoticeProps) {
+  const { chainId } = useChain()
   const { isHandheld } = useResponsive()
-  const link = txUrlFor(hash)
+  const link = txUrlFor(chainId, hash)
 
   function openBscScan() {
     if (!link) return
@@ -31,7 +31,7 @@ function PendingNotice({ hash }: PendingNoticeProps) {
           initial="initial"
           animate="animate"
           exit="exit"
-          variants={slideInDown}
+          variants={ANIMATION_MAP.slideInDown}
         >
           <Lottie className="lottie" animationData="loading" />
 
@@ -45,7 +45,7 @@ function PendingNotice({ hash }: PendingNoticeProps) {
 
           <button className="extLink" type="button" onClick={openBscScan}>
             <span className="explorer">
-              {config.assetPlatform === 'ethereum' ? 'Etherscan' : 'BscScan'}
+              {isEthereum(chainId) ? 'Etherscan' : 'BscScan'}
             </span>
             <Icon icon={isHandheld ? 'link' : 'outlink'} />
           </button>
@@ -55,4 +55,4 @@ function PendingNotice({ hash }: PendingNoticeProps) {
   )
 }
 
-export default memo(PendingNotice)
+export default PendingNotice

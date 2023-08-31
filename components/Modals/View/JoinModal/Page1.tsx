@@ -1,21 +1,22 @@
-import { memo } from 'react'
 import { useAtom } from 'jotai'
+import clsx from 'clsx'
 
 import { joinTxAtom } from 'states/tx'
-import config from 'config'
+import { NATIVE_CURRENCY_ADDRESS } from 'config/constants/addresses'
 import { bnum } from 'utils/bnum'
-import { useJoinPool, useStaking } from 'hooks'
+import { walletErrorHandler } from 'utils/walletErrorHandler'
+import { useStaking } from 'hooks'
+import { useJoinPool } from 'hooks/balancer'
 
 import { StyledJoinModalPage1 } from './styled'
 import { CloseButton, PendingNotice } from 'components/Modals/shared'
 import NumberFormat from 'components/NumberFormat'
 import TxButton from 'components/TxButton'
-import clsx from 'clsx'
 
 type JoinModalPage1Props = {
   assets: Hash[]
   joinAmounts: string[]
-  bptBalance: string
+  lpBalance: string
   totalJoinFiatValue: string
   send(value: string): void
 }
@@ -23,15 +24,15 @@ type JoinModalPage1Props = {
 function JoinModalPage1({
   assets,
   joinAmounts,
-  bptBalance,
+  lpBalance,
   totalJoinFiatValue,
   send,
 }: JoinModalPage1Props) {
   const [tx, setTx] = useAtom(joinTxAtom)
-  const { shouldReversePoolTokenOrderOnDisplay, tokenMap } = useStaking()
+  const { shouldReversePoolTokenOrderOnDisplay, tokens } = useStaking()
 
   const nativeAssetIndex = assets.findIndex(
-    (addr) => addr === config.nativeCurrency.address
+    (addr) => addr === NATIVE_CURRENCY_ADDRESS
   )
   const hasNativeAsset =
     nativeAssetIndex >= 0 && bnum(joinAmounts[nativeAssetIndex]).gt(0)
@@ -39,34 +40,25 @@ function JoinModalPage1({
   const _join = useJoinPool(assets, joinAmounts, hasNativeAsset)
 
   async function join() {
-    if (!_join) {
-      send('FAIL')
-      return
-    }
-
     try {
+      if (!_join) {
+        throw Error('No writeAsync')
+      }
+
       const txHash = await _join()
-      if (!txHash) return
+      if (!txHash) throw Error('No txHash')
 
       setTx({
         hash: txHash,
         joinAmounts,
-        bptBalance,
+        lpBalance: lpBalance,
         totalJoinFiatValue,
       })
 
       send('NEXT')
     } catch (error: any) {
-      if (
-        error.code === 'ACTION_REJECTED' ||
-        error.code === 4001 ||
-        error.error === 'Rejected by user'
-      ) {
-        send('ROLLBACK')
-        return
-      }
-
-      send('FAIL')
+      walletErrorHandler(error, () => send('FAIL'))
+      send('ROLLBACK')
     }
   }
 
@@ -92,11 +84,11 @@ function JoinModalPage1({
           })}
         >
           {joinAmounts.map((amt, i) => {
-            const { symbol = '', address = '' } = tokenMap[assets[i]] ?? {}
+            const symbol = tokens[assets[i]]?.symbol ?? ''
 
             return (
               <NumberFormat
-                key={`joinModalPage1:${address}`}
+                key={`joinModalPage1:${assets[i]}`}
                 value={amt}
                 symbol={symbol}
                 decimals={8}
@@ -119,4 +111,4 @@ function JoinModalPage1({
   )
 }
 
-export default memo(JoinModalPage1)
+export default JoinModalPage1

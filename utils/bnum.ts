@@ -21,7 +21,7 @@ export function sanitizeNumber(
   return newValue
 }
 
-export function bnum(value: string | number | BigNumber): BigNumber {
+export function bnum(value: string | number | BigNumber | null): BigNumber {
   const number =
     typeof value === 'string' || typeof value === 'number'
       ? sanitizeNumber(value)

@@ -1,16 +1,11 @@
-import { memo, useState } from 'react'
 import { useAtomValue, useSetAtom } from 'jotai'
-import { useTransaction } from 'wagmi'
 import { motion } from 'framer-motion'
 
 import { joinTxAtom } from 'states/tx'
 import { showPoolAtom } from 'states/ui'
-import config from 'config'
-import { MOTION } from 'config/motions'
-import { fadeIn } from 'config/motionVariants'
+import { ANIMATION_MAP, MOTION } from 'config/constants/motions'
 import { bnum } from 'utils/bnum'
-import { formatUnits } from 'utils/formatUnits'
-import { parseTransferLogs } from 'utils/parseTransferLogs'
+import { receivedLpAmountAtom } from './useWatch'
 
 import { useFiat, useModal, useStaking } from 'hooks'
 
@@ -21,26 +16,24 @@ import Lottie from 'components/Lottie'
 import NumberFormat from 'components/NumberFormat'
 
 function JoinModalPage2() {
-  const [amount, setAmount] = useState<string | null>(null)
-
   const toFiat = useFiat()
   const { removeModal } = useModal()
-  const { stakedTokenAddress, tokenMap } = useStaking()
-  const stakedToken = tokenMap[stakedTokenAddress] ?? {}
+  const { lpToken } = useStaking()
 
-  const { hash, bptBalance: lpTokenBalance = '0' } = useAtomValue(joinTxAtom)
+  const { lpBalance = '0' } = useAtomValue(joinTxAtom)
+  const receivedLpAmount = useAtomValue(receivedLpAmountAtom)
   const setShowPool = useSetAtom(showPoolAtom)
 
-  const amountInFiatValue = toFiat(amount ?? 0, stakedTokenAddress)
-  const hadBalanceBefore = bnum(lpTokenBalance).gt(0)
-  const lpTokenBalanceInFiatValue = toFiat(lpTokenBalance, stakedTokenAddress)
+  const amountInFiatValue = toFiat(receivedLpAmount ?? 0, lpToken?.address)
+  const hadLpBalanceBefore = bnum(lpBalance).gt(0)
+  const lpTokenBalanceInFiatValue = toFiat(lpBalance, lpToken?.address)
 
-  const totalLpTokenBalance = bnum(amount ?? 0)
-    .plus(lpTokenBalance)
+  const totalLpTokenBalance = bnum(receivedLpAmount ?? 0)
+    .plus(lpBalance)
     .toString()
   const totalLpTokenBalanceInFiatValue = toFiat(
     totalLpTokenBalance,
-    stakedTokenAddress
+    lpToken?.address
   )
 
   function closeModal() {
@@ -51,22 +44,6 @@ function JoinModalPage2() {
     setShowPool(false)
     removeModal()
   }
-
-  useTransaction({
-    chainId: config.chainId,
-    hash,
-    enabled: !!hash,
-    async onSuccess(tx) {
-      const { logs } = await tx.wait()
-
-      const parsedLogs = parseTransferLogs(logs)
-      const claimed = parsedLogs?.[stakedTokenAddress]
-
-      if (claimed) {
-        setAmount(formatUnits(claimed, stakedToken?.decimals ?? 18))
-      }
-    },
-  })
 
   return (
     <StyledJoinModalPage2>
@@ -79,11 +56,11 @@ function JoinModalPage2() {
       <div className="container">
         <div className="modalContent">
           <dl className="detailList">
-            {hadBalanceBefore && (
+            {hadLpBalanceBefore && (
               <div className="detailItem">
                 <dt>Already had</dt>
                 <dd>
-                  <NumberFormat value={lpTokenBalance} decimals={8} />
+                  <NumberFormat value={lpBalance} decimals={8} />
 
                   <span className="fiatValue">
                     <NumberFormat
@@ -96,16 +73,16 @@ function JoinModalPage2() {
               </div>
             )}
 
-            {amount && (
+            {receivedLpAmount && (
               <motion.div
                 {...MOTION}
                 className="detailItem accent"
-                variants={fadeIn}
+                variants={ANIMATION_MAP.fadeIn}
               >
                 <dt>Received LP tokens</dt>
 
                 <dd>
-                  <NumberFormat value={amount} plus decimals={8} />
+                  <NumberFormat value={receivedLpAmount} plus decimals={8} />
                   <span className="fiatValue">
                     <NumberFormat
                       value={amountInFiatValue}
@@ -133,6 +110,7 @@ function JoinModalPage2() {
           </dl>
         </div>
       </div>
+
       <footer className="modalFooter">
         <Button onClick={goStake} $size="md">
           Go to stake
@@ -145,4 +123,4 @@ function JoinModalPage2() {
   )
 }
 
-export default memo(JoinModalPage2)
+export default JoinModalPage2

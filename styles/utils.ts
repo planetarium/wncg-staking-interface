@@ -220,62 +220,45 @@ export function media(type: DeviceSizeType, style: FlattenSimpleInterpolation) {
 }
 
 // Scrollbar
-export function scrollbar(width = 6, padding = 10) {
+export function scrollbar() {
   return css`
     scrollbar-width: thin;
-    width: calc(100% + ${padding}px);
-    padding-right: ${padding}px !important;
-    margin-right: -${padding}px;
+    width: calc(100% + 24px);
+    padding-right: ${24 - 10}px !important;
+    margin-right: -${24 - 10}px;
     overflow-x: hidden;
     overflow-y: auto;
 
     &::-webkit-scrollbar {
       display: block;
-      width: ${width}px;
-      background-color: rgba(0, 0, 0, 0);
+      width: 10px;
+      background-color: var(--white);
+      border-radius: 50px;
     }
 
     &::-webkit-scrollbar-button {
       display: none;
+      border-radius: 50px;
     }
 
     &::-webkit-scrollbar-track {
-      background-color: rgba(0, 0, 0, 0);
+      background-color: var(--white);
+      border-radius: 50px;
     }
 
     &::-webkit-scrollbar-thumb {
-      background-color: rgba(var(--white-rgb), 0.8);
-      border-radius: 8px;
-    }
-  `
-}
-
-export function scrollbarX(height = 6, padding = 10) {
-  return css`
-    scrollbar-width: thin;
-    padding-bottom: ${padding}px !important;
-    margin-bottom: -${padding}px;
-    overflow-x: auto;
-    overflow-y: hidden;
-
-    &::-webkit-scrollbar {
-      display: block;
-      height: ${height}px;
-      background-color: transparent;
+      background-color: var(--primary-500);
+      border-radius: 50px;
     }
 
-    &::-webkit-scrollbar-button {
-      display: none;
-    }
-
-    &::-webkit-scrollbar-track {
-      background-color: transparent;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      background-color: rgba(var(--black-rgb), 0.4);
-      border-radius: 8px;
-    }
+    ${media(
+      'minTablet',
+      css`
+        width: calc(100% + 48px);
+        padding-right: ${48 - 10}px !important;
+        margin-right: -${48 - 10}px;
+      `
+    )}
   `
 }
 

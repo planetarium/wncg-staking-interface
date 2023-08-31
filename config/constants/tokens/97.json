@@ -1,0 +1,29 @@
+{
+  "chainId": 97,
+  "tokens": {
+    "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee": {
+      "name": "tBNB",
+      "symbol": "tBNB",
+      "address": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+      "chainId": 97,
+      "decimals": 18,
+      "pricingAsset": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+    },
+    "0xae13d989dac2f0debff460ac112a837c89baa7cd": {
+      "name": "Wrapped BNB",
+      "symbol": "WBNB",
+      "address": "0xae13d989dac2f0debff460ac112a837c89baa7cd",
+      "chainId": 97,
+      "decimals": 18,
+      "pricingAsset": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c"
+    },
+    "0x02fb46e27f54624eee9264214f3de741cd9bf212": {
+      "name": "Wrapped NCG Testnet",
+      "symbol": "tWNCG",
+      "address": "0x02fb46e27f54624eee9264214f3de741cd9bf212",
+      "chainId": 97,
+      "decimals": 18,
+      "pricingAsset": "0x02fb46e27f54624eee9264214f3de741cd9bf212"
+    }
+  }
+}

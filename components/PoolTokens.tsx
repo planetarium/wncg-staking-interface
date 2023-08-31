@@ -1,40 +1,44 @@
-import { memo } from 'react'
 import Link from 'next/link'
+import clsx from 'clsx'
+
+import { dexPoolUrlFor } from 'utils/dexPoolUrlFor'
+import { useChain, usePropAmounts, useStaking } from 'hooks'
 
 import { StyledPoolTokens } from './styled'
-import { poolUrlFor } from 'utils/poolUrlFor'
-import { usePropAmounts, useStaking } from 'hooks'
-
-import config from 'config'
 import Icon from 'components/Icon'
 import NumberFormat from 'components/NumberFormat'
 import TokenIcon from 'components/TokenIcon'
 
 type PoolTokensProps = {
-  bptBalance: string
+  lpBalance: string
   className?: string
 }
 
-function PoolTokens({ bptBalance, className }: PoolTokensProps) {
-  const { poolTokens } = useStaking()
-  const { propAmounts, propAmountsInFiatValue } = usePropAmounts(bptBalance)
+function PoolTokens({ lpBalance, className }: PoolTokensProps) {
+  const { chainId, dexPlatformName } = useChain()
+  const { poolTokens, shouldReversePoolTokenOrderOnDisplay } = useStaking()
+  const { propAmounts, propAmountsInFiatValue } = usePropAmounts(lpBalance)
 
   return (
     <StyledPoolTokens className={className}>
       <header className="header">
-        <Link href={poolUrlFor()} target="_blank" rel="noopener">
+        <Link href={dexPoolUrlFor(chainId)} target="_blank" rel="noopener">
           <h4 className="title">My tokens funded in pool</h4>
 
           <div className="tooltipGroup">
             <Icon icon="outlink" />
-            <p className="tooltip">Go to {config.dexPlatformName}</p>
+            <p className="tooltip">Go to {dexPlatformName}</p>
           </div>
         </Link>
       </header>
 
-      <dl className="poolTokensList">
+      <dl
+        className={clsx('poolTokensList', {
+          reverse: shouldReversePoolTokenOrderOnDisplay,
+        })}
+      >
         {poolTokens.map((token, i) => {
-          const { address, symbol } = token
+          const { address, symbol, decimals } = token
           const amount = propAmounts[i]
           const fiatValue = propAmountsInFiatValue[i]
 
@@ -47,7 +51,11 @@ function PoolTokens({ bptBalance, className }: PoolTokensProps) {
               </dt>
 
               <dd>
-                <NumberFormat className="tokenAmount" value={amount} />
+                <NumberFormat
+                  className="tokenAmount"
+                  value={amount}
+                  maxDecimals={decimals === 8 ? 6 : undefined}
+                />
                 <NumberFormat
                   className="fiatValue"
                   value={fiatValue}
@@ -62,4 +70,4 @@ function PoolTokens({ bptBalance, className }: PoolTokensProps) {
   )
 }
 
-export default memo(PoolTokens)
+export default PoolTokens

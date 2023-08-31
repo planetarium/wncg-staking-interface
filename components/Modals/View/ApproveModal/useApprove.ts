@@ -1,26 +1,29 @@
 import { useCallback } from 'react'
 import { useContractWrite, usePrepareContractWrite } from 'wagmi'
-import { constants } from 'ethers'
+import { MaxUint256 } from '@ethersproject/constants'
 
-import config from 'config'
 import { Erc20Abi } from 'config/abi'
-import { useSwitchNetwork } from 'hooks'
+import { useAuth, useChain, useSwitchNetwork } from 'hooks'
 
 const approveConfig = Object.freeze({
   abi: Erc20Abi,
-  chainId: config.chainId,
   functionName: 'approve',
 })
 
 export function useApprove(tokenAddress: Hash, spender: string) {
+  const { isConnected } = useAuth()
   const { switchBeforeSend } = useSwitchNetwork()
+  const { chainId, networkMismatch } = useChain()
 
   const { config } = usePrepareContractWrite({
     ...approveConfig,
     address: tokenAddress as Hash,
-    args: [spender, constants.MaxUint256],
-    enabled: !!tokenAddress && !!spender,
-    onError: switchBeforeSend,
+    chainId,
+    enabled: !!isConnected && !!tokenAddress && !!spender && !networkMismatch,
+    args: [spender, MaxUint256.toBigInt()],
+    onError(err) {
+      switchBeforeSend(err)
+    },
   })
 
   const { writeAsync } = useContractWrite(config)

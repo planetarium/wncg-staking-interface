@@ -102,7 +102,7 @@ export const StyledWalletStaking = styled(StyledMyStakingWalletSection)`
   }
 `
 
-export const StyledWalletRewards = styled(motion.div)<{ $show: boolean }>`
+export const StyledWalletBonusRewards = styled.div<{ $show: boolean }>`
   width: 100%;
   max-height: 48px;
   margin-top: 16px;
@@ -201,6 +201,74 @@ export const StyledWalletRewards = styled(motion.div)<{ $show: boolean }>`
     `}
 `
 
+export const StyledWalletSingleRewards = styled.dl`
+  width: 100%;
+  padding: 16px;
+  margin-top: ${16 + 8}px; // NOTE: revenueButton mb -8px
+  color: var(--white);
+  border-radius: 6px;
+  background-image: ${gradient(1)};
+  will-change: max-height;
+  transition: 300ms;
+
+  .claimButton {
+    ${textStyle('button', 3)}
+  }
+
+  .rewardItem {
+    ${flexbox('between')}
+    ${textStyle('body', 3)}
+    
+
+    &:first-child {
+      padding: 5px 0;
+    }
+
+    &:last-child:not(:only-child) {
+      dd {
+        margin-top: 10px;
+      }
+    }
+
+    dt {
+      ${flexbox('start')}
+      flex-shrink: 0;
+      margin-right: 8px;
+      color: rgba(var(--white-rgb), 0.6);
+    }
+
+    dd {
+      ${flexbox('start')}
+      flex-wrap: wrap;
+      flex-grow: 1;
+      text-align: left;
+
+      .countUp {
+        margin-right: 4px;
+        font-weight: 700;
+      }
+
+      .symbol {
+        font-weight: 700;
+        color: rgba(var(--white-rgb), 0.6);
+      }
+
+      .parenthesis {
+        ${inlineFlexbox('start')}
+      }
+
+      .number {
+        font-weight: 500;
+        color: var(--white);
+
+        &::before {
+          margin-right: 0;
+        }
+      }
+    }
+  }
+`
+
 type StyledWalletUnstakeWindowProps = {
   $unstake?: boolean
 }
@@ -256,6 +324,7 @@ export const StyledWalletUnstakeWindow = styled.div<StyledWalletUnstakeWindowPro
 
     time {
       display: block;
+      white-space: nowrap;
     }
   }
 

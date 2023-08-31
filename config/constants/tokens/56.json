@@ -1,0 +1,29 @@
+{
+  "chainId": 56,
+  "tokens": {
+    "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee": {
+      "name": "BNB",
+      "symbol": "BNB",
+      "address": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+      "chainId": 56,
+      "decimals": 18,
+      "pricingAsset": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+    },
+    "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c": {
+      "name": "Wrapped BNB",
+      "symbol": "WBNB",
+      "address": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "chainId": 56,
+      "decimals": 18,
+      "pricingAsset": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c"
+    },
+    "0x52242cbab41e290e9e17ccc50cc437bb60020a9d": {
+      "name": "Wrapped NCG",
+      "symbol": "WNCG",
+      "address": "0x52242cbab41e290e9e17ccc50cc437bb60020a9d",
+      "chainId": 56,
+      "decimals": 18,
+      "pricingAsset": "0x52242cbab41e290e9e17ccc50cc437bb60020a9d"
+    }
+  }
+}

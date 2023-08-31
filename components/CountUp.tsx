@@ -35,6 +35,7 @@ type CountUpProps = Omit<ReactCountUpProps, 'value' | 'decimalPlaces'> & {
 }
 
 function CountUp({
+  start: _start,
   value: _value,
   allowTrailingZeros = false,
   approx: _approx = null,
@@ -55,7 +56,9 @@ function CountUp({
   type = 'token',
   abbr,
 }: CountUpProps) {
-  const [start, setStart] = useState(0)
+  const initStart = _start ?? bnum(_value).toNumber()
+
+  const [start, setStart] = useState(initStart)
 
   const result = useMemo(
     () =>

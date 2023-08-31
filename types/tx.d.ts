@@ -43,7 +43,7 @@ type ApproveTx = {
 
 type ClaimTx = {
   hash?: Hash
-  earnedRewards?: string[]
+  earnedTokenRewards?: string[]
   rewardList?: boolean[]
   totalClaimFiatValue?: string
 }
@@ -60,7 +60,7 @@ type StakeTx = {
 
 type UnstakeTx = {
   hash?: Hash
-  earnedRewards?: string[]
+  earnedTokenRewards?: string[]
   unstakeAmount?: string
   stakedTokenBalance?: string
   totalClaimFiatValue?: string
@@ -70,21 +70,35 @@ type JoinTx = {
   hash?: Hash
   assets?: Hash[]
   joinAmounts?: string[]
-  bptBalance?: string
+  lpBalance?: string
   totalJoinFiatValue?: string
 }
 
+type AddLiquidityTx = {
+  hash?: Hash
+  assets?: Hash[]
+  amountsIn?: string[]
+  userLpAmount?: string
+  amountsInFiatValueSum?: string
+}
+
 type ExitTx = {
+  bptOutPcnt?: string
+  amountOut?: string
+  bptIn?: string
+  exitType?: Hash | null
+  tokenOutIndex?: number
+  hash?: Hash
+}
+
+type RemoveLiquidityTx = {
   assets?: Hash[]
   hash?: Hash
-  exitAmounts?: string[]
-  totalExitFiatValue?: string
-  isProportional?: boolean
-  exactOut?: boolean
-  exitType?: Hash | null
-  bptOutPcnt?: string
-  bptIn?: string
-  tokenOutIndex?: number
+  amountsOut?: string[]
+  amountsOutFiatValueSum?: string
+  isNative?: boolean
+  pcntOut?: string
+  lpAmountOut?: string
 }
 
 type HarvestTx = {

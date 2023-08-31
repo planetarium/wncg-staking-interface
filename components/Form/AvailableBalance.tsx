@@ -1,7 +1,4 @@
-import { memo } from 'react'
-
-import { MOTION } from 'config/motions'
-import { slideInDown } from 'config/motionVariants'
+import { ANIMATION_MAP, MOTION } from 'config/constants/motions'
 import { bnum } from 'utils/bnum'
 import { useAuth } from 'hooks'
 
@@ -12,7 +9,6 @@ type AvailableBalanceProps = {
   label: string
   maxAmount: string | number
   decimals?: number
-  layout?: boolean
   fiatValue?: number | string
   disabled?: boolean
   symbol?: string
@@ -23,7 +19,6 @@ function AvailableBalance({
   label,
   maxAmount,
   decimals = 8,
-  layout = false,
   fiatValue,
   disabled,
   symbol,
@@ -41,8 +36,7 @@ function AvailableBalance({
     <StyledAvailableBalance
       {...MOTION}
       className="availableTokenAmount"
-      layout={layout}
-      variants={slideInDown}
+      variants={ANIMATION_MAP.slideInDown}
       transition={{ easing: 'linear' }}
       $disabled={disabled}
       $size={$size}
@@ -61,4 +55,4 @@ function AvailableBalance({
   )
 }
 
-export default memo(AvailableBalance)
+export default AvailableBalance

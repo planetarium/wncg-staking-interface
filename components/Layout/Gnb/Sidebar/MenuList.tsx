@@ -1,12 +1,14 @@
-import { memo } from 'react'
 import Link from 'next/link'
 
 import config from 'config'
 import { explorerUrlFor } from 'utils/explorerUrlFor'
+import { useChain } from 'hooks'
 
 import { StyledSidebarMenuList } from './styled'
 
 function MenuList() {
+  const { chainId, stakingAddress, explorerName } = useChain()
+
   return (
     <StyledSidebarMenuList>
       <li className="navItem">
@@ -23,15 +25,15 @@ function MenuList() {
 
       <li className="navItem">
         <Link
-          href={explorerUrlFor(config.stakingAddress)}
+          href={explorerUrlFor(chainId, stakingAddress)}
           target="_blank"
           rel="noopener"
         >
-          Etherscan
+          {explorerName}
         </Link>
       </li>
     </StyledSidebarMenuList>
   )
 }
 
-export default memo(MenuList)
+export default MenuList

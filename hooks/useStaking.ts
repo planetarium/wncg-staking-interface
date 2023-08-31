@@ -1,62 +1,62 @@
+import { useMemo } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 
-import config from 'config'
-import { queryKeys } from 'config/queryKeys'
+import { QUERY_KEYS } from 'config/constants/queryKeys'
+import { bnum } from 'utils/bnum'
+import { useChain } from './useChain'
 
-export function useStaking() {
+type UseStakingReturnBsc = LiquidityPool &
+  BscStaking & {
+    tokens: TokenMap
+    priceMap: PriceMap
+  }
+
+type UseStakingReturnEthereum = LiquidityPool &
+  EthereumStaking & {
+    tokens: TokenMap
+    priceMap: PriceMap
+  }
+
+type UseStakingReturn<T extends 'ethereum'> = T extends 'ethereum'
+  ? UseStakingReturnEthereum
+  : UseStakingReturnBsc
+
+export function useStaking<T extends 'ethereum'>() {
+  const { chainId } = useChain()
   const queryClient = useQueryClient()
 
-  const data =
-    queryClient.getQueryData<BuildResponse>([queryKeys.Build], {
-      exact: false,
-    }) ??
-    ({
-      tokenMap: {},
-      pool: {
-        id: config.poolId,
-        address: '' as Hash,
-        createTime: 0,
-        factory: '',
-        symbol: '',
-        name: '',
-        swapFee: '',
-        owner: '',
-        totalLiquidity: '',
-        totalShares: '',
-        totalSwapFee: '',
-        totalSwapVolume: '',
-        tokens: [],
-        tokensList: [],
-      },
-      balRewardPoolAddress: '' as Hash,
-      bptAddress: '' as Hash,
-      bptTotalSupply: '',
-      bptSymbol: '',
-      bptName: '',
-      bptDecimals: 18,
-      poolId: config.poolId,
-      poolSwapFee: '',
-      poolTotalLiquidity: '',
-      poolTotalSwapVolume: '',
-      poolTotalSwapFee: '',
-      poolTokens: [],
-      poolTokenAddresses: [],
-      poolTokenBalances: [],
-      poolTokenDecimals: [],
-      poolTokenWeights: [],
-      poolTokenWeightsInPcnt: [],
-      poolTokenSymbols: [],
-      cooldownPeriod: 0,
-      earmarkIncentivePcnt: 0.01,
-      liquidityGaugeAddress: '' as Hash,
-      rewardEmissions: [],
-      rewardTokenAddress: '' as Hash,
-      rewardTokenAddresses: [],
-      stakedTokenAddress: '' as Hash,
-      unstakePeriod: 0,
-      totalStaked: '',
-      shouldReversePoolTokenOrderOnDisplay: false,
-    } as BuildResponse)
+  const project = useMemo(
+    () => queryClient.getQueryData<any>([QUERY_KEYS.Build, chainId]),
+    [chainId, queryClient]
+  )
 
-  return data
+  const prices = useMemo(
+    () =>
+      queryClient.getQueryData<PriceMap>([QUERY_KEYS.Staking.Prices, chainId], {
+        exact: false,
+      }),
+    [chainId, queryClient]
+  )
+
+  const poolTokenAddresses = project.poolTokens?.map((t: any) => t.address)
+  const poolTokenWeights = project.poolTokens.map((t: any) => t.weight)
+  const poolTokenWeightsInPcnt = poolTokenWeights.map((w: string) =>
+    bnum(w).times(100).toNumber()
+  )
+  const poolTokenDecimals = project.poolTokens.map((t: any) => t.decimals)
+  const poolTokenSymbols = project.poolTokens.map((t: any) => t.symbol)
+  const poolTokenNames = project.poolTokens.map((t: any) => t.name)
+  const poolTokenBalances = project.poolTokens.map((t: any) => t.balance)
+
+  return {
+    ...project,
+    priceMap: prices,
+    poolTokenAddresses,
+    poolTokenWeights,
+    poolTokenWeightsInPcnt,
+    poolTokenDecimals,
+    poolTokenSymbols,
+    poolTokenNames,
+    poolTokenBalances,
+  } as UseStakingReturn<T>
 }

@@ -3,7 +3,7 @@ import type { UseFormSetValue } from 'react-hook-form'
 
 import { LiquidityFieldType } from 'config/constants'
 import { bnum } from 'utils/bnum'
-import type { ExitFormFields } from 'hooks/useExitForm'
+import type { ExitFormFields } from 'hooks/balancer/useExitForm'
 
 import { StyledExitModalPage1Step2ButtonGroup } from './styled'
 import Button from 'components/Button'

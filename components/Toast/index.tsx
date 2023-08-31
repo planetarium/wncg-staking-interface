@@ -1,12 +1,14 @@
 import { ToastType } from 'config/constants'
 import { assertUnreachable } from 'utils/assertUnreachable'
 
+import AddLiquidityToast from './AddLiquidityToast'
 import ApproveToast from './ApproveToast'
 import ClaimToast from './ClaimToast'
 import CooldownToast from './CooldownToast'
 import ExitToast from './ExitToast'
 import HarvestToast from './HarvestToast'
 import JoinToast from './JoinToast'
+import RemoveLiquidityToast from './RemoveLiquidityToast'
 import StakeToast from './StakeToast'
 import UnstakeToast from './UnstakeToast'
 
@@ -16,6 +18,8 @@ export default function Toast(toast: Toast<any>) {
 
 function renderToast({ type, props }: Toast<any>) {
   switch (type) {
+    case ToastType.AddLiquidity:
+      return <AddLiquidityToast {...props} />
     case ToastType.Approve:
       return <ApproveToast {...props} />
     case ToastType.Claim:
@@ -28,6 +32,8 @@ function renderToast({ type, props }: Toast<any>) {
       return <HarvestToast {...props} />
     case ToastType.Join:
       return <JoinToast {...props} />
+    case ToastType.RemoveLiquidity:
+      return <RemoveLiquidityToast {...props} />
     case ToastType.Stake:
       return <StakeToast {...props} />
     case ToastType.Unstake:

@@ -1,27 +1,26 @@
 import { configureChains } from 'wagmi'
-import { goerli, mainnet } from 'wagmi/chains'
-
+import { mainnet, goerli, bsc, bscTestnet } from 'wagmi/chains'
 import { infuraProvider } from 'wagmi/providers/infura'
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc'
 import { publicProvider } from 'wagmi/providers/public'
 
 import { apiKeys } from 'config/api'
 
-const CHAINS = [mainnet, goerli]
-
-export const { chains, provider, webSocketProvider } = configureChains(CHAINS, [
-  publicProvider(),
-  infuraProvider({ apiKey: apiKeys.infura }),
-  jsonRpcProvider({
-    rpc(chain) {
-      return nodeRealUrlFor(chain.network)
-    },
-  }),
-])
+export const { chains, publicClient, webSocketPublicClient } = configureChains(
+  [mainnet, bsc, goerli, bscTestnet],
+  [
+    jsonRpcProvider({
+      rpc(chain) {
+        return nodeRealUrlFor(chain.network)
+      },
+    }),
+    infuraProvider({ apiKey: apiKeys.infura }),
+    publicProvider(),
+  ]
+)
 
 function nodeRealUrlFor(networkName: string) {
   if (!apiKeys.nodeReal) return null
-  // if (config.env !== 'production') return null
 
   let host = null
 

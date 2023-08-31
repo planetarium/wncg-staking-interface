@@ -1,5 +1,6 @@
-import { memo, useRef } from 'react'
+import { useRef } from 'react'
 import { useUnmount } from 'react-use'
+import dynamic from 'next/dynamic'
 import { useMachine } from '@xstate/react'
 import { useAtomValue } from 'jotai'
 
@@ -20,7 +21,7 @@ type JoinModalProps = Required<JoinTx> & {
 function JoinModal({
   assets: _assets,
   joinAmounts: _joinAmounts,
-  bptBalance: _bptBalance,
+  lpBalance: _lpBalance,
   totalJoinFiatValue: _totalJoinFiatValue,
   resetForm,
 }: JoinModalProps) {
@@ -30,7 +31,7 @@ function JoinModal({
   const hash = tx.hash
   const assets = tx.assets ?? _assets
   const joinAmounts = tx.joinAmounts ?? _joinAmounts
-  const bptBalance = tx.bptBalance ?? _bptBalance
+  const lpBalance = tx.lpBalance ?? _lpBalance
   const totalJoinFiatValue = tx.totalJoinFiatValue ?? _totalJoinFiatValue
 
   const stateMachine = useRef(joinMachine)
@@ -45,16 +46,15 @@ function JoinModal({
   useWatch(send)
 
   useUnmount(() => {
-    resetForm()
-
     if (hash) {
+      resetForm()
       toast<Required<JoinTx>>({
         type: ToastType.Join,
         props: {
           hash,
           assets,
           joinAmounts,
-          bptBalance,
+          lpBalance: lpBalance,
           totalJoinFiatValue,
         },
       })
@@ -67,7 +67,7 @@ function JoinModal({
         <Page1
           assets={assets}
           joinAmounts={joinAmounts}
-          bptBalance={bptBalance}
+          lpBalance={lpBalance}
           send={send}
           totalJoinFiatValue={totalJoinFiatValue}
         />
@@ -78,4 +78,6 @@ function JoinModal({
   )
 }
 
-export default memo(JoinModal)
+export default dynamic(() => Promise.resolve(JoinModal), {
+  ssr: false,
+})

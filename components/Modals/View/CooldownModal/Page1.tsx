@@ -1,4 +1,3 @@
-import { memo } from 'react'
 import dynamic from 'next/dynamic'
 
 import { useModal } from 'hooks'
@@ -16,7 +15,7 @@ const ExpectedRevenue = dynamic(() => import('components/ExpectedRevenue'), {
 })
 
 type CooldownModalPage1Props = {
-  send(event: string): void
+  send: XstateSend
 }
 
 function CooldownModalPage1({ send }: CooldownModalPage1Props) {
@@ -67,4 +66,4 @@ function CooldownModalPage1({ send }: CooldownModalPage1Props) {
   )
 }
 
-export default memo(CooldownModalPage1)
+export default CooldownModalPage1

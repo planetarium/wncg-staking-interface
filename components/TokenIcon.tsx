@@ -1,11 +1,12 @@
-import { memo, useMemo } from 'react'
+import { useMemo } from 'react'
 import { nanoid } from 'nanoid'
 import clsx from 'clsx'
 
-import config from 'config'
-import { useStaking } from 'hooks'
+import { useChain, useStaking } from 'hooks'
+import { isEthereum } from 'utils/isEthereum'
 
-import { StyledTokenIcon, StyledTokenIconGroup } from './styled'
+import { StyledTokenFragment, StyledTokenIcon } from './styled'
+import Image from 'components/Image'
 import CryptoIcon from './CryptoIcon'
 
 type TokenIconProps = {
@@ -13,8 +14,64 @@ type TokenIconProps = {
   ariaLabel?: string
   ariaHidden?: boolean
   className?: string
-  dark?: boolean
   $size?: number
+  $dark?: boolean
+}
+
+function TokenFragment({ address, $size = 24, $dark }: TokenIconProps) {
+  const { balAddress, chainId, nativeCurrency } = useChain()
+  const { rewardTokenAddresses, tokens } = useStaking()
+
+  const token = useMemo(() => tokens?.[address] ?? {}, [address, tokens])
+
+  const fragment = useMemo(() => {
+    if (!token) return <span className="icon defaultIcon" />
+
+    switch (true) {
+      case address === nativeCurrency.address:
+      case address === nativeCurrency.wrappedTokenAddress:
+        const icon = isEthereum(chainId) ? 'ether' : 'bnb'
+        return <CryptoIcon icon={icon} $size={$size} />
+
+      case address === rewardTokenAddresses?.[0]:
+      case token.symbol === 'WNCG':
+        return <CryptoIcon icon="wncg" $size={$size} />
+
+      case address === balAddress:
+        return (
+          <CryptoIcon
+            icon={$dark ? 'balancerDark' : 'balancer'}
+            $size={$size}
+          />
+        )
+
+      default:
+        return (
+          <Image
+            className="mainToken"
+            priority
+            src="/icon.png"
+            alt={token.symbol}
+          />
+        )
+    }
+  }, [
+    $dark,
+    $size,
+    address,
+    balAddress,
+    chainId,
+    nativeCurrency.address,
+    nativeCurrency.wrappedTokenAddress,
+    rewardTokenAddresses,
+    token,
+  ])
+
+  return (
+    <StyledTokenFragment className="tokenFragment" $size={$size}>
+      {fragment}
+    </StyledTokenFragment>
+  )
 }
 
 function TokenIcon({
@@ -22,68 +79,36 @@ function TokenIcon({
   ariaLabel,
   ariaHidden = true,
   className,
-  dark = false,
   $size = 24,
+  $dark,
 }: TokenIconProps) {
-  const {
-    poolTokenSymbols,
-    rewardTokenAddress,
-    shouldReversePoolTokenOrderOnDisplay,
-    stakedTokenAddress,
-    tokenMap,
-  } = useStaking()
-  const token = tokenMap[address]
+  const { lpToken, poolTokenAddresses, shouldReversePoolTokenOrderOnDisplay } =
+    useStaking()
 
   const element = useMemo(() => {
-    if (!token) return <span className="icon defaultIcon" />
+    if (address === lpToken?.address) {
+      const list = [...poolTokenAddresses]
+      if (shouldReversePoolTokenOrderOnDisplay) list.reverse()
 
-    switch (true) {
-      case token.symbol === 'ETH':
-      case token.symbol === 'WETH':
-      case address === config.nativeCurrency.address:
-      case address === config.weth:
-        return <CryptoIcon className="icon" icon="ether" $size={$size} />
-      case token.symbol === 'WNCG':
-      case address === rewardTokenAddress:
-        return <CryptoIcon className="icon" icon="wncg" $size={$size} />
-      case token.symbol === 'BAL':
-      case address === config.bal:
-        if (dark)
-          return (
-            <CryptoIcon className="icon" icon="balancerDark" $size={$size} />
-          )
-        return <CryptoIcon className="icon" icon="balancer" $size={$size} />
-      case token.symbol === 'WBTC':
-        return <CryptoIcon className="icon" icon="wbtc" $size={$size} />
-
-      default:
-        return <span className="icon defaultIcon" />
+      return list.map((addr) => (
+        <TokenFragment
+          key={`tokenFragment:${addr}:${nanoid}`}
+          address={addr}
+          $size={$size}
+          $dark={$dark}
+        />
+      ))
     }
-  }, [$size, address, dark, rewardTokenAddress, token])
 
-  if (token.address === stakedTokenAddress) {
-    return (
-      <StyledTokenIconGroup
-        className={clsx('tokenIconGroup', className)}
-        $size={$size}
-        $reverse={shouldReversePoolTokenOrderOnDisplay}
-      >
-        {poolTokenSymbols.map((symb) => {
-          let icon = symb?.toLowerCase()
-          if (icon === 'weth') icon = 'ether'
-
-          return (
-            <CryptoIcon
-              key={`tokenIcon:${symb}:${nanoid()}`}
-              className="icon"
-              icon={icon as CryptoIconType}
-              $size={$size}
-            />
-          )
-        })}
-      </StyledTokenIconGroup>
-    )
-  }
+    return <TokenFragment address={address} $size={$size} $dark={$dark} />
+  }, [
+    $dark,
+    $size,
+    address,
+    lpToken?.address,
+    poolTokenAddresses,
+    shouldReversePoolTokenOrderOnDisplay,
+  ])
 
   return (
     <StyledTokenIcon
@@ -97,4 +122,4 @@ function TokenIcon({
   )
 }
 
-export default memo(TokenIcon)
+export default TokenIcon

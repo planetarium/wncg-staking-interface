@@ -2,8 +2,9 @@ import { QueryFunctionContext } from '@tanstack/react-query'
 import { request } from 'graphql-request'
 import { jsonToGraphQLQuery } from 'json-to-graphql-query'
 
-import config from 'config'
 import { PAGE_PER } from 'config/misc'
+import { DEX } from 'config/constants/dex'
+import { CHAINS } from 'config/chains'
 
 type FetchSwapsResponse = {
   data: {
@@ -15,12 +16,19 @@ type FetchSwapsResponse = {
 
 export async function fetchPoolSwaps({
   pageParam = 0,
+  queryKey = [],
 }: QueryFunctionContext): Promise<Swap[]> {
+  const [, chainId] = queryKey
+  const { dexPoolId: poolId } = DEX[chainId as ChainId]
+  const { subgraph: endpoint } = CHAINS[chainId as ChainId]
+
+  if (!poolId || !endpoint) return []
+
   const query = {
     query: {
       pool: {
         __args: {
-          id: config.poolId,
+          id: poolId,
         },
         swaps: {
           __args: {
@@ -45,7 +53,7 @@ export async function fetchPoolSwaps({
   }
 
   const { data } = await request<FetchSwapsResponse>(
-    config.subgraph,
+    endpoint,
     jsonToGraphQLQuery(query)
   )
 

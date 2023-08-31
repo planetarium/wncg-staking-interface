@@ -3,21 +3,23 @@ import dynamic from 'next/dynamic'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 
-import { useMediaQuery, useResponsive } from 'hooks'
+import { SUPPORTED_CHAINS } from 'config/chains'
+import { isBsc } from 'utils/isBsc'
+import { isEthereum } from 'utils/isEthereum'
+import { useChain, useMediaQuery } from 'hooks'
 
 import { StyledLayout, StyledMain } from './styled'
-import Code from 'components/Code'
 import Favicon from 'components/Favicon'
-import GlobalHooks from 'components/GlobalHooks'
 import RootFavicon from 'components/RootFavicon'
 import Suspense from 'components/Suspense'
-import Gnb from './Gnb'
+import RootGnb from './Gnb/Root'
+import MainGnb from './Gnb/Main'
 
 const Alerts = dynamic(() => import('./Alerts'), {
   ssr: false,
 })
 
-const Pool = dynamic(() => import('components/Pool'), {
+const BalancerPool = dynamic(() => import('components/BalancerPool'), {
   ssr: false,
 })
 
@@ -25,15 +27,42 @@ const Modals = dynamic(() => import('components/Modals'), {
   ssr: false,
 })
 
+const PancakeSwapPool = dynamic(() => import('components/PancakeSwapPool'), {
+  ssr: false,
+})
+
 function Layout({ children }: PropsWithChildren) {
   const mainRef = useRef<HTMLDivElement>(null)
 
-  const { route, pathname } = useRouter()
-  const { bp } = useResponsive()
+  const { chainId } = useChain()
+  const { route, pathname, query } = useRouter()
+
   useMediaQuery()
 
   const isRootPage = pathname === '/'
-  const isErrorPage = ['/404', '/500'].includes(route)
+
+  if (isRootPage) {
+    return (
+      <>
+        <Head>
+          <RootFavicon />
+        </Head>
+
+        <StyledLayout layoutRoot $root>
+          <RootGnb />
+
+          <StyledMain ref={mainRef} layout>
+            {children}
+          </StyledMain>
+        </StyledLayout>
+      </>
+    )
+  }
+
+  const isErrorPage =
+    ['/404', '/500'].includes(route) ||
+    (query.chainId &&
+      !SUPPORTED_CHAINS.includes(Number(query.chainId) as ChainId))
 
   if (isErrorPage) {
     return (
@@ -49,28 +78,33 @@ function Layout({ children }: PropsWithChildren) {
 
   return (
     <>
-      <Head>{isRootPage ? <RootFavicon /> : <Favicon />}</Head>
-      <StyledLayout layoutRoot $root={isRootPage}>
-        <Alerts />
+      <Head>
+        <Favicon />
+      </Head>
 
-        <Code data={bp} top={100} left={0} z={100000} />
-        <Gnb />
+      <StyledLayout layoutRoot>
+        <Suspense>
+          <Alerts />
+        </Suspense>
+
+        <MainGnb />
 
         <StyledMain ref={mainRef} layout>
           {children}
         </StyledMain>
-
-        <GlobalHooks />
       </StyledLayout>
 
-      {!isRootPage && (
-        <>
-          <Modals />
+      <Modals />
+
+      <Suspense>
+        {isEthereum(chainId) && (
           <Suspense>
-            <Pool />
+            <BalancerPool />
           </Suspense>
-        </>
-      )}
+        )}
+
+        {isBsc(chainId) && <PancakeSwapPool />}
+      </Suspense>
     </>
   )
 }

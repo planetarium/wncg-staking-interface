@@ -1,12 +1,15 @@
-import { useRouter } from 'next/router'
+import dynamic from 'next/dynamic'
 
 import RootGnb from './Root'
 import MainGnb from './Main'
 
-export default function Gnb() {
-  const { pathname } = useRouter()
-  const isRootPage = pathname === '/'
+type GnbProps = {
+  isRootPage: boolean
+}
 
+function Gnb({ isRootPage }: GnbProps) {
   if (isRootPage) return <RootGnb />
   return <MainGnb />
 }
+
+export default dynamic(() => Promise.resolve(Gnb), { ssr: false })

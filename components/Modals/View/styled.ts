@@ -91,7 +91,7 @@ export const StyledConnectModal = styled(ModalPage)`
     `}
 
   ${media(
-    'minLaptop',
+    'minTablet',
     css`
       max-width: 480px;
 

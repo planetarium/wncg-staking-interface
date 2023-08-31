@@ -1,9 +1,8 @@
 import { MouseEvent, useMemo, useRef } from 'react'
+import { uniq } from 'lodash-es'
 
-import config from 'config'
 import { ConnectorId } from 'config/constants'
-import { EXIT_MOTION } from 'config/motions'
-import { slideInUp } from 'config/motionVariants'
+import { ANIMATION_MAP, EXIT_MOTION } from 'config/constants/motions'
 import {
   useAuth,
   useCloseOnBlur,
@@ -29,24 +28,25 @@ export default function GlobalFooterImportTokenDropdownMenu({
   const { connector } = useAuth()
   const { importToken: _importToken } = useImportToken()
   const { isHandheld } = useResponsive()
-  const { bptSymbol, rewardTokenAddress, stakedTokenAddress, tokenMap } =
+  const { lpToken, poolTokenAddresses, rewardTokenAddresses, tokens } =
     useStaking()
 
   useCloseOnBlur(menuRef, closeDropdown)
 
   const list = useMemo(
-    () => [config.bal, rewardTokenAddress, stakedTokenAddress],
-    [rewardTokenAddress, stakedTokenAddress]
+    () =>
+      uniq([...poolTokenAddresses, ...rewardTokenAddresses, lpToken?.address]),
+    [lpToken?.address, poolTokenAddresses, rewardTokenAddresses]
   )
 
-  function importToken(e: MouseEvent<HTMLButtonElement>) {
-    const { value } = e.currentTarget
-    const tokenInfo = tokenMap[value as Hash] ?? {}
-    const { symbol = '' } = tokenInfo
+  function onImportToken(e: MouseEvent<HTMLButtonElement>) {
+    const { value: addr } = e.currentTarget
+    const tokenInfo = tokens[addr as Hash] ?? {}
 
-    const tokenSymbol = value === stakedTokenAddress ? bptSymbol : symbol
-
-    _importToken({ ...tokenInfo, name: tokenSymbol, symbol: tokenSymbol })
+    _importToken({
+      ...tokenInfo,
+      name: addr === lpToken?.address ? tokenInfo.name : tokenInfo.symbol,
+    })
     closeDropdown()
   }
 
@@ -58,7 +58,7 @@ export default function GlobalFooterImportTokenDropdownMenu({
       {...EXIT_MOTION}
       ref={menuRef}
       className="tokenMenu"
-      variants={slideInUp}
+      variants={ANIMATION_MAP.slideInUp}
     >
       <header className="dropdownHeader">
         <h4 className="title">Import token</h4>
@@ -68,7 +68,7 @@ export default function GlobalFooterImportTokenDropdownMenu({
       </header>
 
       {list.map((addr) => {
-        const { symbol = '' } = tokenMap[addr] ?? {} ?? ''
+        const { symbol } = tokens[addr]
 
         return (
           <button
@@ -76,11 +76,12 @@ export default function GlobalFooterImportTokenDropdownMenu({
             className="tokenButton"
             type="button"
             value={addr}
-            onClick={importToken}
+            onClick={onImportToken}
           >
             {symbol}
 
-            <TokenIcon className="token" address={addr} $size={16} dark />
+            <TokenIcon className="token" address={addr} $size={16} $dark />
+
             {isHandheld && (
               <ConnectorIcon
                 className="rightIcon"

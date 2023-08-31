@@ -1,15 +1,14 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useTransaction } from 'wagmi'
-import { useMount } from 'react-use'
 import Link from 'next/link'
 import { useSetAtom } from 'jotai'
 import { RESET } from 'jotai/utils'
 
 import { approveTxAtom } from 'states/tx'
-import config from 'config'
-import { parseLog } from 'utils/parseLog'
 import { txUrlFor } from 'utils/txUrlFor'
-import { useStaking } from 'hooks'
+import { isEthereum } from 'utils/isEthereum'
+import { parseLog } from 'utils/parseLog'
+import { useChain, useClientMount, useStaking, useViemClients } from 'hooks'
 import { useWatch } from './useWatch'
 
 import { StyledToast } from './styled'
@@ -28,25 +27,30 @@ export default function ApproveToast({
   hash,
   toastLabel,
   tokenAddress,
-  tokenDecimals,
 }: ApproveToastProps) {
   const [pending, setPending] = useState<boolean | null>(null)
 
+  const { publicClient } = useViemClients()
+  const { chainId } = useChain()
+  const { lpToken, tokens } = useStaking()
+
   const setTx = useSetAtom(approveTxAtom)
-  const { tokenMap } = useStaking()
 
   const status = useWatch(hash)
 
-  useMount(() => setTx(RESET))
+  useClientMount(() => setTx(RESET))
 
   useTransaction({
     hash,
-    chainId: config.chainId,
+    chainId,
     enabled: !!hash,
     suspense: false,
     async onSuccess(tx) {
       try {
-        const { logs = [] } = (await tx?.wait()) ?? {}
+        const { logs = [] } =
+          (await publicClient.waitForTransactionReceipt({ hash: tx.hash })) ??
+          {}
+
         const approvalLog = logs
           .map((l) => parseLog(l))
           .find((l) => l?.name === 'Approval')
@@ -60,12 +64,18 @@ export default function ApproveToast({
     },
   })
 
-  const { symbol = '' } = tokenMap[tokenAddress] ?? {}
+  const symbol = useMemo(
+    () =>
+      tokenAddress === lpToken?.address && isEthereum(chainId)
+        ? lpToken?.name
+        : tokens[tokenAddress]?.symbol,
+    [chainId, lpToken?.address, lpToken?.name, tokenAddress, tokens]
+  )
 
   return (
     <StyledToast>
       <header className="toastHeader">
-        <Link href={txUrlFor(hash)!} target="_blank" rel="noopener">
+        <Link href={txUrlFor(chainId, hash)!} target="_blank" rel="noopener">
           <h3 className="title">
             Approve to {toastLabel}
             <Icon icon="outlink" />
@@ -78,9 +88,7 @@ export default function ApproveToast({
         <dl className="detailList">
           <div className="detailItem">
             <dt>
-              <div className="token">
-                <TokenIcon address={tokenAddress} dark $size={20} />
-              </div>
+              <TokenIcon address={tokenAddress} $dark $size={20} />
               {symbol}
             </dt>
 

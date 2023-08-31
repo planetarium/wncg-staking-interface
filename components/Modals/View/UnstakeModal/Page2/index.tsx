@@ -1,4 +1,3 @@
-import { memo } from 'react'
 import { useAtomValue } from 'jotai'
 
 import { unstakeTxAtom } from 'states/tx'
@@ -10,13 +9,14 @@ import Footer from './Footer'
 import Form from './Form'
 
 type UnstakeModalPage2Props = {
-  send(event: string): void
+  send: XstateSend
 } & UseUnstakeFormReturns
 
 function UnstakeModalPage2({ send, ...props }: UnstakeModalPage2Props) {
   const {
     checked,
     unstakeAmount,
+    inputDisabled,
     submitDisabled,
     stakedTokenBalance,
     totalClaimFiatValue,
@@ -24,7 +24,7 @@ function UnstakeModalPage2({ send, ...props }: UnstakeModalPage2Props) {
 
   const tx = useAtomValue(unstakeTxAtom)
 
-  const disabled = !!tx.hash
+  const disabled = inputDisabled || !!tx.hash
 
   return (
     <StyledUnstakeModalPage2 $disabled={disabled}>
@@ -61,4 +61,4 @@ function UnstakeModalPage2({ send, ...props }: UnstakeModalPage2Props) {
   )
 }
 
-export default memo(UnstakeModalPage2)
+export default UnstakeModalPage2

@@ -10,13 +10,14 @@ export function useStakeForm() {
   const [showPopup, setShowPopup] = useState(false)
 
   const { isConnected } = useAuth()
+
   const toFiat = useFiat()
-  const { stakedTokenAddress } = useStaking()
+  const { lpToken } = useStaking()
 
   const balanceOf = useBalances()
-  const bptBalance = balanceOf(stakedTokenAddress)
+  const lpBalance = balanceOf(lpToken?.address)
   const fromLaptop = useAtomValue(fromLaptopAtom)
-  const bptBalanceInFiatValue = toFiat(bptBalance, stakedTokenAddress)
+  const lpBalanceInFiatValue = toFiat(lpBalance, lpToken?.address)
 
   const { clearErrors, control, formState, setValue, watch } = useForm<{
     stakeAmount: string
@@ -28,7 +29,7 @@ export function useStakeForm() {
     () => ({
       validate: {
         maxAmount: (v: string) =>
-          bnum(v).lte(bptBalance) || 'Exceeds wallet balance',
+          bnum(v).lte(lpBalance) || 'Exceeds wallet balance',
       },
       onBlur() {
         setShowPopup(false)
@@ -42,7 +43,7 @@ export function useStakeForm() {
         clearErrors('stakeAmount')
       },
     }),
-    [bptBalance, clearErrors]
+    [lpBalance, clearErrors]
   )
 
   const stakeAmount = watch('stakeAmount')
@@ -56,14 +57,14 @@ export function useStakeForm() {
     [formState, isConnected, isValueEmpty]
   )
 
-  const inputDisabled = useMemo(() => bnum(bptBalance).isZero(), [bptBalance])
+  const inputDisabled = useMemo(() => bnum(lpBalance).isZero(), [lpBalance])
 
   function setMaxValue() {
-    if (bnum(bptBalance).isZero()) {
+    if (bnum(lpBalance).isZero()) {
       return
     }
 
-    setValue('stakeAmount', bptBalance)
+    setValue('stakeAmount', lpBalance)
     setShowPopup(true)
     clearErrors('stakeAmount')
   }
@@ -89,8 +90,8 @@ export function useStakeForm() {
     togglePopup,
     control,
     inputDisabled,
-    maxBalance: bptBalance,
-    maxBalanceInFiatValue: bptBalanceInFiatValue,
+    maxBalance: lpBalance,
+    maxBalanceInFiatValue: lpBalanceInFiatValue,
     resetForm,
     rules,
     setMaxValue,

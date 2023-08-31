@@ -1,14 +1,14 @@
-import { YEAR_IN_SEC } from 'constants/time'
+import { YEAR } from 'config/constants/time'
 import { bnum } from './bnum'
 
 export function calcApr(
   emissionPerSec: string,
-  price: number | string,
+  tokenPrice: number | string,
   totalStakedValue: number | string
 ) {
   const apr = bnum(emissionPerSec)
-    .times(YEAR_IN_SEC)
-    .times(price)
+    .times(YEAR)
+    .times(tokenPrice)
     .div(totalStakedValue)
     .times(100)
 

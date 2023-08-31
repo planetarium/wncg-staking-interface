@@ -1,41 +1,44 @@
 import { useMemo } from 'react'
 import { useQuery } from '@tanstack/react-query'
 
-import config from 'config'
-import { queryKeys } from 'config/queryKeys'
+import { QUERY_KEYS } from 'config/constants/queryKeys'
 import { fetchUserAllowances } from 'lib/queries/fetchUserAllowances'
-import { useAuth, useStaking } from 'hooks'
+import { useAuth, useChain, useStaking } from 'hooks'
 
 export function useFetchUserAllowances(options: UseFetchOptions = {}) {
   const {
-    enabled = true,
+    enabled: _enabled = true,
     refetchInterval,
-    refetchOnWindowFocus = 'always',
-    suspense,
+    refetchOnWindowFocus,
+    suspense = false,
   } = options
 
-  const { account } = useAuth()
-  const { stakedTokenAddress, poolTokenAddresses, tokenMap } = useStaking()
+  const { account, isConnected } = useAuth()
+  const { chainId, dexProtocolAddress, stakingAddress, networkMismatch } =
+    useChain()
+  const { lpToken, poolTokenAddresses, tokens } = useStaking()
 
   const pairAddressList: Hash[][] = useMemo(
     () => [
-      [stakedTokenAddress, config.stakingAddress],
-      ...poolTokenAddresses?.map((a) => [a, config.vault]),
+      [lpToken?.address, stakingAddress],
+      ...poolTokenAddresses?.map((addr) => [addr, dexProtocolAddress]),
     ],
-    [poolTokenAddresses, stakedTokenAddress]
+    [dexProtocolAddress, lpToken?.address, poolTokenAddresses, stakingAddress]
   )
 
   const pairs = useMemo(
     () =>
       pairAddressList.map(
-        ([addr, spender]) => [tokenMap[addr], spender] as AllowancePair
+        ([addr, spender]) => [tokens?.[addr], spender] as AllowancePair
       ),
-    [pairAddressList, tokenMap]
+    [pairAddressList, tokens]
   )
 
+  const enabled = _enabled && !!isConnected && !networkMismatch
+
   return useQuery<AllowanceMap>(
-    [queryKeys.User.Allowances, account!],
-    () => fetchUserAllowances(pairs, account!),
+    [QUERY_KEYS.User.Allowances, account!, chainId, ...pairAddressList],
+    () => fetchUserAllowances(chainId, account!, pairs),
     {
       enabled,
       staleTime: Infinity,

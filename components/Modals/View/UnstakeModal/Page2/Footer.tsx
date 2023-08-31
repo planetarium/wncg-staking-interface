@@ -2,6 +2,7 @@ import { useAtom } from 'jotai'
 
 import { unstakeTxAtom } from 'states/tx'
 import { bnum } from 'utils/bnum'
+import { walletErrorHandler } from 'utils/walletErrorHandler'
 import { useFiat, useStaking } from 'hooks'
 import { useUnstake } from './useUnstake'
 
@@ -10,7 +11,7 @@ import TxButton from 'components/TxButton'
 
 type UnstakeModalPage2FooterProps = {
   disabled: boolean
-  send(event: string): void
+  send: XstateSend
   unstakeAmount: string
   rewardFiatValue: string
   stakedTokenBalance: string
@@ -27,38 +28,31 @@ export default function UnstakeModalPage2Footer({
   checked = false,
 }: UnstakeModalPage2FooterProps) {
   const toFiat = useFiat()
-  const { stakedTokenAddress } = useStaking()
+  const { lpToken } = useStaking()
 
   const [tx, setTx] = useAtom(unstakeTxAtom)
 
   const _unstake = useUnstake(unstakeAmount, checked)
 
-  const lpFiatValue = toFiat(unstakeAmount, stakedTokenAddress)
+  const lpFiatValue = toFiat(unstakeAmount, lpToken?.address)
   const fiatValue = checked
     ? bnum(lpFiatValue).plus(rewardFiatValue).toString()
     : lpFiatValue
 
   async function unstake() {
-    if (!_unstake) {
-      send('FAIL')
-      return
-    }
-
     try {
+      if (!_unstake) {
+        throw Error('No writeAsync')
+      }
+
       const txHash = await _unstake()
-      if (!txHash) return
+      if (!txHash) throw Error('No txHash')
+
       setTx({ hash: txHash, unstakeAmount, stakedTokenBalance })
       send('NEXT')
     } catch (error: any) {
-      if (
-        error.code === 'ACTION_REJECTED' ||
-        error.code === 4001 ||
-        error.error === 'Rejected by user'
-      ) {
-        return
-      }
-
-      send('FAIL')
+      walletErrorHandler(error, () => send('FAIL'))
+      send('ROLLBACK')
     }
   }
 

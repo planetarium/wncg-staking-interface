@@ -1,4 +1,3 @@
-import { memo } from 'react'
 import clsx from 'clsx'
 
 import { StyledConnectorIcon } from './styled'
@@ -37,4 +36,4 @@ function ConnectorIcon({
   )
 }
 
-export default memo(ConnectorIcon)
+export default ConnectorIcon

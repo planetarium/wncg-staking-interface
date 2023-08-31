@@ -1,8 +1,6 @@
-import { memo } from 'react'
-
 import { useResponsive } from 'hooks'
 
-import { StyledExpectedRevenue } from './styled'
+import { StyledExpectedRevenueBonusRewards } from './styled'
 import Skeleton from 'components/Skeleton'
 
 const LIST = ['day', 'week', 'month', 'year']
@@ -12,7 +10,7 @@ function ExpectedRevenueFallback() {
 
   if (isHandheld) {
     return (
-      <StyledExpectedRevenue className="revenueList">
+      <StyledExpectedRevenueBonusRewards className="revenueList">
         {LIST.map((span) => {
           return (
             <div className="revenueItem" key={`revenueMap:${span}`}>
@@ -40,12 +38,12 @@ function ExpectedRevenueFallback() {
             </div>
           )
         })}
-      </StyledExpectedRevenue>
+      </StyledExpectedRevenueBonusRewards>
     )
   }
 
   return (
-    <StyledExpectedRevenue className="revenueList">
+    <StyledExpectedRevenueBonusRewards className="revenueList">
       {LIST.map((span) => {
         return (
           <div className="revenueItem" key={`revenueMap:${span}`}>
@@ -73,8 +71,8 @@ function ExpectedRevenueFallback() {
           </div>
         )
       })}
-    </StyledExpectedRevenue>
+    </StyledExpectedRevenueBonusRewards>
   )
 }
 
-export default memo(ExpectedRevenueFallback)
+export default ExpectedRevenueFallback

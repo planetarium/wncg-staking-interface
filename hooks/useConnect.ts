@@ -1,21 +1,22 @@
 import { useCallback } from 'react'
 import { useConnect as _useConnect } from 'wagmi'
 
-import config from 'config'
 import { ModalType } from 'config/constants'
 import { createWallets } from 'lib/wagmi/wallets'
+import { useChain } from './useChain'
 import { useModal } from './useModal'
 
 export function useConnect() {
+  const { chainId } = useChain()
   const { addModal, removeModal } = useModal()
 
   const { connectAsync, connectors } = _useConnect({
-    chainId: config.chainId,
+    chainId,
     onSuccess: removeModal,
   })
 
   const wallets = createWallets({
-    chainId: config.chainId,
+    chainId,
     connect: connectAsync,
   })
 
@@ -36,7 +37,7 @@ export function useConnect() {
       try {
         await connectAsync({
           connector,
-          chainId: config.chainId,
+          chainId,
         })
       } catch (error: any) {
         if (
@@ -56,7 +57,7 @@ export function useConnect() {
         throw error
       }
     },
-    [connectAsync, connectors, removeModal, wallets]
+    [chainId, connectAsync, connectors, removeModal, wallets]
   )
 
   const openConnectModal = useCallback(() => {

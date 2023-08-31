@@ -1,51 +1,85 @@
 import { dehydrate, QueryClient } from '@tanstack/react-query'
+import type { GetStaticPropsContext } from 'next'
 
-import { queryKeys } from 'config/queryKeys'
-import { build } from 'lib/queries/build'
+import config from 'config'
+import { ChainId, SUPPORTED_CHAINS } from 'config/chains'
+import { QUERY_KEYS } from 'config/constants/queryKeys'
+import { getQueryString } from 'utils/getQueryString'
 import { fetchPoolSnapshot } from 'lib/queries/fetchPoolSnapshot'
-import { now } from 'utils/now'
-import { fetchPrices } from './queries/fetchPrices'
-import { getBptPrice } from 'utils/getBptPrice'
+import { fetchPrices } from 'lib/queries/fetchPrices'
+import { fetchStaking } from 'lib/queries/fetchStaking'
 
-export async function getStaticProps() {
+export async function getStaticProps(ctx: GetStaticPropsContext) {
   const queryClient = new QueryClient()
-  const buildTime = now()
 
-  const buildData = await build()
-  const priceMap = await fetchPrices(
-    ...buildData.rewardTokenAddresses,
-    ...buildData.poolTokenAddresses
-  )
+  const _chainId = getQueryString(ctx?.params?.chainId)
+  const chainId = Number(_chainId) as ChainId
 
-  const bptPrice = getBptPrice(
-    buildData.poolTokens,
-    buildData.bptTotalSupply,
-    priceMap
-  )
+  try {
+    if (!SUPPORTED_CHAINS.includes(chainId)) throw Error()
 
-  await queryClient.prefetchQuery<BuildResponse>([queryKeys.Build], build, {
-    staleTime: Infinity,
-    cacheTime: Infinity,
-  })
+    const project = await fetchStaking(chainId)
+    const prices = await fetchPrices(chainId)
 
-  queryClient.setQueryData<PriceMap>([queryKeys.FallbackPrices], {
-    ...priceMap,
-    [buildData.bptAddress]: bptPrice,
-  })
+    const ethereumChainId = config.isTestnet ? ChainId.GOERLI : ChainId.ETHEREUM
+    const bscChainId = config.isTestnet ? ChainId.BSC_TESTNET : ChainId.BSC
+    await queryClient.prefetchQuery(
+      [QUERY_KEYS.Build, ethereumChainId],
+      () => fetchStaking(ethereumChainId),
+      {
+        staleTime: Infinity,
+        cacheTime: Infinity,
+      }
+    )
 
-  await queryClient.prefetchQuery<PoolSnapshotResponse>(
-    [queryKeys.Pool.Snapshot, buildTime],
-    () => fetchPoolSnapshot(buildTime),
-    {
-      staleTime: Infinity,
-      cacheTime: Infinity,
+    await queryClient.prefetchQuery(
+      [QUERY_KEYS.Build, bscChainId],
+      () => fetchStaking(bscChainId),
+      {
+        staleTime: Infinity,
+        cacheTime: Infinity,
+      }
+    )
+
+    await queryClient.prefetchQuery(
+      [QUERY_KEYS.Staking.Prices, ethereumChainId],
+      () => fetchPrices(ethereumChainId),
+      {
+        staleTime: Infinity,
+        cacheTime: Infinity,
+      }
+    )
+
+    await queryClient.prefetchQuery(
+      [QUERY_KEYS.Staking.Prices, bscChainId],
+      () => fetchPrices(bscChainId),
+      {
+        staleTime: Infinity,
+        cacheTime: Infinity,
+      }
+    )
+
+    await queryClient.prefetchQuery<PoolSnapshotResponse>(
+      [QUERY_KEYS.Pool.Snapshot, chainId],
+      () => fetchPoolSnapshot(chainId),
+      {
+        staleTime: Infinity,
+        cacheTime: Infinity,
+      }
+    )
+
+    return {
+      props: {
+        dehydratedState: dehydrate(queryClient),
+        chainId,
+        project,
+        prices,
+      },
+      revalidate: 60 * 10,
     }
-  )
-
-  return {
-    props: {
-      dehydratedState: dehydrate(queryClient),
-    },
-    revalidate: 60 * 60 * 24, // 24 hour
+  } catch {
+    return {
+      notFound: true,
+    }
   }
 }

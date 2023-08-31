@@ -1,4 +1,5 @@
 /** @type {import('next').NextConfig} */
+const { withSentryConfig } = require('@sentry/nextjs')
 
 const nextConfig = {
   compiler: {
@@ -22,15 +23,24 @@ const nextConfig = {
     })
     return config
   },
-  exportPathMap: async function (defaultPathMap) {
-    return {
-      ...defaultPathMap,
-      '/': { page: '/', __nextDefaultLocale: 'en' },
-      '/wncg': { page: '/wncg', __nextDefaultLocale: 'en' },
-      '/wncg/terms': { page: '/wncg/terms', __nextDefaultLocale: 'en' },
-      '/wncg/privacy': { page: '/wncg/privacy', __nextDefaultLocale: 'en' },
-    }
+  async redirects() {
+    return [
+      {
+        source: '/wncg',
+        destination: `/wncg/1`,
+        permanent: true,
+      },
+    ]
   },
+  sentry: {},
 }
 
-module.exports = nextConfig
+const sentryWebpackPluginOptions = {
+  org: 'planetarium-labs',
+  project: 'wncg-staking',
+
+  authToken: process.env.SENTRY_AUTH_TOKEN,
+  silent: true, // Suppresses all logs
+}
+
+module.exports = withSentryConfig(nextConfig, sentryWebpackPluginOptions)

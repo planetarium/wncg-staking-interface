@@ -1,28 +1,38 @@
-import { useQuery } from '@tanstack/react-query'
-import { useAtomValue, useSetAtom } from 'jotai'
+import { useMemo } from 'react'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 
-import { currentTimestampAtom, isHarvestableAtom } from 'states/system'
-import { queryKeys } from 'config/queryKeys'
+import { QUERY_KEYS } from 'config/constants/queryKeys'
 import { fetchStaking } from 'lib/queries/fetchStaking'
-import { useStaking } from 'hooks/useStaking'
+import { useChain } from 'hooks'
+
+type FetchStakingReturn = {
+  totalStaked: string
+  poolTokenBalances: string[]
+  lpToken: any
+}
 
 export function useFetchStaking(options: UseFetchOptions = {}) {
+  const queryClient = useQueryClient()
   const {
-    enabled: _enabled = true,
+    enabled = true,
     refetchInterval,
-    refetchOnWindowFocus = 'always',
+    refetchOnWindowFocus,
     suspense = true,
   } = options
-  const { balRewardPoolAddress, liquidityGaugeAddress } = useStaking()
 
-  const currentTimestamp = useAtomValue(currentTimestampAtom)
-  const setIsHarvestable = useSetAtom(isHarvestableAtom)
+  const { chainId, stakingAddress } = useChain()
 
-  const enabled = _enabled && !!liquidityGaugeAddress
+  const initialData = useMemo(
+    () =>
+      queryClient.getQueryData([QUERY_KEYS.Build, chainId]) as
+        | FetchStakingReturn
+        | undefined,
+    [chainId, queryClient]
+  )
 
-  return useQuery(
-    [queryKeys.Staking.Data, liquidityGaugeAddress],
-    () => fetchStaking(liquidityGaugeAddress, balRewardPoolAddress),
+  return useQuery<FetchStakingReturn>(
+    [QUERY_KEYS.Staking.Data, stakingAddress, chainId],
+    () => fetchStaking(chainId),
     {
       enabled,
       staleTime: Infinity,
@@ -30,11 +40,7 @@ export function useFetchStaking(options: UseFetchOptions = {}) {
       refetchOnWindowFocus,
       suspense,
       useErrorBoundary: false,
-      onSuccess(data) {
-        if (!data) return
-        if (data.periodFinish > currentTimestamp) setIsHarvestable(false)
-        else setIsHarvestable(true)
-      },
+      initialData,
     }
   )
 }

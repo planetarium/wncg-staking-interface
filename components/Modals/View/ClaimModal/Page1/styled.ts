@@ -78,6 +78,15 @@ export const StyledClaimModalPage1Form = styled.form`
     transition: 200ms;
     cursor: pointer;
 
+    &.presentation {
+      width: 100%;
+      cursor: default;
+
+      &::before {
+        display: none;
+      }
+    }
+
     &.selected {
       border-color: var(--primary-400);
     }
@@ -88,9 +97,13 @@ export const StyledClaimModalPage1Form = styled.form`
 
     &.disabled {
       opacity: 0.5 !important;
+
+      &::before {
+        display: none;
+      }
     }
 
-    &:not(.disabled):hover {
+    &:hover {
       &::before {
         opacity: 1;
       }
@@ -204,4 +217,47 @@ export const StyledClaimModalPage1Form = styled.form`
       }
     `
   )}
+`
+
+export const StyledClaimModalPage1Summary = styled.dl`
+  ${flexbox()}
+  padding: 24px 32px;
+  background-image: ${gradient(1)};
+  border-radius: 12px;
+
+  dt {
+    ${flexbox('start')}
+  }
+
+  .tokenIcon {
+    margin-right: 8px;
+  }
+
+  .countUp {
+    ${textStyle('subtitle', 1)}
+    color: var(--white);
+  }
+
+  .number {
+    ${textStyle('body', 3)}
+    margin-top: 4px;
+    font-weight: 700;
+    color: var(--primary-200);
+  }
+
+  dt,
+  dd {
+    flex-grow: 1;
+    width: 50%;
+  }
+
+  dt {
+    ${textStyle('subtitle', 1)}
+  }
+
+  dd {
+    ${flexbox('center', 'end')}
+    flex-direction: column;
+    white-space: nowrap;
+  }
 `

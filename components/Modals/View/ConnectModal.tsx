@@ -1,4 +1,5 @@
 import { MouseEvent } from 'react'
+import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import clsx from 'clsx'
 
@@ -9,7 +10,7 @@ import { StyledConnectModal } from './styled'
 import CryptoIcon, { CryptoIconType } from 'components/CryptoIcon'
 import { CloseButton } from 'components/Modals/shared'
 
-export default function ConnectModal() {
+function ConnectModal() {
   const { connect: _connect, wallets } = useConnect()
   const {} = useStaking()
 
@@ -26,11 +27,11 @@ export default function ConnectModal() {
 
         <p className="desc">
           By connecting a wallet, you agree to Nine Chronicles Ltd&apos;s{' '}
-          <Link href="/wncg/terms" target="_blank" rel="noopener">
+          <Link href="/docs/terms" target="_blank" rel="noopener">
             Terms of Service
           </Link>{' '}
           and{' '}
-          <Link href="/wncg/privacy" target="_blank" rel="noopener">
+          <Link href="/docs/privacy" target="_blank" rel="noopener">
             Privacy Policy
           </Link>
           .
@@ -78,3 +79,5 @@ function renderLabel(name?: string) {
       return name
   }
 }
+
+export default dynamic(() => Promise.resolve(ConnectModal), { ssr: false })

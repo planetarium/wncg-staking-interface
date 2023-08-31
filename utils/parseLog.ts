@@ -1,10 +1,13 @@
-import type { Log } from '@ethersproject/abstract-provider'
+import { Log } from 'viem'
 
 import {
   balRewardPoolIface,
   ercTokenIface,
   liquidityGaugeIface,
-  stakingIface,
+  pancakePairIface,
+  pancakeRouterIface,
+  stakingBscIface,
+  stakingEthereumIface,
   vaultIface,
   wethIface,
 } from 'lib/interface'
@@ -14,21 +17,33 @@ export function parseLog(log: Log) {
     return ercTokenIface.parseLog(log)
   } catch {
     try {
-      return stakingIface.parseLog(log)
+      return stakingEthereumIface.parseLog(log)
     } catch {
       try {
-        return liquidityGaugeIface.parseLog(log)
+        return stakingBscIface.parseLog(log)
       } catch {
         try {
-          return vaultIface.parseLog(log)
+          return pancakeRouterIface.parseLog(log)
         } catch {
           try {
-            return balRewardPoolIface.parseLog(log)
+            return pancakePairIface.parseLog(log)
           } catch {
             try {
-              return wethIface.parseLog(log)
+              return liquidityGaugeIface.parseLog(log)
             } catch {
-              return null
+              try {
+                return vaultIface.parseLog(log)
+              } catch {
+                try {
+                  return balRewardPoolIface.parseLog(log)
+                } catch {
+                  try {
+                    return wethIface.parseLog(log)
+                  } catch {
+                    return null
+                  }
+                }
+              }
             }
           }
         }

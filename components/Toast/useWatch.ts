@@ -3,31 +3,32 @@ import { useUnmount } from 'react-use'
 import { toast } from 'react-toastify'
 import { useWaitForTransaction } from 'wagmi'
 
-import config from 'config'
-import { useRefetch } from 'hooks'
+import { useChain, useRefetch } from 'hooks'
 
 export function useWatch(hash: Hash) {
   const [status, setStatus] = useState<null | 0 | 1>(null)
 
+  const { chainId } = useChain()
+
   const refetch = useRefetch({
-    userData: true,
     staking: true,
     pool: true,
     poolSnapshot: true,
-    userBalances: true,
     userAllowances: true,
+    userBalances: true,
+    userData: true,
   })
 
   useWaitForTransaction({
     enabled: !!hash,
     hash,
-    chainId: config.chainId,
+    chainId,
     suspense: false,
     async onSuccess() {
       setStatus(1)
-      refetch()
+      await refetch()
     },
-    async onError() {
+    onError() {
       setStatus(0)
     },
   })

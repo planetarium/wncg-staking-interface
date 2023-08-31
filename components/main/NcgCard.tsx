@@ -37,7 +37,7 @@ export default function MainNcgCard() {
               target="_blank"
               $contain
             >
-              NCG staking
+              NCG Staking
             </Button>
           </li>
 

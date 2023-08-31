@@ -36,12 +36,10 @@ export const StyledAvailableBalance = styled(motion.dl)<{
   color: var(--primary-300);
   transition: 200ms;
 
-  &:has(dd) {
-    dt::after {
-      margin-right: 4px;
-      margin-left: 4px;
-      content: ':';
-    }
+  dt::after {
+    margin-right: 4px;
+    margin-left: 4px;
+    content: ':';
   }
 
   dd {

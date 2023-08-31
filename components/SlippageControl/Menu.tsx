@@ -4,8 +4,11 @@ import { useSetAtom } from 'jotai'
 import clsx from 'clsx'
 
 import { slippageAtom } from 'states/system'
-import { EXIT_MOTION } from 'config/motions'
-import { dropdownTransition, slideInDown } from 'config/motionVariants'
+import {
+  ANIMATION_MAP,
+  EXIT_MOTION,
+  TRANSITION_MAP,
+} from 'config/constants/motions'
 import { bnum } from 'utils/bnum'
 import { wait } from 'utils/wait'
 import { useCloseOnBlur } from 'hooks'
@@ -44,8 +47,8 @@ function SlippageControlMenu({ closeMenu, menuRef }: SlippageControlMenuProps) {
     <StyledSlippageControlMenu
       {...EXIT_MOTION}
       ref={menuRef}
-      variants={slideInDown}
-      transition={dropdownTransition}
+      variants={ANIMATION_MAP.slideInDown}
+      transition={TRANSITION_MAP.dropdown}
     >
       {SLIPPAGE_TOLERANCES.map((option) => {
         const selected = bnum(currentValue).eq(option)

@@ -35,6 +35,38 @@ export function prepareNumber(
   let value = bValue.toString()
 
   if (type === 'percent') {
+    if (bnum(_value).isZero()) {
+      return {
+        value: '0',
+        decimals: 0,
+        prefix,
+        approx,
+        suffix,
+      }
+    }
+
+    if (bnum(value).lt(softMinAmount)) {
+      value = bnum(_value).toFixed(maxDecimals, roundingMode)
+
+      if (bnum(value).lt(hardMinAmount)) {
+        return {
+          value: hardMinAmount,
+          decimals: maxDecimals,
+          prefix: `<${prefix}`,
+          approx,
+          suffix,
+        }
+      }
+
+      return {
+        value,
+        decimals: maxDecimals,
+        prefix,
+        approx,
+        suffix,
+      }
+    }
+
     return {
       value,
       decimals: bnum(value).gte(100) ? 0 : decimals,

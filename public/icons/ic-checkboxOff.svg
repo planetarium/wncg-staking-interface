@@ -1,0 +1,31 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+>
+  <symbol viewBox="0 0 16 16" id="size-16">
+    <path
+      fill-rule="evenodd"
+      clip-rule="evenodd"
+      d="M12 1.5H4C2.61929 1.5 1.5 2.61929 1.5 4V12C1.5 13.3807 2.61929 14.5 4 14.5H12C13.3807 14.5 14.5 13.3807 14.5 12V4C14.5 2.61929 13.3807 1.5 12 1.5ZM4 0C1.79086 0 0 1.79086 0 4V12C0 14.2091 1.79086 16 4 16H12C14.2091 16 16 14.2091 16 12V4C16 1.79086 14.2091 0 12 0H4Z"
+      fill="currentColor"
+    />
+  </symbol>
+
+  <symbol viewBox="0 0 24 24" id="size-24">
+    <path
+      fill-rule="evenodd"
+      clip-rule="evenodd"
+      d="M20 2H4C2.89543 2 2 2.89543 2 4V20C2 21.1046 2.89543 22 4 22H20C21.1046 22 22 21.1046 22 20V4C22 2.89543 21.1046 2 20 2ZM4 0C1.79086 0 0 1.79086 0 4V20C0 22.2091 1.79086 24 4 24H20C22.2091 24 24 22.2091 24 20V4C24 1.79086 22.2091 0 20 0H4Z"
+      fill="currentColor"
+    />
+  </symbol>
+
+  <symbol viewBox="0 0 32 32" id="size-32">
+    <path
+      fill-rule="evenodd"
+      clip-rule="evenodd"
+      d="M28 2H4C2.89543 2 2 2.89543 2 4V28C2 29.1046 2.89543 30 4 30H28C29.1046 30 30 29.1046 30 28V4C30 2.89543 29.1046 2 28 2ZM4 0C1.79086 0 0 1.79086 0 4V28C0 30.2091 1.79086 32 4 32H28C30.2091 32 32 30.2091 32 28V4C32 1.79086 30.2091 0 28 0H4Z"
+      fill="currentColor"
+    />
+  </symbol>
+</svg>

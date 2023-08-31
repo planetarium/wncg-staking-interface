@@ -1,5 +1,4 @@
 import { useMemo } from 'react'
-import { useMount } from 'react-use'
 import Link from 'next/link'
 import { useAtom, useSetAtom } from 'jotai'
 import { RESET } from 'jotai/utils'
@@ -11,7 +10,7 @@ import { format } from 'utils/format'
 import { formatISO } from 'utils/formatISO'
 import { now } from 'utils/now'
 import { txUrlFor } from 'utils/txUrlFor'
-import { useStaking } from 'hooks'
+import { useClientMount, useChain, useStaking } from 'hooks'
 import { useWatch } from './useWatch'
 
 import { StyledToast } from './styled'
@@ -23,27 +22,29 @@ type CooldownToastProps = {
 }
 
 export default function CooldownToast({ hash }: CooldownToastProps) {
-  const { cooldownPeriod, unstakePeriod } = useStaking()
+  const { chainId } = useChain()
+  const { cooldownSeconds, withdrawSeconds } = useStaking()
+
   const [currentTimestamp, setCurrentTimestamp] = useAtom(currentTimestampAtom)
 
   const schedule = useMemo(() => {
     const cooldownEndsAt = bnum(currentTimestamp)
-      .plus(cooldownPeriod)
+      .plus(cooldownSeconds)
       .toNumber()
 
     return {
       cooldownStartsAt: currentTimestamp,
       cooldownEndsAt,
       unstakeStartsAt: cooldownEndsAt,
-      unstakeEndsAt: bnum(cooldownEndsAt).plus(unstakePeriod).toNumber(),
+      unstakeEndsAt: bnum(cooldownEndsAt).plus(withdrawSeconds).toNumber(),
     }
-  }, [cooldownPeriod, currentTimestamp, unstakePeriod])
+  }, [cooldownSeconds, currentTimestamp, withdrawSeconds])
 
   const setTx = useSetAtom(cooldownTxAtom)
 
   const status = useWatch(hash)
 
-  useMount(() => {
+  useClientMount(() => {
     setCurrentTimestamp(now())
     setTx(RESET)
   })
@@ -51,7 +52,7 @@ export default function CooldownToast({ hash }: CooldownToastProps) {
   return (
     <StyledToast>
       <header className="toastHeader">
-        <Link href={txUrlFor(hash)!} target="_blank" rel="noopener">
+        <Link href={txUrlFor(chainId, hash)!} target="_blank" rel="noopener">
           <h3 className="title">
             Cooldown started
             <Icon icon="outlink" />

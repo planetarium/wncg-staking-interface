@@ -1,11 +1,10 @@
 import Link from 'next/link'
-import { useMount } from 'react-use'
 import { useSetAtom } from 'jotai'
 import { RESET } from 'jotai/utils'
 
 import { joinTxAtom } from 'states/tx'
 import { txUrlFor } from 'utils/txUrlFor'
-import { useFiat, useStaking } from 'hooks'
+import { useClientMount, useChain, useFiat, useStaking } from 'hooks'
 import { useWatch } from './useWatch'
 
 import { StyledToast } from './styled'
@@ -16,24 +15,30 @@ import TokenIcon from 'components/TokenIcon'
 import Status from './Status'
 
 type JoinToastProps = {
+  assets: Hash[]
   hash: Hash
   joinAmounts: string[]
 }
 
-export default function JoinToast({ hash, joinAmounts }: JoinToastProps) {
+export default function JoinToast({
+  assets,
+  hash,
+  joinAmounts,
+}: JoinToastProps) {
+  const { chainId } = useChain()
   const toFiat = useFiat()
-  const { poolTokens, stakedTokenAddress } = useStaking()
+  const { lpToken, tokens } = useStaking()
 
   const setTx = useSetAtom(joinTxAtom)
 
   const status = useWatch(hash)
 
-  useMount(() => setTx(RESET))
+  useClientMount(() => setTx(RESET))
 
   return (
     <StyledToast>
       <header className="toastHeader">
-        <Link href={txUrlFor(hash)!} target="_blank" rel="noopener">
+        <Link href={txUrlFor(chainId, hash)!} target="_blank" rel="noopener">
           <h3 className="title">
             Join pool
             <Icon icon="outlink" />
@@ -45,16 +50,14 @@ export default function JoinToast({ hash, joinAmounts }: JoinToastProps) {
       <div className="toastContent">
         <dl className="detailList">
           {joinAmounts.map((amt, i) => {
-            const token = poolTokens[i]
+            const token = tokens[assets[i]]
             const fiatValue = toFiat(amt, token.address)
             const { address, symbol } = token
 
             return (
               <div className="detailItem" key={`joinToast:${address}:${amt}`}>
                 <dt>
-                  <div className="token">
-                    <TokenIcon address={address} $size={20} />
-                  </div>
+                  <TokenIcon address={address} $size={20} />
                   {symbol}
                 </dt>
                 <dd>
@@ -73,11 +76,7 @@ export default function JoinToast({ hash, joinAmounts }: JoinToastProps) {
       </div>
 
       <footer className="toastFooter">
-        <ImportToken
-          address={stakedTokenAddress}
-          $size="sm"
-          $variant="primary"
-        />
+        <ImportToken address={lpToken?.address} $size="sm" $variant="primary" />
       </footer>
     </StyledToast>
   )

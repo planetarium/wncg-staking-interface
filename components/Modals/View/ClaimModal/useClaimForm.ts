@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form'
 
 import { bnum } from 'utils/bnum'
 import { useFiat, useStaking } from 'hooks'
-import { useFetchUserData } from 'hooks/queries'
+import { useFetchUserRewards } from 'hooks/queries'
 
 export type ClaimFormFields = {
   rewardList: boolean[]
@@ -13,11 +13,11 @@ export function useClaimForm() {
   const toFiat = useFiat()
   const { rewardTokenAddresses } = useStaking()
 
-  const { earnedRewards = [] } = useFetchUserData().data ?? {}
+  const { earnedTokenRewards = [] } = useFetchUserRewards().data ?? {}
   const { setValue, watch } = useForm<ClaimFormFields>({
     mode: 'onChange',
     defaultValues: {
-      rewardList: earnedRewards.map((amt) => bnum(amt).gt(0)),
+      rewardList: earnedTokenRewards.map((amt) => bnum(amt).gt(0)),
     },
   })
 
@@ -28,24 +28,24 @@ export function useClaimForm() {
       rewardList
         .reduce((acc, checked, i) => {
           if (!checked) return acc
-          const amount = earnedRewards[i]
+          const amount = earnedTokenRewards[i]
           const address = rewardTokenAddresses[i]
           return acc.plus(toFiat(amount, address))
         }, bnum(0))
         .toString(),
-    [earnedRewards, rewardList, rewardTokenAddresses, toFiat]
+    [earnedTokenRewards, rewardList, rewardTokenAddresses, toFiat]
   )
 
   const submitDisabled = useMemo(
     () =>
-      earnedRewards.every((amt) => bnum(amt).isZero()) ||
+      earnedTokenRewards.every((amt) => bnum(amt).isZero()) ||
       rewardList.every((c) => !c),
-    [earnedRewards, rewardList]
+    [earnedTokenRewards, rewardList]
   )
 
   return {
     rewardList,
-    earnedRewards,
+    earnedTokenRewards,
     setValue,
     watch,
     submitDisabled,

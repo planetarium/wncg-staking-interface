@@ -10,7 +10,7 @@ export const metamaskWalletConfig = {
   title: 'Metamask',
   installed:
     typeof window !== 'undefined' &&
-    Boolean(window.ethereum?.isMetaMask) &&
+    Boolean((window?.ethereum as WindowProvider)?.isMetaMask) &&
     metaMaskConnector.ready,
   connectorId: ConnectorId.MetaMask,
   deepLink: `https://metamask.app.link/dapp/${config.siteUrl}`,
@@ -64,7 +64,7 @@ export const trustWalletConfig = {
   title: 'Trust Wallet',
   connectorId: ConnectorId.TrustWallet,
   installed: !!getTrustWalletProvider(),
-  deepLink: `https://link.trustwallet.com/open_url?coin_id=637&url=${config.baseUrl}`,
+  deepLink: `https://link.trustwallet.com/open_url?coin_id=637&url=${config.siteUrl}`,
   downloadLink:
     isMobile && isIOS
       ? 'https://apps.apple.com/us/app/trust-crypto-bitcoin-wallet/id1288339409'

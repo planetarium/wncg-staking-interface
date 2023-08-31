@@ -1,4 +1,4 @@
-import { memo, useMemo } from 'react'
+import { useMemo } from 'react'
 import { NumericFormat, NumericFormatProps } from 'react-number-format'
 import clsx from 'clsx'
 
@@ -108,4 +108,4 @@ function NumberFormat({
   )
 }
 
-export default memo(NumberFormat)
+export default NumberFormat

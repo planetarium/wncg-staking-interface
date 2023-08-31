@@ -1,4 +1,4 @@
-import { memo, useMemo } from 'react'
+import { useMemo } from 'react'
 import clsx from 'clsx'
 
 import { StyledCryptoIcon } from './styled'
@@ -62,4 +62,4 @@ function CryptoIcon({
   )
 }
 
-export default memo(CryptoIcon)
+export default CryptoIcon

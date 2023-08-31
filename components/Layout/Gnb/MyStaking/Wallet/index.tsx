@@ -1,9 +1,12 @@
-import { memo, useRef } from 'react'
+import { useRef } from 'react'
 import { useAtomValue } from 'jotai'
 
 import { isUnstakeWindowAtom } from 'states/account'
-import { EXIT_MOTION } from 'config/motions'
-import { dropdownTransition, slideInDown } from 'config/motionVariants'
+import {
+  ANIMATION_MAP,
+  EXIT_MOTION,
+  TRANSITION_MAP,
+} from 'config/constants/motions'
 import { useCloseOnBlur } from 'hooks'
 
 import { StyledMyStakingWallet } from './styled'
@@ -27,8 +30,8 @@ function MyStakingWallet({ closeWallet }: MyStakingWalletProp) {
     <StyledMyStakingWallet
       {...EXIT_MOTION}
       ref={ref}
-      variants={slideInDown}
-      transition={dropdownTransition}
+      variants={ANIMATION_MAP.slideInDown}
+      transition={TRANSITION_MAP.dropdown}
     >
       <Staking closeWallet={closeWallet} />
 
@@ -47,4 +50,4 @@ function MyStakingWallet({ closeWallet }: MyStakingWalletProp) {
   )
 }
 
-export default memo(MyStakingWallet)
+export default MyStakingWallet

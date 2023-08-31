@@ -4,30 +4,41 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { AnimatePresence } from 'framer-motion'
 
-import { useAuth, useResponsive } from 'hooks'
+import { useAuth, useChain, useResponsive } from 'hooks'
 
 import { StyledGnb } from './styled'
 import Image from 'components/Image'
+import Skeleton from 'components/Skeleton'
 import Suspense from 'components/Suspense'
-import AccountMenu from './AccountMenu'
-import ConnectButton from './ConnectButton'
+import ChainSelect from './ChainSelect'
 import MenuButton from './MenuButton'
 import MenuList from './MenuList'
 import Sidebar from './Sidebar'
+
+const AccountMenu = dynamic(() => import('./AccountMenu'), {
+  ssr: false,
+})
+
+const ConnectButton = dynamic(() => import('./ConnectButton'), {
+  ssr: false,
+})
 
 const ClaimableRewards = dynamic(() => import('./ClaimableRewards'), {
   ssr: false,
 })
 
-const MyStaking = dynamic(() => import('./MyStaking'), { ssr: false })
+const MyStaking = dynamic(() => import('./MyStaking'), {
+  ssr: false,
+})
 
 export default function MainGnb() {
   const [show, setShow] = useState(false)
   const [showSidebar, setShowSidebar] = useState(false)
 
   const { isConnected } = useAuth()
+  const { chainId } = useChain()
   const { bp, isBrowser } = useResponsive()
-  const { reload, pathname } = useRouter()
+  const { reload, pathname, push } = useRouter()
 
   const logoSrc = useMemo(() => {
     const breakpoint =
@@ -54,7 +65,8 @@ export default function MainGnb() {
   }
 
   function onLogoClick() {
-    if (pathname === '/wncg') reload()
+    if (pathname === '/wncg/[chainId]') reload()
+    else push(`/wncg/${chainId}`)
   }
 
   const showStaking = !!isConnected && isBrowser
@@ -63,13 +75,13 @@ export default function MainGnb() {
     <StyledGnb>
       <div className="left">
         <h1 className="logo">
-          <Link href="/wncg" onClick={onLogoClick}>
+          <Link href={`/wncg/${chainId}`} onClick={onLogoClick}>
             <Image src={logoSrc} alt="WNCG Staking" />
           </Link>
         </h1>
 
         {showStaking && (
-          <Suspense>
+          <Suspense fallback={<Skeleton $width={110} $height={48} $ml={16} />}>
             <MyStaking />
           </Suspense>
         )}
@@ -84,22 +96,24 @@ export default function MainGnb() {
       <div className="right">
         <MenuList />
 
-        <div className="account">
-          <ConnectButton toggle={toggle} />
+        <div className="settings">
+          <ChainSelect />
 
-          <AnimatePresence>
-            {show && <AccountMenu closeMenu={closeMenu} />}
-          </AnimatePresence>
+          <div className="account">
+            <Suspense>
+              <ConnectButton toggle={toggle} />
+            </Suspense>
+
+            <AnimatePresence>
+              {show && <AccountMenu closeMenu={closeMenu} />}
+            </AnimatePresence>
+          </div>
+
+          <MenuButton open={openSidebar} />
         </div>
 
-        <MenuButton open={openSidebar} />
-
         <AnimatePresence>
-          {showSidebar && (
-            <Suspense>
-              <Sidebar closeSidebar={closeSidebar} />
-            </Suspense>
-          )}
+          {showSidebar && <Sidebar closeSidebar={closeSidebar} />}
         </AnimatePresence>
       </div>
     </StyledGnb>

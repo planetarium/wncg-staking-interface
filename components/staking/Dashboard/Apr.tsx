@@ -1,13 +1,12 @@
-import { memo } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useAtom, useAtomValue } from 'jotai'
 import clsx from 'clsx'
 
 import { isHarvestableAtom, showHarvestTooltipAtom } from 'states/system'
-import config from 'config'
-import { EXIT_MOTION, MOTION } from 'config/motions'
-import { fadeIn } from 'config/motionVariants'
-import { useApr, useFiat, useHarvest, useRewards, useStaking } from 'hooks'
+import { ANIMATION_MAP, EXIT_MOTION } from 'config/constants/motions'
+import { isEthereum } from 'utils/isEthereum'
+import { calcApr } from 'utils/calcApr'
+import { useChain, useFiat, useHarvest, useStaking } from 'hooks'
 import { useFetchStaking } from 'hooks/queries'
 
 import { StyledStakingDashboardApr } from './styled'
@@ -20,18 +19,33 @@ import Harvest from './Harvest'
 function StakingDashboardApr() {
   const [show, setShow] = useAtom(showHarvestTooltipAtom)
 
-  const aprs = useApr()
+  const { balAddress, chainId } = useChain()
   const toFiat = useFiat()
-  const { stakedTokenAddress, rewardTokenAddresses } = useStaking()
-  const { rewardTokenSymbols } = useRewards()
   const harvest = useHarvest()
+  const {
+    lpToken,
+    rewardTokenAddresses,
+    rewardEmissionsPerSec,
+    tokens,
+    totalStaked: initTotalStaked,
+  } = useStaking()
 
-  const { totalStaked = '0' } =
-    useFetchStaking({ refetchInterval: 30 * 1_000 }).data ?? {}
+  const { totalStaked = initTotalStaked } = useFetchStaking().data ?? {}
 
-  const totalStakedInFiatValue = toFiat(totalStaked, stakedTokenAddress)
+  const totalStakedInFiatValue = toFiat(
+    totalStaked ?? initTotalStaked,
+    lpToken?.address
+  )
 
-  const isHarvestable = useAtomValue(isHarvestableAtom)
+  const aprs = rewardEmissionsPerSec?.map((e, i) =>
+    calcApr(
+      e,
+      toFiat(1, rewardTokenAddresses[i]) ?? '0',
+      totalStakedInFiatValue
+    )
+  )
+
+  const isHarvestable = useAtomValue(isHarvestableAtom) && isEthereum(chainId)
 
   function toggleTooltip() {
     setShow((prev) => !prev)
@@ -42,11 +56,7 @@ function StakingDashboardApr() {
   }
 
   return (
-    <StyledStakingDashboardApr
-      {...MOTION}
-      className="aprList"
-      variants={fadeIn}
-    >
+    <StyledStakingDashboardApr className="aprList" suppressHydrationWarning>
       <div className="aprItem">
         <dt>Total Staked</dt>
         <dd className="colon">
@@ -54,11 +64,13 @@ function StakingDashboardApr() {
         </dd>
       </div>
 
-      {aprs.map((apr, i) => {
-        const symbol = rewardTokenSymbols[i]
+      {aprs?.map((apr, i) => {
         const addr = rewardTokenAddresses[i]
+        if (!addr || !tokens[addr]) return null
 
-        const showShowHarvest = addr === config.bal && !!isHarvestable
+        const { symbol } = tokens[addr]
+
+        const showShowHarvest = !!isHarvestable && addr === balAddress
 
         return (
           <div
@@ -76,6 +88,7 @@ function StakingDashboardApr() {
                   >
                     <Icon icon="warning" />
                   </button>
+
                   <Suspense>
                     <Harvest show={show} closeTooltip={closeTooltip} />
                   </Suspense>
@@ -84,17 +97,12 @@ function StakingDashboardApr() {
             </dt>
 
             <dd className="colon">
-              <CountUp
-                value={apr ?? '0'}
-                symbol="%"
-                decimals={2}
-                maxDecimals={2}
-              />
+              <CountUp value={apr} symbol="%" decimals={2} maxDecimals={2} />
             </dd>
 
             <AnimatePresence>
               {showShowHarvest && !!harvest && (
-                <motion.div {...EXIT_MOTION} variants={fadeIn}>
+                <motion.div {...EXIT_MOTION} variants={ANIMATION_MAP.fadeIn}>
                   <Button
                     className="aprHarvestButton"
                     onClick={harvest}
@@ -114,4 +122,4 @@ function StakingDashboardApr() {
   )
 }
 
-export default memo(StakingDashboardApr)
+export default StakingDashboardApr

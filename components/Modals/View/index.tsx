@@ -4,34 +4,40 @@ import { ModalType } from 'config/constants'
 import { assertUnreachable } from 'utils/assertUnreachable'
 
 const ApproveModal = dynamic(() => import('./ApproveModal'), {
-  suspense: true,
+  ssr: false,
+})
+const AddLiquidityModal = dynamic(() => import('./AddLiquidityModal'), {
+  ssr: false,
 })
 const ClaimModal = dynamic(() => import('./ClaimModal'), {
-  suspense: true,
+  ssr: false,
 })
 const ConnectModal = dynamic(() => import('./ConnectModal'), {
-  suspense: true,
+  ssr: false,
 })
 const CooldownModal = dynamic(() => import('./CooldownModal'), {
-  suspense: true,
+  ssr: false,
 })
 const JoinModal = dynamic(() => import('./JoinModal'), {
-  suspense: true,
+  ssr: false,
 })
 const ExitModal = dynamic(() => import('./ExitModal'), {
-  suspense: true,
+  ssr: false,
+})
+const RemoveLiquidityModal = dynamic(() => import('./RemoveLiquidityModal'), {
+  ssr: false,
 })
 const RevenueModal = dynamic(() => import('./RevenueModal'), {
-  suspense: true,
+  ssr: false,
 })
 const StakeModal = dynamic(() => import('./StakeModal'), {
-  suspense: true,
+  ssr: false,
 })
 const SwitchNetworkModal = dynamic(() => import('./SwitchNetworkModal'), {
-  suspense: true,
+  ssr: false,
 })
 const UnstakeModal = dynamic(() => import('./UnstakeModal'), {
-  suspense: true,
+  ssr: false,
 })
 
 type ModalViewProps = {
@@ -46,6 +52,8 @@ function renderModal(modal: Modal) {
   const { type, props } = modal
 
   switch (type) {
+    case ModalType.AddLiquidity:
+      return <AddLiquidityModal {...props} />
     case ModalType.Approve:
       return <ApproveModal {...props} />
     case ModalType.Claim:
@@ -58,6 +66,8 @@ function renderModal(modal: Modal) {
       return <JoinModal {...props} />
     case ModalType.Exit:
       return <ExitModal {...props} />
+    case ModalType.RemoveLiquidity:
+      return <RemoveLiquidityModal />
     case ModalType.Revenue:
       return <RevenueModal />
     case ModalType.Stake:

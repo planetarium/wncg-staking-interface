@@ -1,23 +1,23 @@
-import { useAtomValue } from 'jotai'
+import dynamic from 'next/dynamic'
+import { useNetwork } from 'wagmi'
 import { AnimatePresence } from 'framer-motion'
 
-import { currentChainIdAtom } from 'states/system'
-import config from 'config'
-
-import { StyledAlerts } from './styled'
+import { useChain } from 'hooks'
 import NetworkAlert from './NetworkAlert'
 
-export default function Alerts() {
-  const currentChainId = useAtomValue(currentChainIdAtom)
+import { StyledAlerts } from './styled'
 
-  const invalidNetwork =
-    currentChainId != null && currentChainId !== config.chainId
+function Alerts() {
+  const { chainId } = useChain()
+  const { chain } = useNetwork()
 
-  const enabled = invalidNetwork
+  const showAlert = !!chain?.id && chain?.id !== chainId
 
   return (
-    <StyledAlerts role="alert" layout $enabled={enabled}>
-      <AnimatePresence>{invalidNetwork && <NetworkAlert />}</AnimatePresence>
+    <StyledAlerts role="alert" layout $enabled={showAlert}>
+      <AnimatePresence>{showAlert && <NetworkAlert />}</AnimatePresence>
     </StyledAlerts>
   )
 }
+
+export default dynamic(() => Promise.resolve(Alerts), { ssr: false })

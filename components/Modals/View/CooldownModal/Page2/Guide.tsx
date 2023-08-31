@@ -1,5 +1,3 @@
-import { memo } from 'react'
-
 import Icon from 'components/Icon'
 
 import { StyledCooldownModalPage2Guide } from './styled'
@@ -32,4 +30,4 @@ function CooldownModalPage2Guide() {
   )
 }
 
-export default memo(CooldownModalPage2Guide)
+export default CooldownModalPage2Guide

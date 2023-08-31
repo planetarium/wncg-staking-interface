@@ -8,7 +8,7 @@ import {
 import { useAtom } from 'jotai'
 
 import { slippageAtom } from 'states/system'
-import { MAX_SLIPPAGE } from 'config/misc'
+import { MAX_SLIPPAGE, MIN_SLIPPAGE } from 'config/constants/liquidityPool'
 import { bnum } from 'utils/bnum'
 import { wait } from 'utils/wait'
 
@@ -57,14 +57,25 @@ export function useSlippageForm(onCloseMenu: () => void) {
       validate: {
         maxAmount: (v: string) =>
           bnum(v).lt(MAX_SLIPPAGE) || `Must be <${MAX_SLIPPAGE}%`,
+        minAmount: (v: string) =>
+          bnum(v).isZero() ||
+          bnum(v).gte(MIN_SLIPPAGE) ||
+          `Slippage is too low`,
       },
       onBlur(e: ReactHookFormChangeEvent<'slippage'>) {
         let newSlippage: string | null = e.target.value.replace('%', '')
 
         if (bnum(newSlippage).isZero()) newSlippage = null
-        if (bnum(newSlippage ?? '0').gte(MAX_SLIPPAGE)) newSlippage = null
 
-        setSlippage(newSlippage)
+        if (bnum(newSlippage).gte(MAX_SLIPPAGE)) newSlippage = null
+        if (bnum(newSlippage).lt(MIN_SLIPPAGE)) newSlippage = null
+
+        if (newSlippage) {
+          setSlippage(bnum(newSlippage).toFixed(2))
+        } else {
+          setSlippage(null)
+        }
+
         onCloseMenu()
       },
       onChange(e: ReactHookFormChangeEvent<'slippage'>) {
@@ -73,8 +84,11 @@ export function useSlippageForm(onCloseMenu: () => void) {
         setValue('slippage', newSlippage)
         trigger()
 
-        if (bnum(newSlippage).lt(MAX_SLIPPAGE)) {
-          setSlippage(newSlippage.toString())
+        if (
+          bnum(newSlippage).lt(MAX_SLIPPAGE) &&
+          bnum(newSlippage).gte(MIN_SLIPPAGE)
+        ) {
+          setSlippage(bnum(newSlippage).toFixed(2))
         }
       },
     }),

@@ -1,4 +1,4 @@
-import { memo, MouseEvent, useRef, useState } from 'react'
+import { MouseEvent, useRef, useState } from 'react'
 import { AnimatePresence } from 'framer-motion'
 import { useAtomValue } from 'jotai'
 import clsx from 'clsx'
@@ -44,7 +44,7 @@ function SlippageControl({ className, disabled }: SlippageControlProps) {
         show={show}
         toggle={toggle}
         value={slippage}
-        disabled={!isConnected}
+        disabled={disabled || !isConnected}
       />
 
       <AnimatePresence>
@@ -54,4 +54,4 @@ function SlippageControl({ className, disabled }: SlippageControlProps) {
   )
 }
 
-export default memo(SlippageControl)
+export default SlippageControl

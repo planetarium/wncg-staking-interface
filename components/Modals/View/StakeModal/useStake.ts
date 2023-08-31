@@ -1,30 +1,44 @@
-import { useCallback } from 'react'
-import { parseUnits } from 'ethers/lib/utils'
+import { useCallback, useState } from 'react'
 import { useContractWrite, usePrepareContractWrite } from 'wagmi'
 
-import config from 'config'
-import { StakingAbi } from 'config/abi'
+import { StakingEthereumAbi } from 'config/abi'
 import { bnum } from 'utils/bnum'
-import { useStaking, useSwitchNetwork } from 'hooks'
+import { parseUnits } from 'utils/parseUnits'
+import { useAuth, useChain, useStaking, useSwitchNetwork } from 'hooks'
 
 export function useStake(stakeAmount: string) {
-  const { stakedTokenAddress, tokenMap } = useStaking()
+  const [error, setError] = useState<string | null>(null)
+
+  const { isConnected } = useAuth()
+  const { chainId, networkMismatch, stakingAddress } = useChain()
+  const { lpToken, tokens } = useStaking()
   const { switchBeforeSend } = useSwitchNetwork()
 
   const scaledStakeAmount = parseUnits(
     bnum(stakeAmount).toString(),
-    tokenMap[stakedTokenAddress]?.decimals ?? 18
+    tokens[lpToken?.address]?.decimals ?? 18
   ).toString()
 
-  const enabled = bnum(stakeAmount).gt(0) && !bnum(stakeAmount).isNaN()
+  const enabled =
+    !networkMismatch &&
+    !!isConnected &&
+    bnum(stakeAmount).gt(0) &&
+    !bnum(stakeAmount).isNaN()
 
   const { config: writeConfig } = usePrepareContractWrite({
-    address: config.stakingAddress,
-    abi: StakingAbi,
+    address: stakingAddress,
+    abi: StakingEthereumAbi,
+    chainId,
     args: [scaledStakeAmount],
     functionName: 'stake',
     enabled,
-    onError: switchBeforeSend,
+    onError(err: any) {
+      switchBeforeSend(err)
+
+      if (err?.shortMessage?.includes('BAL#407')) {
+        setError('INSUFFICIENT_ALLOWANCE')
+      }
+    },
   })
 
   const { writeAsync } = useContractWrite(writeConfig)
@@ -38,5 +52,8 @@ export function useStake(stakeAmount: string) {
     }
   }, [writeAsync])
 
-  return writeAsync ? stake : null
+  return {
+    stake,
+    error,
+  }
 }

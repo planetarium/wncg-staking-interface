@@ -1,13 +1,14 @@
 import { useRef } from 'react'
 import { useUnmount } from 'react-use'
-
+import dynamic from 'next/dynamic'
 import { useMachine } from '@xstate/react'
 import { useAtom, useAtomValue } from 'jotai'
 
 import { approveTxAtom } from 'states/tx'
 import { hasModalInViewAtom } from 'states/ui'
 import { ToastType } from 'config/constants'
-import { useToast } from 'hooks'
+import { walletErrorHandler } from 'utils/walletErrorHandler'
+import { useRefetch, useToast } from 'hooks'
 import { approveMachine, pageFor } from './stateMachine'
 import { useApprove } from './useApprove'
 import { useWatch } from './useWatch'
@@ -31,7 +32,7 @@ type ApproveModalProps = {
   tokenName?: string
 }
 
-export default function ApproveModal({
+function ApproveModal({
   spender: _spender,
   spenderName: _spenderName,
   tokenAddress: _tokenAddress,
@@ -46,6 +47,7 @@ export default function ApproveModal({
   tokenName: _tokenName,
 }: ApproveModalProps) {
   const stateMachine = useRef(approveMachine)
+  const refetch = useRefetch({ userAllowances: true, userBalances: true })
 
   const toast = useToast()
   const [tx, setTx] = useAtom(approveTxAtom)
@@ -74,14 +76,13 @@ export default function ApproveModal({
   const _approve = useApprove(tokenAddress, spender)
 
   async function approve() {
-    if (!_approve) {
-      send('FAIL')
-      return
-    }
-
     try {
+      if (!_approve) {
+        throw Error('No writeAsync')
+      }
+
       const txHash = await _approve()
-      if (!txHash) return
+      if (!txHash) throw Error('No txHash')
 
       setTx({
         hash: txHash,
@@ -100,22 +101,16 @@ export default function ApproveModal({
       })
       send('NEXT')
     } catch (error: any) {
-      if (
-        error.code === 'ACTION_REJECTED' ||
-        error.code === 4001 ||
-        error.error === 'Rejected by user'
-      ) {
-        send('ROLLBACK')
-        return
-      }
-
-      send('FAIL')
+      walletErrorHandler(error, () => send('FAIL'))
+      send('ROLLBACK')
     }
   }
 
   useWatch(send)
 
   useUnmount(() => {
+    refetch()
+
     if (tx.hash && !hasModalInView) {
       toast<ApproveTx>({
         type: ToastType.Approve,
@@ -138,7 +133,6 @@ export default function ApproveModal({
           symbol={tokenSymbol}
           hash={tx.hash}
           approve={approve}
-          buttonLabel={buttonLabel}
           toastLabel={toastLabel}
         />
       )}
@@ -157,3 +151,5 @@ export default function ApproveModal({
     </>
   )
 }
+
+export default dynamic(() => Promise.resolve(ApproveModal), { ssr: false })

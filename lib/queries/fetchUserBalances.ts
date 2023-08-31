@@ -1,39 +1,48 @@
 import { fetchBalance } from '@wagmi/core'
+import { erc20ABI } from 'wagmi'
 
-import config from 'config'
-import { Erc20Abi } from 'config/abi'
+import { NATIVE_CURRENCY_ADDRESS } from 'config/constants/addresses'
 import { readContractsPool } from 'lib/readContractsPool'
+import { formatUnits } from 'utils/formatUnits'
+import { resolveReadContractsResult } from 'utils/resolveReadContractsResult'
 
 export async function fetchUserBalances(
-  account: Hash,
-  ...args: Hash[]
+  chainId: ChainId,
+  account: Hash | null,
+  addresses: Hash[],
+  decimals: number[]
 ): Promise<RawBalanceMap> {
+  if (account == null) return {}
+
+  const contracts = addresses.map((addr) => ({
+    address: addr,
+    abi: erc20ABI,
+    functionName: 'balanceOf',
+    chainId,
+    args: [account],
+  }))
+
+  const _data = await readContractsPool.call({
+    allowFailure: true,
+    contracts,
+  })
+  const nativeAssetBalance = await fetchBalance({
+    address: account,
+    chainId,
+  })
+
+  const data = resolveReadContractsResult(_data) as BigInt[]
+
   try {
-    const contracts = args.map((address) => ({
-      address: address as Hash,
-      abi: Erc20Abi as Abi,
-      args: [account],
-      chainId: config.chainId,
-      functionName: 'balanceOf',
-    }))
-
-    const nativeTokenBalance = await fetchBalance({
-      address: account,
-      chainId: config.chainId,
-    })
-
-    const tokenBalances = (await readContractsPool.call({
-      allowFailure: true,
-      contracts,
-    })) as BigNumber[]
-
     const entries = [
-      [config.nativeCurrency.address, nativeTokenBalance.value],
-      ...args.flatMap((a, i) => {
-        if (!a) return []
-        return [[a, tokenBalances[i]]]
-      }),
+      [NATIVE_CURRENCY_ADDRESS, nativeAssetBalance.formatted],
+      ...data.map((amt, i) => [
+        addresses[i],
+        formatUnits(amt.toString(), decimals[i]),
+      ]),
     ]
+
+    // console.log('🩵 BALANCES')
 
     return Object.fromEntries(entries)
   } catch (error) {

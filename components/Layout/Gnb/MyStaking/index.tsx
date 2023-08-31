@@ -1,14 +1,14 @@
 import { MouseEvent } from 'react'
+import dynamic from 'next/dynamic'
 import { useAtom, useAtomValue } from 'jotai'
 import { AnimatePresence, motion } from 'framer-motion'
 import clsx from 'clsx'
 
 import { cooldownWindowAtom, withdrawWindowAtom } from 'states/account'
 import { showMyStakingAtom } from 'states/ui'
-import { EXIT_MOTION } from 'config/motions'
-import { fadeIn, popIn } from 'config/motionVariants'
+import { ANIMATION_MAP, EXIT_MOTION } from 'config/constants/motions'
 import { bnum } from 'utils/bnum'
-import { useFiat, useIsMounted, useStaking } from 'hooks'
+import { useFiat, useStaking } from 'hooks'
 import { useFetchUserData } from 'hooks/queries'
 
 import { StyledGnbMyStaking } from './styled'
@@ -18,18 +18,17 @@ import Lottie from 'components/Lottie'
 import Suspense from 'components/Suspense'
 import Wallet from './Wallet'
 
-export default function GnbMyStaking() {
+function GnbMyStaking() {
   const [show, setShow] = useAtom(showMyStakingAtom)
 
   const toFiat = useFiat()
-  const isMounted = useIsMounted()
-  const { stakedTokenAddress } = useStaking()
+  const { lpToken } = useStaking()
 
-  const { stakedTokenBalance = '0' } =
-    useFetchUserData({ enabled: isMounted }).data ?? {}
+  const { stakedTokenBalance = '0' } = useFetchUserData().data ?? {}
+
   const stakedTokenBalanceInFiatValue = toFiat(
     stakedTokenBalance,
-    stakedTokenAddress
+    lpToken?.address
   )
 
   const cooldownWindow = useAtomValue(cooldownWindowAtom)
@@ -54,7 +53,7 @@ export default function GnbMyStaking() {
         className={clsx('stakingButton', { tooltipGroup: unstakeWindow })}
         type="button"
         onClick={toggle}
-        variants={fadeIn}
+        variants={ANIMATION_MAP.fadeIn}
       >
         <Icon icon="coin" $size={24} />
         My LP
@@ -69,8 +68,9 @@ export default function GnbMyStaking() {
             <motion.div
               {...EXIT_MOTION}
               className="cooldownBadge"
-              variants={popIn}
+              variants={ANIMATION_MAP.popIn}
               transition={{ duration: 0.05, type: 'spring' }}
+              key="GnbMyStaking:CooldownWindow"
             >
               <Lottie animationData="timer" />
             </motion.div>
@@ -81,8 +81,9 @@ export default function GnbMyStaking() {
             <motion.div
               {...EXIT_MOTION}
               className="unstakeBadge"
-              variants={fadeIn}
+              variants={ANIMATION_MAP.fadeIn}
               role="presentation"
+              key="GnbMyStaking:UnstakeWindow"
             />
           )}
         </AnimatePresence>
@@ -98,3 +99,5 @@ export default function GnbMyStaking() {
     </StyledGnbMyStaking>
   )
 }
+
+export default dynamic(() => Promise.resolve(GnbMyStaking), { ssr: false })

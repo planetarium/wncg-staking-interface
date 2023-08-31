@@ -40,9 +40,8 @@ export const StyledModalPage = styled(motion.div)<{ $disabled?: boolean }>`
     content: '';
     background-image: linear-gradient(
       180deg,
-      transparent,
-      rgba(7, 3, 22, 0) 1.14%,
-      #080316 25.3%
+      rgba(18, 18, 18, 0) 0%,
+      #121212 100%
     );
     pointer-events: none;
     user-select: none;
@@ -132,6 +131,10 @@ export const StyledModalPage = styled(motion.div)<{ $disabled?: boolean }>`
   }
 
   .modalFooter {
+    &:has(.checkout) {
+      padding-top: 24px;
+    }
+
     .checkout {
       & + a,
       & + button {
@@ -167,6 +170,12 @@ export const StyledModalPage = styled(motion.div)<{ $disabled?: boolean }>`
 
       &::before {
         display: none;
+      }
+
+      .modalFooter {
+        &:has(.checkout) {
+          padding-top: 0;
+        }
       }
     `
   )}
@@ -290,8 +299,7 @@ export const StyledModalCompletePage = styled(StyledModalPage)`
     border-radius: 4px;
     background-color: rgba(var(--white-rgb), 0.08);
 
-    > .tokenIcon,
-    > .tokenIconGroup {
+    > .tokenIcon {
       margin-right: 8px;
     }
   }

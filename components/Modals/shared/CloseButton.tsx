@@ -1,4 +1,4 @@
-import { memo, MouseEvent } from 'react'
+import { MouseEvent } from 'react'
 
 import { useModal, useResponsive } from 'hooks'
 
@@ -33,4 +33,4 @@ function CloseButton({ onClose }: CloseButtonProps) {
   )
 }
 
-export default memo(CloseButton)
+export default CloseButton

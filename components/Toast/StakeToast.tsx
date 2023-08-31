@@ -1,11 +1,10 @@
 import Link from 'next/link'
-import { useMount } from 'react-use'
 import { useSetAtom } from 'jotai'
 import { RESET } from 'jotai/utils'
 
 import { stakeTxAtom } from 'states/tx'
 import { txUrlFor } from 'utils/txUrlFor'
-import { useFiat, useStaking } from 'hooks'
+import { useChain, useClientMount, useFiat, useStaking } from 'hooks'
 import { useWatch } from './useWatch'
 
 import { StyledToast } from './styled'
@@ -21,23 +20,22 @@ type StakeToastProps = {
 }
 
 export default function StakeToast({ hash, stakeAmount }: StakeToastProps) {
+  const { chainId } = useChain()
   const toFiat = useFiat()
-  const { stakedTokenAddress, tokenMap } = useStaking()
-
-  const { symbol: stakedTokenSymbol = '' } = tokenMap[stakedTokenAddress] ?? {}
+  const { lpToken } = useStaking()
 
   const setTx = useSetAtom(stakeTxAtom)
 
-  const fiatValue = toFiat(stakeAmount!, stakedTokenAddress)
+  const fiatValue = toFiat(stakeAmount!, lpToken?.address)
 
   const status = useWatch(hash)
 
-  useMount(() => setTx(RESET))
+  useClientMount(() => setTx(RESET))
 
   return (
     <StyledToast>
       <header className="toastHeader">
-        <Link href={txUrlFor(hash)!} target="_blank" rel="noopener">
+        <Link href={txUrlFor(chainId, hash)!} target="_blank" rel="noopener">
           <h3 className="title">
             Staking
             <Icon icon="outlink" />
@@ -50,10 +48,8 @@ export default function StakeToast({ hash, stakeAmount }: StakeToastProps) {
         <dl className="detailList">
           <div className="detailItem">
             <dt>
-              <div className="token">
-                <TokenIcon address={stakedTokenAddress} $size={20} />
-              </div>
-              {stakedTokenSymbol}
+              <TokenIcon address={lpToken?.address} $size={20} />
+              {lpToken?.name}
             </dt>
             <dd>
               <NumberFormat value={stakeAmount} decimals={8} />
@@ -69,11 +65,7 @@ export default function StakeToast({ hash, stakeAmount }: StakeToastProps) {
       </div>
 
       <footer className="toastFooter">
-        <ImportToken
-          address={stakedTokenAddress}
-          $size="sm"
-          $variant="primary"
-        />
+        <ImportToken address={lpToken?.address} $size="sm" $variant="primary" />
       </footer>
     </StyledToast>
   )

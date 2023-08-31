@@ -1,13 +1,11 @@
 import Link from 'next/link'
-import { useMount } from 'react-use'
 import { useSetAtom } from 'jotai'
 import { RESET } from 'jotai/utils'
 
 import { exitTxAtom } from 'states/tx'
-import config from 'config'
-import { formatUnits } from 'utils/formatUnits'
+import { NATIVE_CURRENCY_ADDRESS } from 'config/constants/addresses'
 import { txUrlFor } from 'utils/txUrlFor'
-import { useFiat, useStaking } from 'hooks'
+import { useClientMount, useChain, useFiat, useStaking } from 'hooks'
 import { useWatch } from './useWatch'
 
 import { StyledToast } from './styled'
@@ -21,34 +19,33 @@ type ExitToast = Required<ExitTx>
 
 export default function ExitToast({
   hash,
-  assets,
-  totalExitFiatValue,
   bptIn,
-  exitAmounts,
-  isProportional,
-  tokenOutIndex,
+  amountOut,
+  exitType,
 }: ExitToast) {
+  const { chainId } = useChain()
   const toFiat = useFiat()
-  const { bptName, stakedTokenAddress, tokenMap } = useStaking()
-  const { decimals: stakedTokenDecimals = 18 } =
-    tokenMap[stakedTokenAddress] ?? {}
+  const { lpToken, tokens } = useStaking()
 
   const setTx = useSetAtom(exitTxAtom)
 
   const status = useWatch(hash)
 
-  const importTokenAddress = isProportional
-    ? stakedTokenAddress
-    : tokenMap[assets[tokenOutIndex]].address !== config.nativeCurrency.address
-    ? tokenMap[assets[tokenOutIndex]].address
-    : null
+  const importTokenAddress =
+    exitType == null
+      ? lpToken?.address
+      : exitType !== NATIVE_CURRENCY_ADDRESS
+      ? exitType
+      : null
 
-  useMount(() => setTx(RESET))
+  const bptInFiatValue = toFiat(bptIn ?? '0', lpToken.address)
+
+  useClientMount(() => setTx(RESET))
 
   return (
     <StyledToast>
       <header className="toastHeader">
-        <Link href={txUrlFor(hash)!} target="_blank" rel="noopener">
+        <Link href={txUrlFor(chainId, hash)!} target="_blank" rel="noopener">
           <h3 className="title">
             Exit pool
             <Icon icon="outlink" />
@@ -59,54 +56,44 @@ export default function ExitToast({
 
       <div className="toastContent">
         <dl className="detailList">
-          {isProportional ? (
+          {exitType == null && (
             <div className="detailItem">
               <dt>
                 <div className="token">
-                  <TokenIcon address={stakedTokenAddress} $size={20} />
+                  <TokenIcon address={lpToken?.address} $size={20} />
                 </div>
-                {bptName}
+                {lpToken?.name}
               </dt>
 
               <dd>
-                <NumberFormat value={formatUnits(bptIn, stakedTokenDecimals)} />
+                <NumberFormat value={bptIn} />
                 <NumberFormat
                   className="usd"
-                  value={totalExitFiatValue}
+                  value={bptInFiatValue}
                   type="fiat"
                   abbr
                 />
               </dd>
             </div>
-          ) : (
-            exitAmounts.map((amt, i) => {
-              if (i !== tokenOutIndex) return null
+          )}
 
-              const addr = assets[i]
-              const { symbol = '' } = tokenMap[addr] ?? {}
-              const fiatValue = toFiat(amt, addr)
+          {exitType != null && !!amountOut && (
+            <div className="detailItem">
+              <dt>
+                <TokenIcon address={exitType!} $size={20} />
+                {tokens[exitType!].symbol}
+              </dt>
 
-              return (
-                <div className="detailItem" key={`exitToast:${addr}:${amt}`}>
-                  <dt>
-                    <div className="token">
-                      <TokenIcon address={addr} $size={20} />
-                    </div>
-                    {symbol}
-                  </dt>
-
-                  <dd>
-                    <NumberFormat value={amt} />
-                    <NumberFormat
-                      className="usd"
-                      value={fiatValue}
-                      type="fiat"
-                      abbr
-                    />
-                  </dd>
-                </div>
-              )
-            })
+              <dd>
+                <NumberFormat value={amountOut} />
+                <NumberFormat
+                  className="usd"
+                  value={toFiat(amountOut, exitType!)}
+                  type="fiat"
+                  abbr
+                />
+              </dd>
+            </div>
           )}
         </dl>
       </div>

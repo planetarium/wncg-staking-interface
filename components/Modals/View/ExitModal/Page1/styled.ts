@@ -5,7 +5,7 @@ import { flexbox, gradient, media, textStyle } from 'styles/utils'
 import { ModalPage } from 'components/Modals/shared'
 
 export const StyledExitModalPage1 = styled(ModalPage)<{ $disabled: boolean }>`
-  .tokenIconGroup {
+  .tokenIcon {
     .icon {
       box-shadow: 1px 1px 4px rgba(var(--realBlack-rgb), 0.24);
     }
@@ -148,11 +148,10 @@ export const StyledExitModalPage1Step1 = styled(StyledExitModalPage1Step)`
 
     .tokenIcon {
       ${flexbox('start')}
-      box-shadow: 1px 1px 4px rgba(var(--realBlack-rgb), 0.24);
     }
 
-    .tokenIcon {
-      box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.24);
+    .tokenFragment {
+      box-shadow: 1px 1px 4px rgba(var(--realBlack-rgb), 0.24);
     }
 
     input {

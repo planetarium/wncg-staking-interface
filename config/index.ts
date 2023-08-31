@@ -1,4 +1,4 @@
-import networks from 'config/networks'
+import { ChainId, defaultChainId } from './chains'
 
 class ConfigService {
   get assetPlatform() {
@@ -6,33 +6,15 @@ class ConfigService {
   }
 
   get appName() {
-    return `WNCG Staking`
+    return `Nine Chronicles Staking`
   }
 
-  get bal() {
-    return (this.network.addresses.bal?.toLowerCase() ?? '') as Hash
+  get appDescription() {
+    return `Stake Balancer & PancakeSwap LP token and earn rewards!`
   }
 
   get baseUrl() {
     return process.env.NEXT_PUBLIC_BASE_URL ?? 'http://localhost:3000'
-  }
-
-  get blockExplorerName() {
-    return this.network.explorerName
-  }
-
-  get blockExplorerUrl() {
-    return this.network.explorer
-  }
-
-  get chainId() {
-    return (Number(process.env.NEXT_PUBLIC_CHAIN_ID) ?? 1) as Network
-  }
-
-  get dexPlatformName() {
-    return this.network.nativeCurrency.symbol === 'ETH'
-      ? 'Balancer'
-      : 'PancakeSwap'
   }
 
   get domain() {
@@ -43,8 +25,8 @@ class ConfigService {
     return {
       notion:
         'https://planetarium.notion.site/WNCG-Staking-Docs-04317420d2d647ee82f2f1364358c5a9',
-      terms: 'https://stake.nine-chronicles.com/wncg/terms',
-      privacy: 'https://stake.nine-chronicles.com/wncg/privacy',
+      terms: 'https://stake.nine-chronicles.com/docs/terms',
+      privacy: 'https://stake.nine-chronicles.com/docs/privacy',
       auditReport:
         'https://github.com/planetarium/staking_contract_wncg_eth/blob/main/audit/%5BTheori%5D%20Planetarium%20WNCG%20Staking%20Protocol%20Security%20Audit%20Final%20Report.pdf',
     }
@@ -54,19 +36,15 @@ class ConfigService {
     return process.env.NODE_ENV ?? 'development'
   }
 
-  get github() {
-    const repositoryName =
-      process.env.NEXT_PUBLIC_GITHUB_REPO ??
-      'planetarium/staking_contract_wncg_eth'
-
-    return {
-      repositoryName,
-      repositoryUrl: `https://github.com/${repositoryName}`,
-    }
-  }
-
   get googleTagManager() {
     return process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER ?? ''
+  }
+
+  get isTestnet() {
+    return (
+      defaultChainId === ChainId.GOERLI ||
+      defaultChainId === ChainId.BSC_TESTNET
+    )
   }
 
   get links() {
@@ -78,6 +56,10 @@ class ConfigService {
     }
   }
 
+  get stakingAppName() {
+    return `WNCG Staking`
+  }
+
   get stakingLinks() {
     return {
       medium:
@@ -86,70 +68,12 @@ class ConfigService {
     }
   }
 
-  get multicallContract() {
-    return '0xcA11bde05977b3631167028862bE2a173976CA11' // Universal
-      .toLowerCase() as Hash
-  }
-
-  get nativeCurrency() {
-    return {
-      ...this.network.nativeCurrency,
-      address: this.network.nativeCurrency.address?.toLowerCase() as Hash,
-    }
-  }
-
-  get network() {
-    return networks[this.chainId]
-  }
-
-  get poolId() {
-    return (
-      process.env.NEXT_PUBLIC_BALANCER_POOL_ID ||
-      '0xe8cc7e765647625b95f59c15848379d10b9ab4af0002000000000000000001de'
-    )
-  }
-
   get siteUrl() {
     return 'https://stake.nine-chronicles.com'
   }
 
-  get stakingAddress() {
-    return (
-      process.env.NEXT_PUBLIC_STAKING_ADDRESS ??
-      '0xc53b567A70dB04E928FB96D6A417971aa88fdA38'
-    ) // Mainnet
-      .toLowerCase() as Hash
-  }
-
-  get subgraph() {
-    return this.network.subgraph
-  }
-
-  get usdt() {
-    return (this.network.addresses.usdt?.toLowerCase() ?? '') as Hash
-  }
-
-  get weth() {
-    return (this.network.addresses.weth?.toLowerCase() ?? '') as Hash
-  }
-
-  get vault() {
-    return (
-      process.env.NEXT_PUBLIC_VAULT_ADDRESS ??
-      '0xBA12222222228d8Ba445958a75a0704d566BF2C8'
-    ).toLowerCase() as Hash
-  }
-
-  get version() {
-    return process.env.NEXT_PUBLIC_VERSION ?? 'v2.0.0'
-  }
-
   get walletConnectProjectId() {
     return process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID
-  }
-
-  get zeroAddress(): Hash {
-    return `0x0000000000000000000000000000000000000000`
   }
 }
 

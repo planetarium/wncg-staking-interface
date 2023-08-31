@@ -1,14 +1,16 @@
-import { memo } from 'react'
-import { useAtom } from 'jotai'
+import { useAtom, useSetAtom } from 'jotai'
 
 import { stakeTxAtom } from 'states/tx'
-import { useFiat, useStaking } from 'hooks'
+import { isEthereum } from 'utils/isEthereum'
+import { walletErrorHandler } from 'utils/walletErrorHandler'
+import { useChain, useFiat, useStaking } from 'hooks'
 import { useStake } from './useStake'
 
 import { StyledStakeModalPage1 } from './styled'
 import { CloseButton, PendingNotice } from 'components/Modals/shared'
 import NumberFormat from 'components/NumberFormat'
 import TxButton from 'components/TxButton'
+import { stakingErrorAtom } from './useWatch'
 
 type StakeModalPage1Props = {
   stakeAmount: string
@@ -21,24 +23,26 @@ function StakeModalPage1({
   stakedTokenBalance,
   send,
 }: StakeModalPage1Props) {
+  const { chainId } = useChain()
   const toFiat = useFiat()
-  const { bptName, stakedTokenAddress } = useStaking()
+  const { lpToken } = useStaking()
+  const { stake: _stake, error } = useStake(stakeAmount)
 
   const [tx, setTx] = useAtom(stakeTxAtom)
+  const setError = useSetAtom(stakingErrorAtom)
 
-  const _stake = useStake(stakeAmount)
-
-  const fiatValue = toFiat(stakeAmount, stakedTokenAddress)
+  const fiatValue = toFiat(stakeAmount, lpToken?.address)
 
   async function stake() {
-    if (!_stake) {
-      send('FAIL')
-      return
-    }
-
     try {
+      if (error === 'INSUFFICIENT_ALLOWANCE') {
+        throw Error('INSUFFICIENT_ALLOWANCE')
+      }
+
+      if (!_stake) throw Error()
+
       const txHash = await _stake()
-      if (!txHash) return
+      if (!txHash) throw Error()
 
       setTx({
         hash: txHash,
@@ -48,16 +52,11 @@ function StakeModalPage1({
 
       send('NEXT')
     } catch (error: any) {
-      if (
-        error.code === 'ACTION_REJECTED' ||
-        error.code === 4001 ||
-        error.error === 'Rejected by user'
-      ) {
-        send('ROLLBACK')
-        return
-      }
-
-      send('FAIL')
+      walletErrorHandler(error, () => {
+        setError(error)
+        send('FAIL')
+      })
+      send('ROLLBACK')
     }
   }
 
@@ -65,11 +64,15 @@ function StakeModalPage1({
     <StyledStakeModalPage1 $disabled={!!tx.hash}>
       <header className="modalHeader">
         <div className="titleGroup">
-          <h2 className="title accent">LP token({bptName}) staking</h2>
+          <h2 className="title accent">LP token({lpToken?.name}) staking</h2>
           <h3 className="subtitle">
             Do you want to stake?
             <strong className="amount">
-              <NumberFormat value={stakeAmount} decimals={8} symbol="LP" />
+              <NumberFormat
+                value={stakeAmount}
+                decimals={8}
+                symbol={isEthereum(chainId) ? 'LP' : 'Cake-LP'}
+              />
               <strong className="parenthesis">
                 <NumberFormat
                   className="usdValue"
@@ -100,4 +103,4 @@ function StakeModalPage1({
   )
 }
 
-export default memo(StakeModalPage1)
+export default StakeModalPage1

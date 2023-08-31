@@ -29,7 +29,19 @@ type IconSize = import('components/Icon/styled').IconSize
 type InputSize = import('components/Form/styled').InputSize
 
 type UnstakeTimestamps = {
-  cooldownEndsAt: number
-  withdrawEndsAt: number
-  cooldowns: number
+  cooldownEndsAt?: number
+  withdrawEndsAt?: number
+  cooldowns?: number
+}
+
+type RadioSize = CheckboxSize
+
+type ToastMessages = {
+  success?: string
+  error?: string
+  info?: string
+}
+type ToastContent = {
+  title: string
+  messages: ToastMessages
 }

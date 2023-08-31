@@ -7,17 +7,18 @@ import { Abi } from 'abitype'
 import { nanoid } from 'nanoid'
 
 class ReadContractsPool<
-  TAbi extends Abi | readonly unknown[],
+  TAbi extends Abi,
   TFunctionName extends string,
   TContracts extends {
-    abi: TAbi
+    address: Hash
+    abi: Narrow<TAbi>
     functionName: TFunctionName
   }[]
 > {
-  batchInterval = 3000
+  batchInterval = 5000
   pool: { [key in string]: ReadContractsConfig<TContracts> } = {}
   result: { [key in string]: ReadContractsResult<TContracts> } = {}
-  currentChainId?: Network
+  currentChainId?: ChainId
 
   constructor() {
     setInterval(() => {
@@ -94,7 +95,7 @@ class ReadContractsPool<
 
   public call(
     config: ReadContractsConfig<TContracts>,
-    currentChainId?: Network
+    currentChainId?: ChainId
   ): Promise<ReadContractsResult<TContracts>> {
     this.currentChainId = currentChainId
     const key = nanoid()

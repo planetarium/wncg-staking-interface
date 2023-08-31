@@ -450,11 +450,15 @@ ${media(
   )}
 `
 
-export const StyledStakeJoinButton = styled(motion.div)<{
-  $hasBalance: boolean
-}>`
+export const StyledStakeJoinButton = styled(motion.div)`
   width: 100%;
-  margin-top: 4px;
+  margin-top: 16px;
+
+  &.hasBalance {
+    .joinButton {
+      margin-top: 8px;
+    }
+  }
 
   .joinButton {
     ${buttonStyle}
@@ -468,6 +472,12 @@ export const StyledStakeJoinButton = styled(motion.div)<{
     'minTablet',
     css`
       margin: 16px auto 0;
+
+      &.hasBalance {
+        .joinButton {
+          margin-top: 0;
+        }
+      }
 
       .joinButton {
         ${textStyle('button', 2)}
@@ -499,23 +509,6 @@ export const StyledStakeJoinButton = styled(motion.div)<{
       max-width: 580px;
     `
   )}
-
-  ${({ $hasBalance }) =>
-    !$hasBalance &&
-    css`
-      .joinButton {
-        margin-top: 8px;
-      }
-
-      ${media(
-        'minTablet',
-        css`
-          .joinButton {
-            margin-top: 0;
-          }
-        `
-      )}
-    `}
 `
 
 export const StyledStakeJoinTooltip = styled(motion.div)`

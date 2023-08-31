@@ -1,19 +1,10 @@
-import { memo } from 'react'
-import dynamic from 'next/dynamic'
-
 import Suspense from 'components/Suspense'
 import Web3 from './Web3'
-
-const Contract = dynamic(() => import('./Contract'), {
-  suspense: true,
-})
+import Contract from './Contract'
+import dynamic from 'next/dynamic'
 
 const Interface = dynamic(() => import('./Interface'), {
-  suspense: true,
-})
-
-const Unstake = dynamic(() => import('./Unstake'), {
-  suspense: true,
+  ssr: false,
 })
 
 function GlobalHooks() {
@@ -28,12 +19,8 @@ function GlobalHooks() {
       <Suspense>
         <Interface />
       </Suspense>
-
-      <Suspense>
-        <Unstake />
-      </Suspense>
     </>
   )
 }
 
-export default memo(GlobalHooks)
+export default GlobalHooks

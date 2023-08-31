@@ -1,4 +1,5 @@
 import { useRef } from 'react'
+import dynamic from 'next/dynamic'
 import { useMachine } from '@xstate/react'
 import { useUnmount } from 'react-use'
 import { useAtomValue } from 'jotai'
@@ -74,4 +75,4 @@ function StakeModal({ stakeAmount: _stakeAmount, resetForm }: StakeModalProps) {
   )
 }
 
-export default StakeModal
+export default dynamic(() => Promise.resolve(StakeModal), { ssr: false })

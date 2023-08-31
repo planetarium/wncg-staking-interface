@@ -1,4 +1,3 @@
-import { memo } from 'react'
 import dynamic from 'next/dynamic'
 
 import { useFetchUserData } from 'hooks/queries'
@@ -47,4 +46,4 @@ function RevenueModal() {
   )
 }
 
-export default memo(RevenueModal)
+export default RevenueModal

@@ -12,6 +12,9 @@ type BigNumber = import('bignumber.js').BigNumber
 
 type Chain = import('wagmi').Chain
 
+type Ethereum = import('wagmi').WindowProvider
+type WindowProvider = import('wagmi').WindowProvider
+
 type RoundingMode = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8
 
 type Overrides = import('ethers').Overrides & {
@@ -38,8 +41,6 @@ type TransactionReceipt =
   import('@ethersproject/abstract-provider').TransactionReceipt
 
 type ConnectArgs = import('@wagmi/core').ConnectArgs
-
-type Ethereum = import('@wagmi/core').Ethereum
 
 type FetchBalanceResult = import('@wagmi/core').FetchBalanceResult
 
@@ -71,3 +72,54 @@ type UseFetchOptions = {
   refetchOnWindowFocus?: 'always'
   suspense?: boolean
 }
+
+type RpcUrls = {
+  http: readonly string[]
+  webSocket?: readonly string[]
+}
+
+type PoolActionType = 'Join' | 'Exit'
+
+type JoinExit = {
+  id: string
+  type: PoolActionType
+  sender: string
+  amounts: string[]
+  timestamp: number
+  tx: string
+}
+
+type JoinPoolRequest = {
+  assets: string[]
+  maxAmountsIn: string[]
+  userData: string
+  fromInternalBalance: boolean
+}
+
+type Swap = {
+  tokenIn: string
+  tokenOut: string
+  tokenAmountIn: string
+  tokenAmountOut: string
+  valueUSD: string
+  userAddress: {
+    id: string
+  }
+  timestamp: number
+  tx: string
+}
+
+interface ExitPoolAttributes {
+  to: string
+  functionName: string
+  attributes: ExitPool
+  data: string
+}
+
+interface ExitExactBPTInAttributes extends ExitPoolAttributes {
+  expectedAmountsOut: string[]
+  minAmountsOut: string[]
+  priceImpact: string
+}
+
+type XstateSend = (event: string) => void

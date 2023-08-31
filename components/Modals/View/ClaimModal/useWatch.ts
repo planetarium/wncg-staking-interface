@@ -1,23 +1,44 @@
-import { useMount, useUnmount } from 'react-use'
-import { useAtomValue } from 'jotai'
+import { useUnmount } from 'react-use'
+import { atom, useAtomValue, useSetAtom } from 'jotai'
 import { useWaitForTransaction } from 'wagmi'
 
 import { claimTxAtom } from 'states/tx'
+import { formatUnits } from 'utils/formatUnits'
+import { parseTransferLogs } from 'utils/parseTransferLogs'
+import { useChain, useClientMount, useRefetch, useStaking } from 'hooks'
 
-import { useFetchUserBalances, useFetchUserData } from 'hooks/queries'
-import config from 'config'
+export const claimedAmountsAtom = atom<string[]>([])
 
-export function useWatch(send: (event: string) => void) {
-  const tx = useAtomValue(claimTxAtom)
-  const { refetch: refetchUserData } = useFetchUserData()
-  const { refetch: refetchBalances } = useFetchUserBalances()
+export function useWatch(send: XstateSend) {
+  const { chainId } = useChain()
+  const { rewardTokenAddresses, tokens } = useStaking()
+
+  const transaction = useAtomValue(claimTxAtom)
+  const setClaimedAmounts = useSetAtom(claimedAmountsAtom)
+
+  const refetch = useRefetch({
+    userData: true,
+    userBalances: true,
+  })
 
   useWaitForTransaction({
-    hash: tx.hash!,
-    enabled: !!tx.hash,
+    hash: transaction.hash!,
+    enabled: !!transaction.hash,
     suspense: false,
-    chainId: config.chainId,
-    onSuccess() {
+    chainId,
+    async onSuccess(tx) {
+      await refetch()
+      const parsedLogs = parseTransferLogs(tx.logs)
+
+      const claimedAmounts =
+        transaction.rewardList?.map((check, i) => {
+          if (!check) return '0'
+          const addr = rewardTokenAddresses[i]
+
+          return formatUnits(parsedLogs?.[addr], tokens?.[addr]?.decimals ?? 18)
+        }) ?? []
+
+      setClaimedAmounts(claimedAmounts)
       send('SUCCESS')
     },
     onError() {
@@ -25,12 +46,13 @@ export function useWatch(send: (event: string) => void) {
     },
   })
 
-  useMount(() => {
-    refetchUserData()
+  useClientMount(() => {
+    refetch()
+    return
   })
 
   useUnmount(() => {
-    refetchUserData()
-    refetchBalances()
+    refetch()
+    return
   })
 }

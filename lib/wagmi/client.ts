@@ -1,6 +1,6 @@
-import { createClient } from 'wagmi'
+import { createConfig } from 'wagmi'
 
-import { provider, webSocketProvider } from './chains'
+import { publicClient, webSocketPublicClient } from './chains'
 import {
   bscConnector,
   coinbaseConnector,
@@ -10,9 +10,9 @@ import {
   walletConnectConnector,
 } from './connectors'
 
-export default createClient({
-  autoConnect: true,
-  provider,
+export default createConfig({
+  autoConnect: false,
+  publicClient,
   logger: {
     warn: null,
   },
@@ -24,5 +24,5 @@ export default createClient({
     bscConnector,
     injectedConnector,
   ],
-  webSocketProvider,
+  webSocketPublicClient,
 })

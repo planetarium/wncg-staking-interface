@@ -1,8 +1,10 @@
-import { memo, useState } from 'react'
+import { useState } from 'react'
 import { useHotkeys } from 'react-hotkeys-hook'
 import Link from 'next/link'
 
 import config from 'config'
+import { isEthereum } from 'utils/isEthereum'
+import { useChain } from 'hooks'
 
 import { StyledGlobalFooter } from './styled'
 import Icon from 'components/Icon'
@@ -11,12 +13,20 @@ import ImportTokenDropdown from './ImportTokenDropdown'
 function GlobalFooter() {
   const [showVersion, setShowVersion] = useState(false)
 
+  const { chainId } = useChain()
+
   const currentBranch = process.env.NEXT_PUBLIC_AWS_BRANCH ?? ''
   const jobId = Number(process.env.NEXT_PUBLIC_AWS_JOB_ID ?? '0')
+  const commitHash = process.env.NEXT_PUBLIC_AWS_COMMIT_ID ?? ''
+
+  const githubUrl = `https://github.com/planetarium/staking_contract_wncg_${
+    isEthereum(chainId) ? 'eth' : 'bsc'
+  }`
 
   useHotkeys(
     'd+e+v',
     function () {
+      if (process.env.NODE_ENV === 'development') return
       setShowVersion((prev) => !prev)
     },
     { splitKey: ',' }
@@ -29,20 +39,20 @@ function GlobalFooter() {
       <div className="left">
         <h5 className="title">
           <strong>
-            {config.appName}
+            {config.stakingAppName}
             {showVersion && (
               <span className="version">
-                {currentBranch}#{jobId}
+                {currentBranch}#{jobId} ({commitHash.slice(0, 6)})
               </span>
             )}
           </strong>
-          <span>&copy; 2023 {config.appName}</span>
+          <span>&copy; 2023 {config.stakingAppName}</span>
         </h5>
 
         <div className="buttonGroup">
           <Link
             className="linkButton"
-            href="/wncg/terms"
+            href="/docs/terms"
             target="_blank"
             rel="noopener"
           >
@@ -51,7 +61,7 @@ function GlobalFooter() {
 
           <Link
             className="linkButton"
-            href="/wncg/privacy"
+            href="/docs/privacy"
             target="_blank"
             rel="noopener"
           >
@@ -85,7 +95,7 @@ function GlobalFooter() {
 
         <Link
           className="iconButton"
-          href={config.github.repositoryUrl}
+          href={githubUrl}
           target="_blank"
           rel="noopener"
           aria-label="Open github"
@@ -97,4 +107,4 @@ function GlobalFooter() {
   )
 }
 
-export default memo(GlobalFooter)
+export default GlobalFooter
