@@ -8,7 +8,7 @@ export function getNetworkLabel(chainId: ChainId) {
     case ChainId.GOERLI:
       return 'Goerli'
     case ChainId.BSC:
-      return 'BNB Chain'
+      return 'BNB Smart Chain'
     case ChainId.BSC_TESTNET:
       return 'BSC Testnet'
     default:
