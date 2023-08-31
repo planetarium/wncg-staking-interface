@@ -46,19 +46,19 @@ function Modals() {
         )}
       </AnimatePresence>
 
-      <Suspense>
-        <AnimatePresence>
-          {modal && (
-            <StyledModalContainer
-              {...EXIT_MOTION}
-              variants={motionVariants}
-              transition={{ duration: 0.4 }}
-            >
+      <AnimatePresence>
+        {modal && (
+          <StyledModalContainer
+            {...EXIT_MOTION}
+            variants={motionVariants}
+            transition={{ duration: 0.4 }}
+          >
+            <Suspense>
               <View modal={modal} />
-            </StyledModalContainer>
-          )}
-        </AnimatePresence>
-      </Suspense>
+            </Suspense>
+          </StyledModalContainer>
+        )}
+      </AnimatePresence>
     </Portal>
   )
 }

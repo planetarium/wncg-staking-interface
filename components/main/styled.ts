@@ -36,6 +36,7 @@ export const StyledMainCard = styled(motion.div)`
   }
 
   .mobileImage {
+    display: block;
     width: 280px;
     height: 280px;
     margin: 16px auto 0;
