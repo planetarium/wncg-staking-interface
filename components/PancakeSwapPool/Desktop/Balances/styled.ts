@@ -25,10 +25,10 @@ export const StyledAddLiquidityPoolBalances = styled(motion.section)`
     );
     background-color: var(--gray-900);
 
-    .tokenIconGroup {
+    .tokenIcon {
       ${flexbox()}
 
-      .tokenIcon {
+      .tokenFragment {
         margin-left: -20px;
 
         &:first-child {

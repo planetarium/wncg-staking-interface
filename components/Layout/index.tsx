@@ -45,8 +45,6 @@ function Layout({ children }: PropsWithChildren) {
 
   const isRootPage = pathname === '/'
 
-  console.log(1111, pathname, isRootPage)
-
   if (isRootPage) {
     return (
       <>
@@ -54,7 +52,7 @@ function Layout({ children }: PropsWithChildren) {
           <RootFavicon />
         </Head>
 
-        <StyledLayout layoutRoot $root={isRootPage}>
+        <StyledLayout layoutRoot $root>
           <RootGnb />
 
           <StyledMain ref={mainRef} layout>
@@ -88,7 +86,7 @@ function Layout({ children }: PropsWithChildren) {
         <Favicon />
       </Head>
 
-      <StyledLayout layoutRoot $root={isRootPage}>
+      <StyledLayout layoutRoot>
         <Suspense>
           <Alerts />
         </Suspense>
@@ -101,6 +99,7 @@ function Layout({ children }: PropsWithChildren) {
       </StyledLayout>
 
       <Modals />
+
       <Suspense>
         {isEthereum(chainId) && (
           <Suspense>

@@ -38,7 +38,7 @@ export default function MainGnb() {
   const { isConnected } = useAuth()
   const { chainId } = useChain()
   const { bp, isBrowser } = useResponsive()
-  const { reload } = useRouter()
+  const { reload, pathname, push } = useRouter()
 
   const logoSrc = useMemo(() => {
     const breakpoint =
@@ -65,7 +65,8 @@ export default function MainGnb() {
   }
 
   function onLogoClick() {
-    reload()
+    if (pathname === '/wncg/[chainId]') reload()
+    else push(`/wncg/${chainId}`)
   }
 
   const showStaking = !!isConnected && isBrowser

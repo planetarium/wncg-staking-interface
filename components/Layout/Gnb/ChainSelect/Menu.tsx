@@ -29,7 +29,7 @@ export default function GnbChainSelectMenu({
   const router = useRouter()
   const routerChainId = Number(router.asPath.replace('/wncg/', '')) as ChainId
 
-  const { chainId: expectedChainId, setChainId } = useChain()
+  const { chainId: expectedChainId, setChainId, currentChain } = useChain()
   const refetch = useRefetch({
     staking: true,
     poolSnapshot: true,
@@ -44,6 +44,15 @@ export default function GnbChainSelectMenu({
 
       if (routerChainId === newChainId) return
       if (expectedChainId === newChainId) return
+
+      if (currentChain?.id === newChainId) {
+        setChainId?.(newChainId)
+        refetch()
+        wait(100)
+
+        router.replace(router.pathname, newPathname, { shallow: true })
+        return
+      }
 
       try {
         await switchNetwork({
@@ -60,7 +69,15 @@ export default function GnbChainSelectMenu({
 
       closeMenu()
     },
-    [closeMenu, expectedChainId, refetch, router, routerChainId, setChainId]
+    [
+      closeMenu,
+      currentChain?.id,
+      expectedChainId,
+      refetch,
+      router,
+      routerChainId,
+      setChainId,
+    ]
   )
 
   useCloseOnBlur(menuRef, closeMenu)

@@ -34,10 +34,10 @@ export const StyledJoinFormHeader = styled.header<{ $disabled: boolean }>`
     ${textStyle('title', 1)}
     height: 32px;
 
-    .tokenIconGroup {
+    .tokenIcon {
       margin-right: 8px;
 
-      .tokenIcon {
+      .tokenFragment {
         margin-left: -8px;
       }
     }
@@ -62,7 +62,7 @@ export const StyledJoinFormHeader = styled.header<{ $disabled: boolean }>`
 
   .tooltipGroup {
     .tooltip {
-      left: 0;
+      left: auto;
       right: 0;
       width: min-content;
       transform: none;

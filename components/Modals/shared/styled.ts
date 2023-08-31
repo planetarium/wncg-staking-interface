@@ -299,8 +299,7 @@ export const StyledModalCompletePage = styled(StyledModalPage)`
     border-radius: 4px;
     background-color: rgba(var(--white-rgb), 0.08);
 
-    > .tokenIcon,
-    > .tokenIconGroup {
+    > .tokenIcon {
       margin-right: 8px;
     }
   }
