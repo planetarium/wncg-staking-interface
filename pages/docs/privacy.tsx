@@ -3,7 +3,7 @@ import Head from 'next/head'
 import { NextSeo } from 'next-seo'
 
 import { PRIVACY_SEO } from 'lib/seo'
-export { getStaticProps } from 'lib/getStaticProps'
+export { getStaticProps } from 'lib/docs/getStaticProps'
 
 import { StyledDocsPage } from 'styles/pages/docs'
 import Favicon from 'components/Favicon'

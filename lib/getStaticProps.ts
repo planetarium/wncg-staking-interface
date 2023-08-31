@@ -2,20 +2,18 @@ import { dehydrate, QueryClient } from '@tanstack/react-query'
 import type { GetStaticPropsContext } from 'next'
 
 import config from 'config'
-import { ChainId, defaultChainId, SUPPORTED_CHAINS } from 'config/chains'
+import { ChainId, SUPPORTED_CHAINS } from 'config/chains'
 import { QUERY_KEYS } from 'config/constants/queryKeys'
 import { getQueryString } from 'utils/getQueryString'
 import { fetchPoolSnapshot } from 'lib/queries/fetchPoolSnapshot'
-import { fetchStaking } from './queries/fetchStaking'
-import { fetchPrices } from './queries/fetchPrices'
+import { fetchPrices } from 'lib/queries/fetchPrices'
+import { fetchStaking } from 'lib/queries/fetchStaking'
 
 export async function getStaticProps(ctx: GetStaticPropsContext) {
   const queryClient = new QueryClient()
 
   const _chainId = getQueryString(ctx?.params?.chainId)
   const chainId = Number(_chainId) as ChainId
-
-  console.log(222, chainId, ctx)
 
   try {
     if (!SUPPORTED_CHAINS.includes(chainId)) throw Error()

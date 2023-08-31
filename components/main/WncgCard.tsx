@@ -41,7 +41,7 @@ export default function MainWncgCard() {
         <h4 className="subtitle">
           Provide WNCG liquidity.
           <br />
-          You can earn WNCG and BAL reward.
+          Earn WNCG and BAL rewards.
         </h4>
 
         <div className="group">

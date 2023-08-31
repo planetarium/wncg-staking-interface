@@ -28,7 +28,7 @@ export function ChainContextProvider({
 }: ChainContextProvider) {
   const [chainId, setChainId] = useState(pageProps.chainId)
 
-  console.log(39393, chainId)
+  console.log('CHAIN ID > ', chainId)
 
   return (
     <ChainContext.Provider value={{ chainId, setChainId }}>
