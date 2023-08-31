@@ -1,17 +1,13 @@
-import { configureChains, mainnet } from 'wagmi'
-import { goerli, bscTestnet, bsc } from 'wagmi/chains'
+import { configureChains } from 'wagmi'
+import { mainnet, goerli, bsc, bscTestnet } from 'wagmi/chains'
 import { infuraProvider } from 'wagmi/providers/infura'
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc'
 import { publicProvider } from 'wagmi/providers/public'
 
 import { apiKeys } from 'config/api'
-import config from 'config'
 
-const chainList = config.isTestnet ? [goerli, bscTestnet] : [mainnet, bsc]
-
-// NOTE: 식은땀
 export const { chains, publicClient, webSocketPublicClient } = configureChains(
-  [mainnet, bsc],
+  [mainnet, bsc, goerli, bscTestnet],
   [
     jsonRpcProvider({
       rpc(chain) {

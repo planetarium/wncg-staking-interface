@@ -6,9 +6,8 @@ import { NextSeo } from 'next-seo'
 import { STAKING_SEO } from 'lib/seo'
 export { getStaticProps } from 'lib/getStaticProps'
 export { getStaticPaths } from 'lib/getStaticPaths'
-
 import { StyledStakingPage } from 'styles/pages/staking'
-import Favicon from 'components/Favicon'
+
 import GlobalFooter from 'components/GlobalFooter'
 import GlobalHooks from 'components/GlobalHooks'
 import Stake from 'components/staking/Stake'
@@ -28,7 +27,7 @@ const WncgStaking: NextPage = () => {
           name="description"
           content="Stake Balancer LP token and earn rewards!"
         />
-        <Favicon />
+        {/* <Favicon /> */}
       </Head>
 
       <StyledStakingPage layout>

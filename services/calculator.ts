@@ -6,7 +6,6 @@ import {
 } from '@balancer-labs/sdk'
 import { WeightedMath } from '@georgeroman/balancer-v2-pools'
 
-import config from 'config'
 import {
   NATIVE_CURRENCY_ADDRESS,
   WETH_ADDRESS,

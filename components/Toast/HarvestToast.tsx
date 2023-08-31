@@ -5,7 +5,6 @@ import { useTransaction } from 'wagmi'
 import { useSetAtom } from 'jotai'
 
 import { harvestTxAtom } from 'states/tx'
-import { BAL_ADDRESS } from 'config/constants/addresses'
 import { parseTransferLogs } from 'utils/parseTransferLogs'
 import { txUrlFor } from 'utils/txUrlFor'
 import { useClientMount, useChain, useViemClients } from 'hooks'
@@ -24,7 +23,6 @@ export default function HarvestToast({ hash }: HarvestToastProps) {
   const { balAddress, chainId } = useChain()
 
   const { publicClient } = useViemClients()
-  const bal = BAL_ADDRESS[chainId] as Hash
 
   const status = useWatch(hash)
 

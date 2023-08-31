@@ -29,8 +29,6 @@ export class ExactInJoinHandler implements JoinPoolHandler {
       throw new Error('Could not query generalised join')
     }
 
-    console.log('joinRes', params, this.joinRes)
-
     // value property must be passed if joining with native asset
     // return txBuilder.raw.sendTransaction({ to, data, value })
   }

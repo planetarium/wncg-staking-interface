@@ -4,10 +4,7 @@ import { AnimatePresence } from 'framer-motion'
 import { ANIMATION_MAP, EXIT_MOTION } from 'config/constants/motions'
 import { bnum } from 'utils/bnum'
 import { useAuth, useStaking } from 'hooks'
-import {
-  AddLiquidityFormElement,
-  FIELDS,
-} from 'hooks/pancakeswap/useAddLiquidityForm'
+import { AddLiquidityFormElement } from 'hooks/pancakeswap/useAddLiquidityForm'
 
 import { StyledAddLiquidityFormUnoptimizableAlert } from './styled'
 import Icon from 'components/Icon'
@@ -21,7 +18,6 @@ type AddLiquidityFormUnoptimizableAlertProps = {
 }
 
 export default function AddLiquidityFormUnoptimizableAlert({
-  activeField,
   assets,
   focusedElement,
   maxBalances,

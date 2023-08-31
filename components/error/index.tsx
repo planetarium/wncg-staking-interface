@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { useRouter } from 'next/router'
+
 import { motion } from 'framer-motion'
 
 import { MOTION, ANIMATION_MAP } from 'config/constants/motions'
@@ -15,7 +15,6 @@ type ErrorProps = {
 }
 
 export default function Error({ code }: ErrorProps) {
-  const router = useRouter()
   const { isHandheld } = useResponsive()
 
   const subtitle = useMemo(

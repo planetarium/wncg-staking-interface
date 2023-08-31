@@ -1,4 +1,4 @@
-import { atom, useSetAtom } from 'jotai'
+import { useSetAtom } from 'jotai'
 import {
   UseFormSetValue,
   UseFormStateReturn,

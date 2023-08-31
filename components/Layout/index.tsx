@@ -23,10 +23,6 @@ const BalancerPool = dynamic(() => import('components/BalancerPool'), {
   ssr: false,
 })
 
-const Gnb = dynamic(() => import('./Gnb'), {
-  ssr: false,
-})
-
 const Modals = dynamic(() => import('components/Modals'), {
   ssr: false,
 })

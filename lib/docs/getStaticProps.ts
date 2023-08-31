@@ -1,10 +1,8 @@
 import { dehydrate, QueryClient } from '@tanstack/react-query'
-import type { GetStaticPropsContext } from 'next'
 
 import config from 'config'
 import { ChainId, defaultChainId } from 'config/chains'
 import { QUERY_KEYS } from 'config/constants/queryKeys'
-import { getQueryString } from 'utils/getQueryString'
 import { fetchPrices } from 'lib/queries/fetchPrices'
 import { fetchStaking } from 'lib/queries/fetchStaking'
 

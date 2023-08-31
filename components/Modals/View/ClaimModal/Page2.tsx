@@ -11,7 +11,6 @@ import CountUp from 'components/CountUp'
 import ImportToken from 'components/ImportToken'
 import NumberFormat from 'components/NumberFormat'
 import TokenIcon from 'components/TokenIcon'
-import { claimTxAtom } from 'states/tx'
 
 type ClaimModalPage2Props = {
   rewardList: boolean[]
@@ -30,8 +29,6 @@ export default function ClaimModalPage2({ rewardList }: ClaimModalPage2Props) {
       bnum(0)
     )
     .toString()
-
-  const { hash } = useAtomValue(claimTxAtom)
 
   return (
     <StyledClaimModalPage2>

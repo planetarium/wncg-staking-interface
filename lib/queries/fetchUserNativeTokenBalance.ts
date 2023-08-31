@@ -1,7 +1,5 @@
 import { fetchBalance } from '@wagmi/core'
 
-import config from 'config'
-
 export async function fetchUserNativeTokenBalance(
   account: Hash,
   chainId: ChainId

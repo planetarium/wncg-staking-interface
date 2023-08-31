@@ -1,21 +1,8 @@
 import { motion } from 'framer-motion'
 import styled, { css } from 'styled-components'
 
-import {
-  flexbox,
-  gradient,
-  media,
-  posCenterX,
-  posCenterY,
-  textStyle,
-} from 'styles/utils'
-import {
-  buttonStyle,
-  lgButtonStyle,
-  mdButtonStyle,
-} from 'components/Button/styled'
-
-const INPUT_FIELD_GAP = 24
+import { flexbox, media, posCenterX, posCenterY, textStyle } from 'styles/utils'
+import { lgButtonStyle, mdButtonStyle } from 'components/Button/styled'
 
 const ARROW_SIZE = 32
 const DASH_HEIGHT = 24

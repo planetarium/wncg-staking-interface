@@ -11,7 +11,6 @@ import {
   useResponsive,
   useStaking,
 } from 'hooks'
-import { DEX_PROTOCOL_ADDRESS } from 'config/constants/addresses'
 
 export function useJoinModal(assets: Hash[], joinAmounts: string[]) {
   const allowanceOf = useAllowances()

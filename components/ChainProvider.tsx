@@ -21,14 +21,12 @@ type ChainContextProvider = {
   pageProps: AppProps['pageProps']
 } & PropsWithChildren
 
-// Custom wrapper component
+// NOTE: Custom Context Provider
 export function ChainContextProvider({
   pageProps,
   children,
 }: ChainContextProvider) {
   const [chainId, setChainId] = useState(pageProps.chainId)
-
-  console.log('CHAIN ID > ', chainId)
 
   return (
     <ChainContext.Provider value={{ chainId, setChainId }}>
