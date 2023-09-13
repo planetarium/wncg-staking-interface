@@ -6,8 +6,9 @@ import { QUERY_KEYS } from 'config/constants/queryKeys'
 import { isEthereum } from 'utils/isEthereum'
 import { fetchHarvest } from 'lib/queries/fetchHarvest'
 import { useChain, useStaking } from 'hooks'
+import { bnum } from 'utils/bnum'
 
-export function useFetchHarvest(options: UseFetchOptions) {
+export function useFetchHarvest(options: UseFetchOptions = {}) {
   const {
     enabled: _enabled = true,
     refetchInterval,
@@ -32,7 +33,7 @@ export function useFetchHarvest(options: UseFetchOptions) {
       refetchOnWindowFocus,
       suspense,
       onSuccess(data) {
-        if (data > currentTimestamp) setIsHarvestable(false)
+        if (bnum(data).gt(currentTimestamp)) setIsHarvestable(false)
         else setIsHarvestable(true)
       },
     }

@@ -1,10 +1,13 @@
 import {
+  useFetchHarvest,
   useFetchStaking,
   useFetchUserData,
   useFetchUserRewards,
 } from 'hooks/queries'
 
 function ContractHook() {
+  useFetchHarvest()
+
   useFetchStaking({
     refetchInterval: 10 * 1_000,
   })

@@ -12,9 +12,9 @@ export async function fetchHarvest(
       abi: BalancerRewardPoolAbi,
       chainId,
       functionName: 'periodFinish',
-    })) as BigNumber
+    })) as BigInt
 
-    return data.toNumber()
+    return data.toString()
   } catch (error) {
     throw error
   }
