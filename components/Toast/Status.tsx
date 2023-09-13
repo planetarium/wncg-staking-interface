@@ -16,14 +16,17 @@ export default function ToastStatus({ status }: ToastStatusProps) {
           Fail
         </StyledToastStatus>
       )
+
     case 1:
       return (
         <StyledToastStatus {...MOTION} variants={ANIMATION_MAP.fadeIn} $success>
           Success <Icon icon="check" />
         </StyledToastStatus>
       )
+
     case null:
       return <Lottie className="loading" animationData="toastLoading" />
+
     default:
       assertUnreachable(status)
   }

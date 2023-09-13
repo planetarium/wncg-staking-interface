@@ -7,6 +7,7 @@ import { harvestTxAtom } from 'states/tx'
 import { StakingEthereumAbi } from 'config/abi'
 import { ToastType } from 'config/constants'
 import { isEthereum } from 'utils/isEthereum'
+import { walletErrorHandler } from 'utils/walletErrorHandler'
 import { useChain } from './useChain'
 import { useSwitchNetwork } from './useSwitchNetwork'
 import { useToast } from './useToast'
@@ -49,14 +50,7 @@ export function useHarvest() {
       })
     } catch (error: any) {
       setShowHarvestTooltip(false)
-      if (
-        error.code === 'ACTION_REJECTED' ||
-        error.code === 4001 ||
-        error.error === 'Rejected by user'
-      ) {
-        return
-      }
-      throw error
+      walletErrorHandler(error)
     }
   }, [setShowHarvestTooltip, setTx, toast, writeAsync])
 

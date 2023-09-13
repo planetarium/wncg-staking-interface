@@ -20,8 +20,8 @@ type HarvestToastProps = Required<HarvestTx>
 
 export default function HarvestToast({ hash }: HarvestToastProps) {
   const [confirmed, setConfirmed] = useState(false)
-  const { balAddress, chainId } = useChain()
 
+  const { balAddress, chainId } = useChain()
   const { publicClient } = useViemClients()
 
   const status = useWatch(hash)
@@ -34,18 +34,15 @@ export default function HarvestToast({ hash }: HarvestToastProps) {
     enabled: !!hash,
     suspense: false,
     async onSuccess(tx) {
-      try {
-        const { logs = [] } =
-          (await publicClient.waitForTransactionReceipt({ hash: tx.hash })) ??
-          {}
+      const { logs = [] } =
+        (await publicClient.waitForTransactionReceipt({ hash: tx.hash })) ?? {}
 
-        const parsedLogs = parseTransferLogs(logs)
-        const actualHarvestedAmount = parsedLogs?.[balAddress!]
+      const parsedLogs = parseTransferLogs(logs)
+      const actualHarvestedAmount = parsedLogs?.[balAddress!]
 
-        if (actualHarvestedAmount) {
-          setConfirmed(true)
-        }
-      } catch {}
+      if (actualHarvestedAmount) {
+        setConfirmed(true)
+      }
     },
   })
 
