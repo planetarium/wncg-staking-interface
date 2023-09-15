@@ -80,11 +80,9 @@ export default function WalletUnstakeWindow({
 
   const endsAt = Math.max(
     0,
-    cooldownWindow &&
-      unstakeTimestamps.cooldownEndsAt &&
-      unstakeTimestamps.withdrawEndsAt
-      ? unstakeTimestamps.cooldownEndsAt - cooldownSeconds
-      : unstakeTimestamps.cooldownEndsAt ?? 0
+    cooldownWindow
+      ? unstakeTimestamps.cooldownEndsAt ?? 0
+      : unstakeTimestamps.withdrawEndsAt ?? 0
   )
 
   return (
