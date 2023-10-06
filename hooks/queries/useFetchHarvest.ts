@@ -3,11 +3,12 @@ import { useAtomValue, useSetAtom } from 'jotai'
 
 import { currentTimestampAtom, isHarvestableAtom } from 'states/system'
 import { QUERY_KEYS } from 'config/constants/queryKeys'
-import { isEthereum } from 'utils/isEthereum'
 import { fetchHarvest } from 'lib/queries/fetchHarvest'
+import { bnum } from 'utils/bnum'
+import { isEthereum } from 'utils/isEthereum'
 import { useChain, useStaking } from 'hooks'
 
-export function useFetchHarvest(options: UseFetchOptions) {
+export function useFetchHarvest(options: UseFetchOptions = {}) {
   const {
     enabled: _enabled = true,
     refetchInterval,
@@ -16,7 +17,8 @@ export function useFetchHarvest(options: UseFetchOptions) {
   } = options
 
   const { chainId } = useChain()
-  const { balRewardPoolAddress } = useStaking<'ethereum'>()
+  const { balRewardPoolAddress, balancerGaugeAddress } =
+    useStaking<'ethereum'>()
 
   const currentTimestamp = useAtomValue(currentTimestampAtom)
   const setIsHarvestable = useSetAtom(isHarvestableAtom)
@@ -25,14 +27,15 @@ export function useFetchHarvest(options: UseFetchOptions) {
 
   return useQuery(
     [QUERY_KEYS.Harvest, chainId],
-    () => fetchHarvest(chainId, balRewardPoolAddress),
+    () => fetchHarvest(chainId, balRewardPoolAddress, balancerGaugeAddress),
     {
       enabled,
       refetchInterval,
       refetchOnWindowFocus,
       suspense,
       onSuccess(data) {
-        if (data > currentTimestamp) setIsHarvestable(false)
+        const { periodFinish } = data
+        if (bnum(periodFinish).gt(currentTimestamp)) setIsHarvestable(false)
         else setIsHarvestable(true)
       },
     }

@@ -6,6 +6,7 @@ import { isHarvestableAtom } from 'states/system'
 import { ANIMATION_MAP, EXIT_MOTION } from 'config/constants/motions'
 import { bnum } from 'utils/bnum'
 import { useChain, useFiat, useHarvest, useStaking } from 'hooks'
+import { useFetchHarvest } from 'hooks/queries'
 
 import { StyledStakingDashboardHarvest } from './styled'
 import Button from 'components/Button'
@@ -26,13 +27,11 @@ export default function StakingDashboardHarvest({
   const toFiat = useFiat()
   const { earmarkIncentivePcnt } = useStaking<'ethereum'>()
 
-  // FIXME: 수정
-  // const { claimableTokens = '0' } =
-  //   useFetchStaking({
-  //     refetchInterval: 10 * 1_000,
-  //     refetchOnWindowFocus: 'always',
-  //   }).data ?? {}
-  const claimableTokens = '0'
+  const { claimableTokens = '0' } =
+    useFetchHarvest({
+      refetchOnWindowFocus: 'always',
+    }).data ?? {}
+
   const harvest = useHarvest()
 
   const isHarvestable = useAtomValue(isHarvestableAtom)
