@@ -1,12 +1,18 @@
+import { useMemo } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useAtom, useAtomValue } from 'jotai'
 import clsx from 'clsx'
 
-import { isHarvestableAtom, showHarvestTooltipAtom } from 'states/system'
+import {
+  currentTimestampAtom,
+  periodFinishAtom,
+  showHarvestTooltipAtom,
+} from 'states/system'
 import { ANIMATION_MAP, EXIT_MOTION } from 'config/constants/motions'
-import { isEthereum } from 'utils/isEthereum'
+import { bnum } from 'utils/bnum'
 import { calcApr } from 'utils/calcApr'
-import { useChain, useFiat, useHarvest, useStaking } from 'hooks'
+import { isEthereum } from 'utils/isEthereum'
+import { useChain, useFiat, useHarvest, useResponsive, useStaking } from 'hooks'
 import { useFetchStaking } from 'hooks/queries'
 
 import { StyledStakingDashboardApr } from './styled'
@@ -15,6 +21,7 @@ import CountUp from 'components/CountUp'
 import Icon from 'components/Icon'
 import Suspense from 'components/Suspense'
 import Harvest from './Harvest'
+import Skeleton from 'components/Skeleton'
 
 function StakingDashboardApr() {
   const [show, setShow] = useAtom(showHarvestTooltipAtom)
@@ -29,6 +36,7 @@ function StakingDashboardApr() {
     tokens,
     totalStaked: initTotalStaked,
   } = useStaking()
+  const { isHandheld } = useResponsive()
 
   const { totalStaked = initTotalStaked } = useFetchStaking().data ?? {}
 
@@ -44,8 +52,14 @@ function StakingDashboardApr() {
       totalStakedInFiatValue
     )
   )
+  const periodFinish = useAtomValue(periodFinishAtom) ?? '0'
+  const currentTimestamp = useAtomValue(currentTimestampAtom)
 
-  const isHarvestable = useAtomValue(isHarvestableAtom) && isEthereum(chainId)
+  const isHarvestable = useMemo(() => {
+    if (!isEthereum(chainId)) return false
+    if (bnum(currentTimestamp).isZero()) return false
+    return bnum(periodFinish).lte(currentTimestamp)
+  }, [chainId, currentTimestamp, periodFinish])
 
   function toggleTooltip() {
     setShow((prev) => !prev)
@@ -70,7 +84,27 @@ function StakingDashboardApr() {
 
         const { symbol } = tokens[addr]
 
-        const showShowHarvest = !!isHarvestable && addr === balAddress
+        const isBAL = addr === balAddress
+        const showShowHarvest = isBAL && !!isHarvestable
+
+        if (isBAL && bnum(periodFinish).isZero()) {
+          return (
+            <div
+              className={clsx('aprItem', { tooltipGroup: showShowHarvest })}
+              key={`dashboardApr:${apr}:${symbol}`}
+            >
+              <dt className={clsx('hasTooltip', { show })}>{symbol} APR</dt>
+
+              <dd className="colon">
+                <Skeleton
+                  className="aprItem"
+                  $width={isHandheld ? 100 : 72}
+                  $height={isHandheld ? 20 : 48}
+                />
+              </dd>
+            </div>
+          )
+        }
 
         return (
           <div

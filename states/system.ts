@@ -15,7 +15,7 @@ export const slippageAtom = atomWithStorage<string | null>(
   null
 )
 
-export const isHarvestableAtom = atom(false)
+export const periodFinishAtom = atom<string | null>(null)
 export const showHarvestTooltipAtom = atomWithStorage(
   `wncg:staking:showHarvestTooltip`,
   false

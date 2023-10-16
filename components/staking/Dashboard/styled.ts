@@ -125,6 +125,10 @@ export const StyledStakingDashboardApr = styled.dl<{
         font-family: ${fontFamily.text};
       }
     }
+
+    dd {
+      ${flexbox()}
+    }
   }
 
   .aprHarvestButton {
