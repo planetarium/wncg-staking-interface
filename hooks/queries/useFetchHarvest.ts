@@ -23,7 +23,7 @@ export function useFetchHarvest(options: UseFetchOptions = {}) {
   const currentTimestamp = useAtomValue(currentTimestampAtom)
   const setIsHarvestable = useSetAtom(isHarvestableAtom)
 
-  const enabled = isEthereum(chainId)
+  const enabled = isEthereum(chainId) && bnum(currentTimestamp).gt(0)
 
   return useQuery(
     [QUERY_KEYS.Harvest, chainId],
