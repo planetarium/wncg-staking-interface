@@ -1,13 +1,14 @@
-import { useMemo } from 'react'
-import { useAtomValue } from 'jotai'
 import { AnimatePresence } from 'framer-motion'
-
-import { currentTimestampAtom, periodFinishAtom } from 'states/system'
 
 import { ANIMATION_MAP, EXIT_MOTION } from 'config/constants/motions'
 import { bnum } from 'utils/bnum'
-import { isEthereum } from 'utils/isEthereum'
-import { useChain, useFiat, useHarvest, useStaking } from 'hooks'
+import {
+  useChain,
+  useFiat,
+  useHarvest,
+  useIsHarvestable,
+  useStaking,
+} from 'hooks'
 import { useFetchHarvest } from 'hooks/queries'
 
 import { StyledStakingDashboardHarvest } from './styled'
@@ -25,7 +26,7 @@ export default function StakingDashboardHarvest({
   show,
   closeTooltip,
 }: StakingDashboardHarvestProps) {
-  const { balAddress, chainId } = useChain()
+  const { balAddress } = useChain()
   const toFiat = useFiat()
   const { earmarkIncentivePcnt } = useStaking<'ethereum'>()
 
@@ -35,15 +36,7 @@ export default function StakingDashboardHarvest({
     }).data ?? {}
 
   const harvest = useHarvest()
-
-  const periodFinish = useAtomValue(periodFinishAtom)
-  const currentTimestamp = useAtomValue(currentTimestampAtom)
-
-  const isHarvestable = useMemo(() => {
-    if (!isEthereum(chainId)) return false
-    if (bnum(currentTimestamp).isZero()) return false
-    return bnum(periodFinish).lte(currentTimestamp)
-  }, [chainId, currentTimestamp, periodFinish])
+  const isHarvestable = useIsHarvestable()
 
   if (!isHarvestable) return null
 

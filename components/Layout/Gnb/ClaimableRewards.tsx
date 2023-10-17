@@ -1,13 +1,16 @@
-import { useMemo } from 'react'
 import dynamic from 'next/dynamic'
-import { useAtomValue } from 'jotai'
 
-import { currentTimestampAtom, periodFinishAtom } from 'states/system'
 import { ModalType } from 'config/constants'
 import { ANIMATION_MAP, MOTION } from 'config/constants/motions'
 import { bnum } from 'utils/bnum'
-import { isEthereum } from 'utils/isEthereum'
-import { useChain, useFiat, useModal, useResponsive, useStaking } from 'hooks'
+import {
+  useChain,
+  useFiat,
+  useIsHarvestable,
+  useModal,
+  useResponsive,
+  useStaking,
+} from 'hooks'
 import { useFetchUserRewards } from 'hooks/queries'
 
 import { StyledGnbClaimableRewards } from './styled'
@@ -18,8 +21,9 @@ import NumberFormat from 'components/NumberFormat'
 import Tooltip from 'components/Tooltip'
 
 function ClaimableRewards() {
-  const { chainId, balAddress } = useChain()
+  const { balAddress } = useChain()
   const toFiat = useFiat()
+  const isHarvestable = useIsHarvestable()
   const { addModal } = useModal()
   const { isLaptop } = useResponsive()
   const { rewardTokenAddresses, tokens } = useStaking()
@@ -28,15 +32,6 @@ function ClaimableRewards() {
 
   const { earnedTokenRewards = [] } = data ?? {}
   const hasRewards = earnedTokenRewards.some((amt) => bnum(amt).gt(0))
-
-  const periodFinish = useAtomValue(periodFinishAtom)
-  const currentTimestamp = useAtomValue(currentTimestampAtom)
-
-  const isHarvestable = useMemo(() => {
-    if (!isEthereum(chainId)) return false
-    if (bnum(currentTimestamp).isZero()) return false
-    return bnum(periodFinish).lte(currentTimestamp)
-  }, [chainId, currentTimestamp, periodFinish])
 
   function openClaim() {
     addModal({

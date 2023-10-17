@@ -1,18 +1,19 @@
-import { useMemo } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useAtom, useAtomValue } from 'jotai'
 import clsx from 'clsx'
 
-import {
-  currentTimestampAtom,
-  periodFinishAtom,
-  showHarvestTooltipAtom,
-} from 'states/system'
+import { periodFinishAtom, showHarvestTooltipAtom } from 'states/system'
 import { ANIMATION_MAP, EXIT_MOTION } from 'config/constants/motions'
 import { bnum } from 'utils/bnum'
 import { calcApr } from 'utils/calcApr'
-import { isEthereum } from 'utils/isEthereum'
-import { useChain, useFiat, useHarvest, useResponsive, useStaking } from 'hooks'
+import {
+  useChain,
+  useFiat,
+  useHarvest,
+  useIsHarvestable,
+  useResponsive,
+  useStaking,
+} from 'hooks'
 import { useFetchStaking } from 'hooks/queries'
 
 import { StyledStakingDashboardApr } from './styled'
@@ -26,7 +27,8 @@ import Skeleton from 'components/Skeleton'
 function StakingDashboardApr() {
   const [show, setShow] = useAtom(showHarvestTooltipAtom)
 
-  const { balAddress, chainId } = useChain()
+  const { balAddress } = useChain()
+  const isHarvestable = useIsHarvestable()
   const toFiat = useFiat()
   const harvest = useHarvest()
   const {
@@ -53,13 +55,6 @@ function StakingDashboardApr() {
     )
   )
   const periodFinish = useAtomValue(periodFinishAtom) ?? '0'
-  const currentTimestamp = useAtomValue(currentTimestampAtom)
-
-  const isHarvestable = useMemo(() => {
-    if (!isEthereum(chainId)) return false
-    if (bnum(currentTimestamp).isZero()) return false
-    return bnum(periodFinish).lte(currentTimestamp)
-  }, [chainId, currentTimestamp, periodFinish])
 
   function toggleTooltip() {
     setShow((prev) => !prev)
