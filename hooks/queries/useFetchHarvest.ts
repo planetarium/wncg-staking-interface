@@ -1,10 +1,9 @@
 import { useQuery } from '@tanstack/react-query'
-import { useAtomValue, useSetAtom } from 'jotai'
+import { useSetAtom } from 'jotai'
 
-import { currentTimestampAtom, isHarvestableAtom } from 'states/system'
+import { periodFinishAtom } from 'states/system'
 import { QUERY_KEYS } from 'config/constants/queryKeys'
 import { fetchHarvest } from 'lib/queries/fetchHarvest'
-import { bnum } from 'utils/bnum'
 import { isEthereum } from 'utils/isEthereum'
 import { useChain, useStaking } from 'hooks'
 
@@ -20,8 +19,7 @@ export function useFetchHarvest(options: UseFetchOptions = {}) {
   const { balRewardPoolAddress, balancerGaugeAddress } =
     useStaking<'ethereum'>()
 
-  const currentTimestamp = useAtomValue(currentTimestampAtom)
-  const setIsHarvestable = useSetAtom(isHarvestableAtom)
+  const setPeriodFinish = useSetAtom(periodFinishAtom)
 
   const enabled = isEthereum(chainId)
 
@@ -35,8 +33,7 @@ export function useFetchHarvest(options: UseFetchOptions = {}) {
       suspense,
       onSuccess(data) {
         const { periodFinish } = data
-        if (bnum(periodFinish).gt(currentTimestamp)) setIsHarvestable(false)
-        else setIsHarvestable(true)
+        setPeriodFinish(periodFinish)
       },
     }
   )

@@ -1,11 +1,14 @@
-import { useAtomValue } from 'jotai'
 import { AnimatePresence } from 'framer-motion'
-
-import { isHarvestableAtom } from 'states/system'
 
 import { ANIMATION_MAP, EXIT_MOTION } from 'config/constants/motions'
 import { bnum } from 'utils/bnum'
-import { useChain, useFiat, useHarvest, useStaking } from 'hooks'
+import {
+  useChain,
+  useFiat,
+  useHarvest,
+  useIsHarvestable,
+  useStaking,
+} from 'hooks'
 import { useFetchHarvest } from 'hooks/queries'
 
 import { StyledStakingDashboardHarvest } from './styled'
@@ -33,8 +36,7 @@ export default function StakingDashboardHarvest({
     }).data ?? {}
 
   const harvest = useHarvest()
-
-  const isHarvestable = useAtomValue(isHarvestableAtom)
+  const isHarvestable = useIsHarvestable()
 
   if (!isHarvestable) return null
 

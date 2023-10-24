@@ -1,11 +1,16 @@
 import dynamic from 'next/dynamic'
-import { useAtomValue } from 'jotai'
 
-import { isHarvestableAtom } from 'states/system'
 import { ModalType } from 'config/constants'
 import { ANIMATION_MAP, MOTION } from 'config/constants/motions'
 import { bnum } from 'utils/bnum'
-import { useChain, useFiat, useModal, useResponsive, useStaking } from 'hooks'
+import {
+  useChain,
+  useFiat,
+  useIsHarvestable,
+  useModal,
+  useResponsive,
+  useStaking,
+} from 'hooks'
 import { useFetchUserRewards } from 'hooks/queries'
 
 import { StyledGnbClaimableRewards } from './styled'
@@ -18,6 +23,7 @@ import Tooltip from 'components/Tooltip'
 function ClaimableRewards() {
   const { balAddress } = useChain()
   const toFiat = useFiat()
+  const isHarvestable = useIsHarvestable()
   const { addModal } = useModal()
   const { isLaptop } = useResponsive()
   const { rewardTokenAddresses, tokens } = useStaking()
@@ -26,8 +32,6 @@ function ClaimableRewards() {
 
   const { earnedTokenRewards = [] } = data ?? {}
   const hasRewards = earnedTokenRewards.some((amt) => bnum(amt).gt(0))
-
-  const isHarvestable = useAtomValue(isHarvestableAtom)
 
   function openClaim() {
     addModal({
