@@ -19,6 +19,7 @@ export const QUERY_KEYS = {
   FallbackPrices: 'staking:fallbackPriceMap',
   Prices: 'staking:priceMap',
   Staking: {
+    Apr: 'staking:apr',
     Data: 'staking:data',
     FallbackPrices: 'staking:fallbackPrices',
     LpBalances: 'staking:lpBalances',

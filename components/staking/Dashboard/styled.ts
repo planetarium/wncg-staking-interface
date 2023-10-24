@@ -101,6 +101,55 @@ export const StyledStakingDashboardApr = styled.dl<{
     margin-top: 2px;
     color: var(--white);
 
+    &.fallback {
+      .tooltipWrapper {
+        ${posCenterX()}
+        top: 0;
+        width: 100%;
+        height: 10px;
+        background-color: yellow;
+      }
+
+      .tooltipGroup {
+        margin-left: 4px;
+
+        .toggler {
+          margin-left: 0;
+        }
+      }
+
+      .tooltip {
+        ${textStyle('body', 3, 700)}
+        justify-content: flex-start;
+        text-align: left;
+
+        .icon {
+          margin-right: 12px;
+        }
+      }
+
+      .refreshButton {
+        ${flexbox()}
+        width: 20px;
+        height: 20px;
+
+        .icon {
+          width: 20px;
+          height: 20px;
+        }
+      }
+
+      @keyframes floatTop {
+        0% {
+          transform: translate3d(-50%, 0, 0);
+        }
+
+        100% {
+          transform: translate3d(-50%, 4px, 0);
+        }
+      }
+    }
+
     &:first-child {
       margin-top: 0;
     }
@@ -145,6 +194,16 @@ export const StyledStakingDashboardApr = styled.dl<{
     $fallback &&
     css`
       min-height: 88px;
+
+      @keyframes floatTop {
+        0% {
+          transform: translate3d(-50%, 0, 0);
+        }
+
+        100% {
+          transform: translate3d(-50%, 4px, 0);
+        }
+      }
     `}
 
   ${media(
@@ -220,10 +279,14 @@ export const StyledStakingDashboardApr = styled.dl<{
         }
       }
 
-      .aprHarvestButton {
+      .aprHarvestButton,
+      .retryButton {
         ${posCenterX()}
         top: calc(100% + 12px);
         display: flex;
+      }
+
+      .aprHarvestButton {
         width: 99px;
       }
     `
