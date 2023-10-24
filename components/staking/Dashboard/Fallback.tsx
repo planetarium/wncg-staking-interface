@@ -1,49 +1,81 @@
-import { useResponsive } from 'hooks'
+import { useResponsive, useStaking } from 'hooks'
 
-import { StyledStakingDashboardApr } from './styled'
+import {
+  StyledStakingDashboardApr,
+  StyledStakingDashboardAprFallback,
+} from './styled'
 import Skeleton from 'components/Skeleton'
+import Button from 'components/Button'
+import Icon from 'components/Icon'
 
-export default function StakingDashboardAprFallback() {
+type StakingDashboardAprFallbackProps = {
+  refetch(): void
+}
+
+export default function StakingDashboardAprFallback({
+  refetch,
+}: StakingDashboardAprFallbackProps) {
   const { isHandheld } = useResponsive()
+  const { rewardTokenAddresses, tokens } = useStaking()
 
   if (isHandheld) {
     return (
-      <StyledStakingDashboardApr className="aprList">
-        <Skeleton className="aprItem" $width={170} $height={20} />
-        <Skeleton className="aprItem" $width={80} $height={20} $mt={2} />
-        <Skeleton className="aprItem" $width={100} $height={20} $mt={2} />
-      </StyledStakingDashboardApr>
+      <StyledStakingDashboardAprFallback>
+        <p className="errorMsg">
+          <Icon icon="warning" $size={isHandheld ? 16 : 24} />
+          Failed to load the data.
+          <br />
+          Please refresh to try again.
+          <Button
+            className="retryButton"
+            onClick={refetch}
+            $size="sm"
+            $contain
+            $variant="tertiary"
+          >
+            Retry
+          </Button>
+        </p>
+      </StyledStakingDashboardAprFallback>
     )
   }
 
   return (
-    <StyledStakingDashboardApr className="aprList">
-      <div className="aprItem">
-        <dt>
-          <Skeleton className="aprItem" $width={83} $height={20} />
-        </dt>
-        <dd>
-          <Skeleton className="aprItem" $width={120} $height={48} />
-        </dd>
-      </div>
+    <StyledStakingDashboardAprFallback>
+      <StyledStakingDashboardApr className="aprList">
+        <div className="aprItem">
+          <dt>Total Staked</dt>
+          <dd className="colon">
+            <span className="countUp">-</span>
+          </dd>
+        </div>
 
-      <div className="aprItem">
-        <dt>
-          <Skeleton className="aprItem" $width={60} $height={20} />
-        </dt>
-        <dd>
-          <Skeleton className="aprItem" $width={80} $height={48} />
-        </dd>
-      </div>
+        {rewardTokenAddresses?.map((addr, i) => {
+          const { symbol } = tokens[addr] ?? {}
+          return (
+            <div className="aprItem" key={`dashboardApr:${addr}`}>
+              <dt>{symbol} APR</dt>
+              <dd className="colon">
+                <span className="countUp">-</span>
+              </dd>
+            </div>
+          )
+        })}
+      </StyledStakingDashboardApr>
 
-      <div className="aprItem">
-        <dt>
-          <Skeleton className="aprItem" $width={72} $height={20} />
-        </dt>
-        <dd>
-          <Skeleton className="aprItem" $width={72} $height={48} />
-        </dd>
-      </div>
-    </StyledStakingDashboardApr>
+      <p className="errorMsg">
+        <Icon icon="warning" $size={24} />
+        Failed to load the data. Please refresh to try again.
+        <Button
+          className="retryButton"
+          onClick={refetch}
+          $size="sm"
+          $contain
+          $variant="tertiary"
+        >
+          Retry
+        </Button>
+      </p>
+    </StyledStakingDashboardAprFallback>
   )
 }

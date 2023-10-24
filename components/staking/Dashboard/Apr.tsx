@@ -14,7 +14,7 @@ import {
   useResponsive,
   useStaking,
 } from 'hooks'
-import { useFetchStaking } from 'hooks/queries'
+import { useFetchTotalStaked } from 'hooks/queries'
 
 import { StyledStakingDashboardApr } from './styled'
 import Button from 'components/Button'
@@ -31,21 +31,13 @@ function StakingDashboardApr() {
   const isHarvestable = useIsHarvestable()
   const toFiat = useFiat()
   const harvest = useHarvest()
-  const {
-    lpToken,
-    rewardTokenAddresses,
-    rewardEmissionsPerSec,
-    tokens,
-    totalStaked: initTotalStaked,
-  } = useStaking()
+  const { lpToken, rewardTokenAddresses, rewardEmissionsPerSec, tokens } =
+    useStaking()
   const { isHandheld } = useResponsive()
 
-  const { totalStaked = initTotalStaked } = useFetchStaking().data ?? {}
+  const { data: totalStaked } = useFetchTotalStaked()
 
-  const totalStakedInFiatValue = toFiat(
-    totalStaked ?? initTotalStaked,
-    lpToken?.address
-  )
+  const totalStakedInFiatValue = toFiat(totalStaked ?? '0', lpToken?.address)
 
   const aprs = rewardEmissionsPerSec?.map((e, i) =>
     calcApr(

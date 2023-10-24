@@ -2,7 +2,13 @@ import { motion } from 'framer-motion'
 import styled, { css } from 'styled-components'
 
 import { fontFamily } from 'styles/constants/typography'
-import { flexbox, media, posCenterX, textStyle } from 'styles/utils'
+import {
+  flexbox,
+  inlineFlexbox,
+  media,
+  posCenterX,
+  textStyle,
+} from 'styles/utils'
 
 export const StyledStakingDashboard = styled.section`
   .imageContainer {
@@ -219,6 +225,46 @@ export const StyledStakingDashboardApr = styled.dl<{
         top: calc(100% + 12px);
         display: flex;
         width: 99px;
+      }
+    `
+  )}
+`
+
+export const StyledStakingDashboardAprFallback = styled.div`
+  .errorMsg {
+    ${inlineFlexbox('start')}
+    ${textStyle('body', 3)}
+    margin-top: 20px;
+    color: var(--primary-300);
+
+    .icon {
+      color: var(--white);
+      margin-right: 8px;
+    }
+
+    .retryButton {
+      margin-left: 16px;
+    }
+  }
+
+  ${media(
+    'minTablet',
+    css`
+      .errorMsg {
+        ${flexbox()}
+
+        br {
+          display: none;
+        }
+      }
+    `
+  )}
+
+  ${media(
+    'minLaptop',
+    css`
+      .errorMsg {
+        ${textStyle('body', 2)}
       }
     `
   )}
