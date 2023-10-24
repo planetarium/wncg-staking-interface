@@ -25,6 +25,7 @@ export const QUERY_KEYS = {
     Prefetch: 'staking:prefetch',
     Prices: 'staking:prices',
     Statistics: 'staking:staking:statistics',
+    TotalStaked: 'staking:staking:totalStaked',
   },
   Pool: {
     Data: 'pool:data',
