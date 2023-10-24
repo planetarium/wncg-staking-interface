@@ -4,7 +4,6 @@ import {
   StyledStakingDashboardApr,
   StyledStakingDashboardAprFallback,
 } from './styled'
-import Skeleton from 'components/Skeleton'
 import Button from 'components/Button'
 import Icon from 'components/Icon'
 

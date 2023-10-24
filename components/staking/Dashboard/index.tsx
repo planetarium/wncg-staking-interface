@@ -6,8 +6,8 @@ import dynamic from 'next/dynamic'
 import { StyledStakingDashboard } from './styled'
 import Image from 'components/Image'
 import Apr from './Apr'
-import Fallback from './Fallback'
-import Loading from './Loading'
+import Fallback from './AprFallback'
+import Loading from './AprLoading'
 
 function StakingDashboard() {
   const { reset } = useQueryErrorResetBoundary()
