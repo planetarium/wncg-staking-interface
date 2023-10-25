@@ -289,7 +289,7 @@ export const StyledStakingDashboardApr = styled.dl<{
           color: rgba(var(--white-rgb), 0.6);
         }
 
-        dd {
+        dd:not(.buttonGroup) {
           height: 48px;
           margin-top: 8px;
         }

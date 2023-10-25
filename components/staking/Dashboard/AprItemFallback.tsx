@@ -38,21 +38,23 @@ function StakingDashboardAprItemFallback({
         {!isHandheld && <span className="countUp">-</span>}
       </dd>
 
-      {isHandheld ? (
-        <button className="refreshButton" onClick={refetch}>
-          <Icon icon="refreshOn" $size={24} />
-        </button>
-      ) : (
-        <Button
-          className="retryButton"
-          onClick={refetch}
-          $contain
-          $variant="tertiary"
-          $size="sm"
-        >
-          Retry
-        </Button>
-      )}
+      <dd className="buttonGroup">
+        {isHandheld ? (
+          <button className="refreshButton" onClick={refetch}>
+            <Icon icon="refreshOn" $size={24} />
+          </button>
+        ) : (
+          <Button
+            className="retryButton"
+            onClick={refetch}
+            $contain
+            $variant="tertiary"
+            $size="sm"
+          >
+            Retry
+          </Button>
+        )}
+      </dd>
     </div>
   )
 }
