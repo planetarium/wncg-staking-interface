@@ -2,7 +2,13 @@ import { motion } from 'framer-motion'
 import styled, { css } from 'styled-components'
 
 import { fontFamily } from 'styles/constants/typography'
-import { flexbox, media, posCenterX, textStyle } from 'styles/utils'
+import {
+  flexbox,
+  inlineFlexbox,
+  media,
+  posCenterX,
+  textStyle,
+} from 'styles/utils'
 
 export const StyledStakingDashboard = styled.section`
   .imageContainer {
@@ -95,6 +101,79 @@ export const StyledStakingDashboardApr = styled.dl<{
     margin-top: 2px;
     color: var(--white);
 
+    &.fallback {
+      dt {
+        display: flex;
+        flex-direction: row-reverse;
+        align-items: center;
+      }
+
+      .tooltipGroup {
+        width: 20px;
+        height: 20px;
+        /* margin-left: 4px; */
+        margin-right: 4px;
+
+        .toggler {
+          display: flex;
+          width: 20px;
+          height: 20px;
+          margin-left: 0;
+          color: var(--gray-100);
+
+          &:hover {
+            + .tooltip {
+              opacity: 1;
+            }
+          }
+        }
+      }
+
+      .tooltip {
+        ${textStyle('body', 3, 700)}
+        opacity: 0;
+        left: 0 !important;
+        justify-content: flex-start;
+        text-align: left;
+        pointer-events: none;
+        animation: none;
+        transform: translate3d(0, 16px, 0);
+
+        &::after {
+          display: none;
+        }
+
+        .icon.warning {
+          margin-right: 12px;
+        }
+
+        .closeButton {
+          margin-left: 12px;
+        }
+      }
+
+      .refreshButton {
+        ${flexbox()}
+        width: 20px;
+        height: 20px;
+
+        .icon {
+          width: 20px;
+          height: 20px;
+        }
+      }
+
+      @keyframes floatTop {
+        0% {
+          transform: translate3d(0, 0, 0);
+        }
+
+        100% {
+          transform: translate3d(0, 4px, 0);
+        }
+      }
+    }
+
     &:first-child {
       margin-top: 0;
     }
@@ -151,6 +230,28 @@ export const StyledStakingDashboardApr = styled.dl<{
         margin-top: 0;
         margin-left: 32px;
 
+        &.fallback {
+          .tooltip {
+            left: 50% !important;
+            animation: floatTop 600ms infinite alternate
+              cubic-bezier(0.215, 0.61, 0.355, 1);
+
+            &::after {
+              display: block;
+            }
+          }
+
+          @keyframes floatTop {
+            0% {
+              transform: translate3d(-50%, 0, 0);
+            }
+
+            100% {
+              transform: translate3d(-50%, 4px, 0);
+            }
+          }
+        }
+
         &:first-child {
           margin-left: 0;
         }
@@ -188,7 +289,7 @@ export const StyledStakingDashboardApr = styled.dl<{
           color: rgba(var(--white-rgb), 0.6);
         }
 
-        dd {
+        dd:not(.buttonGroup) {
           height: 48px;
           margin-top: 8px;
         }
@@ -214,11 +315,55 @@ export const StyledStakingDashboardApr = styled.dl<{
         }
       }
 
-      .aprHarvestButton {
+      .aprHarvestButton,
+      .retryButton {
         ${posCenterX()}
         top: calc(100% + 12px);
         display: flex;
+      }
+
+      .aprHarvestButton {
         width: 99px;
+      }
+    `
+  )}
+`
+
+export const StyledStakingDashboardAprFallback = styled.div`
+  .errorMsg {
+    ${inlineFlexbox('start')}
+    ${textStyle('body', 3)}
+    margin-top: 20px;
+    color: var(--primary-300);
+
+    .icon {
+      color: var(--white);
+      margin-right: 8px;
+    }
+
+    .retryButton {
+      margin-left: 16px;
+    }
+  }
+
+  ${media(
+    'minTablet',
+    css`
+      .errorMsg {
+        ${flexbox()}
+
+        br {
+          display: none;
+        }
+      }
+    `
+  )}
+
+  ${media(
+    'minLaptop',
+    css`
+      .errorMsg {
+        ${textStyle('body', 2)}
       }
     `
   )}

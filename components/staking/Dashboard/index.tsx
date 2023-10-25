@@ -1,12 +1,17 @@
 import { Suspense } from 'react'
+import { ErrorBoundary } from 'react-error-boundary'
+import { useQueryErrorResetBoundary } from '@tanstack/react-query'
 import dynamic from 'next/dynamic'
 
 import { StyledStakingDashboard } from './styled'
 import Image from 'components/Image'
 import Apr from './Apr'
-import Fallback from './Fallback'
+import Fallback from './AprFallback'
+import Loading from './AprLoading'
 
 function StakingDashboard() {
+  const { reset } = useQueryErrorResetBoundary()
+
   return (
     <StyledStakingDashboard>
       <div className="imageContainer">
@@ -18,9 +23,16 @@ function StakingDashboard() {
         />
       </div>
 
-      <Suspense fallback={<Fallback />}>
-        <Apr />
-      </Suspense>
+      <ErrorBoundary
+        onReset={reset}
+        fallbackRender={({ resetErrorBoundary }) => (
+          <Fallback refetch={resetErrorBoundary} />
+        )}
+      >
+        <Suspense fallback={<Loading />}>
+          <Apr />
+        </Suspense>
+      </ErrorBoundary>
     </StyledStakingDashboard>
   )
 }

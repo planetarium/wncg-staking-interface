@@ -3,7 +3,7 @@ import { useResponsive } from 'hooks'
 import { StyledStakingDashboardApr } from './styled'
 import Skeleton from 'components/Skeleton'
 
-export default function StakingDashboardAprFallback() {
+export default function StakingDashboardAprLoading() {
   const { isHandheld } = useResponsive()
 
   if (isHandheld) {
