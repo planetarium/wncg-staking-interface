@@ -102,29 +102,53 @@ export const StyledStakingDashboardApr = styled.dl<{
     color: var(--white);
 
     &.fallback {
-      .tooltipWrapper {
-        ${posCenterX()}
-        top: 0;
-        width: 100%;
-        height: 10px;
-        background-color: yellow;
+      dt {
+        display: flex;
+        flex-direction: row-reverse;
+        align-items: center;
       }
 
       .tooltipGroup {
-        margin-left: 4px;
+        width: 20px;
+        height: 20px;
+        /* margin-left: 4px; */
+        margin-right: 4px;
 
         .toggler {
+          display: flex;
+          width: 20px;
+          height: 20px;
           margin-left: 0;
+          color: var(--gray-100);
+
+          &:hover {
+            + .tooltip {
+              opacity: 1;
+            }
+          }
         }
       }
 
       .tooltip {
         ${textStyle('body', 3, 700)}
+        opacity: 0;
+        left: 0 !important;
         justify-content: flex-start;
         text-align: left;
+        pointer-events: none;
+        animation: none;
+        transform: translate3d(0, 16px, 0);
 
-        .icon {
+        &::after {
+          display: none;
+        }
+
+        .icon.warning {
           margin-right: 12px;
+        }
+
+        .closeButton {
+          margin-left: 12px;
         }
       }
 
@@ -141,11 +165,11 @@ export const StyledStakingDashboardApr = styled.dl<{
 
       @keyframes floatTop {
         0% {
-          transform: translate3d(-50%, 0, 0);
+          transform: translate3d(0, 0, 0);
         }
 
         100% {
-          transform: translate3d(-50%, 4px, 0);
+          transform: translate3d(0, 4px, 0);
         }
       }
     }
@@ -194,16 +218,6 @@ export const StyledStakingDashboardApr = styled.dl<{
     $fallback &&
     css`
       min-height: 88px;
-
-      @keyframes floatTop {
-        0% {
-          transform: translate3d(-50%, 0, 0);
-        }
-
-        100% {
-          transform: translate3d(-50%, 4px, 0);
-        }
-      }
     `}
 
   ${media(
@@ -215,6 +229,28 @@ export const StyledStakingDashboardApr = styled.dl<{
       .aprItem {
         margin-top: 0;
         margin-left: 32px;
+
+        &.fallback {
+          .tooltip {
+            left: 50% !important;
+            animation: floatTop 600ms infinite alternate
+              cubic-bezier(0.215, 0.61, 0.355, 1);
+
+            &::after {
+              display: block;
+            }
+          }
+
+          @keyframes floatTop {
+            0% {
+              transform: translate3d(-50%, 0, 0);
+            }
+
+            100% {
+              transform: translate3d(-50%, 4px, 0);
+            }
+          }
+        }
 
         &:first-child {
           margin-left: 0;

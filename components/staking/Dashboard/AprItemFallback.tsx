@@ -18,26 +18,19 @@ function StakingDashboardAprItemFallback({
   return (
     <div className="aprItem fallback">
       <dt>
-        {symbol} APR
+        <span>{symbol} APR</span>
+
         <div className="tooltipGroup">
           <button className="toggler">
             <Icon icon="warning" $size={16} />
           </button>
 
-          {!isHandheld && (
-            <Tooltip
-              $direction="top"
-              $align="left"
-              $float
-              $gap={16}
-              $width={250}
-            >
-              <Icon icon="warning" />
-              Failed to load {symbol} APR.
-              <br />
-              Please reload to try again.
-            </Tooltip>
-          )}
+          <Tooltip $direction="top" $align="left" $float $gap={16} $width={244}>
+            <Icon icon="warning" />
+            Failed to load {symbol} APR.
+            <br />
+            Please reload to try again.
+          </Tooltip>
         </div>
       </dt>
 
