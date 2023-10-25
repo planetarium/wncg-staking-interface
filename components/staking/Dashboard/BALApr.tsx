@@ -118,20 +118,6 @@ function StakingDashboardBALApr({ totalStaked }: StakingDashboardBALAprProps) {
       </AnimatePresence>
     </div>
   )
-
-  return (
-    <>
-      {aprs?.map((apr, i) => {
-        const addr = rewardTokenAddresses[i]
-        if (!addr || !tokens[addr]) return null
-
-        const { symbol } = tokens[addr]
-
-        const isBAL = addr === balAddress
-        const showShowHarvest = isBAL && !!isHarvestable
-      })}
-    </>
-  )
 }
 
 export default StakingDashboardBALApr
