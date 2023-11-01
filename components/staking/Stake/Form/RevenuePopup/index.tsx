@@ -2,6 +2,7 @@ import dynamic from 'next/dynamic'
 
 import { bnum } from 'utils/bnum'
 import { useStaking } from 'hooks'
+import { useFetchTotalStaked } from 'hooks/queries'
 
 import BonusRewards from './BonusRewards'
 import SingleRewards from './SingleRewards'
@@ -12,9 +13,9 @@ type StakeFormRevenueProps = {
 }
 
 function StakeFormRevenuePopup({ amount, className }: StakeFormRevenueProps) {
-  const { rewardTokenAddresses, totalStaked } = useStaking()
+  const { rewardTokenAddresses, totalStaked: defaultTotalStaked } = useStaking()
 
-  // const { totalStaked = '0' } = useFetchStaking().data ?? {}
+  const totalStaked = useFetchTotalStaked().data ?? defaultTotalStaked
 
   const expectedTotalStaked = bnum(totalStaked)
     .plus(bnum(amount).toString())

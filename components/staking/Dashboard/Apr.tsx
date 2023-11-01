@@ -24,9 +24,9 @@ function StakingDashboardApr() {
     (addr) => tokens[addr]?.symbol
   )
 
-  const { data: totalStaked } = useFetchTotalStaked()
+  const totalStaked = useFetchTotalStaked().data ?? '0'
 
-  const totalStakedInFiatValue = toFiat(totalStaked ?? '0', lpToken?.address)
+  const totalStakedInFiatValue = toFiat(totalStaked, lpToken?.address)
 
   return (
     <StyledStakingDashboardApr className="aprList" suppressHydrationWarning>
@@ -47,7 +47,7 @@ function StakingDashboardApr() {
         )}
       >
         <Suspense fallback={<ApiItemLoading label={rewardTokenSymbols[0]} />}>
-          <RewardTokenApr totalStaked={totalStaked!} />
+          <RewardTokenApr totalStaked={totalStaked} />
         </Suspense>
       </ErrorBoundary>
 
@@ -59,7 +59,7 @@ function StakingDashboardApr() {
           )}
         >
           <Suspense fallback={<ApiItemLoading label="BAL" $width={100} />}>
-            <BALApr totalStaked={totalStaked!} />
+            <BALApr totalStaked={totalStaked} />
           </Suspense>
         </ErrorBoundary>
       )}

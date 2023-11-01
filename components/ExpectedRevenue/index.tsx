@@ -2,7 +2,7 @@ import dynamic from 'next/dynamic'
 
 import { bnum } from 'utils/bnum'
 import { useFiat, useStaking } from 'hooks'
-import { useFetchUserData } from 'hooks/queries'
+import { useFetchTotalStaked, useFetchUserData } from 'hooks/queries'
 
 import BonusRewards from './BonusRewards'
 import SingleRewards from './SingleRewards'
@@ -13,7 +13,12 @@ type ExpectedRevenueProps = {
 
 function ExpectedRevenue({ amount = '0' }: ExpectedRevenueProps) {
   const toFiat = useFiat()
-  const { lpToken, rewardTokenAddresses, totalStaked } = useStaking()
+  const {
+    lpToken,
+    rewardTokenAddresses,
+    totalStaked: defaultTotalStaked,
+  } = useStaking()
+  const totalStaked = useFetchTotalStaked().data ?? defaultTotalStaked
   const { stakedTokenBalance = '0' } = useFetchUserData().data ?? {}
 
   const hasBonusRewards = rewardTokenAddresses.length > 1
