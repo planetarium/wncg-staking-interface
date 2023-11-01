@@ -5,13 +5,14 @@ import { useAtom, useSetAtom } from 'jotai'
 
 import { accountAtom, connectorAtom, statusAtom } from 'states/account'
 import { useRefetch } from './useRefetch'
-import { useUserSettings } from './useUserSettings'
+import { useResetTx } from './useResetTx'
+import { useResetSettings } from './useResetSettings'
 
 export function useAccount() {
   const queryClient = useQueryClient()
 
-  const resetSettings = useUserSettings()
-
+  const resetSettings = useResetSettings()
+  const resetTx = useResetTx()
   const refetch = useRefetch({
     userAllowances: true,
     userBalances: true,
@@ -31,7 +32,9 @@ export function useAccount() {
     onConnect({ connector }) {
       connector?.on('change', () => {
         queryClient.removeQueries([address], { exact: false })
+
         resetSettings()
+        resetTx()
       })
     },
   })
@@ -40,11 +43,11 @@ export function useAccount() {
     queryClient.removeQueries([account], { exact: false })
 
     resetSettings()
+    resetTx()
+
     setAccount(address ?? null)
     setConnector(_connector ?? null)
     setStatus(_status)
-
-    // queryClient.invalidateQueries([address], { exact: false })
 
     if (address) {
       await refetch()
@@ -57,6 +60,7 @@ export function useAccount() {
     queryClient,
     refetch,
     resetSettings,
+    resetTx,
     setAccount,
     setConnector,
     setStatus,

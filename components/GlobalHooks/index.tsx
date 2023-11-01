@@ -1,7 +1,8 @@
+import dynamic from 'next/dynamic'
+
 import Suspense from 'components/Suspense'
 import Web3 from './Web3'
 import Contract from './Contract'
-import dynamic from 'next/dynamic'
 
 const Interface = dynamic(() => import('./Interface'), {
   ssr: false,
