@@ -1,11 +1,4 @@
-import nextJest from 'next/jest'
-
-const createJestConfig = nextJest({
-  dir: './',
-})
-
-// Add any custom config to be passed to Jest
-const customJestConfig = {
+const config = {
   testEnvironment: 'jsdom',
   setupFiles: ['./jest.setup.js'],
   transformIgnorePatterns: ['/node_modules/(?!(hex-rgb)/)'],
@@ -26,5 +19,4 @@ const customJestConfig = {
   testMatch: ['**/tests/**/*.test.ts', '**/tests/**/*.test.tsx'],
 }
 
-// createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async
-export default createJestConfig(customJestConfig)
+export default config
