@@ -1,7 +1,9 @@
 import dynamic from 'next/dynamic'
+import { ErrorBoundary } from 'react-error-boundary'
 
 import { ModalType } from 'config/constants'
 import { assertUnreachable } from 'utils/assertUnreachable'
+import { FailPage } from '../shared'
 
 const ApproveModal = dynamic(() => import('./ApproveModal'), {
   ssr: false,
@@ -45,7 +47,11 @@ type ModalViewProps = {
 }
 
 export default function ModalView({ modal }: ModalViewProps) {
-  return renderModal(modal)
+  return (
+    <ErrorBoundary fallbackRender={() => <FailPage />}>
+      {renderModal(modal)}
+    </ErrorBoundary>
+  )
 }
 
 function renderModal(modal: Modal) {

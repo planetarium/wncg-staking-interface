@@ -7,7 +7,7 @@ import Button from 'components/Button'
 import Lottie from 'components/Lottie'
 
 type ModalFailPageProps = {
-  action: string
+  action?: string
   className?: string
   label?: string
   reason?: string
@@ -20,6 +20,8 @@ function ModalFailPage({
   label = 'Close',
 }: ModalFailPageProps) {
   const { removeModal } = useModal()
+
+  const title = action ? `${capitalize(action)} failed` : 'Error'
   const reason =
     _reason ||
     'Something is wrong with network connection.<br/> Please try again later.'
@@ -32,7 +34,7 @@ function ModalFailPage({
     >
       <header className="modalHeader">
         <Lottie className="lottie" animationData="fail" />
-        <h2 className="title">{capitalize(action)} failed</h2>
+        <h2 className="title">{title}</h2>
         <p className="desc" dangerouslySetInnerHTML={{ __html: reason }}></p>
       </header>
 
