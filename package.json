@@ -9,7 +9,7 @@
     "prebuild": "sh prebuild.sh",
     "start": "next start",
     "lint": "next lint",
-    "test": "jest --watch",
+    "test": "cp .babelrc.sample .babelrc && jest --watch",
     "codecov": "jest --ci --coverage && codecov"
   },
   "dependencies": {
