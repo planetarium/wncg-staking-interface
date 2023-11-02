@@ -9,8 +9,8 @@
     "prebuild": "sh prebuild.sh",
     "start": "next start",
     "lint": "next lint",
-    "test": "jest --watch",
-    "codecov": "jest --ci --coverage && codecov"
+    "test": "cp .babelrc.sample .babelrc && jest --watch",
+    "codecov": "cp .babelrc.sample .babelrc && jest --ci --coverage && codecov && rm .babelrc"
   },
   "dependencies": {
     "@balancer-labs/sdk": "^1.1.1",

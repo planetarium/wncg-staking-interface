@@ -36,3 +36,9 @@ yarn-error.log*
 
 # Sentry Auth Token
 .sentryclirc
+
+# Etc
+robots.txt
+sitemap.xml
+.babelrc
+

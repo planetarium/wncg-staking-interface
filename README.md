@@ -1,4 +1,6 @@
-# WNCG Staking Frontend
+[![codecov](https://codecov.io/gh/planetarium/wncg-staking-interface/graph/badge.svg?token=6odvDcZXxn)](https://codecov.io/gh/planetarium/wncg-staking-interface)
+
+# WNCG staking interface
 
 ## Requisition
 
