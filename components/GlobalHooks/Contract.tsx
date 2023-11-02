@@ -1,23 +1,35 @@
 import {
   useFetchHarvest,
+  useFetchPrices,
   useFetchStaking,
+  useFetchTotalStaked,
   useFetchUserData,
   useFetchUserRewards,
 } from 'hooks/queries'
 
+const INTERVAL = 30 * 1_000
+
 function ContractHook() {
   useFetchHarvest()
 
+  useFetchPrices({
+    refetchInterval: INTERVAL,
+  })
+
+  useFetchTotalStaked({
+    refetchInterval: INTERVAL,
+  })
+
   useFetchStaking({
-    refetchInterval: 10 * 1_000,
+    refetchInterval: INTERVAL,
   })
 
   useFetchUserData({
-    refetchInterval: 30 * 1_000,
+    refetchInterval: INTERVAL,
   })
 
   useFetchUserRewards({
-    refetchInterval: 30 * 1_000,
+    refetchInterval: INTERVAL,
   })
 
   return null
