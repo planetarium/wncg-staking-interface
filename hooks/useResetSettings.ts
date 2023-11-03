@@ -6,7 +6,7 @@ import { unstakeTimestampsAtom } from 'states/account'
 import { slippageAtom } from 'states/system'
 import { hideJoinTooltipAtom, showMyStakingAtom } from 'states/ui'
 
-export function useUserSettings() {
+export function useResetSettings() {
   const setHideJoinTooltip = useSetAtom(hideJoinTooltipAtom)
   const setShowMyStaking = useSetAtom(showMyStakingAtom)
   const setUnstakeTimestamps = useSetAtom(unstakeTimestampsAtom)
