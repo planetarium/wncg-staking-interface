@@ -10,6 +10,7 @@ import { fetchAprs } from 'lib/queries/fetchAprs'
 import { bnum } from 'utils/bnum'
 import {
   useChain,
+  useFiat,
   useHarvest,
   useIsHarvestable,
   useResponsive,
@@ -34,16 +35,16 @@ function StakingDashboardBALApr({ totalStaked }: StakingDashboardBALAprProps) {
   const { balAddress, chainId } = useChain()
   const isHarvestable = useIsHarvestable()
   const harvest = useHarvest()
-  const { rewardTokenAddresses, tokens } = useStaking()
+  const { rewardTokenAddresses } = useStaking()
   const { isHandheld } = useResponsive()
+  const toFiat = useFiat()
+  const balPrice = toFiat(1, balAddress!)
 
   const { data: aprs = [] } = useQuery(
-    [QUERY_KEYS.Staking.Apr, chainId, totalStaked],
+    [QUERY_KEYS.Staking.Apr, chainId, totalStaked, balPrice, balAddress],
     () => fetchAprs(chainId, totalStaked),
     {
-      cacheTime: Infinity,
       suspense: true,
-      refetchOnWindowFocus: 'always',
     }
   )
 

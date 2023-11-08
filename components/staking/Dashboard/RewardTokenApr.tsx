@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 
 import { QUERY_KEYS } from 'config/constants/queryKeys'
 import { fetchAprs } from 'lib/queries/fetchAprs'
-import { useChain, useStaking } from 'hooks'
+import { useChain, useFiat, useStaking } from 'hooks'
 
 import CountUp from 'components/CountUp'
 
@@ -14,19 +14,26 @@ function StakingDashboardRewardTokenApr({
   totalStaked,
 }: StakingDashboardRewardTokenAprProps) {
   const { chainId } = useChain()
+  const toFiat = useFiat()
   const { rewardTokenAddresses, tokens } = useStaking()
+  const rewardTokenAddress = rewardTokenAddresses[0]
+  const rewardTokenPrice = toFiat(1, rewardTokenAddress)
 
   const { data: aprs = [] } = useQuery(
-    [QUERY_KEYS.Staking.Apr, chainId, totalStaked],
+    [
+      QUERY_KEYS.Staking.Apr,
+      chainId,
+      totalStaked,
+      rewardTokenPrice,
+      rewardTokenAddress,
+    ],
     () => fetchAprs(chainId, totalStaked),
     {
-      cacheTime: Infinity,
       suspense: true,
-      refetchOnWindowFocus: 'always',
     }
   )
 
-  const rewardToken = tokens[rewardTokenAddresses[0]]
+  const rewardToken = tokens[rewardTokenAddress]
   const rewardTokenApr = aprs[0]
 
   return (
