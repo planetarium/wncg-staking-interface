@@ -30,19 +30,18 @@ describe('useFetchTotalStaked', () => {
     })
 
     await waitFor(() => {
-      console.log(fetchTotalStaked.mock.calls.length)
       expect(fetchTotalStaked.mock.calls).toHaveLength(1)
     })
 
     await waitFor(() => {
       window.dispatchEvent(new Event('focus'))
-      console.log(fetchTotalStaked.mock.calls.length)
+
       expect(fetchTotalStaked.mock.calls).toHaveLength(2)
     })
 
     await waitFor(() => {
       window.dispatchEvent(new Event('focus'))
-      console.log(fetchTotalStaked.mock.calls.length)
+
       expect(fetchTotalStaked.mock.calls).toHaveLength(3)
     })
   })

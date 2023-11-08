@@ -10,7 +10,7 @@ export function useFiat() {
   const { data: priceMap = initPriceMap } = useFetchPrices()
 
   const toFiat = useCallback(
-    (amount: string | number, tokenAddress: string) => {
+    (amount: string | number, tokenAddress?: string) => {
       if (!tokenAddress) return '0'
 
       const price = priceMap[tokenAddress?.toLowerCase() as Hash] ?? '0'

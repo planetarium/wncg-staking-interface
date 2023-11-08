@@ -1,9 +1,10 @@
 import { useQueryErrorResetBoundary } from '@tanstack/react-query'
 import { ErrorBoundary } from 'react-error-boundary'
 
+import { bnum } from 'utils/bnum'
 import { isEthereum } from 'utils/isEthereum'
-import { useChain, useFiat, useStaking } from 'hooks'
-import { useFetchTotalStaked } from 'hooks/queries'
+import { useChain, useStaking } from 'hooks'
+import { useFetchPrices, useFetchTotalStaked } from 'hooks/queries'
 
 import { StyledStakingDashboardApr } from './styled'
 import CountUp from 'components/CountUp'
@@ -17,16 +18,19 @@ function StakingDashboardApr() {
   const { reset } = useQueryErrorResetBoundary()
 
   const { chainId } = useChain()
-  const toFiat = useFiat()
-
   const { lpToken, rewardTokenAddresses, tokens } = useStaking()
+
   const rewardTokenSymbols = rewardTokenAddresses.map(
     (addr) => tokens[addr]?.symbol
   )
 
   const totalStaked = useFetchTotalStaked().data ?? '0'
+  const priceMap = useFetchPrices({ refetchOnWindowFocus: 'always' }).data ?? {}
+  const lpTokenPrice = priceMap[lpToken?.address ?? ''] ?? '0'
 
-  const totalStakedInFiatValue = toFiat(totalStaked, lpToken?.address)
+  const totalStakedInFiatValue = bnum(lpTokenPrice)
+    .times(totalStaked)
+    .toString()
 
   return (
     <StyledStakingDashboardApr className="aprList" suppressHydrationWarning>

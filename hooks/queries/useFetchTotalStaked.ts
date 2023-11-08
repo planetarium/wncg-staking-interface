@@ -18,6 +18,7 @@ export function useFetchTotalStaked(options: UseFetchOptions = {}) {
     [QUERY_KEYS.Staking.TotalStaked, stakingAddress, chainId],
     () => fetchTotalStaked(chainId),
     {
+      staleTime: 60 * 1_000,
       enabled,
       refetchInterval,
       refetchOnWindowFocus,
