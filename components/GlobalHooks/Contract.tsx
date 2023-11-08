@@ -1,6 +1,5 @@
 import {
   useFetchHarvest,
-  useFetchPrices,
   useFetchStaking,
   useFetchTotalStaked,
   useFetchUserData,
@@ -11,10 +10,6 @@ const INTERVAL = 30 * 1_000
 
 function ContractHook() {
   useFetchHarvest()
-
-  useFetchPrices({
-    refetchInterval: INTERVAL,
-  })
 
   useFetchTotalStaked({
     refetchInterval: INTERVAL,

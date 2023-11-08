@@ -11,7 +11,7 @@ function InterfaceHook() {
   const setCurrentTimestamp = useSetAtom(currentTimestampAtom)
 
   useFetchPrices({
-    refetchInterval: 60 * 60 * 3 * 1_000, // 3 hour
+    refetchInterval: 60 * 1_000,
   })
 
   useInterval(() => {
