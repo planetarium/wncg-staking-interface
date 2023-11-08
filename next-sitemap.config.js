@@ -1,6 +1,6 @@
 /** @type {import('next-sitemap').IConfig} */
 const config = {
-  siteUrl: process.env.NEXT_PUBLIC_SITE_URL,
+  siteUrl: 'https://stake.nine-chronicles.com',
   generateRobotsTxt: true,
   generateIndexSitemap: false,
 }
