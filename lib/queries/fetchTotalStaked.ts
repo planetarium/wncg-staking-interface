@@ -8,6 +8,7 @@ export async function fetchTotalStaked(chainId: ChainId) {
   const publicClient = createPublicClient(chainId)
 
   try {
+    console.log('> fetchTotalStaked')
     const data = (await publicClient.readContract({
       address: STAKING_ADDRESS[chainId],
       abi: isEthereum(chainId) ? StakingEthereumAbi : StakingBscAbi,
