@@ -8,12 +8,13 @@ export async function fetchTotalStaked(chainId: ChainId) {
   const publicClient = createPublicClient(chainId)
 
   try {
-    console.log('> fetchTotalStaked')
     const data = (await publicClient.readContract({
       address: STAKING_ADDRESS[chainId],
       abi: isEthereum(chainId) ? StakingEthereumAbi : StakingBscAbi,
       functionName: 'totalStaked',
     })) as BigInt
+
+    console.log('> fetchTotalStaked', data.toString())
 
     return formatUnits(data.toString())
   } catch (error) {
