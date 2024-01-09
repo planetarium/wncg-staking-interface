@@ -29,7 +29,7 @@ export function useFetchPrices(options: UseFetchOptions = {}) {
     () => fetchPrices(chainId),
     {
       enabled,
-      staleTime: Infinity,
+      staleTime: 3_000,
       cacheTime: Infinity,
       refetchInterval,
       refetchOnWindowFocus,
