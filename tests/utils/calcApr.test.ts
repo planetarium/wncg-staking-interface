@@ -1,7 +1,5 @@
+import { describe, expect, it } from 'vitest'
 import { calcApr } from 'utils/calcApr'
-import { TextEncoder } from 'util'
-
-global.TextEncoder = TextEncoder
 
 describe('calcApr', () => {
   it('should calculate Apr', () => {
