@@ -6,7 +6,7 @@ import { ChainId } from 'config/chains'
 export async function fetchPrices(chainId: ChainId) {
   try {
     const { data } = await axios.get(`/api/price?chainId=${chainId}`)
-    console.log('💛 PRICES')
+    // console.log('💛 PRICES')
     return data
   } catch (error) {
     if (chainId === ChainId.ETHEREUM) return ethereumStaking.prices

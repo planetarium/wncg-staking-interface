@@ -1,10 +1,6 @@
 import { ChainId, defaultChainId } from './chains'
 
 class ConfigService {
-  get assetPlatform() {
-    return process.env.NEXT_PUBLIC_ASSET_PLATFORM ?? 'ethereum'
-  }
-
   get appName() {
     return `Nine Chronicles Staking`
   }

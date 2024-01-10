@@ -14,8 +14,6 @@ export async function fetchTotalStaked(chainId: ChainId) {
       functionName: 'totalStaked',
     })) as BigInt
 
-    console.log('> fetchTotalStaked', data.toString())
-
     return formatUnits(data.toString())
   } catch (error) {
     throw error
