@@ -1,28 +1,17 @@
 import { defineConfig } from 'vitest/config'
+import tsconfigPaths from 'vite-tsconfig-paths'
 
 export default defineConfig({
+  plugins: [tsconfigPaths()],
   test: {
     globals: true,
     environment: 'jsdom',
-    setupFiles: ['./jest.setup.js'],
-    transformIgnorePatterns: ['/node_modules/(?!(hex-rgb)/)'],
-    moduleNameMapper: {
-      '^public/(.*)$': '<rootDir>/public/$1',
-      '^styles/(.*)$': '<rootDir>/styles/$1',
-      '^utils/(.*)$': '<rootDir>/utils/$1',
-      '^config/(.*)$': '<rootDir>/config/$1',
-      '^lib/(.*)$': '<rootDir>/lib/$1',
-      '^states/(.*)$': '<rootDir>/states/$1',
-      '^hooks/(.*)$': '<rootDir>/hooks/$1',
-      '^components/(.*)$': '<rootDir>/components/$1',
-    },
-    resetMocks: true,
-    restoreMocks: true,
+    exclude: ['node_modules', '/node_modules/(?!(hex-rgb)/)'],
+    clearMocks: true,
     coverage: {
       enabled: true,
       reporter: ['text', 'json', 'html'],
-      directory: 'coverage',
-      provider: 'v8'
+      provider: 'v8',
     },
     include: ['**/tests/**/*.test.ts', '**/tests/**/*.test.tsx'],
   },
