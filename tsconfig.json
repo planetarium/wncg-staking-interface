@@ -19,5 +19,5 @@
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "vitest.config.ts"],
   "exclude": ["node_modules"],
-  "types": ["node", "vitest/globals", "jsdom"]
+  "types": ["node", "vitest/globals", "happy-dom"]
 }

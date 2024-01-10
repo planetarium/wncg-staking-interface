@@ -5,7 +5,7 @@ export default defineConfig({
   plugins: [tsconfigPaths()],
   test: {
     globals: true,
-    environment: 'jsdom',
+    environment: 'happy-dom',
     exclude: ['node_modules', '/node_modules/(?!(hex-rgb)/)'],
     clearMocks: true,
     coverage: {
