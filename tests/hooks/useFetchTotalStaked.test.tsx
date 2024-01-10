@@ -1,3 +1,4 @@
+import { expect, describe, vi } from 'vitest'
 import '@testing-library/jest-dom'
 import * as React from 'react'
 
@@ -12,14 +13,14 @@ const wrapper = ({ children }: React.PropsWithChildren) => (
   <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
 )
 
-jest.mock('hooks/useChain', () => ({
-  useChain: jest.fn(() => ({
+vi.mock('hooks/useChain', () => ({
+  useChain: vi.fn(() => ({
     chainId: 1,
     stakingAddress: '0xc53b567a70db04e928fb96d6a417971aa88fda38',
   })),
 }))
 
-jest.mock('lib/queries/fetchTotalStaked')
+vi.mock('lib/queries/fetchTotalStaked')
 
 describe('useFetchTotalStaked', () => {
   it('should refetch on window focus', async () => {
