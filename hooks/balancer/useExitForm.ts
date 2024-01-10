@@ -131,6 +131,7 @@ export function useExitForm(): UseExitFormReturns {
     if (Object.values(formState.errors).length > 0) return true
     if (exitType != null) {
       if (bnum(tokenOutAmount).isZero()) return true
+
       return (
         bnum(priceImpact).gt(REKT_PRICE_IMPACT) ||
         (bnum(priceImpact).gt(HIGH_PRICE_IMPACT) && !priceImpactAgreement)
