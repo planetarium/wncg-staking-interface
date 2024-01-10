@@ -11,7 +11,7 @@
     "start": "next start",
     "lint": "next lint",
     "test": "vitest --watch",
-    "codecov": "vitest --ci --coverage && codecov"
+    "codecov": "vitest --coverage && codecov"
   },
   "dependencies": {
     "@balancer-labs/sdk": "^1.1.1",
