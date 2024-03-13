@@ -18,8 +18,8 @@
       "pricingAsset": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c"
     },
     "0x2dD0536D05640357b044254a0E3268CdFDe9466b": {
-      "name": "Wrapped NCG Testnet",
-      "symbol": "tWNCG",
+      "name": "DEMO",
+      "symbol": "DEMO",
       "address": "0x2dD0536D05640357b044254a0E3268CdFDe9466b",
       "chainId": 97,
       "decimals": 18,
