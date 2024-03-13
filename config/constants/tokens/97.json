@@ -17,13 +17,13 @@
       "decimals": 18,
       "pricingAsset": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c"
     },
-    "0x02fb46e27f54624eee9264214f3de741cd9bf212": {
+    "0x2dD0536D05640357b044254a0E3268CdFDe9466b": {
       "name": "Wrapped NCG Testnet",
       "symbol": "tWNCG",
-      "address": "0x02fb46e27f54624eee9264214f3de741cd9bf212",
+      "address": "0x2dD0536D05640357b044254a0E3268CdFDe9466b",
       "chainId": 97,
       "decimals": 18,
-      "pricingAsset": "0x02fb46e27f54624eee9264214f3de741cd9bf212"
+      "pricingAsset": "0x2dD0536D05640357b044254a0E3268CdFDe9466b"
     }
   }
 }
