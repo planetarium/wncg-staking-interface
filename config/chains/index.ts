@@ -4,6 +4,7 @@ import _ethereum from './1.json'
 import _goerli from './5.json'
 import _bsc from './56.json'
 import _bscTestnet from './97.json'
+import { apiKeys } from 'config/api'
 
 export const ChainId = {
   ETHEREUM: 1,
@@ -18,6 +19,8 @@ const bsc = _bsc as ChainConfig
 const bscTestnet = _bscTestnet as ChainConfig
 const ethereum = _ethereum as ChainConfig
 const goerli = _goerli as ChainConfig
+
+ethereum.subgraph = ethereum.subgraph?.replace('API-KEY', apiKeys.thegraph)
 
 export const CHAINS: ChainMap<ChainConfig> = {
   [ChainId.ETHEREUM]: ethereum,
