@@ -1,5 +1,5 @@
 import { createPublicClient as _createPublicClient, http } from 'viem'
-import { bsc, bscTestnet, goerli, mainnet } from 'viem/chains'
+import { bsc, bscTestnet, sepolia, mainnet } from 'viem/chains'
 
 import { ChainId } from 'config/chains'
 import { rpcUrlFor } from './rpcUrlFor'
@@ -8,8 +8,8 @@ export function createPublicClient(chainId: ChainId) {
   let chain: Chain = mainnet
 
   switch (chainId) {
-    case ChainId.GOERLI:
-      chain = goerli
+    case ChainId.SEPOLIA:
+      chain = sepolia
       break
     case ChainId.BSC:
       chain = bsc

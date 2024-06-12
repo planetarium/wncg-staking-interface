@@ -1,4 +1,4 @@
-import { mainnet, goerli, bsc, bscTestnet } from 'viem/chains'
+import { mainnet, sepolia, bsc, bscTestnet } from 'viem/chains'
 import { configureChains } from 'wagmi'
 import { infuraProvider } from 'wagmi/providers/infura'
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc'
@@ -8,7 +8,7 @@ import { apiKeys } from 'config/api'
 import { rpcUrlFor } from './rpcUrlFor'
 
 export const { chains, publicClient, webSocketPublicClient } = configureChains(
-  [mainnet, bsc, goerli, bscTestnet],
+  [mainnet, bsc, sepolia, bscTestnet],
   [
     jsonRpcProvider({
       rpc(chain) {

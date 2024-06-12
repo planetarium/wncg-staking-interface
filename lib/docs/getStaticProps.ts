@@ -14,7 +14,7 @@ export async function getStaticProps() {
   const project = await fetchStaking(chainId)
   const prices = await fetchPrices(chainId)
 
-  const ethereumChainId = config.isTestnet ? ChainId.GOERLI : ChainId.ETHEREUM
+  const ethereumChainId = config.isTestnet ? ChainId.SEPOLIA : ChainId.ETHEREUM
   const bscChainId = config.isTestnet ? ChainId.BSC_TESTNET : ChainId.BSC
 
   await queryClient.prefetchQuery(

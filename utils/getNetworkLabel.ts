@@ -5,8 +5,8 @@ export function getNetworkLabel(chainId: ChainId) {
   switch (chainId) {
     case ChainId.ETHEREUM:
       return 'Ethereum'
-    case ChainId.GOERLI:
-      return 'Goerli'
+    case ChainId.SEPOLIA:
+      return 'Sepolia'
     case ChainId.BSC:
       return 'BNB Smart Chain'
     case ChainId.BSC_TESTNET:

@@ -38,7 +38,7 @@ class ConfigService {
 
   get isTestnet() {
     return (
-      defaultChainId === ChainId.GOERLI ||
+      defaultChainId === ChainId.SEPOLIA ||
       defaultChainId === ChainId.BSC_TESTNET
     )
   }

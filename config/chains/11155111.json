@@ -1,23 +1,23 @@
 {
-  "id": 5,
-  "network": "goerli",
+  "id": 11155111,
+  "network": "sepolia",
   "rpcUrls": {
     "default": {
-      "http": ["https://rpc.ankr.com/eth_goerli"]
+      "http": ["https://rpc.ankr.com/eth_sepolia"]
     },
     "public": {
-      "http": ["https://rpc.ankr.com/eth_goerli"]
+      "http": ["https://rpc.ankr.com/eth_sepolia"]
     }
   },
   "assetPlatform": "ethereum",
-  "chainId": 5,
+  "chainId": 11155111,
   "chainName": "Ethereum",
-  "explorer": "https://goerli.etherscan.io",
+  "explorer": "https://sepolia.etherscan.io",
   "explorerName": "Etherscan",
-  "name": "Goerli Testnet",
-  "rpcUrl": "https://goerli.infura.io/v3",
-  "shortName": "Goerli",
-  "subgraph": "https://api.thegraph.com/subgraphs/name/balancer-labs/balancer-goerli-v2",
+  "name": "Sepolia Testnet",
+  "rpcUrl": "https://sepolia.infura.io/v3",
+  "shortName": "Sepolia",
+  "subgraph": "https://api.thegraph.com/subgraphs/name/balancer-labs/balancer-sepolia-v2",
   "nativeCurrency": {
     "name": "Ether",
     "address": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",

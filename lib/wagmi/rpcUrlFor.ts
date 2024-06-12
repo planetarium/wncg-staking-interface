@@ -10,8 +10,8 @@ export function rpcUrlFor(networkName: string) {
       host = `eth-mainnet.nodereal.io/v1/${apiKeys.nodeReal}`
       break
 
-    case 'goerli':
-      host = `eth-goerli.nodereal.io/v1/${apiKeys.nodeReal}`
+    case 'sepolia':
+      host = `eth-sepolia.nodereal.io/v1/${apiKeys.nodeReal}`
       break
 
     case 'bsc':

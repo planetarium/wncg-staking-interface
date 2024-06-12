@@ -1,6 +1,6 @@
 {
-  "chainId": 5,
-  "network": "goerli",
+  "chainId": 11155111,
+  "network": "sepolia",
   "dexPlatform": "balancer",
   "dexPlatformName": "Balancer",
   "dexPlatformUrl": "https://app.balancer.fi",

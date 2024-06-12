@@ -20,7 +20,7 @@ declare global {
 
 const mappingNetwork: Record<number, string> = {
   1: 'eth-mainnet',
-  5: 'eth-goerli',
+  11155111: 'eth-sepolia',
   56: 'bsc-mainnet',
   97: 'bsc-testnet',
 }

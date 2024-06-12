@@ -12,7 +12,7 @@ export function calcLpTokenPrice(
 ) {
   switch (chainId) {
     case ChainId.ETHEREUM:
-    case ChainId.GOERLI:
+    case ChainId.SEPOLIA:
       return calcBalancerLpTokenPrice(
         poolTokens,
         lpTokenAddress,
