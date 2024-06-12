@@ -1,11 +1,11 @@
 {
-  "chainId": 5,
+  "chainId": 11155111,
   "tokens": {
     "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee": {
       "name": "Ether",
       "symbol": "ETH",
       "address": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
-      "chainId": 5,
+      "chainId": 11155111,
       "decimals": 18,
       "pricingAsset": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
     },
@@ -13,7 +13,7 @@
       "name": "Balancer",
       "symbol": "BAL",
       "address": "0xfa8449189744799ad2ace7e0ebac8bb7575eff47",
-      "chainId": 5,
+      "chainId": 11155111,
       "decimals": 18,
       "pricingAsset": "0xba100000625a3754423978a60c9317c58a424e3d"
     },
@@ -22,7 +22,7 @@
       "address": "0xdfcea9088c8a88a76ff74892c1457c17dfeef9c1",
       "symbol": "WETH",
       "decimals": 18,
-      "chainId": 5,
+      "chainId": 11155111,
       "pricingAsset": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
     },
     "0x37f03a12241e9fd3658ad6777d289c3fb8512bc9": {
@@ -30,14 +30,14 @@
       "address": "0x37f03a12241e9fd3658ad6777d289c3fb8512bc9",
       "symbol": "WBTC",
       "decimals": 8,
-      "chainId": 5,
+      "chainId": 11155111,
       "pricingAsset": "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599"
     },
     "0xa488533be3018a0720c4c0647f407f3b41e6cb82": {
       "name": "Hotbody",
       "symbol": "HOTBODY",
       "address": "0xa488533be3018a0720c4c0647f407f3b41e6cb82",
-      "chainId": 5,
+      "chainId": 11155111,
       "decimals": 18,
       "pricingAsset": "0xf203ca1769ca8e9e8fe1da9d147db68b6c919817"
     }

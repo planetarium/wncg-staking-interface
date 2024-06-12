@@ -7,7 +7,7 @@ import _bscTestnet from './97.json'
 
 export const ChainId = {
   ETHEREUM: 1,
-  SEPOLIA: 5,
+  SEPOLIA: 11155111,
   BSC: 56,
   BSC_TESTNET: 97,
 } as const
