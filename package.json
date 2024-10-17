@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@balancer-labs/sdk": "^1.1.1",
+    "@binance/w3w-rainbow-connector": "^1.1.5-alpha.0",
     "@ethersproject/abi": "^5.7.0",
     "@ethersproject/abstract-provider": "^5.7.0",
     "@ethersproject/constants": "^5.7.0",
