@@ -7,12 +7,13 @@ import clsx from 'clsx'
 import { ANIMATION_MAP, EXIT_MOTION } from 'config/constants/motions'
 import { explorerUrlFor } from 'utils/explorerUrlFor'
 import { truncateAddress } from 'utils/truncateAddress'
-import { useAuth, useChain, useConnect, useCopy, useDisconnect } from 'hooks'
+import { useAuth, useChain, useCopy, useDisconnect } from 'hooks'
 
 import { StyledSidebarAccount } from './styled'
 import Button from 'components/Button'
 import Icon from 'components/Icon'
 import Jazzicon from 'components/Jazzicon'
+import { ConnectButton } from '@rainbow-me/rainbowkit'
 
 type SidebarAccountProps = {
   closeSidebar(e: MouseEvent): void
@@ -24,7 +25,6 @@ export default function SidebarAccount({ closeSidebar }: SidebarAccountProps) {
   const { account, connector, isConnected } = useAuth()
   const { chainId, shortName } = useChain()
 
-  const { openConnectModal } = useConnect()
   const { onCopy, copied } = useCopy()
   const disconnect = useDisconnect({
     onSuccess: closeSidebar,
@@ -42,9 +42,13 @@ export default function SidebarAccount({ closeSidebar }: SidebarAccountProps) {
         <h3 className="title">Network</h3>
 
         {!isConnected && (
-          <Button onClick={openConnectModal} $size="md">
-            Connect wallet
-          </Button>
+          <ConnectButton.Custom>
+            {({ openConnectModal }) => (
+              <Button onClick={openConnectModal} $size="md">
+                Connect wallet
+              </Button>
+            )}
+          </ConnectButton.Custom>
         )}
 
         {isConnected && (

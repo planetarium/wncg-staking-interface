@@ -4,11 +4,12 @@ import { useRouter } from 'next/router'
 
 import { ANIMATION_MAP, MOTION } from 'config/constants/motions'
 import { truncateAddress } from 'utils/truncateAddress'
-import { useAuth, useConnect } from 'hooks'
+import { useAuth } from 'hooks'
 
 import { StyledGnbConnectButton } from './styled'
 import Button from 'components/Button'
 import Jazzicon from 'components/Jazzicon'
+import { ConnectButton } from '@rainbow-me/rainbowkit'
 
 type GnbConnectProps = {
   toggle(e: MouseEvent): void
@@ -16,7 +17,6 @@ type GnbConnectProps = {
 
 function GnbConnectButton({ toggle }: GnbConnectProps) {
   const { account, isConnected } = useAuth()
-  const { openConnectModal } = useConnect()
   const { isReady } = useRouter()
 
   const disabled = !!isConnected
@@ -37,11 +37,15 @@ function GnbConnectButton({ toggle }: GnbConnectProps) {
   }
 
   return (
-    <StyledGnbConnectButton {...MOTION} variants={ANIMATION_MAP.fadeIn}>
-      <Button onClick={openConnectModal} disabled={disabled} $size="md">
-        Connect Wallet
-      </Button>
-    </StyledGnbConnectButton>
+    <ConnectButton.Custom>
+      {({ openConnectModal }) => (
+        <StyledGnbConnectButton {...MOTION} variants={ANIMATION_MAP.fadeIn}>
+          <Button onClick={openConnectModal} disabled={disabled} $size="md">
+            Connect Wallet
+          </Button>
+        </StyledGnbConnectButton>
+      )}
+    </ConnectButton.Custom>
   )
 }
 
