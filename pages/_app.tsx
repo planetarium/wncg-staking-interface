@@ -1,3 +1,6 @@
+import 'react-toastify/dist/ReactToastify.css'
+import '@rainbow-me/rainbowkit/styles.css'
+
 import { PropsWithChildren, useEffect, useRef } from 'react'
 import {
   Hydrate,
@@ -15,7 +18,7 @@ import { Provider } from 'jotai'
 import { queryClientAtom } from 'jotai-tanstack-query'
 import { useHydrateAtoms } from 'jotai/utils'
 import { WagmiConfig } from 'wagmi'
-import 'react-toastify/dist/ReactToastify.css'
+import { RainbowKitProvider } from '@rainbow-me/rainbowkit'
 
 import config from 'config'
 import wagmiClient from 'lib/wagmi/client'
@@ -29,6 +32,7 @@ import DefaultSeo from 'components/DefaultSeo'
 import ErrorBoundary from 'components/ErrorBoundary'
 import Layout from 'components/Layout'
 import ToastContainer from 'components/ToastContainer'
+import { chains } from 'lib/wagmi/chains'
 
 type MyAppProps = AppProps & {
   pageProps: {
@@ -106,19 +110,24 @@ function MyApp({ Component, pageProps }: MyAppProps) {
                 prices={pageProps.prices}
               >
                 <WagmiConfig config={wagmiClient}>
-                  <DefaultSeo />
-                  <GlobalStyle />
-                  <ToastStyle />
+                  <RainbowKitProvider
+                    appInfo={{ appName: config.appName }}
+                    chains={chains}
+                  >
+                    <DefaultSeo />
+                    <GlobalStyle />
+                    <ToastStyle />
 
-                  <ChainContextProvider pageProps={pageProps}>
-                    <Layout>
-                      <Component {...pageProps} />
-                    </Layout>
+                    <ChainContextProvider pageProps={pageProps}>
+                      <Layout>
+                        <Component {...pageProps} />
+                      </Layout>
 
-                    <ToastContainer />
-                  </ChainContextProvider>
+                      <ToastContainer />
+                    </ChainContextProvider>
 
-                  <ReactQueryDevtools />
+                    <ReactQueryDevtools />
+                  </RainbowKitProvider>
                 </WagmiConfig>
               </HydrateAtoms>
             </Provider>
