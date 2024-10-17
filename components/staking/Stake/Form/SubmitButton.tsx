@@ -1,8 +1,7 @@
-import { useMemo } from 'react'
-
-import { useAuth, useConnect } from 'hooks'
+import { useAuth } from 'hooks'
 
 import Button from 'components/Button'
+import { ConnectButton } from '@rainbow-me/rainbowkit'
 
 type StakeFormSubmitButtonProps = {
   disabled: boolean
@@ -12,28 +11,27 @@ export default function StakeFormSubmitButton({
   disabled,
 }: StakeFormSubmitButtonProps) {
   const { isConnected } = useAuth()
-  const { openConnectModal } = useConnect()
 
-  const type = useMemo(() => (isConnected ? 'submit' : 'button'), [isConnected])
-
-  const label = useMemo(
-    () => (isConnected ? 'Stake' : 'Connect wallet'),
-    [isConnected]
-  )
-
-  const handleClick = useMemo(
-    () => (isConnected ? undefined : openConnectModal),
-    [openConnectModal, isConnected]
-  )
+  if (!isConnected) {
+    return (
+      <ConnectButton.Custom>
+        {({ openConnectModal }) => (
+          <Button
+            className="submitButton"
+            type="button"
+            onClick={openConnectModal}
+            disabled={disabled}
+          >
+            Connect wallet
+          </Button>
+        )}
+      </ConnectButton.Custom>
+    )
+  }
 
   return (
-    <Button
-      className="submitButton"
-      type={type}
-      onClick={handleClick}
-      disabled={disabled}
-    >
-      {label}
+    <Button className="submitButton" type="submit" disabled={disabled}>
+      Stake
     </Button>
   )
 }
