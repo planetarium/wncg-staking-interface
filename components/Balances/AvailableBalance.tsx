@@ -5,7 +5,6 @@ import { bnum } from 'utils/bnum'
 import {
   useAuth,
   useBalances,
-  useConnect,
   useFiat,
   usePropAmounts,
   useStaking,
@@ -15,6 +14,7 @@ import { StyledAvailableBalance } from './styled'
 import NumberFormat from 'components/NumberFormat'
 import Icon from 'components/Icon'
 import TokenIcon from 'components/TokenIcon'
+import { ConnectButton } from '@rainbow-me/rainbowkit'
 
 type AvailableBalanceProps = {
   children?: ReactNode
@@ -24,7 +24,6 @@ type AvailableBalanceProps = {
 function AvailableBalance({ children, className }: AvailableBalanceProps) {
   const { isConnected } = useAuth()
   const balancesFor = useBalances()
-  const { openConnectModal } = useConnect()
   const toFiat = useFiat()
   const { lpToken, poolTokenAddresses, poolTokenWeights, tokens } = useStaking()
 
@@ -47,13 +46,17 @@ function AvailableBalance({ children, className }: AvailableBalanceProps) {
               {isConnected ? (
                 <NumberFormat className="value" value={lpBalance} />
               ) : (
-                <button
-                  className="connectButton"
-                  type="button"
-                  onClick={openConnectModal}
-                >
-                  Connect wallet
-                </button>
+                <ConnectButton.Custom>
+                  {({ openConnectModal }) => (
+                    <button
+                      className="connectButton"
+                      type="button"
+                      onClick={openConnectModal}
+                    >
+                      Connect wallet
+                    </button>
+                  )}
+                </ConnectButton.Custom>
               )}
             </dd>
           </div>
