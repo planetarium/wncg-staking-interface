@@ -1,14 +1,14 @@
-import { useAuth, useConnect, useStaking } from 'hooks'
+import { useAuth, useStaking } from 'hooks'
 
 import { StyledAddLiquidityPoolBalances } from './styled'
 import Button from 'components/Button'
 import Suspense from 'components/Suspense'
 import TokenIcon from 'components/TokenIcon'
 import Content from './Content'
+import { ConnectButton } from '@rainbow-me/rainbowkit'
 
 function AddLiquidityPoolBalances() {
   const { isConnected } = useAuth()
-  const { openConnectModal } = useConnect()
   const { lpToken } = useStaking()
 
   return (
@@ -19,14 +19,18 @@ function AddLiquidityPoolBalances() {
         <h2 className="title">{lpToken?.name}</h2>
 
         {!isConnected && (
-          <Button
-            className="connectButton"
-            type="button"
-            onClick={openConnectModal}
-            $size="lg"
-          >
-            Connect wallet
-          </Button>
+          <ConnectButton.Custom>
+            {({ openConnectModal }) => (
+              <Button
+                className="connectButton"
+                type="button"
+                onClick={openConnectModal}
+                $size="lg"
+              >
+                Connect wallet
+              </Button>
+            )}
+          </ConnectButton.Custom>
         )}
       </div>
 

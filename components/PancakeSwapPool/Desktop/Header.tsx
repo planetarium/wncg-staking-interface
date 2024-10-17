@@ -1,15 +1,15 @@
 import { explorerUrlFor } from 'utils/explorerUrlFor'
-import { useAuth, useChain, useConnect, useStaking } from 'hooks'
+import { useAuth, useChain, useStaking } from 'hooks'
 
 import { StyledPoolHeader } from './styled'
 import Button from 'components/Button'
 import Icon from 'components/Icon'
 import TokenIcon from 'components/TokenIcon'
+import { ConnectButton } from '@rainbow-me/rainbowkit'
 
 function PoolHeader() {
   const { isConnected } = useAuth()
   const { chainId } = useChain()
-  const { openConnectModal } = useConnect()
 
   const {
     lpToken,
@@ -49,9 +49,17 @@ function PoolHeader() {
       </div>
 
       {!isConnected && (
-        <Button className="connectButton" $size="lg" onClick={openConnectModal}>
-          Connect wallet
-        </Button>
+        <ConnectButton.Custom>
+          {({ openConnectModal }) => (
+            <Button
+              className="connectButton"
+              $size="lg"
+              onClick={openConnectModal}
+            >
+              Connect wallet
+            </Button>
+          )}
+        </ConnectButton.Custom>
       )}
     </StyledPoolHeader>
   )
