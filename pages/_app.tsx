@@ -33,6 +33,7 @@ import ErrorBoundary from 'components/ErrorBoundary'
 import Layout from 'components/Layout'
 import ToastContainer from 'components/ToastContainer'
 import { chains } from 'lib/wagmi/chains'
+import Disclaimer from 'components/Disclaimer'
 
 type MyAppProps = AppProps & {
   pageProps: {
@@ -111,7 +112,10 @@ function MyApp({ Component, pageProps }: MyAppProps) {
               >
                 <WagmiConfig config={wagmiClient}>
                   <RainbowKitProvider
-                    appInfo={{ appName: config.appName }}
+                    appInfo={{
+                      appName: config.appName,
+                      disclaimer: Disclaimer,
+                    }}
                     chains={chains}
                   >
                     <DefaultSeo />
