@@ -2,12 +2,9 @@ import clsx from 'clsx'
 
 import { StyledConnectorIcon } from './styled'
 import CryptoIcon from './CryptoIcon'
+import { ConnectorId } from 'config/constants'
 
-export type ConnectorIconType =
-  | 'coinbaseWallet'
-  | 'metaMask'
-  | 'trustWallet'
-  | 'walletConnect'
+export type ConnectorIconType = Exclude<ConnectorId, 'injected'>
 
 type ConnectorIconProps = {
   icon: ConnectorIconType

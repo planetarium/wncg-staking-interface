@@ -19,8 +19,7 @@ type ButtonVariant = import('components/Button/styled').ButtonVariant
 
 type CheckboxSize = import('components/Checkbox/styled').CheckboxSize
 
-type ConnectorIconType =
-  import('components/ConnectorIcon/styled').ConnectorIconType
+type ConnectorIconType = import('components/ConnectorIcon').ConnectorIconType
 
 type CryptoIconType = import('components/CryptoIcon').CryptoIconType
 

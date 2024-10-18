@@ -1,11 +1,13 @@
-import { useChain, useConnect, useStaking } from 'hooks'
+import { useChain, useStaking } from 'hooks'
 
-import { StyledApproveModalPage1 } from './styled'
 import ConnectorIcon from 'components/ConnectorIcon'
 import { CloseButton, PendingNotice } from 'components/Modals/shared'
 import TxButton from 'components/TxButton'
+import { ConnectorId } from 'config/constants'
+import { wallets } from 'lib/rainbowkit/wallets'
 import { useMemo } from 'react'
 import { isBsc } from 'utils/isBsc'
+import { StyledApproveModalPage1 } from './styled'
 
 type ApproveModalPage1Props = {
   address: Hash
@@ -27,7 +29,6 @@ function ApproveModalPage1({
   approve,
 }: ApproveModalPage1Props) {
   const { chainId } = useChain()
-  const { wallets } = useConnect()
   const { lpToken, tokens } = useStaking()
   const token = tokens?.[address] ?? {}
 
@@ -55,7 +56,7 @@ function ApproveModalPage1({
       <div className="container">
         <div className="modalContent">
           <div className="guide">
-            <ConnectorIcon icon="metaMask" $size={20} />
+            <ConnectorIcon icon={ConnectorId.MetaMask} $size={20} />
             <h4 className="guideTitle">For MetaMask, follow these steps:</h4>
 
             <ol>
@@ -76,15 +77,15 @@ function ApproveModalPage1({
 
           <div className="guide">
             <div className="walletGroup">
-              {wallets.map((w) => {
-                if (w.connectorId === 'metaMask') return null
-                return (
-                  <ConnectorIcon
-                    key={`approveModal:guide:${w.connectorId}`}
-                    icon={w.connectorId as ConnectorIconType}
-                  />
-                )
-              })}
+              {wallets.map(
+                ({ id }) =>
+                  id !== ConnectorId.MetaMask && (
+                    <ConnectorIcon
+                      key={`approveModal:guide:${id}`}
+                      icon={id as ConnectorIconType}
+                    />
+                  )
+              )}
             </div>
 
             <h4 className="guideTitle">

@@ -9,12 +9,12 @@ export const Breakpoint = {
 export type Breakpoint = keyof typeof Breakpoint
 
 export const ConnectorId = {
-  Binance: 'bsc',
-  CoinbaseWallet: 'coinbaseWallet',
-  TrustWallet: 'trustWallet',
+  Binance: 'binance',
+  CoinbaseWallet: 'coinbase',
+  TrustWallet: 'trust',
   MetaMask: 'metaMask',
   WalletConnect: 'walletConnect',
-  Injected: 'injected',
+  // Injected: 'injected',
 } as const
 
 export type ConnectorId = (typeof ConnectorId)[keyof typeof ConnectorId]
