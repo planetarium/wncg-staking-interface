@@ -23,7 +23,6 @@ export const ModalType = {
   Approve: 'Approve',
   AddLiquidity: 'AddLiquidity',
   Claim: 'Claim',
-  Connect: 'Connect',
   Cooldown: 'Cooldown',
   Exit: 'Exit',
   Join: 'Join',

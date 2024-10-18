@@ -14,9 +14,6 @@ const AddLiquidityModal = dynamic(() => import('./AddLiquidityModal'), {
 const ClaimModal = dynamic(() => import('./ClaimModal'), {
   ssr: false,
 })
-const ConnectModal = dynamic(() => import('./ConnectModal'), {
-  ssr: false,
-})
 const CooldownModal = dynamic(() => import('./CooldownModal'), {
   ssr: false,
 })
@@ -64,8 +61,6 @@ function renderModal(modal: Modal) {
       return <ApproveModal {...props} />
     case ModalType.Claim:
       return <ClaimModal />
-    case ModalType.Connect:
-      return <ConnectModal />
     case ModalType.Cooldown:
       return <CooldownModal />
     case ModalType.Join:
