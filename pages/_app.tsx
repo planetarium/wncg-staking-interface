@@ -34,6 +34,7 @@ import Layout from 'components/Layout'
 import ToastContainer from 'components/ToastContainer'
 import { chains } from 'lib/wagmi/chains'
 import Disclaimer from 'components/Disclaimer'
+import { customTheme } from 'lib/rainbowkit/theme'
 
 type MyAppProps = AppProps & {
   pageProps: {
@@ -117,6 +118,7 @@ function MyApp({ Component, pageProps }: MyAppProps) {
                       disclaimer: Disclaimer,
                     }}
                     chains={chains}
+                    theme={customTheme}
                   >
                     <DefaultSeo />
                     <GlobalStyle />
