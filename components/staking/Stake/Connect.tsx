@@ -1,16 +1,17 @@
-import { useConnect } from 'hooks'
-
 import { StyledStakeConnect } from './styled'
 import Button from 'components/Button'
+import { ConnectButton } from '@rainbow-me/rainbowkit'
 
 export default function StakeConnect() {
-  const { openConnectModal } = useConnect()
-
   return (
-    <StyledStakeConnect>
-      <Button className="connectButton" onClick={openConnectModal}>
-        Connect wallet
-      </Button>
-    </StyledStakeConnect>
+    <ConnectButton.Custom>
+      {({ openConnectModal }) => (
+        <StyledStakeConnect>
+          <Button className="connectButton" onClick={openConnectModal}>
+            Connect wallet
+          </Button>
+        </StyledStakeConnect>
+      )}
+    </ConnectButton.Custom>
   )
 }

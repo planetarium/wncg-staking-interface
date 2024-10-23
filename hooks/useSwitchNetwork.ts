@@ -1,13 +1,13 @@
 import { useSwitchNetwork as _useSwitchNetwork } from 'wagmi'
 
 import { isEthereum } from 'utils/isEthereum'
-import { useConnect } from './useConnect'
 import { useChain } from './useChain'
 import { useRefetch } from './useRefetch'
+import { useConnectModal } from '@rainbow-me/rainbowkit'
 
 export function useSwitchNetwork() {
   const { chainId } = useChain()
-  const { openConnectModal } = useConnect()
+  const { openConnectModal } = useConnectModal()
 
   const refetch = useRefetch({
     userAllowances: true,
@@ -32,7 +32,7 @@ export function useSwitchNetwork() {
       _switchNetwork?.()
     } catch (error: any) {
       if (!window.ethereum) return
-      openConnectModal()
+      openConnectModal?.()
     }
   }
 

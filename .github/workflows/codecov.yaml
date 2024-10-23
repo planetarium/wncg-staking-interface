@@ -6,20 +6,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 18
-
+          node-version: 20
       - name: Install dependencies
-        run: npm install -f
-
+        run: yarn
       - name: Generate code coverage
-        run: npm run codecov
+        run: yarn codecov
 
       - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}

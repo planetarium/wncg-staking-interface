@@ -38,7 +38,7 @@ export const StyledConnectModal = styled(ModalPage)`
       );
     }
 
-    &.coinbaseWallet {
+    &.coinbase {
       background-image: linear-gradient(
         131.3deg,
         #c1d3ff 1.47%,
@@ -54,11 +54,11 @@ export const StyledConnectModal = styled(ModalPage)`
       );
     }
 
-    &.trustWallet {
+    &.trust {
       background-image: linear-gradient(270deg, #3375bb 0%, #0c3b6c 100%);
     }
 
-    &.bsc {
+    &.binance {
       background-color: var(--gray-900);
     }
 

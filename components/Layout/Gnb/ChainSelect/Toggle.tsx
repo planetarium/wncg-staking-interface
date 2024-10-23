@@ -3,10 +3,11 @@ import clsx from 'clsx'
 
 import { getNetworkLabel } from 'utils/getNetworkLabel'
 import { isEthereum } from 'utils/isEthereum'
-import { useAuth, useChain, useConnect } from 'hooks'
+import { useAuth, useChain } from 'hooks'
 
 import { StyledGnbChainSelectToggle } from './styled'
 import CryptoIcon from 'components/CryptoIcon'
+import { useConnectModal } from '@rainbow-me/rainbowkit'
 
 type GnbChainSelectToggleProps = {
   toggle(e: MouseEvent<HTMLButtonElement>): void
@@ -14,13 +15,13 @@ type GnbChainSelectToggleProps = {
 
 function GnbChainSelectToggle({ toggle }: GnbChainSelectToggleProps) {
   const { isConnected } = useAuth()
-  const { openConnectModal } = useConnect()
+  const { openConnectModal } = useConnectModal()
   const { chainId } = useChain()
 
   const onClickToggle = useCallback(
     (e: MouseEvent<HTMLButtonElement>) => {
       if (isConnected) toggle(e)
-      else openConnectModal()
+      else openConnectModal?.()
     },
     [isConnected, openConnectModal, toggle]
   )

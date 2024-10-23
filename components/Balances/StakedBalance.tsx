@@ -1,12 +1,13 @@
 import { ReactNode, useMemo } from 'react'
 import clsx from 'clsx'
 
-import { useAuth, useConnect, useFiat, useStaking } from 'hooks'
+import { useAuth, useFiat, useStaking } from 'hooks'
 
 import { StyledStakedBalance } from './styled'
 import NumberFormat from 'components/NumberFormat'
 import { useFetchUserData } from 'hooks/queries'
 import { bnum } from 'utils/bnum'
+import { ConnectButton } from '@rainbow-me/rainbowkit'
 
 type StakedBalanceProps = {
   children?: ReactNode
@@ -15,7 +16,6 @@ type StakedBalanceProps = {
 
 function StakedBalance({ children, className }: StakedBalanceProps) {
   const { isConnected } = useAuth()
-  const { openConnectModal } = useConnect()
   const toFiat = useFiat()
   const { lpToken } = useStaking()
   const { stakedTokenBalance = '0' } = useFetchUserData().data ?? {}
@@ -39,13 +39,17 @@ function StakedBalance({ children, className }: StakedBalanceProps) {
               {isConnected ? (
                 <NumberFormat className="value" value={stakedTokenBalance} />
               ) : (
-                <button
-                  className="connectButton"
-                  type="button"
-                  onClick={openConnectModal}
-                >
-                  Connect wallet
-                </button>
+                <ConnectButton.Custom>
+                  {({ openConnectModal }) => (
+                    <button
+                      className="connectButton"
+                      type="button"
+                      onClick={openConnectModal}
+                    >
+                      Connect wallet
+                    </button>
+                  )}
+                </ConnectButton.Custom>
               )}
             </dd>
           </div>

@@ -1,14 +1,7 @@
 import { createConfig } from 'wagmi'
 
+import { connectors } from 'lib/rainbowkit/connector'
 import { publicClient, webSocketPublicClient } from './chains'
-import {
-  bscConnector,
-  coinbaseConnector,
-  injectedConnector,
-  metaMaskConnector,
-  trustWalletConnector,
-  walletConnectConnector,
-} from './connectors'
 
 export default createConfig({
   autoConnect: false,
@@ -16,13 +9,6 @@ export default createConfig({
   logger: {
     warn: null,
   },
-  connectors: [
-    metaMaskConnector,
-    coinbaseConnector,
-    walletConnectConnector,
-    trustWalletConnector,
-    bscConnector,
-    injectedConnector,
-  ],
+  connectors,
   webSocketPublicClient,
 })
