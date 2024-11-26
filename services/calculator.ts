@@ -1,9 +1,7 @@
 // https://github.com/balancer-labs/frontend-v2
 import { getAddress } from 'viem'
-import {
-  isSameAddress,
-  weightedBPTForTokensZeroPriceImpact as _bptForTokensZeroPriceImpact,
-} from '@balancer-labs/sdk'
+import { weightedBPTForTokensZeroPriceImpact as _bptForTokensZeroPriceImpact } from '@balancer-labs/sdk'
+import { isSameAddress } from '@balancer/sdk'
 import { WeightedMath } from '@georgeroman/balancer-v2-pools'
 
 import {

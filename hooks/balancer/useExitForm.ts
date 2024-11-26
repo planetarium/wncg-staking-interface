@@ -9,7 +9,7 @@ import {
   UseFormTrigger,
   UseFormWatch,
 } from 'react-hook-form'
-import { isSameAddress } from '@balancer-labs/sdk'
+import { isSameAddress } from '@balancer/sdk'
 import { atom, useAtomValue } from 'jotai'
 import { useQuery } from 'wagmi'
 

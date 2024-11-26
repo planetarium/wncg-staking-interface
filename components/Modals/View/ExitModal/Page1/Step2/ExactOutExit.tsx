@@ -7,7 +7,7 @@ import {
   UseFormSetValue,
   UseFormTrigger,
 } from 'react-hook-form'
-import { isSameAddress } from '@balancer-labs/sdk'
+import { isSameAddress } from '@balancer/sdk'
 
 import { NATIVE_CURRENCY_ADDRESS } from 'config/constants/addresses'
 import { LiquidityFieldType } from 'config/constants'

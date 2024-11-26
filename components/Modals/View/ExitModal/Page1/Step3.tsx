@@ -21,7 +21,7 @@ import { QUERY_KEYS } from 'config/constants/queryKeys'
 import { useExactOutExit } from 'hooks/balancer'
 import { useChain, useStaking } from 'hooks'
 import { ExitQueryOutput } from 'lib/balancer/types'
-import { isSameAddress } from '@balancer-labs/sdk'
+import { isSameAddress } from '@balancer/sdk'
 
 type ExitModalPage1Step3Props = {
   hash?: Hash

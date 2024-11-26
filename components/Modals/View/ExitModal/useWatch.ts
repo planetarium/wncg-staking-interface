@@ -1,7 +1,7 @@
 import { useUnmount } from 'react-use'
 import { atom, useAtom, useSetAtom } from 'jotai'
 import { useWaitForTransaction } from 'wagmi'
-import { isSameAddress } from '@balancer-labs/sdk'
+import { isSameAddress } from '@balancer/sdk'
 
 import { exitTxAtom } from 'states/tx'
 import { NATIVE_CURRENCY_ADDRESS } from 'config/constants/addresses'

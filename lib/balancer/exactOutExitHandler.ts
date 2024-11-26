@@ -1,9 +1,5 @@
-import {
-  BalancerSDK,
-  formatFixed,
-  isSameAddress,
-  parseFixed,
-} from '@balancer-labs/sdk'
+import { BalancerSDK, formatFixed, parseFixed } from '@balancer-labs/sdk'
+import { isSameAddress } from '@balancer/sdk'
 
 import { ZERO_ADDRESS } from 'config/constants/addresses'
 import type { ExitQueryOutput, QueryExactOutExitParams } from './types'

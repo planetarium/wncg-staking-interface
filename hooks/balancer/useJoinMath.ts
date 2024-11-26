@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from 'react'
-import { isSameAddress } from '@balancer-labs/sdk'
+import { isSameAddress } from '@balancer/sdk'
 
 import { MIN_TRANSFER_BUFFER } from 'config/misc'
 import { CalcPropJoinHandler } from 'lib/balancer/calcPropJoinHandler'
