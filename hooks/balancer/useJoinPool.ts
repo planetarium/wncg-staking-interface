@@ -1,8 +1,7 @@
 import { useAtomValue } from 'jotai'
 
-import { slippageAtom } from 'states/system'
-import { calcSlippageBsp } from 'utils/calcSlippageBsp'
 import { useAuth } from 'hooks'
+import { slippageAtom } from 'states/system'
 import { useJoinMath } from './useJoinMath'
 
 export function useJoinPool(
@@ -12,10 +11,9 @@ export function useJoinPool(
 ) {
   const { account } = useAuth()
 
-  const { join } = useJoinMath(isNative)
+  const { joinPool: _joinPool } = useJoinMath(isNative)
 
   const slippage = useAtomValue(slippageAtom) ?? '0.5'
-  const slippageBsp = calcSlippageBsp(slippage)
 
   async function joinPool() {
     try {
@@ -23,11 +21,11 @@ export function useJoinPool(
         throw Error('No account')
       }
 
-      return await join({
+      return await _joinPool({
         assets,
         amountsIn,
         account,
-        slippageBsp,
+        slippage,
       })
     } catch (error) {
       throw error

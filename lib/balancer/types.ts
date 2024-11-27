@@ -16,7 +16,7 @@ export type JoinParams = {
   assets: Hash[]
   amountsIn: `${number}`[]
   account: Hash
-  slippageBsp: `${number}`
+  slippage: `${number}`
   // relayerSignature?: string
   //   approvalActions: TransactionActionInfo[]
   // transactionDeadline: number

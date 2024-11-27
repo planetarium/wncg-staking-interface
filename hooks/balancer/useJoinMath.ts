@@ -1,33 +1,31 @@
-import { useCallback, useEffect, useMemo } from 'react'
 import {
   AddLiquidity,
   AddLiquidityInput,
   AddLiquidityKind,
   BalancerApi,
   ChainId,
-  getInputAmount,
   InputAmount,
   isSameAddress,
   PriceImpact,
   Slippage,
 } from '@balancer/sdk'
+import { useCallback, useMemo } from 'react'
 
 import { MIN_TRANSFER_BUFFER } from 'config/misc'
-import { CalcPropJoinHandler } from 'lib/balancer/calcPropJoinHandler'
-import { ExactInJoinHandler } from 'lib/balancer/exactInJoinHandler'
-import type { JoinParams, PriceImpactParam } from 'lib/balancer/types'
-import { bnum } from 'utils/bnum'
 import { useBalances, useChain, useStaking, useViemClients } from 'hooks'
-import { useBalancerSdk } from './useBalancerSdk'
-import { parseEther } from 'viem'
+import { CalcPropJoinHandler } from 'lib/balancer/calcPropJoinHandler'
+import type { JoinParams, PriceImpactParam } from 'lib/balancer/types'
 import { rpcUrlFor } from 'lib/wagmi/rpcUrlFor'
+import { bnum } from 'utils/bnum'
+import { Address, parseEther } from 'viem'
+import { useAccount } from 'wagmi'
 
 export function useJoinMath(isNative: boolean) {
   const balanceOf = useBalances()
   const { chain, chainId, dexPoolId, nativeCurrency } = useChain()
   const { poolTokens, tokens } = useStaking()
-  const { balancerSdk } = useBalancerSdk()
   const { walletClient } = useViemClients()
+  const { address } = useAccount()
 
   const getPoolState = useCallback(async () => {
     if (!dexPoolId || !chainId) return
@@ -84,14 +82,6 @@ export function useJoinMath(isNative: boolean) {
     [calcPropJoinHandler.propMaxAmountsIn]
   )
 
-  const joinHandler = useMemo(
-    () =>
-      balancerSdk
-        ? new ExactInJoinHandler(dexPoolId, tokens, balancerSdk)
-        : null,
-    [balancerSdk, dexPoolId, tokens]
-  )
-
   const getPriceImpact = useCallback(
     async (params: PriceImpactParam) => {
       const poolState = await getPoolState()
@@ -125,40 +115,62 @@ export function useJoinMath(isNative: boolean) {
     [getPoolState, chain]
   )
 
-  const queryJoin = useCallback(
+  const joinPool = useCallback(
     async (params: JoinParams) => {
-      if (joinHandler == null) return
+      const poolState = await getPoolState()
+      if (!poolState || !chain || !address) return
 
       try {
-        return await joinHandler.queryJoin(params)
-      } catch (error) {
-        throw error
-      }
-    },
-    [joinHandler]
-  )
+        const inputAmounts: InputAmount[] = poolState.tokens.map(
+          (token, idx) => {
+            return {
+              ...token,
+              address: token.address as Address,
+              rawAmount: parseEther(params.amountsIn[idx]),
+            }
+          }
+        )
 
-  const join = useCallback(
-    async (params: JoinParams) => {
-      if (joinHandler == null) return
+        const addLiquidityInput: AddLiquidityInput = {
+          amountsIn: inputAmounts,
+          chainId,
+          rpcUrl: rpcUrlFor(chain.network)!.http,
+          kind: AddLiquidityKind.Unbalanced,
+        }
 
-      try {
-        const { joinRes } = await joinHandler.queryJoin(params)
-        const hash = await walletClient?.sendTransaction(joinRes)
+        const addLiquidity = new AddLiquidity()
+        const queryOutput = await addLiquidity.query(
+          addLiquidityInput,
+          poolState
+        )
+
+        const slippage = Slippage.fromPercentage(params.slippage) // 1%
+        const call = addLiquidity.buildCall({
+          ...queryOutput,
+          slippage,
+          wethIsEth: true,
+          sender: address,
+          recipient: address,
+        })
+
+        const hash = await walletClient?.sendTransaction({
+          data: call.callData,
+          to: call.to,
+          value: call.value,
+        })
         return hash
       } catch (error) {
         throw error
       }
     },
-    [joinHandler, walletClient]
+    [getPoolState, chain, address]
   )
 
   return {
     calcPropAmountsIn: calcPropJoinHandler.calcPropAmountsIn,
-    queryJoin,
     getPriceImpact,
     optimizedAmountsIn,
-    join,
+    joinPool,
     maxBalances,
     maxSafeBalances,
   }

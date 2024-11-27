@@ -38,7 +38,7 @@ export class ExactInJoinHandler implements JoinPoolHandler {
     assets,
     amountsIn,
     account,
-    slippageBsp,
+    slippage,
   }: JoinParams): Promise<JoinQueryOutput> {
     const _scaledAmountsIn: string[] = assets.map((addr, i) => {
       const token = this.tokens[addr]
@@ -55,7 +55,7 @@ export class ExactInJoinHandler implements JoinPoolHandler {
       account,
       _tokensIn,
       _scaledAmountsIn,
-      slippageBsp
+      slippage
     )
 
     if (!joinRes) {

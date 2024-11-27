@@ -3,7 +3,7 @@ import { atomWithStorage } from 'jotai/utils'
 
 export const currentTimestampAtom = atom(0)
 
-export const slippageAtom = atomWithStorage<string | null>(
+export const slippageAtom = atomWithStorage<`${number}` | null>(
   `wncg:staking:slippage`,
   null
 )
