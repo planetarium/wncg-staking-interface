@@ -15,7 +15,7 @@ import TxButton from 'components/TxButton'
 
 type JoinModalPage1Props = {
   assets: Hash[]
-  joinAmounts: string[]
+  joinAmounts: `${number}`[]
   lpBalance: string
   totalJoinFiatValue: string
   send(value: string): void

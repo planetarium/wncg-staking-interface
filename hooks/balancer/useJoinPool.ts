@@ -7,7 +7,7 @@ import { useJoinMath } from './useJoinMath'
 
 export function useJoinPool(
   assets: Hash[],
-  amountsIn: string[],
+  amountsIn: `${number}`[],
   isNative: boolean
 ) {
   const { account } = useAuth()

@@ -69,7 +69,7 @@ type UnstakeTx = {
 type JoinTx = {
   hash?: Hash
   assets?: Hash[]
-  joinAmounts?: string[]
+  joinAmounts?: `${number}`[]
   lpBalance?: string
   totalJoinFiatValue?: string
 }

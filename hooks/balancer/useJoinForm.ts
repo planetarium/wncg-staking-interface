@@ -1,3 +1,4 @@
+import { useAtomValue } from 'jotai'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import {
   Control,
@@ -8,18 +9,17 @@ import {
   UseFormTrigger,
   UseFormWatch,
 } from 'react-hook-form'
-import { useAtomValue } from 'jotai'
 
-import { slippageAtom } from 'states/system'
+import { LiquidityFieldType } from 'config/constants'
 import {
   HIGH_PRICE_IMPACT,
   REKT_PRICE_IMPACT,
 } from 'config/constants/liquidityPool'
-import { LiquidityFieldType } from 'config/constants'
+import { useAuth, useChain, useFiat, useStaking } from 'hooks'
+import { slippageAtom } from 'states/system'
 import { bnum } from 'utils/bnum'
 import { calcSlippageBsp } from 'utils/calcSlippageBsp'
 import { isEthereum } from 'utils/isEthereum'
-import { useAuth, useChain, useFiat, useStaking } from 'hooks'
 import { useJoinMath } from './useJoinMath'
 
 export const FIELDS: LiquidityFieldType[] = [
@@ -59,7 +59,7 @@ export type UseJoinFormReturns = {
   priceImpact: string
   trigger: UseFormTrigger<JoinPoolForm>
   watch: UseFormWatch<JoinPoolForm>
-  joinAmounts: string[]
+  joinAmounts: `${number}`[]
   joinAmountsFiatValue: string[]
   totalJoinFiatValue: string
   submitDisabled: boolean
@@ -114,8 +114,12 @@ export function useJoinForm(): UseJoinFormReturns {
     poolTokenAddresses,
   ])
 
-  const { maxBalances, maxSafeBalances, optimizedAmountsIn, queryJoin } =
-    useJoinMath(isNative)
+  const {
+    maxBalances,
+    maxSafeBalances,
+    optimizedAmountsIn,
+    getPriceImpact,
+  } = useJoinMath(isNative)
 
   const unsanitizedJoinAmounts = FIELDS.map((field) =>
     watch(field as any)
@@ -123,7 +127,7 @@ export function useJoinForm(): UseJoinFormReturns {
 
   const joinAmounts = unsanitizedJoinAmounts.map((a) =>
     bnum(a).toString()
-  ) as string[]
+  ) as `${number}`[]
 
   const joinAmountsFiatValue = joinAmounts.map((amount, i) =>
     toFiat(amount, assets[i])
@@ -139,20 +143,17 @@ export function useJoinForm(): UseJoinFormReturns {
 
   const updatePriceImpact = useCallback(async () => {
     try {
-      const res = await queryJoin({
-        assets,
+      const res = await getPriceImpact({
         amountsIn: joinAmounts,
-        account: account!,
-        slippageBsp,
       })
 
       if (res) {
-        setPriceImpact(res.priceImpact)
+        setPriceImpact(res.decimal.toString())
       }
     } catch (error) {
       setPriceImpact('0')
     }
-  }, [account, assets, joinAmounts, queryJoin, slippageBsp])
+  }, [account, assets, joinAmounts, getPriceImpact, slippageBsp])
 
   const optimizeDisabled = useMemo(
     () => maxBalances.some((b) => bnum(b).isZero()),

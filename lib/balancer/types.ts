@@ -14,12 +14,16 @@ export abstract class PropJoinCalculator {
 
 export type JoinParams = {
   assets: Hash[]
-  amountsIn: string[]
+  amountsIn: `${number}`[]
   account: Hash
-  slippageBsp: string
+  slippageBsp: `${number}`
   // relayerSignature?: string
   //   approvalActions: TransactionActionInfo[]
   // transactionDeadline: number
+}
+
+export type PriceImpactParam = {
+  amountsIn: `${number}`[]
 }
 
 export type JoinQueryOutput = {

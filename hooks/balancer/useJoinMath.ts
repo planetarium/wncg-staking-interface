@@ -1,20 +1,42 @@
-import { useCallback, useMemo } from 'react'
-import { isSameAddress } from '@balancer/sdk'
+import { useCallback, useEffect, useMemo } from 'react'
+import {
+  AddLiquidity,
+  AddLiquidityInput,
+  AddLiquidityKind,
+  BalancerApi,
+  ChainId,
+  getInputAmount,
+  InputAmount,
+  isSameAddress,
+  PriceImpact,
+  Slippage,
+} from '@balancer/sdk'
 
 import { MIN_TRANSFER_BUFFER } from 'config/misc'
 import { CalcPropJoinHandler } from 'lib/balancer/calcPropJoinHandler'
 import { ExactInJoinHandler } from 'lib/balancer/exactInJoinHandler'
-import type { JoinParams } from 'lib/balancer/types'
+import type { JoinParams, PriceImpactParam } from 'lib/balancer/types'
 import { bnum } from 'utils/bnum'
 import { useBalances, useChain, useStaking, useViemClients } from 'hooks'
 import { useBalancerSdk } from './useBalancerSdk'
+import { parseEther } from 'viem'
+import { rpcUrlFor } from 'lib/wagmi/rpcUrlFor'
 
 export function useJoinMath(isNative: boolean) {
   const balanceOf = useBalances()
-  const { chainId, dexPoolId, nativeCurrency } = useChain()
+  const { chain, chainId, dexPoolId, nativeCurrency } = useChain()
   const { poolTokens, tokens } = useStaking()
   const { balancerSdk } = useBalancerSdk()
   const { walletClient } = useViemClients()
+
+  const getPoolState = useCallback(async () => {
+    if (!dexPoolId || !chainId) return
+    const balancerApi = new BalancerApi(
+      'https://api-v3.balancer.fi/',
+      chainId as ChainId
+    )
+    return await balancerApi.pools.fetchPoolState(dexPoolId)
+  }, [chainId, dexPoolId])
 
   const assets = useMemo(() => {
     return poolTokens.map((t) => {
@@ -70,6 +92,39 @@ export function useJoinMath(isNative: boolean) {
     [balancerSdk, dexPoolId, tokens]
   )
 
+  const getPriceImpact = useCallback(
+    async (params: PriceImpactParam) => {
+      const poolState = await getPoolState()
+      if (!poolState || !chain) return
+      try {
+        const inputAmounts: InputAmount[] = poolState.tokens.map(
+          (token, idx) => {
+            return {
+              ...token,
+              rawAmount: parseEther(params.amountsIn[idx]),
+            }
+          }
+        )
+
+        const addLiquidityInput: AddLiquidityInput = {
+          amountsIn: inputAmounts,
+          chainId,
+          rpcUrl: rpcUrlFor(chain.network)!.http,
+          kind: AddLiquidityKind.Unbalanced,
+        }
+
+        const priceImpact = await PriceImpact.addLiquidityUnbalanced(
+          addLiquidityInput,
+          poolState
+        )
+        return priceImpact
+      } catch (error) {
+        throw error
+      }
+    },
+    [getPoolState, chain]
+  )
+
   const queryJoin = useCallback(
     async (params: JoinParams) => {
       if (joinHandler == null) return
@@ -101,6 +156,7 @@ export function useJoinMath(isNative: boolean) {
   return {
     calcPropAmountsIn: calcPropJoinHandler.calcPropAmountsIn,
     queryJoin,
+    getPriceImpact,
     optimizedAmountsIn,
     join,
     maxBalances,
