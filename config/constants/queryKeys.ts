@@ -1,7 +1,7 @@
 export const QUERY_KEYS = {
   Balancer: {
     MaxExitAmounts: 'staking:Balancer:maxExitAmounts',
-    ExactInExitAmounts: 'staking:Balancer:exactInExitAmounts',
+    Proportional: 'staking:Balancer:proportional',
     ExactOutExitPriceImpact: 'staking:Balancer:exactOutExitPriceImpact',
   },
   Build: 'staking:build',

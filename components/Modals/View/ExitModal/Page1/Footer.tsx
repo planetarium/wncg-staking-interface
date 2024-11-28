@@ -9,7 +9,7 @@ import { bnum } from 'utils/bnum'
 import { walletErrorHandler } from 'utils/walletErrorHandler'
 import { useBalances, useFiat, useStaking } from 'hooks'
 import {
-  useExactInExit,
+  useProportionalExit,
   useExactOutExit,
   useSingleMaxExit,
 } from 'hooks/balancer'
@@ -50,7 +50,7 @@ function ExitModalPage1Footer({
   const pcnt = watch(LiquidityFieldType.LiquidityPercent)
   const bptOutPcnt = bnum(pcnt).toString()
 
-  const { exactInExit } = useExactInExit()
+  const { exitPool: proportionalExit } = useProportionalExit()
   const { exactOutExit } = useExactOutExit()
   const { singleMaxExit } = useSingleMaxExit()
 
@@ -75,7 +75,7 @@ function ExitModalPage1Footer({
 
       switch (true) {
         case exitType == null:
-          txHash = await exactInExit(bptOutPcnt)
+          txHash = await proportionalExit(bptOutPcnt)
           break
         case exitType !== NATIVE_CURRENCY_ADDRESS &&
           bnum(amountOut).eq(maxAmountOut):

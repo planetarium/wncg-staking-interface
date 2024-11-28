@@ -8,7 +8,7 @@ import {
 
 import { ExitFormFields } from 'hooks/balancer/useExitForm'
 
-import ExactInExit from './ExactInExit'
+import Proportional from './Proportional'
 import ExactOutExit from './ExactOutExit'
 
 type ExitModalPage1Step2Props = {
@@ -37,7 +37,7 @@ function ExitModalPage1Step2({
 
   if (isGivenIn) {
     return (
-      <ExactInExit
+      <Proportional
         control={control}
         watch={watch}
         setValue={setValue}

@@ -1,24 +1,25 @@
+import { useQuery } from '@tanstack/react-query'
 import { useMemo } from 'react'
 import {
-  Control as ReactHookFormControl,
   FieldValues,
-  UseFormWatch,
+  Control as ReactHookFormControl,
   UseFormSetValue,
+  UseFormWatch,
 } from 'react-hook-form'
-import { useQuery } from '@tanstack/react-query'
 
 import { LiquidityFieldType } from 'config/constants'
 import { QUERY_KEYS } from 'config/constants/queryKeys'
-import { bnum } from 'utils/bnum'
 import { useBalances, useFiat, useResponsive, useStaking } from 'hooks'
-import { useExactInExit } from 'hooks/balancer'
+import { useProportionalExit } from 'hooks/balancer'
 import { ExitFormFields } from 'hooks/balancer/useExitForm'
+import { bnum } from 'utils/bnum'
 
-import { StyledExitModalPage1Step2 } from './styled'
-import NumberFormat from 'components/NumberFormat'
 import { Control } from 'components/Form'
+import NumberFormat from 'components/NumberFormat'
+import { formatUnits } from 'viem'
 import ButtonGroup from './ButtonGroup'
 import PropAmounts from './PropAmounts'
+import { StyledExitModalPage1Step2 } from './styled'
 
 const rules = {
   required: true,
@@ -44,7 +45,7 @@ function ExitModalPage1Step2PropExit({
   const { isMobile } = useResponsive()
   const { lpToken, poolTokenAddresses } = useStaking()
 
-  const { queryExactInExit } = useExactInExit()
+  const { exitPoolPreview } = useProportionalExit()
 
   const _pcnt = watch(LiquidityFieldType.LiquidityPercent)
   const bptPcnt = bnum(_pcnt).toString()
@@ -55,21 +56,23 @@ function ExitModalPage1Step2PropExit({
   const disabled = !!hash
 
   const { data = [] } = useQuery(
-    [QUERY_KEYS.Balancer.ExactInExitAmounts, bptPcnt],
-    () => queryExactInExit(bptPcnt),
+    [QUERY_KEYS.Balancer.Proportional, bptPcnt],
+    () => exitPoolPreview(bptPcnt),
     {
       staleTime: 10 * 1_000,
       useErrorBoundary: false,
       select(data) {
-        return data.amountsOut
+        return data.amountsOut.map(({ amount, token }) =>
+          formatUnits(amount, token.decimals)
+        )
       },
     }
   )
 
   const totalExitFiatValue = useMemo(() => {
     return data
-      .reduce((acc, amt, i) => {
-        return acc.plus(toFiat(amt, poolTokenAddresses[i]))
+      .reduce((acc, amount, i) => {
+        return acc.plus(toFiat(amount, poolTokenAddresses[i]))
       }, bnum(0))
       .toString()
   }, [data, poolTokenAddresses, toFiat])
