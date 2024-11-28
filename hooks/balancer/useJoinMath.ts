@@ -148,7 +148,7 @@ export function useJoinMath(isNative: boolean) {
         const call = addLiquidity.buildCall({
           ...queryOutput,
           slippage,
-          wethIsEth: true,
+          wethIsEth: isNative,
           sender: address,
           recipient: address,
         })
