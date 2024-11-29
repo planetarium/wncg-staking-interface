@@ -7,7 +7,7 @@ import {
   UseFormWatch,
 } from 'react-hook-form'
 
-import { LiquidityFieldType } from 'config/constants'
+import { ExitPoolField, LiquidityFieldType } from 'config/constants'
 import { QUERY_KEYS } from 'config/constants/queryKeys'
 import { useBalances, useFiat, useResponsive, useStaking } from 'hooks'
 import { useProportionalExit } from 'hooks/balancer'
@@ -47,17 +47,21 @@ function ExitModalPage1Step2PropExit({
 
   const { exitPoolPreview } = useProportionalExit()
 
-  const _pcnt = watch(LiquidityFieldType.LiquidityPercent)
-  const bptPcnt = bnum(_pcnt).toString()
+  const percent = watch(ExitPoolField.LiquidityPercent)
+
+  const useNative = watch('UseNative')
 
   const userLpBalance = balanceOf(lpToken?.address)
-  const bptOutAmount = bnum(userLpBalance).times(_pcnt).div(100).toString()
+  const bptOutAmount = bnum(userLpBalance)
+    .times(percent)
+    .div(100)
+    .toString() as `${number}`
 
   const disabled = !!hash
 
   const { data = [] } = useQuery(
-    [QUERY_KEYS.Balancer.Proportional, bptPcnt],
-    () => exitPoolPreview(bptPcnt),
+    [QUERY_KEYS.Balancer.Proportional, bptOutAmount],
+    () => exitPoolPreview(bptOutAmount),
     {
       staleTime: 10 * 1_000,
       useErrorBoundary: false,
@@ -91,7 +95,7 @@ function ExitModalPage1Step2PropExit({
                 value={bptOutAmount}
                 symbol="LP"
               />
-              <NumberFormat value={_pcnt} type="percent" parenthesis />
+              <NumberFormat value={percent} type="percent" parenthesis />
             </div>
 
             <NumberFormat
@@ -109,7 +113,7 @@ function ExitModalPage1Step2PropExit({
             />
           </output>
         ) : (
-          <NumberFormat className="percent" value={_pcnt} type="percent" />
+          <NumberFormat className="percent" value={percent} type="percent" />
         )}
       </header>
 
@@ -121,13 +125,17 @@ function ExitModalPage1Step2PropExit({
         min={0}
         max={100}
         step={1}
-        name={LiquidityFieldType.LiquidityPercent}
+        name={ExitPoolField.LiquidityPercent}
         rules={rules}
         disabled={disabled}
       />
 
-      <ButtonGroup bptOutPcnt={_pcnt} setValue={setValue} disabled={disabled} />
-      <PropAmounts expectedAmountsOut={data} />
+      <ButtonGroup
+        bptOutPcnt={percent}
+        setValue={setValue}
+        disabled={disabled}
+      />
+      <PropAmounts expectedAmountsOut={data} useNative={useNative} />
     </StyledExitModalPage1Step2>
   )
 }

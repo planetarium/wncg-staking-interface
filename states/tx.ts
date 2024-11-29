@@ -26,7 +26,7 @@ export const unstakeTxAtom = atomWithStorage<UnstakeTx>(
 
 export const joinTxAtom = atomWithStorage<JoinTx>(`wncg:staking:joinTx`, {})
 
-export const exitTxAtom = atomWithStorage<ExitTx>(`wncg:staking:exitTx`, {})
+export const exitTxAtom = atomWithStorage<Partial<ExitTx>>(`wncg:staking:exitTx`, {})
 
 export const addLiquidityTxAtom = atomWithStorage<AddLiquidityTx>(
   `wncg:staking:addLiquidityTx`,

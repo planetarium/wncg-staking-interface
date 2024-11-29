@@ -197,30 +197,6 @@ export const StyledExitModalPage1Step1 = styled(StyledExitModalPage1Step)`
       }
     `
   )}
-
-  ${media(
-    'minSmLaptop',
-    css`
-      .tokenGroup {
-        flex-wrap: nowrap;
-      }
-
-      .tokenButton {
-        width: calc(25% - 9px);
-        margin-top: 0 !important;
-
-        .fakeInput {
-          ${textStyle('body', 2, 700)}
-          width: 100%;
-          padding: 16px;
-        }
-
-        .tokens {
-          ${flexbox('start')}
-        }
-      }
-    `
-  )}
 `
 
 export const StyledExitModalPage1Step2 = styled(StyledExitModalPage1Step)`

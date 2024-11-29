@@ -20,6 +20,7 @@ import {
 import { rpcUrlFor } from 'lib/wagmi/rpcUrlFor'
 import { slippageAtom } from 'states/system'
 import { bnum } from 'utils/bnum'
+import { parseUnits } from 'viem'
 
 export function useProportionalExit() {
   const { account } = useAuth()
@@ -41,20 +42,12 @@ export function useProportionalExit() {
     return await balancerApi.pools.fetchPoolState(dexPoolId)
   }, [chainId, dexPoolId])
 
-  const exitPoolPreview = async (percent: string) => {
+  const exitPoolPreview = async (amountIn: `${number}`) => {
     try {
       const poolState = await getPoolState()
       if (!account || !poolState) throw Error()
 
-      const amount = BigInt(
-        BigInt(
-          bnum(userLpBalance)
-            .times(10 ** lpToken.decimals)
-            .times(percent)
-            .div(100)
-            .toFixed(0)
-        )
-      )
+      const amount = parseUnits(amountIn, lpToken.decimals)
 
       const bptIn: InputAmount = {
         rawAmount: amount,
@@ -81,20 +74,12 @@ export function useProportionalExit() {
     }
   }
 
-  const exitPool = async (percent: string) => {
+  const exitPool = async (amountIn: `${number}`, isWeth: boolean) => {
     try {
       const poolState = await getPoolState()
       if (!account || !poolState || !walletClient) throw Error()
 
-      const amount = BigInt(
-        BigInt(
-          bnum(userLpBalance)
-            .times(10 ** lpToken.decimals)
-            .times(percent)
-            .div(100)
-            .toFixed(0)
-        )
-      )
+      const amount = parseUnits(amountIn, lpToken.decimals)
 
       const bptIn: InputAmount = {
         rawAmount: amount,
@@ -121,6 +106,7 @@ export function useProportionalExit() {
         chainId,
         sender: account,
         recipient: account,
+        wethIsEth: isWeth,
       })
 
       const hash = await walletClient.sendTransaction({

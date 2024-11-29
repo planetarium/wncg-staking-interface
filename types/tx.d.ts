@@ -83,11 +83,8 @@ type AddLiquidityTx = {
 }
 
 type ExitTx = {
-  bptOutPcnt?: string
-  amountOut?: string
-  bptIn?: string
-  exitType?: Hash | null
-  tokenOutIndex?: number
+  amountIn: string
+  isNative: boolean
   hash?: Hash
 }
 
