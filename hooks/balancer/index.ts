@@ -1,4 +1,3 @@
-export { useBalancerSdk } from './useBalancerSdk'
 export { useExitForm } from './useExitForm'
 export { useJoinBuildRequest } from './useJoinBuildRequest'
 export { useJoinForm } from './useJoinForm'
