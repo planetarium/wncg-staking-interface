@@ -3,7 +3,19 @@ import { isSameAddress } from '@balancer/sdk'
 import { formatUnits } from 'utils/formatUnits'
 import { parseUnits } from 'utils/parseUnits'
 import { bnum } from 'utils/bnum'
-import type { PropJoinCalculator } from './types'
+
+export abstract class PropJoinCalculator {
+  constructor(
+    public readonly chainId: ChainId,
+    public readonly poolTokens: PoolToken[],
+    public readonly tokens: TokenMap,
+    public readonly isNative: boolean,
+    public readonly maxSafeBalances: string[]
+  ) {}
+
+  abstract calcPropAmountsIn(amountIn: string, fixedToken: TokenInfo): string[]
+}
+
 
 export class CalcPropJoinHandler implements PropJoinCalculator {
   constructor(

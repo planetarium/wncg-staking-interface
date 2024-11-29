@@ -1,5 +1,4 @@
 export { useExitForm } from './useExitForm'
-export { useJoinBuildRequest } from './useJoinBuildRequest'
 export { useJoinForm } from './useJoinForm'
 export { useJoinModal } from './useJoinModal'
 export { useJoinPool } from './useJoinPool'
