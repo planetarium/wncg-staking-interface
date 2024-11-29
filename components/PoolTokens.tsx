@@ -1,23 +1,32 @@
-import Link from 'next/link'
 import clsx from 'clsx'
+import Link from 'next/link'
 
+import { useBalances, useChain, usePropAmounts, useStaking } from 'hooks'
 import { dexPoolUrlFor } from 'utils/dexPoolUrlFor'
-import { useChain, usePropAmounts, useStaking } from 'hooks'
 
-import { StyledPoolTokens } from './styled'
 import Icon from 'components/Icon'
 import NumberFormat from 'components/NumberFormat'
 import TokenIcon from 'components/TokenIcon'
+import { bnum } from 'utils/bnum'
+import { StyledPoolTokens } from './styled'
 
 type PoolTokensProps = {
-  lpBalance: string
   className?: string
 }
 
-function PoolTokens({ lpBalance, className }: PoolTokensProps) {
+function PoolTokens({ className }: PoolTokensProps) {
   const { chainId, dexPlatformName } = useChain()
-  const { poolTokens, shouldReversePoolTokenOrderOnDisplay } = useStaking()
-  const { propAmounts, propAmountsInFiatValue } = usePropAmounts(lpBalance)
+  const {
+    lpToken,
+    poolTokens,
+    poolTokenWeights,
+    shouldReversePoolTokenOrderOnDisplay,
+  } = useStaking()
+  const balanceOf = useBalances()
+
+  const userLpBalance = balanceOf(lpToken?.address)
+
+  const { propAmounts, propAmountsInFiatValue } = usePropAmounts(userLpBalance)
 
   return (
     <StyledPoolTokens className={className}>
@@ -42,12 +51,14 @@ function PoolTokens({ lpBalance, className }: PoolTokensProps) {
           const amount = propAmounts[i]
           const fiatValue = propAmountsInFiatValue[i]
 
+          const weight = bnum(poolTokenWeights[i]).times(100).toNumber()
+
           return (
             <div className="poolTokensItem" key={`availableBalance:${address}`}>
               <dt>
                 <TokenIcon address={address} $size={32} />
                 <strong className="symbol">{symbol}</strong>
-                <span className="pcnt">50%</span>
+                <span className="pcnt">{weight}%</span>
               </dt>
 
               <dd>
@@ -60,6 +71,7 @@ function PoolTokens({ lpBalance, className }: PoolTokensProps) {
                   className="fiatValue"
                   value={fiatValue}
                   type="fiat"
+                  decimals={3}
                 />
               </dd>
             </div>

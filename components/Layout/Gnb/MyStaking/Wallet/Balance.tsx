@@ -51,7 +51,7 @@ function WalletBalance() {
       </header>
 
       <div className="content">
-        {hasLpToken && <PoolTokens lpBalance={lpBalance} />}
+        {hasLpToken && <PoolTokens />}
 
         <Button
           className="actionButton"

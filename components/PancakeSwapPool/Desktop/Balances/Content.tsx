@@ -54,9 +54,7 @@ export default function AddLiquidityPoolBalancesContent() {
         )}
       </header>
 
-      {hasLpToken && (
-        <PoolTokens className="poolTokens" lpBalance={lpBalance} />
-      )}
+      {hasLpToken && <PoolTokens className="poolTokens" />}
     </StyledAddLiquidityPoolBalancesContent>
   )
 }

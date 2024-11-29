@@ -10,12 +10,13 @@ import {
 } from 'react-hook-form'
 
 import { ExitPoolField } from 'config/constants'
-import { QUERY_KEYS } from 'config/constants/queryKeys'
-import { useBalances, useDebouncedValue, useFiat, useStaking } from 'hooks'
+import {
+  useBalances,
+  useDebouncedValue,
+  usePropAmounts,
+  useStaking,
+} from 'hooks'
 import { bnum } from 'utils/bnum'
-import { formatUnits } from 'viem'
-import { useQuery } from 'wagmi'
-import { useProportionalExit } from './useProportionalExit'
 
 export type ExitFormFields = {
   [ExitPoolField.LiquidityPercent]: `${number}`
@@ -72,42 +73,15 @@ export function useExitForm(): UseExitFormReturns {
     return false
   }, [formState])
 
-  const { exitPoolPreview } = useProportionalExit()
-
   const debouncedAmount = useDebouncedValue(amountIn, 300)
 
-  const { data } = useQuery<`${number}`[]>(
-    [QUERY_KEYS.Balancer.Proportional, debouncedAmount],
-    async () => {
-      const { amountsOut } = await exitPoolPreview(debouncedAmount)
-      const receive: `${number}`[] = amountsOut.map(
-        ({ amount: _amount, token }) =>
-          formatUnits(_amount, token.decimals) as `${number}`
-      )
-      return receive
-    },
-    {
-      keepPreviousData: true,
-      useErrorBoundary: false,
-      suspense: false,
-    }
-  )
-  const receiveAmounts = data ?? []
-
-  const toFiat = useFiat()
-
-  const totalExitFiatValue = useMemo(() => {
-    return receiveAmounts
-      .reduce((acc, amount, i) => {
-        return acc.plus(toFiat(amount, poolTokenAddresses[i]))
-      }, bnum(0))
-      .toString() as `${number}`
-  }, [receiveAmounts, poolTokenAddresses, toFiat])
+  const { propAmounts, totalPropAmountsInFiatValue } =
+    usePropAmounts(debouncedAmount)
 
   return {
     assets,
     amountIn,
-    totalExitFiatValue,
+    totalExitFiatValue: totalPropAmountsInFiatValue,
     useNative,
     control,
     setValue,
@@ -115,6 +89,6 @@ export function useExitForm(): UseExitFormReturns {
     formState,
     trigger,
     watch,
-    receiveAmounts,
+    receiveAmounts: propAmounts,
   }
 }
