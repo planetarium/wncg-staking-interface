@@ -1,8 +1,6 @@
 import { useAtom } from 'jotai'
-import { useMemo } from 'react'
 import { UseFormWatch } from 'react-hook-form'
 
-import { useBalances, useFiat, useStaking } from 'hooks'
 import { useProportionalExit } from 'hooks/balancer'
 import { ExitFormFields } from 'hooks/balancer/useExitForm'
 import { exitTxAtom } from 'states/tx'
@@ -16,6 +14,7 @@ type ExitModalPage1FooterProps = {
   watch: UseFormWatch<ExitFormFields>
   submitDisabled: boolean
   amountIn: `${number}`
+  totalExitFiatValue: `${number}`
 }
 
 function ExitModalPage1Footer({
@@ -23,20 +22,13 @@ function ExitModalPage1Footer({
   watch,
   submitDisabled,
   amountIn,
+  totalExitFiatValue,
 }: ExitModalPage1FooterProps) {
-  const balanceOf = useBalances()
-  const toFiat = useFiat()
-  const { lpToken } = useStaking()
-
   const [tx, setTx] = useAtom(exitTxAtom)
 
   const useNative = watch('UseNative')
 
   const { exitPool: _exitPool } = useProportionalExit()
-
-  const totalExitFiatValue = useMemo(() => {
-    return toFiat(amountIn, lpToken.address)
-  }, [balanceOf, lpToken.address, toFiat])
 
   async function exitPool() {
     if (submitDisabled) return

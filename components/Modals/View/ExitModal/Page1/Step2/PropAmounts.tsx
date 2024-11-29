@@ -1,10 +1,9 @@
-import { bnum } from 'utils/bnum'
 import { useChain, useFiat, useStaking } from 'hooks'
+import { bnum } from 'utils/bnum'
 
-import { StyledExitModalPage1Step2PropAmounts } from './styled'
 import CountUp from 'components/CountUp'
 import TokenIcon from 'components/TokenIcon'
-import { isNative } from 'lodash-es'
+import { StyledExitModalPage1Step2PropAmounts } from './styled'
 
 type ExitModalPage1Step2PropAmountsProps = {
   expectedAmountsOut: string[]
@@ -34,7 +33,11 @@ function ExitModalPage1Step2PropAmounts({
       <div className="propAmount">
         <dl className="detailList">
           {expectedAmountsOut.map((amt, i) => {
-            const address = poolTokenAddresses[i] === nativeCurrency.wrappedTokenAddress && useNative ?  nativeCurrency.address : poolTokenAddresses[i]
+            const address =
+              poolTokenAddresses[i] === nativeCurrency.wrappedTokenAddress &&
+              useNative
+                ? nativeCurrency.address
+                : poolTokenAddresses[i]
             const weight = bnum(poolTokenWeights[i]).times(100).toNumber()
             const symbol = tokens[address]?.symbol ?? ''
 
@@ -52,13 +55,11 @@ function ExitModalPage1Step2PropAmounts({
 
                 <dd>
                   <CountUp className="amount" value={amt} duration={0.5} />
-                  <div className="fiatValue">
-                    <CountUp
-                      className="fiatValue"
-                      value={fiatValue}
-                      type="fiat"
-                    />
-                  </div>
+                  <CountUp
+                    className="fiatValue"
+                    value={fiatValue}
+                    type="fiat"
+                  />
                 </dd>
               </div>
             )

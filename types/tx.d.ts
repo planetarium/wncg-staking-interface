@@ -83,8 +83,9 @@ type AddLiquidityTx = {
 }
 
 type ExitTx = {
-  amountIn: string
+  amountIn: `${number}`
   isNative: boolean
+  totalExitFiatValue: `${number}`
   hash?: Hash
 }
 
