@@ -37,7 +37,7 @@ function JoinModalPage1({
   const hasNativeAsset =
     nativeAssetIndex >= 0 && bnum(joinAmounts[nativeAssetIndex]).gt(0)
 
-  const _join = useJoinPool(assets, joinAmounts, hasNativeAsset)
+  const { joinPool: _join } = useJoinPool(hasNativeAsset)
 
   async function join() {
     try {
@@ -45,7 +45,7 @@ function JoinModalPage1({
         throw Error('No writeAsync')
       }
 
-      const txHash = await _join()
+      const txHash = await _join(joinAmounts)
       if (!txHash) throw Error('No txHash')
 
       setTx({

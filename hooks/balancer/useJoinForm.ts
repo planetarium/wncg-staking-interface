@@ -16,11 +16,11 @@ import {
   REKT_PRICE_IMPACT,
 } from 'config/constants/liquidityPool'
 import { useAuth, useChain, useFiat, useStaking } from 'hooks'
+import { useJoinPool } from 'hooks/balancer'
 import { slippageAtom } from 'states/system'
 import { bnum } from 'utils/bnum'
 import { calcSlippageBsp } from 'utils/calcSlippageBsp'
 import { isEthereum } from 'utils/isEthereum'
-import { useJoinMath } from './useJoinMath'
 
 export const FIELDS: LiquidityFieldType[] = [
   LiquidityFieldType.TokenA,
@@ -114,12 +114,8 @@ export function useJoinForm(): UseJoinFormReturns {
     poolTokenAddresses,
   ])
 
-  const {
-    maxBalances,
-    maxSafeBalances,
-    optimizedAmountsIn,
-    getPriceImpact,
-  } = useJoinMath(isNative)
+  const { maxBalances, maxSafeBalances, optimizedAmountsIn, getPriceImpact } =
+    useJoinPool(isNative)
 
   const unsanitizedJoinAmounts = FIELDS.map((field) =>
     watch(field as any)
@@ -143,9 +139,7 @@ export function useJoinForm(): UseJoinFormReturns {
 
   const updatePriceImpact = useCallback(async () => {
     try {
-      const res = await getPriceImpact({
-        amountsIn: joinAmounts,
-      })
+      const res = await getPriceImpact(joinAmounts)
 
       if (res) {
         setPriceImpact(res.decimal.toString())

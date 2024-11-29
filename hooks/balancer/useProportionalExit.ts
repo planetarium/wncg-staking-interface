@@ -1,46 +1,26 @@
 import { useAtomValue } from 'jotai'
-import { useCallback } from 'react'
 
 import {
-  BalancerApi,
-  ChainId,
   InputAmount,
   RemoveLiquidity,
   RemoveLiquidityKind,
   RemoveLiquidityProportionalInput,
   Slippage,
 } from '@balancer/sdk'
-import {
-  useAuth,
-  useBalances,
-  useChain,
-  useStaking,
-  useViemClients,
-} from 'hooks'
+import { useAuth, useChain, useStaking, useViemClients } from 'hooks'
 import { rpcUrlFor } from 'lib/wagmi/rpcUrlFor'
 import { slippageAtom } from 'states/system'
-import { bnum } from 'utils/bnum'
 import { parseUnits } from 'viem'
+import { useBalancerApi } from './useBalancerApi'
 
 export function useProportionalExit() {
   const { account } = useAuth()
-  const { dexPoolId, chainId, chain } = useChain()
+  const { chainId, chain } = useChain()
   const { lpToken } = useStaking()
   const { walletClient } = useViemClients()
-  const balanceOf = useBalances()
+  const { getPoolState } = useBalancerApi()
 
   const slippage = useAtomValue(slippageAtom) ?? '0.5'
-
-  const userLpBalance = balanceOf(lpToken.address)
-
-  const getPoolState = useCallback(async () => {
-    if (!dexPoolId || !chainId || !chain) return
-    const balancerApi = new BalancerApi(
-      'https://api-v3.balancer.fi/',
-      chainId as ChainId
-    )
-    return await balancerApi.pools.fetchPoolState(dexPoolId)
-  }, [chainId, dexPoolId])
 
   const exitPoolPreview = async (amountIn: `${number}`) => {
     try {

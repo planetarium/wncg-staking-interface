@@ -5,7 +5,7 @@ import { LiquidityFieldType } from 'config/constants'
 import { ANIMATION_MAP, EXIT_MOTION } from 'config/constants/motions'
 import { bnum } from 'utils/bnum'
 import { useStaking } from 'hooks'
-import { useJoinMath } from 'hooks/balancer'
+import { useJoinPool } from 'hooks/balancer'
 import type { JoinPoolForm } from 'hooks/balancer/useJoinForm'
 
 import { StyledJoinFormProportionalGuideBanner } from './styled'
@@ -30,7 +30,7 @@ function JoinFormProportionalGuideBanner({
   setValue,
 }: JoinFormProportionalGuideBannerProps) {
   const { poolTokens, tokens } = useStaking()
-  const { calcPropAmountsIn } = useJoinMath(isNative)
+  const { calcPropAmountsIn } = useJoinPool(isNative)
 
   const fixedTokenIndex = joinAmounts.findIndex((amt, i) => {
     return bnum(amt).gt(0) && bnum(joinAmounts[1 - i]).isZero()
