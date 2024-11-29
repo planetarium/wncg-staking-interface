@@ -6,7 +6,7 @@ import {
 } from 'react-hook-form'
 
 import { ExitPoolField } from 'config/constants'
-import { useBalances, useFiat, useResponsive, useStaking } from 'hooks'
+import { useBalances, useResponsive, useStaking } from 'hooks'
 import { ExitFormFields } from 'hooks/balancer/useExitForm'
 
 import { Control } from 'components/Form'
@@ -41,9 +41,8 @@ function ExitModalPage1Step2({
   hash,
 }: ExitModalPage1Step2Props) {
   const balanceOf = useBalances()
-  const toFiat = useFiat()
   const { isMobile } = useResponsive()
-  const { lpToken, poolTokenAddresses } = useStaking()
+  const { lpToken } = useStaking()
 
   const percent = watch(ExitPoolField.LiquidityPercent)
 
