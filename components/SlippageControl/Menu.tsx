@@ -31,9 +31,9 @@ function SlippageControlMenu({ closeMenu, menuRef }: SlippageControlMenuProps) {
 
   async function onSelectSlippage(e: ReactMouseEvent<HTMLButtonElement>) {
     e.stopPropagation()
-    const newSlippage = bnum(e.currentTarget.value).toString() || null
+    const newSlippage = bnum(e.currentTarget.value).toString() as `${number}` || null
 
-    setSlippage(newSlippage)
+    setSlippage(() => newSlippage)
     await wait(100)
 
     if (slippageInput) reset()
