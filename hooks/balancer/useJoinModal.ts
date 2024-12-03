@@ -12,7 +12,7 @@ import {
   useStaking,
 } from 'hooks'
 
-export function useJoinModal(assets: Hash[], joinAmounts: string[]) {
+export function useJoinModal(assets: Hash[], joinAmounts: `${number}`[]) {
   const allowanceOf = useAllowances()
   const { dexProtocolAddress } = useChain()
   const { addModal } = useModal()
@@ -42,7 +42,7 @@ export function useJoinModal(assets: Hash[], joinAmounts: string[]) {
 
   function openJoinModal(params: {
     assets: Hash[]
-    joinAmounts: string[]
+    joinAmounts: `${number}`[]
     lpBalance: string
     totalJoinFiatValue: string
     resetForm(): void

@@ -70,7 +70,7 @@ export const JoinPoolField = {
 export type JoinPoolField = (typeof JoinPoolField)[keyof typeof JoinPoolField]
 
 export const ExitPoolField = {
-  ExitAmount: 'ExitAmount',
+  UseNative: 'UseNative',
   LiquidityPercent: 'LiquidityPercent',
 } as const
 

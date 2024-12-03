@@ -69,7 +69,7 @@ type UnstakeTx = {
 type JoinTx = {
   hash?: Hash
   assets?: Hash[]
-  joinAmounts?: string[]
+  joinAmounts?: `${number}`[]
   lpBalance?: string
   totalJoinFiatValue?: string
 }
@@ -83,11 +83,9 @@ type AddLiquidityTx = {
 }
 
 type ExitTx = {
-  bptOutPcnt?: string
-  amountOut?: string
-  bptIn?: string
-  exitType?: Hash | null
-  tokenOutIndex?: number
+  amountIn: `${number}`
+  isNative: boolean
+  totalExitFiatValue: `${number}`
   hash?: Hash
 }
 

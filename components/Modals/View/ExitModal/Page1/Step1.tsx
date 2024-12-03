@@ -1,63 +1,35 @@
-import { useMemo } from 'react'
-import {
-  Control,
-  Controller,
-  UseFormResetField,
-  UseFormSetValue,
-  UseFormWatch,
-} from 'react-hook-form'
 import clsx from 'clsx'
+import { useMemo } from 'react'
+import { Control, Controller, UseFormWatch } from 'react-hook-form'
 
-import { NATIVE_CURRENCY_ADDRESS } from 'config/constants/addresses'
-import { LiquidityFieldType } from 'config/constants'
-import { useStaking } from 'hooks'
+import { useChain, useStaking } from 'hooks'
 import { ExitFormFields } from 'hooks/balancer/useExitForm'
 
-import { StyledExitModalPage1Step1 } from './styled'
 import TokenIcon from 'components/TokenIcon'
+import { StyledExitModalPage1Step1 } from './styled'
 
 type ExitModalPage1Step1Props = {
   control: Control<ExitFormFields>
   watch: UseFormWatch<ExitFormFields>
-  setValue: UseFormSetValue<ExitFormFields>
-  resetField: UseFormResetField<ExitFormFields>
   hash?: Hash
 }
 
 function ExitModalPage1Step1({
   control,
   watch,
-  setValue,
-  resetField,
   hash,
 }: ExitModalPage1Step1Props) {
-  const {
-    lpToken,
-    poolTokenAddresses,
-    shouldReversePoolTokenOrderOnDisplay,
-    tokens,
-  } = useStaking()
+  const { tokens } = useStaking()
 
-  const exitType = watch('exitType')
+  const { nativeCurrency } = useChain()
 
-  const exitTypeList = useMemo(() => {
-    const list = shouldReversePoolTokenOrderOnDisplay
-      ? poolTokenAddresses.reverse()
-      : poolTokenAddresses
-    return [null, ...list, NATIVE_CURRENCY_ADDRESS]
-  }, [poolTokenAddresses, shouldReversePoolTokenOrderOnDisplay])
+  const useNative = watch('UseNative')
+
+  const addressList = useMemo(() => {
+    return [nativeCurrency.address, nativeCurrency.wrappedTokenAddress]
+  }, [nativeCurrency])
 
   const disabled = !!hash
-
-  const rules = {
-    required: true,
-    onChange(e: any) {
-      if (disabled) return
-      if (!e.target.value) setValue('exitType', null)
-      resetField(LiquidityFieldType.ExitAmount)
-      resetField(LiquidityFieldType.LiquidityPercent)
-    },
-  }
 
   return (
     <StyledExitModalPage1Step1 $disabled={disabled}>
@@ -68,39 +40,40 @@ function ExitModalPage1Step1({
 
       <fieldset className="tokenGroup">
         <Controller
-          name="exitType"
+          name="UseNative"
           control={control}
-          rules={rules}
-          render={({ field }: ControlRendererProps<ExitFormFields>) => (
+          render={({
+            field: { onChange, ...field },
+          }: ControlRendererProps<ExitFormFields>) => (
             <>
-              {exitTypeList.map((addr) => {
-                const key = `exitForm:exitType:${addr}`
-                const label = addr === null ? 'All' : tokens?.[addr]?.symbol
+              {addressList.map((address) => {
+                const isNative = address === nativeCurrency.address
+                const key = `exitForm:useNative:${isNative}`
+                const label = tokens?.[address]?.symbol
+                const selected =
+                  (isNative && useNative) || (!isNative && !useNative)
 
                 return (
                   <div
-                    className={clsx('tokenButton', {
-                      selected: exitType === addr,
-                      disabled,
-                    })}
+                    className={clsx('tokenButton', { selected, disabled })}
                     key={key}
                   >
                     <label className="fakeInput" htmlFor={key}>
                       <TokenIcon
-                        key={`exitForm:tokenGroup:${addr ?? lpToken?.address}`}
-                        address={addr ?? lpToken?.address}
+                        key={`exitForm:tokenGroup:${address}`}
+                        address={nativeCurrency.address}
                         $size={24}
                       />
-
                       <span className="label">{label}</span>
                     </label>
-
                     <input
                       {...field}
                       id={key}
                       type="radio"
-                      value={addr ?? undefined}
-                      defaultChecked={exitType === addr}
+                      value={isNative.toString()}
+                      onChange={({ target: { value } }) =>
+                        onChange(value === 'true' ? true : false)
+                      }
                       disabled={disabled}
                     />
                   </div>

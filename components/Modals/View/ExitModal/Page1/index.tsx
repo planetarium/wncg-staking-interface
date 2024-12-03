@@ -1,12 +1,11 @@
 import type { UseExitFormReturns } from 'hooks/balancer/useExitForm'
 
-import { StyledExitModalPage1 } from './styled'
 import { PendingNotice } from 'components/Modals/shared'
 import Footer from './Footer'
 import Header from './Header'
 import Step1 from './Step1'
 import Step2 from './Step2'
-import Step3 from './Step3'
+import { StyledExitModalPage1 } from './styled'
 
 type ExitModalPage1Props = {
   send: XstateSend
@@ -15,21 +14,15 @@ type ExitModalPage1Props = {
 
 function ExitModalPage1(props: ExitModalPage1Props & UseExitFormReturns) {
   const {
-    bptIn,
-    clearErrors,
     control,
-    exitType,
-    singleExitMaxAmounts,
-    trigger,
-    formState,
     watch,
-    resetField,
     send,
     setValue,
     hash,
-    isNative,
     submitDisabled,
-    tokenOutIndex,
+    amountIn,
+    totalExitFiatValue,
+    receiveAmounts,
   } = props
 
   return (
@@ -38,43 +31,23 @@ function ExitModalPage1(props: ExitModalPage1Props & UseExitFormReturns) {
 
       <div className="container">
         <div className="modalContent">
-          <Step1
-            control={control}
-            watch={watch}
-            setValue={setValue}
-            resetField={resetField}
-            hash={hash}
-          />
-
+          <Step1 control={control} watch={watch} hash={hash} />
           <Step2
-            singleExitMaxAmounts={singleExitMaxAmounts}
-            clearErrors={clearErrors}
+            amountIn={amountIn}
+            totalExitFiatValue={totalExitFiatValue}
+            receiveAmounts={receiveAmounts}
             control={control}
             watch={watch}
             setValue={setValue}
-            trigger={trigger}
             hash={hash}
-            isNative={isNative}
           />
-
-          {exitType != null && (
-            <Step3
-              setValue={setValue}
-              watch={watch}
-              hash={hash}
-              formState={formState}
-              singleExitMaxAmounts={singleExitMaxAmounts}
-              tokenOutIndex={tokenOutIndex}
-            />
-          )}
         </div>
       </div>
       <Footer
-        bptIn={bptIn}
+        amountIn={amountIn}
+        totalExitFiatValue={totalExitFiatValue}
         send={send}
-        singleExitMaxAmounts={singleExitMaxAmounts}
         submitDisabled={submitDisabled}
-        tokenOutIndex={tokenOutIndex}
         watch={watch}
       />
       <PendingNotice hash={hash} />

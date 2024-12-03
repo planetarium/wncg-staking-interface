@@ -15,6 +15,7 @@ import { StyledJoinFormSummary } from './styled'
 import HighPriceImpact from 'components/HighPriceImpact'
 import NumberFormat from 'components/NumberFormat'
 import RektPriceImpact from 'components/RektPriceImpact'
+import { useMemo } from 'react'
 
 type JoinFormSummaryProps = {
   priceImpact: string
@@ -35,6 +36,7 @@ function JoinFormSummary({
 }: JoinFormSummaryProps) {
   const { isConnected } = useAuth()
   const priceImpactInPcnt = bnum(priceImpact).times(100).toFixed(4)
+
   const alert = bnum(priceImpact).gte(REKT_PRICE_IMPACT)
 
   const priceImpactAgreement = watch(LiquidityFieldType.HighPriceImpact)
@@ -43,7 +45,10 @@ function JoinFormSummary({
     setValue(LiquidityFieldType.HighPriceImpact, !priceImpactAgreement)
   }
 
-  const hasErrors = Object.keys(formState.errors).length > 0
+  const hasErrors = useMemo(
+    () => Object.keys(formState.errors).length > 0,
+    [formState.errors]
+  )
 
   return (
     <StyledJoinFormSummary className="joinFormSummary" $disabled={!isConnected}>
@@ -57,19 +62,21 @@ function JoinFormSummary({
       <div className="summaryItem">
         <dt>Price impact</dt>
         <dd className={clsx({ alert })}>
-          <NumberFormat value={priceImpactInPcnt} type="percent" />
+          <NumberFormat
+            value={priceImpactInPcnt}
+            type="percent"
+            roundingMode={4}
+          />
         </dd>
       </div>
 
-      {!hasErrors && (
-        <HighPriceImpact
-          className="priceImpactAlert"
-          checked={priceImpactAgreement}
-          priceImpact={priceImpact}
-          toggle={toggle}
-          disabled={disabled}
-        />
-      )}
+      <HighPriceImpact
+        className="priceImpactAlert"
+        checked={priceImpactAgreement}
+        priceImpact={priceImpact}
+        toggle={toggle}
+        disabled={disabled || hasErrors}
+      />
 
       <RektPriceImpact
         className="priceImpactAlert"

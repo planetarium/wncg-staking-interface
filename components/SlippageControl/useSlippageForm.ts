@@ -69,9 +69,8 @@ export function useSlippageForm(onCloseMenu: () => void) {
 
         if (bnum(newSlippage).gte(MAX_SLIPPAGE)) newSlippage = null
         if (bnum(newSlippage).lt(MIN_SLIPPAGE)) newSlippage = null
-
         if (newSlippage) {
-          setSlippage(bnum(newSlippage).toFixed(2))
+          setSlippage(bnum(newSlippage).toFixed(2) as `${number}`)
         } else {
           setSlippage(null)
         }
@@ -88,7 +87,7 @@ export function useSlippageForm(onCloseMenu: () => void) {
           bnum(newSlippage).lt(MAX_SLIPPAGE) &&
           bnum(newSlippage).gte(MIN_SLIPPAGE)
         ) {
-          setSlippage(bnum(newSlippage).toFixed(2))
+          setSlippage(bnum(newSlippage).toFixed(2) as `${number}`)
         }
       },
     }),
@@ -104,7 +103,7 @@ export function useSlippageForm(onCloseMenu: () => void) {
     const newSlippage = bnum(e.currentTarget.value).toString() || null
 
     resetField('slippage')
-    setSlippage(newSlippage)
+    setSlippage(newSlippage as `${number}`)
 
     await wait(100)
 

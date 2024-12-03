@@ -23,7 +23,7 @@ export default function ExitModalPage1FormButtonGroup({
 }: ExitModalPage1FormButtonGroupProps) {
   function onRatioButtonClick(e: MouseEvent) {
     const { value } = e.currentTarget as HTMLButtonElement
-    setValue(LiquidityFieldType.LiquidityPercent, value)
+    setValue(LiquidityFieldType.LiquidityPercent, value as `${number}`)
   }
 
   return (

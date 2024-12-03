@@ -1,26 +1,22 @@
-import { useMemo } from 'react'
-import { useAtomValue } from 'jotai'
 import { motion } from 'framer-motion'
+import { useAtomValue } from 'jotai'
 
-import { NATIVE_CURRENCY_ADDRESS } from 'config/constants/addresses'
 import { ANIMATION_MAP, MOTION } from 'config/constants/motions'
-import { bnum } from 'utils/bnum'
 import { useChain, useFiat, useModal, useStaking } from 'hooks'
+import { bnum } from 'utils/bnum'
 import { exitAmountsAtom } from './useWatch'
 
-import { StyledExitModalPage2 } from './styled'
 import Button from 'components/Button'
-import ImportToken from 'components/ImportToken'
 import NumberFormat from 'components/NumberFormat'
 import TokenIcon from 'components/TokenIcon'
+import { StyledExitModalPage2 } from './styled'
+import ImportToken from 'components/ImportToken'
 
 type ExitModalPage2Props = {
-  assets: Hash[]
-  exitType: Hash | null
-  tokenOutIndex?: number
+  isNative: boolean
 }
 
-export default function ExitModalPage2({ exitType }: ExitModalPage2Props) {
+export default function ExitModalPage2({ isNative }: ExitModalPage2Props) {
   const { nativeCurrency } = useChain()
   const toFiat = useFiat()
   const { removeModal } = useModal()
@@ -37,11 +33,6 @@ export default function ExitModalPage2({ exitType }: ExitModalPage2Props) {
   const totalAmountsOutFiatSumValue = amountsOutFiatValue
     .reduce((acc, amt) => acc.plus(amt), bnum(0))
     .toString()
-
-  const importTokenAddress = useMemo(() => {
-    if (exitType == null) return lpToken?.address
-    return tokens[exitType]!.address
-  }, [exitType, lpToken?.address, tokens])
 
   return (
     <StyledExitModalPage2>
@@ -61,10 +52,7 @@ export default function ExitModalPage2({ exitType }: ExitModalPage2Props) {
                 if (bnum(amt).isZero()) return null
 
                 let addr = poolTokenAddresses[i]
-                if (
-                  exitType === NATIVE_CURRENCY_ADDRESS &&
-                  addr === nativeCurrency.wrappedTokenAddress
-                ) {
+                if (isNative && addr === nativeCurrency.wrappedTokenAddress) {
                   addr = nativeCurrency.address
                 }
 
@@ -107,7 +95,7 @@ export default function ExitModalPage2({ exitType }: ExitModalPage2Props) {
           )}
         </div>
 
-        <ImportToken address={importTokenAddress} />
+        <ImportToken address={lpToken.address} />
       </div>
 
       <footer className="modalFooter">

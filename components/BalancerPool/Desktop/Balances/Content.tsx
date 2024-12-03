@@ -54,9 +54,7 @@ export default function BalancerPoolBalancesContent() {
         )}
       </header>
 
-      {hasLpToken && (
-        <PoolTokens className="poolTokens" lpBalance={lpBalance} />
-      )}
+      {hasLpToken && <PoolTokens className="poolTokens" />}
     </StyledBalancerPoolBalancesContent>
   )
 }
