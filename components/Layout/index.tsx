@@ -1,19 +1,20 @@
-import { PropsWithChildren, useRef } from 'react'
 import dynamic from 'next/dynamic'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
+import { PropsWithChildren, useRef } from 'react'
 
 import { SUPPORTED_CHAINS } from 'config/chains'
+import { useChain, useMediaQuery } from 'hooks'
 import { isBsc } from 'utils/isBsc'
 import { isEthereum } from 'utils/isEthereum'
-import { useChain, useMediaQuery } from 'hooks'
 
-import { StyledLayout, StyledMain } from './styled'
 import Favicon from 'components/Favicon'
+import SunsetModal from 'components/Modals/View/SunsetModal'
 import RootFavicon from 'components/RootFavicon'
 import Suspense from 'components/Suspense'
-import RootGnb from './Gnb/Root'
 import MainGnb from './Gnb/Main'
+import RootGnb from './Gnb/Root'
+import { StyledLayout, StyledMain } from './styled'
 
 const Alerts = dynamic(() => import('./Alerts'), {
   ssr: false,
@@ -81,6 +82,8 @@ function Layout({ children }: PropsWithChildren) {
       <Head>
         <Favicon />
       </Head>
+
+      <SunsetModal />
 
       <StyledLayout layoutRoot>
         <Suspense>
