@@ -43,24 +43,14 @@ function CooldownModalPage2({ send }: CooldownModalPage2Props) {
         <div className="titleGroup">
           <h2 className="title accent">Cooldown</h2>
           <h3 className="subtitle">
-            You&apos;ll get more rewards if you stay. Do you really want to
-            start cooldown?
+            Cooldown will be finished in 60 seconds. <br />
+            You can withdraw after the cooldown.
           </h3>
         </div>
 
         <CloseButton />
       </header>
-
-      <div className="container">
-        <div className="modalContent">
-          <BarGraph />
-          <Guide />
-        </div>
-      </div>
-
       <footer className="modalFooter">
-        <Summary />
-
         <TxButton onClick={cooldown} hash={tx.hash}>
           Start cooldown
         </TxButton>

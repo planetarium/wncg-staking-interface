@@ -9,7 +9,6 @@ import { useToast } from 'hooks'
 import { cooldownMachine, pageFor } from './stateMachine'
 import { useWatch } from './useWatch'
 
-import Page1 from './Page1'
 import Page2 from './Page2'
 import Page3 from './Page3'
 import Page4 from './Page4'
@@ -43,10 +42,9 @@ function CooldownModal() {
 
   return (
     <>
-      {currentPage === 1 && <Page1 send={send} />}
-      {currentPage === 2 && <Page2 send={send} />}
-      {currentPage === 3 && <Page3 />}
-      {currentPage === 4 && <Page4 />}
+      {currentPage === 1 && <Page2 send={send} />}
+      {currentPage === 2 && <Page3 />}
+      {currentPage === 3 && <Page4 />}
     </>
   )
 }
