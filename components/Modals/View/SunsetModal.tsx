@@ -100,7 +100,7 @@ export default function SunsetModal() {
 
   return (
     <ModalOverlay onClick={() => setIsOpen(false)}>
-      <ModalContent>
+      <ModalContent onClick={(e) => e.stopPropagation()}>
         <button className="closeButton" onClick={() => setIsOpen(false)}>
           <Icon icon="close" $size={24} />
         </button>
@@ -119,10 +119,13 @@ export default function SunsetModal() {
           >
             announcement
           </StyledLink>{' '}
-          for the details. As you may already know, there are staking platforms
-          with higher APR including{' '}
+          for the details.
+        </Text>
+        <Text>
+          As you may already know, there are staking platforms with higher APR
+          including{' '}
           <StyledLink
-            href="https://app.aura.finance/"
+            href="https://app.aura.finance/#/1/pool/110"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -130,7 +133,7 @@ export default function SunsetModal() {
           </StyledLink>{' '}
           and{' '}
           <StyledLink
-            href="https://pancakeswap.finance/liquidity/pools"
+            href="https://pancakeswap.finance/add/0x52242cbab41e290e9e17ccc50cc437bb60020a9d/BNB/10000"
             target="_blank"
             rel="noopener noreferrer"
           >
