@@ -36,8 +36,8 @@ function CooldownModalPage1({ send }: CooldownModalPage1Props) {
           </h2>
 
           <h3 className="subtitle">
-            You&apos;ll get more rewards if you stay. Do you really want to
-            start cooldown?
+            Cooldown will be finished in 60 seconds. <br />
+            You can withdraw after the cooldown.
           </h3>
         </div>
 

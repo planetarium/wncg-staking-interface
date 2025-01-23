@@ -1,21 +1,15 @@
-import { useMemo } from 'react'
-import Link from 'next/link'
-import { useAtom, useSetAtom } from 'jotai'
+import { useSetAtom } from 'jotai'
 import { RESET } from 'jotai/utils'
+import Link from 'next/link'
 
-import { currentTimestampAtom } from 'states/system'
+import { useChain, useClientMount } from 'hooks'
 import { cooldownTxAtom } from 'states/tx'
-import { bnum } from 'utils/bnum'
-import { format } from 'utils/format'
-import { formatISO } from 'utils/formatISO'
-import { now } from 'utils/now'
 import { txUrlFor } from 'utils/txUrlFor'
-import { useClientMount, useChain, useStaking } from 'hooks'
 import { useWatch } from './useWatch'
 
-import { StyledToast } from './styled'
 import Icon from 'components/Icon'
 import ToastStatus from './Status'
+import { StyledToast } from './styled'
 
 type CooldownToastProps = {
   hash: Hash
@@ -23,29 +17,12 @@ type CooldownToastProps = {
 
 export default function CooldownToast({ hash }: CooldownToastProps) {
   const { chainId } = useChain()
-  const { cooldownSeconds, withdrawSeconds } = useStaking()
-
-  const [currentTimestamp, setCurrentTimestamp] = useAtom(currentTimestampAtom)
-
-  const schedule = useMemo(() => {
-    const cooldownEndsAt = bnum(currentTimestamp)
-      .plus(cooldownSeconds)
-      .toNumber()
-
-    return {
-      cooldownStartsAt: currentTimestamp,
-      cooldownEndsAt,
-      unstakeStartsAt: cooldownEndsAt,
-      unstakeEndsAt: bnum(cooldownEndsAt).plus(withdrawSeconds).toNumber(),
-    }
-  }, [cooldownSeconds, currentTimestamp, withdrawSeconds])
 
   const setTx = useSetAtom(cooldownTxAtom)
 
   const status = useWatch(hash)
 
   useClientMount(() => {
-    setCurrentTimestamp(now())
     setTx(RESET)
   })
 
@@ -60,39 +37,6 @@ export default function CooldownToast({ hash }: CooldownToastProps) {
           <ToastStatus status={status} />
         </Link>
       </header>
-
-      <div className="toastContent">
-        <dl className="scheduleList">
-          <div className="scheduleItem">
-            <dt>Cooldown</dt>
-            <dd>
-              <time dateTime={formatISO(schedule.cooldownStartsAt)}>
-                {format(schedule.cooldownStartsAt, { dateOnly: true })}
-              </time>
-              <time
-                className="hyphen"
-                dateTime={formatISO(schedule.cooldownEndsAt)}
-              >
-                {format(schedule.cooldownEndsAt, { dateOnly: true })}
-              </time>
-            </dd>
-          </div>
-          <div className="scheduleItem">
-            <dt>Withdraw</dt>
-            <dd>
-              <time dateTime={formatISO(schedule.unstakeStartsAt)}>
-                {format(schedule.unstakeStartsAt, { dateOnly: true })}
-              </time>
-              <time
-                className="hyphen"
-                dateTime={formatISO(schedule.unstakeEndsAt)}
-              >
-                {format(schedule.unstakeEndsAt, { dateOnly: true })}
-              </time>
-            </dd>
-          </div>
-        </dl>
-      </div>
     </StyledToast>
   )
 }

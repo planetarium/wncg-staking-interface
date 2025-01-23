@@ -1,28 +1,13 @@
-import dynamic from 'next/dynamic'
-
-import { useModal } from 'hooks'
-import { useFetchUserData } from 'hooks/queries'
-
-import { StyledUnstakeModalPage1 } from './styled'
 import Button from 'components/Button'
-import Fallback from 'components/ExpectedRevenue/Fallback'
 import Icon from 'components/Icon'
 import { CloseButton } from 'components/Modals/shared'
-import Suspense from 'components/Suspense'
-
-const ExpectedRevenue = dynamic(() => import('components/ExpectedRevenue'), {
-  ssr: false,
-})
+import { StyledUnstakeModalPage1 } from './styled'
 
 type UnstakeModalPage1Props = {
   send: XstateSend
 }
 
 function UnstakeModalPage1({ send }: UnstakeModalPage1Props) {
-  const { removeModal } = useModal()
-
-  const { stakedTokenBalance = '0' } = useFetchUserData().data ?? {}
-
   function goNext() {
     send('NEXT')
   }
@@ -36,29 +21,18 @@ function UnstakeModalPage1({ send }: UnstakeModalPage1Props) {
             Estimated earnings
           </h2>
           <h3 className="subtitle">
-            You&apos;ll get more rewards if you stay. Do you really want to
-            withdraw?
+            Cooldown will be finished in 60 seconds. <br />
+            You can withdraw after the cooldown.
           </h3>
         </div>
 
         <CloseButton />
       </header>
 
-      <div className="container">
-        <div className="modalContent">
-          <Suspense fallback={<Fallback />}>
-            <ExpectedRevenue amount={stakedTokenBalance} />
-          </Suspense>
-        </div>
-      </div>
-
       <footer className="modalFooter">
         <div className="buttonGroup">
           <Button onClick={goNext} $variant="secondary" $size="md">
             Withdraw
-          </Button>
-          <Button onClick={removeModal} $size="md">
-            Stay as is
           </Button>
         </div>
       </footer>

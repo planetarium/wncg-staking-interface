@@ -1,18 +1,16 @@
-import { MouseEvent, useMemo } from 'react'
 import { useAtomValue } from 'jotai'
+import { MouseEvent, useMemo } from 'react'
 
+import { ModalType } from 'config/constants'
+import { useCountdown, useModal } from 'hooks'
+import { useFetchUserData } from 'hooks/queries'
 import {
   cooldownWindowAtom,
   unstakeTimestampsAtom,
   withdrawWindowAtom,
 } from 'states/account'
-import { ModalType } from 'config/constants'
 import { bnum } from 'utils/bnum'
-import { format } from 'utils/format'
-import { formatISO } from 'utils/formatISO'
 import { joinCountdown } from 'utils/joinCountdown'
-import { useCountdown, useModal, useStaking } from 'hooks'
-import { useFetchUserData } from 'hooks/queries'
 
 import { StyledWalletUnstakeWindow } from './styled'
 
@@ -23,8 +21,6 @@ type WalletUnstakeWindowProps = {
 export default function WalletUnstakeWindow({
   closeSidebar,
 }: WalletUnstakeWindowProps) {
-  const { cooldownSeconds } = useStaking()
-
   const cooldownWindow = useAtomValue(cooldownWindowAtom)
   const unstakeWindow = useAtomValue(withdrawWindowAtom)
   const unstakeTimestamps = useAtomValue(unstakeTimestampsAtom)
@@ -71,20 +67,6 @@ export default function WalletUnstakeWindow({
     closeSidebar(e)
   }
 
-  const startsAt = Math.max(
-    0,
-    cooldownWindow && unstakeTimestamps.cooldownEndsAt
-      ? unstakeTimestamps.cooldownEndsAt - cooldownSeconds
-      : unstakeTimestamps.cooldownEndsAt ?? 0
-  )
-
-  const endsAt = Math.max(
-    0,
-    cooldownWindow
-      ? unstakeTimestamps.cooldownEndsAt ?? 0
-      : unstakeTimestamps.withdrawEndsAt ?? 0
-  )
-
   return (
     <StyledWalletUnstakeWindow
       $unstake={unstakeWindow}
@@ -97,13 +79,6 @@ export default function WalletUnstakeWindow({
         <strong className="timer">
           {countdown} {countdown && 'left'}
         </strong>
-
-        <div className="period">
-          <time dateTime={formatISO(startsAt)}>{format(startsAt)}</time>
-          <time dateTime={formatISO(endsAt)} className="hyphen">
-            {format(endsAt)}
-          </time>
-        </div>
       </div>
     </StyledWalletUnstakeWindow>
   )
