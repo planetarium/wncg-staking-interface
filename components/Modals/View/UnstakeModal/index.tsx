@@ -67,8 +67,7 @@ function UnstakeModal() {
 
   return (
     <>
-      {currentPage === 1 && <Page1 send={send} />}
-      {currentPage === 2 && (
+      {currentPage === 1 && (
         <Page2
           send={send}
           {...useFormReturns}
@@ -77,8 +76,8 @@ function UnstakeModal() {
           unstakeAmount={unstakeAmount}
         />
       )}
-      {currentPage === 3 && <Page3 />}
-      {currentPage === 4 && <Page4 />}
+      {currentPage === 2 && <Page3 />}
+      {currentPage === 3 && <Page4 />}
     </>
   )
 }

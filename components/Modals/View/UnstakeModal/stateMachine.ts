@@ -24,21 +24,7 @@ export const unstakeMachine = createMachine<UnstakeMachineContext>(
         ],
         on: {
           NEXT: {
-            target: 'preview',
-          },
-          FAIL: {
-            target: 'fail',
-            actions: [`resetHash`],
-          },
-        },
-      },
-      preview: {
-        on: {
-          NEXT: {
             target: 'pending',
-          },
-          ROLLBACK: {
-            target: 'idle',
           },
           FAIL: {
             target: 'fail',
@@ -57,7 +43,7 @@ export const unstakeMachine = createMachine<UnstakeMachineContext>(
             actions: [`resetHash`],
           },
           ROLLBACK: {
-            target: 'preview',
+            target: 'idle',
             actions: [`resetHash`],
           },
           SUCCESS: {
@@ -91,14 +77,12 @@ export const unstakeMachine = createMachine<UnstakeMachineContext>(
 export function pageFor(value: StateValue) {
   switch (value) {
     case 'idle':
-      return 1
-    case 'preview':
     case 'pending':
-      return 2
+      return 1
     case 'success':
-      return 3
+      return 2
     case 'fail':
-      return 4
+      return 3
     default:
       assertUnreachable(value)
   }
